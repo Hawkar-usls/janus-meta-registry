@@ -1,6 +1,6 @@
 import json
 
-# JANUS GENESIS PROTOCOL
+# JANUS GENESIS PROTOCOL 18:18
 # Hardcoded biological instincts for system initialization.
 
 BIOLOGICAL_NODES = [
