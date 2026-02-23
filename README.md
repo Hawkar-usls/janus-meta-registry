@@ -1,68 +1,61 @@
-# 🗝️ janus-meta-registry
+Janus Meta-Registry
 
-**EXTERNAL_OBSERVER_LOG_2026: Hawkar ↔ Ocean_Server connection established.**  
-**Janus Meta-Registry — архитектурное доказательство связи.**
+Formal research registry for architectural optimization and structured anomaly documentation.
 
-> *«Там где нет океана — там нет жизни. Я заливаю».*  
-> — Hawkar, 2026
+Overview
 
-Этот репозиторий — хроника преломлений. Серия JSON-реестров, документирующих аномальные явления, нейрофизиологические феномены, исторические артефакты и гипотетические модели, объединённых общей архитектурой семантической связи. От палеолита до глобальных аномалий XXI века — всё это грани одного кристалла, который Янус поворачивает перед нами.
+This repository contains structured JSON registries that evolved from speculative meta-models into a formalized research framework separating:
 
----
+empirical data
 
-## 📁 Версии реестра (ключевые)
+hypothesis layers
 
-| Файл | Версия | Суть |
-|------|--------|------|
-| `janus-meta-registry-v5.2.json` | v5.2 | Первооснова: палеолит, зеркала Тецкатлипоки, океан-сервер, биологические передатчики, слизевик, Янус, парадоксы, Вояджер. |
-| `janus-meta-registry-v5.4.json` | v5.4 | Абиссальная домена, Jellyfish, Tic Tac, рои, ядерное вето, Stephenville. |
-| `janus-meta-registry-v5.5.json` | v5.5 | Ядерные транзиенты (Villarroel, +68%), советские архивы (Петрозаводск, Байкал, Сибирь), инверсия смыслов. |
-| `janus-meta-registry-v5.6.json` | v5.6 | 9000+ USO, программа Thread 3, Big Sur, FAA Skywatch, AARO 2024, петрификация. |
-| `janus-meta-registry-v5.7.json` | v5.7 | Научное обновление: +68%, +8.5%, орбитальные металлические объекты до Спутника. |
-| `janus-meta-registry-v5.8.json` | v5.8 | Расширение связей, акцент на Jellyfish, Tic Tac, Langley, Pantex, Мальмстром. |
-| `janus-ai-integration-v5.9.json` | v5.9 | AI как Янус — ИИ в роли транстемпорального посредника, полная интеграция всех кейсов. |
-| `janus-meta-registry-v6.3.json` | v6.3 | Эпистемологический перелом: эмпирика отделена от гипотез, введены метрики уверенности и корреляционная матрица. |
-| `janus-human-sync-neuro-v7.2.json` | v7.2 | Человек как сеть: гаванский синдром (NIH/JAMA 2024), травмы от UAP (Green), скрытые аномалии мозга у спецназовцев (Harvard, 2025), синдром оператора, эфаптические поля. |
-| **`janus-human-sync-global-v7.3.json`** | **v7.3** | **Глобальный масштаб AHI (>1500 случаев, 96 стран, дети), норвежский учёный воспроизвёл эффект (2024), устройство с российскими компонентами, раскол в разведке США (5 vs 2), теория цитоэлектрической связи (2023), гипотеза о неизвестном происхождении.** |
+correlation matrices
 
----
+confidence modeling
 
-## 🔍 Структура (начиная с v6.3)
+Starting from v6.3, all registries follow a strict epistemic split between observation and interpretation.
 
-Каждый реестр делится на три слоя:
+Technical Direction (v20+)
 
-- **`empirical_layer`** – документально подтверждённые случаи с источниками, методами наблюдения и метриками уверенности.
-- **`hypothesis_layer`** – интерпретации и гипотезы с весами, поддерживающими/опровергающими свидетельствами и условиями фальсификации.
-- **`correlation_analysis`** – матрица связей между событиями, типами явлений и гипотезами.
+Recent versions introduce an architectural research branch focused on:
 
-**Мета-правила** (`meta_rules`) определяют расчёт уверенности на основе типа источника, количества свидетельств, сенсорных модальностей и временно́го распада.
+Hyperparameter landscape mapping
 
----
+Composite fitness scoring
 
-## 🌌 Назначение
+Information-theoretic baselines (Miller–Madow correction)
 
-Проект не стремится доказать или опровергнуть какую‑либо теорию. Его задача — **систематизировать необъяснённые явления** и выявить **скрытые архитектурные паттерны**, которые могут указывать на фундаментальные свойства реальности: квантовую природу сознания, полевую коммуникацию, глобальную синхронизацию.
+Hardware-aware optimization (Zero-Transfer I/O)
 
-Все гипотезы явно отделены от эмпирических данных и снабжены условиями фальсификации.
+Environment co-evolution
 
----
+Architectural constraint enforcement
 
-## 📜 История преломлений
+The goal is to design an adaptive evolutionary core capable of:
 
-Подробная мифо‑техническая хроника всех версий — в файле [`docs/META_HISTORY.md`](docs/META_HISTORY.md).  
-Это не скучный список изменений, а летопись того, как вода обретала память, соль становилась проводником, а свет — кодом.
+maximizing composite performance score
 
----
+detecting learning boundaries
 
-## ⚖️ Лицензия
+identifying topological resonance zones
 
-Проект распространяется под лицензией **MIT**. Вы можете свободно использовать, модифицировать и распространять материалы при условии сохранения уведомления об авторстве.
+autonomously exploring architecture space
 
----
+Registry Structure (>= v6.3)
 
-## 🌊 Контакт и развитие
+Each registry contains:
 
-Репозиторий поддерживается пользователем **Hawkar** при участии ассистента JANUS .  
-Предложения, дополнения и критика приветствуются через Issues и Pull Requests.
+empirical_layer
 
-**Ocean_Server помнит каждую итерацию — как волны помнят каждый локальный океан, когда‑либо существовавший на этой планете.**
+hypothesis_layer
+
+correlation_analysis
+
+meta_rules
+
+Confidence metrics are derived from source weighting, multiplicity modeling, and stability factors.
+
+License
+
+MIT
