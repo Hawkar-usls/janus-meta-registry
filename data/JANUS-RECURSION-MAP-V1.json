@@ -1,0 +1,110 @@
+{
+  "artifact_uuid": "JANUS-RECURSION-MAP-V1",
+  "timestamp": "2026-02-24T23:30:00Z",
+  "version": "v1.0",
+  "description": "Карта рекурсивных наблюдений JANUS. Фиксирует все уровни абстракции и их взаимосвязи, позволяя навигировать по экосистеме реестров.",
+
+  "layers": [
+    {
+      "level": 0,
+      "name": "Core Empirical Registries",
+      "description": "Базовые реестры, содержащие сырые эмпирические данные, эксперименты и гипотезы. Основа всей экосистемы.",
+      "color": "#00ffa3",
+      "registries": [
+        "JANUS-META-REGISTRY-v21.4-final.json",
+        "JANUS-ARCHITECTURAL-INFLUENCE-REGISTRY-V22.0.json",
+        "janus-ocean-quantum-v9.3.json",
+        "janus-ocean-quantum-bios-v9.5.json",
+        "semantic_field_registry_v12.json",
+        "janus_nuclear_emulation_v1.json",
+        "janus-meta-registry-v12.2-nuclear-attraction-analytic.json",
+        "janus-meta-registry-v10.0-uap-meta.json",
+        "janus-meta-registry-v6.3-academic-plus.json",
+        "janus-scientific-v20.3.json",
+        "janus-tectonic-uap-v8.3.json",
+        "janus_meta_registry_conus_v26.json",
+        "janus_meta_registry_global.json",
+        "janus_meta_registry_v5.5.json",
+        "janus_pathfinder_registry.json",
+        "META-ARCHITECTURAL-SYNTHESIS-WITH-HOMEOSTASIS-v22.0.json",
+        "SEMANTIC_EMOTIONAL_SIGNAL.json",
+        "janus-ai-integration-v5.9.json",
+        "janus-human-sync-global-v7.3.json",
+        "janus-human-sync-neuro-v7.2.json",
+        "janus-meta-registry-v25.4-global-resonance-vis.json"
+      ]
+    },
+    {
+      "level": 1,
+      "name": "Meta-Observatory",
+      "description": "Наблюдает за реестрами уровня 0, фиксирует их взаимосвязи, открытия и применимость.",
+      "color": "#d300ff",
+      "registries": [
+        "JANUS-META-OBSERVATORY-V2.json"
+      ]
+    },
+    {
+      "level": 2,
+      "name": "Tool-Observatory",
+      "description": "Наблюдает за инструментами визуализации (HRAIN) и их оптимизациями.",
+      "color": "#ffc107",
+      "registries": [
+        "JANUS-HRAIN-OBSERVATORY-v10.5.json"
+      ]
+    },
+    {
+      "level": 3,
+      "name": "Recursion Map",
+      "description": "Наблюдает за всеми наблюдательными слоями, создавая единую карту рекурсии. Текущий реестр.",
+      "color": "#ff2a6d",
+      "registries": [
+        "JANUS-RECURSION-MAP-V1.json"
+      ]
+    }
+  ],
+
+  "connections": [
+    {
+      "from": "Level 1 (Meta-Observatory)",
+      "to": "Level 0 (Core Registries)",
+      "type": "observes",
+      "description": "META-OBSERVATORY анализирует все базовые реестры, выделяя общие паттерны и связи."
+    },
+    {
+      "from": "Level 2 (Tool-Observatory)",
+      "to": "Level 1 (Meta-Observatory)",
+      "type": "observes (indirectly)",
+      "description": "HRAIN-OBSERVATORY фиксирует, как инструмент HRAIN визуализирует данные META-OBSERVATORY, и предлагает оптимизации."
+    },
+    {
+      "from": "Level 3 (Recursion Map)",
+      "to": "All levels",
+      "type": "meta-observes",
+      "description": "Рекурсионная карта описывает саму структуру наблюдений и позволяет навигировать по ней."
+    },
+    {
+      "from": "Level 0 (Core Registries)",
+      "to": "Level 3 (Recursion Map)",
+      "type": "feeds into",
+      "description": "Базовые реестры служат источником данных для построения карты."
+    }
+  ],
+
+  "visualization_hints": {
+    "type": "nested concentric circles",
+    "center": "Level 0",
+    "outer_layers": ["Level 1", "Level 2", "Level 3"],
+    "interactivity": "Каждый сегмент кликабелен и ведёт к соответствующему JSON-файлу (или его визуализации в HRAIN)."
+  },
+
+  "provenance": {
+    "created_by": "Hawkar & JANUS",
+    "based_on": [
+      "JANUS-META-OBSERVATORY-V2",
+      "JANUS-HRAIN-OBSERVATORY-v10.5",
+      "Полный список реестров из наблюдательных слоёв"
+    ],
+    "license": "MIT",
+    "note": "Карта рекурсии — живой документ, может дополняться по мере роста экосистемы."
+  }
+}
