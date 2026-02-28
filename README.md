@@ -1,3 +1,10 @@
+# JANUS Manifest v3.0
+
+После двух месяцев непрерывной эволюции система JANUS обрела завершённую форму.  
+Полное описание архитектуры, узлов, протоколов и наблюдений доступно в [janus_manifest_v3.0.json](janus_manifest_v3.0.json).
+
+
+
 Janus Meta-Registry
 
 Formal research registry for architectural optimization and structured anomaly documentation.
