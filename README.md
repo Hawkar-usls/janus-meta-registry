@@ -1,68 +1,167 @@
-# JANUS v3.0
+# JANUS v4.1
 
-После двух месяцев непрерывной эволюции система JANUS обрела завершённую форму.  
-Полное описание архитектуры, узлов, протоколов и наблюдений доступно в [janus_manifest_v3.0.json](janus_manifest_v3.0.json).
+JANUS — это экспериментальная система для исследования и эволюции архитектур ИИ.
 
+Репозиторий сочетает:
 
+* **Meta-Registry (JSON)** — структурированные данные и наблюдения
+* **Genesis Core (src/genesis)** — исполняемое ядро системы
 
-Janus Meta-Registry
+---
 
-Formal research registry for architectural optimization and structured anomaly documentation.
+# 🧠 Что это такое
 
-Overview
+JANUS — это не просто модель.
 
-This repository contains structured JSON registries that evolved from speculative meta-models into a formalized research framework separating:
+Это система, которая:
 
-empirical data
+* обучается на данных
+* анализирует своё поведение
+* адаптирует архитектуру
+* пытается находить более эффективные конфигурации
 
-hypothesis layers
+---
 
-correlation matrices
+# 📦 Структура репозитория
 
-confidence modeling
+```text
+.
+├── registry/          # JSON реестры (данные, наблюдения, гипотезы)
+├── src/
+│   └── genesis/       # ядро системы (JGPT, core, память и т.д.)
+└── README.md
+```
 
-Starting from v6.3, all registries follow a strict epistemic split between observation and interpretation.
+---
 
-Technical Direction (v20+)
+# 🔬 Meta-Registry
 
-Recent versions introduce an architectural research branch focused on:
+Реестр — это **чистые данные**, без логики.
 
-Hyperparameter landscape mapping
+Каждый JSON разделён на уровни:
 
-Composite fitness scoring
+```json
+{
+  "empirical_layer": {},
+  "hypothesis_layer": {},
+  "correlation_analysis": {},
+  "meta_rules": {}
+}
+```
 
-Information-theoretic baselines (Miller–Madow correction)
+### Смысл:
 
-Hardware-aware optimization (Zero-Transfer I/O)
+* **empirical_layer**
+  факты, логи, метрики
 
-Environment co-evolution
+* **hypothesis_layer**
+  интерпретации и предположения
 
-Architectural constraint enforcement
+* **correlation_analysis**
+  связи между данными
 
-The goal is to design an adaptive evolutionary core capable of:
+* **meta_rules**
+  ограничения системы
 
-maximizing composite performance score
+👉 Главное правило:
+**не смешивать факты и интерпретации**
 
-detecting learning boundaries
+---
 
-identifying topological resonance zones
+# ⚙️ Genesis Core (`src/genesis`)
 
-autonomously exploring architecture space
+Это реальное ядро системы.
 
-Registry Structure (>= v6.3)
+Здесь находится:
 
-Each registry contains:
+* JGPT (обучение)
+* механика эволюции
+* память
+* обработка данных
 
-empirical_layer
+---
 
-hypothesis_layer
+# 🚀 Что умеет ядро
 
-correlation_analysis
+На основе твоего кода:
 
-meta_rules
+* autoregressive обучение (byte-level)
+* swarm / exploration логика
+* self-heal (перезапуски при деградации)
+* gradient protection (blackhole / starvation)
+* EMA метрики
+* replay и память
+* обработка внешних данных
 
-Confidence metrics are derived from source weighting, multiplicity modeling, and stability factors.
+---
 
-License
+# 🔁 Как это работает
+
+```text
+данные (registry)
+        ↓
+ядро (genesis)
+        ↓
+обучение / поиск / эксперименты
+        ↓
+новые наблюдения
+        ↓
+обратно в registry
+```
+
+---
+
+# 🧬 Архитектура (по факту из твоего кода)
+
+Система уже состоит из:
+
+* JGPT — основной цикл обучения
+* память (evolutionary / replay)
+* swarm-поиск параметров
+* self-heal логика
+* обработка внешних источников (логи / device data)
+
+---
+
+# ⚠️ Важно
+
+* registry = только данные
+* код = только в `src/genesis`
+* не мешай эти слои
+
+---
+
+# 📜 License
 
 MIT
+
+---
+
+# 🧠 Текущее состояние
+
+Система:
+
+* нестабильная (есть stall / recovery)
+* но уже живая (есть self-heal и циклы)
+* способна к длительной эволюции
+
+---
+
+# 🚀 Запуск
+
+```bash
+cd src/genesis
+python JGPT_CODEX.py
+```
+
+---
+
+# 🌌 Идея проекта
+
+Сделать систему, которая:
+
+* сама исследует архитектуры
+* сама находит лучшие конфигурации
+* учится на собственных ошибках
+
+---
