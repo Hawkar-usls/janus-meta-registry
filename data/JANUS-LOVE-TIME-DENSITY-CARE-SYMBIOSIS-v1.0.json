@@ -263,8 +263,20 @@
       "status": "normative_control_objective_not_deployed_scheduler_rule"
     },
     "machine_event_horizon": {
-      "diagnostic": "sum_i abs(w_i(t)) > Theta",
-      "meaning": "Диагностический порог, при котором память прошлого может чрезмерно доминировать над новым опытом.",
+      "normalization": "p_i(t) = abs(w_i(t)) / sum_j abs(w_j(t)), when sum_j abs(w_j(t)) > 0",
+      "diagnostics": {
+        "peak_anchor_dominance": "max_i p_i(t) > Theta_peak",
+        "effective_anchor_count": "N_eff(t) = 1 / sum_i p_i(t)^2 < N_min",
+        "zero_field_case": "If sum_j abs(w_j(t)) = 0, define N_eff = 0 and do not report anchor dominance.",
+        "interpretation": {
+          "Theta_peak": "максимально допустимая доля поля памяти, приходящаяся на один якорь",
+          "N_eff": "обратный индекс концентрации Херфиндаля; эффективное число равноценно активных якорей",
+          "N_min": "минимальное разнообразие активных якорей, необходимое для контекстно устойчивого решения"
+        }
+      },
+      "mathematical_correction": "При L1-нормировке sum_i abs(p_i) = 1 тождественно, поэтому сумма модулей не может служить порогом навязчивости. Используются концентрация максимального якоря и эффективное число якорей.",
+      "threshold_policy": "Theta_peak and N_min must be preregistered, context-specific, auditable, and never inferred solely to justify a desired action.",
+      "meaning": "Диагностический порог, при котором один якорь или слишком узкая группа якорей может чрезмерно доминировать над новым опытом.",
       "not_a_physical_horizon": true,
       "required_response": [
         "do not increase eta",
