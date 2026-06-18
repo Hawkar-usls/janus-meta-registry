@@ -267,7 +267,12 @@
       "diagnostics": {
         "peak_anchor_dominance": "max_i p_i(t) > Theta_peak",
         "effective_anchor_count": "N_eff(t) = 1 / sum_i p_i(t)^2 < N_min",
-        "zero_field_case": "If sum_j abs(w_j(t)) = 0, define N_eff = 0 and do not report anchor dominance.",
+        "fixation_trigger": "(max_i p_i(t) > Theta_peak) OR (N_eff(t) < N_min)",
+        "cancellation_index": "C_cancel(t) = 1 - abs(sum_i w_i(t)) / sum_i abs(w_i(t)), when sum_i abs(w_i(t)) > epsilon",
+        "cancellation_zero_guard": "If sum_i abs(w_i(t)) <= epsilon, define C_cancel = 0 and emit status insufficient_active_weight.",
+        "cancellation_interpretation": "High C_cancel indicates strong mutual cancellation among signed anchor weights. It is distinct from concentration of weight magnitudes.",
+        "cancellation_response": "Observer-only: record the diagnostic and request human review when consequences are material. It is not permission for automatic intervention.",
+        "zero_field_case": "If sum_j abs(w_j(t)) <= epsilon, define N_eff = 0, do not report anchor dominance, and emit status insufficient_active_weight.",
         "interpretation": {
           "Theta_peak": "максимально допустимая доля поля памяти, приходящаяся на один якорь",
           "N_eff": "обратный индекс концентрации Херфиндаля; эффективное число равноценно активных якорей",
