@@ -101,4 +101,3 @@ predeclared endpoints, traceable material, and independent review.
 - [`data/proofs/banana_dna_decoder.json`](../data/proofs/banana_dna_decoder.json)
 - [`templates/germplasm_specimen_template.md`](../templates/germplasm_specimen_template.md)
 - [`docs/germplasm-evidence-layout.md`](../docs/germplasm-evidence-layout.md)
-

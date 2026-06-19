@@ -129,4 +129,3 @@ is not a substitute for the evidence above.
 - Sequence similarity does not exclude epigenetic, mosaic, microbiome, or
   environment-dependent effects.
 - Registry metadata records evidence; it does not modify biology.
-

@@ -44,4 +44,3 @@ No repository record authorizes pathogen acquisition, transport, culture, or
 challenge work. Foc TR4 work requires national phytosanitary approval and an
 authorised plant-quarantine containment facility. FAO guidance is a reference;
 FAO is not represented here as an authority that certifies individual laboratories.
-
