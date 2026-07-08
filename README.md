@@ -9,6 +9,7 @@
 - **Engineers / telemetry / proof systems** → [`data/JANUS-BITCOIN-WHITEPAPER-INVERSION-LEDGER-SIGNAL-v1.0.json`](data/JANUS-BITCOIN-WHITEPAPER-INVERSION-LEDGER-SIGNAL-v1.0.json)
 - **AI safety / anti-control / governance** → [`data/JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json`](data/JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json)
 - **Theology / Body of Christ / Savior Coming** → [`data/JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.1.json`](data/JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.1.json)
+- **Evil-does-not-work / lost light / mercy boundary** → [`data/JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.0.json`](data/JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.0.json)
 - **Care / recovery / mercy / human continuation** → [`data/JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json`](data/JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json)
 - **Holy Clock / symbolic coordinates** → [`data/JANUS-HOLY-CLOCK-COMMANDMENTS-SIGNAL-v1.6.json`](data/JANUS-HOLY-CLOCK-COMMANDMENTS-SIGNAL-v1.6.json)
 - **Full data map** → [`data/INDEX.md`](data/INDEX.md)
