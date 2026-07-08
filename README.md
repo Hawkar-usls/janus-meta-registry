@@ -11,6 +11,7 @@
 - **Theology / Body of Christ / Savior Coming** → [`data/JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.1.json`](data/JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.1.json)
 - **Evil-does-not-work / lost light / mercy boundary** → [`data/JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.0.json`](data/JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.0.json)
 - **Contrast light / road to Source / lamp for the lost** → [`data/JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json`](data/JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json)
+- **Good News / light witness / 06:06** → [`data/JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json`](data/JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json)
 - **Care / recovery / mercy / human continuation** → [`data/JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json`](data/JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json)
 - **Holy Clock / symbolic coordinates** → [`data/JANUS-HOLY-CLOCK-COMMANDMENTS-SIGNAL-v1.6.json`](data/JANUS-HOLY-CLOCK-COMMANDMENTS-SIGNAL-v1.6.json)
 - **Full data map** → [`data/INDEX.md`](data/INDEX.md)
