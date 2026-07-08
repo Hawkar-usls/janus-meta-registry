@@ -1,5 +1,24 @@
 # JANUS v4.2
 
+> **Start here / Входные двери:**  
+> Если вы впервые открыли этот реестр, начните с [`START_HERE.md`](START_HERE.md).  
+> Там каждый читатель может выбрать свою дверь: инженерную, богословскую, safety, care/recovery, Holy Clock, Bitcoin/distributed systems или skeptical review.
+
+**Quick doors:**
+
+- **Engineers / telemetry / proof systems** → [`data/JANUS-BITCOIN-WHITEPAPER-INVERSION-LEDGER-SIGNAL-v1.0.json`](data/JANUS-BITCOIN-WHITEPAPER-INVERSION-LEDGER-SIGNAL-v1.0.json)
+- **AI safety / anti-control / governance** → [`data/JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json`](data/JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json)
+- **Theology / Body of Christ / Savior Coming** → [`data/JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.1.json`](data/JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.1.json)
+- **Care / recovery / mercy / human continuation** → [`data/JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json`](data/JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json)
+- **Holy Clock / symbolic coordinates** → [`data/JANUS-HOLY-CLOCK-COMMANDMENTS-SIGNAL-v1.6.json`](data/JANUS-HOLY-CLOCK-COMMANDMENTS-SIGNAL-v1.6.json)
+- **Full data map** → [`data/INDEX.md`](data/INDEX.md)
+
+> **Boundary:** this registry is a map, not a throne.  
+> The machine is a mirror, not the Source.  
+> No prophecy claim, no date-setting, no financial advice, no medical replacement, no machine-as-God, no total control, no claim without gates.
+
+---
+
 JANUS — это экспериментальная система для исследования и эволюции архитектур ИИ.
 
 Репозиторий объединяет три ключевых слоя:
@@ -78,141 +97,3 @@ JANUS — это система, которая:
 ---
 
 ## 🧩 Назначение слоёв
-
-### empirical_layer
-
-* факты
-* наблюдения
-* метрики
-* события
-
-### hypothesis_layer
-
-* интерпретации
-* предположения
-* модели
-
-### correlation_analysis
-
-* связи между сущностями
-* зависимости
-* паттерны
-
-### meta_rules
-
-* ограничения системы
-* инварианты
-* правила фильтрации
-
----
-
-## ⚠️ Главное правило
-
-> **НЕ смешивать raw data и интерпретации**
-
----
-
-# ⚙️ src/genesis — Ядро системы
-
-`src/genesis` — это исполняемый слой JANUS.
-
-Здесь происходит:
-
-* обучение моделей (JGPT)
-* эволюция параметров
-* анализ результатов
-* self-heal логика
-* управление циклами
-
----
-
-# 🚀 Возможности ядра
-
-На основе текущего кода:
-
-* byte-level autoregressive обучение
-* swarm / exploration поиск
-* self-heal при деградации
-* gradient protection:
-
-  * blackhole detection
-  * starvation detection
-* EMA метрики
-* replay память
-* работа с внешними данными (из data/)
-
----
-
-# 🔁 Полный цикл системы
-
-```text id="g2m7r1"
-data/ (сырой поток)
-        ↓
-очистка / фильтрация
-        ↓
-registry/ (структурированные данные)
-        ↓
-src/genesis (обучение и анализ)
-        ↓
-новые наблюдения
-        ↓
-обратно в data/
-```
-
----
-
-# 🧬 Архитектура JANUS
-
-Система уже содержит:
-
-* JGPT — основной цикл обучения
-* evolutionary memory
-* swarm-оптимизацию
-* replay систему
-* self-heal механизм
-* обработку внешних источников
-
----
-
-# ⚠️ Ограничения
-
-* система может входить в циклы деградации (stall / recovery)
-* качество зависит от data/
-* registry требует ручной или полуавтоматической фильтрации
-
----
-
-# 📜 License
-
-MIT License
-
----
-
-# 🧠 Текущий статус
-
-JANUS находится в стадии:
-
-* активной разработки
-* нестабильной эволюции
-* частично автономного обучения
-
----
-
-# 🚀 Запуск
-
-```bash id="h5i0td"
-cd src/genesis
-python JGPT_CODEX.py
-```
-
----
-
-# 🌌 Цель проекта
-
-Создать систему, которая:
-
-* сама исследует архитектуры
-* сама учится на данных
-* сама улучшает себя
-
----
