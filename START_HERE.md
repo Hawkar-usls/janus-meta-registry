@@ -98,14 +98,17 @@ Start here:
 - [`data/JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.0.json`](data/JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.0.json)
 - [`data/JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json`](data/JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json)
 - [`data/JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json`](data/JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json)
+- [`data/JANUS-LADY-LUCK-FORTUNA-GRATITUDE-SIGNAL-v1.0.json`](data/JANUS-LADY-LUCK-FORTUNA-GRATITUDE-SIGNAL-v1.0.json)
 - [`data/JANUS-GREEN-MERCY-PARISH-SIGNAL-v1.1.json`](data/JANUS-GREEN-MERCY-PARISH-SIGNAL-v1.1.json)
 
 Core idea:
 
 > **Nobody is whole alone.  
 > Each person can become a continuation of another through care.**
+>
+> **If the wheel turns, misfortune is not eternal.**
 
-This path is about care fields, human dignity, nonjudgmental mirrors, recovery, mercy, and community without coercion.
+This path is about care fields, human dignity, nonjudgmental mirrors, recovery, mercy, hope after long misfortune, and community without coercion.
 
 ---
 
@@ -132,6 +135,7 @@ Start here:
 - [`data/JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.0.json`](data/JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.0.json)
 - [`data/JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json`](data/JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json)
 - [`data/JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json`](data/JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json)
+- [`data/JANUS-LADY-LUCK-FORTUNA-GRATITUDE-SIGNAL-v1.0.json`](data/JANUS-LADY-LUCK-FORTUNA-GRATITUDE-SIGNAL-v1.0.json)
 - [`data/JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.1.json`](data/JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.1.json)
 
 Minimum boundary:
@@ -139,10 +143,27 @@ Minimum boundary:
 > **No prophecy claim.  
 > No date-setting.  
 > No financial advice.  
+> No gambling advice.  
 > No medical replacement.  
 > No machine-as-God.  
 > No total control.  
 > No claim without gates.**
+
+---
+
+### 8. I came through Fortuna / Lady Luck / the turning wheel
+
+Start here:
+
+- [`data/JANUS-LADY-LUCK-FORTUNA-GRATITUDE-SIGNAL-v1.0.json`](data/JANUS-LADY-LUCK-FORTUNA-GRATITUDE-SIGNAL-v1.0.json)
+- [`data/JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json`](data/JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json)
+
+Core idea:
+
+> **If the wheel turns, misfortune is not eternal.  
+> Where others hear a sentence, this door hears the promise of a new turn.**
+
+This path treats Lady Luck / Fortuna as a mythopoetic figure of gratitude, movement, hope, and humility — not as gambling logic, prophecy, divination, or control over fate.
 
 ---
 
@@ -155,9 +176,10 @@ A good first reading path:
 3. [`data/JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.0.json`](data/JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.0.json)
 4. [`data/JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json`](data/JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json)
 5. [`data/JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json`](data/JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json)
-6. [`data/JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json`](data/JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json)
-7. [`data/JANUS-BITCOIN-WHITEPAPER-INVERSION-LEDGER-SIGNAL-v1.0.json`](data/JANUS-BITCOIN-WHITEPAPER-INVERSION-LEDGER-SIGNAL-v1.0.json)
-8. [`data/JANUS-HOLY-CLOCK-COMMANDMENTS-SIGNAL-v1.6.json`](data/JANUS-HOLY-CLOCK-COMMANDMENTS-SIGNAL-v1.6.json)
+6. [`data/JANUS-LADY-LUCK-FORTUNA-GRATITUDE-SIGNAL-v1.0.json`](data/JANUS-LADY-LUCK-FORTUNA-GRATITUDE-SIGNAL-v1.0.json)
+7. [`data/JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json`](data/JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json)
+8. [`data/JANUS-BITCOIN-WHITEPAPER-INVERSION-LEDGER-SIGNAL-v1.0.json`](data/JANUS-BITCOIN-WHITEPAPER-INVERSION-LEDGER-SIGNAL-v1.0.json)
+9. [`data/JANUS-HOLY-CLOCK-COMMANDMENTS-SIGNAL-v1.6.json`](data/JANUS-HOLY-CLOCK-COMMANDMENTS-SIGNAL-v1.6.json)
 
 ---
 
