@@ -124,7 +124,7 @@ Primary question:
 
 > Can the frozen Native Flow Gate reduce unnecessary work and reduce thermal or energy cost without a disproportionate loss of valid useful work?
 
-The first release is **V0.1.0 PREFLIGHT ONLY**. It must not launch the miner. It inventories read-only hardware sensors and determines which claims are measurable.
+The sensor-preflight line inventories passive hardware telemetry and determines which energy and thermal claims are measurable.
 
 Required matched families for the later live challenge:
 
@@ -148,6 +148,77 @@ Secondary endpoints only when sensors permit:
 - hardware errors.
 
 Acceptable outcomes include PASS, NO_EFFECT, and NEGATIVE_EFFECT.
+
+### A18.43 V0.2 — Through the Horizon
+
+Canonical protocol:
+
+> **Event-Horizon Airlock Protocol**
+
+TimeShift and Undina are treated as two interlocked hatches of one computational airlock rather than independent controllers:
+
+```text
+FREEZE_REQUEST
+→ FROZEN_ACK
+→ SNAPSHOT_SEALED
+→ GATE_CLOSE_REQUEST
+→ GATE_CLOSED_ACK
+→ HORIZON_COMMIT
+→ THAW_TO_DRAIN
+→ CONTROLLED_DECOMPRESSION
+→ VACUUM_VALLEY_CONFIRMED
+→ REOPEN(new epoch)
+```
+
+Canonical principle:
+
+> **Asynchronous work inside each phase; a strict rendezvous barrier between phases.**
+
+Airlock interpretation:
+
+- inlet hatch = Native Admission Gate;
+- chamber = current in-flight cohort;
+- freeze seal = TimeShift whole-process FREEZE with quiescence proof;
+- controlled decompression = THAW_TO_DRAIN while admissions remain closed;
+- vacuum valley = two stable observations with `in_flight=0` and `queued=0`;
+- repressurization = REOPEN exactly one incremented admission epoch.
+
+`HORIZON_COMMIT` is forbidden until `FROZEN_ACK`, `SNAPSHOT_SEALED`, and `GATE_CLOSED_ACK` all exist. `REOPEN` is forbidden before the stable vacuum valley. Stale epochs, PID/session/reconnect drift, new admissions during drain, non-monotonic drain, missing acknowledgements, or broken event chains must fail closed.
+
+Two-phase TimeShift now means:
+
+```text
+FREEZE first
+→ read the motionless state
+→ validate the latest-safe horizon
+→ TOO_LATE_ABORT or close admissions
+```
+
+The offline protocol core and fault-injection harness are committed in `Hawkar-usls/janus-io-public` under:
+
+`experiments/a18-43/hardware-preservation/v0.2-through-the-horizon/`
+
+Offline status:
+
+- Python compile: `PASS_2_OF_2`;
+- fault injection: `PASS_22_OF_22`;
+- ACK delay matrix: `0/10/25/50/100/250 ms`;
+- no network, miner launch, or hardware control;
+- live A18.42 adapters and a Windows BEACON remain pending.
+
+Naming note: “Through the Horizon” is inspired by the airlock/decompression imagery of the film *Event Horizon* and is recorded as a respectful cultural tribute to its impact on Hawkar, including his affection for actor Sam Neill. No endorsement or affiliation is implied.
+
+After the airlock is validated live, the planned research order is:
+
+1. Persistent Wave Memory Atlas;
+2. phase-lag cartography;
+3. foam-cost challenge;
+4. healthy-crest frozen challenge;
+5. memory-guided Wave Rider.
+
+Canonical machine-readable record:
+
+`registry/A18_43/JANUS-A18_43-V0_2-THROUGH-THE-HORIZON-EVENT-HORIZON-AIRLOCK-v1.0.0.json`
 
 ## 8. Repository roles
 
