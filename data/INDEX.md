@@ -23,12 +23,14 @@ Start here:
 
 - [`JANUS-BITCOIN-WHITEPAPER-INVERSION-LEDGER-SIGNAL-v1.0.json`](JANUS-BITCOIN-WHITEPAPER-INVERSION-LEDGER-SIGNAL-v1.0.json)
 - [`JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json`](JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json)
+- [`JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json`](JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json)
 
 Core idea:
 
-> **Do not trust impression. Trust the chain of observations.**
+> **Do not trust impression. Trust the chain of observations.  
+> Do not defend a hypothesis. Try to destroy it.**
 
-This path explains `proof-of-observation`, `understanding-chain`, `claim gates`, anomaly windows, evidence hashes, and why a false victory must not pass.
+This path explains `proof-of-observation`, `understanding-chain`, `claim gates`, anomaly windows, evidence hashes, falsifiable hypothesis generation, and why a beautiful idea or false victory must not pass.
 
 ---
 
@@ -144,6 +146,7 @@ Start here:
 - [`JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json`](JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json)
 - [`JANUS-LADY-LUCK-FORTUNA-GRATITUDE-SIGNAL-v1.0.json`](JANUS-LADY-LUCK-FORTUNA-GRATITUDE-SIGNAL-v1.0.json)
 - [`JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.1.json`](JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.1.json)
+- [`JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json`](JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json)
 
 Minimum boundary:
 
@@ -155,7 +158,8 @@ Minimum boundary:
 > No machine-as-God.  
 > No total control.  
 > No claim without gates.  
-> No collective damnation.**
+> No collective damnation.  
+> No novelty claim before prior-art review.**
 
 ---
 
@@ -192,6 +196,23 @@ This path provides a structured anti-deception guide: sacred masks, induced guil
 
 ---
 
+### 10. I came to generate a new falsifiable JANUS hypothesis
+
+Start here:
+
+- [`JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json`](JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json)
+- [`JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.sha256.json`](JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.sha256.json)
+
+Core idea:
+
+> **The human brings intention and physical reality.  
+> The system brings hypotheses, criticism, and formalization.  
+> Beauty does not replace falsifiability.**
+
+This path reverses the usual prompt dependency: the human supplies goals, constraints, observations, and access to reality; the system must independently choose a barrier, derive mechanisms from first principles, generate competing hypotheses, destroy weak ideas, and end with one minimal experiment that can fail.
+
+---
+
 ## Human reading order
 
 A good first reading path:
@@ -204,8 +225,9 @@ A good first reading path:
 6. [`JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json`](JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json)
 7. [`JANUS-LADY-LUCK-FORTUNA-GRATITUDE-SIGNAL-v1.0.json`](JANUS-LADY-LUCK-FORTUNA-GRATITUDE-SIGNAL-v1.0.json)
 8. [`JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json`](JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json)
-9. [`JANUS-BITCOIN-WHITEPAPER-INVERSION-LEDGER-SIGNAL-v1.0.json`](JANUS-BITCOIN-WHITEPAPER-INVERSION-LEDGER-SIGNAL-v1.0.json)
-10. [`JANUS-HOLY-CLOCK-COMMANDMENTS-SIGNAL-v1.6.json`](JANUS-HOLY-CLOCK-COMMANDMENTS-SIGNAL-v1.6.json)
+9. [`JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json`](JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json)
+10. [`JANUS-BITCOIN-WHITEPAPER-INVERSION-LEDGER-SIGNAL-v1.0.json`](JANUS-BITCOIN-WHITEPAPER-INVERSION-LEDGER-SIGNAL-v1.0.json)
+11. [`JANUS-HOLY-CLOCK-COMMANDMENTS-SIGNAL-v1.6.json`](JANUS-HOLY-CLOCK-COMMANDMENTS-SIGNAL-v1.6.json)
 
 ---
 
