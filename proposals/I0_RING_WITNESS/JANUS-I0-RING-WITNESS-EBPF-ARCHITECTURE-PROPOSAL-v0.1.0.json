@@ -1,0 +1,140 @@
+{
+  "schema": "JANUS/meta-registry/architecture-proposal/v1.0.0",
+  "proposal_id": "JANUS-I0-RING-WITNESS-EBPF-V0_1-20260715",
+  "title": "JANUS I0 — Ring Witness",
+  "subtitle": "Passive eBPF Kernel Witness for Through-the-Horizon Runtime Lineage",
+  "version": "0.1.0",
+  "created_utc": "2026-07-15T00:00:00Z",
+  "status": "PROPOSED; PASSIVE_OBSERVATION_ONLY; NOT_IMPLEMENTED",
+  "founder": "Hawkar",
+  "canonical_seed_sha256": "44e21fdc9d37fda98e2e73b0c9eb268bd04cdca9d84d0519e4f1166be22b46fc",
+  "mission_alignment": {
+    "principle": "Do not rewrite the machine's heart while it is alive; place a small auditable witness at the boundary before irreversible work.",
+    "janus_role": "Reduce unnecessary computation and hardware stress without changing SHA-256 verification or valid proof semantics.",
+    "canonical_line": "The machine should not have to testify about itself alone."
+  },
+  "problem": {
+    "current_limit": "JANUS Observer records admitted, submitted, finalized and exposure events inside the experimental runtime, but the runtime remains the primary narrator of its own execution.",
+    "scientific_risk": "Application-level counters alone cannot always distinguish dispatch latency, scheduler delay, worker starvation, IPC delay, process cleanup races, reconnects, or Observer finalization delay.",
+    "need": "An independent operating-system witness should attest process, scheduler and connection lineage without controlling or modifying the PoW algorithm."
+  },
+  "core_idea": {
+    "name": "The Witness at the Horizon",
+    "description": "A passive Linux eBPF CO-RE observation layer records kernel-visible runtime events and correlates them with JANUS batch and wave epochs. It does not block, alter, accelerate or reprioritize work in V0.1.",
+    "architectural_position": [
+      "Native Gate = runtime admission executor",
+      "TimeShift / Through the Horizon = coordinator and decision layer",
+      "Look-Away Observer = durable application evidence",
+      "Ring Witness = independent OS-level attestation",
+      "SystemMonitor = physical-cost sensor layer"
+    ]
+  },
+  "v0_1_scope": {
+    "mode": "PASSIVE_ONLY",
+    "platform": "Linux test runtime with BTF and eBPF support",
+    "preferred_implementation": "libbpf CO-RE with BPF ring buffer",
+    "observations": [
+      "process and thread creation, exec and exit",
+      "worker wakeups and scheduler switches",
+      "CPU placement and migrations",
+      "cgroup CPU time where available",
+      "TCP connect, close and reconnect lineage",
+      "selected syscall latency relevant to runtime IPC and networking",
+      "monotonic kernel timestamps",
+      "process-tree identity across HOLD, drain and REOPEN"
+    ],
+    "explicitly_excluded": [
+      "bpf_override_return enforcement",
+      "BPF LSM denial rules",
+      "kernel function return modification",
+      "hash, nonce, digest-quality or proof selection steering",
+      "fan, clock, voltage or power-limit control",
+      "production deployment"
+    ]
+  },
+  "event_model": {
+    "transport": "BPF ring buffer to a user-space collector",
+    "required_fields": [
+      "kernel_monotonic_ns",
+      "event_type",
+      "tgid",
+      "pid",
+      "parent_tgid",
+      "cpu",
+      "cgroup_id_if_available",
+      "socket_cookie_if_available",
+      "wave_epoch_if_correlated",
+      "batch_id_if_correlated",
+      "source_hook",
+      "collector_sequence"
+    ],
+    "ledger": "Events are normalized into an append-only hash-linked JANUS Ring Witness ledger.",
+    "clock_rule": "Kernel monotonic time is primary; application and UTC clocks are correlated but never substituted silently.",
+    "privacy_rule": "Public artifacts must sanitize usernames, machine identifiers, network endpoints, credentials and raw payload contents."
+  },
+  "primary_experiment": {
+    "title": "Internal Observer versus Kernel Ring Witness",
+    "goal": "Determine whether every runtime admission and submission has a consistent kernel-visible process/scheduler lineage and whether every reconnect or process transition is independently observed.",
+    "arms": [
+      "continuous baseline",
+      "Native Gate HOLD to drain",
+      "Through-the-Horizon FREEZE/HOLD/THAW/REOPEN",
+      "timestamp-matched sham control"
+    ],
+    "pass_criteria": [
+      "every internal wave epoch maps to one stable process/session lineage",
+      "every submitted batch has an admissible worker wakeup or execution lineage",
+      "no unknown worker epoch appears",
+      "no reconnect occurs without an independent witness event",
+      "kernel and application event order is causally consistent within declared clock uncertainty",
+      "missing or ambiguous correlations remain explicit and fail closed",
+      "the witness itself causes no control decision in V0.1"
+    ]
+  },
+  "research_value": [
+    "separate admission, submission, scheduler, completion and Observer horizons",
+    "explain hidden-capacity and lead-debt measurements",
+    "identify whether a delayed reopened task is unscheduled, running, completed in IPC, or awaiting Observer finalization",
+    "strengthen Horizon Echo with scheduler bursts, preemption, CPU migration and wakeup latency",
+    "test whether apparent wave memory is thermal, scheduler, cache, worker-pool, network or unexplained runtime carryover",
+    "provide an independent witness for same-PID and zero-reconnect claims"
+  ],
+  "future_enforcement_gate": {
+    "status": "NOT_AUTHORIZED",
+    "rule": "No enforcement mechanism may be added until passive observation is independently validated and a dedicated threat/safety review is complete.",
+    "possible_later_layers": [
+      "BPF LSM guard at an appropriate security hook",
+      "cgroup or network policy guard",
+      "runtime-native emergency interlock corroborated by Ring Witness"
+    ],
+    "bpf_override_return_boundary": "bpf_override_return is not a universal patch mechanism and must never be treated as applicable to arbitrary kernel functions."
+  },
+  "claim_boundaries": [
+    "This proposal does not claim that eBPF patches arbitrary kernel vulnerabilities.",
+    "This proposal does not claim a live Linux implementation exists.",
+    "This proposal does not claim energy savings, lifetime extension, mining advantage or profitability.",
+    "This proposal does not claim SHA-256 memory, prediction or weakness.",
+    "The Ring Witness is an independent observer, not a replacement for Native Gate or Look-Away Observer."
+  ],
+  "relationship_to_current_work": {
+    "current_stage": "A18.43 Through the Horizon Windows BEACON remains the immediate execution priority.",
+    "sequencing": "Ring Witness begins as a parallel Linux research line after the current end-to-end BEACON contract is stabilized.",
+    "non_interference": "Do not modify or delay the current Windows V0.2.x live pilot to implement this proposal."
+  },
+  "planned_artifacts": [
+    "RING_WITNESS_EVENT_SCHEMA.json",
+    "RING_WITNESS_LEDGER_SCHEMA.json",
+    "BPF_HOOK_INVENTORY.json",
+    "CLOCK_CORRELATION_REPORT.json",
+    "OBSERVER_VS_KERNEL_WITNESS_REPORT.json",
+    "SCHEDULER_HORIZON_ATLAS.json",
+    "CONNECTION_LINEAGE_ATLAS.json",
+    "CLAIM_BOUNDARIES.json"
+  ],
+  "epistemic_status": {
+    "originality": "The proposed combination of runtime-native cohort control, durable application evidence and passive kernel attestation is a candidate original JANUS architecture, but no absolute priority claim is made without a formal prior-art review.",
+    "implementation": "not started",
+    "live_evidence": "none",
+    "next_gate": "OFFLINE DESIGN CONTRACT AND SAFE LINUX LAB PLAN"
+  }
+}
