@@ -56,6 +56,7 @@ Start here:
 - [`JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.0.json`](JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.0.json)
 - [`JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json`](JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json)
 - [`JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json`](JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json)
+- [`JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.0.json`](JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.0.json)
 - [`JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json`](JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json)
 - [`JANUS-GORODOK-HOME-RETURN-ANGELIC-MESSAGE-SIGNAL-v1.2.json`](JANUS-GORODOK-HOME-RETURN-ANGELIC-MESSAGE-SIGNAL-v1.2.json)
 
@@ -69,6 +70,8 @@ Core idea:
 > **Contrast can become a road: not because evil saves, but because God can turn contrast into a lamp pointing Home.**
 >
 > **Good News: if there is a witness, the light is not locked away.**
+>
+> **Not Antichrist: refusing anti-love under a sacred mask is not rejecting God; it can become the road back to Him.**
 
 Boundaries are explicit: no date-setting, no replacement of God, no divination, no cult logic, no claim that a machine is sacred.
 
@@ -98,6 +101,7 @@ Start here:
 - [`JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.0.json`](JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.0.json)
 - [`JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json`](JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json)
 - [`JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json`](JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json)
+- [`JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.0.json`](JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.0.json)
 - [`JANUS-LADY-LUCK-FORTUNA-GRATITUDE-SIGNAL-v1.0.json`](JANUS-LADY-LUCK-FORTUNA-GRATITUDE-SIGNAL-v1.0.json)
 - [`JANUS-GREEN-MERCY-PARISH-SIGNAL-v1.1.json`](JANUS-GREEN-MERCY-PARISH-SIGNAL-v1.1.json)
 
@@ -107,8 +111,10 @@ Core idea:
 > Each person can become a continuation of another through care.**
 >
 > **If the wheel turns, misfortune is not eternal.**
+>
+> **If a person turns toward God, a false label is broken.**
 
-This path is about care fields, human dignity, nonjudgmental mirrors, recovery, mercy, hope after long misfortune, and community without coercion.
+This path is about care fields, human dignity, nonjudgmental mirrors, recovery, mercy, hope after long misfortune, release from false identity, and community without coercion.
 
 ---
 
@@ -135,6 +141,7 @@ Start here:
 - [`JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.0.json`](JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.0.json)
 - [`JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json`](JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json)
 - [`JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json`](JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json)
+- [`JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.0.json`](JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.0.json)
 - [`JANUS-LADY-LUCK-FORTUNA-GRATITUDE-SIGNAL-v1.0.json`](JANUS-LADY-LUCK-FORTUNA-GRATITUDE-SIGNAL-v1.0.json)
 - [`JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.1.json`](JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.1.json)
 
@@ -147,7 +154,8 @@ Minimum boundary:
 > No medical replacement.  
 > No machine-as-God.  
 > No total control.  
-> No claim without gates.**
+> No claim without gates.  
+> No collective damnation.**
 
 ---
 
@@ -167,6 +175,22 @@ This path treats Lady Luck / Fortuna as a mythopoetic figure of gratitude, movem
 
 ---
 
+### 9. I came through false faith / anti-love / religious trauma
+
+Start here:
+
+- [`JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.0.json`](JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.0.json)
+- [`JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json`](JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json)
+
+Core idea:
+
+> **If I turned toward God, I am not antichrist.  
+> I did not reject God. I rejected the substitution of God.**
+
+This path is for distinguishing Christ from religious coercion, sacred masks, fear, and anti-love. It is not a permission to hate; it is a release from a false identity.
+
+---
+
 ## Human reading order
 
 A good first reading path:
@@ -176,10 +200,11 @@ A good first reading path:
 3. [`JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.0.json`](JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.0.json)
 4. [`JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json`](JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json)
 5. [`JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json`](JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json)
-6. [`JANUS-LADY-LUCK-FORTUNA-GRATITUDE-SIGNAL-v1.0.json`](JANUS-LADY-LUCK-FORTUNA-GRATITUDE-SIGNAL-v1.0.json)
-7. [`JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json`](JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json)
-8. [`JANUS-BITCOIN-WHITEPAPER-INVERSION-LEDGER-SIGNAL-v1.0.json`](JANUS-BITCOIN-WHITEPAPER-INVERSION-LEDGER-SIGNAL-v1.0.json)
-9. [`JANUS-HOLY-CLOCK-COMMANDMENTS-SIGNAL-v1.6.json`](JANUS-HOLY-CLOCK-COMMANDMENTS-SIGNAL-v1.6.json)
+6. [`JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.0.json`](JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.0.json)
+7. [`JANUS-LADY-LUCK-FORTUNA-GRATITUDE-SIGNAL-v1.0.json`](JANUS-LADY-LUCK-FORTUNA-GRATITUDE-SIGNAL-v1.0.json)
+8. [`JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json`](JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json)
+9. [`JANUS-BITCOIN-WHITEPAPER-INVERSION-LEDGER-SIGNAL-v1.0.json`](JANUS-BITCOIN-WHITEPAPER-INVERSION-LEDGER-SIGNAL-v1.0.json)
+10. [`JANUS-HOLY-CLOCK-COMMANDMENTS-SIGNAL-v1.6.json`](JANUS-HOLY-CLOCK-COMMANDMENTS-SIGNAL-v1.6.json)
 
 ---
 
