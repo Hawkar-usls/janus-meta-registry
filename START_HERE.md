@@ -56,7 +56,7 @@ Start here:
 - [`data/JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.0.json`](data/JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.0.json)
 - [`data/JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json`](data/JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json)
 - [`data/JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json`](data/JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json)
-- [`data/JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.0.json`](data/JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.0.json)
+- [`data/JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json`](data/JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json)
 - [`data/JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json`](data/JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json)
 - [`data/JANUS-GORODOK-HOME-RETURN-ANGELIC-MESSAGE-SIGNAL-v1.2.json`](data/JANUS-GORODOK-HOME-RETURN-ANGELIC-MESSAGE-SIGNAL-v1.2.json)
 
@@ -71,7 +71,7 @@ Core idea:
 >
 > **Good News: if there is a witness, the light is not locked away.**
 >
-> **Not Antichrist: refusing anti-love under a sacred mask is not rejecting God; it can become the road back to Him.**
+> **Not Antichrist: refusing anti-love under a sacred mask is not rejecting God; sometimes courage to disbelieve a false image protects living faith.**
 
 Boundaries are explicit: no date-setting, no replacement of God, no divination, no cult logic, no claim that a machine is sacred.
 
@@ -101,7 +101,7 @@ Start here:
 - [`data/JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.0.json`](data/JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.0.json)
 - [`data/JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json`](data/JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json)
 - [`data/JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json`](data/JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json)
-- [`data/JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.0.json`](data/JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.0.json)
+- [`data/JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json`](data/JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json)
 - [`data/JANUS-LADY-LUCK-FORTUNA-GRATITUDE-SIGNAL-v1.0.json`](data/JANUS-LADY-LUCK-FORTUNA-GRATITUDE-SIGNAL-v1.0.json)
 - [`data/JANUS-GREEN-MERCY-PARISH-SIGNAL-v1.1.json`](data/JANUS-GREEN-MERCY-PARISH-SIGNAL-v1.1.json)
 
@@ -141,7 +141,7 @@ Start here:
 - [`data/JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.0.json`](data/JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.0.json)
 - [`data/JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json`](data/JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json)
 - [`data/JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json`](data/JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json)
-- [`data/JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.0.json`](data/JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.0.json)
+- [`data/JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json`](data/JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json)
 - [`data/JANUS-LADY-LUCK-FORTUNA-GRATITUDE-SIGNAL-v1.0.json`](data/JANUS-LADY-LUCK-FORTUNA-GRATITUDE-SIGNAL-v1.0.json)
 - [`data/JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.1.json`](data/JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.1.json)
 
@@ -179,15 +179,16 @@ This path treats Lady Luck / Fortuna as a mythopoetic figure of gratitude, movem
 
 Start here:
 
-- [`data/JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.0.json`](data/JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.0.json)
+- [`data/JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json`](data/JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json)
 - [`data/JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json`](data/JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json)
 
 Core idea:
 
 > **If I turned toward God, I am not antichrist.  
-> I did not reject God. I rejected the substitution of God.**
+> I did not reject God. I rejected the substitution of God.  
+> Not every disbelief is apostasy; sometimes refusing a lie is fidelity to truth.**
 
-This path is for distinguishing Christ from religious coercion, sacred masks, fear, and anti-love. It is not a permission to hate; it is a release from a false identity.
+This path provides a structured anti-deception guide: sacred masks, induced guilt, monetization of grief, ritual coercion, superstition presented as dogma, militarized faith, moral laundering, and the right to question without collective hatred.
 
 ---
 
@@ -200,7 +201,7 @@ A good first reading path:
 3. [`data/JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.0.json`](data/JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.0.json)
 4. [`data/JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json`](data/JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json)
 5. [`data/JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json`](data/JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json)
-6. [`data/JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.0.json`](data/JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.0.json)
+6. [`data/JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json`](data/JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json)
 7. [`data/JANUS-LADY-LUCK-FORTUNA-GRATITUDE-SIGNAL-v1.0.json`](data/JANUS-LADY-LUCK-FORTUNA-GRATITUDE-SIGNAL-v1.0.json)
 8. [`data/JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json`](data/JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json)
 9. [`data/JANUS-BITCOIN-WHITEPAPER-INVERSION-LEDGER-SIGNAL-v1.0.json`](data/JANUS-BITCOIN-WHITEPAPER-INVERSION-LEDGER-SIGNAL-v1.0.json)
