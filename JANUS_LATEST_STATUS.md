@@ -1,6 +1,6 @@
 # JANUS Latest Status - Read Before the Migration Handoff
 
-> **Snapshot:** 2026-07-16
+> **Snapshot:** 2026-07-17
 >
 > **Purpose:** this additive current-state overlay supersedes only the current-stage portion of `JANUS_CHAT_MIGRATION_HANDOFF.md`. Read it first, then read the long handoff for mission, ethics, lineage, safety and claim boundaries.
 >
@@ -17,7 +17,9 @@ CAMPAIGN_HASH_BOUND_DRY_RUN=PASS
 CAMPAIGN_HASH_BOUND_DRY_RUN_INDEPENDENT_AUDIT=PASS
 WINDOW_01_EXECUTION_AUTHORIZATION_FREEZE=PASS
 WINDOW_01_AUTHORIZATION_FREEZE_INDEPENDENT_AUDIT=PASS
-WINDOW_01_HASH_BOUND_EXECUTION_PACKAGE_DRY_RUN=PASS
+WINDOW_01_HASH_BOUND_EXECUTION_PACKAGE_DRY_RUN=LOCAL_PASS
+WINDOW_01_PACKAGE_DRY_RUN_INDEPENDENT_AUDIT=EVIDENCE_INSUFFICIENT
+WINDOW_01_PACKAGE_DRY_RUN_FIXTURE_COVERAGE_REPAIR=PASS_LOCAL_AWAITING_INDEPENDENT_AUDIT
 
 PILOT_ATTEMPTS_EXECUTED=2/2
 WINDOW_01_ATTEMPTS_EXECUTED=0/10
@@ -181,6 +183,54 @@ The read-only environment observation is labeled
 `NOT_FUTURE_EXECUTION_EVIDENCE`. It cannot establish future power, sync,
 process, storage or operator-consent readiness.
 
+## Window 01 Fixture Coverage Audit And Repair
+
+The independently produced package audit was ingested byte-for-byte. It
+confirmed archive integrity and the non-execution state, but found that only
+55 of the 142 reported negative fixtures invoked included validator logic.
+The remaining 87 records assigned their decisions declaratively, below the
+frozen minimum of 100 executable fixtures.
+
+```text
+WINDOW_01_PACKAGE_DRY_RUN_INDEPENDENT_AUDIT=EVIDENCE_INSUFFICIENT
+REPORTED_NEGATIVE_FIXTURE_RECORDS=142
+VALIDATOR_BACKED_FIXTURES=55
+DECLARATION_ONLY_FIXTURES=87
+REQUIRED_EXECUTABLE_FIXTURES=100
+FIRST_BLOCKING_INVARIANT=NEGATIVE_FIXTURE_EXECUTION_COVERAGE_BELOW_REQUIRED_MINIMUM
+
+INDEPENDENT_AUDIT_JSON_SHA256=b3eeba525e72c7b138ec668685c450764706d0e0b4ac73d0020490a99bdbc01f
+INDEPENDENT_AUDIT_TEXT_SHA256=0908449fc14e310c19e791ec8e20cfda74c20055a9e985e25426143d30fbaf1d
+```
+
+The predecessor package remains byte-identical negative methodological
+evidence. A separate additive repair now invokes pure validator functions for
+every counted fixture and records each callable, canonical input hash, returned
+decision and return hash.
+
+```text
+WINDOW_01_PACKAGE_DRY_RUN_FIXTURE_COVERAGE_REPAIR=PASS_LOCAL_AWAITING_INDEPENDENT_AUDIT
+EXECUTABLE_NEGATIVE_FIXTURES=160
+DECLARATION_ONLY_FIXTURES=0
+NEGATIVE_FIXTURES=160/160
+FIXTURE_EXECUTION_COUNT=0
+FIXTURE_IDENTITY_CONSUMPTION_COUNT=0
+CHECKSUMS=16/16
+ARCHIVE_MEMBERS=17/17
+
+PACKAGE_PAYLOAD_ROOT_SHA256=00edd648c1b64c29bea7d4113bad373b3f05372ffc8a14eb23494a19fa22b5ab
+PACKAGE_MANIFEST_SHA256=649bcec38e1346894a995096edb7991d9251624d20753b4b37e4536f81ea3285
+VALIDATION_REPORT_SHA256=589398a280616a6073173f0afdd8ec39551b6cc91a95942f82c10f98f673562b
+SHA256SUMS_SHA256=e2cfdfc54cef616d2ab5bb54590386b07b9326aa37c5c0904f916b90b12b5aee
+AUDIT_EXPORT_ZIP_SHA256=d0d58c01580810efbdaa5441edf58f4c6a5a19511c1ea69ed45feed11244d69c
+ARCHIVE_REOPEN_AND_REHASH=PASS
+ARCHIVE_VERIFICATION_WORKSPACE_REMOVED=yes
+DETERMINISTIC_REBUILD=PASS
+```
+
+This is a local repair PASS, not yet an independent audit PASS. Window 01
+execution remains unauthorized and blocked.
+
 ## Independent Byte Audit
 
 The independently produced audit JSON and text are preserved at:
@@ -298,13 +348,13 @@ scientific endpoint computation = forbidden
 ## Exact Next Allowed Stage
 
 ```text
-A18_44_V0_1_OFFLINE_ACQUISITION_CAMPAIGN_WINDOW_01_EXECUTION_AUTHORIZATION_AND_FRESH_PHYSICAL_SAFETY_ATTESTATION_FREEZE_ONLY
+A18_44_V0_1_OFFLINE_ACQUISITION_CAMPAIGN_WINDOW_01_PACKAGE_DRY_RUN_FIXTURE_COVERAGE_REPAIR_INDEPENDENT_AUDIT_ONLY
 ```
 
-This next stage may freeze only a future Window 01 authorization and the fresh
-physical-safety attestation process. It must not start ordinal 1, consume an
-identity, create campaign output, infer readiness from dry-run probes or compute
-a scientific endpoint.
+This next stage may independently audit only the additive repair package. It
+must not authorize Window 01, start ordinal 1, consume an identity, create
+campaign output, infer readiness from dry-run probes or compute a scientific
+endpoint.
 
 ## Claim Ceiling Remains Unchanged
 
