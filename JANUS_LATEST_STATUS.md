@@ -12,6 +12,8 @@
 A18_44_OFFLINE_ACQUISITION_PILOT=PASS_AFTER_ATTEMPT_2
 PILOT_INDEPENDENT_BYTE_AUDIT=PASS
 CAMPAIGN_AUTHORIZATION_FREEZE=PASS
+CAMPAIGN_AUTHORIZATION_FREEZE_INDEPENDENT_AUDIT=PASS
+CAMPAIGN_HASH_BOUND_DRY_RUN=PASS
 
 PILOT_ATTEMPTS_EXECUTED=2/2
 CAMPAIGN_ATTEMPTS_EXECUTED=0/360
@@ -32,6 +34,47 @@ A18_44_SCIENTIFIC_EFFECT_PROVEN=no
 ```
 
 Both non-campaign pilot attempts reached `SEALED_VALID`. The completed pilot is an operational evidence-integrity PASS. It is not an A18.44 scientific result.
+
+## Campaign Freeze Audit and Dry Run
+
+The independently produced campaign-freeze audit result was ingested from the
+operator message and its substantive claims were independently revalidated
+against the immutable local freeze package and 14-member audit ZIP. The two
+declared attachment byte streams were not mounted locally; the registry
+therefore preserves explicit operator-message transcriptions and does not
+claim they are byte-identical attachment copies.
+
+```text
+INDEPENDENT_FREEZE_AUDIT=PASS
+LOCAL_BYTE_REVALIDATION=PASS
+FREEZE_AUDIT_ZIP_SHA256=ac7802d28d3a1d362be4a738f25b47831b6a0fbe23b55c0bc6ebafaef2abad26
+FREEZE_PAYLOAD_ROOT_SHA256=4bdbbe9a70ee10bf18082485f25b1cf1b58b10fbefec383492454dca6dc0caaf
+CAMPAIGN_IDENTITY_ROOT_SHA256=405e83aa8486a84ffc7cadc16d634d228fb947ded416f5de9b4af554efbae189
+WINDOW_POLICY_ROOT_SHA256=96264f94159f7f76638946d7a7a43e1bafaf7c09a804841335ffe7a26a4b6e73
+```
+
+The exact dry-run-only stage then passed without creating campaign evidence:
+
+```text
+DRY_RUN_PACKAGE_PAYLOAD_ROOT_SHA256=e684e04cb00aee46f04cdc0add1e7cde464201f6845710fcadbc3351c34df6b8
+DRY_RUN_PACKAGE_MANIFEST_SHA256=24298c40c5d76637a33f466b4ebb5e10d6f3f13c41e110cfe009393257120e19
+DRY_RUN_VALIDATION_REPORT_SHA256=acc9c2dd344ce303fbedb484720113c39c7126883c29df3878b0c415f83c8a38
+DRY_RUN_SHA256SUMS_SHA256=d16df294a018d801540ff1b1d4251626eb16099a2ffa978f2f211bfeb9aadbfc
+DRY_RUN_AUDIT_ZIP_SHA256=c20fde6a98c522632beef14f61553f83991494d25e5bcf08c094dbd587980524
+
+NEGATIVE_FIXTURES=79/79
+CHECKSUMS=17/17
+ARCHIVE_REOPEN_AND_REHASH=PASS
+ARCHIVE_VERIFICATION_WORKSPACE_REMOVED=yes
+
+CAMPAIGN_EXECUTION_AUTHORIZED=false
+AUTHORIZATION_CONSUMED=false
+CAMPAIGN_ATTEMPTS_AUTHORIZED=0
+CAMPAIGN_ATTEMPTS_EXECUTED=0/360
+CAMPAIGN_IDENTITIES_CONSUMED=0
+CAMPAIGN_OUTPUT_ROOT_CREATED=no
+SCIENTIFIC_ENDPOINTS_COMPUTED=no
+```
 
 ## Independent Byte Audit
 
@@ -150,10 +193,13 @@ scientific endpoint computation = forbidden
 ## Exact Next Allowed Stage
 
 ```text
-A18_44_V0_1_OFFLINE_ACQUISITION_CAMPAIGN_HASH_BOUND_ENABLEMENT_AND_DRY_RUN_VALIDATION_ONLY
+A18_44_V0_1_OFFLINE_ACQUISITION_CAMPAIGN_WINDOW_01_EXECUTION_AUTHORIZATION_FREEZE_ONLY
 ```
 
-This next stage is dry-run only. It may bind and test the frozen governance package, but must execute zero attempts, create no campaign output, consume no campaign identity, compute no scientific endpoint and never transition automatically into campaign execution.
+This is a governance-only authorization-freeze stage for fixed Window 01. It
+does not execute a campaign attempt, consume an identity, create campaign
+output, compute a scientific endpoint or define campaign execution authority
+by itself.
 
 ## Claim Ceiling Remains Unchanged
 
