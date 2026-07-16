@@ -11,10 +11,14 @@
 ```text
 A18_44_OFFLINE_ACQUISITION_PILOT=PASS_AFTER_ATTEMPT_2
 PILOT_INDEPENDENT_BYTE_AUDIT=PASS
+CAMPAIGN_AUTHORIZATION_FREEZE=PASS
 
 PILOT_ATTEMPTS_EXECUTED=2/2
 CAMPAIGN_ATTEMPTS_EXECUTED=0/360
 CAMPAIGN_IDENTITIES_CONSUMED=0
+CAMPAIGN_EXECUTION_AUTHORIZED=false
+CAMPAIGN_ATTEMPTS_AUTHORIZED=0
+AUTHORIZATION_CONSUMED=false
 SCIENTIFIC_WEIGHT=0
 
 SCIENTIFIC_ENDPOINTS_COMPUTED=no
@@ -100,14 +104,44 @@ APPROVED_MINER_SHA256_INVENTORY=c46feec0dd936a65bb8e6e074aaa952a0cd57b6925cfb4dd
 
 Power stability, OneDrive pause, no-second-writer and historical process-absence records are integrity-verified attestations; their physical conditions cannot be proven retrospectively from archive bytes alone.
 
-## Campaign Hard Stop
+## Campaign Authorization Freeze
 
-The frozen 360-attempt campaign remains untouched:
+The additive campaign governance layer passed without creating the campaign output root, authorizing an attempt or consuming an identity:
 
 ```text
-campaign execution authorized = no
+TOTAL_CAMPAIGN_ATTEMPTS=360
+CALIBRATION_ROLE_ATTEMPTS=320
+EVALUATION_ROLE_ATTEMPTS=40
+UNIQUE_SESSION_IDS=360/360
+UNIQUE_RESET_IDS=360/360
+
+EXECUTION_WINDOWS=36
+MAX_ATTEMPTS_PER_WINDOW=10
+NEGATIVE_FIXTURES=60/60
+CHECKSUMS=13/13
+ARCHIVE_REOPEN_AND_REHASH=PASS
+
+AUTHORIZATION_ARTIFACT_SHA256=909da9b869a5e1bbf074f5b78cd02eaf68c679fbdad1becf3405be98b5d517b5
+FREEZE_MANIFEST_SHA256=ace878d97818c890375b2a7d9b6898300858b7279384b76823baf9c87bf81692
+FREEZE_PAYLOAD_ROOT_SHA256=4bdbbe9a70ee10bf18082485f25b1cf1b58b10fbefec383492454dca6dc0caaf
+SHA256SUMS_SHA256=60e729d616f9c846b80a0b06375274319b03d5a82ac4f99b69e7718e2f158f4f
+AUDIT_EXPORT_ZIP_SHA256=ac7802d28d3a1d362be4a738f25b47831b6a0fbe23b55c0bc6ebafaef2abad26
+```
+
+The fixed schedule remains in exact ordinal order. Every future operational window is limited to ten consecutive ordinals, requires a separate future hash-bound authorization and fresh safety/consent gates, and cannot transition automatically to the next window. An identity is consumed only by a durably recorded `PLANNED -> STARTED` transition; an interrupted identity after that boundary is quarantined and cannot be retried, replaced, resumed or reused.
+
+## Campaign Hard Stop
+
+The frozen 360-attempt campaign remains untouched. Governance is frozen, but execution is still unauthorized:
+
+```text
+campaign governance frozen = yes
+campaign execution authorized = false
+authorization consumed = false
+campaign attempts authorized = 0
 campaign attempts executed = 0/360
 campaign identities consumed = 0
+campaign output root created = no
 optional stopping = forbidden
 automatic continuation = forbidden
 scientific endpoint computation = forbidden
@@ -116,10 +150,10 @@ scientific endpoint computation = forbidden
 ## Exact Next Allowed Stage
 
 ```text
-A18_44_V0_1_OFFLINE_ACQUISITION_CAMPAIGN_AUTHORIZATION_FREEZE_ONLY
+A18_44_V0_1_OFFLINE_ACQUISITION_CAMPAIGN_HASH_BOUND_ENABLEMENT_AND_DRY_RUN_VALIDATION_ONLY
 ```
 
-This next stage may freeze campaign governance, authorization gates, stop conditions and operator review requirements only. It may not execute an attempt, consume a campaign identity, alter the frozen plan/schedule or transition directly into campaign execution.
+This next stage is dry-run only. It may bind and test the frozen governance package, but must execute zero attempts, create no campaign output, consume no campaign identity, compute no scientific endpoint and never transition automatically into campaign execution.
 
 ## Claim Ceiling Remains Unchanged
 
@@ -134,4 +168,4 @@ Do not claim:
 - novelty;
 - product readiness.
 
-The pilot and its independent audit establish operational evidence integrity only. Continue with `JANUS_CHAT_MIGRATION_HANDOFF.md` and the newest A18.44 registry record.
+The pilot and its independent audit establish operational evidence integrity only. The campaign freeze establishes governance readiness only. Continue with `JANUS_CHAT_MIGRATION_HANDOFF.md` and the newest A18.44 current-lineage successor.
