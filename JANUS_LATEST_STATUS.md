@@ -16,6 +16,8 @@ CAMPAIGN_AUTHORIZATION_FREEZE_INDEPENDENT_AUDIT=PASS
 CAMPAIGN_HASH_BOUND_DRY_RUN=PASS
 CAMPAIGN_HASH_BOUND_DRY_RUN_INDEPENDENT_AUDIT=PASS
 WINDOW_01_EXECUTION_AUTHORIZATION_FREEZE=PASS
+WINDOW_01_AUTHORIZATION_FREEZE_INDEPENDENT_AUDIT=PASS
+WINDOW_01_HASH_BOUND_EXECUTION_PACKAGE_DRY_RUN=PASS
 
 PILOT_ATTEMPTS_EXECUTED=2/2
 WINDOW_01_ATTEMPTS_EXECUTED=0/10
@@ -128,6 +130,56 @@ consent before each attempt. It allows no automatic first start, next-attempt
 transition, retry, resume, replacement, identity reuse, outcome-based
 continuation, optional stopping or Window 02 transition. No attempt execution
 phrase exists in this layer.
+
+## Window 01 Independent Audit and Package Dry Run
+
+The independent Window 01 authorization-freeze audit attachments were mounted
+locally and ingested byte-for-byte. Their declared ZIP, payload-root, manifest,
+checksum, roster and policy values were reproduced against the immutable local
+freeze before the package dry run was built.
+
+```text
+INDEPENDENT_WINDOW_01_FREEZE_AUDIT=PASS
+ATTACHMENT_BYTES_LOCALLY_MOUNTED=yes
+LOCAL_WINDOW_01_FREEZE_BYTE_REVALIDATION=PASS
+INDEPENDENT_AUDIT_JSON_SHA256=9548a1a49c071180e4b79a262e65554688f1c483d65fe95b351b6cc8919d64df
+INDEPENDENT_AUDIT_TEXT_SHA256=7516310bbd9b4aa1bd11bfae6d00f244bc5aa9e84f45e247c2bae73610f92ab5
+WINDOW_01_FREEZE_AUDIT_ZIP_SHA256=8e3c2cf93f3d00de70a27635381507239ea0012827876466b63a820533620feb
+```
+
+The derived package contains pure validators, contract definitions and
+synthetic negative fixtures only. It has no transition writer, no attempt-start
+authority and no campaign output path.
+
+```text
+WINDOW_01_PACKAGE_DRY_RUN=PASS
+PACKAGE_PAYLOAD_ROOT_SHA256=9d6aed4c344a1b18b67557ba3263db255d96c6e901d8260d3c9e67ec10fb7ba3
+PACKAGE_MANIFEST_SHA256=29ebb676e6a3e9499bd7cb9296dcfdbac50e8520c2a9eb134fff30dde263316d
+DRY_RUN_VALIDATION_REPORT_SHA256=ea145703e9b52ea6e1f28c6a7677e43f4f8af92ba30d391af31a9fa690458e3e
+SHA256SUMS_SHA256=ba3cc3b173f932edb3239dc93a38bbed7a4cd80df63f68d47cb97e9aa0574890
+AUDIT_EXPORT_ZIP_SHA256=373a42f1c38d674455c5af82fd1a5e84ce5c9ef35c0f87d0ffecf6fa41162963
+
+MANIFEST_FILES=25/25
+CHECKSUMS=26/26
+NEGATIVE_FIXTURES=142/142
+SAFETY_GATES=22/22
+ARCHIVE_REOPEN_AND_REHASH=PASS
+ARCHIVE_VERIFICATION_WORKSPACE_REMOVED=yes
+
+DRY_RUN_ONLY=true
+WINDOW_01_EXECUTION_ALLOWED=false
+WINDOW_01_EXECUTION_AUTHORIZED=false
+WINDOW_01_ATTEMPTS_AUTHORIZED=0
+WINDOW_01_ATTEMPTS_EXECUTED=0/10
+CAMPAIGN_ATTEMPTS_EXECUTED=0/360
+CAMPAIGN_IDENTITIES_CONSUMED=0
+CAMPAIGN_OUTPUT_ROOT_CREATED=no
+SCIENTIFIC_ENDPOINTS_COMPUTED=no
+```
+
+The read-only environment observation is labeled
+`NOT_FUTURE_EXECUTION_EVIDENCE`. It cannot establish future power, sync,
+process, storage or operator-consent readiness.
 
 ## Independent Byte Audit
 
@@ -246,12 +298,13 @@ scientific endpoint computation = forbidden
 ## Exact Next Allowed Stage
 
 ```text
-A18_44_V0_1_OFFLINE_ACQUISITION_CAMPAIGN_WINDOW_01_HASH_BOUND_EXECUTION_PACKAGE_AND_DRY_RUN_VALIDATION_ONLY
+A18_44_V0_1_OFFLINE_ACQUISITION_CAMPAIGN_WINDOW_01_EXECUTION_AUTHORIZATION_AND_FRESH_PHYSICAL_SAFETY_ATTESTATION_FREEZE_ONLY
 ```
 
-This next stage is dry-run only. It must bind and validate a Window 01 execution
-package while executing zero campaign attempts, consuming zero identities,
-creating no campaign output and computing no scientific endpoint.
+This next stage may freeze only a future Window 01 authorization and the fresh
+physical-safety attestation process. It must not start ordinal 1, consume an
+identity, create campaign output, infer readiness from dry-run probes or compute
+a scientific endpoint.
 
 ## Claim Ceiling Remains Unchanged
 
