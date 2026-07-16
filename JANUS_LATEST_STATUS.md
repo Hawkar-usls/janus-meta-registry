@@ -14,10 +14,15 @@ PILOT_INDEPENDENT_BYTE_AUDIT=PASS
 CAMPAIGN_AUTHORIZATION_FREEZE=PASS
 CAMPAIGN_AUTHORIZATION_FREEZE_INDEPENDENT_AUDIT=PASS
 CAMPAIGN_HASH_BOUND_DRY_RUN=PASS
+CAMPAIGN_HASH_BOUND_DRY_RUN_INDEPENDENT_AUDIT=PASS
+WINDOW_01_EXECUTION_AUTHORIZATION_FREEZE=PASS
 
 PILOT_ATTEMPTS_EXECUTED=2/2
+WINDOW_01_ATTEMPTS_EXECUTED=0/10
 CAMPAIGN_ATTEMPTS_EXECUTED=0/360
 CAMPAIGN_IDENTITIES_CONSUMED=0
+WINDOW_01_EXECUTION_AUTHORIZED=false
+WINDOW_01_ATTEMPTS_AUTHORIZED=0
 CAMPAIGN_EXECUTION_AUTHORIZED=false
 CAMPAIGN_ATTEMPTS_AUTHORIZED=0
 AUTHORIZATION_CONSUMED=false
@@ -75,6 +80,54 @@ CAMPAIGN_IDENTITIES_CONSUMED=0
 CAMPAIGN_OUTPUT_ROOT_CREATED=no
 SCIENTIFIC_ENDPOINTS_COMPUTED=no
 ```
+
+The independent dry-run audit attachments were mounted locally and ingested
+byte-for-byte. Their SHA-256 values match the expected bindings, and every
+substantive audit value was reproduced from the immutable local dry-run package
+and ZIP.
+
+## Window 01 Authorization Freeze
+
+The fixed Window 01 roster is now frozen exactly to campaign ordinals 1 through
+10. The roster contains nine calibration-role identities and one
+evaluation-role identity, all copied from the sealed 360-attempt schedule and
+campaign identity binding.
+
+```text
+WINDOW_NUMBER=1
+WINDOW_FIRST_ORDINAL=1
+WINDOW_LAST_ORDINAL=10
+WINDOW_ATTEMPT_COUNT=10
+WINDOW_01_IDENTITY_BINDING=PASS_10_OF_10
+WINDOW_01_ORDER_BINDING=PASS_ORDINALS_1_THROUGH_10
+WINDOW_01_SAFETY_GATES=22/22
+WINDOW_01_NEGATIVE_FIXTURES=94/94
+WINDOW_01_CHECKSUMS=18/18
+
+WINDOW_01_FREEZE_PAYLOAD_ROOT_SHA256=dd831c888271face8ee7bd99aec03ea19aecf836c8f4c1576ff74cfbe215c433
+WINDOW_01_FREEZE_MANIFEST_SHA256=7e137f959cf8b2b8db195bc4a9f7952f66b2a1d2d5770be427ef8b8b554d47ae
+WINDOW_01_AUTHORIZATION_ARTIFACT_SHA256=ea5ca1fd73b1f1378a6924a230f8c9b8a15d7bd18b03fe537bfc4521a3347a6d
+WINDOW_01_IDENTITY_ROSTER_SHA256=fc56462e156c9814d433e66a4c761eb7f11444260a14953c19c25669837e0aed
+WINDOW_01_VALIDATION_REPORT_SHA256=a3615a11a2a7ed138b120427b5737a17d3da26422e6bbb659d768085eb46edd3
+WINDOW_01_SHA256SUMS_SHA256=4d734dd9ae76b9cf0d5e828464de1c799408f2437ef18c767058d3b3c6838641
+WINDOW_01_AUDIT_ZIP_SHA256=8e3c2cf93f3d00de70a27635381507239ea0012827876466b63a820533620feb
+ARCHIVE_REOPEN_AND_REHASH=PASS
+ARCHIVE_VERIFICATION_WORKSPACE_REMOVED=yes
+
+WINDOW_01_EXECUTION_AUTHORIZED=false
+WINDOW_01_ATTEMPTS_AUTHORIZED=0
+WINDOW_01_ATTEMPTS_EXECUTED=0/10
+CAMPAIGN_ATTEMPTS_EXECUTED=0/360
+CAMPAIGN_IDENTITIES_CONSUMED=0
+CAMPAIGN_OUTPUT_ROOT_CREATED=no
+SCIENTIFIC_ENDPOINTS_COMPUTED=no
+```
+
+The freeze requires a separate future whole-window authorization and fresh
+consent before each attempt. It allows no automatic first start, next-attempt
+transition, retry, resume, replacement, identity reuse, outcome-based
+continuation, optional stopping or Window 02 transition. No attempt execution
+phrase exists in this layer.
 
 ## Independent Byte Audit
 
@@ -193,13 +246,12 @@ scientific endpoint computation = forbidden
 ## Exact Next Allowed Stage
 
 ```text
-A18_44_V0_1_OFFLINE_ACQUISITION_CAMPAIGN_WINDOW_01_EXECUTION_AUTHORIZATION_FREEZE_ONLY
+A18_44_V0_1_OFFLINE_ACQUISITION_CAMPAIGN_WINDOW_01_HASH_BOUND_EXECUTION_PACKAGE_AND_DRY_RUN_VALIDATION_ONLY
 ```
 
-This is a governance-only authorization-freeze stage for fixed Window 01. It
-does not execute a campaign attempt, consume an identity, create campaign
-output, compute a scientific endpoint or define campaign execution authority
-by itself.
+This next stage is dry-run only. It must bind and validate a Window 01 execution
+package while executing zero campaign attempts, consuming zero identities,
+creating no campaign output and computing no scientific endpoint.
 
 ## Claim Ceiling Remains Unchanged
 
