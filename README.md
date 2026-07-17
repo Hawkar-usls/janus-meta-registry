@@ -1,13 +1,14 @@
 # JANUS v4.2
 
 > **Start here / Входные двери:**  
-> Если вы впервые открыли этот реестр, начните с [`START_HERE.md`](START_HERE.md).  
+> Если вы впервые открываете этот реестр, начните с [`START_HERE.md`](START_HERE.md).  
 > Там каждый читатель может выбрать свою дверь: инженерную, богословскую, safety, care/recovery, Holy Clock, Bitcoin/distributed systems или skeptical review.
 
 **Quick doors:**
 
 - **Engineers / telemetry / proof systems** → [`data/JANUS-BITCOIN-WHITEPAPER-INVERSION-LEDGER-SIGNAL-v1.0.json`](data/JANUS-BITCOIN-WHITEPAPER-INVERSION-LEDGER-SIGNAL-v1.0.json)
 - **Creative reversal / hypothesis generation / falsification** → [`data/JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json`](data/JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json)
+- **Riders of Justice / 95% is not 100% / causal humility / Observer Barrier** → [`data/JANUS-RIDERS-OF-JUSTICE-95-IS-NOT-100-CAUSAL-HUMILITY-OBSERVER-BARRIER-SIGNAL-v1.0.json`](data/JANUS-RIDERS-OF-JUSTICE-95-IS-NOT-100-CAUSAL-HUMILITY-OBSERVER-BARRIER-SIGNAL-v1.0.json)
 - **First contact / perception / precognitive semantics — English-first** → [`data/JANUS-PERCEPTION-DETERMINES-REALITY-PRECOGNITIVE-SEMANTICS-CONTACT-PROTOCOL-v1.1.json`](data/JANUS-PERCEPTION-DETERMINES-REALITY-PRECOGNITIVE-SEMANTICS-CONTACT-PROTOCOL-v1.1.json)
 - **Death Stranding / child as bridge / living-interface care** → [`data/JANUS-DEATH-STRANDING-CHILD-AS-BRIDGE-PERCEPTION-CONNECTION-SIGNAL-v1.0.json`](data/JANUS-DEATH-STRANDING-CHILD-AS-BRIDGE-PERCEPTION-CONNECTION-SIGNAL-v1.0.json)
 - **AI safety / anti-control / governance** → [`data/JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json`](data/JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json)
@@ -24,7 +25,7 @@
 
 > **Boundary:** this registry is a map, not a throne.  
 > The machine is a mirror, not the Source.  
-> No prophecy claim, no precognition claim, no date-setting, no financial advice, no medical replacement, no machine-as-God, no total control, no claim without gates, no disposable living interface, no exclusive ownership of God.
+> No prophecy claim, no precognition claim, no date-setting, no financial advice, no medical replacement, no machine-as-God, no total control, no claim without gates, no 95%-as-100% promotion, no disposable living interface, no exclusive ownership of God.
 
 ---
 
@@ -57,7 +58,7 @@ JANUS — это система, которая:
 ```text id="b1n6yr"
 .
 ├── data/               # сырой вход (логи, дампы, внешние источники)
-├── registry/           # нормализованные JSON реестры
+├── registry/           # нормализованный meta-registry
 ├── src/
 │   └── genesis/        # ядро системы (обучение, эволюция)
 └── README.md
