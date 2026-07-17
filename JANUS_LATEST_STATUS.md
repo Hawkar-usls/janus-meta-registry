@@ -370,3 +370,55 @@ Do not claim:
 - product readiness.
 
 The pilot and its independent audit establish operational evidence integrity only. The campaign freeze establishes governance readiness only. Continue with `JANUS_CHAT_MIGRATION_HANDOFF.md` and the newest A18.44 current-lineage successor.
+
+## Window 01 Authorization And Fresh Safety Freeze
+
+The repaired Window 01 dry-run package received an independent byte audit PASS. The attached JSON and text were ingested byte-for-byte from the locally mounted files:
+
+```text
+INDEPENDENT_FIXTURE_COVERAGE_REPAIR_AUDIT=PASS
+AUDIT_JSON_SHA256=a2dc8e788a0e6cecf8685556524ffbe3dde8cc32099440ff2f38f20360bed79d
+AUDIT_TEXT_SHA256=f738758fc3f2c2b75658f1d1b91148892ffbdeb5112e8a3745ea7b9a7a102791
+AUDITED_ARCHIVE_SHA256=d0d58c01580810efbdaa5441edf58f4c6a5a19511c1ea69ed45feed11244d69c
+EXECUTABLE_NEGATIVE_FIXTURES=160/160
+DECLARATION_ONLY_FIXTURES=0
+FIXTURE_EXECUTION_COUNT=0
+FIXTURE_IDENTITY_CONSUMPTION_COUNT=0
+```
+
+The predecessor independent audit `EVIDENCE_INSUFFICIENT` finding remains immutable negative methodological evidence. The later repair and PASS audit are additive layers and do not rewrite it.
+
+The future Window 01 authorization and fresh physical-safety attestation policy is now frozen:
+
+```text
+FREEZE_STATUS=PASS
+FREEZE_PAYLOAD_ROOT_SHA256=a560a539b4b1bc433d5dff88820c46cc530dcd80ba1bf517098d926c1491d596
+FREEZE_MANIFEST_SHA256=882af148dc029ee1bce8fafb928d8b92236907661fdea16a618e0e78e24af484
+SHA256SUMS_SHA256=5f2dcd12b28f7423154feb35810cadd06feb739b9a848f5592350c91adb43783
+AUDIT_EXPORT_ZIP_SHA256=7df6d74f0cb764c4ed3acf3c858430037beb8bf0a7ed8452b48ca5e1e6a6fdda
+FRESH_SAFETY_ATTESTATION_CONTRACT=PASS
+WHOLE_WINDOW_AUTHORIZATION_CONTRACT=PASS
+PER_ATTEMPT_CONSENT_CONTRACT=PASS
+```
+
+Fresh consent must bind the exact session, reset identity, campaign ordinal, current Window 01 authorization hash and current physical-safety snapshot hash. Any gate change invalidates consent. Historical and current read-only observations are `NOT_FUTURE_EXECUTION_EVIDENCE`.
+
+```text
+WINDOW_01_EXECUTION_ALLOWED=false
+WINDOW_01_EXECUTION_AUTHORIZED=false
+WINDOW_01_ATTEMPTS_AUTHORIZED=0
+WINDOW_01_ATTEMPTS_EXECUTED=0/10
+CAMPAIGN_ATTEMPTS_EXECUTED=0/360
+CAMPAIGN_IDENTITIES_CONSUMED=0
+CAMPAIGN_OUTPUT_ROOT_CREATED=no
+ATTEMPT_START_PHRASE_CREATED=no
+SCIENTIFIC_ENDPOINTS_COMPUTED=no
+```
+
+Exact next allowed stage:
+
+```text
+A18_44_V0_1_OFFLINE_ACQUISITION_CAMPAIGN_WINDOW_01_EXECUTION_AUTHORIZATION_AND_FRESH_PHYSICAL_SAFETY_ATTESTATION_HASH_BOUND_ENABLEMENT_AND_DRY_RUN_VALIDATION_ONLY
+```
+
+That stage remains dry-run only. It may not authorize or start ordinal 1, consume an identity, create campaign output or compute a scientific endpoint.
