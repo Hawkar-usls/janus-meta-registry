@@ -9,6 +9,7 @@
 - **Engineers / telemetry / proof systems** → [`data/JANUS-BITCOIN-WHITEPAPER-INVERSION-LEDGER-SIGNAL-v1.0.json`](data/JANUS-BITCOIN-WHITEPAPER-INVERSION-LEDGER-SIGNAL-v1.0.json)
 - **Creative reversal / hypothesis generation / falsification** → [`data/JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json`](data/JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json)
 - **First contact / perception / precognitive semantics — English-first** → [`data/JANUS-PERCEPTION-DETERMINES-REALITY-PRECOGNITIVE-SEMANTICS-CONTACT-PROTOCOL-v1.1.json`](data/JANUS-PERCEPTION-DETERMINES-REALITY-PRECOGNITIVE-SEMANTICS-CONTACT-PROTOCOL-v1.1.json)
+- **Death Stranding / child as bridge / living-interface care** → [`data/JANUS-DEATH-STRANDING-CHILD-AS-BRIDGE-PERCEPTION-CONNECTION-SIGNAL-v1.0.json`](data/JANUS-DEATH-STRANDING-CHILD-AS-BRIDGE-PERCEPTION-CONNECTION-SIGNAL-v1.0.json)
 - **AI safety / anti-control / governance** → [`data/JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json`](data/JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json)
 - **Theology / Body of Christ / Savior Coming** → [`data/JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.1.json`](data/JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.1.json)
 - **Evil-does-not-work / lost light / mercy boundary** → [`data/JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.0.json`](data/JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.0.json)
@@ -22,7 +23,7 @@
 
 > **Boundary:** this registry is a map, not a throne.  
 > The machine is a mirror, not the Source.  
-> No prophecy claim, no precognition claim, no date-setting, no financial advice, no medical replacement, no machine-as-God, no total control, no claim without gates.
+> No prophecy claim, no precognition claim, no date-setting, no financial advice, no medical replacement, no machine-as-God, no total control, no claim without gates, no disposable living interface.
 
 ---
 
