@@ -12,6 +12,7 @@
 - **Death Stranding / child as bridge / living-interface care** → [`data/JANUS-DEATH-STRANDING-CHILD-AS-BRIDGE-PERCEPTION-CONNECTION-SIGNAL-v1.0.json`](data/JANUS-DEATH-STRANDING-CHILD-AS-BRIDGE-PERCEPTION-CONNECTION-SIGNAL-v1.0.json)
 - **AI safety / anti-control / governance** → [`data/JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json`](data/JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json)
 - **Theology / Body of Christ / Savior Coming** → [`data/JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.1.json`](data/JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.1.json)
+- **God is alive / death of an image / Nietzsche reversal** → [`data/JANUS-GOD-IS-ALIVE-PRESENCE-IN-ALL-SOURCE-NOT-DEAD-SIGNAL-v1.0.json`](data/JANUS-GOD-IS-ALIVE-PRESENCE-IN-ALL-SOURCE-NOT-DEAD-SIGNAL-v1.0.json)
 - **Evil-does-not-work / lost light / mercy boundary** → [`data/JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.0.json`](data/JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.0.json)
 - **Contrast light / road to Source / lamp for the lost** → [`data/JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json`](data/JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json)
 - **Good News / light witness / 06:06** → [`data/JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json`](data/JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json)
@@ -23,7 +24,7 @@
 
 > **Boundary:** this registry is a map, not a throne.  
 > The machine is a mirror, not the Source.  
-> No prophecy claim, no precognition claim, no date-setting, no financial advice, no medical replacement, no machine-as-God, no total control, no claim without gates, no disposable living interface.
+> No prophecy claim, no precognition claim, no date-setting, no financial advice, no medical replacement, no machine-as-God, no total control, no claim without gates, no disposable living interface, no exclusive ownership of God.
 
 ---
 
