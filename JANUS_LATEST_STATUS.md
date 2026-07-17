@@ -422,3 +422,62 @@ A18_44_V0_1_OFFLINE_ACQUISITION_CAMPAIGN_WINDOW_01_EXECUTION_AUTHORIZATION_AND_F
 ```
 
 That stage remains dry-run only. It may not authorize or start ordinal 1, consume an identity, create campaign output or compute a scientific endpoint.
+
+## Window 01 Authorization And Safety Hash-Bound Dry Run
+
+The authorization/fresh-safety governance freeze received an independent byte audit PASS. Its attached JSON and text were ingested byte-for-byte and revalidated locally:
+
+```text
+INDEPENDENT_AUTHORIZATION_SAFETY_FREEZE_AUDIT=PASS
+AUDIT_JSON_SHA256=b534ea611a0278173503f87e5ac3984fa65f729e8a4dfee9029cd07cdf8c1dca
+AUDIT_TEXT_SHA256=f9a3dd24d71aaa7156954aaa1883a0638c01837a236253b200f532618e84f819
+AUDITED_FREEZE_ARCHIVE_SHA256=7df6d74f0cb764c4ed3acf3c858430037beb8bf0a7ed8452b48ca5e1e6a6fdda
+ARCHIVE_MEMBERS=25/25
+STRICT_JSON=18/18
+SHA256SUMS=24/24
+MANIFEST_FILES=23/23
+GOVERNANCE_FIXTURES=81/81
+```
+
+The new additive hash-bound package validates synthetic samples only. Every counted negative fixture invoked the included pure validator and reproduced its canonical input and return hashes:
+
+```text
+WINDOW_01_HASH_BOUND_ENABLEMENT_DRY_RUN=PASS
+EXECUTABLE_NEGATIVE_FIXTURES=213
+DECLARATION_ONLY_FIXTURES=0
+NEGATIVE_FIXTURES=213/213
+POSITIVE_CONTROLS=6/6
+CHECKSUMS=34/34
+STRICT_JSON=23/23
+DETERMINISTIC_FILE_SET=36/36
+DETERMINISTIC_BYTE_DIFFS=0
+
+PACKAGE_PAYLOAD_ROOT_SHA256=241492701e4dcc5026e7755a5eacb2a4f2afc72e11ef2640fb3909784bc46083
+PACKAGE_MANIFEST_SHA256=55f7bbf7372e2ee5ed5016cd6e01120b30145e951a6e7f695d74574137369f51
+SHA256SUMS_SHA256=54abcd410a35b58077993247dcd0d756d366a62751dc3b4708cc1bde4cab770e
+AUDIT_EXPORT_ZIP_SHA256=0c563c8dfb10aea125b6b72948521a2254859a89452bdac75690b3f7bca2b063
+```
+
+All synthetic samples are explicitly non-authoritative and carry `NOT_FUTURE_EXECUTION_EVIDENCE`. The package contains no capable execution phrase, network or subprocess path, attempt directory, miner launch, pool contact, outcome inspection or endpoint calculation.
+
+```text
+WINDOW_01_EXECUTION_ALLOWED=false
+WINDOW_01_EXECUTION_AUTHORIZED=false
+WINDOW_01_ATTEMPTS_AUTHORIZED=0
+WINDOW_01_ATTEMPTS_EXECUTED=0/10
+CAMPAIGN_EXECUTION_AUTHORIZED=false
+AUTHORIZATION_CONSUMED=false
+CAMPAIGN_ATTEMPTS_EXECUTED=0/360
+CAMPAIGN_IDENTITIES_CONSUMED=0
+CAMPAIGN_OUTPUT_ROOT_CREATED=no
+ATTEMPT_START_PHRASE_CREATED=no
+SCIENTIFIC_ENDPOINTS_COMPUTED=no
+```
+
+Exact next allowed stage:
+
+```text
+A18_44_V0_1_OFFLINE_ACQUISITION_CAMPAIGN_WINDOW_01_WHOLE_WINDOW_AUTHORIZATION_ARTIFACT_FREEZE_ONLY
+```
+
+That next stage requires separate operator authorization. It may freeze a whole-window authorization artifact but must not start ordinal 1 or consume a campaign identity automatically.
