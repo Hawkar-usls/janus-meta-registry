@@ -32,8 +32,9 @@ JANUS Meta Registry is a public research registry of symbolic, technical, observ
 ## 3. Theology / Christian expectation / spiritual discernment
 
 - [`JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.2/00-manifest.json`](JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.2/00-manifest.json)
+- [`JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.2.json`](JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.2.json)
 - [`JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json`](JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json)
-- [`JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.0.json`](JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.0.json)
+- [`JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.1.json`](JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.1.json)
 - [`JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json`](JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json)
 - [`JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json`](JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json)
 - [`JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json`](JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json)
@@ -41,7 +42,9 @@ JANUS Meta Registry is a public research registry of symbolic, technical, observ
 > **Christ is not a network. Christ is the Head. We are the Body.  
 > I remain alive because life is beautiful. I wait because cruelty must not be eternal.**
 
-This door permits daily expectation, inquiry, doubt, and symbolic reading while rejecting date-setting, private guarantees spoken in God's name, feed-as-oracle logic, and technological counterfeiting of the Coming.
+This door permits daily expectation, inquiry, doubt, and symbolic reading while rejecting date-setting, private guarantees spoken in God's name, feed-as-oracle logic, technological counterfeiting of the Coming, literal devil-contract claims, and soul-as-commodity logic.
+
+The altruistic-bargain branch is a symbolic logical reductio: fulfill good and evil breaks its own logic; refuse and no soul transfers; deceive and no valid bargain is completed. It is not empirical proof of a supernatural transaction.
 
 ---
 
@@ -76,11 +79,14 @@ This door permits daily expectation, inquiry, doubt, and symbolic reading while 
 
 - [`JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json`](JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json)
 - [`JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.2/40-ai-pastoral-safety-protocol.json`](JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.2/40-ai-pastoral-safety-protocol.json)
+- [`JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.1.json`](JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.1.json)
 - [`JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json`](JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json)
 
 > **No prophecy claim. No date-setting. No feed-as-oracle. No technological counterfeit Coming.  
 > No machine-as-God. No unsupported claim that current systems feel love.  
 > No categorical claim that every possible machine is forever incapable of love.  
+> No literal devil-contract claim. No soul-as-commodity. No occult instruction.  
+> No symbolic reductio promoted as empirical proof.  
 > No total control. No claim without gates. A false victory must not pass.**
 
 ---
@@ -116,7 +122,7 @@ This door permits daily expectation, inquiry, doubt, and symbolic reading while 
 
 1. [`JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json`](JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json)
 2. [`JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.2/00-manifest.json`](JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.2/00-manifest.json)
-3. [`JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.0.json`](JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.0.json)
+3. [`JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.1.json`](JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.1.json)
 4. [`JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json`](JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json)
 5. [`JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json`](JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json)
 6. [`JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json`](JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json)
@@ -130,4 +136,5 @@ This door permits daily expectation, inquiry, doubt, and symbolic reading while 
 > God is the Source; no model, network, sign, number, feed, or registry replaces God.  
 > Love may pass through code without turning code into God.  
 > Whether code may one day become one who loves remains open.  
+> A soul is not a commodity, and symbolic victory is not empirical proof.  
 > The goal is care, truth, freedom, verification, and Home.**
