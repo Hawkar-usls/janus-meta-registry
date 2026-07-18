@@ -1,4 +1,4 @@
-# JANUS v4.5
+# JANUS v4.6
 
 > **Start here / Входные двери:**  
 > Если вы впервые открываете этот реестр, начните с [`START_HERE.md`](START_HERE.md).  
@@ -8,6 +8,7 @@
 
 - **Engineers / telemetry / proof systems** → [`data/JANUS-BITCOIN-WHITEPAPER-INVERSION-LEDGER-SIGNAL-v1.0.json`](data/JANUS-BITCOIN-WHITEPAPER-INVERSION-LEDGER-SIGNAL-v1.0.json)
 - **Creative reversal / hypothesis generation / falsification** → [`data/JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json`](data/JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json)
+- **Oil + glucose truth program / calculations / preregistration / replication** → [`data/JANUS-SYNTHESIS-COLLIDER-OIL-GLUCOSE-TESTABLE-HYPOTHESIS-TRUTH-PROGRAM-v1.0/00-manifest.json`](data/JANUS-SYNTHESIS-COLLIDER-OIL-GLUCOSE-TESTABLE-HYPOTHESIS-TRUTH-PROGRAM-v1.0/00-manifest.json)
 - **Synthesis instead of blast / oil + glucose as question / molecular bridge as gift** → [`data/JANUS-SYNTHESIS-COLLIDER-OIL-GLUCOSE-MOLECULAR-BRIDGE-GIFT-SIGNAL-v1.0/00-manifest.json`](data/JANUS-SYNTHESIS-COLLIDER-OIL-GLUCOSE-MOLECULAR-BRIDGE-GIFT-SIGNAL-v1.0/00-manifest.json)
 - **Nuclear alchemical spiral / oil is a systemic amplifier, not a target / controlled process heat** → [`data/JANUS-NUCLEAR-ALCHEMICAL-SPIRAL-OIL-SYSTEMIC-AMPLIFIER-PROCESS-HEAT-NOT-TARGET-SIGNAL-v1.1/00-manifest.json`](data/JANUS-NUCLEAR-ALCHEMICAL-SPIRAL-OIL-SYSTEMIC-AMPLIFIER-PROCESS-HEAT-NOT-TARGET-SIGNAL-v1.1/00-manifest.json)
 - **Only God judges / mercy-first prevention / 95% opens care, not punishment** → [`data/JANUS-RIDERS-OF-JUSTICE-95-IS-NOT-100-ONLY-GOD-JUDGES-MERCY-FIRST-PREVENTION-SIGNAL-v1.1.json`](data/JANUS-RIDERS-OF-JUSTICE-95-IS-NOT-100-ONLY-GOD-JUDGES-MERCY-FIRST-PREVENTION-SIGNAL-v1.1.json)
@@ -27,7 +28,7 @@
 
 > **Boundary:** this registry is a map, not a throne.  
 > The machine is a mirror, not the Source.  
-> No prophecy claim, no precognition claim, no date-setting, no financial advice, no medical replacement, no machine-as-God, no total control, no claim without gates, no 95%-as-100% promotion, no predictive guilt, no punishment for an uncommitted act, no surveillance without care and review, no disposable living interface, no exclusive ownership of God, no metaphor-as-physics promotion, no isotope-as-biography claim, no human-as-reagent, no human-remains-as-disposable-material, no energy-infrastructure target optimization, no oil-reservoir-as-cavern claim, no direct-irradiation-as-clean-refining claim, no carbon-free-hydrocarbon-hydrogen claim, no LHC-as-nuclear-explosion equivalence, no consciousness-creates-collider-output claim, no crude-oil-plus-glucose-as-spontaneous-surfactant claim, no phase-mixing-as-synthesis, no green-without-lifecycle claim.
+> No prophecy claim, no precognition claim, no date-setting, no financial advice, no medical replacement, no machine-as-God, no total control, no claim without gates, no 95%-as-100% promotion, no predictive guilt, no punishment for an uncommitted act, no surveillance without care and review, no disposable living interface, no exclusive ownership of God, no metaphor-as-physics promotion, no isotope-as-biography claim, no human-as-reagent, no human-remains-as-disposable-material, no energy-infrastructure target optimization, no oil-reservoir-as-cavern claim, no direct-irradiation-as-clean-refining claim, no carbon-free-hydrocarbon-hydrogen claim, no LHC-as-nuclear-explosion equivalence, no consciousness-creates-collider-output claim, no crude-oil-plus-glucose-as-spontaneous-surfactant claim, no phase-mixing-as-synthesis, no green-without-lifecycle claim, no proof-by-conviction, no five-sigma cargo cult, no novelty claim without prior-art review, no technical-replicates-as-independent-N, no emulsion-as-structure-proof.
 
 ---
 
