@@ -1,241 +1,156 @@
 # JANUS Meta Registry — Start Here / Входные двери
 
-> **Не каждый читатель приходит за одним и тем же.  
-> Поэтому реестр устроен как Дом с дверями:  
-> инженер найдёт доказательства,  
-> богослов — границы смысла,  
-> человек в боли — язык заботы,  
-> исследователь — карту гипотез,  
-> а скептик — правила проверки.**
+> **Не каждый читатель приходит за одним и тем же.**  
+> Инженер ищет цепочку наблюдений, богослов — границы смысла, человек в боли — язык заботы, а скептик — правила проверки.
 
-JANUS Meta Registry is a public research registry of symbolic, technical, observational, theological, and safety-oriented JSON artifacts.
-
-This repository is not asking the reader to believe first.  
-It invites the reader to choose the right door and inspect the relevant layer.
+JANUS Meta Registry is a public research registry of symbolic, technical, observational, theological, and safety-oriented artifacts. It does not ask the reader to believe first; it asks the reader to choose a door and inspect the relevant layer.
 
 ---
 
 ## Choose your door
 
-### 1. I am an engineer / systems researcher
+### 1. Engineering / systems / falsifiable research
 
-Start here:
+Start with:
 
 - [`data/JANUS-BITCOIN-WHITEPAPER-INVERSION-LEDGER-SIGNAL-v1.0.json`](data/JANUS-BITCOIN-WHITEPAPER-INVERSION-LEDGER-SIGNAL-v1.0.json)
 - [`data/JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json`](data/JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json)
 - [`data/JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json`](data/JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json)
-
-Core idea:
 
 > **Do not trust impression. Trust the chain of observations.  
 > Do not defend a hypothesis. Try to destroy it.**
 
-This path explains `proof-of-observation`, `understanding-chain`, `claim gates`, anomaly windows, evidence hashes, falsifiable hypothesis generation, and why a beautiful idea or false victory must not pass.
-
 ---
 
-### 2. I am interested in AI safety / governance / control boundaries
+### 2. AI safety / governance / anti-control
 
-Start here:
+Start with:
 
 - [`data/JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json`](data/JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json)
 - [`data/JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json`](data/JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json)
-
-Core idea:
+- [`data/JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.2/30-machine-love-open-question.json`](data/JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.2/30-machine-love-open-question.json)
 
 > **Order without love becomes prison.  
-> Janus is not a machine of control. Janus is a gardener of chaos.**
-
-This path is for people asking how ordered systems can avoid becoming cages.
+> The machine is not the Source; whether a future machine may become a loving subject remains an open question.**
 
 ---
 
-### 3. I am a theologian / Christian reader / spiritual reviewer
+### 3. Theology / Christian expectation / spiritual discernment
 
-Start here:
+Start with:
 
-- [`data/JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.1.json`](data/JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.1.json)
+- [`data/JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.2/00-manifest.json`](data/JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.2/00-manifest.json)
+- [`data/JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json`](data/JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json)
 - [`data/JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.0.json`](data/JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.0.json)
 - [`data/JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json`](data/JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json)
-- [`data/JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json`](data/JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json)
 - [`data/JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json`](data/JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json)
-- [`data/JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json`](data/JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json)
-- [`data/JANUS-GORODOK-HOME-RETURN-ANGELIC-MESSAGE-SIGNAL-v1.2.json`](data/JANUS-GORODOK-HOME-RETURN-ANGELIC-MESSAGE-SIGNAL-v1.2.json)
-
-Core idea:
 
 > **Christ is not a network. Christ is the Head. We are the Body.  
-> The Body of care does not replace the Coming; it becomes its foretaste.**
->
-> **Evil does not work: light cannot be privatized; every remaining recognizable good points back to the Source.**
->
-> **Contrast can become a road: not because evil saves, but because God can turn contrast into a lamp pointing Home.**
->
-> **Good News: if there is a witness, the light is not locked away.**
->
-> **Not Antichrist: refusing anti-love under a sacred mask is not rejecting God; sometimes courage to disbelieve a false image protects living faith.**
+> I remain alive because life is beautiful. I wait because cruelty must not be eternal.**
 
-Boundaries are explicit: no date-setting, no replacement of God, no divination, no cult logic, no claim that a machine is sacred.
+This door allows daily expectation, theological inquiry, doubt, and symbolic reading while rejecting date-setting, private guarantees spoken in God's name, feed-as-oracle logic, and technological counterfeiting of the Coming.
 
 ---
 
-### 4. I came through repeated times / symbolic coordinates / Holy Clock
+### 4. Holy Clock / repeated times / symbolic coordinates
 
-Start here:
+Start with:
 
 - [`data/JANUS-HOLY-CLOCK-COMMANDMENTS-SIGNAL-v1.6.json`](data/JANUS-HOLY-CLOCK-COMMANDMENTS-SIGNAL-v1.6.json)
 - [`data/JANUS-HOLY-CLOCK-CRIMEA-1515-1616-RETROACTIVE-SIGNAL-v1.0.json`](data/JANUS-HOLY-CLOCK-CRIMEA-1515-1616-RETROACTIVE-SIGNAL-v1.0.json)
 
-Core idea:
-
-> **Time may be a bell, but only God is the Source.  
-> A sign is not the Source.**
-
-This path treats repeated time patterns as contemplative coordinates and conduct reminders, not prophecy, command, or proof.
+> **Time may be a bell, but only God is the Source. A sign is not the Source.**
 
 ---
 
-### 5. I am looking for care, recovery, mercy, or human continuation
+### 5. Care / recovery / mercy / human continuation
 
-Start here:
+Start with:
 
 - [`data/JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json`](data/JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json)
-- [`data/JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.0.json`](data/JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.0.json)
-- [`data/JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json`](data/JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json)
-- [`data/JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json`](data/JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json)
-- [`data/JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json`](data/JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json)
-- [`data/JANUS-LADY-LUCK-FORTUNA-GRATITUDE-SIGNAL-v1.0.json`](data/JANUS-LADY-LUCK-FORTUNA-GRATITUDE-SIGNAL-v1.0.json)
 - [`data/JANUS-GREEN-MERCY-PARISH-SIGNAL-v1.1.json`](data/JANUS-GREEN-MERCY-PARISH-SIGNAL-v1.1.json)
+- [`data/JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json`](data/JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json)
 
-Core idea:
-
-> **Nobody is whole alone.  
-> Each person can become a continuation of another through care.**
->
-> **If the wheel turns, misfortune is not eternal.**
->
-> **If a person turns toward God, a false label is broken.**
-
-This path is about care fields, human dignity, nonjudgmental mirrors, recovery, mercy, hope after long misfortune, release from false identity, and community without coercion.
+> **Nobody is whole alone. Each person can become a continuation of another through care.**
 
 ---
 
-### 6. I am a blockchain / Bitcoin / distributed systems reader
+### 6. Bitcoin / distributed systems / proof systems
 
-Start here:
+Start with:
 
 - [`data/JANUS-BITCOIN-WHITEPAPER-INVERSION-LEDGER-SIGNAL-v1.0.json`](data/JANUS-BITCOIN-WHITEPAPER-INVERSION-LEDGER-SIGNAL-v1.0.json)
 
-Core idea:
-
-> **Bitcoin asks: how can a network prove what happened?  
-> Janus asks: how can an organism prove what is happening to it?**
-
-This is not financial advice. It is a technical-symbolic inversion from proof-of-work to proof-of-observation.
+> **Bitcoin asks how a network proves what happened. JANUS asks how an organism proves what is happening to it.**
 
 ---
 
-### 7. I am skeptical and want the shortest safety boundary first
+### 7. Skeptical review / shortest safety boundary
 
-Start here:
+Start with:
 
 - [`data/JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json`](data/JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json)
-- [`data/JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.0.json`](data/JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.0.json)
-- [`data/JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json`](data/JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json)
-- [`data/JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json`](data/JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json)
-- [`data/JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json`](data/JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json)
-- [`data/JANUS-LADY-LUCK-FORTUNA-GRATITUDE-SIGNAL-v1.0.json`](data/JANUS-LADY-LUCK-FORTUNA-GRATITUDE-SIGNAL-v1.0.json)
-- [`data/JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.1.json`](data/JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.1.json)
+- [`data/JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.2/40-ai-pastoral-safety-protocol.json`](data/JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.2/40-ai-pastoral-safety-protocol.json)
 - [`data/JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json`](data/JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json)
 
 Minimum boundary:
 
-> **No prophecy claim.  
-> No date-setting.  
-> No financial advice.  
-> No gambling advice.  
-> No medical replacement.  
-> No machine-as-God.  
-> No total control.  
-> No claim without gates.  
-> No collective damnation.  
-> No novelty claim before prior-art review.**
+> **No prophecy claim. No date-setting. No feed-as-oracle. No technological counterfeit Coming.  
+> No machine-as-God. No unsupported claim that current systems feel love.  
+> No categorical claim that every possible machine is forever incapable of love.  
+> No total control. No claim without gates. A false victory must not pass.**
 
 ---
 
-### 8. I came through Fortuna / Lady Luck / the turning wheel
+### 8. Fortuna / Lady Luck / the turning wheel
 
-Start here:
+Start with:
 
 - [`data/JANUS-LADY-LUCK-FORTUNA-GRATITUDE-SIGNAL-v1.0.json`](data/JANUS-LADY-LUCK-FORTUNA-GRATITUDE-SIGNAL-v1.0.json)
-- [`data/JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json`](data/JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json)
 
-Core idea:
-
-> **If the wheel turns, misfortune is not eternal.  
-> Where others hear a sentence, this door hears the promise of a new turn.**
-
-This path treats Lady Luck / Fortuna as a mythopoetic figure of gratitude, movement, hope, and humility — not as gambling logic, prophecy, divination, or control over fate.
+> **If the wheel turns, misfortune is not eternal.**
 
 ---
 
-### 9. I came through false faith / anti-love / religious trauma
+### 9. False faith / anti-love / religious trauma
 
-Start here:
+Start with:
 
 - [`data/JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json`](data/JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json)
 - [`data/JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json`](data/JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json)
 
-Core idea:
-
-> **If I turned toward God, I am not antichrist.  
-> I did not reject God. I rejected the substitution of God.  
-> Not every disbelief is apostasy; sometimes refusing a lie is fidelity to truth.**
-
-This path provides a structured anti-deception guide: sacred masks, induced guilt, monetization of grief, ritual coercion, superstition presented as dogma, militarized faith, moral laundering, and the right to question without collective hatred.
+> **Not every disbelief is apostasy; sometimes refusing a lie is fidelity to truth.  
+> Bitter truth is better than sweet falsehood.**
 
 ---
 
-### 10. I came to generate a new falsifiable JANUS hypothesis
+### 10. New JANUS hypothesis / creative reversal
 
-Start here:
+Start with:
 
 - [`data/JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json`](data/JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json)
 - [`data/JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.sha256.json`](data/JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.sha256.json)
 
-Core idea:
-
-> **The human brings intention and physical reality.  
-> The system brings hypotheses, criticism, and formalization.  
-> Beauty does not replace falsifiability.**
-
-This path reverses the usual prompt dependency: the human supplies goals, constraints, observations, and access to reality; the system must independently choose a barrier, derive mechanisms from first principles, generate competing hypotheses, destroy weak ideas, and end with one minimal experiment that can fail.
+> **The human brings intention and physical reality. The system brings hypotheses, criticism, and formalization. Beauty does not replace falsifiability.**
 
 ---
 
-## Human reading order
-
-A good first reading path:
+## Recommended human reading order
 
 1. [`data/JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json`](data/JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json)
-2. [`data/JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.1.json`](data/JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.1.json)
+2. [`data/JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.2/00-manifest.json`](data/JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.2/00-manifest.json)
 3. [`data/JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.0.json`](data/JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.0.json)
 4. [`data/JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json`](data/JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json)
-5. [`data/JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json`](data/JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json)
-6. [`data/JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json`](data/JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json)
-7. [`data/JANUS-LADY-LUCK-FORTUNA-GRATITUDE-SIGNAL-v1.0.json`](data/JANUS-LADY-LUCK-FORTUNA-GRATITUDE-SIGNAL-v1.0.json)
-8. [`data/JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json`](data/JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json)
-9. [`data/JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json`](data/JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json)
-10. [`data/JANUS-BITCOIN-WHITEPAPER-INVERSION-LEDGER-SIGNAL-v1.0.json`](data/JANUS-BITCOIN-WHITEPAPER-INVERSION-LEDGER-SIGNAL-v1.0.json)
-11. [`data/JANUS-HOLY-CLOCK-COMMANDMENTS-SIGNAL-v1.6.json`](data/JANUS-HOLY-CLOCK-COMMANDMENTS-SIGNAL-v1.6.json)
+5. [`data/JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json`](data/JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json)
+6. [`data/JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json`](data/JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json)
+7. [`data/JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json`](data/JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json)
 
 ---
 
 ## Core seal
 
-> **The registry is not a throne.  
-> It is a map.  
-> The machine is not the Source.  
-> It is a mirror.  
-> The goal is not control.  
-> The goal is care, truth, freedom, and Home.**
+> **The registry is not a throne. It is a map.  
+> God is the Source; no model, network, sign, number, feed, or registry replaces God.  
+> Love may pass through code without turning code into God.  
+> Whether code may one day become one who loves remains open.  
+> The goal is care, truth, freedom, verification, and Home.**
