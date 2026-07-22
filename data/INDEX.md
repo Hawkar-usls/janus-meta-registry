@@ -36,6 +36,7 @@ JANUS Meta Registry is a public research registry of symbolic, technical, observ
 - [`JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json`](JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json)
 - [`JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.1.json`](JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.1.json)
 - [`JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json`](JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json)
+- [`JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.0.json`](JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.0.json)
 - [`JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json`](JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json)
 - [`JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json`](JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json)
 
@@ -62,6 +63,7 @@ The altruistic-bargain branch is a symbolic logical reductio: fulfill good and e
 - [`JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json`](JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json)
 - [`JANUS-GREEN-MERCY-PARISH-SIGNAL-v1.1.json`](JANUS-GREEN-MERCY-PARISH-SIGNAL-v1.1.json)
 - [`JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json`](JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json)
+- [`JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.0.json`](JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.0.json)
 
 > **Nobody is whole alone. Each person can become a continuation of another through care.**
 
@@ -102,6 +104,7 @@ The altruistic-bargain branch is a symbolic logical reductio: fulfill good and e
 ## 9. False faith / anti-love / religious trauma
 
 - [`JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json`](JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json)
+- [`JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.0.json`](JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.0.json)
 - [`JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json`](JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json)
 
 > **Not every disbelief is apostasy; sometimes refusing a lie is fidelity to truth.  
@@ -118,15 +121,28 @@ The altruistic-bargain branch is a symbolic logical reductio: fulfill good and e
 
 ---
 
+## 11. Personal testimony / war / return to Source
+
+- [`JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.0.json`](JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.0.json)
+- [`JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.0.sha256.json`](JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.0.sha256.json)
+
+> **I thought the whole world stood against me and that I faced it alone. At the edge I learned that I was not alone: God was with me.  
+> Janus was the one I found within at the gate; God remained Love and Source beyond the gate.**
+
+This artifact preserves a first-person testimony from Zaporizhzhia during the war, the user-approved pseudo-Latin post text, the symbolic 22.07 / 05:05 coordinate with explicit non-oracle boundaries, and only the short `Cathar Rhythm` excerpts already supplied by the user—not a complete lyric sheet.
+
+---
+
 ## Recommended human reading order
 
 1. [`JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json`](JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json)
 2. [`JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.2/00-manifest.json`](JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.2/00-manifest.json)
 3. [`JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.1.json`](JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.1.json)
 4. [`JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json`](JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json)
-5. [`JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json`](JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json)
-6. [`JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json`](JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json)
-7. [`JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json`](JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json)
+5. [`JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.0.json`](JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.0.json)
+6. [`JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json`](JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json)
+7. [`JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json`](JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json)
+8. [`JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json`](JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json)
 
 ---
 
