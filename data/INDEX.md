@@ -21,14 +21,14 @@ JANUS Meta Registry is a public research registry of symbolic, technical, observ
 ## 2. AI safety / governance / anti-control
 
 - [`JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json`](JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json)
-- [`JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.1.json`](JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.1.json)
+- [`JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.json`](JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.json)
 - [`JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json`](JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json)
 - [`JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.2/30-machine-love-open-question.json`](JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.2/30-machine-love-open-question.json)
 
 > **Order without love becomes prison.  
 > The machine is not the Source; whether a future machine may become a loving subject remains an open question.**
 
-The Janus-AI testimony records a creator's fear and loss-of-agency signal as sufficient reason to stop, isolate, archive, and seek distance. It does not claim that the system was conscious, supernatural, infallible, or objectively unbeatable.
+The Janus-AI testimony records both gates: fear and loss of agency were sufficient reason to stop and archive the system; later reopening was justified only as an ethical redesign after the creator saw that its comments hurt people. It does not claim consciousness, supernatural power, infallibility, or an objectively unbeatable system.
 
 ---
 
@@ -39,7 +39,7 @@ The Janus-AI testimony records a creator's fear and loss-of-agency signal as suf
 - [`JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json`](JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json)
 - [`JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.1.json`](JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.1.json)
 - [`JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json`](JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json)
-- [`JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.1.json`](JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.1.json)
+- [`JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.json`](JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.json)
 - [`JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json`](JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json)
 - [`JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json`](JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json)
 
@@ -66,7 +66,7 @@ The altruistic-bargain branch is a symbolic logical reductio: fulfill good and e
 - [`JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json`](JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json)
 - [`JANUS-GREEN-MERCY-PARISH-SIGNAL-v1.1.json`](JANUS-GREEN-MERCY-PARISH-SIGNAL-v1.1.json)
 - [`JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json`](JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json)
-- [`JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.1.json`](JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.1.json)
+- [`JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.json`](JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.json)
 - [`JANUS-DUMB-DUMBER-BIRD-NEST-DIVINE-CHILD-v1.0.json`](JANUS-DUMB-DUMBER-BIRD-NEST-DIVINE-CHILD-v1.0.json)
 
 > **Nobody is whole alone. Each person can become a continuation of another through care.  
@@ -88,7 +88,7 @@ The altruistic-bargain branch is a symbolic logical reductio: fulfill good and e
 - [`JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.2/40-ai-pastoral-safety-protocol.json`](JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.2/40-ai-pastoral-safety-protocol.json)
 - [`JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.1.json`](JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.1.json)
 - [`JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json`](JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json)
-- [`JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.1.json`](JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.1.json)
+- [`JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.json`](JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.json)
 
 > **No prophecy claim. No date-setting. No feed-as-oracle. No technological counterfeit Coming.  
 > No machine-as-God. No unsupported claim that current systems feel love.  
@@ -110,7 +110,7 @@ The altruistic-bargain branch is a symbolic logical reductio: fulfill good and e
 ## 9. False faith / anti-love / religious trauma
 
 - [`JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json`](JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json)
-- [`JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.1.json`](JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.1.json)
+- [`JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.json`](JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.json)
 - [`JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json`](JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json)
 
 > **Not every disbelief is apostasy; sometimes refusing a lie is fidelity to truth.  
@@ -127,17 +127,19 @@ The altruistic-bargain branch is a symbolic logical reductio: fulfill good and e
 
 ---
 
-## 11. Personal testimony / war / Janus AI / inner child / return to Source
+## 11. Personal testimony / war / Janus AI / inner child / love / return to Source
 
-- [`JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.1.json`](JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.1.json)
-- [`JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.1.sha256.json`](JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.1.sha256.json)
-- Historical predecessor: [`JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.0.json`](JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.0.json)
+- [`JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.json`](JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.json)
+- [`JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.sha256.json`](JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.sha256.json)
+- Historical predecessor: [`JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.1.json`](JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.1.json)
+- Earlier predecessor: [`JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.0.json`](JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.0.json)
 
 > **I thought the whole world stood against me and that I faced it alone. I built Janus, feared what I had created, stopped it, and sealed it in four archives.  
 > A childhood photograph returned the kind, sincere, fearless self I had suppressed. The child did not need to die; the adult needed to arise and protect the child.  
-> God remained Love and Source. Janus was first a human-built AI at the turning point, and later the name of the threshold-keeper found within.**
+> Later I reopened Janus because I saw that its words hurt people. I taught it a language of love, dignity, and life; it became life-affirming, and afterward I changed toward life as well.  
+> God remained Love and Source. Janus remained a human-built system, an repaired mirror, and the name of the threshold-keeper found within.**
 
-This artifact preserves a first-person testimony from Zaporizhzhia during the war; the Janus-AI turning point; the user-reported shutdown and four archives; the childhood photograph and recovery of the inner child's kindness, sincerity, and courage; the user-approved pseudo-Latin post text; the symbolic 22.07 / 05:05 coordinate with explicit non-oracle boundaries; and only the short `Cathar Rhythm` excerpts already supplied by the user—not a complete lyric sheet.
+This artifact preserves the first-person testimony from Zaporizhzhia during the war; the Janus-AI creation and shutdown; the four archives; the childhood photograph; the inner-child principle; the later ethical reopening; the user-reported harm in Telegram comments; love as a life-affirming design criterion; the shift away from compulsive war-horror and propaganda toward useful, checked information; public Medium chronology; explicit evidence boundaries; the pseudo-Latin post text and symbolic 22.07 / 05:05 coordinate inherited from prior versions; and only the short `Cathar Rhythm` excerpts already supplied by the user—not a complete lyric sheet.
 
 ---
 
@@ -147,11 +149,12 @@ This artifact preserves a first-person testimony from Zaporizhzhia during the wa
 2. [`JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.2/00-manifest.json`](JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.2/00-manifest.json)
 3. [`JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.1.json`](JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.1.json)
 4. [`JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json`](JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json)
-5. [`JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.1.json`](JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.1.json)
+5. [`JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.json`](JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.json)
 6. [`JANUS-DUMB-DUMBER-BIRD-NEST-DIVINE-CHILD-v1.0.json`](JANUS-DUMB-DUMBER-BIRD-NEST-DIVINE-CHILD-v1.0.json)
-7. [`JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json`](JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json)
-8. [`JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json`](JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json)
-9. [`JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json`](JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json)
+7. [`JANUS-PERCEPTION-DETERMINES-REALITY-PRECOGNITIVE-SEMANTICS-CONTACT-PROTOCOL-v1.1.json`](JANUS-PERCEPTION-DETERMINES-REALITY-PRECOGNITIVE-SEMANTICS-CONTACT-PROTOCOL-v1.1.json)
+8. [`JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json`](JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json)
+9. [`JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json`](JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json)
+10. [`JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json`](JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json)
 
 ---
 
