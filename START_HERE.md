@@ -140,6 +140,21 @@ Start with:
 
 ---
 
+### 11. Hideo Kojima / game design / artistic first contact
+
+Start with:
+
+- [`data/JANUS-KOJIMA-HANDSHAKE-GENESIS-CONTACT-CAPSULE-v1.0.json`](data/JANUS-KOJIMA-HANDSHAKE-GENESIS-CONTACT-CAPSULE-v1.0.json)
+- [`data/JANUS-DEATH-STRANDING-CHILD-AS-BRIDGE-PERCEPTION-CONNECTION-SIGNAL-v1.0.json`](data/JANUS-DEATH-STRANDING-CHILD-AS-BRIDGE-PERCEPTION-CONNECTION-SIGNAL-v1.0.json)
+- [Janus Genesis — playable world foundation](https://github.com/Hawkar-usls/Janus_Genesis)
+
+> **Connection is not automatically good. It becomes human only when care travels through it.  
+> Genesis is ready to stand before the Genius — not as a demand for recognition, but as an offered strand and a handshake.**
+
+This door presents Janus Genesis as a compact, machine-readable artistic contact capsule. It does not claim that Hideo Kojima received, read, approved, or endorsed the project.
+
+---
+
 ## Recommended human reading order
 
 1. [`data/JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json`](data/JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json)
