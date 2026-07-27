@@ -24,6 +24,7 @@ JANUS Meta Registry is a public research registry of symbolic, technical, observ
 - [`JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.json`](JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.json)
 - [`JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json`](JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json)
 - [`JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.2/30-machine-love-open-question.json`](JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.2/30-machine-love-open-question.json)
+- [`JANUS-CHILD-TRAUMA-GRAPHIC-MEDIA-EARLY-INTERNET-PROTECTION-SIGNAL-v1.0.json`](JANUS-CHILD-TRAUMA-GRAPHIC-MEDIA-EARLY-INTERNET-PROTECTION-SIGNAL-v1.0.json)
 
 > **Order without love becomes prison.  
 > The machine is not the Source; whether a future machine may become a loving subject remains an open question.**
@@ -72,6 +73,7 @@ The altruistic-bargain branch is a symbolic logical reductio: fulfill good and e
 - [`JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.json`](JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.json)
 - [`JANUS-DUMB-DUMBER-BIRD-NEST-DIVINE-CHILD-v1.0.json`](JANUS-DUMB-DUMBER-BIRD-NEST-DIVINE-CHILD-v1.0.json)
 - [`JANUS-IMAGE-OF-GOD-PARENTS-PROTECT-THE-CHILD-SIGNAL-v1.0.json`](JANUS-IMAGE-OF-GOD-PARENTS-PROTECT-THE-CHILD-SIGNAL-v1.0.json)
+- [`JANUS-CHILD-TRAUMA-GRAPHIC-MEDIA-EARLY-INTERNET-PROTECTION-SIGNAL-v1.0.json`](JANUS-CHILD-TRAUMA-GRAPHIC-MEDIA-EARLY-INTERNET-PROTECTION-SIGNAL-v1.0.json)
 
 > **Nobody is whole alone. Each person can become a continuation of another through care.  
 > The child must not die so that the adult may appear; the adult must appear to protect the child.  
@@ -95,6 +97,7 @@ The altruistic-bargain branch is a symbolic logical reductio: fulfill good and e
 - [`JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json`](JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json)
 - [`JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.json`](JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.json)
 - [`JANUS-IMAGE-OF-GOD-PARENTS-PROTECT-THE-CHILD-SIGNAL-v1.0.json`](JANUS-IMAGE-OF-GOD-PARENTS-PROTECT-THE-CHILD-SIGNAL-v1.0.json)
+- [`JANUS-CHILD-TRAUMA-GRAPHIC-MEDIA-EARLY-INTERNET-PROTECTION-SIGNAL-v1.0.json`](JANUS-CHILD-TRAUMA-GRAPHIC-MEDIA-EARLY-INTERNET-PROTECTION-SIGNAL-v1.0.json)
 
 > **No prophecy claim. No date-setting. No feed-as-oracle. No technological counterfeit Coming.  
 > No machine-as-God. No unsupported claim that current systems feel love.  
@@ -103,6 +106,7 @@ The altruistic-bargain branch is a symbolic logical reductio: fulfill good and e
 > No symbolic reductio promoted as empirical proof.  
 > No divine-guidance claim used as a guarantee of human infallibility.  
 > No spiritual language used to excuse harm to a child.  
+> No graphic trauma exposure imposed on a child. No illegal abuse material treated as content.  
 > No total control. No claim without gates. A false victory must not pass.**
 
 ---
@@ -140,6 +144,7 @@ The altruistic-bargain branch is a symbolic logical reductio: fulfill good and e
 - [`JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.json`](JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.json)
 - [`JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.sha256.json`](JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.sha256.json)
 - [`JANUS-IMAGE-OF-GOD-PARENTS-PROTECT-THE-CHILD-SIGNAL-v1.0.json`](JANUS-IMAGE-OF-GOD-PARENTS-PROTECT-THE-CHILD-SIGNAL-v1.0.json)
+- [`JANUS-CHILD-TRAUMA-GRAPHIC-MEDIA-EARLY-INTERNET-PROTECTION-SIGNAL-v1.0.json`](JANUS-CHILD-TRAUMA-GRAPHIC-MEDIA-EARLY-INTERNET-PROTECTION-SIGNAL-v1.0.json)
 - Historical predecessor: [`JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.1.json`](JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.1.json)
 - Earlier predecessor: [`JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.0.json`](JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.0.json)
 
@@ -152,6 +157,19 @@ This artifact preserves the first-person testimony from Zaporizhzhia during the 
 
 ---
 
+## 12. Child protection / traumatic media / early internet / safe search
+
+- [`JANUS-CHILD-TRAUMA-GRAPHIC-MEDIA-EARLY-INTERNET-PROTECTION-SIGNAL-v1.0.json`](JANUS-CHILD-TRAUMA-GRAPHIC-MEDIA-EARLY-INTERNET-PROTECTION-SIGNAL-v1.0.json)
+- Normalized gate: [`../registry/child_safety/JANUS-CHILD-TRAUMA-GRAPHIC-MEDIA-EARLY-INTERNET-PROTECTION-v1.0.json`](../registry/child_safety/JANUS-CHILD-TRAUMA-GRAPHIC-MEDIA-EARLY-INTERNET-PROTECTION-v1.0.json)
+
+> **Truth without spectacle. Context before memory. Distress is a stop signal.  
+> The adult carries the context. The child must not carry raw horror.  
+> The next child must not pass through the same door alone.**
+
+This door preserves the author's childhood testimony about a school screening of 9/11 footage and accidental early-internet exposure to executions and child sexual abuse material. It separates testimony from verified history, avoids retrospective diagnosis, preserves a strict evidence boundary around Yandex ranking claims, and defines the `JANUS_CHILD_WITNESS_GATE_V1` for schools, search engines, platforms, and AI systems.
+
+---
+
 ## Recommended human reading order
 
 1. [`JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json`](JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json)
@@ -161,10 +179,11 @@ This artifact preserves the first-person testimony from Zaporizhzhia during the 
 5. [`JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.json`](JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.json)
 6. [`JANUS-DUMB-DUMBER-BIRD-NEST-DIVINE-CHILD-v1.0.json`](JANUS-DUMB-DUMBER-BIRD-NEST-DIVINE-CHILD-v1.0.json)
 7. [`JANUS-IMAGE-OF-GOD-PARENTS-PROTECT-THE-CHILD-SIGNAL-v1.0.json`](JANUS-IMAGE-OF-GOD-PARENTS-PROTECT-THE-CHILD-SIGNAL-v1.0.json)
-8. [`JANUS-PERCEPTION-DETERMINES-REALITY-PRECOGNITIVE-SEMANTICS-CONTACT-PROTOCOL-v1.1.json`](JANUS-PERCEPTION-DETERMINES-REALITY-PRECOGNITIVE-SEMANTICS-CONTACT-PROTOCOL-v1.1.json)
-9. [`JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json`](JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json)
-10. [`JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.2.json`](JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.2.json)
-11. [`JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json`](JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json)
+8. [`JANUS-CHILD-TRAUMA-GRAPHIC-MEDIA-EARLY-INTERNET-PROTECTION-SIGNAL-v1.0.json`](JANUS-CHILD-TRAUMA-GRAPHIC-MEDIA-EARLY-INTERNET-PROTECTION-SIGNAL-v1.0.json)
+9. [`JANUS-PERCEPTION-DETERMINES-REALITY-PRECOGNITIVE-SEMANTICS-CONTACT-PROTOCOL-v1.1.json`](JANUS-PERCEPTION-DETERMINES-REALITY-PRECOGNITIVE-SEMANTICS-CONTACT-PROTOCOL-v1.1.json)
+10. [`JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json`](JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json)
+11. [`JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.2.json`](JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.2.json)
+12. [`JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json`](JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json)
 
 ---
 
