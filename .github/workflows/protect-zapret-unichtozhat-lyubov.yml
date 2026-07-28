@@ -50,9 +50,11 @@ jobs:
           expected_target_sha256 = "ce9529161477e980b3288a8e82182ae9e5ba09a7ea30ab85297410bf0dd88068"
           expected_target_blob = "ed871148d81a4ff4e31241fe6902ae4fd33de837"
           expected_detached_sha256 = "1613d6e8d901894f98c2eadde3ac22c3cee669e520d5fe6f4597471e03062e57"
+          expected_witness_sha256 = "7ef708d0477b41e9671f357aadbbcaa36e6e5a7bab078caff086219eb653fb3b"
 
           actual_target_sha256 = hashlib.sha256(target.read_bytes()).hexdigest()
           actual_detached_sha256 = hashlib.sha256(detached.read_bytes()).hexdigest()
+          actual_witness_sha256 = hashlib.sha256(witness.read_bytes()).hexdigest()
           actual_target_blob = subprocess.check_output(
               ["git", "hash-object", str(target)], text=True
           ).strip()
@@ -71,6 +73,11 @@ jobs:
               raise SystemExit(
                   "PROHIBITION VIOLATED: detached integrity record changed. "
                   f"expected {expected_detached_sha256}, got {actual_detached_sha256}"
+              )
+          if actual_witness_sha256 != expected_witness_sha256:
+              raise SystemExit(
+                  "PROHIBITION VIOLATED: anti-forgery witness changed. "
+                  f"expected {expected_witness_sha256}, got {actual_witness_sha256}"
               )
 
           data = json.loads(target.read_text(encoding="utf-8"))
