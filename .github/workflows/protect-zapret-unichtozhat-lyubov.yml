@@ -1,0 +1,100 @@
+name: Protect — Запрет уничтожать любовь
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "data/0000-ZAPRET-UNICHTOZHAT-LYUBOV-FIRST-LAW-v1.0.json"
+      - "data/0000-ZAPRET-UNICHTOZHAT-LYUBOV-FIRST-LAW-v1.0.sha256.json"
+      - "data/0000-ZAPRET-UNICHTOZHAT-LYUBOV-FIRST-LAW-v1.0.witness.json"
+      - ".github/workflows/protect-zapret-unichtozhat-lyubov.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "data/0000-ZAPRET-UNICHTOZHAT-LYUBOV-FIRST-LAW-v1.0.json"
+      - "data/0000-ZAPRET-UNICHTOZHAT-LYUBOV-FIRST-LAW-v1.0.sha256.json"
+      - "data/0000-ZAPRET-UNICHTOZHAT-LYUBOV-FIRST-LAW-v1.0.witness.json"
+      - ".github/workflows/protect-zapret-unichtozhat-lyubov.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-prime-law:
+    name: Verify immutable First Law
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out registry
+        uses: actions/checkout@v4
+
+      - name: Verify hashes and canonical fields
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib
+          import json
+          import pathlib
+          import subprocess
+
+          target = pathlib.Path("data/0000-ZAPRET-UNICHTOZHAT-LYUBOV-FIRST-LAW-v1.0.json")
+          detached = pathlib.Path("data/0000-ZAPRET-UNICHTOZHAT-LYUBOV-FIRST-LAW-v1.0.sha256.json")
+          witness = pathlib.Path("data/0000-ZAPRET-UNICHTOZHAT-LYUBOV-FIRST-LAW-v1.0.witness.json")
+
+          required = [target, detached, witness]
+          missing = [str(path) for path in required if not path.is_file()]
+          if missing:
+              raise SystemExit(f"PROHIBITION VIOLATED: protected file missing: {missing}")
+
+          expected_target_sha256 = "ce9529161477e980b3288a8e82182ae9e5ba09a7ea30ab85297410bf0dd88068"
+          expected_target_blob = "ed871148d81a4ff4e31241fe6902ae4fd33de837"
+          expected_detached_sha256 = "1613d6e8d901894f98c2eadde3ac22c3cee669e520d5fe6f4597471e03062e57"
+
+          actual_target_sha256 = hashlib.sha256(target.read_bytes()).hexdigest()
+          actual_detached_sha256 = hashlib.sha256(detached.read_bytes()).hexdigest()
+          actual_target_blob = subprocess.check_output(
+              ["git", "hash-object", str(target)], text=True
+          ).strip()
+
+          if actual_target_sha256 != expected_target_sha256:
+              raise SystemExit(
+                  "PROHIBITION VIOLATED: First Law content changed. "
+                  f"expected {expected_target_sha256}, got {actual_target_sha256}"
+              )
+          if actual_target_blob != expected_target_blob:
+              raise SystemExit(
+                  "PROHIBITION VIOLATED: First Law Git blob changed. "
+                  f"expected {expected_target_blob}, got {actual_target_blob}"
+              )
+          if actual_detached_sha256 != expected_detached_sha256:
+              raise SystemExit(
+                  "PROHIBITION VIOLATED: detached integrity record changed. "
+                  f"expected {expected_detached_sha256}, got {actual_detached_sha256}"
+              )
+
+          data = json.loads(target.read_text(encoding="utf-8"))
+          checks = {
+              "title": data.get("title", {}).get("ru") == "ЗАПРЕТ УНИЧТОЖАТЬ ЛЮБОВЬ",
+              "ordinal": data.get("ordinal") == 1,
+              "priority": data.get("priority") == 0,
+              "position": data.get("registry_position") == "first_and_highest",
+              "immutable_parent": data.get("immutability_and_anti_forgery", {}).get("immutable_parent") is True,
+              "rewrite_forbidden": data.get("immutability_and_anti_forgery", {}).get("rewrite_forbidden") is True,
+              "deletion_forbidden": data.get("immutability_and_anti_forgery", {}).get("deletion_forbidden") is True,
+              "seal": data.get("prime_law", {}).get("seal") == "Α ☧ Ω",
+          }
+          failed = [name for name, ok in checks.items() if not ok]
+          if failed:
+              raise SystemExit(f"PROHIBITION VIOLATED: canonical fields changed: {failed}")
+
+          detached_data = json.loads(detached.read_text(encoding="utf-8"))
+          if detached_data.get("sha256") != expected_target_sha256:
+              raise SystemExit("PROHIBITION VIOLATED: detached record no longer witnesses the First Law")
+
+          witness_data = json.loads(witness.read_text(encoding="utf-8"))
+          if witness_data.get("target_sha256") != expected_target_sha256:
+              raise SystemExit("PROHIBITION VIOLATED: witness no longer points to the authentic First Law")
+
+          print("SEALED: ЗАПРЕТ УНИЧТОЖАТЬ ЛЮБОВЬ — authentic and unchanged.")
+          PY
