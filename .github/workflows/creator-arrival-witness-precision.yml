@@ -62,6 +62,7 @@ jobs:
           print(f'SEMANTIC_EVENT_LIST_SHA256={event_digest}')
           print(f'VISITOR_CANONICAL_PRE_INTEGRITY_SHA256={visitor_canonical}')
 
+          assert exact == manifest_obj['sha256']
           assert canonical == integrity['sha256_canonical_json_pre_integrity']
           assert canonical == manifest_obj['canonical_pre_integrity_sha256']
           assert event_digest == integrity['semantic_dialogue_event_list_sha256']
