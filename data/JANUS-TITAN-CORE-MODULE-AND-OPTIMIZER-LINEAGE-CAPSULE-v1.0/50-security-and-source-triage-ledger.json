@@ -6,7 +6,20 @@
     "directories_total": 77,
     "unique_contents": 451,
     "duplicate_copies": 549,
-    "extension_counts": {".backup": 2, ".bat": 21, ".csv": 14, ".db": 2, ".html": 20, ".ini": 2, ".json": 45, ".log": 6, ".py": 486, ".pyc": 354, ".txt": 44, "[no_ext]": 4},
+    "extension_counts": {
+      ".backup": 2,
+      ".bat": 21,
+      ".csv": 14,
+      ".db": 2,
+      ".html": 20,
+      ".ini": 2,
+      ".json": 45,
+      ".log": 6,
+      ".py": 486,
+      ".pyc": 354,
+      ".txt": 44,
+      "[no_ext]": 4
+    },
     "mirror_exact_pairs_between_root_and_backup": 373,
     "mirror_pairs_with_different_content": 11
   },
@@ -17,8 +30,20 @@
     "ast_fail_distinct": 7
   },
   "credential_and_private_data_scan": {
-    "unique_credential_shaped_values": {"google_api_key": 15, "openai_key": 4, "groq_key": 9, "telegram_bot_token": 0, "aws_access_key": 0, "github_token": 0},
-    "affected_file_counts": {"google_api_key": 6, "openai_key": 2, "groq_key": 2, "private_ipv4": 16},
+    "unique_credential_shaped_values": {
+      "google_api_key": 15,
+      "openai_key": 4,
+      "groq_key": 9,
+      "telegram_bot_token": 0,
+      "aws_access_key": 0,
+      "github_token": 0
+    },
+    "affected_file_counts": {
+      "google_api_key": 6,
+      "openai_key": 2,
+      "groq_key": 2,
+      "private_ipv4": 16
+    },
     "private_ipv4_unique_values": 1,
     "private_ipv4_occurrences": 176,
     "windows_path_text_files": 57,
@@ -27,27 +52,59 @@
     "required_action": "Treat all credential values as compromised, rotate/revoke them, remove credential stores from working copies and history, and rebuild any derived artifacts."
   },
   "private_database_summary": {
-    "duplicate_database_paths": ["janus.db", "Janus_Titan — копия/janus.db"],
+    "duplicate_database_paths": [
+      "janus.db",
+      "Janus_Titan — копия/janus.db"
+    ],
     "database_sha256": "f0191bcd53f48f04236fc7e411158f98f039a1fb474098984b65939493c7c7bd",
     "tables": {
       "thoughts_rows": 27,
       "vault_rows": 15,
-      "vault_key_type_counts": {"google_api": 15},
+      "vault_key_type_counts": {
+        "google_api": 15
+      },
       "graph_state_rows": 1,
       "janus_experiments_rows": 1
     },
     "decision": "EXCLUDE_DATABASE_AND_ALL_ROW_CONTENT"
   },
   "notable_exclusions": [
-    {"source": "JanusKeys.txt and backup copy", "decision": "EXCLUDE_CREDENTIAL_STORE"},
-    {"source": "moons.txt.backup and backup copy", "decision": "EXCLUDE_MULTI_PROVIDER_CREDENTIAL_STORE"},
-    {"source": "janus.db and backup copy", "decision": "EXCLUDE_MEMORY_GRAPH_EXPERIMENT_AND_KEY_VAULT"},
-    {"source": "logs/titan.log and backup copy", "decision": "EXCLUDE_OPERATIONAL_LOG_WITH_PRIVATE_ENDPOINT"},
-    {"source": "354 pyc files", "decision": "EXCLUDE_COMPILED_BYTECODE_AND_CACHE"},
-    {"source": "21 batch files", "decision": "ROUTE_TO_CODE_REVIEW_NOT_META_REGISTRY"},
-    {"source": "JANUS-MUSIC-SOUL-SIGNAL-REGISTRY-v23.3.json", "decision": "EXCLUDE_RAW_LYRIC_EXCERPTS; ONLY_LYRIC_FREE_NORMALIZATION_COULD_BE_ADMITTED"},
-    {"source": "JANUS-MUSIC-SOUL-SIGNAL-REGISTRY-v23.4.json", "decision": "REJECT_ZERO_BYTE_FILE"},
-    {"source": "JANUS-INTERSTELLAR-TESSERACT-OBSERVATION-v23.1.py", "decision": "DO_NOT_DUPLICATE_EXISTING_REGISTRY_ARTIFACT"}
+    {
+      "source": "JanusKeys.txt and backup copy",
+      "decision": "EXCLUDE_CREDENTIAL_STORE"
+    },
+    {
+      "source": "moons.txt.backup and backup copy",
+      "decision": "EXCLUDE_MULTI_PROVIDER_CREDENTIAL_STORE"
+    },
+    {
+      "source": "janus.db and backup copy",
+      "decision": "EXCLUDE_MEMORY_GRAPH_EXPERIMENT_AND_KEY_VAULT"
+    },
+    {
+      "source": "logs/titan.log and backup copy",
+      "decision": "EXCLUDE_OPERATIONAL_LOG_WITH_PRIVATE_ENDPOINT"
+    },
+    {
+      "source": "354 pyc files",
+      "decision": "EXCLUDE_COMPILED_BYTECODE_AND_CACHE"
+    },
+    {
+      "source": "21 batch files",
+      "decision": "ROUTE_TO_CODE_REVIEW_NOT_META_REGISTRY"
+    },
+    {
+      "source": "JANUS-MUSIC-SOUL-SIGNAL-REGISTRY-v23.3.json",
+      "decision": "EXCLUDE_RAW_LYRIC_EXCERPTS; ONLY_LYRIC_FREE_NORMALIZATION_COULD_BE_ADMITTED"
+    },
+    {
+      "source": "JANUS-MUSIC-SOUL-SIGNAL-REGISTRY-v23.4.json",
+      "decision": "REJECT_ZERO_BYTE_FILE"
+    },
+    {
+      "source": "JANUS-INTERSTELLAR-TESSERACT-OBSERVATION-v23.1.py",
+      "decision": "DO_NOT_DUPLICATE_EXISTING_REGISTRY_ARTIFACT"
+    }
   ],
   "decision_counts": {
     "ROUTE_SOURCE_TO_CODE_REPOSITORY_AFTER_HARDENING": 486,
