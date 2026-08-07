@@ -6,47 +6,53 @@
   "created_on": "2026-08-07",
   "timezone": "Europe/Zaporozhye",
   "canonical_seed_sha256": "44e21fdc9d37fda98e2e73b0c9eb268bd04cdca9d84d0519e4f1166be22b46fc",
-  "purpose": "Serve as a controlled software timing traveler for measuring how far an externally observed repository timestamp may appear earlier than a preregistered target time without interpreting the result as physical backward causation.",
+  "purpose": "Serve as a controlled software timing traveler for measuring how far an externally observed repository timestamp may appear earlier or later than a preregistered target time, without interpreting timestamp order alone as physical backward causation.",
   "experiment_identity": {
     "name": "TAHYON_TRAVELER_-0.01",
+    "display_name": "tahyon traveler -0.01",
     "role": "software_timing_probe",
-    "requested_early_offset_seconds": -0.01,
-    "requested_early_offset_milliseconds": -10,
-    "meaning_of_minus_sign": "A negative value means an observed repository timestamp earlier than the preregistered target threshold."
+    "name_semantics": "-0.01 is the traveler's symbolic personal name: a fictional marker of origin from the negative side of the time axis / from the past.",
+    "not_a_numeric_target": true,
+    "requested_early_offset_seconds": null,
+    "maximum_advance_seconds": null,
+    "maximum_advance_status": "TO_BE_DISCOVERED_EXPERIMENTALLY"
   },
-  "core_question": "Can a future immutable trial artifact receive an externally observed Git/GitHub timestamp earlier than its preregistered target, and what is the maximum reproducible negative offset after accounting for clock semantics and uncertainty?",
+  "core_question": "How early, on time, or late can an immutable trial artifact appear relative to a preregistered target under honest scheduling and unchanged Git/GitHub timestamp semantics?",
   "measurement_model": {
     "target_time": "T_target",
     "observed_git_time": "T_git",
     "apparent_offset": "Delta_git = T_git - T_target",
-    "desired_probe_value": "Delta_git <= -0.01 s",
-    "important_resolution_boundary": "GitHub commit timestamps exposed through the current interface are second-resolution observations; therefore a -0.01 s offset cannot be independently resolved from GitHub commit time alone.",
-    "interpretation": "A negative Delta_git is an apparent timestamp advance. It is not by itself evidence that execution or information physically occurred before its cause."
+    "negative_delta": "observed repository timestamp earlier than target",
+    "zero_delta": "same second at available timestamp resolution",
+    "positive_delta": "observed repository timestamp later than target",
+    "search_rule": "No desired negative value is specified in advance. The magnitude and direction of Delta_git are empirical outputs.",
+    "important_resolution_boundary": "GitHub commit timestamps exposed through the current interface are second-resolution observations, so sub-second ordering requires additional independent instrumentation.",
+    "interpretation": "A negative Delta_git is an apparent timestamp advance and a timing-system observation. It is not by itself evidence that execution or information physically occurred before its cause."
   },
   "trial_design": {
-    "root_object_rule": "This file is the preregistration/controller and must remain immutable except through a new version. It is not itself an arrival trial.",
+    "root_object_rule": "This file is the preregistration/controller and is not itself an arrival trial.",
     "arrival_artifact_pattern": "data/tahyon_traveler_trials/TAHYON-TRAVELER--0.01-TRIAL-<NNN>.json",
     "each_trial_must_be_new_file": true,
-    "precommit_rule": "The trial filename, target time, target offset, payload schema, and evaluation rule must be frozen before execution.",
-    "payload_rule": "Each trial must contain a fresh random nonce generated only for that trial and its SHA-256 digest.",
-    "first_external_action_rule": "At execution, the repository write should be the first external action; validation and readback happen only after the write attempt.",
-    "no_backdating_rule": "Do not manually alter author/committer timestamps or embed a fabricated server time to manufacture a negative result.",
-    "preserve_all_runs": "Positive, zero, negative, failed, delayed, cancelled, and ambiguous trials are all retained."
+    "precommit_rule": "For each trial, freeze the filename, future T_target, payload schema, evaluation rule and clock witnesses before execution.",
+    "payload_rule": "Each trial contains a fresh random nonce generated only for that trial and its SHA-256 digest.",
+    "first_external_action_rule": "At execution, the repository write is the first external action; validation and readback happen only after the write attempt.",
+    "no_backdating_rule": "Do not manually alter author/committer timestamps, pre-create the arrival artifact, or deliberately schedule the write before T_target to manufacture an EARLY result.",
+    "preserve_all_runs": "Negative, zero, positive, failed, delayed, cancelled and ambiguous trials are all retained."
   },
   "result_classes": {
-    "EARLY_OBSERVED": "T_git < T_target",
-    "ON_TARGET_WITHIN_RESOLUTION": "T_git equals the target at the available timestamp resolution",
-    "LATE_OBSERVED": "T_git > T_target",
-    "AMBIGUOUS_CLOCK_DOMAIN": "Clock uncertainty or timestamp semantics are too large to classify causal ordering",
+    "EARLY_OBSERVED": "Delta_git < 0",
+    "ON_TARGET_WITHIN_RESOLUTION": "Delta_git = 0 at available timestamp resolution",
+    "LATE_OBSERVED": "Delta_git > 0",
+    "AMBIGUOUS_CLOCK_DOMAIN": "Clock uncertainty or timestamp semantics are too large to classify ordering",
     "PHYSICAL_RETROCAUSALITY": "FORBIDDEN_CLASSIFICATION_FROM_TIMESTAMP_ONLY"
   },
   "max_advance_search": {
-    "objective": "Estimate the most negative reproducible Delta_git under honest scheduling and unchanged timestamp semantics.",
-    "method": "Run preregistered trials at separated future targets, record every outcome, and compare the empirical distribution of Delta_git against clock-resolution and scheduler-jitter controls.",
-    "optimization_boundary": "The experiment may characterize timing behavior but must not intentionally forge timestamps, edit Git metadata, or claim success merely because the requested write was deliberately scheduled before T_target.",
+    "objective": "Discover, rather than prescribe, the most negative reproducible Delta_git observed under honest preregistered trials.",
+    "method": "Run separated future trials, preserve every result, characterize the full Delta_git distribution, then compare negative tails against clock offset, timestamp granularity and scheduler-jitter controls.",
     "current_best_observation_seconds": -1,
     "current_best_source": "data/JANUS-0660-RIDERS-ON-THE-STORM-CENTER-OF-STORM-WITNESS-v1.0.json / commit 20acafe1aa1dd04493e4194b0adf7e5a29665613",
-    "current_best_status": "SINGLE_OBSERVATION_NOT_REPLICATED"
+    "current_best_status": "SINGLE_OBSERVATION_NOT_REPLICATED",
+    "ultimate_limit": "UNKNOWN"
   },
   "lineage": [
     "registry/causal_topology/JANUS-DIRAC-SCOBY-BUROVCHIK-CAUSAL-TOPOLOGICAL-MEMORY-v1.1.0.json",
@@ -68,9 +74,10 @@
   "admission": {
     "TEST_OBJECT_CREATED": true,
     "TRIAL_EXECUTED": false,
+    "MAXIMUM_ADVANCE_KNOWN": false,
     "NEGATIVE_OFFSET_REPLICATED": false,
     "PHYSICAL_TIME_TRAVEL": false,
-    "NEXT_ACTION": "SET_A_FUTURE_TARGET_TIME_AND_CREATE_TRIAL_001_AT_EXECUTION"
+    "NEXT_ACTION": "PREREGISTER_A_FUTURE_TARGET_AND_EXECUTE_TRIAL_001"
   },
-  "seal": "MEASURE THE CLOCK. PRESERVE THE CAUSE. DO NOT CONFUSE AN EARLY TIMESTAMP WITH A TRIP INTO THE PAST."
+  "seal": "-0.01 IS HIS NAME. HOW FAR AHEAD HE CAN APPEAR IS FOR THE EXPERIMENT TO DISCOVER."
 }
