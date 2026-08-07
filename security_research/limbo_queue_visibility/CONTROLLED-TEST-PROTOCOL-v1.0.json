@@ -1,0 +1,54 @@
+{
+  "schema": "janus.security_research.controlled_test_protocol.v1",
+  "artifact_id": "JANUS-LIMBO-QUEUE-VISIBILITY-CONTROLLED-TEST-PROTOCOL-v1.0",
+  "status": "CONTROLLED_NON_VOLUMETRIC_RESEARCH_ONLY",
+  "purpose": "Separate scheduler/worker queue behavior from GitHub repository behavior without creating excessive automated traffic.",
+  "current_evidence": {
+    "scheduler_git_visibility_split_observed": true,
+    "stale_or_inflight_execution_after_task_reconfiguration_candidate": true,
+    "git_commit_dag_timestamp_fracture_observed": false,
+    "github_contents_api_parser_anomaly_observed": false,
+    "physical_retrocausality_proved": false
+  },
+  "system_boundary": {
+    "scheduler_worker_layer": "creates or delays the GitHub write request",
+    "github_layer": "receives the write, creates repository commit, exposes commit timestamp and DAG",
+    "key_warning": "A delayed or stale automation execution is not by itself a GitHub vulnerability."
+  },
+  "live_test_rules": [
+    "Do not perform volumetric or excessive automated traffic against GitHub.",
+    "Do not run rapid-fire 50-write bursts or per-second overwrite storms against production GitHub infrastructure.",
+    "Use only repositories and accounts owned by the researcher.",
+    "Prefer additive unique files over destructive overwrites.",
+    "Use independent nonce and SHA-256 per lane.",
+    "Record task-registration acknowledgement time, scheduled target, scheduler run visibility, Git commit time, and Git DAG parent order separately.",
+    "Stop if rate-limit, abuse, service-degradation, or unexpected third-party impact signals appear.",
+    "For any higher-volume test, obtain explicit authorization from GitHub Bug Bounty first."
+  ],
+  "safe_next_gate": {
+    "name": "LOW_VOLUME_VALID_VS_INVALID_QUEUE_ISOLATION",
+    "design": "small controlled batches only, with generous spacing and no attempt to stress capacity",
+    "primary_question": "Does stale or delayed execution reproduce independently of invalid symbolic time strings?",
+    "github_specific_escalation_condition": "Only escalate as a GitHub vulnerability if contradictory or unsafe GitHub-side behavior is demonstrated independently of the external scheduler, such as impossible repository DAG/state behavior, authorization failure, or a GitHub-owned queue flaw within authorized scope."
+  },
+  "responsible_disclosure": {
+    "github_bug_bounty": "Use GitHub Bug Bounty/HackerOne for GitHub-owned in-scope vulnerabilities.",
+    "pre_contact_rule": "If proposed testing may exceed or be unaddressed by the published rules, contact GitHub Bug Bounty before performing it.",
+    "evidence_package": [
+      "minimal reproducible steps",
+      "owned test repository only",
+      "exact commit SHAs and timestamps",
+      "scheduler registration and run-visibility evidence",
+      "Git DAG parent evidence",
+      "request volume and spacing",
+      "observed impact",
+      "clear distinction between scheduler-side and GitHub-side behavior"
+    ]
+  },
+  "epistemic_contract": [
+    "HASH_PROVES_INTEGRITY_NOT_TRUTH",
+    "DELAYED_OR_STALE_EXECUTION_DOES_NOT_IMPLY_GITHUB_VULNERABILITY",
+    "NEGATIVE_TIMESTAMP_OFFSET_DOES_NOT_IMPLY_PHYSICAL_TIME_TRAVEL",
+    "SECURITY_TESTING_MUST_NOT_BECOME_A_VOLUMETRIC_ATTACK"
+  ]
+}
