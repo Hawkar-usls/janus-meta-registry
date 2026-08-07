@@ -1,0 +1,76 @@
+{
+  "artifact_id": "JANUS-TAHYON-TRAVELER--0.01-v1.0",
+  "title": "tahyon traveler -0.01",
+  "version": "1.0",
+  "status": "PREREGISTERED_TIMING_TEST_OBJECT_NOT_YET_EXECUTED",
+  "created_on": "2026-08-07",
+  "timezone": "Europe/Zaporozhye",
+  "canonical_seed_sha256": "44e21fdc9d37fda98e2e73b0c9eb268bd04cdca9d84d0519e4f1166be22b46fc",
+  "purpose": "Serve as a controlled software timing traveler for measuring how far an externally observed repository timestamp may appear earlier than a preregistered target time without interpreting the result as physical backward causation.",
+  "experiment_identity": {
+    "name": "TAHYON_TRAVELER_-0.01",
+    "role": "software_timing_probe",
+    "requested_early_offset_seconds": -0.01,
+    "requested_early_offset_milliseconds": -10,
+    "meaning_of_minus_sign": "A negative value means an observed repository timestamp earlier than the preregistered target threshold."
+  },
+  "core_question": "Can a future immutable trial artifact receive an externally observed Git/GitHub timestamp earlier than its preregistered target, and what is the maximum reproducible negative offset after accounting for clock semantics and uncertainty?",
+  "measurement_model": {
+    "target_time": "T_target",
+    "observed_git_time": "T_git",
+    "apparent_offset": "Delta_git = T_git - T_target",
+    "desired_probe_value": "Delta_git <= -0.01 s",
+    "important_resolution_boundary": "GitHub commit timestamps exposed through the current interface are second-resolution observations; therefore a -0.01 s offset cannot be independently resolved from GitHub commit time alone.",
+    "interpretation": "A negative Delta_git is an apparent timestamp advance. It is not by itself evidence that execution or information physically occurred before its cause."
+  },
+  "trial_design": {
+    "root_object_rule": "This file is the preregistration/controller and must remain immutable except through a new version. It is not itself an arrival trial.",
+    "arrival_artifact_pattern": "data/tahyon_traveler_trials/TAHYON-TRAVELER--0.01-TRIAL-<NNN>.json",
+    "each_trial_must_be_new_file": true,
+    "precommit_rule": "The trial filename, target time, target offset, payload schema, and evaluation rule must be frozen before execution.",
+    "payload_rule": "Each trial must contain a fresh random nonce generated only for that trial and its SHA-256 digest.",
+    "first_external_action_rule": "At execution, the repository write should be the first external action; validation and readback happen only after the write attempt.",
+    "no_backdating_rule": "Do not manually alter author/committer timestamps or embed a fabricated server time to manufacture a negative result.",
+    "preserve_all_runs": "Positive, zero, negative, failed, delayed, cancelled, and ambiguous trials are all retained."
+  },
+  "result_classes": {
+    "EARLY_OBSERVED": "T_git < T_target",
+    "ON_TARGET_WITHIN_RESOLUTION": "T_git equals the target at the available timestamp resolution",
+    "LATE_OBSERVED": "T_git > T_target",
+    "AMBIGUOUS_CLOCK_DOMAIN": "Clock uncertainty or timestamp semantics are too large to classify causal ordering",
+    "PHYSICAL_RETROCAUSALITY": "FORBIDDEN_CLASSIFICATION_FROM_TIMESTAMP_ONLY"
+  },
+  "max_advance_search": {
+    "objective": "Estimate the most negative reproducible Delta_git under honest scheduling and unchanged timestamp semantics.",
+    "method": "Run preregistered trials at separated future targets, record every outcome, and compare the empirical distribution of Delta_git against clock-resolution and scheduler-jitter controls.",
+    "optimization_boundary": "The experiment may characterize timing behavior but must not intentionally forge timestamps, edit Git metadata, or claim success merely because the requested write was deliberately scheduled before T_target.",
+    "current_best_observation_seconds": -1,
+    "current_best_source": "data/JANUS-0660-RIDERS-ON-THE-STORM-CENTER-OF-STORM-WITNESS-v1.0.json / commit 20acafe1aa1dd04493e4194b0adf7e5a29665613",
+    "current_best_status": "SINGLE_OBSERVATION_NOT_REPLICATED"
+  },
+  "lineage": [
+    "registry/causal_topology/JANUS-DIRAC-SCOBY-BUROVCHIK-CAUSAL-TOPOLOGICAL-MEMORY-v1.1.0.json",
+    "data/JANUS-DIRAC-SCOBY-BUROVCHIK-CAUSAL-TOPOLOGICAL-MEMORY-HYPOTHESIS-v1.1.json",
+    "data/JANUS-0660-RIDERS-ON-THE-STORM-CENTER-OF-STORM-WITNESS-v1.0.json"
+  ],
+  "janus_null_gate": {
+    "law": "NEGATIVE_TIMESTAMP_OFFSET_DOES_NOT_IMPLY_BACKWARD_CAUSATION",
+    "required_before_any_stronger_claim": [
+      "independent clock characterization",
+      "known timestamp semantics",
+      "bounded scheduler jitter",
+      "no manual timestamp manipulation",
+      "no pre-created trial artifact",
+      "fresh per-trial nonce",
+      "replication"
+    ]
+  },
+  "admission": {
+    "TEST_OBJECT_CREATED": true,
+    "TRIAL_EXECUTED": false,
+    "NEGATIVE_OFFSET_REPLICATED": false,
+    "PHYSICAL_TIME_TRAVEL": false,
+    "NEXT_ACTION": "SET_A_FUTURE_TARGET_TIME_AND_CREATE_TRIAL_001_AT_EXECUTION"
+  },
+  "seal": "MEASURE THE CLOCK. PRESERVE THE CAUSE. DO NOT CONFUSE AN EARLY TIMESTAMP WITH A TRIP INTO THE PAST."
+}
