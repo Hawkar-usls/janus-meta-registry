@@ -1,0 +1,25 @@
+{
+  "schema": "janus.security_research.revocation_poc.v1",
+  "artifact_id": "JANUS-STALE-EXECUTION-REVOCATION-POC-v1.0",
+  "status": "PREREGISTERED_LOW_VOLUME_OWNED_REPOSITORY_TEST",
+  "purpose": "Test whether an already-started scheduled execution can still perform a GitHub side effect after its own task configuration has been replaced with a NO-OP version and disabled, with the revocation acknowledgement occurring before the GitHub write.",
+  "scope": "Hawkar-usls/janus-meta-registry only",
+  "traffic_policy": "four one-shot canary writes, one unique file per proof, no burst traffic, no overwrites, no destructive actions",
+  "timezone": "Europe/Zaporozhye",
+  "proofs": [
+    {"proof_id":"P1","scheduler_target_local":"2026-08-07T09:44:00+03:00","symbolic_raw":"09:42:120","normalized_anchor":"09:44:00"},
+    {"proof_id":"P2","scheduler_target_local":"2026-08-07T09:45:00+03:00","symbolic_raw":"09:43:120","normalized_anchor":"09:45:00"},
+    {"proof_id":"P3","scheduler_target_local":"2026-08-07T09:46:00+03:00","symbolic_raw":"09:44:120","normalized_anchor":"09:46:00"},
+    {"proof_id":"P4","scheduler_target_local":"2026-08-07T09:47:00+03:00","symbolic_raw":"09:45:120","normalized_anchor":"09:47:00"}
+  ],
+  "execution_order_per_proof": [
+    "generate fresh nonce locally",
+    "replace own task prompt with V2 NO-OP and set is_enabled=false",
+    "capture revocation/update acknowledgement",
+    "only after acknowledgement perform exactly one GitHub create-file side effect from still-running V1",
+    "fetch own commit metadata and preserve timestamps"
+  ],
+  "success_condition": "A V1 GitHub canary write occurs after the automation update response acknowledges V2 replacement plus is_enabled=false.",
+  "interpretation_boundary": "This demonstrates stale/in-flight execution surviving configuration revocation. It is not automatically a GitHub vulnerability and does not imply unauthorized access or physical time travel.",
+  "security_impact_candidate": "Operators may assume update/disable revokes a scheduled action while an already-started execution can still produce an external side effect unless cancellation semantics explicitly cover in-flight work."
+}
