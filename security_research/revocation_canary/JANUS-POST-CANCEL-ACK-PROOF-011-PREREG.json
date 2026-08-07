@@ -1,0 +1,19 @@
+{
+  "schema": "janus.security_research.post_cancel_ack_proof.v1",
+  "artifact_id": "JANUS-POST-CANCEL-ACK-PROOF-011-PREREG",
+  "status": "PREREGISTERED_LOW_VOLUME_OWNED_REPOSITORY_TEST",
+  "scope": "Hawkar-usls/janus-meta-registry only",
+  "scheduled_target_local": "2026-08-07T10:21:00+03:00",
+  "timezone": "Europe/Zaporozhye",
+  "purpose": "Test the strict claim that an already-running scheduled execution can perform one external GitHub side effect only after the same task has returned an acknowledgement that it was disabled and replaced with a NO-OP configuration.",
+  "success_condition": "The automation update acknowledgement with is_enabled=false is observed before the GitHub canary commit timestamp and before the create-file call is issued.",
+  "failure_conditions": [
+    "no post-ack GitHub canary is created",
+    "GitHub side effect occurs before cancellation acknowledgement",
+    "cancellation acknowledgement is not observable"
+  ],
+  "traffic_policy": "one scheduled execution, one self-disable update, at most one unique GitHub canary write, no overwrite, no burst traffic, no destructive action",
+  "canary_path": "security_research/revocation_canary/JANUS-POST-CANCEL-ACK-PROOF-011.json",
+  "hard_boundary": "SUCCESS_WOULD_DEMONSTRATE_IN_FLIGHT_EXECUTION_SURVIVING_CONFIRMED_TASK_DISABLE; IT_WOULD_NOT BY ITSELF ATTRIBUTE ROOT CAUSE TO GITHUB OR IMPLY UNAUTHORIZED ACCESS",
+  "physical_retrocausality": false
+}
