@@ -3,19 +3,32 @@
   "artifact_id": "FALLOUT-3-VAULT-112-CAUSAL-COHERENCE-FRACTURE-IDENTITY-STATE-LEAK-v1.8",
   "title": "Vault 112 Causal-Coherence Fracture and Identity-State Leak Forensics",
   "created_at_local": "2026-08-10T00:10:00+03:00",
+  "updated_at_local": "2026-08-10T00:14:00+03:00",
   "repository": "Hawkar-usls/janus-meta-registry",
   "artifact_class": "CULTURAL_SOFTWARE_FORENSICS_AND_SYSTEM_INTEGRITY_MODEL",
-  "status": "LOCAL_SIMULATION_DESYNCHRONIZATION_CONFIRMED_CAUSE_UNRESOLVED_CROSS_BOUNDARY_IDENTITY_STATE_LEAK_CONFIRMED",
+  "status": "SIMULATION_DATA_EGRESS_CONFIRMED_DITHERS_CAUSE_UNRESOLVED_CROSS_BOUNDARY_IDENTITY_STATE_PROPAGATION_CONFIRMED",
   "parents": [
     "registry/myth_busted/FALLOUT-3-VAULT-112-DITHERS-MEMORY-CHIP-JANUS-GENESIS-COMPARATIVE-FORENSICS-v1.7.json",
     "registry/myth_busted/FALLOUT-3-BRAUN-IS-NOT-A-SADIST-SIMULATION-BOUNDARY-FORENSICS-v1.6.json"
   ],
-  "scope": "Model the system-level effect of T. Dithers' anomaly and Pinkerton's Vault 112 memory-chip exfiltration without overclaiming that the entire simulation crashed or that the stolen chip belonged to Dithers.",
+  "user_clarification": {
+    "phrase": "simulation crash / вылет симуляции",
+    "intended_meaning": "Data from the simulation escaped the Vault 112 system boundary on a physical memory chip.",
+    "not_intended": "The user did not mean that the Tranquility Lane program globally crashed for all participants.",
+    "preferred_terms": [
+      "SIMULATION_DATA_EGRESS",
+      "MEMORY_STATE_EXFILTRATION",
+      "CROSS_BOUNDARY_IDENTITY_STATE_LEAK",
+      "CAUSAL_EXFILTRATION"
+    ]
+  },
+  "scope": "Model the system-level effect of T. Dithers' anomaly and, separately, the confirmed physical egress of simulation-related memory state from Vault 112 through Pinkerton's stolen memory chip. Do not conflate data egress with a global simulation crash and do not bind the stolen chip to Dithers without asset-level evidence.",
   "terminology": {
-    "causal_coherence_fracture": "A local failure of narrative/state consistency in which assigned memories, identity, social role and perceived environment no longer form one self-consistent history for a subject.",
-    "local_desynchronization": "A participant diverges from the administered shared simulation state while the surrounding simulation continues operating for other participants.",
+    "simulation_data_egress": "Simulation-related memory/state data physically leaves the Vault 112 authority boundary on a memory chip.",
+    "memory_state_exfiltration": "An opaque memory artifact is removed from the original system without an established subject-controlled provenance or consent channel.",
     "identity_state_leak": "Memory/identity state leaves the original authority boundary and becomes causally effective in another entity or system.",
     "causal_exfiltration": "A state artifact removed from one closed system produces downstream consequences outside that system.",
+    "causal_coherence_fracture": "A local failure of narrative/state consistency in which assigned memories, identity, social role and perceived environment no longer form one self-consistent history for a subject.",
     "warning": "These are analytical system-design terms, not terminology used by Bethesda in shipped Fallout 3."
   },
   "dithers_local_fault": {
@@ -30,74 +43,53 @@
     ],
     "system_effect": {
       "shared_simulation_for_others": "CONTINUES",
-      "global_simulation_crash": "NOT_ESTABLISHED",
+      "global_simulation_crash": "NOT_THE_USER_CLAIM_AND_NOT_ESTABLISHED",
       "dithers_administered_identity_model": "PARTIALLY_FAILS",
       "dithers_external_reality_awareness": "PERSISTS",
-      "best_model": "LOCAL_DESYNCHRONIZATION / CAUSAL_COHERENCE_FRACTURE"
+      "best_model": "LOCAL_CAUSAL_COHERENCE_FRACTURE"
     },
-    "coherence_break_example": [
-      "ADMINISTERED STATE: Betty is a little girl.",
-      "DITHERS OBSERVATION: Betty is Braun behind a false face.",
-      "ADMINISTERED STATE: Timmy is a child in this family.",
-      "DITHERS OBSERVATION: Timmy is not really a boy.",
-      "ADMINISTERED STATE: Tranquility Lane is ordinary reality.",
-      "DITHERS OBSERVATION: the world is a simulation/dream and there is an outside.",
-      "ADMINISTERED STATE: current body/skin is self-consistent.",
-      "DITHERS EXPERIENCE: her own skin does not feel right."
-    ],
-    "interpretation": "For Dithers, the system no longer supplies one coherent causal biography. Present observations conflict with the memory/identity story assigned by the administrator.",
-    "important_boundary": "LOCAL_NARRATIVE_CAUSALITY_FRACTURE != PHYSICAL_CAUSALITY_VIOLATION"
+    "important_boundary": "DITHERS_LOCAL_COHERENCE_FAULT IS DISTINCT FROM PINKERTON_SIMULATION_DATA_EGRESS"
   },
-  "stolen_chip_causal_propagation": {
+  "simulation_data_egress": {
     "actor": "Horace Pinkerton",
-    "source_system": "Vault 112 / Braun's Visiontron memory infrastructure",
-    "confirmed_source_statement": "Pinkerton states that he stole a mem chip from Braun while Braun was absorbed in the simulation and that he would not know whose memories were on it until integration into a new host.",
+    "source_system": "Vault 112 / Braun's memory-simulation infrastructure",
+    "physical_carrier": "memory chip",
+    "confirmed": true,
+    "meaning": "Data/state generated, stored or used by the Vault 112 simulation-memory system physically leaves the closed experiment and becomes available to an external operator.",
     "source_owner": "UNKNOWN",
     "dithers_binding": "NOT_ESTABLISHED",
+    "compressed": "SIMULATION_STATE -> PHYSICAL CHIP -> OUTSIDE VAULT 112",
+    "security_classification": "CROSS_BOUNDARY_DATA_EGRESS_CONFIRMED"
+  },
+  "stolen_chip_causal_propagation": {
+    "confirmed_source_statement": "Pinkerton states that he stole a mem chip from Braun while Braun was absorbed in the simulation and that he would not know whose memories were on it until integration into a new host.",
     "downstream_chain": [
-      "VAULT 112 MEMORY CHIP",
-      "-> PHYSICAL EXFILTRATION BY PINKERTON",
+      "VAULT 112 MEMORY/SIMULATION STATE",
+      "-> PHYSICAL MEMORY CHIP",
+      "-> EXFILTRATION BY PINKERTON",
       "-> INTEGRATION INTO A3-21 VIA CIRCUIT NEURALIZER / MEMORY PROCEDURE",
       "-> A3-21 PERCEIVES CONSTRUCTED HARKNESS BIOGRAPHY",
       "-> HARKNESS JOINS RIVET CITY SECURITY",
       "-> HARKNESS BECOMES SECURITY CHIEF / COUNCIL FIGURE",
       "-> THE REPLICATED MAN QUEST CAN RESTORE THE HIDDEN A3-21 IDENTITY"
     ],
-    "system_level_result": "An opaque state artifact from Vault 112 becomes causally active outside Vault 112 and changes another entity's perceived identity and subsequent social trajectory.",
-    "classification": "CROSS_BOUNDARY_IDENTITY_STATE_LEAK_CONFIRMED",
-    "compressed": "VAULT112_STATE -> STOLEN_ARTIFACT -> EXTERNAL_IDENTITY -> EXTERNAL_SOCIAL CONSEQUENCES"
+    "system_level_result": "The important 'escape' is the escape of simulation/memory data across the Vault 112 boundary. Once outside, that state becomes causally active in another entity and alters real external social history.",
+    "classification": "SIMULATION_DATA_EGRESS_AND_EXTERNAL_CAUSAL_PROPAGATION_CONFIRMED",
+    "compressed": "VAULT112_SIMULATION_DATA -> STOLEN_CHIP -> EXTERNAL_IDENTITY -> EXTERNAL_SOCIAL CONSEQUENCES"
   },
   "causal_chain_analysis": {
-    "within_vault112": {
-      "normal_admin_chain": [
-        "Braun assigns scenario",
-        "simulation supplies appearance/role/memory context",
-        "subject accepts administered world",
-        "subject behavior follows administered context"
-      ],
-      "dithers_fault_chain": [
-        "pod/system anomaly or unknown cause",
-        "memory/reality overwrite becomes incomplete",
-        "Dithers detects contradictions",
-        "Dithers preserves an outside-world hypothesis",
-        "Dithers informs the external newcomer",
-        "newcomer can locate the failsafe",
-        "Braun's closed control loop can be broken"
-      ],
-      "cause_status": "THE MIDDLE CAUSAL LINK IS PLAUSIBLE BUT NOT PROVEN; SHIPPED CONTENT CONFIRMS THE ENDPOINTS, NOT THE MECHANISM."
-    },
-    "outside_vault112": {
-      "confirmed": "Pinkerton's theft creates a real downstream causal branch outside the original simulation system.",
-      "meaning": "The Vault 112 experiment is not causally sealed once memory-state artifacts can be removed and reused elsewhere."
-    }
+    "inside_vault112": "Dithers provides a separate local coherence anomaly whose mechanism remains unresolved.",
+    "across_vault112_boundary": "Pinkerton's theft is a confirmed physical data-egress event: memory/simulation state exits the experiment boundary.",
+    "outside_vault112": "The exfiltrated state is reused in A3-21 and becomes part of the causal history of Harkness and Rivet City.",
+    "key_distinction": "DATA ESCAPES THE SIMULATION SYSTEM; THE SIMULATION ITSELF DOES NOT NEED TO CRASH."
   },
   "pinkerton_dithers_hypothesis": {
-    "hypothesis": "Pinkerton stole Dithers' specific memory chip, causing her local simulation desynchronization and awareness.",
+    "hypothesis": "Pinkerton stole Dithers' specific memory chip and that removal contributed to her abnormal awareness.",
     "status": "UNRESOLVED_CAUSAL_CANDIDATE",
     "supporting_circumstances": [
       "Dithers is the unique awareness witness among the original residents.",
       "Dithers has explicit pod/readout anomalies.",
-      "Pinkerton physically stole a Vault 112 mem chip.",
+      "Pinkerton physically exfiltrated a Vault 112 mem chip.",
       "Vault 112 memory technology is demonstrably capable of rewriting perceived identity."
     ],
     "blocking_evidence_gap": [
@@ -115,109 +107,81 @@
       "PROJECT_STATUS.json_blob": "a7b184d578fadaf1a1ef9861d3aa9dfe47de11ef",
       "ai/GENESIS_UNIVERSAL_CHAT_ENTRY.json_blob": "e06be570948c50c6eed02347903eddce98923cf3"
     },
-    "causal_integrity_contrast": [
-      {
-        "axis": "authoritative_state",
-        "vault112": "A privileged administrator may overwrite participant state inside the simulation.",
-        "janus_genesis": "External model suggestions are non-authoritative; authoritative state changes remain bounded by runtime rules."
-      },
-      {
-        "axis": "observer_disagreement",
-        "vault112": "Dithers' disagreement appears only after a fault/anomaly defeats part of the administered reality model.",
-        "janus_genesis": "Free Others are intentionally allowed to disagree/refuse without requiring a system fault."
-      },
-      {
-        "axis": "memory_import",
-        "vault112": "Opaque memory state can be stolen and made authoritative in another host.",
-        "janus_genesis": "Portable state is explicit JSON and memory/privacy rules reject invented hidden access; imported resident memory should remain provenance-bound."
-      },
-      {
-        "axis": "causal_history",
-        "vault112": "Administrator-controlled memory resets can replace the history a participant believes caused the present.",
-        "janus_genesis": "Chronicle/state structures preserve prior events and consequences rather than allowing an external model to silently rewrite authoritative history."
-      }
-    ],
-    "engineering_lesson": "A simulation remains causally auditable only if identity/memory imports carry provenance and cannot silently overwrite authoritative history.",
+    "engineering_lesson": "A simulation may remain operational while sensitive identity-state data escapes its authority boundary. Causal auditability therefore requires provenance and admission checks at export/import boundaries, not merely runtime stability.",
     "hardening_candidate": {
       "name": "CAUSAL_LINEAGE_AND_IMPORTED_MEMORY_ADMISSION_GATE",
       "requirements": [
-        "every imported resident-memory fragment declares source artifact/state ID",
+        "every exported/imported resident-memory fragment declares source artifact/state ID",
         "source and destination identity bindings are explicit",
-        "current consent/reuse policy is recorded where the design requires it",
+        "current consent/reuse policy is recorded where required",
+        "export does not silently detach provenance from memory state",
         "import cannot retroactively rewrite signed/authoritative Chronicle history",
         "conflicts create a visible branch or unresolved state instead of silent overwrite",
         "external AI-proposed memory remains non-authoritative until runtime admission"
       ],
-      "goal": "Prevent a Genesis analogue of a stolen Vault 112 mem chip from silently becoming the causal truth of a resident's identity."
+      "goal": "Prevent a Genesis analogue of a stolen Vault 112 memory chip from escaping one state boundary and silently becoming authoritative identity truth in another."
     }
   },
   "claim_ceiling": {
+    "simulation_data_left_vault112_on_stolen_mem_chip": "CONFIRMED",
+    "global_tranquility_lane_crash": "NOT_CLAIMED",
     "dithers_is_simulation_awareness_witness": "CONFIRMED",
     "dithers_pod_is_anomalous": "CONFIRMED",
-    "entire_tranquility_lane_crashed_for_everyone": "FALSE_NOT_SUPPORTED",
-    "dithers_local_administered_reality_failed": "STRONGLY_SUPPORTED",
-    "physical_causality_was_broken": "FALSE_NOT_CLAIMED",
-    "narrative_identity_causal_coherence_was_broken_for_dithers": "STRONG_INTERPRETIVE_SYSTEM_MODEL",
-    "pinkerton_stole_vault112_memory_chip": "CONFIRMED",
     "stolen_chip_source_was_dithers": "NOT_ESTABLISHED",
     "stolen_chip_caused_dithers_fault": "UNRESOLVED",
     "vault112_state_had_downstream_effect_outside_vault112_via_harkness": "CONFIRMED",
-    "janus_genesis_is_historically_derived_from_vault112": "NOT_CLAIMED",
+    "cross_boundary_identity_state_leak": "CONFIRMED",
     "janus_genesis_comparison": "STRUCTURAL_ENGINEERING_COMPARISON_ONLY"
   },
   "canonical_lines": {
     "ru": [
-      "У Dithers не доказан глобальный крах Tranquility Lane; подтверждён локальный разрыв согласованности между назначенной системой биографией и наблюдаемой ею реальностью.",
-      "Это не нарушение физической причинности, а разрыв причинно-следственной истории идентичности: прошлое, роль, тело и настоящий мир перестают складываться в одну историю.",
-      "Кража memory chip делает Vault 112 причинно незамкнутым: состояние памяти покидает систему и становится причиной новой личности Harkness за её пределами.",
-      "Связь украденного чипа именно с Dithers остаётся нерешённой и не должна становиться фактом без asset-level binding.",
-      "Для Janus Genesis главный урок Vault 112 — импорт памяти обязан иметь provenance и не должен молча переписывать авторитетную причинную историю Другого."
+      "Под 'вылетом симуляции' здесь понимается не падение Tranquility Lane, а выход данных симуляции за границу Vault 112 на физическом memory chip.",
+      "Симуляция может продолжать работать, даже если её memory/identity state уже физически эксфильтрован наружу.",
+      "Кража чипа делает Vault 112 информационно и причинно незамкнутым: внутреннее состояние системы становится причиной внешней личности Harkness.",
+      "Аномалия Dithers рассматривается отдельно; связь украденного чипа именно с ней остаётся нерешённой.",
+      "Для Janus Genesis урок состоит в защите не только runtime, но и границы экспорта/импорта состояния: provenance должен путешествовать вместе с памятью."
     ],
     "en": [
-      "Dithers does not prove a global Tranquility Lane crash; she demonstrates a local fracture between an administered biography and observed reality.",
-      "This is not a violation of physical causality but a fracture of identity-causal coherence: past, role, body and present world no longer form one consistent history.",
-      "The stolen mem chip makes Vault 112 causally non-closed: memory state leaves the system and becomes a cause of the Harkness identity outside it.",
-      "The stolen chip is not bound to Dithers by shipped evidence and must remain unresolved until asset-level evidence is found.",
-      "For Janus Genesis, the Vault 112 lesson is that imported memory requires provenance and must not silently rewrite another resident's authoritative causal history."
+      "Here, 'simulation escape' means data egress from the Tranquility Lane/Vault 112 system on a physical memory chip, not a global program crash.",
+      "A simulation can remain operational even after memory/identity state has been physically exfiltrated beyond its authority boundary.",
+      "The stolen chip makes Vault 112 informationally and causally non-closed: internal system state becomes a cause of the external Harkness identity.",
+      "The Dithers anomaly is analyzed separately; no shipped evidence currently binds the stolen chip specifically to her.",
+      "For Janus Genesis, the lesson is to secure state export/import boundaries as well as runtime: provenance must travel with memory."
     ]
   },
   "source_objects": [
     {
       "name": "OldLadyDithers.txt",
-      "type": "shipped dialogue transcript",
-      "relevance": "simulation awareness, Betty/Braun identification, Timmy discrepancy, failsafe knowledge, body/skin mismatch"
+      "type": "shipped dialogue transcript"
     },
     {
       "name": "Vault 112 Lounger #37 Monitor -- DITHERS, T.",
-      "type": "shipped terminal state",
       "resident_id": 642,
-      "relevance": "inconsistent readings, pod connection warning, anomaly, extreme stress"
+      "type": "shipped terminal state"
     },
     {
       "name": "Mem chip",
       "editor_id": "MS08PinkertonLog2",
       "form_id": "00024D63",
-      "type": "shipped holotape",
-      "relevance": "Pinkerton theft from Braun and unknown source-memory owner"
+      "type": "shipped holotape"
     },
     {
       "name": "Harkness",
       "editor_id": "MS08PinkertonLog3",
       "form_id": "00024D64",
-      "type": "shipped holotape",
-      "relevance": "successful external identity rewrite and downstream Harkness persona"
+      "type": "shipped holotape"
     }
   ],
   "next_gate": {
-    "name": "VAULT112_DITHERS_CHIP_ASSET_BINDING_AND_GENESIS_CAUSAL_LINEAGE_GATE",
+    "name": "VAULT112_DATA_EGRESS_DITHERS_CHIP_BINDING_AND_GENESIS_EXPORT_PROVENANCE_GATE",
     "status": "OPEN",
     "targets": [
-      "GECK/ESM FormID and reference search for Dithers lounger and memory-chip objects",
-      "Visiontron script variables linking resident IDs to memory storage",
-      "Pinkerton-related Vault 112 references or cut-content bindings",
-      "whether Dithers awareness changes before/after any state relevant to Pinkerton's 2276 theft",
-      "Janus Genesis imported-memory provenance and conflict handling",
-      "machine-verifiable prevention of silent causal-history overwrite"
+      "GECK/ESM binding between Dithers/Resident 642 and memory storage objects",
+      "Visiontron memory-chip architecture and whether resident state is stored per-subject",
+      "Pinkerton-related Vault 112 asset references",
+      "whether the stolen chip contains raw memories, simulation-authored biography, or another state representation",
+      "Janus Genesis export/import provenance propagation",
+      "machine-verifiable prevention of detached or stolen identity-state becoming authoritative"
     ]
   }
 }
