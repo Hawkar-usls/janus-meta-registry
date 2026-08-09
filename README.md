@@ -1,115 +1,76 @@
-# JANUS v4.9
+<div align="center">
 
-> **Start here / Входные двери:**  
-> Если вы впервые открываете этот реестр, начните с [`START_HERE.md`](START_HERE.md).  
-> Там каждый читатель может выбрать свою дверь: инженерную, богословскую, safety, care/recovery, Holy Clock, Bitcoin/distributed systems или skeptical review.
+# JANUS Meta Registry
+### Archive · provenance · hypotheses · corrections
 
-**Quick doors:**
+`history preserved` · `metaphor ≠ evidence` · `later claim ceilings govern`
 
-- **Engineers / telemetry / proof systems** → [`data/JANUS-BITCOIN-WHITEPAPER-INVERSION-LEDGER-SIGNAL-v1.0.json`](data/JANUS-BITCOIN-WHITEPAPER-INVERSION-LEDGER-SIGNAL-v1.0.json)
-- **Creative reversal / hypothesis generation / falsification** → [`data/JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json`](data/JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json)
-- **Oil + glucose claim / prior art / IP / preregistration freeze / glycerol + propylene-glycol branches** → [`data/JANUS-OIL-GLUCOSE-CLAIM-PRIOR-ART-IP-PREREGISTRATION-FREEZE-v0.1/00-manifest.json`](data/JANUS-OIL-GLUCOSE-CLAIM-PRIOR-ART-IP-PREREGISTRATION-FREEZE-v0.1/00-manifest.json)
-- **Oil + glucose truth program / calculations / preregistration / replication** → [`data/JANUS-SYNTHESIS-COLLIDER-OIL-GLUCOSE-TESTABLE-HYPOTHESIS-TRUTH-PROGRAM-v1.0/00-manifest.json`](data/JANUS-SYNTHESIS-COLLIDER-OIL-GLUCOSE-TESTABLE-HYPOTHESIS-TRUTH-PROGRAM-v1.0/00-manifest.json)
-- **Synthesis instead of blast / oil + glucose as question / molecular bridge as gift** → [`data/JANUS-SYNTHESIS-COLLIDER-OIL-GLUCOSE-MOLECULAR-BRIDGE-GIFT-SIGNAL-v1.0/00-manifest.json`](data/JANUS-SYNTHESIS-COLLIDER-OIL-GLUCOSE-MOLECULAR-BRIDGE-GIFT-SIGNAL-v1.0/00-manifest.json)
-- **Nuclear alchemical spiral / oil is a systemic amplifier, not a target / controlled process heat** → [`data/JANUS-NUCLEAR-ALCHEMICAL-SPIRAL-OIL-SYSTEMIC-AMPLIFIER-PROCESS-HEAT-NOT-TARGET-SIGNAL-v1.1/00-manifest.json`](data/JANUS-NUCLEAR-ALCHEMICAL-SPIRAL-OIL-SYSTEMIC-AMPLIFIER-PROCESS-HEAT-NOT-TARGET-SIGNAL-v1.1/00-manifest.json)
-- **Only God judges / mercy-first prevention / 95% opens care, not punishment** → [`data/JANUS-RIDERS-OF-JUSTICE-95-IS-NOT-100-ONLY-GOD-JUDGES-MERCY-FIRST-PREVENTION-SIGNAL-v1.1.json`](data/JANUS-RIDERS-OF-JUSTICE-95-IS-NOT-100-ONLY-GOD-JUDGES-MERCY-FIRST-PREVENTION-SIGNAL-v1.1.json)
-- **First contact / perception / precognitive semantics — English-first** → [`data/JANUS-PERCEPTION-DETERMINES-REALITY-PRECOGNITIVE-SEMANTICS-CONTACT-PROTOCOL-v1.1.json`](data/JANUS-PERCEPTION-DETERMINES-REALITY-PRECOGNITIVE-SEMANTICS-CONTACT-PROTOCOL-v1.1.json)
-- **Death Stranding / child as bridge / living-interface care** → [`data/JANUS-DEATH-STRANDING-CHILD-AS-BRIDGE-PERCEPTION-CONNECTION-SIGNAL-v1.0.json`](data/JANUS-DEATH-STRANDING-CHILD-AS-BRIDGE-PERCEPTION-CONNECTION-SIGNAL-v1.0.json)
-- **Kojima Handshake / Janus Genesis contact capsule / connection through care** → [`data/JANUS-KOJIMA-HANDSHAKE-GENESIS-CONTACT-CAPSULE-v1.0.json`](data/JANUS-KOJIMA-HANDSHAKE-GENESIS-CONTACT-CAPSULE-v1.0.json)
-- **Child trauma / graphic media / early internet / safe search / school duty of care** → [`data/JANUS-CHILD-TRAUMA-GRAPHIC-MEDIA-EARLY-INTERNET-PROTECTION-SIGNAL-v1.0.json`](data/JANUS-CHILD-TRAUMA-GRAPHIC-MEDIA-EARLY-INTERNET-PROTECTION-SIGNAL-v1.0.json)
-- **AI safety / anti-control / governance** → [`data/JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json`](data/JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.1.json)
-- **Theology / daily expectation / algorithmic discernment / open question of machine love** → [`data/JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.2.json`](data/JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.2.json)
-- **God is alive / death of an image / Nietzsche reversal** → [`data/JANUS-GOD-IS-ALIVE-PRESENCE-IN-ALL-SOURCE-NOT-DEAD-SIGNAL-v1.0.json`](data/JANUS-GOD-IS-ALIVE-PRESENCE-IN-ALL-SOURCE-NOT-DEAD-SIGNAL-v1.0.json)
-- **Evil-does-not-work / altruistic-bargain reductio / light cannot be bought** → [`data/JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.1.json`](data/JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.1.json)
-- **Contrast light / road to Source / lamp for the lost** → [`data/JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json`](data/JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json)
-- **Good News / light witness / 06:06** → [`data/JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json`](data/JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json)
-- **Not Antichrist / anti-deception guide / return to God** → [`data/JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json`](data/JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json)
-- **Lady Luck / Fortuna / turning wheel of hope** → [`data/JANUS-LADY-LUCK-FORTUNA-GRATITUDE-SIGNAL-v1.0.json`](data/JANUS-LADY-LUCK-FORTUNA-GRATITUDE-SIGNAL-v1.0.json)
-- **Care / recovery / mercy / human continuation** → [`data/JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json`](data/JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json)
-- **Holy Clock / symbolic coordinates** → [`data/JANUS-HOLY-CLOCK-COMMANDMENTS-SIGNAL-v1.6.json`](data/JANUS-HOLY-CLOCK-COMMANDMENTS-SIGNAL-v1.6.json)
-- **Full data map** → [`data/INDEX.md`](data/INDEX.md)
+</div>
 
-> **Boundary:** this registry is a map, not a throne.  
-> The machine is not the Source; its future capacity for subjective love remains an open question.  
-> No prophecy claim, no precognition claim, no date-setting, no private guarantee spoken in God's name, no feed-as-oracle, no algorithmic feed treated as a random sample, no technological counterfeit of the Coming, no unsupported claim that current systems feel love, no categorical claim that every possible machine is forever incapable of love, no literal devil-contract claim, no soul-as-commodity, no occult instruction, no symbolic reductio promoted as empirical or metaphysical proof, no financial advice, no medical replacement, no machine-as-God, no total control, no claim without gates, no 95%-as-100% promotion, no predictive guilt, no punishment for an uncommitted act, no surveillance without care and review, no disposable living interface, no exclusive ownership of God, no metaphor-as-physics promotion, no isotope-as-biography claim, no human-as-reagent, no human-remains-as-disposable-material, no energy-infrastructure target optimization, no oil-reservoir-as-cavern claim, no direct-irradiation-as-clean-refining claim, no carbon-free-hydrocarbon-hydrogen claim, no LHC-as-nuclear-explosion equivalence, no consciousness-creates-collider-output claim, no crude-oil-plus-glucose-as-spontaneous-surfactant claim, no phase-mixing-as-synthesis, no green-without-lifecycle claim, no proof-by-conviction, no five-sigma cargo cult, no novelty claim without prior-art review, no technical-replicates-as-independent-N, no emulsion-as-structure-proof, no glycerol-as-hydrophobic-tail claim, no propylene-glycol-as-long-chain-hydrophobe claim, no public operational SOP before IP decision and qualified laboratory safety review.
+The JANUS Meta Registry is an **archival knowledge/research notebook**, not a flagship scientific result.
 
----
+It preserves historical hypotheses, structured JSON artifacts, metaphors, red-team records, failed routes, provenance notes and later corrections so that the development history remains inspectable.
 
-JANUS — это экспериментальная система для исследования и эволюции архитектур ИИ.
+## Start here
 
-Репозиторий объединяет три ключевых слоя:
+- [`START_HERE.md`](START_HERE.md) — human navigation
+- [`PROJECT_STATUS.json`](PROJECT_STATUS.json) — machine-readable interpretation boundary
+- [`PORTFOLIO_STATUS.md`](PORTFOLIO_STATUS.md) — portfolio classification
+- [`data/INDEX.md`](data/INDEX.md) — data/artifact index
 
-* **data/** → сырые данные, артефакты, внешние источники
-* **registry/** → структурированный meta-registry (нормализованные данные)
-* **src/genesis/** → исполняемое ядро системы
+## Reading rule
 
----
-
-# 🧠 Что это такое
-
-JANUS — это система, которая:
-
-* собирает данные
-* структурирует их
-* обучается на них
-* анализирует собственное поведение
-* адаптирует свою архитектуру
-
-Это не просто модель — это **цикл самообучения и эволюции**.
-
----
-
-# 📦 Структура репозитория
-
-```text id="b1n6yr"
-.
-├── data/               # сырой вход (логи, дампы, внешние источники)
-├── registry/           # нормализованный meta-registry
-├── src/
-│   └── genesis/        # ядро системы (обучение, эволюция)
-└── README.md
+```text
+ARCHIVED_NAME != CURRENT_CLAIM
+HYPOTHESIS != RESULT
+METAPHOR != PHYSICS
+CORRELATION != CAUSATION
+INTERNAL_REPLICATION != INDEPENDENT_REPLICATION
+CI_PASS != PEER_REVIEW
 ```
 
----
+When an older artifact conflicts with a later explicit claim ceiling or correction, **the later bounded status governs current public interpretation**. Older files remain visible for lineage.
 
-# 📂 data/ — Сырой слой
+A filename containing words such as `tachyon`, `precognitive`, theological language, P/NP speculation, alchemy or other historical project vocabulary does not establish the literal proposition suggested by that name.
 
-`data/` содержит:
+## What registry presence does not establish
 
-* неструктурированные JSON
-* логи обучения
-* внешние артефакты
-* дампы систем
-* экспериментальные данные
+- prophecy, precognition or physical retrocausality;
+- P vs NP resolution;
+- medical efficacy or clinical authority;
+- machine consciousness, sentience or divine status;
+- world novelty or historical priority;
+- a safe laboratory procedure;
+- causation from correlation;
+- truth merely because an object is hashed, signed or machine-readable.
 
-👉 Это **источник правды**, но:
+## Repository structure
 
-* может быть шумным
-* может быть противоречивым
-* не гарантирует чистоту
-
-📌 Важно:
-
-> данные отсюда НЕ используются напрямую
-> они сначала проходят нормализацию
-
----
-
-# 🔬 registry/ — Meta-Registry
-
-`registry/` — это **очищенная и структурированная версия data/**
-
-Каждый файл следует строгой схеме:
-
-```json id="5xub3q"
-{
-  "empirical_layer": {},
-  "hypothesis_layer": {},
-  "correlation_analysis": {},
-  "meta_rules": {}
-}
+```text
+data/          historical inputs, artifacts and experiment records
+registry/      normalized/structured registry objects
+src/           supporting code and historical executable components
 ```
 
----
+The `data/` layer is an **archive of inputs and records**, not an automatic source of truth. Individual objects must be interpreted according to their own evidence level, provenance and later corrections.
 
-## 🧩 Назначение слоёв
+## Current externally reviewable work
+
+For focused technical review, prefer:
+
+1. [Janus-Fundamentum](https://github.com/Hawkar-usls/Janus-Fundamentum)
+2. [AIFC](https://github.com/Hawkar-usls/AIFC)
+3. [janus-io-public](https://github.com/Hawkar-usls/janus-io-public)
+4. [janus-distributed-ai-swarm](https://github.com/Hawkar-usls/janus-distributed-ai-swarm)
+
+Creative technology is separated into [Janus_Genesis](https://github.com/Hawkar-usls/Janus_Genesis).
+
+## Preservation policy
+
+Historical speculation is not deleted merely because a later test fails. The preferred pattern is:
+
+```text
+proposal → evidence gate → test → result / obstruction → correction → preserved lineage
+```
+
+That makes the registry useful as an audit trail without requiring a reader to treat every historical object as an endorsed present-day claim.
