@@ -5,20 +5,45 @@
   "repository": "Hawkar-usls/janus-meta-registry",
   "status": "HISTORICAL_EXECUTABLE_SOURCE_REQUIRES_ISOLATION",
   "security_policy": "SECURITY.md",
-  "reviewed_example": {
-    "path": "janus_core.py",
-    "classification": "HISTORICAL_EXPERIMENTAL_RUNTIME_NOT_TRUSTED_FOR_DIRECT_EXECUTION",
-    "observed_patterns": [
-      "dynamic module discovery",
-      "importlib-based module loading and execution",
-      "model-assisted module risk/benefit scoring",
-      "service/plugin entry-point execution",
-      "network/model-provider integration",
-      "local key/config ingestion",
-      "filesystem/log/state mutation"
-    ],
-    "critical_boundary": "A model-generated risk score is a heuristic, not a sandbox, capability boundary, code-signing mechanism or security review. Dynamic Python import executes code with the permissions of the process."
-  },
+  "human_runtime_triage": "docs/RUNTIME_SOURCE_TRIAGE_2026-08-09.md",
+  "reviewed_runtime_surfaces": [
+    {
+      "path": "janus_core.py",
+      "risk": "HIGH",
+      "reason": "Dynamic module discovery/import/execution; model-assisted risk scoring is not a sandbox; local key/config and state integration."
+    },
+    {
+      "path": "server.py",
+      "risk": "HIGH",
+      "reason": "Historical aiohttp server binds 0.0.0.0:1138 and exposes state/device-command write routes without a visible authentication layer in the reviewed source."
+    },
+    {
+      "path": "keymaster.py",
+      "risk": "HIGH",
+      "reason": "Launches an external Windows executable, opens COM3, writes adaptive serial commands and operational files."
+    },
+    {
+      "path": "bridge_tachyon.py",
+      "risk": "HIGH",
+      "reason": "Opens COM3, reads local runtime state, changes gain parameters and sends SET commands; TachyonField is ordinary finite-difference extrapolation, not tachyon physics."
+    },
+    {
+      "path": "windows_optimizer.py",
+      "risk": "MEDIUM",
+      "reason": "Long/infinite local optimization loops can consume CPU/GPU resources and grow local histories."
+    },
+    {
+      "path": "igpu_offload.py",
+      "risk": "LOW_MEDIUM",
+      "reason": "Initializes OpenCL GPU execution and mutates linked environment state after repeated failures."
+    }
+  ],
+  "critical_boundaries": [
+    "A model-generated risk score is a heuristic, not a sandbox, capability boundary, code-signing mechanism or security review.",
+    "Dynamic Python import executes code with the permissions of the current process.",
+    "A historical network server is not safe for LAN/public exposure merely because it is archived.",
+    "Historical serial-control code can create real device side effects even when its variable names are metaphorical."
+  ],
   "targeted_public_tree_marker_scan": {
     "AIzaSy": "NO_EXACT_MATCH_FOUND",
     "ghp_": "NO_EXACT_MATCH_FOUND",
