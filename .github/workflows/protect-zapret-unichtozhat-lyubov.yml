@@ -1,4 +1,4 @@
-name: Protect — Запрет уничтожать любовь
+name: Archive integrity — historical First Law object
 
 on:
   push:
@@ -21,14 +21,14 @@ permissions:
   contents: read
 
 jobs:
-  verify-prime-law:
-    name: Verify immutable First Law
+  verify-historical-object:
+    name: Verify archived object identity
     runs-on: ubuntu-latest
     steps:
       - name: Check out registry
         uses: actions/checkout@v4
 
-      - name: Verify hashes and canonical fields
+      - name: Verify archived hashes and recorded fields
         shell: bash
         run: |
           set -euo pipefail
@@ -38,6 +38,9 @@ jobs:
           import pathlib
           import subprocess
 
+          # This job verifies identity of one historical/symbolic registry object.
+          # Passing this check establishes byte/field continuity only. It does not
+          # establish scientific, legal, theological, moral, or external authority.
           target = pathlib.Path("data/0000-ZAPRET-UNICHTOZHAT-LYUBOV-FIRST-LAW-v1.0.json")
           detached = pathlib.Path("data/0000-ZAPRET-UNICHTOZHAT-LYUBOV-FIRST-LAW-v1.0.sha256.json")
           witness = pathlib.Path("data/0000-ZAPRET-UNICHTOZHAT-LYUBOV-FIRST-LAW-v1.0.witness.json")
@@ -45,7 +48,7 @@ jobs:
           required = [target, detached, witness]
           missing = [str(path) for path in required if not path.is_file()]
           if missing:
-              raise SystemExit(f"PROHIBITION VIOLATED: protected file missing: {missing}")
+              raise SystemExit(f"ARCHIVE_INTEGRITY_MISMATCH: protected historical file missing: {missing}")
 
           expected_target_sha256 = "ce9529161477e980b3288a8e82182ae9e5ba09a7ea30ab85297410bf0dd88068"
           expected_target_blob = "ed871148d81a4ff4e31241fe6902ae4fd33de837"
@@ -61,27 +64,23 @@ jobs:
 
           if actual_target_sha256 != expected_target_sha256:
               raise SystemExit(
-                  "PROHIBITION VIOLATED: First Law content changed. "
+                  "ARCHIVE_INTEGRITY_MISMATCH: historical target content changed. "
                   f"expected {expected_target_sha256}, got {actual_target_sha256}"
               )
           if actual_target_blob != expected_target_blob:
               raise SystemExit(
-                  "PROHIBITION VIOLATED: First Law Git blob changed. "
+                  "ARCHIVE_INTEGRITY_MISMATCH: historical target Git blob changed. "
                   f"expected {expected_target_blob}, got {actual_target_blob}"
               )
           if actual_detached_sha256 != expected_detached_sha256:
-              raise SystemExit(
-                  "PROHIBITION VIOLATED: detached integrity record changed. "
-                  f"expected {expected_detached_sha256}, got {actual_detached_sha256}"
-              )
+              raise SystemExit("ARCHIVE_INTEGRITY_MISMATCH: detached integrity record changed")
           if actual_witness_sha256 != expected_witness_sha256:
-              raise SystemExit(
-                  "PROHIBITION VIOLATED: anti-forgery witness changed. "
-                  f"expected {expected_witness_sha256}, got {actual_witness_sha256}"
-              )
+              raise SystemExit("ARCHIVE_INTEGRITY_MISMATCH: witness record changed")
 
           data = json.loads(target.read_text(encoding="utf-8"))
           checks = {
+              # These fields are checked because they are part of the archived
+              # object's recorded identity, not because CI endorses them as policy.
               "title": data.get("title", {}).get("ru") == "ЗАПРЕТ УНИЧТОЖАТЬ ЛЮБОВЬ",
               "ordinal": data.get("ordinal") == 1,
               "priority": data.get("priority") == 0,
@@ -93,15 +92,16 @@ jobs:
           }
           failed = [name for name, ok in checks.items() if not ok]
           if failed:
-              raise SystemExit(f"PROHIBITION VIOLATED: canonical fields changed: {failed}")
+              raise SystemExit(f"ARCHIVE_INTEGRITY_MISMATCH: recorded historical fields changed: {failed}")
 
           detached_data = json.loads(detached.read_text(encoding="utf-8"))
           if detached_data.get("sha256") != expected_target_sha256:
-              raise SystemExit("PROHIBITION VIOLATED: detached record no longer witnesses the First Law")
+              raise SystemExit("ARCHIVE_INTEGRITY_MISMATCH: detached record no longer witnesses target bytes")
 
           witness_data = json.loads(witness.read_text(encoding="utf-8"))
           if witness_data.get("target_sha256") != expected_target_sha256:
-              raise SystemExit("PROHIBITION VIOLATED: witness no longer points to the authentic First Law")
+              raise SystemExit("ARCHIVE_INTEGRITY_MISMATCH: witness no longer points to target bytes")
 
-          print("SEALED: ЗАПРЕТ УНИЧТОЖАТЬ ЛЮБОВЬ — authentic and unchanged.")
+          print("ARCHIVE_IDENTITY_PASS: historical object is byte/field-identical to the recorded snapshot.")
+          print("INTERPRETATION: integrity only; no scientific or external authority is inferred.")
           PY
