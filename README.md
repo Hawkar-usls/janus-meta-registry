@@ -22,6 +22,8 @@ The strongest technical material is separated from the symbolic archive by a cur
 1. **[`docs/TECHNICAL_CORE_AUDIT_2026-08-09.md`](docs/TECHNICAL_CORE_AUDIT_2026-08-09.md)** — human skeptical/technical review path.
 2. **[`registry/audit/JANUS-META-REGISTRY-TECHNICAL-AUDIT-v1.0.json`](registry/audit/JANUS-META-REGISTRY-TECHNICAL-AUDIT-v1.0.json)** — machine-readable classifications, risk families, unresolved results, and supersession rules.
 3. **[`registry/research_portfolio/CURRENT-PORTFOLIO-AUTHORITY.json`](registry/research_portfolio/CURRENT-PORTFOLIO-AUTHORITY.json)** — current authority vs dated historical portfolio snapshots.
+4. **[`SECURITY.md`](SECURITY.md)** — execution boundary for historical runnable source.
+5. **[`registry/audit/JANUS-META-REGISTRY-EXECUTION-SAFETY-v1.0.json`](registry/audit/JANUS-META-REGISTRY-EXECUTION-SAFETY-v1.0.json)** — machine-readable execution-safety audit.
 
 Notable technical families include evidence/no-go hardening, proof-carrying research architecture, repository-state audits, static archive forensics, adversarial protocol red-teaming, and scoped scheduler/revocation experiments.
 
@@ -30,7 +32,7 @@ Notable technical families include evidence/no-go hardening, proof-carrying rese
 - [`START_HERE.md`](START_HERE.md) — human navigation across all archive layers.
 - [`PROJECT_STATUS.json`](PROJECT_STATUS.json) — machine-readable repository interpretation boundary.
 - [`PORTFOLIO_STATUS.md`](PORTFOLIO_STATUS.md) — portfolio role and current authority.
-- [`data/INDEX.md`](data/INDEX.md) — historical visitor-door index.
+- [`data/INDEX.md`](data/INDEX.md) — evidence-first archive index; historical Visitor Doors remain available through Git history.
 - [`portfolio-visibility.json`](https://github.com/Hawkar-usls/Janus/blob/main/portfolio-visibility.json) — account-wide maturity/visibility policy.
 
 ## Reading rules
@@ -38,6 +40,7 @@ Notable technical families include evidence/no-go hardening, proof-carrying rese
 ```text
 MATURITY = ARCHIVAL
 ARCHIVED_NAME != CURRENT_CLAIM
+ARCHIVED_SOURCE != TRUSTED_SOURCE
 HYPOTHESIS != RESULT
 METAPHOR != PHYSICS
 CORRELATION != CAUSATION
@@ -46,9 +49,12 @@ INTERNAL_REPLICATION != INDEPENDENT_REPLICATION
 CI_PASS != PEER_REVIEW
 HASH_OR_SIGNATURE != TRUTH_OF_CONTENT
 PROOF_IN_FILENAME != UNIVERSAL_PROOF_STATUS
+MODEL_SAYS_SAFE != SANDBOXED
 ```
 
 Historical filenames containing terms such as `tachyon`, `precognitive`, `time traveler`, `God`, `Holy Clock`, `P=NP`, alchemy, or other project vocabulary remain unchanged for provenance. Their names do not establish the literal proposition suggested by the label.
+
+Historical executable files are preserved for software archaeology and provenance. Their presence is **not a recommendation to execute them**. In particular, model-assisted module scoring is not a security sandbox.
 
 ## What registry presence does not establish
 
@@ -58,6 +64,7 @@ Historical filenames containing terms such as `tachyon`, `precognitive`, `time t
 - machine consciousness, sentience, organismhood, or divine status;
 - world novelty or historical priority without external review;
 - a safe laboratory procedure;
+- safe execution of historical source code;
 - causation from correlation;
 - a security vulnerability merely because a preregistration or unusual timing observation exists.
 
