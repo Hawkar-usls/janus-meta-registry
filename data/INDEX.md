@@ -9,9 +9,12 @@ The older **Visitor Doors** layout is preserved in Git history at audited commit
 - [`../PROJECT_STATUS.json`](../PROJECT_STATUS.json) — repository-level interpretation boundary.
 - [`../docs/TECHNICAL_CORE_AUDIT_2026-08-09.md`](../docs/TECHNICAL_CORE_AUDIT_2026-08-09.md) — human technical/skeptical audit.
 - [`../registry/audit/JANUS-META-REGISTRY-TECHNICAL-AUDIT-v1.0.json`](../registry/audit/JANUS-META-REGISTRY-TECHNICAL-AUDIT-v1.0.json) — machine-readable evidence/risk classes.
+- [`../SECURITY.md`](../SECURITY.md) — execution-safety boundary for historical source.
+- [`../docs/RUNTIME_SOURCE_TRIAGE_2026-08-09.md`](../docs/RUNTIME_SOURCE_TRIAGE_2026-08-09.md) — root runtime side-effect triage.
 
 ```text
 ARCHIVED_NAME != CURRENT_CLAIM
+ARCHIVED_SOURCE != TRUSTED_SOURCE
 HASH != TRUTH
 PREREGISTRATION != RESULT
 INTERNAL_REPLAY != INDEPENDENT_REPLICATION
@@ -24,9 +27,18 @@ SYMBOLIC_TIME != PHYSICAL_CAUSALITY
 
 ### Independent-future / causal evidence hardening
 
-- [`proofs/JANUS-INDEPENDENT-FUTURE-NO-GO-AND-EVIDENCE-HARDENING-v0.5.json`](proofs/JANUS-INDEPENDENT-FUTURE-NO-GO-AND-EVIDENCE-HARDENING-v0.5.json)
-- [`proofs/JANUS-PRECOGNITIVE-SEMANTIC-RETURN-GATE-REDTEAM-REPORT-v0.2.json`](proofs/JANUS-PRECOGNITIVE-SEMANTIC-RETURN-GATE-REDTEAM-REPORT-v0.2.json) — useful as anti-false-positive red-team; **not evidence of precognition**.
-- [`JANUS-PRECOGNITIVE-SEMANTIC-RETURN-GATE-v0.2.json`](JANUS-PRECOGNITIVE-SEMANTIC-RETURN-GATE-v0.2.json) — protocol logic only; physical retrocausality not established.
+Primary objects, in recommended order:
+
+1. [`proofs/JANUS-INDEPENDENT-FUTURE-NO-GO-AND-EVIDENCE-HARDENING-v0.5.json`](proofs/JANUS-INDEPENDENT-FUTURE-NO-GO-AND-EVIDENCE-HARDENING-v0.5.json) — exact-match/min-entropy no-go and sandbox self-certification boundary.
+2. [`proofs/JANUS-SEQUENTIAL-ADAPTIVE-WITNESS-HARDENING-v0.6.json`](proofs/JANUS-SEQUENTIAL-ADAPTIVE-WITNESS-HARDENING-v0.6.json) — history-wise conditional bound, multiplicity penalty, and counterexamples to marginal/average entropy reasoning.
+3. [`proofs/JANUS-ANYTIME-VALID-WITNESS-HARDENING-v0.7.json`](proofs/JANUS-ANYTIME-VALID-WITNESS-HARDENING-v0.7.json) — e-process/optional-stopping layer plus a falsifying marginal-null example.
+4. [`proofs/JANUS-CAUSAL-ISOLATION-DSEPARATION-HARDENING-v0.8.json`](proofs/JANUS-CAUSAL-ISOLATION-DSEPARATION-HARDENING-v0.8.json) — common-cause, selection-collider, and parallel leak-path controls.
+5. [`../registry/causal_topology/JANUS-TEMPORAL-CONTINUITY-ROLLBACK-REPLAY-GATE-v0.9.0.json`](../registry/causal_topology/JANUS-TEMPORAL-CONTINUITY-ROLLBACK-REPLAY-GATE-v0.9.0.json) — authenticity/freshness separation and rollback/replay boundary.
+6. [`../registry/causal_topology/JANUS-MULTI-WITNESS-QUORUM-CONTINUITY-GATE-v1.0.0.json`](../registry/causal_topology/JANUS-MULTI-WITNESS-QUORUM-CONTINUITY-GATE-v1.0.0.json) — witness failure-domain/quorum model; majority is not assumed sufficient.
+7. [`proofs/JANUS-PRECOGNITIVE-SEMANTIC-RETURN-GATE-REDTEAM-REPORT-v0.2.json`](proofs/JANUS-PRECOGNITIVE-SEMANTIC-RETURN-GATE-REDTEAM-REPORT-v0.2.json) — useful as anti-false-positive red-team; **not evidence of precognition**.
+8. [`JANUS-PRECOGNITIVE-SEMANTIC-RETURN-GATE-v0.2.json`](JANUS-PRECOGNITIVE-SEMANTIC-RETURN-GATE-v0.2.json) — historical protocol name; physical retrocausality not established.
+
+The underlying probability, causal-inference, martingale/e-process, and quorum ideas include substantial established prior art. The registry's potentially interesting contribution is their **explicit composition into fail-closed evidence protocols**, not ownership of the underlying mathematics.
 
 ### Proof-route / research-state audits
 
@@ -38,7 +50,7 @@ SYMBOLIC_TIME != PHYSICAL_CAUSALITY
 - [`JANUS-TITAN-CORE-MODULE-AND-OPTIMIZER-LINEAGE-CAPSULE-v1.0/00-manifest.json`](JANUS-TITAN-CORE-MODULE-AND-OPTIMIZER-LINEAGE-CAPSULE-v1.0/00-manifest.json)
 - Other normalized archive capsules preserve hashes, inventories, deduplication, static parsing, secret quarantine, and explicit non-execution boundaries.
 
-### Current cross-project methodological dossiers
+### Cross-project methodological dossiers
 
 See [`../registry/research_portfolio/`](../registry/research_portfolio/) and begin with:
 
@@ -58,6 +70,8 @@ Global novelty remains external-review dependent.
 **Audit status:** the strict result file `JANUS-POST-CANCEL-ACK-PROOF-011.json` is not present on the audited default branch. The strict post-cancel-ack side-effect claim is therefore **not established** here.
 
 “Time traveler”, “LIMBO”, “storm”, and similar historical timing labels may coexist with useful scheduler observations, but they are not physical backward-causation claims.
+
+For historical executable-code risks, use [`../docs/RUNTIME_SOURCE_TRIAGE_2026-08-09.md`](../docs/RUNTIME_SOURCE_TRIAGE_2026-08-09.md).
 
 ---
 
