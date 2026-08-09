@@ -1,62 +1,65 @@
 <div align="center">
 
 # JANUS Meta Registry
-### Archive · provenance · hypotheses · corrections
+### Archival research notebook and provenance index
 
-`history preserved` · `metaphor ≠ evidence` · `later claim ceilings govern`
+![Status](https://img.shields.io/badge/status-archival-8c959f)
+![Class](https://img.shields.io/badge/class-provenance%20%2F%20history-6e7681)
 
 </div>
 
-The JANUS Meta Registry is an **archival knowledge/research notebook**, not a flagship scientific result.
+## Status
 
-It preserves historical hypotheses, structured JSON artifacts, metaphors, red-team records, failed routes, provenance notes and later corrections so that the development history remains inspectable.
+**Archival.** This repository preserves historical hypotheses, experiment records, structured artifacts, red-team results, corrections, and provenance. It is not a single current scientific claim and is not a flagship research result.
+
+## Abstract
+
+The registry exists to keep development history inspectable. Older speculative objects remain available for lineage, while current interpretation is governed by later explicit claim ceilings, corrections, and dedicated project repositories.
 
 ## Start here
 
-- [`START_HERE.md`](START_HERE.md) — human navigation
-- [`PROJECT_STATUS.json`](PROJECT_STATUS.json) — machine-readable interpretation boundary
-- [`PORTFOLIO_STATUS.md`](PORTFOLIO_STATUS.md) — portfolio classification
-- [`data/INDEX.md`](data/INDEX.md) — data/artifact index
+- [`START_HERE.md`](START_HERE.md) — human navigation.
+- [`PROJECT_STATUS.json`](PROJECT_STATUS.json) — machine-readable interpretation boundary.
+- [`PORTFOLIO_STATUS.md`](PORTFOLIO_STATUS.md) — portfolio classification.
+- [`data/INDEX.md`](data/INDEX.md) — deeper archive index.
+- [`portfolio-visibility.json`](https://github.com/Hawkar-usls/Janus/blob/main/portfolio-visibility.json) — account-wide maturity/visibility policy.
 
-## Reading rule
+## Reading rules
 
 ```text
+MATURITY = ARCHIVAL
 ARCHIVED_NAME != CURRENT_CLAIM
 HYPOTHESIS != RESULT
 METAPHOR != PHYSICS
 CORRELATION != CAUSATION
 INTERNAL_REPLICATION != INDEPENDENT_REPLICATION
 CI_PASS != PEER_REVIEW
+HASH_OR_SIGNATURE != TRUTH_OF_CONTENT
 ```
 
-When an older artifact conflicts with a later explicit claim ceiling or correction, **the later bounded status governs current public interpretation**. Older files remain visible for lineage.
-
-A filename containing words such as `tachyon`, `precognitive`, theological language, P/NP speculation, alchemy or other historical project vocabulary does not establish the literal proposition suggested by that name.
+A filename containing terms such as `tachyon`, `precognitive`, theological language, `P=NP`, alchemy, or other historical vocabulary does not establish the literal proposition suggested by that name.
 
 ## What registry presence does not establish
 
-- prophecy, precognition or physical retrocausality;
+- prophecy, precognition, or physical retrocausality;
 - P vs NP resolution;
 - medical efficacy or clinical authority;
-- machine consciousness, sentience or divine status;
+- machine consciousness, sentience, or divine status;
 - world novelty or historical priority;
 - a safe laboratory procedure;
-- causation from correlation;
-- truth merely because an object is hashed, signed or machine-readable.
+- causation from correlation.
 
 ## Repository structure
 
 ```text
-data/          historical inputs, artifacts and experiment records
-registry/      normalized/structured registry objects
-src/           supporting code and historical executable components
+data/       historical inputs, artifacts, and experiment records
+registry/   normalized/structured registry objects
+src/        supporting code and historical executable components
 ```
 
-The `data/` layer is an **archive of inputs and records**, not an automatic source of truth. Individual objects must be interpreted according to their own evidence level, provenance and later corrections.
+## Current primary work
 
-## Current externally reviewable work
-
-For focused technical review, prefer:
+For focused external review, prefer:
 
 1. [Janus-Fundamentum](https://github.com/Hawkar-usls/Janus-Fundamentum)
 2. [AIFC](https://github.com/Hawkar-usls/AIFC)
@@ -67,10 +70,10 @@ Creative technology is separated into [Janus_Genesis](https://github.com/Hawkar-
 
 ## Preservation policy
 
-Historical speculation is not deleted merely because a later test fails. The preferred pattern is:
-
 ```text
 proposal → evidence gate → test → result / obstruction → correction → preserved lineage
 ```
 
-That makes the registry useful as an audit trail without requiring a reader to treat every historical object as an endorsed present-day claim.
+The goal is auditability without forcing a reader to treat every historical artifact as a present-day endorsement.
+
+Presentation follows the account's [public repository standard](https://github.com/Hawkar-usls/Janus/blob/main/docs/PUBLIC_REPOSITORY_PRESENTATION_STANDARD.md). No affiliation with MIT is implied by the presentation style.
