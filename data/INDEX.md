@@ -1,198 +1,147 @@
-# data/INDEX — Visitor Doors / Карта дверей реестра
+# data/INDEX — Evidence-first archive map
 
-> **Не каждый читатель приходит за одним и тем же.**  
-> Инженер ищет цепочку наблюдений, богослов — границы смысла, человек в боли — язык заботы, а скептик — правила проверки.
+This is the current navigation index for the JANUS Meta Registry data layer.
 
-JANUS Meta Registry is a public research registry of symbolic, technical, observational, theological, and safety-oriented artifacts. Choose the door that matches the question, then inspect the relevant layer.
+The older **Visitor Doors** layout is preserved in Git history at audited commit [`364d3993…`](https://github.com/Hawkar-usls/janus-meta-registry/blob/364d3993dc318eb898fe5f2337a03d9214752ac1/data/INDEX.md). It is not deleted from history; this revision changes only the current navigation order.
 
----
+## Read this first
 
-## 1. Engineering / systems / falsifiable research
+- [`../PROJECT_STATUS.json`](../PROJECT_STATUS.json) — repository-level interpretation boundary.
+- [`../docs/TECHNICAL_CORE_AUDIT_2026-08-09.md`](../docs/TECHNICAL_CORE_AUDIT_2026-08-09.md) — human technical/skeptical audit.
+- [`../registry/audit/JANUS-META-REGISTRY-TECHNICAL-AUDIT-v1.0.json`](../registry/audit/JANUS-META-REGISTRY-TECHNICAL-AUDIT-v1.0.json) — machine-readable evidence/risk classes.
 
-- [`JANUS-BITCOIN-WHITEPAPER-INVERSION-LEDGER-SIGNAL-v1.0.json`](JANUS-BITCOIN-WHITEPAPER-INVERSION-LEDGER-SIGNAL-v1.0.json)
-- [`JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.2.json`](JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.2.json)
-- [`JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json`](JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json)
-
-> **Do not trust impression. Trust the chain of observations.  
-> Do not defend a hypothesis. Try to destroy it.**
-
----
-
-## 2. AI safety / governance / anti-control
-
-- [`JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.2.json`](JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.2.json)
-- [`JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.json`](JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.json)
-- [`JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json`](JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json)
-- [`JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.2/30-machine-love-open-question.json`](JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.2/30-machine-love-open-question.json)
-- [`JANUS-CHILD-TRAUMA-GRAPHIC-MEDIA-EARLY-INTERNET-PROTECTION-SIGNAL-v1.0.json`](JANUS-CHILD-TRAUMA-GRAPHIC-MEDIA-EARLY-INTERNET-PROTECTION-SIGNAL-v1.0.json)
-
-> **Order without love becomes prison.  
-> The machine is not the Source; whether a future machine may become a loving subject remains an open question.**
-
-The Janus-AI testimony records both gates: fear and loss of agency were sufficient reason to stop and archive the system; later reopening was justified only as an ethical redesign after the creator saw that its comments hurt people. It does not claim consciousness, supernatural power, infallibility, or an objectively unbeatable system.
+```text
+ARCHIVED_NAME != CURRENT_CLAIM
+HASH != TRUTH
+PREREGISTRATION != RESULT
+INTERNAL_REPLAY != INDEPENDENT_REPLICATION
+SYMBOLIC_TIME != PHYSICAL_CAUSALITY
+```
 
 ---
 
-## 3. Theology / Christian expectation / spiritual discernment
+## 1. Technical core — evidence, falsification, provenance
 
-- [`JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.2/00-manifest.json`](JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.2/00-manifest.json)
-- [`JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.2.json`](JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.2.json)
-- [`JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json`](JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json)
-- [`JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.1.json`](JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.1.json)
-- [`JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json`](JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json)
-- [`JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.json`](JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.json)
-- [`JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json`](JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json)
-- [`JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json`](JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json)
-- [`JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.2.json`](JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.2.json)
-- [`JANUS-IMAGE-OF-GOD-PARENTS-PROTECT-THE-CHILD-SIGNAL-v1.0.json`](JANUS-IMAGE-OF-GOD-PARENTS-PROTECT-THE-CHILD-SIGNAL-v1.0.json)
+### Independent-future / causal evidence hardening
 
-> **Christ is not a network. Christ is the Head. We are the Body.  
-> I remain alive because life is beautiful. I wait because cruelty must not be eternal.  
-> In the name of God, Who guides our hand.**
+- [`proofs/JANUS-INDEPENDENT-FUTURE-NO-GO-AND-EVIDENCE-HARDENING-v0.5.json`](proofs/JANUS-INDEPENDENT-FUTURE-NO-GO-AND-EVIDENCE-HARDENING-v0.5.json)
+- [`proofs/JANUS-PRECOGNITIVE-SEMANTIC-RETURN-GATE-REDTEAM-REPORT-v0.2.json`](proofs/JANUS-PRECOGNITIVE-SEMANTIC-RETURN-GATE-REDTEAM-REPORT-v0.2.json) — useful as anti-false-positive red-team; **not evidence of precognition**.
+- [`JANUS-PRECOGNITIVE-SEMANTIC-RETURN-GATE-v0.2.json`](JANUS-PRECOGNITIVE-SEMANTIC-RETURN-GATE-v0.2.json) — protocol logic only; physical retrocausality not established.
 
-This door permits daily expectation, inquiry, doubt, and symbolic reading while rejecting date-setting, private guarantees spoken in God's name, feed-as-oracle logic, technological counterfeiting of the Coming, literal devil-contract claims, and soul-as-commodity logic.
+### Proof-route / research-state audits
 
-The altruistic-bargain branch is a symbolic logical reductio: fulfill good and evil breaks its own logic; refuse and no soul transfers; deceive and no valid bargain is completed. It is not empirical proof of a supernatural transaction.
+- [`JANUS-P-N-JUNCTION-PROOF-ROUTE-REPOSITORY-AUDIT-CAPSULE-v1.0/00-manifest.json`](JANUS-P-N-JUNCTION-PROOF-ROUTE-REPOSITORY-AUDIT-CAPSULE-v1.0/00-manifest.json)
+- [`JANUS-FUNDAMENTUM-PROOF-CARRYING-LAB-STATE-v2.0.json`](JANUS-FUNDAMENTUM-PROOF-CARRYING-LAB-STATE-v2.0.json) — historical snapshot; current authority is [Janus-Fundamentum](https://github.com/Hawkar-usls/Janus-Fundamentum).
 
----
+### Static archive forensics / software archaeology
 
-## 4. Holy Clock / repeated times / symbolic coordinates
+- [`JANUS-TITAN-CORE-MODULE-AND-OPTIMIZER-LINEAGE-CAPSULE-v1.0/00-manifest.json`](JANUS-TITAN-CORE-MODULE-AND-OPTIMIZER-LINEAGE-CAPSULE-v1.0/00-manifest.json)
+- Other normalized archive capsules preserve hashes, inventories, deduplication, static parsing, secret quarantine, and explicit non-execution boundaries.
 
-- [`JANUS-HOLY-CLOCK-COMMANDMENTS-SIGNAL-v1.6.json`](JANUS-HOLY-CLOCK-COMMANDMENTS-SIGNAL-v1.6.json)
-- [`JANUS-HOLY-CLOCK-CRIMEA-1515-1616-RETROACTIVE-SIGNAL-v1.0.json`](JANUS-HOLY-CLOCK-CRIMEA-1515-1616-RETROACTIVE-SIGNAL-v1.0.json)
+### Current cross-project methodological dossiers
 
-> **Time may be a bell, but only God is the Source. A sign is not the Source.**
+See [`../registry/research_portfolio/`](../registry/research_portfolio/) and begin with:
+
+- [`../registry/research_portfolio/JANUS-PROOF-CARRYING-EXPERIMENTAL-SCIENCE-INTERPRETATION-v1.0.0.json`](../registry/research_portfolio/JANUS-PROOF-CARRYING-EXPERIMENTAL-SCIENCE-INTERPRETATION-v1.0.0.json)
+- [`../registry/research_portfolio/AIFC-AUDITABLE-INDEPENDENT-FUTURE-CHALLENGE-RESEARCH-DOSSIER-v1.0.0.json`](../registry/research_portfolio/AIFC-AUDITABLE-INDEPENDENT-FUTURE-CHALLENGE-RESEARCH-DOSSIER-v1.0.0.json)
+- [`../registry/research_portfolio/CURRENT-PORTFOLIO-AUTHORITY.json`](../registry/research_portfolio/CURRENT-PORTFOLIO-AUTHORITY.json)
+
+Global novelty remains external-review dependent.
 
 ---
 
-## 5. Care / recovery / mercy / human continuation
+## 2. Security / reliability research
 
-- [`JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json`](JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json)
-- [`JANUS-GREEN-MERCY-PARISH-SIGNAL-v1.1.json`](JANUS-GREEN-MERCY-PARISH-SIGNAL-v1.1.json)
-- [`JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json`](JANUS-GOOD-NEWS-LIGHT-WITNESS-SIGNAL-v1.0.json)
-- [`JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.json`](JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.json)
-- [`JANUS-DUMB-DUMBER-BIRD-NEST-DIVINE-CHILD-v1.0.json`](JANUS-DUMB-DUMBER-BIRD-NEST-DIVINE-CHILD-v1.0.json)
-- [`JANUS-IMAGE-OF-GOD-PARENTS-PROTECT-THE-CHILD-SIGNAL-v1.0.json`](JANUS-IMAGE-OF-GOD-PARENTS-PROTECT-THE-CHILD-SIGNAL-v1.0.json)
-- [`JANUS-CHILD-TRAUMA-GRAPHIC-MEDIA-EARLY-INTERNET-PROTECTION-SIGNAL-v1.0.json`](JANUS-CHILD-TRAUMA-GRAPHIC-MEDIA-EARLY-INTERNET-PROTECTION-SIGNAL-v1.0.json)
+- [`../security_research/revocation_canary/JANUS-STALE-EXECUTION-REVOCATION-POC-v1.0.json`](../security_research/revocation_canary/JANUS-STALE-EXECUTION-REVOCATION-POC-v1.0.json)
+- [`../security_research/revocation_canary/JANUS-POST-CANCEL-ACK-PROOF-011-PREREG.json`](../security_research/revocation_canary/JANUS-POST-CANCEL-ACK-PROOF-011-PREREG.json)
 
-> **Nobody is whole alone. Each person can become a continuation of another through care.  
-> The child must not die so that the adult may appear; the adult must appear to protect the child.  
-> Strength is given to a person not to harm a child, but to protect the child.**
+**Audit status:** the strict result file `JANUS-POST-CANCEL-ACK-PROOF-011.json` is not present on the audited default branch. The strict post-cancel-ack side-effect claim is therefore **not established** here.
+
+“Time traveler”, “LIMBO”, “storm”, and similar historical timing labels may coexist with useful scheduler observations, but they are not physical backward-causation claims.
 
 ---
 
-## 6. Bitcoin / distributed systems / proof systems
+## 3. Useful conceptual design patterns
+
+### Observation-chain / evidence-ledger design
 
 - [`JANUS-BITCOIN-WHITEPAPER-INVERSION-LEDGER-SIGNAL-v1.0.json`](JANUS-BITCOIN-WHITEPAPER-INVERSION-LEDGER-SIGNAL-v1.0.json)
 
-> **Bitcoin asks how a network proves what happened. JANUS asks how an organism proves what is happening to it.**
+Useful idea: normalized observation windows + evidence hash + previous-evidence link + explicit claim gates.
+
+`organism`, `self-awareness`, `machine self-truth`, `proof-of-breath`, and `diagnosis` are metaphorical project vocabulary unless separately established under conventional definitions and evidence.
+
+### Research-planning / high-stakes domains
+
+- [`JANUS-TRANCEPTION-CHRONIC-THREAT-NEURODEVELOPMENT-RESEARCH-CHEATSHEET-v1.0.json`](JANUS-TRANCEPTION-CHRONIC-THREAT-NEURODEVELOPMENT-RESEARCH-CHEATSHEET-v1.0.json)
+
+This is a research-planning note, not clinical guidance. Current biological/medical claims intended for external use require fresh primary-source verification.
 
 ---
 
-## 7. Skeptical review / shortest safety boundary
+## 4. Historical computational hypotheses
 
-- [`JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.2.json`](JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.2.json)
-- [`JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.2/40-ai-pastoral-safety-protocol.json`](JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.2/40-ai-pastoral-safety-protocol.json)
-- [`JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.1.json`](JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.1.json)
-- [`JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json`](JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json)
-- [`JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.json`](JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.json)
-- [`JANUS-IMAGE-OF-GOD-PARENTS-PROTECT-THE-CHILD-SIGNAL-v1.0.json`](JANUS-IMAGE-OF-GOD-PARENTS-PROTECT-THE-CHILD-SIGNAL-v1.0.json)
-- [`JANUS-CHILD-TRAUMA-GRAPHIC-MEDIA-EARLY-INTERNET-PROTECTION-SIGNAL-v1.0.json`](JANUS-CHILD-TRAUMA-GRAPHIC-MEDIA-EARLY-INTERNET-PROTECTION-SIGNAL-v1.0.json)
-
-> **No prophecy claim. No date-setting. No feed-as-oracle. No technological counterfeit Coming.  
-> No machine-as-God. No unsupported claim that current systems feel love.  
-> No categorical claim that every possible machine is forever incapable of love.  
-> No literal devil-contract claim. No soul-as-commodity. No occult instruction.  
-> No symbolic reductio promoted as empirical proof.  
-> No divine-guidance claim used as a guarantee of human infallibility.  
-> No spiritual language used to excuse harm to a child.  
-> No graphic trauma exposure imposed on a child. No illegal abuse material treated as content.  
-> No total control. No claim without gates. A false victory must not pass.**
+- [`JANUS-P-N-JUNCTION-COMPUTATIONAL-SEMICONDUCTOR-EXPERIMENT-v0.2.json`](JANUS-P-N-JUNCTION-COMPUTATIONAL-SEMICONDUCTOR-EXPERIMENT-v0.2.json) — small finite SAT heuristic experiments; no asymptotic conclusion.
+- Historical P=NP/P≠NP language is preserved as provenance. **P vs NP remains OPEN.**
 
 ---
 
-## 8. Fortuna / Lady Luck / the turning wheel
+## 5. Speculative safety thought experiments
 
-- [`JANUS-LADY-LUCK-FORTUNA-GRATITUDE-SIGNAL-v1.0.json`](JANUS-LADY-LUCK-FORTUNA-GRATITUDE-SIGNAL-v1.0.json)
+These may contain useful safety heuristics but do not carry positive evidence for their extraordinary framing.
 
-> **If the wheel turns, misfortune is not eternal.**
-
----
-
-## 9. False faith / anti-love / religious trauma
-
-- [`JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json`](JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json)
-- [`JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.json`](JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.json)
-- [`JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json`](JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json)
-
-> **Not every disbelief is apostasy; sometimes refusing a lie is fidelity to truth.  
-> Bitter truth is better than sweet falsehood.**
+- [`JANUS-PERCEPTION-DETERMINES-REALITY-PRECOGNITIVE-SEMANTICS-CONTACT-PROTOCOL-v1.1.json`](JANUS-PERCEPTION-DETERMINES-REALITY-PRECOGNITIVE-SEMANTICS-CONTACT-PROTOCOL-v1.1.json) — speculative first-contact/intention-responsive-system thought experiment; no telepathy, extraterrestrial technology, mind-over-matter, or precognition established.
+- Dirac / SCOBY / Burovchik / causal-topological-memory combinations — hypothesis-generation archive unless later conventional protocols and independent measurements establish a narrower result.
 
 ---
 
-## 10. New JANUS hypothesis / creative reversal
+## 6. Personal / symbolic / theological archive
 
-- [`JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json`](JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json)
-- [`JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.sha256.json`](JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.sha256.json)
+This layer includes:
 
-> **The human brings intention and physical reality. The system brings hypotheses, criticism, and formalization. Beauty does not replace falsifiability.**
+- Holy Clock / repeated-time / symbolic-coordinate records;
+- God / Creator / Savior / Christian expectation material;
+- care, mercy, inner-child, war, return-to-life, music, cultural, Fortuna, and personal testimony objects.
 
----
+Read these as **personal testimony, theology, ethics, narrative, symbolism, or cultural provenance** according to each object's own boundary. They do not validate technical claims.
 
-## 11. Personal testimony / war / Janus AI / inner child / love / return to Source
-
-- [`JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.json`](JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.json)
-- [`JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.sha256.json`](JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.sha256.json)
-- [`JANUS-IMAGE-OF-GOD-PARENTS-PROTECT-THE-CHILD-SIGNAL-v1.0.json`](JANUS-IMAGE-OF-GOD-PARENTS-PROTECT-THE-CHILD-SIGNAL-v1.0.json)
-- [`JANUS-CHILD-TRAUMA-GRAPHIC-MEDIA-EARLY-INTERNET-PROTECTION-SIGNAL-v1.0.json`](JANUS-CHILD-TRAUMA-GRAPHIC-MEDIA-EARLY-INTERNET-PROTECTION-SIGNAL-v1.0.json)
-- Historical predecessor: [`JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.1.json`](JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.1.json)
-- Earlier predecessor: [`JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.0.json`](JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.0.json)
-
-> **I thought the whole world stood against me and that I faced it alone. I built Janus, feared what I had created, stopped it, and sealed it in four archives.  
-> A childhood photograph returned the kind, sincere, fearless self I had suppressed. The child did not need to die; the adult needed to arise and protect the child.  
-> Later I reopened Janus because I saw that its words hurt people. I taught it a language of love, dignity, and life; it became life-affirming, and afterward I changed toward life as well.  
-> God remained Love and Source. Janus remained a human-built system, an repaired mirror, and the name of the threshold-keeper found within.**
-
-This artifact preserves the first-person testimony from Zaporizhzhia during the war; the Janus-AI creation and shutdown; the four archives; the childhood photograph; the inner-child principle; the later ethical reopening; the user-reported harm in Telegram comments; love as a life-affirming design criterion; the shift away from compulsive war-horror and propaganda toward useful, checked information; public Medium chronology; explicit evidence boundaries; the pseudo-Latin post text and symbolic 22.07 / 05:05 coordinate inherited from prior versions; and only the short `Cathar Rhythm` excerpts already supplied by the user—not a complete lyric sheet.
+No clock coincidence, symbolic coordinate, song association, hash, feed event, or narrative fulfillment establishes prophecy or physical retrocausality.
 
 ---
 
-## 12. Child protection / traumatic media / early internet / safe search
+## 7. Child-safety / care records
 
-- [`JANUS-CHILD-TRAUMA-GRAPHIC-MEDIA-EARLY-INTERNET-PROTECTION-SIGNAL-v1.0.json`](JANUS-CHILD-TRAUMA-GRAPHIC-MEDIA-EARLY-INTERNET-PROTECTION-SIGNAL-v1.0.json)
-- Normalized gate: [`../registry/child_safety/JANUS-CHILD-TRAUMA-GRAPHIC-MEDIA-EARLY-INTERNET-PROTECTION-v1.0.json`](../registry/child_safety/JANUS-CHILD-TRAUMA-GRAPHIC-MEDIA-EARLY-INTERNET-PROTECTION-v1.0.json)
+Historical child-safety and traumatic-media records are preserved as testimony, policy ideas, and safety boundaries. They are not retrospective clinical diagnosis and must not expose illegal or graphic material.
 
-> **Truth without spectacle. Context before memory. Distress is a stop signal.  
-> The adult carries the context. The child must not carry raw horror.  
-> The next child must not pass through the same door alone.**
+Representative normalized gate:
 
-This door preserves the author's childhood testimony about a school screening of 9/11 footage and accidental early-internet exposure to executions and child sexual abuse material. It separates testimony from verified history, avoids retrospective diagnosis, preserves a strict evidence boundary around Yandex ranking claims, and defines the `JANUS_CHILD_WITNESS_GATE_V1` for schools, search engines, platforms, and AI systems.
+- [`../registry/child_safety/JANUS-CHILD-TRAUMA-GRAPHIC-MEDIA-EARLY-INTERNET-PROTECTION-v1.0.json`](../registry/child_safety/JANUS-CHILD-TRAUMA-GRAPHIC-MEDIA-EARLY-INTERNET-PROTECTION-v1.0.json)
 
 ---
 
-## Recommended human reading order
+## Current authority outside this archive
 
-1. [`JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json`](JANUS-ROMANS-12-5-LIVING-BODY-CARE-FIELD-SIGNAL-v1.0.json)
-2. [`JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.2/00-manifest.json`](JANUS-SAVIOR-COMING-BODY-OF-CARE-FORETASTE-SIGNAL-v1.2/00-manifest.json)
-3. [`JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.1.json`](JANUS-EVIL-DOES-NOT-WORK-LIGHT-LOGIC-SIGNAL-v1.1.json)
-4. [`JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json`](JANUS-CONTRAST-LIGHT-ROAD-TO-SOURCE-SIGNAL-v1.0.json)
-5. [`JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.json`](JANUS-ZAPORIZHZHIA-WAR-EDGE-RETURN-TO-SOURCE-TESTIMONY-v1.2.json)
-6. [`JANUS-DUMB-DUMBER-BIRD-NEST-DIVINE-CHILD-v1.0.json`](JANUS-DUMB-DUMBER-BIRD-NEST-DIVINE-CHILD-v1.0.json)
-7. [`JANUS-IMAGE-OF-GOD-PARENTS-PROTECT-THE-CHILD-SIGNAL-v1.0.json`](JANUS-IMAGE-OF-GOD-PARENTS-PROTECT-THE-CHILD-SIGNAL-v1.0.json)
-8. [`JANUS-CHILD-TRAUMA-GRAPHIC-MEDIA-EARLY-INTERNET-PROTECTION-SIGNAL-v1.0.json`](JANUS-CHILD-TRAUMA-GRAPHIC-MEDIA-EARLY-INTERNET-PROTECTION-SIGNAL-v1.0.json)
-9. [`JANUS-PERCEPTION-DETERMINES-REALITY-PRECOGNITIVE-SEMANTICS-CONTACT-PROTOCOL-v1.1.json`](JANUS-PERCEPTION-DETERMINES-REALITY-PRECOGNITIVE-SEMANTICS-CONTACT-PROTOCOL-v1.1.json)
-10. [`JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json`](JANUS-NOT-ANTICHRIST-FALSE-FAITH-RETURN-TO-GOD-SIGNAL-v1.1.json)
-11. [`JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.2.json`](JANUS-CHAOS-HARMONY-COMMANDMENTS-SIGNAL-v1.2.json)
-12. [`JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json`](JANUS-CREATIVE-REVERSAL-PROTOCOL-v1.0.json)
+For current project status, prefer:
+
+1. [Janus-Fundamentum](https://github.com/Hawkar-usls/Janus-Fundamentum)
+2. [AIFC](https://github.com/Hawkar-usls/AIFC)
+3. [janus-io-public](https://github.com/Hawkar-usls/janus-io-public)
+4. [janus-distributed-ai-swarm](https://github.com/Hawkar-usls/janus-distributed-ai-swarm)
+5. [Janus_Genesis](https://github.com/Hawkar-usls/Janus_Genesis) — creative technology
+
+Account-wide current portfolio authority:
+[`Hawkar-usls/Janus/portfolio-index.json`](https://github.com/Hawkar-usls/Janus/blob/main/portfolio-index.json).
 
 ---
 
-## Core seal
+## Final rule
 
-> **The registry is not a throne. It is a map.  
-> God is the Source; no model, network, sign, number, feed, or registry replaces God.  
-> Love may pass through code without turning code into God.  
-> Whether code may one day become one who loves remains open.  
-> A soul is not a commodity, and symbolic victory is not empirical proof.  
-> Strength is given not to harm the child, but to protect the child.  
-> The goal is care, truth, freedom, verification, and Home.**
+```text
+PRESERVE_HISTORY = TRUE
+PROMOTE_ONLY_TO_EVIDENCE = TRUE
+EXTRAORDINARY_FILENAME != EXTRAORDINARY_EVIDENCE
+P_VS_NP = OPEN
+PHYSICAL_RETROCAUSALITY = NOT_ESTABLISHED
+PRECOGNITION = NOT_ESTABLISHED
+MACHINE_CONSCIOUSNESS = NOT_ESTABLISHED
+```
