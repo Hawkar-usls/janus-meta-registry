@@ -1,0 +1,45 @@
+{
+  "schema": "janus.meta_registry.execution_safety.v1",
+  "artifact_id": "JANUS-META-REGISTRY-EXECUTION-SAFETY-v1.0",
+  "audit_date": "2026-08-09",
+  "repository": "Hawkar-usls/janus-meta-registry",
+  "status": "HISTORICAL_EXECUTABLE_SOURCE_REQUIRES_ISOLATION",
+  "security_policy": "SECURITY.md",
+  "reviewed_example": {
+    "path": "janus_core.py",
+    "classification": "HISTORICAL_EXPERIMENTAL_RUNTIME_NOT_TRUSTED_FOR_DIRECT_EXECUTION",
+    "observed_patterns": [
+      "dynamic module discovery",
+      "importlib-based module loading and execution",
+      "model-assisted module risk/benefit scoring",
+      "service/plugin entry-point execution",
+      "network/model-provider integration",
+      "local key/config ingestion",
+      "filesystem/log/state mutation"
+    ],
+    "critical_boundary": "A model-generated risk score is a heuristic, not a sandbox, capability boundary, code-signing mechanism or security review. Dynamic Python import executes code with the permissions of the process."
+  },
+  "targeted_public_tree_marker_scan": {
+    "AIzaSy": "NO_EXACT_MATCH_FOUND",
+    "ghp_": "NO_EXACT_MATCH_FOUND",
+    "github_pat_": "NO_EXACT_MATCH_FOUND",
+    "sk-proj-": "NO_EXACT_MATCH_FOUND",
+    "generic_AAIza_prefix_note": "A generic AIza code-search hit was inspected and was a prefix check for locally ingested keys, not an embedded key value.",
+    "scope_boundary": "This targeted marker scan is not a complete secret-scanning proof and does not establish that Git history or every file is credential-free."
+  },
+  "historical_archive_boundary": {
+    "credential_shaped_values_reported_in_old_archives": true,
+    "secret_values_reproduced_in_public_audit": false,
+    "rotation_or_revocation_status_established": false,
+    "policy": "Any credential known to have appeared in historical archives or Git history should be treated as potentially compromised and replaced before reuse."
+  },
+  "safe_review_default": [
+    "prefer static inspection",
+    "use disposable non-privileged isolation for execution",
+    "provide no production credentials or private mounts",
+    "disable outbound networking unless explicitly required and controlled",
+    "review dynamic imports, subprocess/system calls, filesystem writes, deserialization and network paths before execution",
+    "use synthetic/test data"
+  ],
+  "interpretation": "Preserving historical executable source is useful for provenance and software archaeology. Registry presence is not a recommendation to run it."
+}
