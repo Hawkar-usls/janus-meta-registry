@@ -91,6 +91,10 @@ Useful idea: normalized observation windows + evidence hash + previous-evidence 
 
 This is a research-planning note, not clinical guidance. Current biological/medical claims intended for external use require fresh primary-source verification.
 
+### Bio-derived materials / circular biomanufacturing
+
+- [`SKYBU-SKINGPT-CIRCULAR-BIOMANUFACTURING-CONCEPT-v1.0.json`](SKYBU-SKINGPT-CIRCULAR-BIOMANUFACTURING-CONCEPT-v1.0.json) — early research concept linking SCOBY-derived bacterial nanocellulose, SkinGPT sensing skins, acetate co-product research, and a strictly separated food-grade fermentation lane. Ballistic armor, zero-waste, nutritional, and food-safety claims remain unestablished until independently validated.
+
 ---
 
 ## 4. Historical computational hypotheses
