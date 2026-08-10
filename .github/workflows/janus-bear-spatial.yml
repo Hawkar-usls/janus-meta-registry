@@ -17,6 +17,24 @@ on:
       - "registry/myth_busted/FALLOUT-3-JANUS-BEAR-CONTEXT-LEDGER-SCHEMA-v4.0.json"
       - "registry/myth_busted/JANUS-BEAR-GNOME-SPATIAL-PUBLICATION-RECEIPT-v4.1.json"
       - ".github/workflows/janus-bear-spatial.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "tools/analyze_teddy_gnome_enrichment.py"
+      - "tools/analyze_teddy_gnome_enrichment_v4_2.py"
+      - "tools/verify_janus_bear_publication.py"
+      - "tools/fo3edit_teddy_context_inventory_export.pas"
+      - "tests/test_teddy_gnome_enrichment.py"
+      - "tests/test_teddy_gnome_enrichment_v4_2.py"
+      - "tests/test_teddy_skeleton_proximity.py"
+      - "data/JANUS-BEAR-CHILD-GUARDIAN-COMPANION-v1.0.json"
+      - "registry/myth_busted/FALLOUT-JANUS-BEAR-GNOME-PROXY-ACTOR-GRAMMAR-v4.0.json"
+      - "registry/myth_busted/FALLOUT-3-JANUS-BEAR-SPATIAL-ENRICHMENT-TECHNICAL-v4.0.json"
+      - "registry/myth_busted/FALLOUT-3-JANUS-BEAR-SPATIAL-ENRICHMENT-HARDENING-v4.2.json"
+      - "registry/myth_busted/FALLOUT-3-JANUS-BEAR-CONTEXT-LEDGER-SCHEMA-v4.0.json"
+      - "registry/myth_busted/JANUS-BEAR-GNOME-SPATIAL-PUBLICATION-RECEIPT-v4.1.json"
+      - ".github/workflows/janus-bear-spatial.yml"
   workflow_dispatch:
 
 permissions:
@@ -28,7 +46,7 @@ jobs:
     timeout-minutes: 10
 
     steps:
-      - name: Checkout exact PR head
+      - name: Checkout exact event head
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -92,6 +110,8 @@ jobs:
       - name: Emit exact Git receipt
         env:
           EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          EVENT_NAME: ${{ github.event_name }}
+          REF_NAME: ${{ github.ref_name }}
         run: |
           python - <<'PY'
           import json, os, subprocess
@@ -103,8 +123,9 @@ jobs:
           actual = git("rev-parse", "HEAD")
           expected = os.environ["EXPECTED_HEAD"]
           receipt = {
-              "schema": "janus.bear.github_actions.git_receipt.v2",
-              "event": "pull_request_or_manual_dispatch",
+              "schema": "janus.bear.github_actions.git_receipt.v3",
+              "event": os.environ["EVENT_NAME"],
+              "ref_name": os.environ["REF_NAME"],
               "expected_head": expected,
               "actual_head": actual,
               "exact_head_match": actual == expected,
@@ -115,7 +136,7 @@ jobs:
               "distance_512_establishes_same_visible_scene": False,
           }
           if not receipt["exact_head_match"]:
-              raise SystemExit("exact PR-head mismatch")
+              raise SystemExit("exact event-head mismatch")
           Path("janus-bear-git-receipt.json").write_text(
               json.dumps(receipt, indent=2) + "\n", encoding="utf-8"
           )
