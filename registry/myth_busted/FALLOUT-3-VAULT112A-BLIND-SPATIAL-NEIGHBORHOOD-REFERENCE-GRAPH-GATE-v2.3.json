@@ -1,0 +1,107 @@
+{
+  "schema": "janus.meta_registry.fallout3_vault112a_blind_spatial_neighborhood_reference_graph_gate.v2_1",
+  "artifact_id": "FALLOUT-3-VAULT112A-BLIND-SPATIAL-NEIGHBORHOOD-REFERENCE-GRAPH-GATE-v2.3",
+  "title": "Fallout 3 — Vault112a Blind Spatial-Neighborhood Reference-Graph Gate v2.3",
+  "created_at_local": "2026-08-10T16:36:00+03:00",
+  "repository": "Hawkar-usls/janus-meta-registry",
+  "artifact_class": "ASSET_LEVEL_BLIND_REFERENCE_EXPORT_AND_SPATIAL_DISCOVERY_GATE",
+  "status": "TOOLING_IMPLEMENTED_BLIND_ALL_REFR_EXPORT_REAL_ESM_RECEIPT_OPEN",
+  "parents": [
+    "registry/myth_busted/FALLOUT-3-VAULT112A-LOUNGER23-PLACED-REFERENCE-PERSISTENT-CHILD-AUDIT-v2.2.json",
+    "registry/myth_busted/FALLOUT-3-PER-LOUNGER-BACKEND-SHARD-RESIDENT-STORAGE-CARRIER-BINDING-AUDIT-v2.0.json",
+    "registry/myth_busted/FALLOUT-3-LOUNGER23-REFERENCE-GRAPH-EXECUTABLE-CLOSURE-CI-MERGE-RECEIPT-v2.0.json"
+  ],
+  "problem_found": {
+    "source": "tools/fo3edit_vault112_per_lounger_backend_shard_export_v2_0.pas",
+    "finding": "The v2.0 exporter assigns HardwareKind and exits before export when kind=OTHER. An unnamed or generically named ACTI/STAT/MSTT/local-processing prop can therefore be absent from the hardware TSV even when physically adjacent to every Visiontron.",
+    "impact": "The real per-lounger shard could be missed because discovery was partially dependent on base/ref identity text before spatial analysis.",
+    "classification": "REAL_TOOLING_BLIND_SPOT"
+  },
+  "v2_1_fix": {
+    "xedit_exporter": "tools/fo3edit_vault112_blind_spatial_neighborhood_export_v2_1.pas",
+    "verifier": "tools/verify_vault112_blind_spatial_neighborhood_v2_1.py",
+    "tests": "tests/test_vault112_blind_spatial_neighborhood_v2_1.py",
+    "workflow": ".github/workflows/vault112-blind-spatial-neighborhood-v2-1.yml",
+    "raw_output": "JANUS-Vault112a-All-Refs-v2.1.tsv",
+    "result_output": "JANUS-Vault112a-Blind-Spatial-Neighborhood-Audit-v2.1.json",
+    "design": [
+      "Export every winning REFR in CELL Vault112a without name, signature or hardware-kind prefiltering.",
+      "Preserve base signature/FormID/EditorID/name/model, exact XYZ, scripts, enable parent, owner, disabled state and full record path.",
+      "Identify James monitor and Visiontron anchors only after the exhaustive cell export.",
+      "Assign each non-Visiontron reference to its uniquely nearest Visiontron within the audit radius; equidistant objects remain visible but do not contribute to repeating-layout admission.",
+      "Rank blind neighbors per Visiontron and detect repeated base FormIDs across distinct loungers even when EditorID/name are empty.",
+      "Never promote proximity or repetition to functional wiring, state ownership, persistence or memory-carrier status."
+    ]
+  },
+  "anchor_set": {
+    "james_monitor_base": "00031190",
+    "visiontron_bases": ["0002A45B", "000B364C", "000B06D4"],
+    "cell": "Vault112a"
+  },
+  "admission_ladder": [
+    {"level": "C0", "meaning": "All Vault112a REFR records exported", "authority": "EXHAUSTIVE_SPATIAL_DISCOVERY_INPUT"},
+    {"level": "C1", "meaning": "James monitor has geometric Visiontron candidate", "authority": "GEOMETRIC_ENDPOINT_ASSOCIATION_ONLY"},
+    {"level": "C2", "meaning": "Unnamed/generic base repeats in uniquely-nearest neighborhoods of multiple Visiontrons", "authority": "BLIND_REPEATED_LAYOUT_CANDIDATE"},
+    {"level": "C3", "meaning": "James Visiontron participates in the same repeated generic-base pattern", "authority": "JAMES_BLIND_SHARD_CANDIDATE"},
+    {"level": "C4", "meaning": "Primary ESM links/scripts/reverse refs bind candidate to resident/session state", "authority": "JAMES_SPECIFIC_BACKEND_HANDLE_CANDIDATE"},
+    {"level": "C5", "meaning": "Primary semantics prove persistence/addressability and later carrier edge", "authority": "PERSISTED_JAMES_MEMORY_STATE_RECONSTRUCTION_CANDIDATE"}
+  ],
+  "hard_rules": [
+    "NAME_BASED_HARDWARE_FILTER != EXHAUSTIVE_REFERENCE_GRAPH",
+    "ALL_REFR_EXPORT != FUNCTIONAL_SHARD",
+    "NEAREST_OBJECT != FUNCTIONAL_WIRING",
+    "REPEATED_BASE != FUNCTIONAL_WIRING",
+    "UNNAMED_REPEATED_BASE != BACKEND_PROOF",
+    "PROXIMITY != STATE_OWNERSHIP",
+    "SPATIAL_PATTERN != MEMORY_PERSISTENCE",
+    "JAMES_NEIGHBOR != JAMES_STORAGE",
+    "DISTANCE_TIE != UNIQUE_BINDING",
+    "REAL_ESM_RESULT_REQUIRED_BEFORE_PERSISTED_JAMES_PROMOTION"
+  ],
+  "test_scope": {
+    "synthetic_test_count": 12,
+    "required_cases": [
+      "Unnamed generic ACTI repeated around separate Visiontrons is surfaced.",
+      "Generic STAT and MSTT objects are not discarded.",
+      "Distinct bases do not form a false repeated-base candidate.",
+      "Object outside radius does not contribute.",
+      "Visiontron cannot be its own neighbor.",
+      "Duplicate RefID and nonnumeric coordinates fail closed.",
+      "James repeated neighbor remains candidate only.",
+      "No spatial result auto-promotes memory persistence."
+    ],
+    "real_esm_execution": "OPEN"
+  },
+  "save_james_effect": {
+    "previous_status": "PERSISTENT_CONTROL_PLANE_AND_PER_LOUNGER_BACKEND_BOUND_CONDITIONAL_RECONSTRUCTION",
+    "new_status": "BLIND_REFERENCE_GRAPH_READY_CONDITIONAL_RECONSTRUCTION",
+    "promotion": false,
+    "reason": "The search tooling can no longer miss an unnamed per-lounger shard solely because the object lacks computer-like naming, but no real ESM TSV has yet established a James-specific persistent backend handle.",
+    "target": "PERSISTED_JAMES_STATE_CANDIDATE"
+  },
+  "current_matrix": {
+    "V2_0_NAME_FILTER_BLIND_SPOT": "CONFIRMED",
+    "BLIND_ALL_VAULT112A_REFR_EXPORTER": "IMPLEMENTED",
+    "POST_EXPORT_SPATIAL_CLASSIFICATION": "IMPLEMENTED",
+    "UNNAMED_GENERIC_SHARD_DISCOVERY": "TESTED_SYNTHETICALLY",
+    "REAL_ESM_ALL_REFS_TSV": "OPEN",
+    "REAL_ESM_JAMES_VISIONTRON_REFID": "OPEN",
+    "REAL_ESM_REPEATED_UNNAMED_LOCAL_SHARD": "OPEN",
+    "JAMES_SPECIFIC_BACKEND_HANDLE": "NOT_ESTABLISHED",
+    "JAMES_SPECIFIC_PERSISTED_MEMORY_STATE": "NOT_ESTABLISHED",
+    "PERSISTED_JAMES_STATE_CANDIDATE": "NOT_YET_ADMITTED"
+  },
+  "next_gate": {
+    "name": "REAL_ESM_VAULT112A_BLIND_ALL_REFR_SPATIAL_RECEIPT_v2.1",
+    "status": "OPEN_BLOCKED_BY_OFFICIAL_MASTER_EXPORT",
+    "required_sequence": [
+      "Load exactly Fallout3.esm, Anchorage.esm, ThePitt.esm, BrokenSteel.esm, PointLookout.esm and Zeta.esm in FO3Edit.",
+      "Run fo3edit_vault112_blind_spatial_neighborhood_export_v2_1.pas read-only.",
+      "Freeze SHA-256 of JANUS-Vault112a-All-Refs-v2.1.tsv.",
+      "Run verify_vault112_blind_spatial_neighborhood_v2_1.py and freeze its JSON result.",
+      "Inspect repeated unnamed/generic bases around all Visiontrons and especially the James-associated Visiontron.",
+      "For any James repeated-blind candidate, return to primary ESM and resolve scripts, enable parents, ownership, linked records and reverse references.",
+      "Promote only if primary record semantics establish James-specific state ownership/persistence."
+    ]
+  }
+}
