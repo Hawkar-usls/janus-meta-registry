@@ -1,0 +1,61 @@
+name: Crystal pareidolia light probe
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "tools/crystal_pareidolia_probe.py"
+      - "experiments/crystal_pareidolia/**"
+      - "tests/test_crystal_pareidolia_probe.py"
+      - ".github/workflows/crystal-pareidolia-light.yml"
+  push:
+    branches: [main]
+    paths:
+      - "tools/crystal_pareidolia_probe.py"
+      - "experiments/crystal_pareidolia/**"
+      - "tests/test_crystal_pareidolia_probe.py"
+      - ".github/workflows/crystal-pareidolia-light.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install detector runtime
+        run: python -m pip install "opencv-python-headless==4.13.0.92"
+
+      - name: Unit tests
+        run: python tests/test_crystal_pareidolia_probe.py -v
+
+      - name: Run open-source crystal probe
+        run: >-
+          python tools/crystal_pareidolia_probe.py
+          --manifest experiments/crystal_pareidolia/sources.json
+          --out artifacts/crystal-pareidolia
+          --max-dim 960
+          --video-samples 8
+
+      - name: Publish job summary
+        if: always()
+        shell: bash
+        run: |
+          if [ -f artifacts/crystal-pareidolia/SUMMARY.md ]; then
+            cat artifacts/crystal-pareidolia/SUMMARY.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload machine-readable receipt
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: crystal-pareidolia-receipt
+          path: artifacts/crystal-pareidolia/
+          if-no-files-found: error
