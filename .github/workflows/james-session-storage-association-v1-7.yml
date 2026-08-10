@@ -1,0 +1,111 @@
+name: James Session Storage Association v1.7
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "tools/fo3edit_james_session_storage_association_export_v1_7.pas"
+      - "tools/verify_james_session_storage_association_v1_7.py"
+      - "tests/test_james_session_storage_association_v1_7.py"
+      - "registry/myth_busted/FALLOUT-3-JAMES-SESSION-AUTOPERSISTENCE-STORAGE-ASSOCIATION-AUDIT-v1.7.json"
+      - ".github/workflows/james-session-storage-association-v1-7.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Assert exact head
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          ACTUAL_HEAD="$(git rev-parse HEAD)"
+          echo "EXPECTED_HEAD=$EXPECTED_HEAD"
+          echo "ACTUAL_HEAD=$ACTUAL_HEAD"
+          test "$ACTUAL_HEAD" = "$EXPECTED_HEAD"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Compile Python and validate semantic gate
+        run: |
+          python -m py_compile tools/verify_james_session_storage_association_v1_7.py tests/test_james_session_storage_association_v1_7.py
+          python -m json.tool registry/myth_busted/FALLOUT-3-JAMES-SESSION-AUTOPERSISTENCE-STORAGE-ASSOCIATION-AUDIT-v1.7.json >/dev/null
+
+      - name: Static xEdit exporter invariants
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          text = Path('tools/fo3edit_james_session_storage_association_export_v1_7.pas').read_text(encoding='utf-8')
+          required = [
+              "LoadedOfficial.Count <> 6",
+              "UnexpectedPlugins.Count > 0",
+              "Vault112PodTermDad",
+              "MQ04StatusNoteDad",
+              "MQ04StressNoteDad",
+              "MQ04Doc",
+              "ReferencedByCount(root)",
+              "ReferencedByIndex(root, i)",
+              "BaseRecord(rec)",
+              "CanonicalCellEditorID(win), 'Vault112a'",
+              "GetPosition(rec)",
+              "XESP - Enable Parent",
+              "SCRI - Script",
+              "XOWN - Owner",
+              "memory chip",
+              "snapshot",
+              "storage",
+              "think machine",
+              "JANUS-James-Session-Seed-Leaves-v1.7.tsv",
+              "JANUS-James-Session-Seed-Reverse-Refs-v1.7.tsv",
+              "JANUS-James-Placed-Seed-Refs-v1.7.tsv",
+              "JANUS-Vault112a-REFR-Inventory-v1.7.tsv",
+              "JANUS-James-Storage-Candidates-v1.7.tsv",
+          ]
+          missing = [x for x in required if x not in text]
+          assert not missing, missing
+          print(f'JAMES_STORAGE_XEDIT_STATIC_INVARIANTS={len(required)}/{len(required)} PASS')
+          PY
+
+      - name: Run exactly twelve storage-association tests
+        run: |
+          set -o pipefail
+          python -m unittest tests.test_james_session_storage_association_v1_7 -v 2>&1 | tee /tmp/james-storage-tests.log
+          grep -F "Ran 12 tests" /tmp/james-storage-tests.log
+          grep -Fx "OK" /tmp/james-storage-tests.log
+
+      - name: Verify claim ceilings
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d = json.loads(Path('registry/myth_busted/FALLOUT-3-JAMES-SESSION-AUTOPERSISTENCE-STORAGE-ASSOCIATION-AUDIT-v1.7.json').read_text(encoding='utf-8'))
+          rules = set(d['hard_rules'])
+          required = {
+              'DIRECT_LINK != STORAGE_SEMANTICS',
+              'REVERSE_REFERENCE != PERSISTENCE_DIRECTION',
+              'POD_PROXIMITY != SESSION_STORAGE',
+              'STORAGE_KEYWORD != MEMORY_PAYLOAD',
+              'SHARED_BACKEND != SHARED_MEMORY_BUFFER',
+              'AUTOMATIC_PERSISTENCE_PLAUSIBILITY != PER_SESSION_AUTOPERSISTENCE',
+              'HIGH_PRIORITY_STORAGE_CANDIDATE != PASS',
+              'SECONDARY_DITHERS_CHIP_CLAIM != PRIMARY_ESM_BINDING',
+          }
+          assert required <= rules
+          assert d['current_matrix']['JAMES_SESSION_TO_PERSISTENT_STORAGE'] == 'NOT_ESTABLISHED'
+          assert d['current_matrix']['JAMES_SPECIFIC_REMOVABLE_CARRIER'] == 'NOT_ESTABLISHED'
+          assert d['current_matrix']['SAVE_JAMES_ASSET_LEVEL_EXECUTABLE'] == 'BLOCKED'
+          print('JAMES_SESSION_STORAGE_CLAIM_CEILING=PASS')
+          PY
