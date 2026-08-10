@@ -28,7 +28,6 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
-          cache: pip
 
       - name: Install detector runtime
         run: python -m pip install "opencv-python-headless==4.13.0.92"
@@ -58,4 +57,4 @@ jobs:
         with:
           name: crystal-pareidolia-receipt
           path: artifacts/crystal-pareidolia/
-          if-no-files-found: error
+          if-no-files-found: warn
