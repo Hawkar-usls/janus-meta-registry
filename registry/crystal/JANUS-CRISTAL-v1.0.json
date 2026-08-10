@@ -1,0 +1,128 @@
+{
+  "schema": "janus.meta_registry.janus_cristal.v1",
+  "artifact_id": "JANUS-CRISTAL-v1.0",
+  "artifact_name": "Janus Cristal",
+  "created_at_local": "2026-08-10T06:58:00+03:00",
+  "repository": "Hawkar-usls/janus-meta-registry",
+  "artifact_class": "MULTISPECTRAL_CRYSTAL_MACHINE_PERCEPTION_AND_SEMANTIC_FALSE_POSITIVE_GATE",
+  "status": "CI_EMPIRICAL_RUN_PENDING",
+  "scope": "Search open-access crystal observations for machine-detected word-like, formula-like, code-like, algorithm-like or periodic structures while separating real recorded modalities from image-space proxies and refusing post-hoc decoding.",
+  "questions": [
+    "Do machine OCR or structural detectors return repeatable text-like or formula/code-like candidates on crystal imagery?",
+    "Do any candidates persist across independent recorded modalities rather than only preprocessing variants?",
+    "What materially real structures become more visible under UV, IR or X-ray observation?",
+    "Do neon, solar-reference and quartz-on-quartz computational proxies change detector behavior without being mistaken for physical experiments?"
+  ],
+  "direct_recorded_modalities": [
+    "VISIBLE_RECORDED",
+    "UV_405_NM_RECORDED",
+    "LWIR_7.7_TO_12.4_UM_RECORDED",
+    "X_RAY_FLUORESCENCE_RECORDED"
+  ],
+  "proxy_only_modalities": {
+    "SOLAR_REFERENCE_BROADBAND_CONTROL": "SIMULATION_ONLY_NOT_CALIBRATED_SUNLIGHT",
+    "NEON_REDORANGE": "SIMULATION_ONLY_NOT_CALIBRATED_NEON_LAMP",
+    "QUARTZ_FILTER_ONCE": "SIMULATION_ONLY_NOT_PHYSICAL_QUARTZ_ON_QUARTZ",
+    "QUARTZ_FILTER_TWICE": "SIMULATION_ONLY_POSTERIOR_IMPACT_ZERO"
+  },
+  "open_source_observation_register": [
+    {
+      "id": "ALATAY_QUARTZ_VISIBLE_UV405_PAIR",
+      "source": "Wikimedia Commons / Boris Lobastov",
+      "observation": "The same 8 mm quartz specimen is available in ordinary recording and under 405 nm UV; the source description reports large hydrocarbon inclusions glowing greenish-blue and small droplets yellow-orange.",
+      "evidence_class": "DIRECT_RECORDED_IMAGE_PAIR",
+      "claim_ceiling": "UV reveals composition-dependent fluorescence/contrast; it does not imply symbolic encoding."
+    },
+    {
+      "id": "LWIR_QUARTZ_FELDSPAR",
+      "source": "Specim LWIR-C figure, Wikimedia Commons",
+      "observation": "A stone set scanned from 7.7 to 12.4 micrometers shows recognizable quartz and feldspar spectra.",
+      "evidence_class": "RECORDED_LWIR_HYPERSPECTRAL_FIGURE",
+      "semantic_scan": "DISABLED_BECAUSE_FIGURE_CONTAINS_AUTHOR_ANNOTATIONS"
+    },
+    {
+      "id": "XRF_QUARTZ_GRAINS",
+      "source": "Alain Manceau / ALS beamline 10.3.2 image",
+      "observation": "X-ray fluorescence maps As, Fe and Mn distribution in coatings on quartz grains at 10 x 10 micrometer pixels.",
+      "evidence_class": "RECORDED_X_RAY_FLUORESCENCE_MAP",
+      "claim_ceiling": "Chemical spatial structure, not a message."
+    },
+    {
+      "id": "NIST_SOFT_XRAY_QUARTZ_ANISOTROPY",
+      "source": "NIST / Journal of Applied Crystallography 2021",
+      "observation": "Orientation-dependent soft X-ray reflectometry from 45 to 620 eV reconstructs anisotropic optical constants of y-cut SiO2 quartz.",
+      "evidence_class": "PRIMARY_MEASUREMENT",
+      "posterior_impact_on_message_hypothesis": 0
+    },
+    {
+      "id": "USGS_SPECTRAL_LIBRARY_V7",
+      "source": "USGS Data Series 1035 / data release",
+      "observation": "The public spectral library spans roughly 0.2 to 200 micrometers for many materials and provides measured spectra and sample metadata suitable for future quartz-specific numeric gates.",
+      "evidence_class": "OFFICIAL_PRIMARY_DATA_LIBRARY",
+      "posterior_impact_on_message_hypothesis": 0
+    }
+  ],
+  "existing_registry_links": [
+    {
+      "path": "data/proofs/stochastic_light_interface_model.json",
+      "classification": "ARCHIVAL_LIGHT_AS_API_ANALOGY",
+      "use_here": "Historical inspiration only; physical claims are not inherited.",
+      "posterior_impact": 0
+    },
+    {
+      "path": "data/semantic_field_registry_v12.json",
+      "classification": "ARCHIVAL_OPTICS_TO_SEMANTICS_ANALOGY",
+      "use_here": "Motivates explicit signal/noise and gain controls only; optical metaphors are not material evidence.",
+      "posterior_impact": 0
+    },
+    {
+      "path": "registry/myth_busted/MATHERSHIP-ALIEN-CRYSTAL-FUNCTION-HYPOTHESIS-ADMISSION-v3.5.json",
+      "classification": "FICTIONAL_SOFTWARE_FORENSICS_CONTEXT",
+      "use_here": "Kept as a separate cultural/software-forensics lineage; no real-quartz inference is imported.",
+      "posterior_impact": 0
+    }
+  ],
+  "machine_method": {
+    "tool": "tools/janus_cristal_probe.py",
+    "sources": "experiments/janus_cristal/sources.json",
+    "tests": "tests/test_janus_cristal_probe.py",
+    "workflow": ".github/workflows/janus-cristal.yml",
+    "search_channels": [
+      "word-like OCR",
+      "formula-like OCR",
+      "code-like OCR",
+      "symbol sequences",
+      "FFT periodicity"
+    ],
+    "negative_control": "deterministic local block shuffle",
+    "annotation_policy": "Published figures with human labels are excluded from semantic OCR.",
+    "cipher_policy": "NO_POST_HOC_CIPHER_SEARCH"
+  },
+  "formal_rules": [
+    "DIRECT_RECORDED_MODALITY != SYNTHETIC_PROXY",
+    "OCR_TOKEN != MESSAGE",
+    "FORMULA_LIKE != ENCODED_FORMULA",
+    "CODE_LIKE != ALGORITHM",
+    "PATTERN != INTENT",
+    "CROSS_PREPROCESSING_PERSISTENCE != CROSS_MODALITY_PERSISTENCE",
+    "HUMAN_ANNOTATION_MUST_NOT_BE_REINTERPRETED_AS_CRYSTAL_OUTPUT",
+    "NO_POST_HOC_CIPHER_SEARCH"
+  ],
+  "physical_experiment_boundary": {
+    "uv405": "DIRECT_OPEN_RECORDING_AVAILABLE",
+    "infrared": "DIRECT_OPEN_LWIR_RECORDING_AVAILABLE",
+    "xray": "DIRECT_OPEN_XRF_RECORDING_AVAILABLE_AND_NIST_NUMERIC_DATA_EXISTS",
+    "neon": "NO_DIRECT_MATCHED_OPEN_QUARTZ_EXPOSURE_IN_V1.0; PROXY_ONLY",
+    "sunlight": "NO_CALIBRATED_MATCHED_OPEN_QUARTZ_EXPOSURE_IN_V1.0; BROADBAND_CONTROL_ONLY",
+    "quartz_illuminating_quartz": "NOT_PHYSICALLY_EXECUTED; PROXY_ONLY"
+  },
+  "result_binding": {
+    "ci_status": "PENDING",
+    "workflow_run": null,
+    "head_sha": null,
+    "artifact_id": null,
+    "artifact_sha256": null,
+    "semantic_result": "PENDING"
+  },
+  "claim_ceiling": "The experiment can establish machine detector behavior and material contrast under recorded modalities. It cannot establish an intentional message, formula, algorithm, intelligence, entity or supernatural cause without an independently preregistered encoding and cross-modality replication."
+}
