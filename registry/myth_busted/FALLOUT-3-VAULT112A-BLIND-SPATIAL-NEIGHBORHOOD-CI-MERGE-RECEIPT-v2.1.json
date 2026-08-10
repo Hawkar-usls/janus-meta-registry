@@ -1,0 +1,70 @@
+{
+  "schema": "janus.meta_registry.fallout3_vault112a_blind_spatial_neighborhood_ci_merge_receipt.v2_1",
+  "artifact_id": "FALLOUT-3-VAULT112A-BLIND-SPATIAL-NEIGHBORHOOD-CI-MERGE-RECEIPT-v2.1",
+  "title": "Vault112a Blind Spatial Neighborhood — Exact-Head CI / Merge Receipt v2.1",
+  "created_at_local": "2026-08-10T16:47:00+03:00",
+  "repository": "Hawkar-usls/janus-meta-registry",
+  "artifact_class": "EXACT_HEAD_CI_AND_MERGE_RECEIPT",
+  "status": "TOOLING_VERIFIED_REAL_ESM_RESULT_OPEN",
+  "gate": "registry/myth_busted/FALLOUT-3-VAULT112A-BLIND-SPATIAL-NEIGHBORHOOD-REFERENCE-GRAPH-GATE-v2.3.json",
+  "pull_request": {
+    "number": 51,
+    "title": "Verify Vault112 blind spatial neighborhood v2.1",
+    "tested_head_sha": "849ebe50c6d2d996d36607d4629f199f1f40228f",
+    "merge_sha": "a0e8d59432d6c31a7cea8142cb68dc8c3810795c",
+    "merged": true
+  },
+  "github_actions": {
+    "workflow": "Vault112 Blind Spatial Neighborhood v2.1",
+    "workflow_run_id": 31394236285,
+    "job_id": 93473091629,
+    "conclusion": "success",
+    "exact_head": {
+      "expected": "849ebe50c6d2d996d36607d4629f199f1f40228f",
+      "actual": "849ebe50c6d2d996d36607d4629f199f1f40228f",
+      "status": "PASS"
+    },
+    "static_xedit_invariants": {
+      "passed": 14,
+      "total": 14,
+      "status": "PASS"
+    },
+    "synthetic_tests": {
+      "passed": 12,
+      "total": 12,
+      "raw_summary": "Ran 12 tests in 0.001s / OK",
+      "status": "PASS"
+    },
+    "claim_ceiling": "VAULT112_BLIND_CLAIM_CEILING=PASS"
+  },
+  "verified_fix": {
+    "old_blind_spot": "v2.0 HardwareKind filtering could exclude unnamed/generic OTHER placed refs before spatial analysis.",
+    "new_rule": "Export every winning REFR in Vault112a first, then classify spatially.",
+    "forbidden_patterns_checked_absent": [
+      "HardwareKind(",
+      "if kind = 'OTHER' then exit"
+    ],
+    "synthetic_detection": [
+      "unnamed repeated ACTI candidate",
+      "generic STAT candidate",
+      "generic MSTT candidate",
+      "distance tie preserved",
+      "no proximity-to-memory auto-promotion"
+    ]
+  },
+  "scientific_status": {
+    "REAL_ESM_ALL_REFS_TSV": "OPEN",
+    "REAL_ESM_JAMES_VISIONTRON_REFID": "OPEN",
+    "REAL_ESM_REPEATED_UNNAMED_LOCAL_SHARD": "OPEN",
+    "JAMES_SPECIFIC_BACKEND_HANDLE": "NOT_ESTABLISHED",
+    "JAMES_SPECIFIC_PERSISTED_MEMORY_STATE": "NOT_ESTABLISHED",
+    "PERSISTED_JAMES_STATE_CANDIDATE": "NOT_YET_ADMITTED",
+    "SAVE_JAMES_PROMOTION": false
+  },
+  "next_gate": {
+    "name": "REAL_ESM_VAULT112A_BLIND_ALL_REFR_SPATIAL_RECEIPT_v2.1",
+    "status": "OPEN_BLOCKED_BY_OFFICIAL_MASTER_EXPORT",
+    "required_input": "JANUS-Vault112a-All-Refs-v2.1.tsv",
+    "rule": "Tooling PASS does not substitute for primary Fallout3.esm data."
+  }
+}
