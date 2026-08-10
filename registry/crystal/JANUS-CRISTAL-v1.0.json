@@ -3,9 +3,10 @@
   "artifact_id": "JANUS-CRISTAL-v1.0",
   "artifact_name": "Janus Cristal",
   "created_at_local": "2026-08-10T06:58:00+03:00",
+  "result_bound_at_local": "2026-08-10T07:14:00+03:00",
   "repository": "Hawkar-usls/janus-meta-registry",
   "artifact_class": "MULTISPECTRAL_CRYSTAL_MACHINE_PERCEPTION_AND_SEMANTIC_FALSE_POSITIVE_GATE",
-  "status": "CI_EMPIRICAL_RUN_PENDING",
+  "status": "CI_PASS_NO_SEMANTIC_CONTENT_ADMITTED_MATERIAL_MODALITY_SIGNAL_CONFIRMED",
   "scope": "Search open-access crystal observations for machine-detected word-like, formula-like, code-like, algorithm-like or periodic structures while separating real recorded modalities from image-space proxies and refusing post-hoc decoding.",
   "questions": [
     "Do machine OCR or structural detectors return repeatable text-like or formula/code-like candidates on crystal imagery?",
@@ -45,6 +46,7 @@
       "source": "Alain Manceau / ALS beamline 10.3.2 image",
       "observation": "X-ray fluorescence maps As, Fe and Mn distribution in coatings on quartz grains at 10 x 10 micrometer pixels.",
       "evidence_class": "RECORDED_X_RAY_FLUORESCENCE_MAP",
+      "semantic_scan": "DISABLED_AFTER_ANNOTATION_CONTAMINATION_RED_TEAM",
       "claim_ceiling": "Chemical spatial structure, not a message."
     },
     {
@@ -83,7 +85,8 @@
     }
   ],
   "machine_method": {
-    "tool": "tools/janus_cristal_probe.py",
+    "raw_tool": "tools/janus_cristal_probe.py",
+    "admission_tool": "tools/janus_cristal_admission.py",
     "sources": "experiments/janus_cristal/sources.json",
     "tests": "tests/test_janus_cristal_probe.py",
     "workflow": ".github/workflows/janus-cristal.yml",
@@ -94,9 +97,82 @@
       "symbol sequences",
       "FFT periodicity"
     ],
-    "negative_control": "deterministic local block shuffle",
+    "negative_control": "deterministic local 48px block shuffle",
     "annotation_policy": "Published figures with human labels are excluded from semantic OCR.",
-    "cipher_policy": "NO_POST_HOC_CIPHER_SEARCH"
+    "cipher_policy": "NO_POST_HOC_CIPHER_SEARCH",
+    "admission_policy": "A persistent OCR token must be at least 3 characters, belong to the word/formula/code class, survive the negative-control check, and repeat across independent recorded modalities merely to open a replication gate; even then it is not admitted as a message."
+  },
+  "empirical_result": {
+    "source_count": 5,
+    "source_errors": 0,
+    "same_specimen_visible_vs_uv405": {
+      "pixel_correlation_unregistered": -0.143321,
+      "mean_absolute_delta": 54.3772,
+      "visible_edge_density": 0.042296,
+      "uv_edge_density": 0.024425,
+      "interpretation": "LARGE_MODALITY_DEPENDENT_IMAGE_CHANGE_OBSERVED_BUT_CAMERA_EXPOSURE_ALIGNMENT_CONFOUNDS_REMAIN"
+    },
+    "raw_persistent_ocr": {
+      "petroleum_quartz_visible": ["OE", "SE", "AE"],
+      "petroleum_quartz_uv405": ["A>", "RE", "ME", "AE"],
+      "usgs_quartz_visible_control": [],
+      "note": "These are raw OCR detector outputs, not admitted semantics."
+    },
+    "cross_recording_raw_overlap": {
+      "token": "AE",
+      "visible_and_uv405": true,
+      "admission": "REJECTED_TOKEN_SHORTER_THAN_3_AND_NOT_WORD_FORMULA_OR_CODE_CLASS"
+    },
+    "strict_semantic_admission": {
+      "word_like_admitted": 0,
+      "formula_like_admitted": 0,
+      "code_like_admitted": 0,
+      "algorithm_admitted": 0,
+      "cross_modality_semantic_candidates": 0,
+      "messages_or_formulas_or_code_admitted": 0,
+      "status": "NO_SEMANTIC_CONTENT_ADMITTED"
+    },
+    "xrf_annotation_red_team": {
+      "initial_detector_behavior": "OCR recovered short element-label-like tokens from the published XRF figure.",
+      "finding": "The image contains human-authored chemical labels/legend material, so semantic OCR on that source is contaminated by design.",
+      "hardening": "XRF semantic_scan disabled; only nonsemantic structure statistics remain admissible.",
+      "status": "FALSE_SEMANTIC_SIGNAL_CAUGHT_AND_EXCLUDED"
+    },
+    "fft_periodicity": {
+      "raw_peak_to_mean": {
+        "petroleum_quartz_visible": 69.0124,
+        "petroleum_quartz_uv405": 51.8693,
+        "usgs_quartz_visible_control": 41.5567,
+        "lwir_annotated_figure": 82.3772,
+        "xrf_annotated_figure": 42.0005
+      },
+      "admission": "NOT_ADMITTED_AS_SPECIAL_STRUCTURE",
+      "reason": "The coarse raw threshold fires strongly on every tested source including the ordinary visible control and annotated scientific figures; it is non-discriminative in v1.0."
+    },
+    "physical_material_findings": {
+      "uv405": "DIRECT_MODALITY_CONTRAST_AND_FLUORESCENCE_STRUCTURE_SUPPORTED",
+      "lwir": "DIRECT_SPECTRAL_MATERIAL_DISCRIMINATION_SUPPORTED_BY_OPEN_RECORDED_FIGURE",
+      "xray": "DIRECT_ELEMENTAL_ORIENTATION_DEPENDENT_MATERIAL_STRUCTURE_SUPPORTED_BY_OPEN_PRIMARY_OBSERVATIONS",
+      "intentional_message": "NOT_FOUND",
+      "hidden_formula": "NOT_FOUND",
+      "hidden_code": "NOT_FOUND",
+      "hidden_algorithm": "NOT_FOUND"
+    }
+  },
+  "source_receipts": {
+    "petroleum_quartz_visible_sha256": "5f0dd591aec2c3d8b6eb8c320f8ec373088d5b2a062fe8fc92857d8720d7fd4a",
+    "petroleum_quartz_uv405_sha256": "3e7f574411b9680a316d050e1c8062cfd04cccd087ce730b2c5b63b5a3432ca6",
+    "usgs_quartz_visible_control_sha256": "1cfd65985b91b85c616bcc60f45a0fc01447135ee9c288cda7ecd7c8e2a4fd33",
+    "lwir_stones_quartz_feldspar_sha256": "7ee71ee74b7afb246103f59722bb0f8e8b646d2fe75677da4082fd06e5be666b",
+    "xrf_quartz_grain_map_sha256": "76da75ae34e14bdae48fe31c0ee7a7ef83ce00b08d9013ac76fb12b71603fb33"
+  },
+  "physical_experiment_boundary": {
+    "uv405": "DIRECT_OPEN_RECORDING_AVAILABLE_AND_ANALYZED",
+    "infrared": "DIRECT_OPEN_LWIR_RECORDING_AVAILABLE_AND_NONSEMANTICALLY_ANALYZED",
+    "xray": "DIRECT_OPEN_XRF_RECORDING_AVAILABLE_AND_NONSEMANTICALLY_ANALYZED; NIST_NUMERIC_PRIMARY_DATA_EXISTS",
+    "neon": "NO_DIRECT_MATCHED_OPEN_QUARTZ_EXPOSURE_IN_V1.0; PROXY_ONLY; POSTERIOR_IMPACT_ZERO",
+    "sunlight": "NO_CALIBRATED_MATCHED_OPEN_QUARTZ_EXPOSURE_IN_V1.0; BROADBAND_PROXY_ONLY; POSTERIOR_IMPACT_ZERO",
+    "quartz_illuminating_quartz": "NOT_PHYSICALLY_EXECUTED; IMAGE_SPACE_QUARTZ_FILTER_PROXY_ONLY; POSTERIOR_IMPACT_ZERO"
   },
   "formal_rules": [
     "DIRECT_RECORDED_MODALITY != SYNTHETIC_PROXY",
@@ -105,24 +181,34 @@
     "CODE_LIKE != ALGORITHM",
     "PATTERN != INTENT",
     "CROSS_PREPROCESSING_PERSISTENCE != CROSS_MODALITY_PERSISTENCE",
+    "CROSS_MODALITY_OCR != MESSAGE",
     "HUMAN_ANNOTATION_MUST_NOT_BE_REINTERPRETED_AS_CRYSTAL_OUTPUT",
     "NO_POST_HOC_CIPHER_SEARCH"
   ],
-  "physical_experiment_boundary": {
-    "uv405": "DIRECT_OPEN_RECORDING_AVAILABLE",
-    "infrared": "DIRECT_OPEN_LWIR_RECORDING_AVAILABLE",
-    "xray": "DIRECT_OPEN_XRF_RECORDING_AVAILABLE_AND_NIST_NUMERIC_DATA_EXISTS",
-    "neon": "NO_DIRECT_MATCHED_OPEN_QUARTZ_EXPOSURE_IN_V1.0; PROXY_ONLY",
-    "sunlight": "NO_CALIBRATED_MATCHED_OPEN_QUARTZ_EXPOSURE_IN_V1.0; BROADBAND_CONTROL_ONLY",
-    "quartz_illuminating_quartz": "NOT_PHYSICALLY_EXECUTED; PROXY_ONLY"
-  },
   "result_binding": {
-    "ci_status": "PENDING",
-    "workflow_run": null,
-    "head_sha": null,
-    "artifact_id": null,
-    "artifact_sha256": null,
-    "semantic_result": "PENDING"
+    "ci_status": "SUCCESS",
+    "measurement_workflow_run": 31354798526,
+    "measurement_head_sha": "5a3c8d3bd521e72e235841291470282abe6970ca",
+    "unit_tests": "7_OF_7_PASS",
+    "artifact_name": "janus-cristal-receipt",
+    "artifact_id": 9050255673,
+    "artifact_sha256": "6f3eecb0ddbd5b5809b9b6af26738c08cc0c47a70f3494177b8622d33bf52337",
+    "semantic_result": "NO_SEMANTIC_CONTENT_ADMITTED"
   },
-  "claim_ceiling": "The experiment can establish machine detector behavior and material contrast under recorded modalities. It cannot establish an intentional message, formula, algorithm, intelligence, entity or supernatural cause without an independently preregistered encoding and cross-modality replication."
+  "next_gate": {
+    "name": "JANUS_CRISTAL_CALIBRATED_SAME_SPECIMEN_MULTISPECTRAL_ACQUISITION",
+    "status": "OPEN",
+    "requirements": [
+      "one fixed physical quartz specimen with locked camera geometry",
+      "calibrated visible/daylight or solar-simulator acquisition",
+      "calibrated neon-discharge acquisition with recorded emission spectrum",
+      "UV 365/405 nm acquisition",
+      "NIR/SWIR/LWIR acquisition where detector access permits",
+      "crossed and parallel polarization controls",
+      "physical quartz-filter once and twice transmission paths with orientation recorded",
+      "pre-registered regions, transforms and semantic acceptance criteria before image acquisition",
+      "independent specimen replication before any semantic claim"
+    ]
+  },
+  "claim_ceiling": "v1.0 establishes machine detector behavior and ordinary material contrast under recorded modalities. It finds no admissible intentional message, formula, code or algorithm. Synthetic neon, sunlight and quartz-on-quartz transforms are robustness probes only and contribute zero posterior weight to physical claims."
 }
