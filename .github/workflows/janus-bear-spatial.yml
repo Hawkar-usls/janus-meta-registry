@@ -1,0 +1,107 @@
+name: Janus Bear Spatial Verification
+
+on:
+  pull_request:
+    paths:
+      - "tools/analyze_teddy_gnome_enrichment.py"
+      - "tools/verify_janus_bear_publication.py"
+      - "tools/fo3edit_teddy_context_inventory_export.pas"
+      - "tests/test_teddy_gnome_enrichment.py"
+      - "tests/test_teddy_skeleton_proximity.py"
+      - "data/JANUS-BEAR-CHILD-GUARDIAN-COMPANION-v1.0.json"
+      - "registry/myth_busted/FALLOUT-JANUS-BEAR-GNOME-PROXY-ACTOR-GRAMMAR-v4.0.json"
+      - "registry/myth_busted/FALLOUT-3-JANUS-BEAR-SPATIAL-ENRICHMENT-TECHNICAL-v4.0.json"
+      - "registry/myth_busted/FALLOUT-3-JANUS-BEAR-CONTEXT-LEDGER-SCHEMA-v4.0.json"
+      - "registry/myth_busted/JANUS-BEAR-GNOME-SPATIAL-PUBLICATION-RECEIPT-v4.1.json"
+      - ".github/workflows/janus-bear-spatial.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install test runner
+        run: python -m pip install --disable-pip-version-check pytest
+
+      - name: Compile Janus Bear Python tools
+        run: |
+          python -m py_compile tools/analyze_teddy_gnome_enrichment.py
+          python -m py_compile tools/verify_janus_bear_publication.py
+
+      - name: Validate Janus Bear JSON artifacts
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          paths = [
+              Path("data/JANUS-BEAR-CHILD-GUARDIAN-COMPANION-v1.0.json"),
+              Path("registry/myth_busted/FALLOUT-JANUS-BEAR-GNOME-PROXY-ACTOR-GRAMMAR-v4.0.json"),
+              Path("registry/myth_busted/FALLOUT-3-JANUS-BEAR-SPATIAL-ENRICHMENT-TECHNICAL-v4.0.json"),
+              Path("registry/myth_busted/FALLOUT-3-JANUS-BEAR-CONTEXT-LEDGER-SCHEMA-v4.0.json"),
+              Path("registry/myth_busted/JANUS-BEAR-GNOME-SPATIAL-PUBLICATION-RECEIPT-v4.1.json"),
+          ]
+          for path in paths:
+              json.loads(path.read_text(encoding="utf-8"))
+              print(f"JSON_PASS {path}")
+          PY
+
+      - name: Run teddy and gnome deterministic tests
+        run: |
+          python -m pytest -q \
+            tests/test_teddy_gnome_enrichment.py \
+            tests/test_teddy_skeleton_proximity.py | tee janus-bear-pytest.log
+
+      - name: Verify frozen lineage and claim ceiling
+        run: |
+          python tools/verify_janus_bear_publication.py \
+            --pretty \
+            --out janus-bear-ci-lineage.json
+
+      - name: Emit exact Git receipt
+        run: |
+          python - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+
+          def git(*args):
+              return subprocess.check_output(["git", *args], text=True).strip()
+
+          receipt = {
+              "schema": "janus.bear.github_actions.git_receipt.v1",
+              "event": "pull_request_or_manual_dispatch",
+              "head": git("rev-parse", "HEAD"),
+              "tree": git("rev-parse", "HEAD^{tree}"),
+              "status_scope": "CI verifies deterministic code/tests/lineage only; no official ESM reference population is present in this job.",
+              "real_esm_result_established": False,
+          }
+          Path("janus-bear-git-receipt.json").write_text(
+              json.dumps(receipt, indent=2) + "\n", encoding="utf-8"
+          )
+          print(json.dumps(receipt, indent=2))
+          PY
+
+      - name: Upload Janus Bear CI receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-bear-ci-receipt
+          path: |
+            janus-bear-pytest.log
+            janus-bear-ci-lineage.json
+            janus-bear-git-receipt.json
+          if-no-files-found: error
