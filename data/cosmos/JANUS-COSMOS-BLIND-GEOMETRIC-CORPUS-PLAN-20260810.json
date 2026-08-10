@@ -1,0 +1,21 @@
+{
+  "schema": "janus.cosmos.blind_geometric_corpus.plan.v1",
+  "status": "REGISTERED_FOR_EXECUTION",
+  "project": "Janus Cosmos",
+  "experiment": "blind_geometric_hst_corpus",
+  "source": "MAST / STScI Hubble archive",
+  "repository": "Hawkar-usls/Janus-Cosmos",
+  "corpus_manifest": "data/hst_blind_corpus.json",
+  "gate_config": "experiments/hst/blind_gate_config.json",
+  "runner": "experiments/hst/run_blind_corpus.py",
+  "workflow": ".github/workflows/blind-geometric-corpus.yml",
+  "targets": ["NGC1365","NGC1425","NGC1637","NGC2841","NGC3031","NGC3627","NGC4321"],
+  "filters_per_target": ["F555W","F814W"],
+  "nulls_per_filter": 256,
+  "scales": [1.0,2.0,4.0],
+  "orientations_deg": [0,30,60,90,120,150],
+  "excluded_methods": ["OCR","face_search","semantic_search","cipher_search","post_hoc_tuning"],
+  "cross_filter_required": true,
+  "claim_ceiling": "Image-level geometric candidates only. No astronomical discovery claim without independent blind replication and scientific review.",
+  "registration_note": "This entry records the pre-registered blind corpus and fixed gate before its first execution. Results must be added as a separate immutable receipt after Actions execution."
+}
