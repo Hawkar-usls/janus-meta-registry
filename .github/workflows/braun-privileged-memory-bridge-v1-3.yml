@@ -1,0 +1,100 @@
+name: Braun Privileged Memory Bridge v1.3
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "tools/fo3edit_braun_privileged_memory_bridge_audit_v1_3.pas"
+      - "tools/verify_braun_privileged_memory_bridge_v1_3.py"
+      - "tests/test_braun_privileged_memory_bridge_v1_3.py"
+      - "registry/myth_busted/FALLOUT-3-BRAUN-PRIVILEGED-CONTROL-PLANE-MEMORY-BRIDGE-AUDIT-v1.3.json"
+      - ".github/workflows/braun-privileged-memory-bridge-v1-3.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Assert exact head
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          ACTUAL_HEAD="$(git rev-parse HEAD)"
+          echo "EXPECTED_HEAD=$EXPECTED_HEAD"
+          echo "ACTUAL_HEAD=$ACTUAL_HEAD"
+          test "$ACTUAL_HEAD" = "$EXPECTED_HEAD"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Compile and validate semantic gate
+        run: |
+          python -m py_compile tools/verify_braun_privileged_memory_bridge_v1_3.py tests/test_braun_privileged_memory_bridge_v1_3.py
+          python -m json.tool registry/myth_busted/FALLOUT-3-BRAUN-PRIVILEGED-CONTROL-PLANE-MEMORY-BRIDGE-AUDIT-v1.3.json >/dev/null
+
+      - name: Static xEdit discovery invariants
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          text = Path('tools/fo3edit_braun_privileged_memory_bridge_audit_v1_3.pas').read_text(encoding='utf-8')
+          required = [
+              "LoadedOfficial.Count <> 6",
+              "UnexpectedPlugins.Count > 0",
+              "IsWinningOverride(e)",
+              "MasterOrSelf(e)",
+              "GetIsDeleted(e)",
+              "ReferencedByCount(root)",
+              "ReferencedByIndex(root, i)",
+              "ScanElement(e, e, 0)",
+              "MQ04DadPodScript",
+              "MQ04PlayerContainerScript",
+              "BettyScript",
+              "MS08PinkertonLog2",
+              "memory chip",
+              "removeallitems",
+              "user unknown",
+              "KEYWORD HIT" if False else "Candidate hits:",
+          ]
+          missing = [x for x in required if x not in text]
+          assert not missing, missing
+          print(f'BRAUN_XEDIT_STATIC_INVARIANTS={len(required)}/{len(required)} PASS')
+          PY
+
+      - name: Run exactly seven bridge verifier tests
+        run: |
+          set -o pipefail
+          python -m unittest tests.test_braun_privileged_memory_bridge_v1_3 -v 2>&1 | tee /tmp/braun-bridge-tests.log
+          grep -F "Ran 7 tests" /tmp/braun-bridge-tests.log
+          grep -Fx "OK" /tmp/braun-bridge-tests.log
+
+      - name: Verify non-promotion claim ceiling
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d = json.loads(Path('registry/myth_busted/FALLOUT-3-BRAUN-PRIVILEGED-CONTROL-PLANE-MEMORY-BRIDGE-AUDIT-v1.3.json').read_text(encoding='utf-8'))
+          rules = set(d['hard_rules'])
+          required = {
+              'KEYWORD_HIT != EXECUTABLE_EDGE',
+              'SAME_RECORD_TERM_CONVERGENCE != EXECUTABLE_EDGE',
+              'REFERENCED_BY_EDGE != WRITE_DIRECTION',
+              'USER_UNKNOWN != JAMES_WITHOUT_PRIMARY_BINDING',
+              'MEMORY_TO_CARRIER_CLASS_EXISTS != JAMES_TO_CARRIER_WRITE',
+          }
+          assert required <= rules
+          assert d['current_matrix']['DIRECT_JAMES_MEMORY_TO_CARRIER_WRITE'] == 'NOT_ESTABLISHED'
+          assert d['current_matrix']['SAVE_JAMES_ASSET_LEVEL_EXECUTABLE'] == 'BLOCKED'
+          print('BRAUN_MEMORY_BRIDGE_CLAIM_CEILING=PASS')
+          PY
