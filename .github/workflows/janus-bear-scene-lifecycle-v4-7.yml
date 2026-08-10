@@ -1,0 +1,90 @@
+name: Janus Bear Scene Lifecycle v4.7
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "tools/fo3edit_janus_bear_scene_lifecycle_export_v4_7.pas"
+      - "tools/verify_janus_bear_scene_lifecycle_v4_7.py"
+      - "tests/test_janus_bear_scene_lifecycle_v4_7.py"
+      - "registry/myth_busted/FALLOUT-3-JANUS-BEAR-EXACT-SCENE-REFID-LIFECYCLE-GATE-v4.7.json"
+      - ".github/workflows/janus-bear-scene-lifecycle-v4-7.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Assert exact head
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          ACTUAL_HEAD="$(git rev-parse HEAD)"
+          echo "EXPECTED_HEAD=$EXPECTED_HEAD"
+          echo "ACTUAL_HEAD=$ACTUAL_HEAD"
+          test "$ACTUAL_HEAD" = "$EXPECTED_HEAD"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Compile Python and validate JSON
+        run: |
+          python -m py_compile tools/verify_janus_bear_scene_lifecycle_v4_7.py tests/test_janus_bear_scene_lifecycle_v4_7.py
+          python -m json.tool registry/myth_busted/FALLOUT-3-JANUS-BEAR-EXACT-SCENE-REFID-LIFECYCLE-GATE-v4.7.json >/dev/null
+
+      - name: Static xEdit exporter invariants
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          text = Path('tools/fo3edit_janus_bear_scene_lifecycle_export_v4_7.pas').read_text(encoding='utf-8')
+          required = [
+              "LoadedOfficial.Count <> 6",
+              "UnexpectedPlugins.Count > 0",
+              "IsWinningOverride(e)",
+              "MasterOrSelf(e)",
+              "GetIsDeleted(e)",
+              "GetIsInitiallyDisabled(e)",
+              "XESP - Enable Parent",
+              "ReferencedByCount(rootRef)",
+              "ReferencedByIndex(rootTarget, i)",
+              "DuplicateLogicalCount",
+              "JANUS-Bear-Scene-Lifecycle-v4.7.tsv",
+              "JANUS-Bear-Scene-Reverse-Refs-v4.7.tsv",
+          ]
+          missing = [s for s in required if s not in text]
+          assert not missing, missing
+          print(f'XEDIT_EXPORTER_INVARIANTS={len(required)}/{len(required)} PASS')
+          PY
+
+      - name: Run exactly seven lifecycle verifier tests
+        run: |
+          set -o pipefail
+          python -m unittest tests.test_janus_bear_scene_lifecycle_v4_7 -v 2>&1 | tee /tmp/janus-bear-life-tests.log
+          grep -F "Ran 7 tests" /tmp/janus-bear-life-tests.log
+          grep -Fx "OK" /tmp/janus-bear-life-tests.log
+
+      - name: Verify claim ceilings
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d = json.loads(Path('registry/myth_busted/FALLOUT-3-JANUS-BEAR-EXACT-SCENE-REFID-LIFECYCLE-GATE-v4.7.json').read_text(encoding='utf-8'))
+          rules = set(d['claim_ceiling'])
+          assert 'DIRECT_QUIET != STATIC_PROVEN' in rules
+          assert 'PRE_JAMES_B_LOCATION_ACCESS != PRE_JAMES_B_OBJECT_LIFECYCLE' in rules
+          assert 'TEMPORAL_FALSIFICATION_OF_JAMES_B_ALL != REJECTION_OF_JAMES_SUBSET' in rules
+          assert d['current_execution_boundary']['xedit_export_run_on_real_masters'] is False
+          print('JANUS_BEAR_LIFECYCLE_CLAIM_CEILING=PASS')
+          PY
