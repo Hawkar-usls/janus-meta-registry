@@ -1,0 +1,104 @@
+name: MQ04 INFO Selector Boundary v1.6
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "tools/fo3edit_mq04_info_selector_boundary_export_v1_6.pas"
+      - "tools/verify_mq04_info_selector_boundary_v1_6.py"
+      - "tests/test_mq04_info_selector_boundary_v1_6.py"
+      - "registry/myth_busted/FALLOUT-3-MQ04-INFO-RESULT-SCRIPT-SELECTOR-BOUNDARY-AUDIT-v1.6.json"
+      - ".github/workflows/mq04-info-selector-boundary-v1-6.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Assert exact head
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          ACTUAL_HEAD="$(git rev-parse HEAD)"
+          echo "EXPECTED_HEAD=$EXPECTED_HEAD"
+          echo "ACTUAL_HEAD=$ACTUAL_HEAD"
+          test "$ACTUAL_HEAD" = "$EXPECTED_HEAD"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Compile Python and validate semantic gate
+        run: |
+          python -m py_compile tools/verify_mq04_info_selector_boundary_v1_6.py tests/test_mq04_info_selector_boundary_v1_6.py
+          python -m json.tool registry/myth_busted/FALLOUT-3-MQ04-INFO-RESULT-SCRIPT-SELECTOR-BOUNDARY-AUDIT-v1.6.json >/dev/null
+
+      - name: Static xEdit exporter invariants
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          text = Path('tools/fo3edit_mq04_info_selector_boundary_export_v1_6.pas').read_text(encoding='utf-8')
+          required = [
+              "LoadedOfficial.Count <> 6",
+              "UnexpectedPlugins.Count > 0",
+              "CompareText(EditorID(e), 'MQ04')",
+              "ReferencedByCount(rootQuest)",
+              "ReferencedByIndex(rootQuest, i)",
+              "ChildGroup(rootDial)",
+              "Signature(info) = 'INFO'",
+              "ElementByName(winInfo, 'Responses')",
+              "ElementByName(winInfo, 'Conditions')",
+              "ElementByName(winInfo, 'Script (Begin)')",
+              "ElementByName(winInfo, 'Script (End)')",
+              "LinksTo(e)",
+              "WinningOverride(root)",
+              "GetIsDeleted(Result)",
+              "JANUS-MQ04-INFO-Index-v1.6.tsv",
+              "JANUS-MQ04-INFO-Embedded-Control-v1.6.tsv",
+          ]
+          missing = [x for x in required if x not in text]
+          assert not missing, missing
+          print(f'MQ04_INFO_XEDIT_STATIC_INVARIANTS={len(required)}/{len(required)} PASS')
+          PY
+
+      - name: Run exactly ten selector-boundary tests
+        run: |
+          set -o pipefail
+          python -m unittest tests.test_mq04_info_selector_boundary_v1_6 -v 2>&1 | tee /tmp/mq04-info-tests.log
+          grep -F "Ran 10 tests" /tmp/mq04-info-tests.log
+          grep -Fx "OK" /tmp/mq04-info-tests.log
+
+      - name: Verify claim ceilings
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d = json.loads(Path('registry/myth_busted/FALLOUT-3-MQ04-INFO-RESULT-SCRIPT-SELECTOR-BOUNDARY-AUDIT-v1.6.json').read_text(encoding='utf-8'))
+          rules = set(d['hard_rules'])
+          required = {
+              'INFO_FLAG_SET != MEMORY_MUTATION',
+              'DADDOGINFO != CARRIER_BINDING',
+              'BRAUNINFO != ADMIN_SERIALIZER',
+              'NPCRESET != MEMORY_EXPORT',
+              'USER_UNKNOWN != JAMES_WITHOUT_PRIMARY_UNIQUE_BINDING',
+              'SAME_INFO_TERM_CONVERGENCE != WRITE_DIRECTION',
+              'COMPILED_ONLY_INFO != HIDDEN_SERIALIZER_PROVEN',
+              'HIGH_PRIORITY_INFO_CANDIDATE != PASS',
+          }
+          assert required <= rules
+          assert d['current_matrix']['UNKNOWN_IS_JAMES'] == 'NOT_ESTABLISHED'
+          assert d['current_matrix']['JAMES_SELECTOR_TO_CARRIER'] == 'NOT_ESTABLISHED'
+          assert d['current_matrix']['SAVE_JAMES_ASSET_LEVEL_EXECUTABLE'] == 'BLOCKED'
+          print('MQ04_INFO_SELECTOR_CLAIM_CEILING=PASS')
+          PY
