@@ -1,0 +1,109 @@
+{
+  "schema": "janus.cristal.sources.v1",
+  "artifact_name": "Janus Cristal",
+  "purpose": "Open-source multimodal crystal corpus for machine-only search of text-like, formula-like, code-like and structural patterns under direct recorded modalities and explicitly separated proxies.",
+  "sources": [
+    {
+      "id": "petroleum_quartz_visible",
+      "kind": "image",
+      "modality": "VISIBLE_RECORDED",
+      "pair_id": "ALATAY_VISIBLE_UV405",
+      "page_url": "https://commons.wikimedia.org/wiki/File:Petroleum_quartz_from_Alatay.jpg",
+      "download_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Petroleum%20quartz%20from%20Alatay.jpg",
+      "author": "Boris Lobastov",
+      "license": "CC BY 4.0",
+      "semantic_scan": true,
+      "allow_spectral_proxies": true,
+      "notes": "Same 8 mm quartz specimen as UV405 source. Proxy variants are robustness tests only, never physical re-illumination claims."
+    },
+    {
+      "id": "petroleum_quartz_uv405",
+      "kind": "image",
+      "modality": "UV_405_NM_RECORDED",
+      "pair_id": "ALATAY_VISIBLE_UV405",
+      "page_url": "https://commons.wikimedia.org/wiki/File:Petroleum_quartz_from_Alatay_UV_405_nm.jpg",
+      "download_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Petroleum%20quartz%20from%20Alatay%20UV%20405%20nm.jpg",
+      "author": "Boris Lobastov",
+      "license": "CC BY 4.0",
+      "semantic_scan": true,
+      "allow_spectral_proxies": false,
+      "notes": "Direct 405 nm ultraviolet photograph of the same specimen; source description reports differing fluorescence of hydrocarbon inclusions."
+    },
+    {
+      "id": "usgs_quartz_visible_control",
+      "kind": "image",
+      "modality": "VISIBLE_RECORDED_CONTROL",
+      "page_url": "https://commons.wikimedia.org/wiki/File:Quartz_Crystal.jpg",
+      "download_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Quartz_Crystal.jpg",
+      "author": "United States Geological Survey",
+      "license": "Public domain (U.S. federal work)",
+      "semantic_scan": true,
+      "allow_spectral_proxies": true,
+      "notes": "Ordinary quartz control; not claimed to be calibrated sunlight."
+    },
+    {
+      "id": "lwir_stones_quartz_feldspar",
+      "kind": "image",
+      "modality": "LWIR_7.7_TO_12.4_UM_RECORDED",
+      "page_url": "https://commons.wikimedia.org/wiki/File:HSI_LWIR_stones.png",
+      "download_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/HSI%20LWIR%20stones.png",
+      "author": "Aappo Roos / Aappo",
+      "license": "CC BY-SA 3.0",
+      "semantic_scan": false,
+      "allow_spectral_proxies": false,
+      "notes": "Published figure contains authored annotations/plots, therefore OCR is intentionally disabled. Only nonsemantic structure statistics are computed."
+    },
+    {
+      "id": "xrf_quartz_grain_map",
+      "kind": "image",
+      "modality": "X_RAY_FLUORESCENCE_RECORDED",
+      "page_url": "https://commons.wikimedia.org/wiki/File:Qtz_coating_rAsgFebMn.jpg",
+      "download_url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Qtz%20coating%20rAsgFebMn.jpg",
+      "author": "Alain Manceau",
+      "license": "CC BY-SA 3.0",
+      "semantic_scan": true,
+      "allow_spectral_proxies": false,
+      "notes": "RGB XRF map of As/Fe/Mn distribution in coated quartz grains; recorded at ALS beamline 10.3.2."
+    }
+  ],
+  "pairs": [
+    {
+      "id": "ALATAY_VISIBLE_VS_UV405",
+      "a": "petroleum_quartz_visible",
+      "b": "petroleum_quartz_uv405",
+      "question": "What changes when the same specimen is recorded under visible vs 405 nm UV?"
+    }
+  ],
+  "proxy_modes": {
+    "solar_broadband_control_PROXY": {
+      "status": "SIMULATION_ONLY",
+      "reference": "NREL ASTM G173 AM1.5 reference spectrum",
+      "claim_ceiling": "Image robustness perturbation only; not a calibrated sunlight exposure."
+    },
+    "neon_redorange_PROXY": {
+      "status": "SIMULATION_ONLY",
+      "reference": "NIST Atomic Spectra Database Ne I visible lines",
+      "claim_ceiling": "Red/orange channel stress test only; not a calibrated neon lamp exposure."
+    },
+    "quartz_filter_once_PROXY": {
+      "status": "SIMULATION_ONLY",
+      "reference": "crystalline quartz birefringence / optical filtering concept",
+      "claim_ceiling": "Weak displaced-copy birefringence stress test; not a physical quartz-on-quartz experiment."
+    },
+    "quartz_filter_twice_PROXY": {
+      "status": "SIMULATION_ONLY",
+      "reference": "recursive quartz-filter stress test",
+      "claim_ceiling": "Second-pass robustness test only; posterior impact on physical claims is zero."
+    }
+  },
+  "epistemic_rules": [
+    "DIRECT_RECORDED_MODALITY != SYNTHETIC_PROXY",
+    "OCR_TOKEN != MESSAGE",
+    "FORMULA_LIKE != ENCODED_FORMULA",
+    "CODE_LIKE != ALGORITHM",
+    "PATTERN != INTENT",
+    "NO_POST_HOC_CIPHER_SEARCH",
+    "ANNOTATED_FIGURES_MUST_NOT_FEED_SEMANTIC_OCR",
+    "PHYSICAL_QUARTZ_ON_QUARTZ_TEST_REMAINS_NOT_EXECUTED"
+  ]
+}
