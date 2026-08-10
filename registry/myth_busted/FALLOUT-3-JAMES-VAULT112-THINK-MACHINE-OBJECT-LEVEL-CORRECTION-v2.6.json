@@ -1,0 +1,64 @@
+{
+  "schema": "janus.meta_registry.fallout3_james_vault112_think_machine_object_level_correction.v2_6",
+  "artifact_id": "FALLOUT-3-JAMES-VAULT112-THINK-MACHINE-OBJECT-LEVEL-CORRECTION-v2.6",
+  "title": "Fallout 3 — Vault 112 Think Machine 3600r object-level correction",
+  "status": "LORE_NOTE_CONFIRMED_OBJECT_LEVEL_BACKEND_NOT_ESTABLISHED",
+  "source": {
+    "filename": "Fallout3.esm",
+    "sha256": "fb4442418fb6bf6df68e633c7056afb4e09572b521a7f4602a2699fa33d99e32"
+  },
+  "finding": {
+    "phrase": "Think Machine 3600r",
+    "record_formid": "000739A4",
+    "record_signature": "NOTE",
+    "record_editorid": "MQ06VTTerminalVault112EquipNote",
+    "subrecord": "TNAM",
+    "interpretation": "The exact phrase is present in a shipped NOTE text record describing Vault 112 equipment/lore. The native ESM scan did not establish a world REFR/ACTI/TERM/CONT object whose identity is Think Machine 3600r.",
+    "object_level_backend": "NOT_ESTABLISHED",
+    "lore_level_reference": "PASS"
+  },
+  "nearby_actual_computer_refs_in_vault112a": [
+    {
+      "refid": "0007100F",
+      "baseid": "00071010",
+      "editorid": "Vault112StockpileComputer",
+      "distance_from_dad_monitor_units": 1261.1
+    },
+    {
+      "refid": "00071043",
+      "baseid": "00071044",
+      "editorid": "Vault112OverSeerComputer",
+      "distance_from_dad_monitor_units": 1609.2
+    }
+  ],
+  "correction": {
+    "old_statement": "THINK_MACHINE_3600R_BACKEND = PASS as an object-level Vault112 backend node",
+    "new_statement": "THINK_MACHINE_3600R = LORE_NOTE_REFERENCE; OBJECT_LEVEL_BACKEND_NODE = NOT_ESTABLISHED",
+    "reason": "The phrase is anchored to NOTE 000739A4/TNAM rather than an identified placed backend object.",
+    "scientific_effect": "Do not use the Think Machine name alone to create a James session -> backend graph edge. A primary reference edge or object-level record must be found."
+  },
+  "hard_rules": [
+    "LORE_NOTE_REFERENCE != PLACED_BACKEND_OBJECT",
+    "THINK_MACHINE_NAME != EXACT_PROCESSOR_REFR",
+    "COMPUTER_PROXIMITY != SESSION_BINDING",
+    "JAMES_POD_ASSEMBLY != BACKEND_MEMORY_BINDING",
+    "NO_OBJECT_LEVEL_BACKEND_EDGE = NO_PERSISTED_JAMES_STATE_PROMOTION"
+  ],
+  "current_matrix": {
+    "THINK_MACHINE_3600R_LORE_REFERENCE": "PASS",
+    "THINK_MACHINE_3600R_EXACT_WORLD_OBJECT": "NOT_ESTABLISHED",
+    "VAULT112_LOCAL_COMPUTER_REFS": "PASS_2_IDENTIFIED",
+    "JAMES_MONITOR_TO_COMPUTER_LINK": "NOT_ESTABLISHED",
+    "JAMES_SESSION_TO_BACKEND_STATE": "NOT_ESTABLISHED",
+    "JAMES_MEMORY_TO_CARRIER_WRITE": "NOT_ESTABLISHED"
+  },
+  "next_gate": {
+    "name": "JAMES-POD-SHELL-TO-PRIMARY-BACKEND-REFERENCE-EDGE-v2.7",
+    "required": [
+      "Start from 000B3645 and 000B3654, not from the Think Machine name.",
+      "Follow all primary SCRO/REFR/quest/script references reachable from MQ04DadPodScript 0005AE43.",
+      "Identify any exact object or script variable representing the processing center/session state.",
+      "Only then test for resident-specific persistence and carrier association."
+    ]
+  }
+}
