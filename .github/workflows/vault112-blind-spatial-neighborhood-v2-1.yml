@@ -8,6 +8,7 @@ on:
       - "tools/verify_vault112_blind_spatial_neighborhood_v2_1.py"
       - "tests/test_vault112_blind_spatial_neighborhood_v2_1.py"
       - "registry/myth_busted/FALLOUT-3-VAULT112A-BLIND-SPATIAL-NEIGHBORHOOD-REFERENCE-GRAPH-GATE-v2.3.json"
+      - "registry/myth_busted/FALLOUT-3-VAULT112A-BLIND-SPATIAL-NEIGHBORHOOD-CI-REQUEST-v2.1.json"
       - ".github/workflows/vault112-blind-spatial-neighborhood-v2-1.yml"
   workflow_dispatch:
 
@@ -43,6 +44,7 @@ jobs:
         run: |
           python -m py_compile tools/verify_vault112_blind_spatial_neighborhood_v2_1.py tests/test_vault112_blind_spatial_neighborhood_v2_1.py
           python -m json.tool registry/myth_busted/FALLOUT-3-VAULT112A-BLIND-SPATIAL-NEIGHBORHOOD-REFERENCE-GRAPH-GATE-v2.3.json >/dev/null
+          python -m json.tool registry/myth_busted/FALLOUT-3-VAULT112A-BLIND-SPATIAL-NEIGHBORHOOD-CI-REQUEST-v2.1.json >/dev/null
 
       - name: Static xEdit exhaustive-export invariants
         run: |
