@@ -1,0 +1,184 @@
+name: Janus Bear v4.3 Acquisition Gate
+
+on:
+  pull_request:
+    paths:
+      - "tools/fo3edit_janus_bear_effective_refr_export_v4_3.pas"
+      - "tools/verify_janus_bear_v4_3_acquisition.py"
+      - "tools/finalize_janus_bear_v4_3_result.py"
+      - "tools/run_janus_bear_v4_3.ps1"
+      - "tools/analyze_teddy_gnome_enrichment.py"
+      - "tools/analyze_teddy_gnome_enrichment_v4_2.py"
+      - "tests/test_janus_bear_v4_3_acquisition.py"
+      - "tests/test_janus_bear_v4_3_end_to_end.py"
+      - "tests/test_teddy_gnome_enrichment.py"
+      - "tests/test_teddy_gnome_enrichment_v4_2.py"
+      - "tests/test_teddy_skeleton_proximity.py"
+      - "registry/myth_busted/FALLOUT-3-JANUS-BEAR-OFFICIAL-ESM-ACQUISITION-GATE-v4.3.json"
+      - ".github/workflows/janus-bear-v4-3-acquisition.yml"
+  push:
+    branches: [main]
+    paths:
+      - "tools/fo3edit_janus_bear_effective_refr_export_v4_3.pas"
+      - "tools/verify_janus_bear_v4_3_acquisition.py"
+      - "tools/finalize_janus_bear_v4_3_result.py"
+      - "tools/run_janus_bear_v4_3.ps1"
+      - "tools/analyze_teddy_gnome_enrichment.py"
+      - "tools/analyze_teddy_gnome_enrichment_v4_2.py"
+      - "tests/test_janus_bear_v4_3_acquisition.py"
+      - "tests/test_janus_bear_v4_3_end_to_end.py"
+      - "tests/test_teddy_gnome_enrichment.py"
+      - "tests/test_teddy_gnome_enrichment_v4_2.py"
+      - "tests/test_teddy_skeleton_proximity.py"
+      - "registry/myth_busted/FALLOUT-3-JANUS-BEAR-OFFICIAL-ESM-ACQUISITION-GATE-v4.3.json"
+      - ".github/workflows/janus-bear-v4-3-acquisition.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact event head
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Assert exact requested head
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          ACTUAL_HEAD="$(git rev-parse HEAD)"
+          echo "EXPECTED_HEAD=$EXPECTED_HEAD"
+          echo "ACTUAL_HEAD=$ACTUAL_HEAD"
+          test "$ACTUAL_HEAD" = "$EXPECTED_HEAD"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install pytest
+        run: python -m pip install --disable-pip-version-check pytest
+
+      - name: Compile Python stack
+        run: |
+          python -m py_compile tools/analyze_teddy_gnome_enrichment.py
+          python -m py_compile tools/analyze_teddy_gnome_enrichment_v4_2.py
+          python -m py_compile tools/verify_janus_bear_v4_3_acquisition.py
+          python -m py_compile tools/finalize_janus_bear_v4_3_result.py
+
+      - name: Parse PowerShell runner
+        shell: pwsh
+        run: |
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            (Resolve-Path "tools/run_janus_bear_v4_3.ps1"),
+            [ref]$tokens,
+            [ref]$errors
+          ) | Out-Null
+          if ($errors.Count -ne 0) {
+            $errors | Format-List | Out-String | Write-Host
+            throw "PowerShell parse errors: $($errors.Count)"
+          }
+          Write-Host "POWERSHELL_PARSE_PASS"
+
+      - name: Validate v4.3 semantic gate JSON
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path("registry/myth_busted/FALLOUT-3-JANUS-BEAR-OFFICIAL-ESM-ACQUISITION-GATE-v4.3.json")
+          d = json.loads(p.read_text(encoding="utf-8"))
+          assert d["current_execution_boundary"]["master_bytes_available_to_current_agent_runtime"] is False
+          assert d["current_execution_boundary"]["real_percentages_computed"] is False
+          assert d["current_execution_boundary"]["real_enrichment_p_values_computed"] is False
+          assert "SYNTHETIC_CI_PASS != REAL_ESM_RESULT" in d["claim_ceiling"]
+          print("V4_3_GATE_JSON_PASS")
+          PY
+
+      - name: Static exporter invariants
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          text = Path("tools/fo3edit_janus_bear_effective_refr_export_v4_3.pas").read_text(encoding="utf-8")
+          required = [
+              "IsWinningOverride(e)",
+              "MasterOrSelf(e)",
+              "OverrideCount(rootRef)",
+              "LoadedOfficial.Count <> 6",
+              "UnexpectedPlugins.Count > 0",
+              "DuplicateLogicalCount",
+              "GetIsDeleted(e)",
+              "CanonicalLocationKey(e)",
+              "logical_ref_formid",
+          ]
+          missing = [x for x in required if x not in text]
+          assert not missing, missing
+          print("EXPORTER_STATIC_INVARIANTS_PASS", len(required))
+          PY
+
+      - name: Reject committed game plugin bytes
+        run: |
+          BAD="$(find . -type f \( -iname '*.esm' -o -iname '*.esp' \) -print)"
+          if [ -n "$BAD" ]; then
+            echo "$BAD"
+            echo "Raw game/plugin files must not be committed."
+            exit 1
+          fi
+          echo "NO_ESM_ESP_BYTES_COMMITTED"
+
+      - name: Run full Janus Bear deterministic suite
+        run: |
+          python -m pytest -q \
+            tests/test_teddy_gnome_enrichment.py \
+            tests/test_teddy_gnome_enrichment_v4_2.py \
+            tests/test_teddy_skeleton_proximity.py \
+            tests/test_janus_bear_v4_3_acquisition.py \
+            tests/test_janus_bear_v4_3_end_to_end.py | tee janus-bear-v4-3-pytest.log
+
+      - name: Emit exact-head CI receipt
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          EVENT_NAME: ${{ github.event_name }}
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          python - <<'PY'
+          import json, os, subprocess
+          from pathlib import Path
+          def git(*args):
+              return subprocess.check_output(["git", *args], text=True).strip()
+          actual = git("rev-parse", "HEAD")
+          expected = os.environ["EXPECTED_HEAD"]
+          receipt = {
+              "schema": "janus.bear.v4_3.github_actions_receipt.v1",
+              "event": os.environ["EVENT_NAME"],
+              "ref_name": os.environ["REF_NAME"],
+              "expected_head": expected,
+              "actual_head": actual,
+              "exact_head_match": actual == expected,
+              "tree": git("rev-parse", "HEAD^{tree}"),
+              "scope": "synthetic acquisition/adversarial/statistical pipeline verification only",
+              "real_master_bytes_present": False,
+              "real_esm_result_established": False,
+              "xedit_runtime_execution_established": False,
+          }
+          if not receipt["exact_head_match"]:
+              raise SystemExit("exact event head mismatch")
+          Path("janus-bear-v4-3-ci-receipt.json").write_text(json.dumps(receipt, indent=2) + "\n", encoding="utf-8")
+          print(json.dumps(receipt, indent=2))
+          PY
+
+      - name: Upload v4.3 CI receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-bear-v4-3-ci-receipt
+          path: |
+            janus-bear-v4-3-pytest.log
+            janus-bear-v4-3-ci-receipt.json
+          if-no-files-found: error
