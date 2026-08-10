@@ -1,0 +1,178 @@
+{
+  "schema": "janus.meta_registry.fallout3_james_session_autopersistence_storage_association_audit.v1",
+  "artifact_id": "FALLOUT-3-JAMES-SESSION-AUTOPERSISTENCE-STORAGE-ASSOCIATION-AUDIT-v1.7",
+  "title": "Fallout 3 — James Session Autopersistence / Storage Association Audit v1.7",
+  "created_at_local": "2026-08-10T16:05:00+03:00",
+  "repository": "Hawkar-usls/janus-meta-registry",
+  "artifact_class": "PHYSICAL_SESSION_GRAPH_AND_PERSISTENCE_ASSOCIATION_ADMISSION_GATE",
+  "status": "TOOLING_IMPLEMENTED_REAL_ESM_JAMES_SESSION_STORAGE_ASSOCIATION_OPEN",
+  "parents": [
+    "registry/myth_busted/FALLOUT-3-MQ04-INFO-RESULT-SCRIPT-SELECTOR-BOUNDARY-AUDIT-v1.6.json",
+    "registry/myth_busted/FALLOUT-3-VAULT112-AUTOMATIC-MEMORY-CARRIER-PERSISTENCE-INFERENCE-GATE-v1.4.json",
+    "registry/myth_busted/FALLOUT-3-FATHER-CHILD-FACEGEN-SHARED-SIMULATION-BACKEND-GATE-v1.5.json",
+    "registry/myth_busted/FALLOUT-3-JAMES-SPECIFIC-MEMORY-WRITE-BINDING-CARRIER-REUSE-AUDIT-v1.1.json"
+  ],
+  "question": "Does the exact James Vault 112 session graph contain a shipped persistent-storage, backend-state, hidden-object or transferable-payload association strong enough to bind James's 2277 session to persisted memory without requiring a player-visible COPY/WRITE command?",
+  "reason_for_gate": {
+    "explicit_opcode_status": "NO_LONGER_REQUIRED_FOR_EXISTENCE_OF_MEMORY_TO_CARRIER_CLASS",
+    "basis": "Pinkerton removed an already-populated memory carrier from Braun's custody and later integrated its payload into A3-21; therefore some internal memory-to-carrier process existed even though its producer opcode is not exposed on the reviewed public terminal surface.",
+    "new_target": "JAMES_SESSION -> PERSISTED_OR_SELECTABLE_STATE -> TRANSFERABLE_PAYLOAD_CLASS",
+    "not_target": "Invent a mandatory manual WRITE button."
+  },
+  "physical_session_graph": {
+    "james_monitor_base": {
+      "editor_id": "Vault112PodTermDad",
+      "form_id": "00031190",
+      "role": "James-specific lounger monitor / physical session selector"
+    },
+    "james_status": {
+      "editor_id": "MQ04StatusNoteDad",
+      "form_id": "00031192"
+    },
+    "james_stress": {
+      "editor_id": "MQ04StressNoteDad",
+      "form_id": "00031191"
+    },
+    "james_simulation_identity": {
+      "editor_id": "MQ04Doc",
+      "base_form_id": "0004E79C",
+      "placed_ref_id": "0006023C"
+    },
+    "dad_pod_controller": {
+      "editor_id": "MQ04DadPodScript",
+      "form_id": "0005AE43"
+    },
+    "exit_controller": {
+      "editor_id": "MQ04PlayerContainerScript",
+      "form_id": "0004C255",
+      "known_public_mirror_behavior": "Opens MQ04DadPodShellRef and MQ04PlayerPodShellRef separately and restores MQDadRef physical state on exit.",
+      "boundary": "POD_SHELL_AND_ACTOR_REFERENCE_GRAPH_EXISTS != MEMORY_STORAGE_GRAPH_PROVEN"
+    }
+  },
+  "shared_backend_context": {
+    "current_status": "SHARED_SIMULATION_BACKEND_CONFIRMED_MEMORY_BUFFER_NOT_ESTABLISHED",
+    "model": "Think Machine 3600r runs/synchronizes the main simulation while smaller per-lounger systems handle local graphics/medical state.",
+    "testable_implication": "A resident-specific persisted state may be attached to pod-local or shared-backend objects rather than exposed directly in MQ04Script.",
+    "hard_boundary": "SHARED_BACKEND != SHARED_AUTOBIOGRAPHICAL_MEMORY_BUFFER"
+  },
+  "toolchain": {
+    "xedit_exporter": "tools/fo3edit_james_session_storage_association_export_v1_7.pas",
+    "verifier": "tools/verify_james_session_storage_association_v1_7.py",
+    "tests": "tests/test_james_session_storage_association_v1_7.py",
+    "outputs": [
+      "JANUS-James-Session-Seed-Leaves-v1.7.tsv",
+      "JANUS-James-Session-Seed-Reverse-Refs-v1.7.tsv",
+      "JANUS-James-Placed-Seed-Refs-v1.7.tsv",
+      "JANUS-Vault112a-REFR-Inventory-v1.7.tsv",
+      "JANUS-James-Storage-Candidates-v1.7.tsv",
+      "JANUS-James-Session-Storage-Audit-v1.7.json"
+    ]
+  },
+  "seed_records": [
+    {"editor_id":"Vault112PodTermDad","form_id":"00031190","class":"JAMES_PHYSICAL_SESSION"},
+    {"editor_id":"MQ04StressNoteDad","form_id":"00031191","class":"JAMES_PHYSICAL_STATUS"},
+    {"editor_id":"MQ04StatusNoteDad","form_id":"00031192","class":"JAMES_PHYSICAL_STATUS"},
+    {"editor_id":"MQ04Doc","form_id":"0004E79C","class":"JAMES_SIMULATION_IDENTITY"},
+    {"label":"MQ04DocRef","form_id":"0006023C","class":"JAMES_SIMULATION_PLACED_REF"},
+    {"editor_id":"MQ04DadPodScript","form_id":"0005AE43","class":"JAMES_POD_CONTROL"},
+    {"editor_id":"MQ04PlayerContainerScript","form_id":"0004C255","class":"POD_EXIT_CONTROL"},
+    {"editor_id":"MQ04Script","form_id":"000254C9","class":"QUEST_ORCHESTRATOR"},
+    {"editor_id":"BettyScript","form_id":"0007DC71","class":"BRAUN_STATE_MUTATOR"},
+    {"editor_id":"MQ04VersionControlCurrent","form_id":"000C339E","class":"PER_USER_MEMORY_AUTHORITY"},
+    {"editor_id":"MQ04PlayerPodScript","form_id":"0004B1CF","class":"PLAYER_POD_CONTROL_COMPARISON"}
+  ],
+  "discovery_layers": {
+    "seed_leaf_links": "Export every parsed leaf from exact seed records and preserve any linked FormID/EditorID/name.",
+    "reverse_references": "Export official-master ReferencedBy edges for each seed.",
+    "placed_seed_instances": "Bind placed REFR instances whose base is a James/session seed, including exact location and lifecycle fields.",
+    "pod_local_inventory": "Export every effective REFR in canonical cell Vault112a with base identity, XYZ, Initially Disabled, XESP, ownership and scripts.",
+    "broad_storage_candidates": "Scan all effective official records for memory/persistence/storage/backend terms, without assigning semantics from keywords alone."
+  },
+  "storage_search_terms": [
+    "memory",
+    "mem chip",
+    "memory chip",
+    "neural",
+    "engram",
+    "persist",
+    "archive",
+    "backup",
+    "snapshot",
+    "storage",
+    "save",
+    "restore",
+    "reload",
+    "cache",
+    "buffer",
+    "slot",
+    "sync/synchronization",
+    "Visiontron",
+    "Think Machine",
+    "transfer",
+    "serialize",
+    "copy",
+    "write"
+  ],
+  "proximity_policy": {
+    "radii_units": [128, 512, 1024],
+    "purpose": "Prioritize pod-local physical objects around the exact placed James monitor without turning co-location into function.",
+    "high_priority_local_candidate": "Within 512 units of an exact James monitor placement AND storage/persistence identity is present AND a direct lifecycle/dependency marker is present.",
+    "hard_rule": "POD_PROXIMITY != SESSION_STORAGE"
+  },
+  "admission_ladder": [
+    {"level":"S0","meaning":"storage keyword or pod-local proximity only","authority":"DISCOVERY_ONLY"},
+    {"level":"S1","meaning":"direct linked form from a James seed OR storage candidate reverse-references an exact James seed","authority":"SOURCE_BOUND_REVIEW_CANDIDATE"},
+    {"level":"S2","meaning":"pod-local object has storage identity plus dependency/lifecycle edge, or primary seed linkage names a persistence/storage object","authority":"HIGH_PRIORITY_STORAGE_ASSOCIATION_REVIEW"},
+    {"level":"S3","meaning":"primary shipped record semantics bind James's exact session/pod/Doc state to a persistent resident-specific storage state or selectable payload","authority":"JAMES_SPECIFIC_PERSISTENCE_BINDING_CANDIDATE"},
+    {"level":"S4","meaning":"persisted James-derived payload is independently bound to the removable/transferable memory-carrier class compatible with Pinkerton import","authority":"ASSET_LEVEL_EXECUTABLE_RECONSTRUCTION_CANDIDATE"}
+  ],
+  "secondary_dithers_hypothesis": {
+    "claim_encountered": "Older secondary Fallout documentation describes the stolen Vault 112 chip as T. Dithers' resident-specific rewritable memory chip and interprets her awareness as a consequence of its removal.",
+    "use_here": "SEARCH_HYPOTHESIS_ONLY",
+    "not_admitted": [
+      "T_DITHERS_WAS_THE_STOLEN_SOURCE",
+      "ONE_REMOVABLE_CHIP_PER_RESIDENT",
+      "CHIP_REMOVAL_CAUSED_DITHERS_AWARENESS",
+      "CARRIER_REWRITABILITY"
+    ],
+    "promotion_requirement": "Primary ESM record/reference/script binding is required."
+  },
+  "hard_rules": [
+    "DIRECT_LINK != STORAGE_SEMANTICS",
+    "REVERSE_REFERENCE != PERSISTENCE_DIRECTION",
+    "POD_PROXIMITY != SESSION_STORAGE",
+    "STORAGE_KEYWORD != MEMORY_PAYLOAD",
+    "SHARED_BACKEND != SHARED_MEMORY_BUFFER",
+    "AUTOMATIC_PERSISTENCE_PLAUSIBILITY != PER_SESSION_AUTOPERSISTENCE",
+    "HIGH_PRIORITY_STORAGE_CANDIDATE != PASS",
+    "SECONDARY_DITHERS_CHIP_CLAIM != PRIMARY_ESM_BINDING"
+  ],
+  "current_matrix": {
+    "JAMES_SPECIFIC_PHYSICAL_SESSION":"PASS",
+    "JAMES_SPECIFIC_DOC_IDENTITY":"PASS",
+    "SEPARATE_DAD_AND_PLAYER_POD_CONTROL":"PASS",
+    "SHARED_VAULT112_SIMULATION_BACKEND":"PASS",
+    "PER_USER_MEMORY_AUTHORITY":"PASS",
+    "MEMORY_TO_POPULATED_CARRIER_CLASS":"PASS_EXISTENTIALLY",
+    "EXPLICIT_WRITE_OPCODE_REQUIRED":"NO",
+    "REAL_JAMES_MONITOR_PLACED_REF_EXPORTED":"NO",
+    "JAMES_SESSION_TO_PERSISTENT_STORAGE":"NOT_ESTABLISHED",
+    "JAMES_SESSION_AUTOPERSISTENCE":"NOT_ESTABLISHED",
+    "JAMES_SPECIFIC_REMOVABLE_CARRIER":"NOT_ESTABLISHED",
+    "CARRIER_REWRITABLE":"NOT_ESTABLISHED",
+    "SAVE_JAMES_ASSET_LEVEL_EXECUTABLE":"BLOCKED"
+  },
+  "next_gate": {
+    "name":"JAMES_SESSION_REAL_ESM_STORAGE_ASSOCIATION_RECEIPT_v1.7",
+    "status":"OPEN_BLOCKED_BY_OFFICIAL_MASTER_BYTES_OR_COMPLETE_HASH_BOUND_EXPORTS",
+    "completion":[
+      "Run v1.7 exporter with exactly six official masters.",
+      "Freeze SHA-256 of all five TSV outputs before interpretation.",
+      "Run the v1.7 verifier.",
+      "Bind the exact placed Vault112PodTermDad monitor REFR and inspect its 128/512/1024 unit neighborhood.",
+      "Review every direct linked form and reverse reference from James session seeds.",
+      "Manually inspect all source-bound/high-priority persistence candidates.",
+      "Promote only if primary semantics establish a resident/session-specific persisted state or transferable James payload."
+    ]
+  }
+}
