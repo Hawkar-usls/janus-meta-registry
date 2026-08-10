@@ -45,11 +45,19 @@ def load(path: Path):
         return list(csv.DictReader(f, delimiter="\t"))
 
 
+def is_crystal(row):
+    return norm(row.get("base_formid", "")) in CRYSTAL_BASES
+
+
 def is_tech(row):
+    # Critical anti-correlation boundary: a crystal must never classify itself
+    # as a technology candidate, and a location name such as "Robot Assembly"
+    # must not turn every object in that cell into a machine.
+    if is_crystal(row):
+        return False
     text = " ".join(
         row.get(k, "") for k in (
             "record_editorid", "base_editorid", "base_name",
-            "parent_cell_or_world", "full_path",
         )
     ).lower()
     return any(term in text for term in TECH_TERMS)
@@ -57,7 +65,7 @@ def is_tech(row):
 
 def analyze(rows):
     zeta = [r for r in rows if r.get("record_file", "").lower() == "zeta.esm"]
-    crystals = [r for r in zeta if norm(r.get("base_formid", "")) in CRYSTAL_BASES]
+    crystals = [r for r in zeta if is_crystal(r)]
     tech = [r for r in zeta if is_tech(r)]
 
     by_location = Counter(r.get("parent_cell_or_world", "") for r in crystals)
@@ -107,6 +115,8 @@ def analyze(rows):
         "invariants": {
             "COLOCATION_DOES_NOT_PROVE_FUNCTION": True,
             "NO_DATA_STORAGE_CLAIM_WITHOUT_USE_EDGE": True,
+            "CRYSTAL_NEVER_COUNTS_AS_ITS_OWN_TECH_CANDIDATE": True,
+            "CELL_NAME_NEVER_CLASSIFIES_ALL_CONTENTS_AS_TECH": True,
         },
     }
 
