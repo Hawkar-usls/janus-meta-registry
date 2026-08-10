@@ -1,0 +1,93 @@
+name: Vault112 Public Pod Role Hardening v2.2
+
+on:
+  pull_request:
+    paths:
+      - 'tools/verify_vault112_public_pod_role_hardening_v2_2.py'
+      - 'tests/test_vault112_public_pod_role_hardening_v2_2.py'
+      - 'registry/myth_busted/FALLOUT-3-VAULT112A-PUBLIC-DERIVED-POD-ROLE-ANCHOR-HARDENING-v2.4.json'
+      - '.github/workflows/vault112-public-pod-role-hardening-v2-2.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Assert exact head
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          ACTUAL_HEAD="$(git rev-parse HEAD)"
+          echo "EXPECTED_HEAD=$EXPECTED_HEAD"
+          echo "ACTUAL_HEAD=$ACTUAL_HEAD"
+          test "$ACTUAL_HEAD" = "$EXPECTED_HEAD"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Compile Python and validate JSON
+        run: |
+          python -m py_compile tools/verify_vault112_public_pod_role_hardening_v2_2.py tests/test_vault112_public_pod_role_hardening_v2_2.py
+          python -m json.tool registry/myth_busted/FALLOUT-3-VAULT112A-PUBLIC-DERIVED-POD-ROLE-ANCHOR-HARDENING-v2.4.json >/dev/null
+
+      - name: Verify public-derived role constants
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          text = Path('tools/verify_vault112_public_pod_role_hardening_v2_2.py').read_text(encoding='utf-8')
+          required = [
+              '"0002A45B": "PLAYER_EXPLICIT_BASE"',
+              '"000B364C": "DAD_SCRIPT_BOUND_BASE_CANDIDATE"',
+              '"000572D6": "DAD_NAMED_BASE_CANDIDATE"',
+              '"000B06D4": "BROKEN_EXPLICIT_BASE"',
+              '105d6f3264bf1112c132c27322e7176fb656cd70',
+              'MQ04PlayerPodShellScript',
+              'MQ04DadPodScript',
+              'MQ04NonPlayerPodScript',
+          ]
+          missing = [x for x in required if x not in text]
+          assert not missing, missing
+          print(f'PUBLIC_POD_ROLE_STATIC_INVARIANTS={len(required)}/{len(required)} PASS')
+          PY
+
+      - name: Run exactly ten role-hardening tests
+        run: |
+          set -o pipefail
+          python -m unittest tests.test_vault112_public_pod_role_hardening_v2_2 -v 2>&1 | tee /tmp/pod-role-tests.log
+          grep -F "Ran 10 tests" /tmp/pod-role-tests.log
+          grep -Fx "OK" /tmp/pod-role-tests.log
+
+      - name: Verify claim ceilings
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d = json.loads(Path('registry/myth_busted/FALLOUT-3-VAULT112A-PUBLIC-DERIVED-POD-ROLE-ANCHOR-HARDENING-v2.4.json').read_text(encoding='utf-8'))
+          rules = set(d['hard_rules'])
+          required = {
+              'PLAYER_POD_BASE != JAMES_POD_BY_PROXIMITY',
+              'BROKEN_POD_BASE != JAMES_POD_BY_PROXIMITY',
+              'DAD_ROLE_BASE != EXACT_JAMES_PLACED_REF',
+              'TTW_DERIVED_XML != VANILLA_ALL_REFR_DUMP',
+              'BASE_SCRIPT_BINDING != PLACED_INSTANCE_BINDING',
+              'PUBLIC_SOURCE_NONDETECTION != ESM_ABSENCE',
+              'ROLE_BOUND_CANDIDATE != PERSISTED_MEMORY_STATE',
+          }
+          assert required <= rules
+          assert d['current_matrix']['EXACT_PUBLIC_JANUS_TSV_SET'] == 'NOT_FOUND'
+          assert d['current_matrix']['REAL_ESM_EXACT_JAMES_POD_REFR'] == 'OPEN'
+          assert d['current_matrix']['JAMES_SPECIFIC_PERSISTED_MEMORY_STATE'] == 'NOT_ESTABLISHED'
+          assert d['save_james_effect']['promotion'] is False
+          print('PUBLIC_POD_ROLE_CLAIM_CEILING=PASS')
+          PY
