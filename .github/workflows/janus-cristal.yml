@@ -1,0 +1,64 @@
+name: Janus Cristal multispectral probe
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "tools/janus_cristal_probe.py"
+      - "experiments/janus_cristal/**"
+      - "tests/test_janus_cristal_probe.py"
+      - "registry/crystal/JANUS-CRISTAL*.json"
+      - ".github/workflows/janus-cristal.yml"
+  push:
+    branches: [main]
+    paths:
+      - "tools/janus_cristal_probe.py"
+      - "experiments/janus_cristal/**"
+      - "tests/test_janus_cristal_probe.py"
+      - "registry/crystal/JANUS-CRISTAL*.json"
+      - ".github/workflows/janus-cristal.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install runtime
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq tesseract-ocr
+          python -m pip install "opencv-python-headless==4.13.0.92"
+
+      - name: Deterministic unit tests
+        run: python tests/test_janus_cristal_probe.py -v
+
+      - name: Run Janus Cristal
+        run: >-
+          python tools/janus_cristal_probe.py
+          --manifest experiments/janus_cristal/sources.json
+          --out artifacts/janus-cristal
+          --min-ocr-confidence 45
+
+      - name: Publish job summary
+        if: always()
+        shell: bash
+        run: |
+          if [ -f artifacts/janus-cristal/SUMMARY.md ]; then
+            cat artifacts/janus-cristal/SUMMARY.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload Janus Cristal receipt
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: janus-cristal-receipt
+          path: artifacts/janus-cristal/
+          if-no-files-found: error
