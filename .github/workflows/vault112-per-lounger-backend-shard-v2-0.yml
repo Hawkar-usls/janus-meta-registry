@@ -1,0 +1,112 @@
+name: Vault112 Per-Lounger Backend Shard v2.0
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "tools/fo3edit_vault112_per_lounger_backend_shard_export_v2_0.pas"
+      - "tools/verify_vault112_per_lounger_backend_shard_v2_0.py"
+      - "tests/test_vault112_per_lounger_backend_shard_v2_0.py"
+      - "registry/myth_busted/FALLOUT-3-PER-LOUNGER-BACKEND-SHARD-RESIDENT-STORAGE-CARRIER-BINDING-AUDIT-v2.0.json"
+      - ".github/workflows/vault112-per-lounger-backend-shard-v2-0.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Assert exact head
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          ACTUAL_HEAD="$(git rev-parse HEAD)"
+          echo "EXPECTED_HEAD=$EXPECTED_HEAD"
+          echo "ACTUAL_HEAD=$ACTUAL_HEAD"
+          test "$ACTUAL_HEAD" = "$EXPECTED_HEAD"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Compile Python and validate JSON
+        run: |
+          python -m py_compile tools/verify_vault112_per_lounger_backend_shard_v2_0.py tests/test_vault112_per_lounger_backend_shard_v2_0.py
+          python -m json.tool registry/myth_busted/FALLOUT-3-PER-LOUNGER-BACKEND-SHARD-RESIDENT-STORAGE-CARRIER-BINDING-AUDIT-v2.0.json >/dev/null
+
+      - name: Static xEdit exporter invariants
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          text = Path('tools/fo3edit_vault112_per_lounger_backend_shard_export_v2_0.pas').read_text(encoding='utf-8')
+          required = [
+              "LoadedOfficial.Count <> 6",
+              "UnexpectedPlugins.Count > 0",
+              "$0002A45B",
+              "$000B364C",
+              "$000B06D4",
+              "$00031190",
+              "CompareText(CanonicalCellEditorID(win), 'Vault112a')",
+              "BaseRecord(rec)",
+              "GetPosition(rec)",
+              "ReferencedByCount(root)",
+              "ReferencedByIndex(root, i)",
+              "LinksTo(el)",
+              "XESP - Enable Parent",
+              "SCRI - Script",
+              "XOWN - Owner",
+              "think machine",
+              "memory chip",
+              "user unknown",
+              "JANUS-Vault112a-Backend-Hardware-v2.0.tsv",
+              "JANUS-Vault112a-Backend-Hardware-Links-v2.0.tsv",
+              "JANUS-Vault112a-Backend-Hardware-Reverse-Refs-v2.0.tsv",
+              "JANUS-ThinkMachine-Backend-Semantic-Candidates-v2.0.tsv",
+          ]
+          missing = [x for x in required if x not in text]
+          assert not missing, missing
+          print(f'VAULT112_SHARD_XEDIT_STATIC_INVARIANTS={len(required)}/{len(required)} PASS')
+          PY
+
+      - name: Run exactly thirteen backend-shard tests
+        run: |
+          set -o pipefail
+          python -m unittest tests.test_vault112_per_lounger_backend_shard_v2_0 -v 2>&1 | tee /tmp/vault112-shard-tests.log
+          grep -F "Ran 13 tests" /tmp/vault112-shard-tests.log
+          grep -Fx "OK" /tmp/vault112-shard-tests.log
+
+      - name: Verify claim ceilings
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d = json.loads(Path('registry/myth_busted/FALLOUT-3-PER-LOUNGER-BACKEND-SHARD-RESIDENT-STORAGE-CARRIER-BINDING-AUDIT-v2.0.json').read_text(encoding='utf-8'))
+          rules = set(d['hard_rules'])
+          required = {
+              'DAD_MONITOR_STATIC_NOTE_ASSETS != DYNAMIC_MEMORY_STORE',
+              'NEAREST_MONITOR_TO_VISIONTRON != FUNCTIONAL_BINDING',
+              'NEAREST_COMPUTER_TO_VISIONTRON != PER_LOUNGER_SHARD_PROOF',
+              'REPEATED_LAYOUT != FUNCTIONAL_WIRING',
+              'DIRECT_LINK != PERSISTENCE_DIRECTION',
+              'REVERSE_REFERENCE != STATE_OWNERSHIP',
+              'MEMORY_TERM != AUTOBIOGRAPHICAL_MEMORY_PAYLOAD',
+              'THINK_MACHINE_SHARED_BACKEND != SHARED_MEMORY_BUFFER',
+              'HIGH_PRIORITY_CANDIDATE != PASS',
+              'PER_LOUNGER_SHARD != PER_LOUNGER_REMOVABLE_CHIP',
+          }
+          assert required <= rules
+          assert d['current_matrix']['DAD_MONITOR_DYNAMIC_MEMORY_SOURCE'] == 'FAIL'
+          assert d['current_matrix']['JAMES_SPECIFIC_BACKEND_STATE_HANDLE'] == 'NOT_ESTABLISHED'
+          assert d['current_matrix']['PERSISTED_JAMES_MEMORY_STATE_RECONSTRUCTION'] == 'NOT_YET_ADMITTED'
+          print('VAULT112_SHARD_CLAIM_CEILING=PASS')
+          PY
