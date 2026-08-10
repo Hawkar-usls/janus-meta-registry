@@ -4,13 +4,16 @@ on:
   pull_request:
     paths:
       - "tools/analyze_teddy_gnome_enrichment.py"
+      - "tools/analyze_teddy_gnome_enrichment_v4_2.py"
       - "tools/verify_janus_bear_publication.py"
       - "tools/fo3edit_teddy_context_inventory_export.pas"
       - "tests/test_teddy_gnome_enrichment.py"
+      - "tests/test_teddy_gnome_enrichment_v4_2.py"
       - "tests/test_teddy_skeleton_proximity.py"
       - "data/JANUS-BEAR-CHILD-GUARDIAN-COMPANION-v1.0.json"
       - "registry/myth_busted/FALLOUT-JANUS-BEAR-GNOME-PROXY-ACTOR-GRAMMAR-v4.0.json"
       - "registry/myth_busted/FALLOUT-3-JANUS-BEAR-SPATIAL-ENRICHMENT-TECHNICAL-v4.0.json"
+      - "registry/myth_busted/FALLOUT-3-JANUS-BEAR-SPATIAL-ENRICHMENT-HARDENING-v4.2.json"
       - "registry/myth_busted/FALLOUT-3-JANUS-BEAR-CONTEXT-LEDGER-SCHEMA-v4.0.json"
       - "registry/myth_busted/JANUS-BEAR-GNOME-SPATIAL-PUBLICATION-RECEIPT-v4.1.json"
       - ".github/workflows/janus-bear-spatial.yml"
@@ -29,6 +32,16 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Assert exact requested head
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          ACTUAL_HEAD="$(git rev-parse HEAD)"
+          echo "EXPECTED_HEAD=$EXPECTED_HEAD"
+          echo "ACTUAL_HEAD=$ACTUAL_HEAD"
+          test "$ACTUAL_HEAD" = "$EXPECTED_HEAD"
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -41,6 +54,7 @@ jobs:
       - name: Compile Janus Bear Python tools
         run: |
           python -m py_compile tools/analyze_teddy_gnome_enrichment.py
+          python -m py_compile tools/analyze_teddy_gnome_enrichment_v4_2.py
           python -m py_compile tools/verify_janus_bear_publication.py
 
       - name: Validate Janus Bear JSON artifacts
@@ -53,6 +67,7 @@ jobs:
               Path("data/JANUS-BEAR-CHILD-GUARDIAN-COMPANION-v1.0.json"),
               Path("registry/myth_busted/FALLOUT-JANUS-BEAR-GNOME-PROXY-ACTOR-GRAMMAR-v4.0.json"),
               Path("registry/myth_busted/FALLOUT-3-JANUS-BEAR-SPATIAL-ENRICHMENT-TECHNICAL-v4.0.json"),
+              Path("registry/myth_busted/FALLOUT-3-JANUS-BEAR-SPATIAL-ENRICHMENT-HARDENING-v4.2.json"),
               Path("registry/myth_busted/FALLOUT-3-JANUS-BEAR-CONTEXT-LEDGER-SCHEMA-v4.0.json"),
               Path("registry/myth_busted/JANUS-BEAR-GNOME-SPATIAL-PUBLICATION-RECEIPT-v4.1.json"),
           ]
@@ -65,31 +80,42 @@ jobs:
         run: |
           python -m pytest -q \
             tests/test_teddy_gnome_enrichment.py \
+            tests/test_teddy_gnome_enrichment_v4_2.py \
             tests/test_teddy_skeleton_proximity.py | tee janus-bear-pytest.log
 
-      - name: Verify frozen lineage and claim ceiling
+      - name: Verify frozen v4.1 lineage and claim ceiling
         run: |
           python tools/verify_janus_bear_publication.py \
             --pretty \
             --out janus-bear-ci-lineage.json
 
       - name: Emit exact Git receipt
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           python - <<'PY'
-          import json, subprocess
+          import json, os, subprocess
           from pathlib import Path
 
           def git(*args):
               return subprocess.check_output(["git", *args], text=True).strip()
 
+          actual = git("rev-parse", "HEAD")
+          expected = os.environ["EXPECTED_HEAD"]
           receipt = {
-              "schema": "janus.bear.github_actions.git_receipt.v1",
+              "schema": "janus.bear.github_actions.git_receipt.v2",
               "event": "pull_request_or_manual_dispatch",
-              "head": git("rev-parse", "HEAD"),
+              "expected_head": expected,
+              "actual_head": actual,
+              "exact_head_match": actual == expected,
               "tree": git("rev-parse", "HEAD^{tree}"),
               "status_scope": "CI verifies deterministic code/tests/lineage only; no official ESM reference population is present in this job.",
               "real_esm_result_established": False,
+              "static_skeleton_proxy_is_all_human_remains": False,
+              "distance_512_establishes_same_visible_scene": False,
           }
+          if not receipt["exact_head_match"]:
+              raise SystemExit("exact PR-head mismatch")
           Path("janus-bear-git-receipt.json").write_text(
               json.dumps(receipt, indent=2) + "\n", encoding="utf-8"
           )
@@ -99,7 +125,7 @@ jobs:
       - name: Upload Janus Bear CI receipt
         uses: actions/upload-artifact@v4
         with:
-          name: janus-bear-ci-receipt
+          name: janus-bear-ci-receipt-v4-2
           path: |
             janus-bear-pytest.log
             janus-bear-ci-lineage.json
