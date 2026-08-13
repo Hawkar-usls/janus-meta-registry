@@ -1,0 +1,16 @@
+{
+  "schema":"JANUS/connection-scan/data-batch/v1",
+  "scan":"JANUS-CONNECTION-SCAN-2026-08-13-021-DATA-BATCH-007",
+  "status":"CANDIDATE_ANALYSIS_NOT_EDGE_SURVIVAL_PROOF",
+  "sources":["data/proofs/JANUS-TEMPORAL-CONTINUITY-ROLLBACK-REPLAY-HARDENING-v0.9.json","data/proofs/JANUS-SEQUENTIAL-ADAPTIVE-WITNESS-HARDENING-v0.6.json","data/proofs/JANUS-ANYTIME-VALID-WITNESS-HARDENING-v0.7.json","data/JANUS-SIMULATION-FIRST-ANIMAL-WELFARE-COVENANT-v1.2.json","registry/research_portfolio/JANUS-PROOF-CARRYING-EXPERIMENTAL-SCIENCE-INTERPRETATION-v1.0.0.json"],
+  "connections":[
+    {"id":"CONN-021-001","name":"REPLAY_REQUIRES_STATE_EQUIVALENCE","relation":"predecessor_state -> replay_validity","observation":"A replay is informative only when restored predecessor state is equivalent to the intended earlier state.","strength":"high"},
+    {"id":"CONN-021-002","name":"FRESHNESS_IS_A_SUCCESSOR_PERMISSION","relation":"prior_continuity -> successor_admissibility","observation":"A state can remain authentic while becoming inadmissible for the next decision when freshness is externally changed.","strength":"high"},
+    {"id":"CONN-021-003","name":"ADAPTIVE_SUCCESSOR_DEPENDS_ON_COMPLETE_HISTORY","relation":"history -> successor_distribution","observation":"Sequential/adaptive witness selection depends on complete pre-target history; marginal equivalence does not preserve conditional successor behavior.","strength":"high"},
+    {"id":"CONN-021-004","name":"EXTERNAL_ROOT_BREAKS_LOCAL_REPLAY_SYMMETRY","relation":"external_anchor -> replay_status","observation":"An external freshness root can distinguish stale replay from current state even when local content and signatures remain valid.","strength":"high"},
+    {"id":"CONN-021-005","name":"PAST_EVIDENCE_CAN_CHANGE_ESCALATION","relation":"prior_evidence -> next_gate","observation":"Evidence accumulated in one stage can redirect or block the next escalation step.","strength":"medium_high"}
+  ],
+  "edge_survival_design":{"primary_candidates":["CONN-021-002","CONN-021-003"],"states":["REAL","BLIND","TEMPORAL_REWIRED","MATCHED_NULL"],"desired_profile":{"REAL":"present","BLIND":"present","TEMPORAL_REWIRED":"absent","MATCHED_NULL":"absent"},"rewiring_rule":"Permute predecessor-successor assignments while preserving node count, field counts, value marginals and local schema statistics as far as feasible.","status":"NOT_YET_EXECUTED_AS_A_FULL_PERMUTATION_EXPERIMENT"},
+  "negative_control":"A cryptographically valid replay is not by itself evidence of temporal continuity; local authenticity is explicitly separated from freshness.",
+  "epistemic_boundary":"Structural connections only; no claim of physical retrocausality or new mathematics."
+}
