@@ -1,0 +1,123 @@
+name: JANUS Linear A higher-order neighborhood v0.8
+
+on:
+  push:
+    paths:
+      - "research/linear_a/janus_linear_a_higher_order_neighborhood_v0_8.py"
+      - "research/linear_a/janus_linear_a_token_typing_policy_v0_6_2.py"
+      - "research/linear_a/janus_linear_a_parser_policy_v0_6_1.py"
+      - "data/JANUS-LINEAR-A-HIGHER-ORDER-NEIGHBORHOOD-EXECUTION-SPEC-2026-08-14-v0.8.json"
+      - "data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.2.json"
+      - ".github/workflows/janus-linear-a-higher-order-v0.8.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  higher-order-neighborhood:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout JANUS registry
+        uses: actions/checkout@v4
+
+      - name: Verify canonical parent and frozen v0.8 spec
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          state='data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.2.json'
+          spec='data/JANUS-LINEAR-A-HIGHER-ORDER-NEIGHBORHOOD-EXECUTION-SPEC-2026-08-14-v0.8.json'
+          s=json.load(open(state, encoding='utf-8'))
+          e=json.load(open(spec, encoding='utf-8'))
+          assert s['artifact_uuid'] == 'JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.2'
+          assert s['representation_baseline']['policy_id'] == 'JANUS-LINA-TOKEN-TYPING-POLICY-v0.6.2'
+          assert s['claim_ceiling']['new_anchor_established'] is False
+          assert s['claim_ceiling']['decipherment_established'] is False
+          assert e['artifact_uuid'] == 'JANUS-LINEAR-A-HIGHER-ORDER-NEIGHBORHOOD-EXECUTION-SPEC-2026-08-14-v0.8'
+          assert e['canonical_parent']['commit'] == 'c45adaa5732600a27cea3f72d366efa36e8d68c3'
+          assert e['shared_representation']['policy_id'] == 'JANUS-LINA-TOKEN-TYPING-POLICY-v0.6.2'
+          assert len(e['predeclared_hypothesis_families']) == 6
+          assert len(e['destructive_nulls']) == 3
+          print('Canonical v2.2 and v0.8 execution spec verified.')
+          PY
+
+      - name: Syntax-check v0.8 runner
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile research/linear_a/janus_linear_a_higher_order_neighborhood_v0_8.py
+
+      - name: Fetch frozen Linear A corpus
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --quiet https://github.com/mwenge/lineara.xyz.git /tmp/lineara
+          git -C /tmp/lineara checkout --quiet 43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a
+          test "$(git -C /tmp/lineara rev-parse HEAD)" = "43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a"
+          test -f /tmp/lineara/items_analysis/numbers.txt
+          echo "Frozen corpus verified."
+
+      - name: Run v0.8 higher-order typed neighborhood analysis
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/linear_a/janus_linear_a_higher_order_neighborhood_v0_8.py \
+            --corpus /tmp/lineara \
+            --out artifacts/JANUS-LINEAR-A-HIGHER-ORDER-NEIGHBORHOOD-2026-08-14-v0.8.json \
+            --seed 260814725 \
+            --screen-permutations 1500 \
+            --confirm-permutations 3000 \
+            --test-permutations 3000
+
+      - name: Validate v0.8 claim ceiling and frozen design
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          p='artifacts/JANUS-LINEAR-A-HIGHER-ORDER-NEIGHBORHOOD-2026-08-14-v0.8.json'
+          d=json.load(open(p, encoding='utf-8'))
+          assert d['source']['frozen_commit'] == '43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a'
+          assert d['source']['token_typing_policy_id'] == 'JANUS-LINA-TOKEN-TYPING-POLICY-v0.6.2'
+          assert d['source']['canonical_parent_commit'] == 'c45adaa5732600a27cea3f72d366efa36e8d68c3'
+          assert d['source']['execution_spec_commit'] == '402c1f2750dfe8e56fd432bcc3ff88d06d0285ab'
+          assert d['methodology']['partition_chain'] == ['HT_SCREEN','HT_CONFIRM','NON_HT']
+          assert d['methodology']['representation'] == 'WORD_ONLY'
+          assert d['methodology']['claim_bearing_channel'] == 'NOVELTY_MASKED'
+          assert len(d['methodology']['hypothesis_families']) == 6
+          assert len(d['methodology']['null_operators']) == 3
+          assert d['methodology']['not_evaluable_is_distinct_from_failed_replication'] is True
+          assert d['epistemic_gate']['typed_candidate_universe_frozen'] is True
+          assert d['epistemic_gate']['new_anchor_established'] is False
+          assert d['epistemic_gate']['decipherment_established'] is False
+          assert d['epistemic_gate']['external_replication_established'] is False
+          forbidden={'*900','*901','*902','*903','¹⁄₅','¹⁄₃','≈¹⁄₆','≈¹⁄₄'}
+          for channel_name in ('control_channel','novelty_channel'):
+              channel=d[channel_name]
+              for h in channel['screen']['top_25_post_score']:
+                  labels=h.get('post_score_labels', [])
+                  label=h.get('post_score_label')
+                  assert not any(x in forbidden for x in labels)
+                  assert label not in forbidden
+          print(json.dumps({
+              'control_screen_selected': d['control_channel']['frozen_counts_before_reveal']['screen_selected'],
+              'control_HT_confirmed': d['control_channel']['frozen_counts_before_reveal']['HT_confirmed'],
+              'control_NON_HT_replicated': d['control_channel']['frozen_counts_before_reveal']['NON_HT_replicated'],
+              'novelty_screen_selected': d['novelty_channel']['frozen_counts_before_reveal']['screen_selected'],
+              'novelty_HT_confirmed': d['novelty_channel']['frozen_counts_before_reveal']['HT_confirmed'],
+              'novelty_NON_HT_replicated': d['novelty_channel']['frozen_counts_before_reveal']['NON_HT_replicated'],
+              'new_anchor_established': False,
+              'decipherment_established': False,
+          }, sort_keys=True))
+          PY
+
+      - name: Upload v0.8 receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-higher-order-neighborhood-v0.8
+          path: artifacts/JANUS-LINEAR-A-HIGHER-ORDER-NEIGHBORHOOD-2026-08-14-v0.8.json
+          if-no-files-found: error
+          retention-days: 30
