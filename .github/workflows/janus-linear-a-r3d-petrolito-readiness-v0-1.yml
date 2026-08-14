@@ -1,0 +1,119 @@
+name: JANUS Linear A R3D Petrolito source recovery readiness v0.1
+
+on:
+  push:
+    paths:
+      - "data/JANUS-LINEAR-A-R3D-PETROLITO-TEI-EPIDOC-SOURCE-RECOVERY-CANDIDATE-2026-08-14-v0.1.json"
+      - "data/JANUS-LINEAR-A-R3D-PETROLITO-TEI-EPIDOC-RECOVERY-PROTOCOL-2026-08-14-v0.1.json"
+      - "data/JANUS-LINEAR-A-R3D-PETROLITO-ACQUISITION-RECEIPT-CONTRACT-2026-08-14-v0.1.json"
+      - "research/linear_a/janus_linear_a_r3d_petrolito_readiness_v0_1.py"
+      - ".github/workflows/janus-linear-a-r3d-petrolito-readiness-v0-1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  validate-readiness:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compile runner
+        run: python3 -m py_compile research/linear_a/janus_linear_a_r3d_petrolito_readiness_v0_1.py
+
+      - name: Validate frozen source classification and recovery protocol
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          c=json.load(open('data/JANUS-LINEAR-A-R3D-PETROLITO-TEI-EPIDOC-SOURCE-RECOVERY-CANDIDATE-2026-08-14-v0.1.json',encoding='utf-8'))
+          p=json.load(open('data/JANUS-LINEAR-A-R3D-PETROLITO-TEI-EPIDOC-RECOVERY-PROTOCOL-2026-08-14-v0.1.json',encoding='utf-8'))
+          r=json.load(open('data/JANUS-LINEAR-A-R3D-PETROLITO-ACQUISITION-RECEIPT-CONTRACT-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert c['status']=='SOURCE_IDENTITY_AND_LINEAGE_RECONSTRUCTED_BYTES_NOT_RECOVERED'
+          assert c['provenance_classification']['JANUS_independence_class']=='L1_INDEPENDENT_DIGITIZATION_SHARED_TRANSCRIPTION_WITH_GORILA_EDITORIAL_CHECK'
+          assert c['provenance_classification']['R3B_external_replication_eligible'] is False
+          assert c['claim_ceiling']['corpus_bytes_recovered'] is False
+          assert p['status']=='FROZEN_BEFORE_BYTE_RECOVERY'
+          assert p['provenance_ceiling']['R3B_replication_credit'] is False
+          assert p['XML_security_policy']['external_entity_resolution'] is False
+          assert r['status']=='FROZEN_BEFORE_SOURCE_ACQUISITION'
+          assert r['admitted_receipt_status']=='R3D_PETROLITO_SOURCE_BYTES_ACQUIRED'
+          assert r['claim_ceiling']['R3B_replication_credit'] is False
+          PY
+
+      - name: Run synthetic fail-closed self-test
+        shell: bash
+        env:
+          PYTHONPATH: research/linear_a
+        run: |
+          set -euo pipefail
+          python3 research/linear_a/janus_linear_a_r3d_petrolito_readiness_v0_1.py self-test > /tmp/r3d-self-test.json
+          python3 - <<'PY'
+          import json
+          d=json.load(open('/tmp/r3d-self-test.json',encoding='utf-8'))
+          assert d['valid_synthetic_receipt_pass'] is True
+          assert d['web_archive_wrapper_false_source_rejected'] is True
+          assert d['R3B_promotion_rejected'] is True
+          assert d['scientific_content_scored'] is False
+          assert d['decipherment'] is False
+          PY
+
+      - name: Build current readiness result
+        shell: bash
+        env:
+          PYTHONPATH: research/linear_a
+        run: |
+          set -euo pipefail
+          python3 research/linear_a/janus_linear_a_r3d_petrolito_readiness_v0_1.py readiness \
+            --data-dir data \
+            --out data/JANUS-LINEAR-A-R3D-PETROLITO-READINESS-RESULT-2026-08-14-v0.1.json
+
+      - name: Enforce current blocked state without scientific promotion
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          d=json.load(open('data/JANUS-LINEAR-A-R3D-PETROLITO-READINESS-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert d['admitted_receipt_count']==0
+          assert d['status']=='BLOCKED_BYTES_NOT_RECOVERED'
+          assert d['scientific_content_scored'] is False
+          assert d['source_adapter_executed'] is False
+          assert d['R3B_replication_credit'] is False
+          assert d['claim_ceiling']['R3B_effect']=='NONE'
+          assert d['claim_ceiling']['new_anchor'] is False
+          assert d['claim_ceiling']['decipherment'] is False
+          PY
+
+      - name: Upload immutable readiness package
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r3d-petrolito-readiness-v0.1
+          path: |
+            /tmp/r3d-self-test.json
+            data/JANUS-LINEAR-A-R3D-PETROLITO-READINESS-RESULT-2026-08-14-v0.1.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Persist readiness with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "janus-proof-bot"
+          git config user.email "janus-proof-bot@users.noreply.github.com"
+          git add data/JANUS-LINEAR-A-R3D-PETROLITO-READINESS-RESULT-2026-08-14-v0.1.json
+          git commit -m "Register Linear A R3D Petrolito source recovery readiness v0.1"
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then pushed=1; break; fi
+            sleep "$attempt"
+          done
+          test "$pushed" = 1
