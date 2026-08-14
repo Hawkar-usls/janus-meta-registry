@@ -1,0 +1,170 @@
+name: JANUS Linear A canonical state v2.16
+
+on:
+  push:
+    paths:
+      - "data/JANUS-LINEAR-A-RESEARCH-STATE-PROMOTION-SPEC-2026-08-14-v2.16.json"
+      - ".github/workflows/janus-linear-a-canonical-state-v2-16.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Re-read evidence and build v2.16 candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import copy,json,os
+          sp='data/JANUS-LINEAR-A-RESEARCH-STATE-PROMOTION-SPEC-2026-08-14-v2.16.json'
+          s=json.load(open(sp,encoding='utf-8'))
+          assert s['status']=='FROZEN_BEFORE_CANONICAL_PROMOTION'
+          p=json.load(open(s['parent_canonical']['path'],encoding='utf-8'))
+          assert p['version']==s['parent_canonical']['required_version'] and p['status']==s['parent_canonical']['required_status']
+          ev={}
+          for k,r in s['required_new_evidence'].items():
+              assert os.path.exists(r['path']), (k,r['path'])
+              d=json.load(open(r['path'],encoding='utf-8'))
+              assert d['status']==r['required_status'], (k,d.get('status'),r['required_status'])
+              ev[k]=d
+          h=ev['package_history']; n=ev['all_package_member_names']; b=ev['historical_current_code_bindings']; flow=ev['historical_dataflow']; diff=ev['corrected_current_method_differential']; pc=s['promotion_checks']
+          # Prove the historical main loader is a user-selected file path and that
+          # the current main loader is normalized-AST identical to that historical loader.
+          f=next(x for x in flow['functions'] if x['name']=='openFileDialog')
+          fjson=json.dumps(f['operations'],ensure_ascii=False,sort_keys=True)
+          historical_external_loader=('getOpenFileName' in fjson) and ('read_csv' in fjson or 'read_excel' in fjson)
+          current_loader_identical=diff['loader_reconciliation']['openFileDialog']['all_occurrences_ast_identical'] is True
+          expected_pc=pc['positive_control_hits']
+          checks={
+            'commits40':h['summary']['reachable_commit_count']==pc['reachable_public_commits'],
+            'trees38':h['summary']['unique_tree_count']==pc['unique_public_trees'],
+            'zip6':h['summary']['unique_zip_blob_count']==pc['unique_public_zip_blobs'],
+            'entries4861':n['summary']['total_zip_entries_across_unique_blobs']==pc['all_public_zip_entry_total'],
+            'package_uralic_snapshots0':n['summary']['Uralic_named_snapshot_count']==0,
+            'package_uralic_members0':n['summary']['Uralic_named_member_total']==0,
+            'hist_uralic0':b['summary']['Uralic_historical_hit_count']==0,
+            'current_uralic0':b['summary']['Uralic_current_hit_count']==0,
+            'controls_egyptian':b['positive_controls']['ANCIENT_EGYPTIAN']=={'historical_hits':expected_pc['ANCIENT_EGYPTIAN']['historical'],'current_hits':expected_pc['ANCIENT_EGYPTIAN']['current']},
+            'controls_luwian':b['positive_controls']['LUWIAN']=={'historical_hits':expected_pc['LUWIAN']['historical'],'current_hits':expected_pc['LUWIAN']['current']},
+            'controls_hittite':b['positive_controls']['HITTITE']=={'historical_hits':expected_pc['HITTITE']['historical'],'current_hits':expected_pc['HITTITE']['current']},
+            'controls_celtic':b['positive_controls']['PROTO_CELTIC']=={'historical_hits':expected_pc['PROTO_CELTIC']['historical'],'current_hits':expected_pc['PROTO_CELTIC']['current']},
+            'positive_control_exists':b['any_non_Uralic_positive_control_present'] is True,
+            'historical_external_loader':historical_external_loader,
+            'current_loader_ast_identical':current_loader_identical,
+            'inference_supported':b['inference_support']['external_or_user_supplied_Uralic_channel_supported_as_inference'] is True,
+            'inference_not_proved':b['claim_ceiling']['external_or_user_supplied_Uralic_channel_proved'] is False,
+            'absence_data_not_proved':b['claim_ceiling']['absence_of_Uralic_linguistic_data_proved'] is False,
+            'paper_input_not_admitted':b['claim_ceiling']['paper_exact_2024_input_identity_established'] is False,
+            'R3B_none':b['claim_ceiling']['R3B_effect']=='NONE',
+            'no_anchor':b['claim_ceiling']['new_anchor'] is False,
+            'no_decipherment':b['claim_ceiling']['decipherment'] is False
+          }
+          assert all(checks.values()), {k:v for k,v in checks.items() if not v}
+          c=copy.deepcopy(p)
+          c['artifact_uuid']='JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.16-CANDIDATE'
+          c['version']='v2.16-candidate'
+          c['node_type']='canonical_research_state_candidate'
+          c['status']='CANDIDATE_PENDING_CANONICALITY_AUDIT'
+          c['timestamp']='2026-08-14T23:00:00+03:00'
+          c['title']='JANUS Linear A canonical candidate after exhaustive public-package Uralic-name provenance audit'
+          c['canonicality']={'current_source_of_truth':False,'parent_state':s['parent_canonical']['path'],'promotion_spec':sp,'promotion_prerequisites_pass':True,'history_is_not_deleted':True}
+          c['R3C_3_Uralic_public_provenance_audit']={
+            'status':'PUBLIC_PACKAGE_AND_PLAINTEXT_NAME_CHANNEL_EXHAUSTED_EXTERNAL_USER_INPUT_ROUTE_SUPPORTED_AS_INFERENCE',
+            'package_history':s['required_new_evidence']['package_history']['path'],
+            'all_package_member_name_audit':s['required_new_evidence']['all_package_member_names']['path'],
+            'historical_current_code_binding_audit':s['required_new_evidence']['historical_current_code_bindings']['path'],
+            'reachable_public_commits':40,'unique_public_trees':38,'unique_public_zip_blobs':6,'central_directory_entries_audited':4861,
+            'Uralic_named_package_snapshots':0,'Uralic_named_package_members':0,'Uralic_historical_plaintext_hits':0,'Uralic_current_plaintext_hits':0,
+            'positive_control_hits':b['positive_controls'],
+            'historical_main_loader_accepts_user_selected_file':True,
+            'current_main_loader_normalized_AST_identical_to_historical':True,
+            'provenance_inference':'Because Uralic is absent by name from all six public package snapshots and from both recovered plaintext source versions, while the software contains a user-selected external file loader and the current main loader is structurally identical to the historical one, an external/user-supplied Uralic input channel is now the best-supported public-provenance explanation. This is an inference, not proof; a differently named packaged resource remains logically possible.',
+            'paper_exact_2024_input_identity_established':False
+          }
+          for row in c.get('roadmap',[]):
+              if row.get('id')=='R3C_3_CORRECTIVE_LANGUAGE_MATCH_AUDIT':
+                  row['status']='PUBLIC_PACKAGE_AND_CODE_PROVENANCE_EXHAUSTED_FOR_URALIC_NAME_EXTERNAL_INPUT_CHANNEL_INFERRED_PAPER_EXACT_2024_BLOCKED'
+          c['next_atomic_requirements']=[
+            {'id':'P0_RILA_S1_BYTE_ACQUISITION','action':'Continue lawful exact-byte acquisition of RILA-S1 or another alternate-editorial transcription. Quarantine and R3B0 receipt must precede content search.'},
+            {'id':'P1_R3C_3_EXTERNAL_URALIC_RESOURCE_ACQUISITION','action':'Search lawful supplementary/repository/citation routes for the exact Uralic study input or its source/version identity; public upstream package-name and plaintext-source channels are exhausted for the token Uralic.'},
+            {'id':'P1_R3C_3_PAPER_SNAPSHOT_BRIDGE','action':'Localize the exact 2024 study software/data snapshot using publication chronology and member identities; do not promote current or historical bundles to paper-exact without source receipt.'},
+            {'id':'P2_R3C_1F_BRIAKOS_METHOD_MATERIAL','action':'Continue lawful Briakos method-material recovery without target-guided subset fitting.'},
+            {'id':'P3_R3D_PETROLITO_XML_BYTES','action':'Continue historical TEI-EpiDoc byte recovery with fixed L1 ceiling.'}
+          ]
+          c['highest_admissible_claim']=p['highest_admissible_claim'] + ' JANUS has now enumerated the complete reachable public Git package lineage of the Nepal/Perono software repository: 40 commits, 38 unique trees, and six unique ZIP blobs. Across all six public package snapshots, 4,861 central-directory member names were audited without reading member payloads; zero Uralic-named members were found. Static AST audit of both recovered historical and current plaintext Python sources likewise found zero Uralic-name bindings, while strong positive controls for Ancient Egyptian, Luwian, Hittite, and Proto-Celtic were present in both versions. The historical main loader accepts a user-selected external file and the current main loader is normalized-AST identical, so an external/user-supplied Uralic input channel is now supported as the best public-provenance inference. It remains unproved, a differently named packaged input remains possible, and the exact 2024 study input is still unavailable. No paper reproduction, language-family inference, R3B change, anchor, or decipherment is established.'
+          c['claim_ceiling'].update({
+            'R3C_3_all_public_package_Uralic_name_absence_established':True,
+            'R3C_3_historical_current_plaintext_Uralic_name_absence_established':True,
+            'R3C_3_external_or_user_supplied_Uralic_channel_supported_as_inference':True,
+            'R3C_3_external_or_user_supplied_Uralic_channel_proved':False,
+            'R3C_3_absence_of_Uralic_linguistic_data_proved':False,
+            'R3C_3_paper_exact_2024_input_identity_established':False,
+            'R3C_3_published_2024_matches_reproduced':False,
+            'R3C_3_language_family_relationship_established':False,
+            'R3B_0_alternate_editorial_source_bytes_acquired':False,
+            'external_transcription_replication_established':False,
+            'new_anchor_established':False,
+            'decipherment_established':False,
+            'promotion':'BLOCKED'
+          })
+          out='data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.16-CANDIDATE.json'
+          open(out,'w',encoding='utf-8').write(json.dumps(c,ensure_ascii=False,indent=2)+'\n')
+          json.dump(checks,open('/tmp/v216-checks.json','w'),ensure_ascii=False,indent=2)
+          PY
+
+      - name: Canonicality audit and promote v2.16
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import copy,json
+          cp='data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.16-CANDIDATE.json'
+          c=json.load(open(cp,encoding='utf-8')); checks=json.load(open('/tmp/v216-checks.json'))
+          assert c['status']=='CANDIDATE_PENDING_CANONICALITY_AUDIT' and all(checks.values())
+          r=c['R3C_3_Uralic_public_provenance_audit']
+          assert r['Uralic_named_package_snapshots']==0 and r['Uralic_named_package_members']==0
+          assert r['Uralic_historical_plaintext_hits']==0 and r['Uralic_current_plaintext_hits']==0
+          assert r['historical_main_loader_accepts_user_selected_file'] is True
+          assert r['current_main_loader_normalized_AST_identical_to_historical'] is True
+          assert c['claim_ceiling']['R3C_3_external_or_user_supplied_Uralic_channel_supported_as_inference'] is True
+          assert c['claim_ceiling']['R3C_3_external_or_user_supplied_Uralic_channel_proved'] is False
+          assert c['claim_ceiling']['R3C_3_paper_exact_2024_input_identity_established'] is False
+          assert c['claim_ceiling']['external_transcription_replication_established'] is False
+          assert c['claim_ceiling']['new_anchor_established'] is False and c['claim_ceiling']['decipherment_established'] is False
+          audit={'artifact_uuid':'JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.16','version':'v2.16','node_type':'canonicality_audit_result','status':'CANONICALITY_AUDIT_PASS','candidate':cp,'promotion_spec':'data/JANUS-LINEAR-A-RESEARCH-STATE-PROMOTION-SPEC-2026-08-14-v2.16.json','checks':checks,'all_checks_pass':True,'claim_ceiling':{'R3B_effect':'NONE','new_anchor':False,'decipherment':False}}
+          ap='data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.16.json'; open(ap,'w',encoding='utf-8').write(json.dumps(audit,ensure_ascii=False,indent=2)+'\n')
+          out=copy.deepcopy(c); out['artifact_uuid']='JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.16'; out['version']='v2.16'; out['node_type']='canonical_research_state'; out['status']='CURRENT_CANONICAL_RESEARCH_STATE'; out['canonicality'].update({'current_source_of_truth':True,'candidate_path':cp,'canonicality_audit':ap,'canonicality_audit_status':'CANONICALITY_AUDIT_PASS','promotion_rule_satisfied':True})
+          open('data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.16.json','w',encoding='utf-8').write(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          PY
+
+      - name: Upload immutable v2.16 canonical package
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-canonical-state-v2.16
+          path: |
+            data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.16-CANDIDATE.json
+            data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.16.json
+            data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.16.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Persist canonical v2.16 with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'janus-proof-bot'; git config user.email 'janus-proof-bot@users.noreply.github.com'
+          git add data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.16-CANDIDATE.json data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.16.json data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.16.json
+          git commit -m 'Promote Linear A canonical research state v2.16 after exhaustive Uralic public-provenance audit'
+          pushed=0
+          for attempt in 1 2 3 4 5; do git fetch origin main; git rebase origin/main; if git push origin HEAD:main; then pushed=1; break; fi; sleep "$attempt"; done
+          test "$pushed" = 1
