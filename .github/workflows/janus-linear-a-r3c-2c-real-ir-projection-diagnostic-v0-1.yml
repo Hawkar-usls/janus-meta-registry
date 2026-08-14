@@ -1,0 +1,112 @@
+name: JANUS Linear A R3C-2C real IR projection diagnostic v0.1
+
+on:
+  push:
+    paths:
+      - ".github/workflows/janus-linear-a-r3c-2c-real-ir-projection-diagnostic-v0-1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compile frozen projection and diagnostic stack
+        run: |
+          python3 -m py_compile \
+            research/linear_a/janus_linear_a_transcription_ir_v1_0.py \
+            research/linear_a/janus_linear_a_transcription_ir_hardening_v1_1.py \
+            research/linear_a/janus_linear_a_transcription_ir_hardening_v1_2_1.py \
+            research/linear_a/janus_linear_a_r3c_common_v0_1.py \
+            research/linear_a/janus_linear_a_r3c_source_loader_v0_3.py \
+            research/linear_a/janus_linear_a_r3c_source_loader_v0_4.py \
+            research/linear_a/janus_linear_a_r3c_real_ir_projection_v0_1.py \
+            research/linear_a/janus_linear_a_r3c_real_ir_projection_diagnostic_v0_1.py
+
+      - name: Verify failed-run and diagnostic-only preconditions
+        run: |
+          python3 - <<'PY'
+          import json
+          r=json.load(open('data/JANUS-LINEAR-A-R3C-2C-REAL-IR-PROJECTION-FAILED-RUN-RECEIPT-2026-08-14-v0.1.json',encoding='utf-8'))
+          s=json.load(open('data/JANUS-LINEAR-A-R3C-2C-REAL-IR-PROJECTION-SPEC-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert r['status']=='FAILED_BEFORE_PROJECTION_PACKAGE_PERSISTENCE'
+          assert r['workflow_run_id']==31812442667
+          assert r['scientific_or_validation_result_inheritance'] is False
+          assert s['status']=='FROZEN_BEFORE_EXECUTION'
+          PY
+
+      - name: Checkout exact current source
+        uses: actions/checkout@v4
+        with:
+          repository: mwenge/lineara.xyz
+          ref: 43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a
+          path: external/mwenge-current
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            LinearAInscriptions.js
+          sparse-checkout-cone-mode: false
+
+      - name: Re-prove source and diagnose all seven in memory
+        shell: bash
+        env:
+          PYTHONPATH: research/linear_a
+        run: |
+          set -euo pipefail
+          test "$(git -C external/mwenge-current rev-parse HEAD)" = "43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a"
+          test "$(wc -c < external/mwenge-current/LinearAInscriptions.js | tr -d ' ')" = "1609137"
+          test "$(sha256sum external/mwenge-current/LinearAInscriptions.js | awk '{print $1}')" = "4da8e1f9693d30880ee505e56541fc189add70605bad88436c44a8e11a57764c"
+          python3 research/linear_a/janus_linear_a_r3c_real_ir_projection_diagnostic_v0_1.py \
+            --source external/mwenge-current/LinearAInscriptions.js \
+            --output data/JANUS-LINEAR-A-R3C-2C-REAL-IR-PROJECTION-DIAGNOSTIC-RESULT-2026-08-14-v0.1.json
+
+      - name: Enforce diagnostic-only semantics
+        run: |
+          python3 - <<'PY'
+          import json
+          d=json.load(open('data/JANUS-LINEAR-A-R3C-2C-REAL-IR-PROJECTION-DIAGNOSTIC-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert d['source']['identity_admitted'] is True
+          assert d['summary']['documents_attempted']==7
+          assert d['summary']['projection_files_written']==0
+          assert d['firewall']['failed_run_result_inherited'] is False
+          assert d['firewall']['projection_result_promoted'] is False
+          assert d['firewall']['IR_projection_files_persisted'] is False
+          assert d['firewall']['frozen_projection_template_modified'] is False
+          assert d['claim_ceiling']['diagnostic_only'] is True
+          assert d['claim_ceiling']['real_projection_admitted'] is False
+          assert d['claim_ceiling']['R3B_effect']=='NONE'
+          assert d['claim_ceiling']['decipherment'] is False
+          PY
+
+      - name: Upload diagnostic
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r3c-2c-real-ir-projection-diagnostic-v0.1
+          path: data/JANUS-LINEAR-A-R3C-2C-REAL-IR-PROJECTION-DIAGNOSTIC-RESULT-2026-08-14-v0.1.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Persist diagnostic with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "janus-proof-bot"
+          git config user.email "janus-proof-bot@users.noreply.github.com"
+          git add data/JANUS-LINEAR-A-R3C-2C-REAL-IR-PROJECTION-DIAGNOSTIC-RESULT-2026-08-14-v0.1.json
+          git commit -m "Register Linear A seven-document projection diagnostic v0.1"
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then pushed=1; break; fi
+            sleep "$attempt"
+          done
+          test "$pushed" = 1
