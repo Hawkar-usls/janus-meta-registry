@@ -1,0 +1,127 @@
+{
+  "schema": "janus.connection.external_blind_transport_selection.v0.1",
+  "artifact_uuid": "JANUS-CONNECTION-EXTERNAL-BLIND-TRANSPORT-SELECTION-2026-08-14-V0.1",
+  "timestamp_local": "2026-08-14T15:50:00+03:00",
+  "status": "FROZEN_BEFORE_SELECTED_JSON_BODY_CLASSIFICATION",
+  "objective": "Freeze an external corpus authored outside Hawkar-usls/JANUS before mapping HIDDEN-001, HIDDEN-002 or HIDDEN-003. Selection uses repository identity, exact commit identity and JSON path only; selected JSON bodies are not used to choose membership.",
+  "selection_protocol": {
+    "repository_pool_size": 8,
+    "repository_pool_policy": "Purposefully domain-diverse public repositories with independent governance/authorship. This is an external transport panel, not an unbiased sample of GitHub or a population-prevalence study.",
+    "path_discovery_primary": "Git recursive-tree enumeration without body checkout.",
+    "connector_limitation": "Large recursive-tree responses are truncated by the connector.",
+    "preclassification_fallback": "For each frozen repository commit, use GitHub code search query '.json'; consume returned path order only. Select the first three returned paths whose path literally ends in .json after technical exclusions.",
+    "technical_exclusions": [
+      "package-lock.json",
+      "package.json",
+      "renovate.json",
+      "editor/tool-only configuration JSON",
+      "any JSON path whose body was accidentally exposed by latest-commit diff metadata before this receipt was frozen"
+    ],
+    "max_selected_per_repository": 3,
+    "no_replacement_rule": "If a frozen repository yields fewer than three eligible paths under the bounded selector, keep the deficit. Do not replace it with a more convenient repository or query after seeing the outcome.",
+    "classification_features_forbidden_during_selection": [
+      "JANUS vocabulary",
+      "Connection labels",
+      "HIDDEN-001/002/003 vocabulary",
+      "semantic reading of selected JSON bodies",
+      "support/contradiction expectations"
+    ],
+    "known_pre_freeze_metadata_contamination": {
+      "json-schema-org/JSON-Schema-Test-Suite": [
+        "tests/draft2019-09/optional/format/uri-reference.json",
+        "tests/draft2020-12/optional/format/uri-reference.json",
+        "tests/draft6/optional/format/uri-reference.json",
+        "tests/draft7/optional/format/uri-reference.json"
+      ],
+      "in-toto/attestation": ["package-lock.json"],
+      "rule": "These paths are ineligible for the panel because commit metadata exposed body/diff content before the selection receipt was frozen."
+    }
+  },
+  "frozen_repositories": [
+    {
+      "repository": "json-schema-org/JSON-Schema-Test-Suite",
+      "commit": "6648e8194c69697b2e1a15fe76a06a480b183a51",
+      "tree": "2004ad9d7dd52b5f88a4e90e2e7aed6afbb02f34",
+      "selected_paths": [
+        "remotes/v1/tree.json",
+        "remotes/v1/detached-ref.json",
+        "remotes/v1/ref-and-defs.json"
+      ]
+    },
+    {
+      "repository": "CycloneDX/specification",
+      "commit": "e02a34ae42a48239f54e04f75280b9000b29f1fb",
+      "tree": "4ac0045c0ea635bd22603cff50217c9ba7191c95",
+      "selected_paths": [
+        "schema/jsf-0.82.schema.json",
+        "schema/bom-1.4.schema.json",
+        "schema/bom-1.2.schema.json"
+      ]
+    },
+    {
+      "repository": "oasis-tcs/sarif-spec",
+      "commit": "ed71d4f62db866ce3698a08a5ec3f7f2e775545d",
+      "tree": "cc2a9f426d46df12b06fb14f3fd8acdbc8f69567",
+      "selected_paths": [
+        "sarif-2.2/example/example-3-13-5-01.json",
+        "sarif-2.2/schema/sarif-external-property-file-schema-2.2.json",
+        "sarif-2.1/prose/sarif-external-property-file-schema-2.1.0.json"
+      ]
+    },
+    {
+      "repository": "in-toto/attestation",
+      "commit": "96c8d058c50384adca121ab7f914ba050e892ea3",
+      "tree": "079bcfbc9c197bf3ad80bbb10dadd7553b16f1e6",
+      "selected_paths": [],
+      "bounded_selector_result": "NO_ELIGIBLE_RETURNED_JSON_PATH_AFTER_TECHNICAL_EXCLUSIONS"
+    },
+    {
+      "repository": "opencontainers/image-spec",
+      "commit": "af26a05fba5ee648512f4ea3c9fda1fcc1b6d6dc",
+      "tree": "97944477e60051c34262e9eeb7b1d6be915daff0",
+      "selected_paths": [
+        "schema/config-schema.json",
+        "schema/defs-descriptor.json",
+        "schema/content-descriptor.json"
+      ]
+    },
+    {
+      "repository": "sigstore/cosign",
+      "commit": "98ff280b1942d3d49dbe8b34f41ad6e8154f4d88",
+      "tree": "2dbb67e6bb463791c61e41c83c364e2e48949e67",
+      "selected_paths": [],
+      "bounded_selector_result": "NO_ELIGIBLE_RETURNED_JSON_PATH_AFTER_TECHNICAL_EXCLUSIONS"
+    },
+    {
+      "repository": "slsa-framework/slsa",
+      "commit": "1686afeba11a456e470235ecf50cfc0d2f9ecbc3",
+      "tree": "b13338de7ab6929f84706e90eef3a59e06812aaa",
+      "selected_paths": [],
+      "bounded_selector_result": "ONLY_RENOVATE_JSON_RETURNED_AS_JSON_PATH_AND_EXCLUDED_AS_TOOL_CONFIGURATION"
+    },
+    {
+      "repository": "ossf/scorecard",
+      "commit": "ed711f762ab97be31772d4642abdc3784167bf3c",
+      "tree": "ba96644144db1408c0935969d3680746b0909996",
+      "selected_paths": [],
+      "bounded_selector_result": "NO_ELIGIBLE_RETURNED_JSON_PATH_AFTER_TECHNICAL_EXCLUSIONS"
+    }
+  ],
+  "panel": {
+    "selected_json_count": 12,
+    "repositories_with_selected_json": 4,
+    "repositories_retained_with_zero_selected_json": 4,
+    "organizations_represented_in_selected_json": 4,
+    "body_classification_started": false
+  },
+  "claim_ceiling": {
+    "external_authorship": true,
+    "selection_frozen_before_body_classification": true,
+    "full_github_population_random_sample": false,
+    "unbiased_prevalence_estimator": false,
+    "external_transport_result": "NOT_YET_EXECUTED",
+    "external_replication": false,
+    "scientific_novelty": false
+  },
+  "next_gate": "Freeze SUPPORT/WEAK_SUPPORT/CONTRADICTION/NOT_APPLICABLE rubric for HIDDEN-001/002/003 before opening any selected JSON body; then classify all 12 without replacement and run relation-destroying controls where source structure permits."
+}
