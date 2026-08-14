@@ -1,0 +1,66 @@
+name: JANUS Linear A R3B-0 Notti 2018 identity bridge v0.1
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'data/JANUS-LINEAR-A-R3B-0-NOTTI-2018-IDENTITY-BRIDGE-SPEC-2026-08-14-v0.1.json'
+      - 'research/linear_a/janus_linear_a_r3b0_notti_2018_identity_bridge_v0_1.py'
+      - '.github/workflows/janus-linear-a-r3b0-notti-2018-identity-bridge-v0-1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  bridge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile bridge runner
+        run: python -m py_compile research/linear_a/janus_linear_a_r3b0_notti_2018_identity_bridge_v0_1.py
+      - name: Execute frozen bridge
+        run: |
+          python research/linear_a/janus_linear_a_r3b0_notti_2018_identity_bridge_v0_1.py \
+            --spec data/JANUS-LINEAR-A-R3B-0-NOTTI-2018-IDENTITY-BRIDGE-SPEC-2026-08-14-v0.1.json \
+            --inventory data/JANUS-LINEAR-A-R3B-0-NOTTI-2018-ALL-TABLE-IDENTITY-INVENTORY-RESULT-2026-08-14-v0.1.json \
+            --out data/JANUS-LINEAR-A-R3B-0-NOTTI-2018-IDENTITY-BRIDGE-RESULT-2026-08-14-v0.1.json
+      - name: Enforce bounded identity verdict
+        run: |
+          python - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-R3B-0-NOTTI-2018-IDENTITY-BRIDGE-RESULT-2026-08-14-v0.1.json'
+          x=json.load(open(p,encoding='utf-8'))
+          assert x['status']=='IDENTITY_BRIDGE_13_PASS_ZB14_ZB15_COLLISION_PRESERVED'
+          assert x['all_checks_pass'] is True
+          assert x['summary']['bridged_identity_count']==13
+          assert x['summary']['standalone_mapping_for_collision_created'] is False
+          assert x['summary']['reading_comparison_performed'] is False
+          assert x['unresolved_alias_collision']['collision_proved'] is True
+          print('identity bridge PASS with collision preserved')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-notti-2018-identity-bridge-v0-1
+          path: data/JANUS-LINEAR-A-R3B-0-NOTTI-2018-IDENTITY-BRIDGE-RESULT-2026-08-14-v0.1.json
+          if-no-files-found: error
+          retention-days: 90
+      - name: Persist bridge result
+        env:
+          RESULT: data/JANUS-LINEAR-A-R3B-0-NOTTI-2018-IDENTITY-BRIDGE-RESULT-2026-08-14-v0.1.json
+        run: |
+          git config user.name 'JANUS Evidence Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add "$RESULT"
+          git commit -m 'Register Linear A Notti 2018 identity bridge v0.1' || true
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then exit 0; fi
+            git pull --rebase origin main
+          done
+          exit 1
