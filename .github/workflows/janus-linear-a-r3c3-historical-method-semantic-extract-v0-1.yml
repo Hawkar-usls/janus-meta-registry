@@ -1,0 +1,102 @@
+name: JANUS Linear A R3C-3 historical method semantic extraction v0.1
+
+on:
+  push:
+    paths:
+      - ".github/workflows/janus-linear-a-r3c3-historical-method-semantic-extract-v0-1.yml"
+      - "research/linear_a/janus_linear_a_r3c3_historical_method_semantic_extract_v0_1.py"
+      - "data/JANUS-LINEAR-A-R3C-3-HISTORICAL-METHOD-SEMANTIC-EXTRACTION-SPEC-2026-08-14-v0.1.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  semantic-extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify parents and compile extractor
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          s=json.load(open('data/JANUS-LINEAR-A-R3C-3-HISTORICAL-METHOD-SEMANTIC-EXTRACTION-SPEC-2026-08-14-v0.1.json',encoding='utf-8'))
+          p=json.load(open('data/JANUS-LINEAR-A-R3C-3-HISTORICAL-BUNDLE-STATIC-METHOD-INSPECTION-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert s['status']=='FROZEN_BEFORE_EXECUTION'
+          assert p['status']==s['parents']['required_status']
+          assert p['bundle']['sha256']==s['parents']['bundle_sha256']
+          assert p['python_source']['sha256']==s['parents']['python_member_sha256']
+          assert s['cleanroom_boundary']['third_party_module_executed'] is False
+          PY
+          python3 -m py_compile research/linear_a/janus_linear_a_r3c3_historical_method_semantic_extract_v0_1.py
+
+      - name: Reacquire exact immutable historical bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p external/r3c3-historical-mac
+          OUT='external/r3c3-historical-mac/LinearADecipherment(Mac).zip'
+          curl --fail --location --retry 4 --retry-all-errors --connect-timeout 20 --max-time 180 \
+            'https://raw.githubusercontent.com/L-Colin/Linear-A-decipherment-programme/fab66e715b18607c4b383782e7f4d1b86a26d725/LinearADecipherment(Mac).zip' \
+            --output "$OUT"
+          test "$(wc -c < "$OUT" | tr -d ' ')" = '1765475'
+          test "$(git hash-object "$OUT")" = 'b58e8a3043911f6de921be39bbf516755839829f'
+          test "$(sha256sum "$OUT" | awk '{print $1}')" = 'a4627d4c2e26668593e8f6f9c8a004ae75bb3f1bbf497a39c0d4a772c9012850'
+
+      - name: Extract bounded semantic IR without execution
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/linear_a/janus_linear_a_r3c3_historical_method_semantic_extract_v0_1.py \
+            'external/r3c3-historical-mac/LinearADecipherment(Mac).zip' \
+            --out 'data/JANUS-LINEAR-A-R3C-3-HISTORICAL-METHOD-SEMANTIC-EXTRACTION-RESULT-2026-08-14-v0.1.json'
+
+      - name: Enforce cleanroom and claim ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          d=json.load(open('data/JANUS-LINEAR-A-R3C-3-HISTORICAL-METHOD-SEMANTIC-EXTRACTION-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert len(d['functions'])==7
+          assert d['safety']['third_party_source_executed'] is False
+          assert d['safety']['third_party_source_imported'] is False
+          assert d['safety']['eval_used'] is False
+          assert d['safety']['exec_used'] is False
+          assert d['safety']['full_source_persisted'] is False
+          assert d['claim_ceiling']['historical_outputs_reproduced'] is False
+          assert d['claim_ceiling']['paper_exact_2024_outputs_reproduced'] is False
+          PY
+
+      - name: Upload immutable semantic IR
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r3c3-historical-method-semantic-ir-v0.1
+          path: |
+            data/JANUS-LINEAR-A-R3C-3-HISTORICAL-METHOD-SEMANTIC-EXTRACTION-SPEC-2026-08-14-v0.1.json
+            data/JANUS-LINEAR-A-R3C-3-HISTORICAL-METHOD-SEMANTIC-EXTRACTION-RESULT-2026-08-14-v0.1.json
+          if-no-files-found: error
+
+      - name: Persist semantic IR with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'janus-proof-bot'
+          git config user.email 'janus-proof-bot@users.noreply.github.com'
+          git add data/JANUS-LINEAR-A-R3C-3-HISTORICAL-METHOD-SEMANTIC-EXTRACTION-RESULT-2026-08-14-v0.1.json
+          git commit -m 'Register Linear A R3C-3 historical method semantic IR v0.1'
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then pushed=1; break; fi
+            sleep "$attempt"
+          done
+          test "$pushed" = 1
