@@ -1,0 +1,50 @@
+name: Connection hidden-pattern held-out selector
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'tools/connection/janus_connection_hidden_pattern_heldout_selector_v0_1.py'
+      - '.github/workflows/connection-hidden-pattern-heldout-selector.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  select:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Freeze held-out panel before interpretation
+        run: |
+          mkdir -p out
+          python tools/connection/janus_connection_hidden_pattern_heldout_selector_v0_1.py \
+            --panel-size 16 \
+            --out out/JANUS-CONNECTION-HIDDEN-PATTERN-HELDOUT-SELECTION-2026-08-14-v0.1.json
+      - name: Enforce held-out-selection boundaries
+        run: |
+          python - <<'PY'
+          import json, pathlib
+          d=json.loads(pathlib.Path('out/JANUS-CONNECTION-HIDDEN-PATTERN-HELDOUT-SELECTION-2026-08-14-v0.1.json').read_text())
+          assert d['selection_frozen_before_source_interpretation'] is True
+          assert d['narrative_prose_used_for_ranking'] is False
+          assert d['titles_used_for_ranking'] is False
+          assert d['connection_labels_used_for_ranking'] is False
+          assert d['panel_size'] >= 8
+          assert len({x['family_stem'] for x in d['selected']}) == d['panel_size']
+          for x in d['selected']:
+              assert not x['path'].startswith('registry/connections/')
+              assert not pathlib.Path(x['path']).name.upper().startswith('JANUS-CONNECTION-')
+          print('PASS_HELDOUT_SELECTION_BOUNDARIES', d['panel_size'])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: connection-hidden-pattern-heldout-selection-v0.1
+          path: out/JANUS-CONNECTION-HIDDEN-PATTERN-HELDOUT-SELECTION-2026-08-14-v0.1.json
+          if-no-files-found: error
+          retention-days: 30
