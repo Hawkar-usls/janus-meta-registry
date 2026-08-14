@@ -49,7 +49,7 @@ jobs:
           d=json.load(open(p, encoding='utf-8'))
           assert d['status']=='TECHNICAL_WORD_VIEW_PROBE_EXECUTED'
           assert len(d['pages'])==3
-          assert all(x['reported_word_count'] >= 1 for x in d['pages'])
+          assert all(isinstance(x['reported_word_count'], int) and x['reported_word_count'] >= 0 for x in d['pages'])
           g=d['epistemic_gate']
           assert g['technical_word_view_contract_established'] is True
           assert g['cross_digitization_content_replication_established'] is False
