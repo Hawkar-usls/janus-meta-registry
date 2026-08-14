@@ -97,7 +97,6 @@ jobs:
             'D5_boundary_kind_promoted':False,
             'D6_semantic_authority_granted':False
           }
-          # Update roadmap append-only in semantic sense: preserve previous entries and replace only named next-gate statuses.
           roadmap=[]
           seen=set()
           for row in c.get('roadmap',[]):
@@ -118,18 +117,9 @@ jobs:
                   if row.get('id')=='R3C_3_CORRECTIVE_LANGUAGE_MATCH_AUDIT': row['status']='PLANNED_METHOD_NOT_FROZEN'
           c['roadmap']=roadmap
           c['next_atomic_requirements']=[
-            {
-              'id':'R3C_3_METHOD_FREEZE',
-              'action':'Locate primary/external prior-art definition of the planned corrective language-match audit and freeze method before execution; do not infer method from its roadmap label.'
-            },
-            {
-              'id':'R3C_1F_PRIMARY_METHOD_MATERIAL_ACQUISITION',
-              'action':'Continue lawful search for Briakos code/supplementary corpus manifest; target-guided 419 subset search remains forbidden.'
-            },
-            {
-              'id':'R3B_0_REAL_SOURCE_ACQUISITION',
-              'action':'Continue lawful acquisition of exact alternate-editorial source bytes under frozen R3B0 receipt contract.'
-            }
+            {'id':'R3C_3_METHOD_FREEZE','action':'Locate primary/external prior-art definition of the planned corrective language-match audit and freeze method before execution; do not infer method from its roadmap label.'},
+            {'id':'R3C_1F_PRIMARY_METHOD_MATERIAL_ACQUISITION','action':'Continue lawful search for Briakos code/supplementary corpus manifest; target-guided 419 subset search remains forbidden.'},
+            {'id':'R3B_0_REAL_SOURCE_ACQUISITION','action':'Continue lawful acquisition of exact alternate-editorial source bytes under frozen R3B0 receipt contract.'}
           ]
           c['highest_admissible_claim']=parent['highest_admissible_claim'] + ' Additionally, a real-source coverage audit established that the four externally seeded D5 splits are mechanically present in the current mwenge source but the flat source exposes only newline/line-break witnesses and does not resolve whether each boundary is a physical surface transition or a ruled-line transition. An additive v1.2.1 hardening profile is admitted, preserving v1.1 and the base IR format while representing SOURCE_CONTINUATION_ACROSS_BOUNDARY with SURFACE, LINE, or UNRESOLVED_SURFACE_OR_LINE classes and fail-closed claim-view policies. A seven-document minimal source-span projection has passed cumulative base/v1.1/v1.2.1 validation and negative/positive scientific-view firewall canaries for all four D5 and three D6 cases. These are technical source-span projections, not full-document transcriptions; D5 boundary kind and linguistic wordhood remain unresolved, and D6 assigns no semantics to A319/*904.'
           c['claim_ceiling'].update({
@@ -224,3 +214,5 @@ jobs:
             sleep "$attempt"
           done
           test "$pushed" = 1
+
+# Transport-only retrigger after GITHUB_TOKEN persistence; promotion logic unchanged.
