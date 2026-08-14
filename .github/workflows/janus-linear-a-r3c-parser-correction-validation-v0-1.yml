@@ -1,0 +1,114 @@
+name: JANUS Linear A R3C parser correction validation v0.1
+
+on:
+  push:
+    paths:
+      - ".github/workflows/janus-linear-a-r3c-parser-correction-validation-v0-1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  validate-parser-correction:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compile corrected parser and validation runner
+        run: |
+          python3 -m py_compile \
+            research/linear_a/janus_linear_a_r3c_common_v0_1.py \
+            research/linear_a/janus_linear_a_r3c_parser_correction_validation_v0_1.py
+
+      - name: Verify frozen correction spec precedes validation
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-R3C-1A-JS-TRAILING-COMMA-PARSER-CORRECTION-SPEC-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['status']=='FROZEN_BEFORE_PARSER_CORRECTION_EXECUTION'
+          assert d['frozen_transform']['id']=='JANUS-JS-LITERAL-TRAILING-COMMA-ONLY-v0.1'
+          assert d['anti_overfit']['document_specific_KH104_patch_forbidden'] is True
+          assert d['anti_overfit']['additional_JS_syntax_normalization_without_new_diagnostic_and_freeze'] is False
+          PY
+
+      - name: Checkout exact Briakos historical source
+        uses: actions/checkout@v4
+        with:
+          repository: mwenge/lineara.xyz
+          ref: 568f452c7a5ec80fa292cb307ead2fc6f65d07fb
+          path: external/mwenge-historical
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            LinearAInscriptions.js
+          sparse-checkout-cone-mode: false
+
+      - name: Checkout current JANUS frozen mwenge source
+        uses: actions/checkout@v4
+        with:
+          repository: mwenge/lineara.xyz
+          ref: 43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a
+          path: external/mwenge-current
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            LinearAInscriptions.js
+          sparse-checkout-cone-mode: false
+
+      - name: Execute parser-only validation
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C external/mwenge-historical rev-parse HEAD)" = "568f452c7a5ec80fa292cb307ead2fc6f65d07fb"
+          test "$(git -C external/mwenge-current rev-parse HEAD)" = "43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a"
+          python3 research/linear_a/janus_linear_a_r3c_parser_correction_validation_v0_1.py \
+            --historical external/mwenge-historical/LinearAInscriptions.js \
+            --current external/mwenge-current/LinearAInscriptions.js \
+            --output data/JANUS-LINEAR-A-R3C-1A-JS-TRAILING-COMMA-PARSER-CORRECTION-VALIDATION-RESULT-2026-08-14-v0.1.json
+
+      - name: Upload validation result regardless of admission
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r3c-parser-correction-validation-v0.1
+          path: data/JANUS-LINEAR-A-R3C-1A-JS-TRAILING-COMMA-PARSER-CORRECTION-VALIDATION-RESULT-2026-08-14-v0.1.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Persist parser validation with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "janus-proof-bot"
+          git config user.email "janus-proof-bot@users.noreply.github.com"
+          git add data/JANUS-LINEAR-A-R3C-1A-JS-TRAILING-COMMA-PARSER-CORRECTION-VALIDATION-RESULT-2026-08-14-v0.1.json
+          git commit -m "Register Linear A R3C parser correction validation v0.1"
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then
+              pushed=1
+              break
+            fi
+            sleep "$attempt"
+          done
+          test "$pushed" = 1
+
+      - name: Enforce parser admission after evidence persistence
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-R3C-1A-JS-TRAILING-COMMA-PARSER-CORRECTION-VALIDATION-RESULT-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['checks']['parser_correction_admitted'] is True, d
+          assert d['execution_firewall']['scientific_metrics_computed'] is False
+          assert d['execution_firewall']['scientific_recovery_run_allowed'] is True
+          PY
