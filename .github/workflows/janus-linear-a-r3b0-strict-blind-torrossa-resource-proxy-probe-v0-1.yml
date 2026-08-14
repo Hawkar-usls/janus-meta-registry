@@ -1,0 +1,60 @@
+name: JANUS Linear A R3B-0 strict blind Torrossa resource-proxy probe v0.1
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/janus-linear-a-r3b0-strict-blind-torrossa-resource-proxy-probe-v0-1.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Compile probe runner
+        run: python -m py_compile research/linear_a/janus_linear_a_r3b0_strict_blind_torrossa_resource_proxy_probe_v0_1.py
+      - name: Probe frozen Torrossa routes as opaque bytes
+        run: |
+          python research/linear_a/janus_linear_a_r3b0_strict_blind_torrossa_resource_proxy_probe_v0_1.py \
+            --spec data/JANUS-LINEAR-A-R3B-0-STRICT-BLIND-TORROSSA-RESOURCE-PROXY-PROBE-SPEC-2026-08-14-v0.1.json \
+            --out data/JANUS-LINEAR-A-R3B-0-STRICT-BLIND-TORROSSA-RESOURCE-PROXY-PROBE-RESULT-2026-08-14-v0.1.json
+      - name: Enforce no-content ceiling
+        run: |
+          python - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-R3B-0-STRICT-BLIND-TORROSSA-RESOURCE-PROXY-PROBE-RESULT-2026-08-14-v0.1.json'
+          x=json.load(open(p,encoding='utf-8'))
+          assert x['all_checks_pass'] is True
+          assert x['summary']['source_content_inspected'] is False
+          assert x['summary']['source_native_sign_readings_seen'] is False
+          assert x['summary']['overlap_selected'] is False
+          assert x['summary']['strict_r3b_replication_established'] is False
+          for r in x['probe_results']:
+            if r['classification']=='PRECONTENT_EXACT_PDF_BYTES_SEALED':
+              assert r['pdf_magic']=='%PDF-'
+              assert len(r['sha256'])==64 and r['byte_length']>0
+              assert r['body_persisted'] is False and r['body_parsed'] is False
+          print(json.dumps(x['summary'],indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r3b0-torrossa-probe-v0-1
+          path: data/JANUS-LINEAR-A-R3B-0-STRICT-BLIND-TORROSSA-RESOURCE-PROXY-PROBE-RESULT-2026-08-14-v0.1.json
+          if-no-files-found: error
+      - name: Persist Torrossa blind probe
+        env:
+          RESULT: data/JANUS-LINEAR-A-R3B-0-STRICT-BLIND-TORROSSA-RESOURCE-PROXY-PROBE-RESULT-2026-08-14-v0.1.json
+        run: |
+          git config user.name 'JANUS Evidence Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add "$RESULT"
+          git commit -m 'Register Linear A Torrossa strict blind byte probe v0.1' || true
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then exit 0; fi
+            git pull --rebase origin main
+          done
+          exit 1
