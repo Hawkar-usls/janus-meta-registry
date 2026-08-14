@@ -1,0 +1,51 @@
+name: Connection full-registry discovery
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '**/*.json'
+      - 'tools/connection/janus_connection_full_registry_discovery_v0_1.py'
+      - '.github/workflows/connection-full-registry-discovery.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Execute full JSON corpus discovery
+        run: |
+          mkdir -p out
+          python tools/connection/janus_connection_full_registry_discovery_v0_1.py \
+            --repo-root . \
+            --out out/JANUS-CONNECTION-FULL-REGISTRY-DISCOVERY-2026-08-14-v0.1.json
+      - name: Enforce exhaustive corpus accounting
+        run: |
+          python - <<'PY'
+          import json, pathlib, sys
+          p=pathlib.Path('out/JANUS-CONNECTION-FULL-REGISTRY-DISCOVERY-2026-08-14-v0.1.json')
+          d=json.loads(p.read_text(encoding='utf-8'))
+          actual=len([x for x in pathlib.Path('.').rglob('*.json') if '.git' not in x.parts and 'out' not in x.parts])
+          c=d['corpus']
+          assert c['json_files_seen']==actual, (c['json_files_seen'],actual)
+          assert c['json_parse_success']+c['json_parse_failures']==actual
+          assert len(d['corpus_manifest'])==c['json_parse_success']
+          assert d['epistemic_boundary']['all_json_accounted_in_corpus_manifest'] is True
+          assert d['epistemic_boundary']['connection_family_included_as_hypothesis_memory_but_not_independent_support'] is True
+          assert d['epistemic_boundary']['integrity_sidecars_included_but_zero_independent_support'] is True
+          print('PASS_EXHAUSTIVE_JSON_ACCOUNTING', actual)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: connection-full-registry-discovery-v0.1
+          path: out/JANUS-CONNECTION-FULL-REGISTRY-DISCOVERY-2026-08-14-v0.1.json
+          if-no-files-found: error
+          retention-days: 30
