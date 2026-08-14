@@ -1,0 +1,190 @@
+name: JANUS Linear A R3C-3 historical Mac bundle acquisition v0.1
+
+on:
+  push:
+    paths:
+      - ".github/workflows/janus-linear-a-r3c-3-historical-mac-bundle-acquisition-v0-1.yml"
+      - "data/JANUS-LINEAR-A-R3C-3-HISTORICAL-MAC-BUNDLE-ACQUISITION-SPEC-2026-08-14-v0.1.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  acquire-quarantine:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify frozen acquisition prerequisites
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          spec=json.load(open('data/JANUS-LINEAR-A-R3C-3-HISTORICAL-MAC-BUNDLE-ACQUISITION-SPEC-2026-08-14-v0.1.json',encoding='utf-8'))
+          lineage=json.load(open('data/JANUS-LINEAR-A-R3C-3-PUBLIC-SOFTWARE-RESOURCE-LINEAGE-RECOVERY-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert spec['status']=='FROZEN_BEFORE_EXECUTION'
+          assert lineage['status']==spec['preconditions']['required_lineage_status']
+          assert spec['upstream']['expected_bytes']==1765475
+          assert spec['upstream']['expected_git_blob_sha1']=='b58e8a3043911f6de921be39bbf516755839829f'
+          assert spec['claim_ceiling']['paper_exact_study_input_identity_may_be_established_by_this_gate'] is False
+          PY
+          python3 -m py_compile research/linear_a/janus_linear_a_source_intake_quarantine_v0_1.py
+          python3 research/linear_a/janus_linear_a_source_intake_quarantine_v0_1.py self-test >/tmp/quarantine-self-test.json
+
+      - name: Acquire exact historical public Git blob
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p external/r3c3-historical-mac
+          URL='https://raw.githubusercontent.com/L-Colin/Linear-A-decipherment-programme/fab66e715b18607c4b383782e7f4d1b86a26d725/LinearADecipherment(Mac).zip'
+          OUT='external/r3c3-historical-mac/LinearADecipherment(Mac).zip'
+          curl --fail --location --retry 4 --retry-all-errors --connect-timeout 20 --max-time 180 "$URL" --output "$OUT"
+          test "$(wc -c < "$OUT" | tr -d ' ')" = '1765475'
+          test "$(git hash-object "$OUT")" = 'b58e8a3043911f6de921be39bbf516755839829f'
+          sha256sum "$OUT" | tee /tmp/mac-bundle-sha256.txt
+
+      - name: Non-executing archive quarantine and member hashing
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/linear_a/janus_linear_a_source_intake_quarantine_v0_1.py quarantine \
+            'external/r3c3-historical-mac/LinearADecipherment(Mac).zip' \
+            --out 'data/JANUS-LINEAR-A-R3C-3-HISTORICAL-MAC-BUNDLE-QUARANTINE-RESULT-2026-08-14-v0.1.json'
+
+      - name: Build acquisition and static-resource routing receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          specp='data/JANUS-LINEAR-A-R3C-3-HISTORICAL-MAC-BUNDLE-ACQUISITION-SPEC-2026-08-14-v0.1.json'
+          qp='data/JANUS-LINEAR-A-R3C-3-HISTORICAL-MAC-BUNDLE-QUARANTINE-RESULT-2026-08-14-v0.1.json'
+          spec=json.load(open(specp,encoding='utf-8'))
+          q=json.load(open(qp,encoding='utf-8'))
+          inv=q.get('inventory') or {}
+          entries=inv.get('entries') or []
+          suffixes=tuple(spec['member_routing_extensions'])
+          routed=[]
+          for e in entries:
+              name=str(e.get('name',''))
+              low=name.lower()
+              if (not e.get('directory')) and low.endswith(suffixes):
+                  routed.append({
+                    'entry_index':e.get('entry_index'),
+                    'name':name,
+                    'declared_uncompressed_bytes':e.get('declared_uncompressed_bytes'),
+                    'sha256':e.get('sha256'),
+                    'code_or_executable_like':e.get('code_or_executable_like'),
+                    'flags':e.get('flags',[])
+                  })
+          safe=q['status']=='SAFE_ARCHIVE_INVENTORY_COMPLETE_CONTENT_UNINSPECTED'
+          result={
+            'artifact_uuid':'JANUS-LINEAR-A-R3C-3-HISTORICAL-MAC-BUNDLE-ACQUISITION-RESULT-2026-08-14-v0.1',
+            'version':'v0.1',
+            'node_type':'historical_public_software_bundle_acquisition_result',
+            'status':'HISTORICAL_BUNDLE_ACQUIRED_SAFE_STATIC_INVENTORY_COMPLETE' if safe else 'HISTORICAL_BUNDLE_ACQUIRED_QUARANTINE_HOLD',
+            'frozen_spec':specp,
+            'source':{
+              'repository':spec['upstream']['repository'],
+              'commit':spec['upstream']['commit'],
+              'path':spec['upstream']['path'],
+              'git_blob_sha1_expected':spec['upstream']['expected_git_blob_sha1'],
+              'git_blob_sha1_verified':True,
+              'bytes_expected':spec['upstream']['expected_bytes'],
+              'bytes_observed':q['bytes'],
+              'sha256':q['sha256']
+            },
+            'quarantine_result':qp,
+            'quarantine_status':q['status'],
+            'inventory_summary':{
+              'archive_format':inv.get('archive_format'),
+              'entry_count':inv.get('entry_count'),
+              'declared_total_uncompressed_bytes':inv.get('declared_total_uncompressed_bytes'),
+              'duplicate_entry_name_count':inv.get('duplicate_entry_name_count'),
+              'code_or_executable_like_entry_count':inv.get('code_or_executable_like_entry_count'),
+              'all_regular_file_payload_hashes_present':inv.get('all_regular_file_payload_hashes_present'),
+              'global_flags':inv.get('global_flags',[]),
+              'routed_static_or_method_resource_count':len(routed)
+            },
+            'routed_static_or_method_resources':routed,
+            'safety':{
+              'archive_extracted_to_filesystem':False,
+              'code_executed':False,
+              'scientific_content_inspected':False,
+              'dictionary_lexical_content_inspected':False,
+              'member_payload_use':'SHA256_STREAMING_ONLY'
+            },
+            'readiness_effect':{
+              'historical_bundle_bytes_acquired':True,
+              'historical_bundle_byte_identity_admitted':True,
+              'static_member_byte_identities_available_for_followup':safe,
+              'paper_exact_input_receipt_admitted':False,
+              'upstream_normalization_contract_complete':False,
+              'scientific_R3C3_execution_permitted':False
+            },
+            'claim_ceiling':{
+              'historical_software_bundle_exact_git_object_recovered':True,
+              'archive_inventory_completed':True,
+              'paper_exact_study_inputs_established':False,
+              'published_matches_reproduced':False,
+              'language_family_relationship_established':False,
+              'R3B_effect':'NONE','new_anchor':False,'decipherment':False
+            }
+          }
+          out='data/JANUS-LINEAR-A-R3C-3-HISTORICAL-MAC-BUNDLE-ACQUISITION-RESULT-2026-08-14-v0.1.json'
+          Path(out).write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print(json.dumps({'status':result['status'],'sha256':q['sha256'],'entries':inv.get('entry_count'),'routed':len(routed),'flags':inv.get('global_flags',[])},ensure_ascii=False,sort_keys=True))
+          PY
+
+      - name: Enforce claim and non-execution invariants before persistence
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-R3C-3-HISTORICAL-MAC-BUNDLE-ACQUISITION-RESULT-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['source']['git_blob_sha1_verified'] is True
+          assert d['source']['bytes_observed']==1765475
+          assert d['safety']['archive_extracted_to_filesystem'] is False
+          assert d['safety']['code_executed'] is False
+          assert d['safety']['scientific_content_inspected'] is False
+          assert d['readiness_effect']['paper_exact_input_receipt_admitted'] is False
+          assert d['claim_ceiling']['published_matches_reproduced'] is False
+          PY
+
+      - name: Upload immutable acquisition evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r3c3-historical-mac-bundle-v0.1
+          path: |
+            data/JANUS-LINEAR-A-R3C-3-HISTORICAL-MAC-BUNDLE-ACQUISITION-SPEC-2026-08-14-v0.1.json
+            data/JANUS-LINEAR-A-R3C-3-HISTORICAL-MAC-BUNDLE-QUARANTINE-RESULT-2026-08-14-v0.1.json
+            data/JANUS-LINEAR-A-R3C-3-HISTORICAL-MAC-BUNDLE-ACQUISITION-RESULT-2026-08-14-v0.1.json
+          if-no-files-found: error
+
+      - name: Persist acquisition receipts with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'janus-proof-bot'
+          git config user.email 'janus-proof-bot@users.noreply.github.com'
+          git add \
+            data/JANUS-LINEAR-A-R3C-3-HISTORICAL-MAC-BUNDLE-QUARANTINE-RESULT-2026-08-14-v0.1.json \
+            data/JANUS-LINEAR-A-R3C-3-HISTORICAL-MAC-BUNDLE-ACQUISITION-RESULT-2026-08-14-v0.1.json
+          git commit -m 'Register Linear A R3C-3 historical Mac bundle acquisition v0.1'
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then pushed=1; break; fi
+            sleep "$attempt"
+          done
+          test "$pushed" = 1
