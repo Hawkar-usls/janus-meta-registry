@@ -1,0 +1,39 @@
+name: Sing When You're Winning matched prevalence tranche v2
+
+on:
+  push:
+    paths:
+      - 'data/JANUS-SING-WHEN-YOURE-WINNING-SPORTS-MVP-PREVALENCE-TRANCHE-01-v1.0.json'
+      - 'data/JANUS-SING-WHEN-YOURE-WINNING-SPORTS-MVP-PREVALENCE-TRANCHE-02-v1.0.json'
+      - 'tools/verify_sing_when_youre_winning_prevalence_tranche_v2.py'
+      - '.github/workflows/sing-when-winning-prevalence-tranche-v2.yml'
+  pull_request:
+    paths:
+      - 'data/JANUS-SING-WHEN-YOURE-WINNING-SPORTS-MVP-PREVALENCE-TRANCHE-01-v1.0.json'
+      - 'data/JANUS-SING-WHEN-YOURE-WINNING-SPORTS-MVP-PREVALENCE-TRANCHE-02-v1.0.json'
+      - 'tools/verify_sing_when_youre_winning_prevalence_tranche_v2.py'
+      - '.github/workflows/sing-when-winning-prevalence-tranche-v2.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify-prevalence-tranche-v2:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout JANUS registry
+        uses: actions/checkout@v4
+      - name: Verify tranche and cumulative boundary counts
+        run: python3 tools/verify_sing_when_youre_winning_prevalence_tranche_v2.py
+      - name: Enforce anti-rescue scientific ceiling
+        run: |
+          python3 - <<'PY'
+          import json
+          p = json.load(open('data/JANUS-SING-WHEN-YOURE-WINNING-SPORTS-MVP-PREVALENCE-TRANCHE-02-v1.0.json', encoding='utf-8'))
+          assert p['epistemic_ceiling']['population_prevalence_claim'] is False
+          assert p['cumulative_after_tranche_02']['full_chain_resolved'] >= 10
+          assert p['cumulative_after_tranche_02']['exactly_five_full_chain_resolved'] >= 1
+          assert p['diagnostic_result']['exact_five_itself'] == 'COMMON_WITHIN_THE_FIVE_PHOTO_MEMORABILIA_TEMPLATE_AND_NOT_ANOMALOUS'
+          assert p['diagnostic_result']['memorabilia_only_explanation'] == 'REJECTED_AS_COMPLETE_EXPLANATION_BY_SPORTSNET_LA_FULL_CHAIN_GRAPHIC'
+          print('anti-rescue scientific ceiling: PASS')
+          PY
