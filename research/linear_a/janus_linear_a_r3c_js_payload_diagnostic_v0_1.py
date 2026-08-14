@@ -110,15 +110,15 @@ def main() -> None:
             "surrounding_lines": exact_lines,
             "lexical_classification": classify_context(payload, e.pos),
             "safety": {
-                "javascript_executed": false,
-                "eval_used": false,
-                "source_mutated": false,
+                "javascript_executed": False,
+                "eval_used": False,
+                "source_mutated": False,
             },
             "claim_ceiling": {
-                "parser_diagnostic_only": true,
-                "scientific_metrics_computed": false,
+                "parser_diagnostic_only": True,
+                "scientific_metrics_computed": False,
                 "R3B_effect": "NONE",
-                "decipherment": false,
+                "decipherment": False,
             },
         }
     else:
@@ -128,8 +128,8 @@ def main() -> None:
             "node_type": "parser_failure_diagnostic",
             "status": "PAYLOAD_IS_STRICT_JSON_UNEXPECTED_RELATIVE_TO_PRIOR_FAILURE",
             "source": {"bytes": len(raw), "sha256": hashlib.sha256(raw).hexdigest()},
-            "safety": {"javascript_executed": false, "eval_used": false, "source_mutated": false},
-            "claim_ceiling": {"parser_diagnostic_only": true, "scientific_metrics_computed": false, "R3B_effect": "NONE", "decipherment": false},
+            "safety": {"javascript_executed": False, "eval_used": False, "source_mutated": False},
+            "claim_ceiling": {"parser_diagnostic_only": True, "scientific_metrics_computed": False, "R3B_effect": "NONE", "decipherment": False},
         }
 
     Path(args.output).write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
