@@ -1,0 +1,71 @@
+name: JANUS Linear A R3C-3 upstream Git package-history audit v0.1
+on:
+  push:
+    paths:
+      - ".github/workflows/janus-linear-a-r3c3-upstream-git-package-history-audit-v0-1.yml"
+      - "research/linear_a/janus_linear_a_r3c3_upstream_git_package_history_audit_v0_1.py"
+      - "data/JANUS-LINEAR-A-R3C-3-UPSTREAM-GIT-PACKAGE-HISTORY-AUDIT-SPEC-2026-08-14-v0.1.json"
+  workflow_dispatch:
+permissions: {contents: write}
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - name: Verify frozen spec and compile auditor
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          s=json.load(open('data/JANUS-LINEAR-A-R3C-3-UPSTREAM-GIT-PACKAGE-HISTORY-AUDIT-SPEC-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert s['status']=='FROZEN_BEFORE_EXECUTION'
+          assert s['scope']['package_extension']=='.zip'
+          assert s['scope']['package_payload_inspection_in_this_gate'] is False
+          assert s['persist']['archive_member_names'] is False
+          assert s['claim_ceiling']['archive_internal_Uralic_presence_established'] is False
+          PY
+          python3 -m py_compile research/linear_a/janus_linear_a_r3c3_upstream_git_package_history_audit_v0_1.py
+      - name: Fetch complete public upstream refs without blob checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf external/r3c3-upstream-history
+          git clone --filter=blob:none --no-checkout https://github.com/L-Colin/Linear-A-decipherment-programme.git external/r3c3-upstream-history
+          git -C external/r3c3-upstream-history fetch --all --tags --prune
+      - name: Enumerate commits trees and ZIP blob identities only
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/linear_a/janus_linear_a_r3c3_upstream_git_package_history_audit_v0_1.py external/r3c3-upstream-history --out data/JANUS-LINEAR-A-R3C-3-UPSTREAM-GIT-PACKAGE-HISTORY-AUDIT-RESULT-2026-08-14-v0.1.json
+      - name: Enforce metadata-only ceiling
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          d=json.load(open('data/JANUS-LINEAR-A-R3C-3-UPSTREAM-GIT-PACKAGE-HISTORY-AUDIT-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert d['status']=='UPSTREAM_GIT_PACKAGE_HISTORY_ENUMERATED'
+          assert d['summary']['reachable_commit_count']>0
+          assert d['readiness_effect']['public_package_blob_universe_enumerated'] is True
+          assert d['readiness_effect']['archive_internal_Uralic_presence_established'] is False
+          assert d['claim_ceiling']['paper_exact_2024_input_identity_established'] is False
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r3c3-upstream-package-history-v0.1
+          path: |
+            data/JANUS-LINEAR-A-R3C-3-UPSTREAM-GIT-PACKAGE-HISTORY-AUDIT-SPEC-2026-08-14-v0.1.json
+            data/JANUS-LINEAR-A-R3C-3-UPSTREAM-GIT-PACKAGE-HISTORY-AUDIT-RESULT-2026-08-14-v0.1.json
+          if-no-files-found: error
+      - name: Persist history audit with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'janus-proof-bot'; git config user.email 'janus-proof-bot@users.noreply.github.com'
+          git add data/JANUS-LINEAR-A-R3C-3-UPSTREAM-GIT-PACKAGE-HISTORY-AUDIT-RESULT-2026-08-14-v0.1.json
+          git commit -m 'Register Linear A R3C-3 upstream Git package-history audit v0.1'
+          pushed=0
+          for attempt in 1 2 3 4 5; do git fetch origin main; git rebase origin/main; if git push origin HEAD:main; then pushed=1; break; fi; sleep "$attempt"; done
+          test "$pushed" = 1
