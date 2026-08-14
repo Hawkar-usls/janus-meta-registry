@@ -1,0 +1,96 @@
+name: JANUS Linear A R3C annotation JS syntax diagnostic v0.1
+
+on:
+  push:
+    paths:
+      - ".github/workflows/janus-linear-a-r3c-annotation-js-diagnostic-v0-1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compile diagnostic
+        run: python3 -m py_compile research/linear_a/janus_linear_a_r3c_annotation_js_diagnostic_v0_1.py
+
+      - name: Verify parent failed-run receipt
+        run: |
+          python3 - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-IDENTITY-BRIDGE-FAILED-RUN-RECEIPT-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['status']=='FAILED_BEFORE_IDENTITY_RESULT'
+          assert d['scientific_result_inheritance'] is False
+          assert d['failure']['json_error_line']==80091
+          PY
+
+      - name: Checkout exact historical annotations source
+        uses: actions/checkout@v4
+        with:
+          repository: mwenge/lineara.xyz
+          ref: 568f452c7a5ec80fa292cb307ead2fc6f65d07fb
+          path: external/mwenge-historical
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            annotations.js
+          sparse-checkout-cone-mode: false
+
+      - name: Diagnose annotations syntax without identity scoring
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C external/mwenge-historical rev-parse HEAD)" = "568f452c7a5ec80fa292cb307ead2fc6f65d07fb"
+          python3 research/linear_a/janus_linear_a_r3c_annotation_js_diagnostic_v0_1.py \
+            --source external/mwenge-historical/annotations.js \
+            --output data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-JS-DIAGNOSTIC-RESULT-2026-08-14-v0.1.json
+
+      - name: Enforce diagnostic-only semantics
+        run: |
+          python3 - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-JS-DIAGNOSTIC-RESULT-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['safety']['javascript_executed'] is False
+          assert d['safety']['eval_used'] is False
+          assert d['safety']['identity_scoring_performed'] is False
+          assert d['claim_ceiling']['diagnostic_only'] is True
+          assert d['claim_ceiling']['Briakos_scope_inference'] is False
+          assert d['claim_ceiling']['R3B_effect']=='NONE'
+          assert d['claim_ceiling']['decipherment'] is False
+          assert d['status']=='FIRST_STRICT_JSON_BREAK_LOCALIZED'
+          PY
+
+      - name: Upload diagnostic
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r3c-annotation-js-diagnostic-v0.1
+          path: data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-JS-DIAGNOSTIC-RESULT-2026-08-14-v0.1.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Persist diagnostic with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "janus-proof-bot"
+          git config user.email "janus-proof-bot@users.noreply.github.com"
+          git add data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-JS-DIAGNOSTIC-RESULT-2026-08-14-v0.1.json
+          git commit -m "Register Linear A annotation JS syntax diagnostic v0.1"
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then pushed=1; break; fi
+            sleep "$attempt"
+          done
+          test "$pushed" = 1
