@@ -1,0 +1,278 @@
+name: JANUS Linear A transcription substrate v1.0
+
+on:
+  push:
+    paths:
+      - "research/linear_a/janus_linear_a_transcription_ir_v1_0.py"
+      - "research/linear_a/janus_linear_a_transcription_adapters_v1_0.py"
+      - "data/JANUS-LINEAR-A-TRANSCRIPTION-SUBSTRATE-SPEC-2026-08-14-v1.0.json"
+      - ".github/workflows/janus-linear-a-transcription-substrate-v1-0.yml"
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  validate-transcription-substrate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      MWENGE_COMMIT: "43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a"
+      SIGLA_RUN_ID: "31795255402"
+      SIGLA_ARTIFACT_ID: "9217092521"
+      SIGLA_ARTIFACT_NAME: "janus-linear-a-sigla-word-view-probe-v0.1"
+      SIGLA_ARTIFACT_DIGEST: "sha256:a5c0a80c0bf131a937329712a5def5187fd41e1c2ef84b5c3c654ce1d1ff837d"
+
+    steps:
+      - name: Checkout JANUS registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compile IR core and adapters
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            research/linear_a/janus_linear_a_transcription_ir_v1_0.py \
+            research/linear_a/janus_linear_a_transcription_adapters_v1_0.py
+
+      - name: Run lossless IR core self-test
+        shell: bash
+        env:
+          PYTHONPATH: research/linear_a
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          python3 research/linear_a/janus_linear_a_transcription_ir_v1_0.py self-test | tee artifacts/core-self-test.json
+          python3 research/linear_a/janus_linear_a_transcription_ir_v1_0.py fixture > artifacts/fixture-ir.json
+          python3 research/linear_a/janus_linear_a_transcription_ir_v1_0.py validate artifacts/fixture-ir.json
+
+      - name: Freeze-check substrate architecture declarations
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          d=json.load(open('data/JANUS-LINEAR-A-TRANSCRIPTION-SUBSTRATE-SPEC-2026-08-14-v1.0.json',encoding='utf-8'))
+          assert d['status']=='FROZEN_BEFORE_R3B_ALTERNATE_EDITORIAL_SOURCE_INGESTION'
+          assert d['scientific_claim_bearing'] is False
+          assert d['canonical_IR']['format_id']=='JANUS-LINEAR-TRANSCRIPTION-IR-v1.0'
+          assert d['architectural_principles'][0].startswith('RAW_FIRST_LOSSLESS')
+          assert 'NUMERIC_APPROX_OR_UNCERTAIN' in d['canonical_IR']['tokens']['allowed_token_types']
+          assert 'FRACTION_APPROX_OR_UNCERTAIN' in d['canonical_IR']['tokens']['allowed_token_types']
+          assert d['canonical_IR']['numeric']['representation']['approximate_or_uncertain']['rules'][0]=='exact_value MUST be null'
+          assert d['R3B_integration']['R3B_1'].startswith('Overlap freeze')
+          assert d['claim_ceiling']['new_anchor_established'] is False
+          assert d['claim_ceiling']['decipherment_established'] is False
+          PY
+
+      - name: Validate immutable SigLA probe artifact metadata
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          curl -fsSL \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/${SIGLA_ARTIFACT_ID}" \
+            > artifacts/sigla-artifact-metadata.json
+          python3 - <<'PY'
+          import json,os
+          d=json.load(open('artifacts/sigla-artifact-metadata.json',encoding='utf-8'))
+          assert d['id']==int(os.environ['SIGLA_ARTIFACT_ID'])
+          assert d['name']==os.environ['SIGLA_ARTIFACT_NAME']
+          assert d['digest']==os.environ['SIGLA_ARTIFACT_DIGEST']
+          assert d['expired'] is False
+          assert d['workflow_run']['id']==int(os.environ['SIGLA_RUN_ID'])
+          PY
+
+      - name: Download exact frozen SigLA word-view artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: janus-linear-a-sigla-word-view-probe-v0.1
+          path: artifacts/sigla-probe
+          run-id: 31795255402
+          github-token: ${{ github.token }}
+
+      - name: Fetch exact frozen mwenge corpus
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --quiet https://github.com/mwenge/lineara.xyz.git /tmp/lineara
+          git -C /tmp/lineara checkout --quiet "${MWENGE_COMMIT}"
+          test "$(git -C /tmp/lineara rev-parse HEAD)" = "${MWENGE_COMMIT}"
+          test -f /tmp/lineara/items/ZA10b.html
+
+      - name: Convert real mwenge ZA10b into transcription IR
+        shell: bash
+        env:
+          PYTHONPATH: research/linear_a
+        run: |
+          set -euo pipefail
+          python3 research/linear_a/janus_linear_a_transcription_adapters_v1_0.py mwenge \
+            /tmp/lineara/items/ZA10b.html \
+            --source-locator "mwenge/lineara.xyz@43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a:items/ZA10b.html" \
+            --out artifacts/mwenge-ZA10b-ir.json
+          python3 research/linear_a/janus_linear_a_transcription_ir_v1_0.py validate artifacts/mwenge-ZA10b-ir.json
+
+      - name: Resolve exact SigLA ZA10b snapshot from frozen probe receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import glob,json,pathlib
+          candidates=glob.glob('artifacts/sigla-probe/**/JANUS-LINEAR-A-SIGLA-WORD-VIEW-PROBE-RESULT-2026-08-14-v0.1.json',recursive=True)
+          assert len(candidates)==1,candidates
+          d=json.load(open(candidates[0],encoding='utf-8'))
+          page=next(x for x in d['pages'] if x['bridge_key']=='ZA10b')
+          matches=glob.glob('artifacts/sigla-probe/**/'+page['snapshot_filename'],recursive=True)
+          assert len(matches)==1,matches
+          pathlib.Path('artifacts/sigla-ZA10b-path.txt').write_text(matches[0],encoding='utf-8')
+          pathlib.Path('artifacts/sigla-ZA10b-page-meta.json').write_text(json.dumps({
+            'sigla_id':page['sigla_id'],
+            'bridge_key':page['bridge_key'],
+            'content_sha256':page['content_sha256'],
+            'reported_word_count':page['reported_word_count'],
+            'snapshot_filename':page['snapshot_filename']
+          },sort_keys=True,indent=2)+'\n',encoding='utf-8')
+          PY
+
+      - name: Convert exact frozen SigLA ZA10b into transcription IR
+        shell: bash
+        env:
+          PYTHONPATH: research/linear_a
+        run: |
+          set -euo pipefail
+          SNAP="$(cat artifacts/sigla-ZA10b-path.txt)"
+          python3 research/linear_a/janus_linear_a_transcription_adapters_v1_0.py sigla \
+            "$SNAP" \
+            --sigla-id "ZA 10b" \
+            --source-locator "https://sigla.phis.me/document/ZA%2010b/index-word.html" \
+            --out artifacts/sigla-ZA10b-ir.json
+          python3 research/linear_a/janus_linear_a_transcription_ir_v1_0.py validate artifacts/sigla-ZA10b-ir.json
+
+      - name: Cross-adapter substrate invariants
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          m=json.load(open('artifacts/mwenge-ZA10b-ir.json',encoding='utf-8'))
+          s=json.load(open('artifacts/sigla-ZA10b-ir.json',encoding='utf-8'))
+          assert m['ir_format']==s['ir_format']=='JANUS-LINEAR-TRANSCRIPTION-IR-v1.0'
+          assert m['document']['document_id']=='ZA10b'
+          assert s['document']['document_id']=='ZA10b'
+          assert m['source']['source_family']=='MWENGE_LINEARA_XYZ'
+          assert s['source']['source_family']=='SIGLA_THE_SIGNS_OF_LINEAR_A'
+          assert m['source']['adapter_id']!=s['source']['adapter_id']
+          assert m['source']['independence_level']=='L0_DERIVATIVE_TRANSFORM'
+          assert s['source']['independence_level']=='L1_INDEPENDENT_DIGITIZATION_SHARED_TRANSCRIPTION'
+          assert m['provenance_receipt']['ir_sha256']!=s['provenance_receipt']['ir_sha256']
+          assert all('source_raw' in t for t in m['tokens'])
+          assert all('source_raw' in t for t in s['tokens'])
+          assert all(g['group_type'] in {'SOURCE_WORD','SOURCE_NUMERIC_GROUP'} for g in m['groups'])
+          assert all(g['group_type']=='SOURCE_WORD' for g in s['groups'])
+          # SigLA machine identity must be sign IDs, not visible transliteration strings.
+          assert all(t['source_raw']==t['source_sign_id'] for t in s['tokens'])
+          assert all(repr(t.get('numeric')).find('exact_value')<0 or t.get('token_type') not in {'NUMERIC_APPROX_OR_UNCERTAIN','FRACTION_APPROX_OR_UNCERTAIN'} or t['numeric'].get('exact_value') is None for t in m['tokens'])
+          manifest={
+            'mwenge':{'tokens':len(m['tokens']),'groups':len(m['groups']),'ir_sha256':m['provenance_receipt']['ir_sha256']},
+            'sigla':{'tokens':len(s['tokens']),'groups':len(s['groups']),'ir_sha256':s['provenance_receipt']['ir_sha256']},
+            'shared_ir_format':m['ir_format'],
+            'shared_parser_used':False,
+            'source_specific_adapters_preserved':True
+          }
+          open('artifacts/cross-adapter-manifest.json','w',encoding='utf-8').write(json.dumps(manifest,indent=2,sort_keys=True)+'\n')
+          print(json.dumps(manifest,sort_keys=True))
+          PY
+
+      - name: Build technical validation result
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json,pathlib
+          core=json.load(open('artifacts/core-self-test.json',encoding='utf-8'))
+          cross=json.load(open('artifacts/cross-adapter-manifest.json',encoding='utf-8'))
+          mw=json.load(open('artifacts/mwenge-ZA10b-ir.json',encoding='utf-8'))
+          sg=json.load(open('artifacts/sigla-ZA10b-ir.json',encoding='utf-8'))
+          result={
+            'artifact_uuid':'JANUS-LINEAR-A-TRANSCRIPTION-SUBSTRATE-VALIDATION-RESULT-2026-08-14-v1.0',
+            'timestamp':'2026-08-14T14:57:00+03:00',
+            'version':'v1.0',
+            'title':'JANUS Linear A transcription substrate v1.0 technical validation result',
+            'node_type':'technical_transcription_substrate_validation_result',
+            'status':'TRANSCRIPTION_SUBSTRATE_CORE_AND_FIRST_PARTY_ADAPTERS_VALIDATED',
+            'scientific_claim_bearing':False,
+            'architecture_spec':{'path':'data/JANUS-LINEAR-A-TRANSCRIPTION-SUBSTRATE-SPEC-2026-08-14-v1.0.json','commit':'55ca1e8d26d521b85b23f18e007ae50a20471f0c'},
+            'core':{'path':'research/linear_a/janus_linear_a_transcription_ir_v1_0.py','commit':'60b213a69b89858a8957b51debffa9572d402baf','self_test':core},
+            'adapters':{'path':'research/linear_a/janus_linear_a_transcription_adapters_v1_0.py','commit':'988cebbec6f8542f7512c200f8f340e6cb2646cf'},
+            'real_source_validation':{
+              'mwenge':{'document':'ZA10b','source_commit':'43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a','ir_sha256':mw['provenance_receipt']['ir_sha256'],'tokens':len(mw['tokens']),'groups':len(mw['groups']),'valid':True},
+              'sigla':{'document':'ZA 10b','source_artifact_id':9217092521,'source_artifact_digest':'sha256:a5c0a80c0bf131a937329712a5def5187fd41e1c2ef84b5c3c654ce1d1ff837d','ir_sha256':sg['provenance_receipt']['ir_sha256'],'tokens':len(sg['tokens']),'groups':len(sg['groups']),'valid':True},
+              'shared_ir_format':cross['shared_ir_format'],
+              'shared_parser_used':False,
+              'source_specific_adapters_preserved':True
+            },
+            'validated_invariants':[
+              'canonical IR hashing is deterministic and fail-closed',
+              'exact numeric literals are represented as reduced rationals, not authoritative floats',
+              'approximate numeric exact_value leakage is rejected',
+              'broken references are rejected',
+              'scientific view cannot admit non-semantic token types without an explicit exception',
+              'mwenge and SigLA can serialize into one IR without sharing a parser grammar',
+              'source family, adapter identity, independence level and raw provenance remain distinct'
+            ],
+            'blocked_adapters':['CTLA','TMT','RILA_S1'],
+            'unblock_condition':'R3B-0 exact source bytes/pages plus R3B-1 source-native grammar/overlap freeze',
+            'claim_ceiling':{
+              'transcription_substrate_validated':True,
+              'alternate_editorial_source_ingested':False,
+              'external_transcription_replication_established':False,
+              'new_anchor_established':False,
+              'decipherment_established':False,
+              'promotion':'NO_PROMOTION'
+            }
+          }
+          pathlib.Path('data/JANUS-LINEAR-A-TRANSCRIPTION-SUBSTRATE-VALIDATION-RESULT-2026-08-14-v1.0.json').write_text(json.dumps(result,ensure_ascii=False,indent=2,sort_keys=True)+'\n',encoding='utf-8')
+          PY
+
+      - name: Upload immutable validation receipt before persistence
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-transcription-substrate-v1.0
+          path: |
+            data/JANUS-LINEAR-A-TRANSCRIPTION-SUBSTRATE-VALIDATION-RESULT-2026-08-14-v1.0.json
+            artifacts/core-self-test.json
+            artifacts/fixture-ir.json
+            artifacts/mwenge-ZA10b-ir.json
+            artifacts/sigla-ZA10b-ir.json
+            artifacts/cross-adapter-manifest.json
+            artifacts/sigla-artifact-metadata.json
+            artifacts/sigla-ZA10b-page-meta.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Persist validation result with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "janus-proof-bot"
+          git config user.email "janus-proof-bot@users.noreply.github.com"
+          git add data/JANUS-LINEAR-A-TRANSCRIPTION-SUBSTRATE-VALIDATION-RESULT-2026-08-14-v1.0.json
+          git commit -m "Register Linear transcription substrate v1.0 validation"
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then
+              pushed=1
+              break
+            fi
+            sleep "$attempt"
+          done
+          test "$pushed" = 1
