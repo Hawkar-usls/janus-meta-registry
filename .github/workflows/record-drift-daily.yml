@@ -1,0 +1,37 @@
+name: JANUS Record Drift Daily
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 5 * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: janus-record-drift-daily
+  cancel-in-progress: false
+
+jobs:
+  observe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Record Drift Tn observer
+        run: python tools/record_drift/t1_runner.py
+
+      - name: Commit append-only journal entry
+        run: |
+          git config user.name "janus-record-drift-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add registry/record_drift/JANUS-RECORD-DRIFT-JOURNAL-*.json
+          if git diff --cached --quiet; then
+            echo "No journal change to commit"
+            exit 0
+          fi
+          git commit -m "record-drift: daily Tn journal $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git push
