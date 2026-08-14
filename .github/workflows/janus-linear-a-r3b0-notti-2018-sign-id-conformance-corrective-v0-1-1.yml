@@ -1,0 +1,75 @@
+name: JANUS Linear A R3B-0 Notti 2018 sign-ID conformance corrective v0.1.1
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'data/JANUS-LINEAR-A-R3B-0-NOTTI-2018-SIGN-ID-CONFORMANCE-CORRECTIVE-SPEC-2026-08-14-v0.1.1.json'
+      - 'research/linear_a/janus_linear_a_r3b0_notti_2018_sign_id_conformance_corrective_v0_1_1.py'
+      - '.github/workflows/janus-linear-a-r3b0-notti-2018-sign-id-conformance-corrective-v0-1-1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install exact PDF dependency
+        run: python -m pip install --disable-pip-version-check 'pypdf[crypto]==5.9.0'
+      - name: Compile corrective replay runner
+        run: python -m py_compile research/linear_a/janus_linear_a_r3b0_notti_2018_sign_id_conformance_corrective_v0_1_1.py
+      - name: Execute fresh 13-document corrective replay
+        run: |
+          python research/linear_a/janus_linear_a_r3b0_notti_2018_sign_id_conformance_corrective_v0_1_1.py \
+            --spec data/JANUS-LINEAR-A-R3B-0-NOTTI-2018-SIGN-ID-CONFORMANCE-CORRECTIVE-SPEC-2026-08-14-v0.1.1.json \
+            --receipt data/JANUS-LINEAR-A-R3B-0-NOTTI-2018-OPEN-PUBLISHER-RESCUE-ACQUISITION-RESULT-2026-08-14-v0.1.1.json \
+            --bridge data/JANUS-LINEAR-A-R3B-0-NOTTI-2018-IDENTITY-BRIDGE-RESULT-2026-08-14-v0.1.json \
+            --audit data/JANUS-LINEAR-A-R3B-0-NOTTI-2018-SOURCE-PARSER-INTEGRITY-AUDIT-RESULT-2026-08-14-v0.1.json \
+            --out data/JANUS-LINEAR-A-R3B-0-NOTTI-2018-SIGN-ID-CONFORMANCE-CORRECTIVE-RESULT-2026-08-14-v0.1.1.json \
+            --pdf-tmp /tmp/notti-2018-corrective-replay.pdf
+      - name: Enforce corrected family partition and claim ceiling
+        run: |
+          python - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-R3B-0-NOTTI-2018-SIGN-ID-CONFORMANCE-CORRECTIVE-RESULT-2026-08-14-v0.1.1.json'
+          x=json.load(open(p,encoding='utf-8'))
+          assert x['status']=='CORRECTIVE_REPLAY_ALL_13_SOURCE_AMBIGUITY_PRESERVED'
+          assert x['all_checks_pass'] is True
+          s=x['summary']
+          assert s['family_size']==13
+          assert s['comparable_count'] + s['source_ambiguity_noncomparable_count'] + s['empty_noncomparable_count'] == 13
+          assert s['exact_match_count'] + s['mismatch_count'] == s['comparable_count']
+          assert s['blind_novelty_credit'] is False
+          assert s['strict_R3B_replication_established'] is False
+          assert x['representation_contract']['phonetic_values_used'] is False
+          assert x['representation_contract']['semantic_values_used'] is False
+          print(json.dumps(s,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-notti-2018-sign-id-conformance-corrective-v0-1-1
+          path: data/JANUS-LINEAR-A-R3B-0-NOTTI-2018-SIGN-ID-CONFORMANCE-CORRECTIVE-RESULT-2026-08-14-v0.1.1.json
+          if-no-files-found: error
+          retention-days: 90
+      - name: Persist corrective comparison result
+        env:
+          RESULT: data/JANUS-LINEAR-A-R3B-0-NOTTI-2018-SIGN-ID-CONFORMANCE-CORRECTIVE-RESULT-2026-08-14-v0.1.1.json
+        run: |
+          git config user.name 'JANUS Evidence Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add "$RESULT"
+          git commit -m 'Register Linear A Notti 2018 corrective sign-ID conformance v0.1.1' || true
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then exit 0; fi
+            git pull --rebase origin main
+          done
+          exit 1
