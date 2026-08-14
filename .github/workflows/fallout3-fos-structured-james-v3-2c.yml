@@ -1,0 +1,116 @@
+name: Fallout 3 FOS Structured James v3.2c
+
+on:
+  pull_request:
+    paths:
+      - "registry/myth_busted/FALLOUT-3-FOS-STRUCTURED-CHANGED-FORM-REFID-GATE-v3.2c.json"
+      - "tools/fo3_fos_changed_form_header_index_v0_1.py"
+      - "tools/fo3_fos_header_plugin_manifest_v0_1.py"
+      - "tests/test_fo3_fos_changed_form_header_index_v0_1.py"
+      - ".github/workflows/fallout3-fos-structured-james-v3-2c.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "registry/myth_busted/FALLOUT-3-FOS-STRUCTURED-CHANGED-FORM-REFID-GATE-v3.2c.json"
+      - "tools/fo3_fos_changed_form_header_index_v0_1.py"
+      - "tools/fo3_fos_header_plugin_manifest_v0_1.py"
+      - "tests/test_fo3_fos_changed_form_header_index_v0_1.py"
+      - ".github/workflows/fallout3-fos-structured-james-v3-2c.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact event head
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Assert exact requested head
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          ACTUAL_HEAD="$(git rev-parse HEAD)"
+          echo "EXPECTED_HEAD=$EXPECTED_HEAD"
+          echo "ACTUAL_HEAD=$ACTUAL_HEAD"
+          test "$ACTUAL_HEAD" = "$EXPECTED_HEAD"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install pytest
+        run: python -m pip install --disable-pip-version-check pytest
+
+      - name: Compile structural parser
+        run: |
+          python -m py_compile tools/fo3_fos_changed_form_header_index_v0_1.py
+          python -m py_compile tools/fo3_fos_header_plugin_manifest_v0_1.py
+
+      - name: Validate gate JSON
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path("registry/myth_busted/FALLOUT-3-FOS-STRUCTURED-CHANGED-FORM-REFID-GATE-v3.2c.json")
+          data = json.loads(p.read_text(encoding="utf-8"))
+          assert data["status"] == "FORMAT_GRAMMAR_PASS_REAL_T0_T3_EXECUTION_BLOCKED_NO_FOS_INPUT"
+          assert data["admission_ladder"][3]["status"] == "PASS_SOURCE_AND_INDEPENDENT_CROSSCHECK"
+          assert data["admission_ladder"][4]["status"] == "BLOCKED_NO_FOS_INPUT"
+          print("JSON_PASS", p)
+          PY
+
+      - name: Run deterministic structural tests
+        run: python -m pytest -q tests/test_fo3_fos_changed_form_header_index_v0_1.py
+
+      - name: Emit exact-head claim-ceiling receipt
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          python - <<'PY'
+          import json, os, subprocess
+          from pathlib import Path
+
+          def git(*args):
+              return subprocess.check_output(["git", *args], text=True).strip()
+
+          actual = git("rev-parse", "HEAD")
+          expected = os.environ["EXPECTED_HEAD"]
+          receipt = {
+              "schema": "janus.fo3_fos_structured_james_ci_receipt.v3_2c",
+              "event": os.environ["EVENT_NAME"],
+              "expected_head": expected,
+              "actual_head": actual,
+              "exact_head_match": actual == expected,
+              "tree": git("rev-parse", "HEAD^{tree}"),
+              "format_grammar_tests_passed": True,
+              "real_fos_inputs_present": False,
+              "real_t0_t3_execution_established": False,
+              "structured_james_runtime_record_established": False,
+              "persisted_james_autobiographical_memory_established": False,
+              "in_world_james_serialization_established": False,
+              "claim_ceiling": "CI validates source-bound structural parser behavior on deterministic fixtures only. It does not supply or simulate evidence that a real user Fallout 3 save contains James runtime state."
+          }
+          if not receipt["exact_head_match"]:
+              raise SystemExit("exact event-head mismatch")
+          Path("fallout3-fos-structured-james-v3-2c-ci-receipt.json").write_text(
+              json.dumps(receipt, indent=2) + "\n", encoding="utf-8"
+          )
+          print(json.dumps(receipt, indent=2))
+          PY
+
+      - name: Upload receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: fallout3-fos-structured-james-v3-2c
+          path: fallout3-fos-structured-james-v3-2c-ci-receipt.json
+          if-no-files-found: error
