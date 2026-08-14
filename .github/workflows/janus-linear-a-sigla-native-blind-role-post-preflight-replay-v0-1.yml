@@ -1,0 +1,313 @@
+name: JANUS Linear A SigLA-native blind-role post-preflight replay v0.1
+
+on:
+  push:
+    paths:
+      - "data/JANUS-LINEAR-A-SIGLA-NATIVE-BLIND-ROLE-POST-PREFLIGHT-REPLAY-SPEC-2026-08-14-v0.1.json"
+      - ".github/workflows/janus-linear-a-sigla-native-blind-role-post-preflight-replay-v0-1.yml"
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  post-preflight-replay:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      ORIGINAL_RUN_ID: "31795779079"
+      ORIGINAL_ARTIFACT_ID: "9217320613"
+      ORIGINAL_ARTIFACT_NAME: "janus-linear-a-sigla-native-blind-role-v0.1"
+      ORIGINAL_ARTIFACT_DIGEST: "sha256:e87cf0a96c8f6f47510019a3b4078d78ed7dab2bfea66c58dd4fb9ef65e2fe81"
+      PREFLIGHT_RUN_ID: "31796171646"
+      PREFLIGHT_ARTIFACT_ID: "9217464522"
+      PREFLIGHT_ARTIFACT_DIGEST: "sha256:feb90d4c5b2fa323b20193ed774d55e36205936f62a68ecadec7c08b9e520dd6"
+
+    steps:
+      - name: Checkout current JANUS registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Prove frozen scientific code and spec identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse 502095da1d9e715b4d20b697b3fa85e91f132a04:data/JANUS-LINEAR-A-SIGLA-NATIVE-BLIND-ROLE-DISCOVERY-SPEC-2026-08-14-v0.1.json)" = \
+               "$(git rev-parse HEAD:data/JANUS-LINEAR-A-SIGLA-NATIVE-BLIND-ROLE-DISCOVERY-SPEC-2026-08-14-v0.1.json)"
+          test "$(git rev-parse bf6ff7d3cb7c29fe4ae28058edec925dd51966e6:research/linear_a/janus_linear_a_sigla_native_blind_role_v0_1.py)" = \
+               "$(git rev-parse HEAD:research/linear_a/janus_linear_a_sigla_native_blind_role_v0_1.py)"
+          test "$(git rev-parse HEAD:research/linear_a/janus_linear_a_sigla_native_blind_role_v0_1.py)" = "1951d9e05105ae2c20e8c3d04784ccfbfc465d16"
+          python3 -m py_compile research/linear_a/janus_linear_a_sigla_native_blind_role_v0_1.py
+
+      - name: Validate frozen replay spec and parser admission
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          s=json.load(open('data/JANUS-LINEAR-A-SIGLA-NATIVE-BLIND-ROLE-POST-PREFLIGHT-REPLAY-SPEC-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert s['status']=='FROZEN_BEFORE_POST_PREFLIGHT_REPLAY'
+          assert s['scientific_claim_bearing'] is True
+          assert s['parser_admission']['receipt_commit']=='7399f19744a7521fb2477f0e7d2f9055c8a49093'
+          assert s['scientific_parent']['spec_commit']=='502095da1d9e715b4d20b697b3fa85e91f132a04'
+          assert s['scientific_parent']['runner_commit']=='bf6ff7d3cb7c29fe4ae28058edec925dd51966e6'
+          assert s['pre_admission_execution']['workflow_run_id']==31795779079
+          assert s['pre_admission_execution']['retroactively_admitted'] is False
+          m=s['mutation_prohibition']
+          assert all(v is False for v in m.values())
+          p=s['frozen_execution_parameters']
+          assert p['workers']==8
+          assert p['retries']==3
+          assert p['screen_permutations']==3000
+          assert p['confirm_permutations']==5000
+          assert p['test_permutations']==5000
+          assert p['alpha']==0.05
+
+          a=json.load(open('data/JANUS-LINEAR-A-SIGLA-PARSER-INTEGRITY-ADMISSION-RECEIPT-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert a['status']=='R3A_4_SCORING_ADMITTED_AFTER_FULL_UNIVERSE_PREFLIGHT'
+          assert a['successful_recovery_execution']['workflow_run_id']==31796171646
+          assert a['successful_recovery_execution']['artifact_id']==9217464522
+          assert a['successful_recovery_execution']['artifact_digest']=='sha256:feb90d4c5b2fa323b20193ed774d55e36205936f62a68ecadec7c08b9e520dd6'
+          assert a['full_universe_summary']['pass_document_count']==686
+          assert a['full_universe_summary']['deterministic_mismatch_count']==0
+          assert a['full_universe_summary']['parser_integrity_success_fraction_of_686']==1.0
+          assert a['admission_rule']['R3A_4_scoring_admitted'] is True
+          PY
+
+      - name: Validate original and preflight artifact metadata
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          for pair in "${ORIGINAL_ARTIFACT_ID} ${ORIGINAL_ARTIFACT_DIGEST} ${ORIGINAL_RUN_ID}" "${PREFLIGHT_ARTIFACT_ID} ${PREFLIGHT_ARTIFACT_DIGEST} ${PREFLIGHT_RUN_ID}"; do
+            set -- $pair
+            id="$1"; digest="$2"; run="$3"
+            curl -fsSL \
+              -H "Authorization: Bearer ${GH_TOKEN}" \
+              -H "Accept: application/vnd.github+json" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/${id}" > "/tmp/artifact-${id}.json"
+            python3 - "$id" "$digest" "$run" <<'PY'
+          import json,sys
+          artifact_id=int(sys.argv[1]); digest=sys.argv[2]; run_id=int(sys.argv[3])
+          d=json.load(open(f'/tmp/artifact-{artifact_id}.json',encoding='utf-8'))
+          assert d['id']==artifact_id
+          assert d['digest']==digest
+          assert d['expired'] is False
+          assert d['workflow_run']['id']==run_id
+          PY
+          done
+
+      - name: Download exact pre-admission scientific execution artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: janus-linear-a-sigla-native-blind-role-v0.1
+          path: artifacts/original
+          run-id: 31795779079
+          github-token: ${{ github.token }}
+
+      - name: Fetch frozen mwenge identity-bridge corpus
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --quiet https://github.com/mwenge/lineara.xyz.git /tmp/lineara
+          git -C /tmp/lineara checkout --quiet 43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a
+          test "$(git -C /tmp/lineara rev-parse HEAD)" = "43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a"
+
+      - name: Execute exact post-admission scientific replay
+        shell: bash
+        env:
+          PYTHONPATH: research/linear_a
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/replay
+          python3 research/linear_a/janus_linear_a_sigla_native_blind_role_v0_1.py \
+            --mwenge-root /tmp/lineara \
+            --out artifacts/replay/JANUS-LINEAR-A-SIGLA-NATIVE-BLIND-ROLE-RAW-POST-PREFLIGHT-REPLAY-2026-08-14-v0.1.json \
+            --workers 8 \
+            --retries 3 \
+            --screen-permutations 3000 \
+            --confirm-permutations 5000 \
+            --test-permutations 5000 \
+            --alpha 0.05
+
+      - name: Build deep scientific projection replay receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import glob,hashlib,json,pathlib
+          spec=json.load(open('data/JANUS-LINEAR-A-SIGLA-NATIVE-BLIND-ROLE-POST-PREFLIGHT-REPLAY-SPEC-2026-08-14-v0.1.json',encoding='utf-8'))
+          candidates=glob.glob('artifacts/original/**/*.json',recursive=True)
+          assert len(candidates)==1, candidates
+          original_path=candidates[0]
+          replay_path='artifacts/replay/JANUS-LINEAR-A-SIGLA-NATIVE-BLIND-ROLE-RAW-POST-PREFLIGHT-REPLAY-2026-08-14-v0.1.json'
+          original=json.load(open(original_path,encoding='utf-8'))
+          replay=json.load(open(replay_path,encoding='utf-8'))
+          fields=spec['replay_comparison']['exact_projection_fields']
+          op={k:original[k] for k in fields}
+          rp={k:replay[k] for k in fields}
+          canon=lambda x: json.dumps(x,ensure_ascii=False,sort_keys=True,separators=(',',':')).encode('utf-8')
+          osha=hashlib.sha256(canon(op)).hexdigest()
+          rsha=hashlib.sha256(canon(rp)).hexdigest()
+          equal=op==rp
+          differing=[k for k in fields if original[k]!=replay[k]]
+          receipt={
+            'artifact_uuid':'JANUS-LINEAR-A-SIGLA-NATIVE-BLIND-ROLE-POST-PREFLIGHT-REPLAY-RESULT-2026-08-14-v0.1',
+            'version':'v0.1',
+            'title':'JANUS Linear A SigLA-native blind-role post-preflight replay result',
+            'node_type':'post_preflight_scientific_replay_receipt',
+            'status':'POST_PREFLIGHT_REPLAY_EXACT_SCIENTIFIC_PROJECTION_MATCH' if equal else 'POST_PREFLIGHT_REPLAY_SOURCE_OR_EXECUTION_DRIFT',
+            'frozen_replay_spec':{
+              'path':'data/JANUS-LINEAR-A-SIGLA-NATIVE-BLIND-ROLE-POST-PREFLIGHT-REPLAY-SPEC-2026-08-14-v0.1.json',
+              'commit':'461341900cce52cf9183407ccf00e7dd97659771'
+            },
+            'parser_admission':{
+              'receipt_path':'data/JANUS-LINEAR-A-SIGLA-PARSER-INTEGRITY-ADMISSION-RECEIPT-2026-08-14-v0.1.json',
+              'receipt_commit':'7399f19744a7521fb2477f0e7d2f9055c8a49093',
+              'R3A_4_scoring_admitted':True,
+              'documents_pass':686,
+              'deterministic_mismatches':0
+            },
+            'scientific_identity':{
+              'spec_commit':'502095da1d9e715b4d20b697b3fa85e91f132a04',
+              'runner_commit':'bf6ff7d3cb7c29fe4ae28058edec925dd51966e6',
+              'runner_blob_sha':'1951d9e05105ae2c20e8c3d04784ccfbfc465d16',
+              'workers':8,
+              'retries':3,
+              'screen_permutations':3000,
+              'confirm_permutations':5000,
+              'test_permutations':5000,
+              'alpha':0.05
+            },
+            'original_pre_admission_execution':{
+              'workflow_run_id':31795779079,
+              'artifact_id':9217320613,
+              'artifact_digest':'sha256:e87cf0a96c8f6f47510019a3b4078d78ed7dab2bfea66c58dd4fb9ef65e2fe81',
+              'temporal_class':'PRE_ADMISSION_EXECUTION',
+              'retroactively_admitted':False
+            },
+            'comparison':{
+              'fields':fields,
+              'original_projection_sha256':osha,
+              'replay_projection_sha256':rsha,
+              'exact_scientific_projection_match':equal,
+              'differing_fields':differing
+            },
+            'replay_summary':{
+              'status':replay['status'],
+              'classification':replay['classification'],
+              'parser_audit':replay['parser_audit'],
+              'partitions':replay['partitions'],
+              'SCREEN':{
+                'eligible_candidate_count':replay['SCREEN']['eligible_candidate_count'],
+                'tested_hypothesis_count':replay['SCREEN']['tested_hypothesis_count'],
+                'selected_count':replay['SCREEN']['selected_count'],
+                'top_three_tested':replay['SCREEN']['tested'][:3]
+              },
+              'CONFIRM':{
+                'locked_count':replay['CONFIRM']['locked_count'],
+                'evaluable_count':replay['CONFIRM']['evaluable_count'],
+                'survivor_count':replay['CONFIRM']['survivor_count'],
+                'state':replay['CONFIRM']['state']
+              },
+              'TEST':{
+                'locked_count':replay['TEST']['locked_count'],
+                'evaluable_count':replay['TEST']['evaluable_count'],
+                'survivor_count':replay['TEST']['survivor_count'],
+                'state':replay['TEST']['state']
+              },
+              'full_survivor_count':replay['full_survivor_count']
+            },
+            'epistemic_gate':{
+              'post_preflight_replay_completed':True,
+              'exact_scientific_projection_reproduced':equal,
+              'external_transcription_replication_established':False,
+              'new_lexical_anchor_established':False,
+              'decipherment_established':False,
+              'promotion':'CONFIRM_PARENT_R3A_4_OUTCOME_ONLY' if equal else 'BLOCKED_SOURCE_OR_EXECUTION_DRIFT'
+            },
+            'required_next':(
+              ['The pre-admission R3A_4 result is now independently time-ordered behind parser admission and may be treated as replay-confirmed under the frozen L1 SigLA ontology.',
+               'Continue to the already frozen R3A_5 morphology ontology without lowering thresholds, while preserving that L1 SigLA is not external transcription replication.']
+              if equal else
+              ['Do not choose the preferred R3A_4 outcome.',
+               'Freeze and inspect source/execution drift before any descendant claim-bearing stage is promoted.']
+            ),
+            'claim_ceiling':{
+              'maximum':'REPLAY_CONFIRMED_VALID_NEGATIVE_NO_FULL_SURVIVOR' if equal and replay['full_survivor_count']==0 else ('REPLAY_CONFIRMED_PARENT_OUTCOME' if equal else 'SOURCE_OR_EXECUTION_DRIFT'),
+              'external_transcription_replication_established':False,
+              'new_lexical_anchor_established':False,
+              'decipherment_established':False
+            }
+          }
+          pathlib.Path('data/JANUS-LINEAR-A-SIGLA-NATIVE-BLIND-ROLE-POST-PREFLIGHT-REPLAY-RESULT-2026-08-14-v0.1.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2,sort_keys=True)+'\n',encoding='utf-8')
+          print(json.dumps({'exact_scientific_projection_match':equal,'differing_fields':differing,'original_projection_sha256':osha,'replay_projection_sha256':rsha,'replay_status':replay['status'],'full_survivor_count':replay['full_survivor_count']},sort_keys=True))
+          PY
+
+      - name: Validate replay receipt claim ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-SIGLA-NATIVE-BLIND-ROLE-POST-PREFLIGHT-REPLAY-RESULT-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['parser_admission']['R3A_4_scoring_admitted'] is True
+          assert d['parser_admission']['documents_pass']==686
+          assert d['parser_admission']['deterministic_mismatches']==0
+          assert d['scientific_identity']['spec_commit']=='502095da1d9e715b4d20b697b3fa85e91f132a04'
+          assert d['scientific_identity']['runner_commit']=='bf6ff7d3cb7c29fe4ae28058edec925dd51966e6'
+          assert d['original_pre_admission_execution']['retroactively_admitted'] is False
+          assert d['epistemic_gate']['external_transcription_replication_established'] is False
+          assert d['epistemic_gate']['new_lexical_anchor_established'] is False
+          assert d['epistemic_gate']['decipherment_established'] is False
+          PY
+
+      - name: Upload immutable post-preflight replay receipt before persistence
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-sigla-native-blind-role-post-preflight-replay-v0.1
+          path: |
+            data/JANUS-LINEAR-A-SIGLA-NATIVE-BLIND-ROLE-POST-PREFLIGHT-REPLAY-RESULT-2026-08-14-v0.1.json
+            artifacts/replay/JANUS-LINEAR-A-SIGLA-NATIVE-BLIND-ROLE-RAW-POST-PREFLIGHT-REPLAY-2026-08-14-v0.1.json
+            /tmp/artifact-9217320613.json
+            /tmp/artifact-9217464522.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Persist replay receipt with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "janus-proof-bot"
+          git config user.email "janus-proof-bot@users.noreply.github.com"
+          git add data/JANUS-LINEAR-A-SIGLA-NATIVE-BLIND-ROLE-POST-PREFLIGHT-REPLAY-RESULT-2026-08-14-v0.1.json
+          git commit -m "Register post-preflight SigLA blind-role replay v0.1"
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then
+              pushed=1
+              break
+            fi
+            sleep "$attempt"
+          done
+          test "$pushed" = 1
+
+      - name: Enforce frozen exact-projection replay gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          d=json.load(open('data/JANUS-LINEAR-A-SIGLA-NATIVE-BLIND-ROLE-POST-PREFLIGHT-REPLAY-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert d['comparison']['exact_scientific_projection_match'] is True, d['comparison']['differing_fields']
+          assert d['status']=='POST_PREFLIGHT_REPLAY_EXACT_SCIENTIFIC_PROJECTION_MATCH'
+          assert d['replay_summary']['full_survivor_count']==0
+          assert d['claim_ceiling']['maximum']=='REPLAY_CONFIRMED_VALID_NEGATIVE_NO_FULL_SURVIVOR'
+          PY
