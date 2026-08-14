@@ -1,0 +1,125 @@
+name: JANUS Linear A R3C parser correction validation v0.4
+
+on:
+  push:
+    paths:
+      - ".github/workflows/janus-linear-a-r3c-parser-correction-validation-v0-4.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  validate-parser-v0-4:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compile parser stack and v0.4 validation
+        run: |
+          python3 -m py_compile \
+            research/linear_a/janus_linear_a_r3c_common_v0_1.py \
+            research/linear_a/janus_linear_a_r3c_source_loader_v0_3.py \
+            research/linear_a/janus_linear_a_r3c_source_loader_v0_4.py \
+            research/linear_a/janus_linear_a_r3c_parser_correction_validation_v0_4.py
+
+      - name: Verify v0.4 freeze precedes execution
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-R3C-1A-JS-MAP-DUPLICATE-SEMANTICS-SPEC-2026-08-14-v0.4.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['status']=='FROZEN_BEFORE_V0_4_EXECUTION'
+          assert d['frozen_algorithm']['id']=='JANUS-JS-MAP-SET-REPLAY-v0.4'
+          assert d['frozen_algorithm']['silent_deduplication_forbidden'] is True
+          assert d['frozen_algorithm']['first_wins_forbidden'] is True
+          assert d['anti_overfit']['KH101_specific_resolution_rule_forbidden'] is True
+          assert d['anti_overfit']['published_Briakos_metrics_used_to_select_duplicate_semantics'] is False
+          PY
+
+      - name: Checkout exact Briakos historical source
+        uses: actions/checkout@v4
+        with:
+          repository: mwenge/lineara.xyz
+          ref: 568f452c7a5ec80fa292cb307ead2fc6f65d07fb
+          path: external/mwenge-historical
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            LinearAInscriptions.js
+          sparse-checkout-cone-mode: false
+
+      - name: Checkout current JANUS frozen mwenge source
+        uses: actions/checkout@v4
+        with:
+          repository: mwenge/lineara.xyz
+          ref: 43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a
+          path: external/mwenge-current
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            LinearAInscriptions.js
+          sparse-checkout-cone-mode: false
+
+      - name: Verify exact source identities and execute parser-only v0.4 validation
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C external/mwenge-historical rev-parse HEAD)" = "568f452c7a5ec80fa292cb307ead2fc6f65d07fb"
+          test "$(git -C external/mwenge-current rev-parse HEAD)" = "43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a"
+          test "$(wc -c < external/mwenge-historical/LinearAInscriptions.js | tr -d ' ')" = "1609122"
+          test "$(sha256sum external/mwenge-historical/LinearAInscriptions.js | awk '{print $1}')" = "b7b383b93db55b504eb00c552a8b18c19a588e83bba7ff0ab93ca32277d8bfe2"
+          test "$(wc -c < external/mwenge-current/LinearAInscriptions.js | tr -d ' ')" = "1609137"
+          test "$(sha256sum external/mwenge-current/LinearAInscriptions.js | awk '{print $1}')" = "4da8e1f9693d30880ee505e56541fc189add70605bad88436c44a8e11a57764c"
+          python3 research/linear_a/janus_linear_a_r3c_parser_correction_validation_v0_4.py \
+            --historical external/mwenge-historical/LinearAInscriptions.js \
+            --current external/mwenge-current/LinearAInscriptions.js \
+            --output data/JANUS-LINEAR-A-R3C-1A-JS-MAP-SEMANTICS-PARSER-VALIDATION-RESULT-2026-08-14-v0.4.json
+
+      - name: Upload parser evidence before admission decision
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r3c-parser-correction-validation-v0.4
+          path: data/JANUS-LINEAR-A-R3C-1A-JS-MAP-SEMANTICS-PARSER-VALIDATION-RESULT-2026-08-14-v0.4.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Persist v0.4 evidence with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "janus-proof-bot"
+          git config user.email "janus-proof-bot@users.noreply.github.com"
+          git add data/JANUS-LINEAR-A-R3C-1A-JS-MAP-SEMANTICS-PARSER-VALIDATION-RESULT-2026-08-14-v0.4.json
+          git commit -m "Register Linear A R3C parser v0.4 validation"
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then
+              pushed=1
+              break
+            fi
+            sleep "$attempt"
+          done
+          test "$pushed" = 1
+
+      - name: Enforce parser admission after evidence persistence
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-R3C-1A-JS-MAP-SEMANTICS-PARSER-VALIDATION-RESULT-2026-08-14-v0.4.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['checks']['parser_v0_4_admitted'] is True, d
+          assert d['execution_firewall']['scientific_metrics_computed'] is False
+          assert d['execution_firewall']['scientific_recovery_run_allowed'] is True
+          assert d['history']['v0_1_negative_preserved'] is True
+          assert d['history']['v0_2_negative_preserved'] is True
+          assert d['history']['v0_3_negative_preserved'] is True
+          PY
