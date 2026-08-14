@@ -1,0 +1,68 @@
+name: JANUS Linear A R3C-3 current Windows static-resource routing v0.1
+on:
+  push:
+    paths:
+      - ".github/workflows/janus-linear-a-r3c3-current-windows-resource-routing-v0-1.yml"
+      - "research/linear_a/janus_linear_a_r3c3_current_windows_resource_routing_v0_1.py"
+      - "data/JANUS-LINEAR-A-R3C-3-CURRENT-WINDOWS-STATIC-RESOURCE-ROUTING-SPEC-2026-08-14-v0.1.json"
+  workflow_dispatch:
+permissions: {contents: write}
+jobs:
+  route:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - name: Verify frozen parents and compile
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          s=json.load(open('data/JANUS-LINEAR-A-R3C-3-CURRENT-WINDOWS-STATIC-RESOURCE-ROUTING-SPEC-2026-08-14-v0.1.json',encoding='utf-8'))
+          q=json.load(open('data/JANUS-LINEAR-A-R3C-3-CURRENT-WINDOWS-BUNDLE-QUARANTINE-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          c=json.load(open('data/JANUS-LINEAR-A-R3C-3-CURRENT-WINDOWS-BUNDLE-RESOURCE-COMPARISON-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert s['status']=='FROZEN_BEFORE_EXECUTION'
+          assert q['sha256']==s['parent']['bundle_sha256']
+          assert c['status']==s['parent']['required_comparison_status']
+          assert s['reporting']['persist_member_payload_content'] is False
+          assert s['claim_ceiling']['paper_exact_2024_input_identity_established'] is False
+          PY
+          python3 -m py_compile research/linear_a/janus_linear_a_r3c3_current_windows_resource_routing_v0_1.py
+      - name: Execute name-only routing over persisted quarantine inventory
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/linear_a/janus_linear_a_r3c3_current_windows_resource_routing_v0_1.py --out data/JANUS-LINEAR-A-R3C-3-CURRENT-WINDOWS-STATIC-RESOURCE-ROUTING-RESULT-2026-08-14-v0.1.json
+      - name: Enforce non-content ceiling
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          d=json.load(open('data/JANUS-LINEAR-A-R3C-3-CURRENT-WINDOWS-STATIC-RESOURCE-ROUTING-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert d['status']=='CURRENT_WINDOWS_STATIC_RESOURCE_ROUTING_COMPLETE'
+          assert d['bundle']['entry_count']==1122
+          assert d['safety']['member_payload_content_read'] is False
+          assert d['safety']['members_extracted'] is False
+          assert d['safety']['members_executed'] is False
+          assert d['safety']['nested_archives_inspected'] is False
+          assert d['claim_ceiling']['paper_exact_2024_input_identity_established'] is False
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r3c3-current-windows-resource-routing-v0.1
+          path: |
+            data/JANUS-LINEAR-A-R3C-3-CURRENT-WINDOWS-STATIC-RESOURCE-ROUTING-SPEC-2026-08-14-v0.1.json
+            data/JANUS-LINEAR-A-R3C-3-CURRENT-WINDOWS-STATIC-RESOURCE-ROUTING-RESULT-2026-08-14-v0.1.json
+          if-no-files-found: error
+      - name: Persist routing result with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'janus-proof-bot'; git config user.email 'janus-proof-bot@users.noreply.github.com'
+          git add data/JANUS-LINEAR-A-R3C-3-CURRENT-WINDOWS-STATIC-RESOURCE-ROUTING-RESULT-2026-08-14-v0.1.json
+          git commit -m 'Register Linear A R3C-3 current Windows static-resource routing v0.1'
+          pushed=0
+          for attempt in 1 2 3 4 5; do git fetch origin main; git rebase origin/main; if git push origin HEAD:main; then pushed=1; break; fi; sleep "$attempt"; done
+          test "$pushed" = 1
