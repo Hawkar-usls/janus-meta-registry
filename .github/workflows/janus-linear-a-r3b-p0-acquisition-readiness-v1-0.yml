@@ -1,0 +1,102 @@
+name: JANUS Linear A R3B P0 acquisition readiness v1.0
+
+on:
+  push:
+    paths:
+      - "data/JANUS-LINEAR-A-R3B-0-P0-OUTREACH-READINESS-2026-08-14-v1.0.json"
+      - "data/JANUS-LINEAR-A-R3B-0-RILA-S1-DIGITAL-EDITION-ROUTE-RECONCILIATION-2026-08-14-v0.1.json"
+      - "research/linear_a/janus_linear_a_r3b_p0_acquisition_readiness_v1_0.py"
+      - ".github/workflows/janus-linear-a-r3b-p0-acquisition-readiness-v1-0.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  validate-readiness:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compile runner
+        run: python3 -m py_compile research/linear_a/janus_linear_a_r3b_p0_acquisition_readiness_v1_0.py
+
+      - name: Run fail-closed self-test
+        shell: bash
+        env:
+          PYTHONPATH: research/linear_a
+        run: |
+          set -euo pipefail
+          python3 research/linear_a/janus_linear_a_r3b_p0_acquisition_readiness_v1_0.py self-test > /tmp/p0-self-test.json
+          python3 - <<'PY'
+          import json
+          d=json.load(open('/tmp/p0-self-test.json',encoding='utf-8'))
+          assert d['valid_unsent_route_pass'] is True
+          assert d['sent_request_state_rejected'] is True
+          assert d['false_R3B0_promotion_rejected'] is True
+          assert d['scientific_content_inspected'] is False
+          assert d['decipherment'] is False
+          PY
+
+      - name: Build current P0 readiness
+        shell: bash
+        env:
+          PYTHONPATH: research/linear_a
+        run: |
+          set -euo pipefail
+          python3 research/linear_a/janus_linear_a_r3b_p0_acquisition_readiness_v1_0.py readiness \
+            --repo-root . \
+            --out data/JANUS-LINEAR-A-R3B-0-P0-ACQUISITION-READINESS-RESULT-2026-08-14-v1.0.json
+
+      - name: Enforce zero-byte zero-request state and claim ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          d=json.load(open('data/JANUS-LINEAR-A-R3B-0-P0-ACQUISITION-READINESS-RESULT-2026-08-14-v1.0.json',encoding='utf-8'))
+          assert d['status']=='P0_READY_FOR_LAWFUL_ACQUISITION_NO_BYTES'
+          assert d['route_ranking']==['RILA_S1','CTLA_SECOND_EDITION_1994','TMT_1999']
+          assert d['requests_sent']==0
+          assert d['source_bytes_acquired']==0
+          assert d['R3B_0_admitted_receipts']==0
+          assert d['RILA_digital_edition_route']['full_digital_edition_existence_confirmed'] is True
+          assert d['RILA_digital_edition_route']['local_source_bytes_acquired'] is False
+          assert d['scientific_content_inspected'] is False
+          assert d['claim_ceiling']['R3B_effect']=='NONE'
+          assert d['claim_ceiling']['external_transcription_replication_established'] is False
+          assert d['claim_ceiling']['new_anchor'] is False
+          assert d['claim_ceiling']['decipherment'] is False
+          assert d['errors']==[]
+          PY
+
+      - name: Upload immutable P0 readiness package
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r3b-p0-acquisition-readiness-v1.0
+          path: |
+            /tmp/p0-self-test.json
+            data/JANUS-LINEAR-A-R3B-0-P0-ACQUISITION-READINESS-RESULT-2026-08-14-v1.0.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Persist readiness with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "janus-proof-bot"
+          git config user.email "janus-proof-bot@users.noreply.github.com"
+          git add data/JANUS-LINEAR-A-R3B-0-P0-ACQUISITION-READINESS-RESULT-2026-08-14-v1.0.json
+          git commit -m "Register Linear A R3B P0 acquisition readiness v1.0"
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then pushed=1; break; fi
+            sleep "$attempt"
+          done
+          test "$pushed" = 1
