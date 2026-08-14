@@ -1,0 +1,69 @@
+name: JANUS Linear A R3C-3 current-method differential reconciliation v0.1.1
+on:
+  push:
+    paths:
+      - ".github/workflows/janus-linear-a-r3c3-current-method-differential-reconcile-v0-1-1.yml"
+      - "research/linear_a/janus_linear_a_r3c3_current_method_differential_reconcile_v0_1_1.py"
+      - "data/JANUS-LINEAR-A-R3C-3-CURRENT-SOURCE-METHOD-DIFFERENTIAL-CORRECTIVE-SPEC-2026-08-14-v0.1.1.json"
+  workflow_dispatch:
+permissions: {contents: write}
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - name: Verify persisted parents and compile
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          s=json.load(open('data/JANUS-LINEAR-A-R3C-3-CURRENT-SOURCE-METHOD-DIFFERENTIAL-CORRECTIVE-SPEC-2026-08-14-v0.1.1.json',encoding='utf-8'))
+          c=json.load(open('data/JANUS-LINEAR-A-R3C-3-CURRENT-SOURCE-METHOD-DIFFERENTIAL-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          f=json.load(open('data/JANUS-LINEAR-A-R3C-3-HISTORICAL-DATAFLOW-RECONSTRUCTION-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert s['status']=='FROZEN_AFTER_V0_1_BASELINE_GAP_BEFORE_RECONCILIATION'
+          assert c['status']=='CURRENT_METHOD_DIFFERENTIAL_COMPLETE'
+          assert f['status']=='HISTORICAL_DATAFLOW_MACHINE_RECONSTRUCTED'
+          assert s['identified_gap']['affected_function_names']==['openFileDialog','openFileDialog_new_update','openFileDialog1','openFileDialog2']
+          PY
+          python3 -m py_compile research/linear_a/janus_linear_a_r3c3_current_method_differential_reconcile_v0_1_1.py
+      - name: Reconcile loader baseline from persisted historical dataflow
+        shell: bash
+        run: |
+          python3 research/linear_a/janus_linear_a_r3c3_current_method_differential_reconcile_v0_1_1.py --out data/JANUS-LINEAR-A-R3C-3-CURRENT-SOURCE-METHOD-DIFFERENTIAL-RESULT-2026-08-14-v0.1.1.json
+      - name: Enforce correction bounds
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          d=json.load(open('data/JANUS-LINEAR-A-R3C-3-CURRENT-SOURCE-METHOD-DIFFERENTIAL-RESULT-2026-08-14-v0.1.1.json',encoding='utf-8'))
+          assert d['status']=='CURRENT_METHOD_DIFFERENTIAL_CORRECTED_BASELINE_COMPLETE'
+          assert d['target_summary']['comparison_slots']==11
+          assert d['target_summary']['current_occurrences_present']==11
+          assert d['target_summary']['historical_occurrences_present']==11
+          assert d['correction']['current_AST_hashes_recomputed'] is False
+          assert d['correction']['historical_source_reparsed'] is False
+          assert d['correction']['current_source_reparsed'] is False
+          assert d['correction']['BaseSheet_observation_changed'] is False
+          assert d['current_BaseSheet']['first_sheet_headers_equal_historical_csv_headers'] is True
+          assert d['claim_ceiling']['paper_exact_2024_method_identity_established'] is False
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r3c3-current-method-diff-v0.1.1
+          path: |
+            data/JANUS-LINEAR-A-R3C-3-CURRENT-SOURCE-METHOD-DIFFERENTIAL-CORRECTIVE-SPEC-2026-08-14-v0.1.1.json
+            data/JANUS-LINEAR-A-R3C-3-CURRENT-SOURCE-METHOD-DIFFERENTIAL-RESULT-2026-08-14-v0.1.1.json
+          if-no-files-found: error
+      - name: Persist corrected differential with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'janus-proof-bot'; git config user.email 'janus-proof-bot@users.noreply.github.com'
+          git add data/JANUS-LINEAR-A-R3C-3-CURRENT-SOURCE-METHOD-DIFFERENTIAL-RESULT-2026-08-14-v0.1.1.json
+          git commit -m 'Register Linear A R3C-3 corrected current-method differential v0.1.1'
+          pushed=0
+          for attempt in 1 2 3 4 5; do git fetch origin main; git rebase origin/main; if git push origin HEAD:main; then pushed=1; break; fi; sleep "$attempt"; done
+          test "$pushed" = 1
