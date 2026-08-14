@@ -1,0 +1,113 @@
+name: JANUS Linear A R3C-2B real IR hardening coverage audit v0.1
+
+on:
+  push:
+    paths:
+      - ".github/workflows/janus-linear-a-r3c-2b-real-ir-hardening-coverage-v0-1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  coverage-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compile audit and parser stack
+        run: |
+          python3 -m py_compile \
+            research/linear_a/janus_linear_a_r3c_common_v0_1.py \
+            research/linear_a/janus_linear_a_r3c_source_loader_v0_3.py \
+            research/linear_a/janus_linear_a_r3c_source_loader_v0_4.py \
+            research/linear_a/janus_linear_a_r3c_real_ir_hardening_coverage_audit_v0_1.py
+
+      - name: Verify frozen parent state and evidence bindings
+        run: |
+          python3 - <<'PY'
+          import json
+          spec=json.load(open('data/JANUS-LINEAR-A-R3C-2B-REAL-IR-HARDENING-COVERAGE-AUDIT-SPEC-2026-08-14-v0.1.json',encoding='utf-8'))
+          state=json.load(open('data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.8.json',encoding='utf-8'))
+          hard=json.load(open('data/JANUS-LINEAR-A-TRANSCRIPTION-IR-HARDENING-VALIDATION-RESULT-2026-08-14-v1.1.json',encoding='utf-8'))
+          d5=json.load(open('data/JANUS-LINEAR-A-R3C-2-LOGOS-DEFECT-CONFORMANCE-RESULT-2026-08-14-v0.1.1.json',encoding='utf-8'))
+          d6=json.load(open('data/JANUS-LINEAR-A-R3C-2A-LOGOS-D6-CORRECTIVE-REPLAY-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert spec['status']=='FROZEN_BEFORE_EXECUTION'
+          assert state['status']==spec['required_parent_status']
+          assert hard['status']==spec['hardening_parent']['required_status']
+          assert d5['D5']['confirmed_case_count']==4 and d5['D5']['all_seeded_source_symptoms_confirmed'] is True
+          assert d6['status']=='CONFIRMED_EXTERNAL_REPLAY_CORRECTED' and d6['seeded']['all_3_copresent'] is True
+          assert spec['D5_audit_protocol']['strict_rule'].startswith('Do not infer SURFACE from a newline alone')
+          PY
+
+      - name: Checkout exact current source
+        uses: actions/checkout@v4
+        with:
+          repository: mwenge/lineara.xyz
+          ref: 43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a
+          path: external/mwenge-current
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            LinearAInscriptions.js
+          sparse-checkout-cone-mode: false
+
+      - name: Re-prove exact source and execute coverage audit
+        shell: bash
+        env:
+          PYTHONPATH: research/linear_a
+        run: |
+          set -euo pipefail
+          test "$(git -C external/mwenge-current rev-parse HEAD)" = "43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a"
+          test "$(wc -c < external/mwenge-current/LinearAInscriptions.js | tr -d ' ')" = "1609137"
+          test "$(sha256sum external/mwenge-current/LinearAInscriptions.js | awk '{print $1}')" = "4da8e1f9693d30880ee505e56541fc189add70605bad88436c44a8e11a57764c"
+          python3 research/linear_a/janus_linear_a_r3c_real_ir_hardening_coverage_audit_v0_1.py \
+            --source external/mwenge-current/LinearAInscriptions.js \
+            --output data/JANUS-LINEAR-A-R3C-2B-REAL-IR-HARDENING-COVERAGE-AUDIT-RESULT-2026-08-14-v0.1.json
+
+      - name: Enforce source symptoms and claim ceiling, not preferred coverage outcome
+        run: |
+          python3 - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-R3C-2B-REAL-IR-HARDENING-COVERAGE-AUDIT-RESULT-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['source_identity_admitted'] is True
+          assert d['D5']['all_4_source_split_symptoms_confirmed'] is True
+          assert d['D6']['all_3_source_conflicts_confirmed'] is True
+          assert d['coverage_interpretation']['surface_from_newline_inferred'] is False
+          assert d['coverage_interpretation']['line_from_absent_surface_metadata_inferred'] is False
+          assert d['coverage_interpretation']['v1_1_invalidated_if_gap'] is False
+          assert d['claim_ceiling']['JANUS_independent_D5_D6_discovery'] is False
+          assert d['claim_ceiling']['R3B_effect']=='NONE'
+          assert d['claim_ceiling']['new_anchor'] is False
+          assert d['claim_ceiling']['decipherment'] is False
+          PY
+
+      - name: Upload immutable coverage result
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r3c-2b-real-ir-hardening-coverage-v0.1
+          path: data/JANUS-LINEAR-A-R3C-2B-REAL-IR-HARDENING-COVERAGE-AUDIT-RESULT-2026-08-14-v0.1.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Persist result with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "janus-proof-bot"
+          git config user.email "janus-proof-bot@users.noreply.github.com"
+          git add data/JANUS-LINEAR-A-R3C-2B-REAL-IR-HARDENING-COVERAGE-AUDIT-RESULT-2026-08-14-v0.1.json
+          git commit -m "Register Linear A real IR hardening coverage audit v0.1"
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then pushed=1; break; fi
+            sleep "$attempt"
+          done
+          test "$pushed" = 1
