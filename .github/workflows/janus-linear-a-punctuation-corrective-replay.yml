@@ -1,0 +1,81 @@
+name: JANUS Linear A punctuation corrective replay
+
+on:
+  push:
+    paths:
+      - "research/linear_a/janus_linear_a_parser_policy_v0_6_1.py"
+      - "research/linear_a/janus_linear_a_corrective_replay_v0_6_1.py"
+      - "research/linear_a/janus_linear_a_full_corpus.py"
+      - "research/linear_a/janus_linear_a_candidate_holdout.py"
+      - "research/linear_a/janus_linear_a_survivor_decomposition.py"
+      - "research/linear_a/janus_linear_a_vir_subtype.py"
+      - "research/linear_a/janus_linear_a_known_subtracted.py"
+      - "research/linear_a/janus_linear_a_record_role.py"
+      - ".github/workflows/janus-linear-a-punctuation-corrective-replay.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  corrective-replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout JANUS registry
+        uses: actions/checkout@v4
+
+      - name: Fetch frozen Linear A corpus
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --quiet https://github.com/mwenge/lineara.xyz.git /tmp/lineara
+          git -C /tmp/lineara checkout --quiet 43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a
+          test "$(git -C /tmp/lineara rev-parse HEAD)" = "43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a"
+          echo "Frozen corpus commit verified."
+
+      - name: Run punctuation-filtered corrective replay v0.6.1
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/linear_a/janus_linear_a_corrective_replay_v0_6_1.py \
+            --corpus /tmp/lineara \
+            --out-dir artifacts/linear_a_corrected_v0_6_1 \
+            --manifest artifacts/JANUS-LINEAR-A-PUNCTUATION-CORRECTIVE-REPLAY-MANIFEST-2026-08-14-v0.6.1.json
+
+      - name: Validate corrected claim ceiling and parser policy
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          manifest_path = Path('artifacts/JANUS-LINEAR-A-PUNCTUATION-CORRECTIVE-REPLAY-MANIFEST-2026-08-14-v0.6.1.json')
+          manifest = json.load(open(manifest_path, encoding='utf-8'))
+          assert manifest['parser_policy']['policy_id'] == 'JANUS-LINA-PARSER-POLICY-v0.6.1'
+          assert manifest['marker_counts_in_frozen_corpus_before_filter']['total_filtered_occurrences'] > 0
+          assert len(manifest['receipts']) == 6
+          assert manifest['epistemic_gate']['new_anchor_established'] is False
+          assert manifest['epistemic_gate']['decipherment_established'] is False
+          for item in manifest['receipts']:
+              d = json.load(open(item['path'], encoding='utf-8'))
+              assert d['corrective_replay']['parser_policy']['policy_id'] == 'JANUS-LINA-PARSER-POLICY-v0.6.1'
+              assert d['epistemic_gate']['new_anchor_established'] is False
+              assert d['epistemic_gate']['decipherment_established'] is False
+          print(json.dumps({
+              'filtered_occurrences': manifest['marker_counts_in_frozen_corpus_before_filter']['total_filtered_occurrences'],
+              'final_record_role_survivors': manifest['final_record_role_state'].get('cross_region_survivor_count'),
+              'new_anchor_established': False,
+              'decipherment_established': False,
+          }, sort_keys=True))
+          PY
+
+      - name: Upload corrected execution receipts
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-punctuation-corrective-replay-v0.6.1
+          path: |
+            artifacts/JANUS-LINEAR-A-PUNCTUATION-CORRECTIVE-REPLAY-MANIFEST-2026-08-14-v0.6.1.json
+            artifacts/linear_a_corrected_v0_6_1/*.json
+          if-no-files-found: error
+          retention-days: 30
