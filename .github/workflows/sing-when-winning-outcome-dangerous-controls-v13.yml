@@ -1,0 +1,43 @@
+name: Sing When You're Winning dangerous outcome controls v1.3
+
+on:
+  push:
+    paths:
+      - "data/JANUS-SING-WHEN-YOURE-WINNING-OUTCOME-RECEIPT-DANGEROUS-CONTROL-SEARCH-v1.0.json"
+      - "tools/verify_sing_when_youre_winning_outcome_dangerous_controls_v13.py"
+      - ".github/workflows/sing-when-winning-outcome-dangerous-controls-v13.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-dangerous-controls:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout JANUS registry
+        uses: actions/checkout@v4
+
+      - name: Verify counterexample preservation and counts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/verify_sing_when_youre_winning_outcome_dangerous_controls_v13.py
+
+      - name: Enforce anti-rescue scientific ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          p = 'data/JANUS-SING-WHEN-YOURE-WINNING-OUTCOME-RECEIPT-DANGEROUS-CONTROL-SEARCH-v1.0.json'
+          d = json.load(open(p, encoding='utf-8'))
+          assert d['critical_result']['scientific_effect'] == 'OUTCOME_CHAIN_WEAKENED_BY_DIRECT_OFFICIAL_COUNTEREXAMPLE'
+          assert d['critical_result']['what_is_not_falsified']
+          assert d['anti_rescue_integrity']['do_not_add_simultaneity_requirement_after_Mahomes'] is True
+          assert d['anti_rescue_integrity']['do_not_require_exactly_one_outcome_token_retroactively'] is True
+          assert d['derived_counts']['high_confidence_direct_counterexamples'] >= 1
+          assert d['execution']['population_prevalence_estimate'] is False
+          assert d['next_gate']['name'] == 'OUTCOME_RECEIPT_MATCHED_PREVALENCE_ESTIMATION'
+          print('dangerous-control anti-rescue ceiling: PASS')
+          PY
