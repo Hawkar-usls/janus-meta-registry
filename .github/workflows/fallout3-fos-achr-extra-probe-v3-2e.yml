@@ -1,0 +1,71 @@
+name: Fallout 3 ACHR Changed Extra probe v3.2e
+
+on:
+  pull_request:
+    paths:
+      - "tools/fo3_fos_achr_changed_extra_probe_v0_1.py"
+      - "tools/fo3_fos_changed_form_header_index_v0_1.py"
+      - "tools/fo3_fos_header_plugin_manifest_v0_1.py"
+      - ".github/workflows/fallout3-fos-achr-extra-probe-v3-2e.yml"
+      - "registry/myth_busted/FALLOUT-3-ACHR-TYPE1-CHANGED-EXTRA-FIELD-BASELINE-DECODER-v3.2e.json"
+  push:
+    branches: [main]
+    paths:
+      - "tools/fo3_fos_achr_changed_extra_probe_v0_1.py"
+      - "tools/fo3_fos_changed_form_header_index_v0_1.py"
+      - "tools/fo3_fos_header_plugin_manifest_v0_1.py"
+      - ".github/workflows/fallout3-fos-achr-extra-probe-v3-2e.yml"
+      - "registry/myth_busted/FALLOUT-3-ACHR-TYPE1-CHANGED-EXTRA-FIELD-BASELINE-DECODER-v3.2e.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe-achr-extra:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      VORTEX_COMMIT: 87eb92131c2e85dd52d4fdb9a69d41b4eb9148e6
+      FIXTURE_DIR: .ci/fo3-real-fixtures
+      RECEIPT: .ci/fo3-achr-extra-probe.json
+    steps:
+      - name: Checkout registry
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Download pinned real Fallout 3 fixtures
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$FIXTURE_DIR"
+          base="https://raw.githubusercontent.com/Nexus-Mods/Vortex/${VORTEX_COMMIT}/extensions/gamebryo-savegame-management/test/saves/fallout3"
+          for file in fallout3_1.fos fallout3_2.fos fallout3_3.fos; do
+            curl --fail --location --retry 3 --retry-all-errors --output "$FIXTURE_DIR/$file" "$base/$file"
+          done
+
+      - name: Probe MQDadRef ACHR payload framing
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/fo3_fos_achr_changed_extra_probe_v0_1.py \
+            --fixture-dir "$FIXTURE_DIR" \
+            --output "$RECEIPT"
+
+      - name: Print receipt
+        if: always()
+        shell: bash
+        run: |
+          if [[ -f "$RECEIPT" ]]; then python -m json.tool "$RECEIPT"; fi
+
+      - name: Upload receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fallout3-fos-achr-extra-probe-v3-2e
+          path: .ci/fo3-achr-extra-probe.json
+          if-no-files-found: error
