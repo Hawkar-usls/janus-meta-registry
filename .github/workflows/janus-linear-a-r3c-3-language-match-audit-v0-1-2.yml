@@ -1,0 +1,137 @@
+name: JANUS Linear A R3C-3 language-match audit v0.1.2
+
+on:
+  push:
+    paths:
+      - "data/JANUS-LINEAR-A-R3C-3-CORRECTIVE-LANGUAGE-MATCH-AUDIT-SPEC-2026-08-14-v0.1.2.json"
+      - "data/JANUS-LINEAR-A-R3C-3-EXECUTION-INPUT-RECEIPT-CONTRACT-2026-08-14-v0.1.json"
+      - "research/linear_a/janus_linear_a_r3c3_language_match_audit_v0_1_2.py"
+      - ".github/workflows/janus-linear-a-r3c-3-language-match-audit-v0-1-2.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  validate-readiness:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compile runner
+        run: python3 -m py_compile research/linear_a/janus_linear_a_r3c3_language_match_audit_v0_1_2.py
+
+      - name: Validate frozen lineage and corrected spec
+        shell: bash
+        env:
+          PYTHONPATH: research/linear_a
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          import janus_linear_a_r3c3_language_match_audit_v0_1_2 as r
+          method=json.load(open('data/JANUS-LINEAR-A-R3C-3-PRIMARY-METHOD-RECONSTRUCTION-2026-08-14-v0.1.json',encoding='utf-8'))
+          rev0=json.load(open('data/JANUS-LINEAR-A-R3C-3-CORRECTIVE-LANGUAGE-MATCH-AUDIT-PREVALIDATION-REVIEW-2026-08-14-v0.1.json',encoding='utf-8'))
+          rev1=json.load(open('data/JANUS-LINEAR-A-R3C-3-CORRECTIVE-LANGUAGE-MATCH-AUDIT-PREVALIDATION-REVIEW-2026-08-14-v0.1.1.json',encoding='utf-8'))
+          spec=json.load(open(r.SPEC_PATH,encoding='utf-8'))
+          contract=json.load(open(r.RECEIPT_CONTRACT_PATH,encoding='utf-8'))
+          assert method['status']=='PRIMARY_METHOD_RECONSTRUCTED_EXECUTION_INPUTS_INCOMPLETE'
+          assert rev0['status']=='PREVALIDATION_REJECTED_INCOMPLETE_UPSTREAM_NORMALIZATION_CONTRACT'
+          assert rev0['scientific_execution_performed'] is False
+          assert rev1['status']=='PREVALIDATION_REJECTED_MACHINE_KEY_TYPO_ONLY'
+          assert rev1['scientific_execution_performed'] is False
+          errors=r.validate_spec(spec)
+          assert not errors, errors
+          assert spec['fixed_languages']==r.LANGUAGES
+          assert spec['permutation_protocol']['iterations_per_null_family']==10000
+          assert spec['secondary_descriptive_layer']['published_manual_matches_may_be_replayed_descriptively'] is True
+          assert spec['contamination_firewall']['JANUS_blind_discovery_credit'] is False
+          assert spec['claim_ceiling']['language_family_relationship_established'] is False
+          assert contract['status']=='FROZEN_BEFORE_INPUT_ACQUISITION'
+          assert contract['admitted_receipt_status']==r.RECEIPT_STATUS
+          assert contract['normalization_contract']['required_status']==r.NORMALIZATION_STATUS
+          assert contract['claim_ceiling']['decipherment'] is False
+          PY
+
+      - name: Run deterministic synthetic self-test
+        shell: bash
+        env:
+          PYTHONPATH: research/linear_a
+        run: |
+          set -euo pipefail
+          python3 research/linear_a/janus_linear_a_r3c3_language_match_audit_v0_1_2.py self-test > /tmp/r3c3-self-test.json
+          python3 - <<'PY'
+          import json
+          d=json.load(open('/tmp/r3c3-self-test.json',encoding='utf-8'))
+          assert d['N1_deterministic_replay_pass'] is True
+          assert d['N2_deterministic_replay_pass'] is True
+          assert d['FWER_not_below_unadjusted_canary_pass'] is True
+          assert d['invalid_receipt_fail_closed_pass'] is True
+          assert d['scientific_execution_on_paper_data_performed'] is False
+          assert d['language_family_relationship_established'] is False
+          assert d['decipherment'] is False
+          PY
+
+      - name: Build current registry readiness result
+        shell: bash
+        env:
+          PYTHONPATH: research/linear_a
+        run: |
+          set -euo pipefail
+          python3 research/linear_a/janus_linear_a_r3c3_language_match_audit_v0_1_2.py readiness \
+            --data-dir data \
+            --out data/JANUS-LINEAR-A-R3C-3-READINESS-RESULT-2026-08-14-v0.1.2.json
+
+      - name: Enforce current claim ceiling and no accidental execution
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          d=json.load(open('data/JANUS-LINEAR-A-R3C-3-READINESS-RESULT-2026-08-14-v0.1.2.json',encoding='utf-8'))
+          assert d['status'] in {
+            'BLOCKED_MISSING_PAPER_EXACT_INPUT_RECEIPTS_AND_NORMALIZATION_CONTRACT',
+            'READY_FOR_MANUAL_SCIENTIFIC_EXECUTION',
+            'BLOCKED_MULTIPLE_ADMITTED_EXECUTION_RECEIPTS_REQUIRE_EXPLICIT_SELECTION'
+          }
+          assert d['scientific_execution_performed'] is False
+          assert d['published_matches_reproduced'] is False
+          assert d['claim_ceiling']['language_family_relationship_established'] is False
+          assert d['claim_ceiling']['R3B_effect']=='NONE'
+          assert d['claim_ceiling']['new_anchor'] is False
+          assert d['claim_ceiling']['decipherment'] is False
+          # On the current pre-acquisition tree, no admitted execution receipt is expected.
+          if d['admitted_receipt_count']==0:
+              assert d['status']=='BLOCKED_MISSING_PAPER_EXACT_INPUT_RECEIPTS_AND_NORMALIZATION_CONTRACT'
+          PY
+
+      - name: Upload immutable readiness package
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r3c-3-language-match-readiness-v0.1.2
+          path: |
+            /tmp/r3c3-self-test.json
+            data/JANUS-LINEAR-A-R3C-3-READINESS-RESULT-2026-08-14-v0.1.2.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Persist readiness with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "janus-proof-bot"
+          git config user.email "janus-proof-bot@users.noreply.github.com"
+          git add data/JANUS-LINEAR-A-R3C-3-READINESS-RESULT-2026-08-14-v0.1.2.json
+          git commit -m "Register Linear A R3C-3 corrective language-match readiness v0.1.2"
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then pushed=1; break; fi
+            sleep "$attempt"
+          done
+          test "$pushed" = 1
