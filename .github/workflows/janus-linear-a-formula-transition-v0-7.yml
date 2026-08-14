@@ -1,0 +1,77 @@
+name: JANUS Linear A formula-transition v0.7
+
+on:
+  push:
+    paths:
+      - "research/linear_a/janus_linear_a_formula_transition_v0_7.py"
+      - "research/linear_a/janus_linear_a_token_typing_policy_v0_6_2.py"
+      - "research/linear_a/janus_linear_a_parser_policy_v0_6_1.py"
+      - "research/linear_a/janus_linear_a_full_corpus.py"
+      - ".github/workflows/janus-linear-a-formula-transition-v0-7.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  formula-transition:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout JANUS registry
+        uses: actions/checkout@v4
+
+      - name: Fetch frozen Linear A corpus
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --quiet https://github.com/mwenge/lineara.xyz.git /tmp/lineara
+          git -C /tmp/lineara checkout --quiet 43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a
+          test "$(git -C /tmp/lineara rev-parse HEAD)" = "43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a"
+          test -f /tmp/lineara/items_analysis/numbers.txt
+          echo "Frozen corpus verified."
+
+      - name: Run formula-transition neighborhood discovery v0.7
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/linear_a/janus_linear_a_formula_transition_v0_7.py \
+            --corpus /tmp/lineara \
+            --out artifacts/JANUS-LINEAR-A-FORMULA-TRANSITION-NEIGHBORHOOD-2026-08-14-v0.7.json \
+            --screen-permutations 2000 \
+            --confirm-permutations 5000 \
+            --test-permutations 10000
+
+      - name: Validate v0.7 claim ceiling and partition discipline
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          p = 'artifacts/JANUS-LINEAR-A-FORMULA-TRANSITION-NEIGHBORHOOD-2026-08-14-v0.7.json'
+          d = json.load(open(p, encoding='utf-8'))
+          assert d['source']['typed_token_policy'] == 'JANUS-LINA-TOKEN-TYPING-POLICY-v0.6.2'
+          assert d['partitioning']['replication_is_pristine_unseen_holdout'] is False
+          assert d['null_model']['operator'] == 'WITHIN_DOCUMENT_SEMANTIC_IDENTITY_SHUFFLE'
+          assert set(d['channels']) == {'CONTROL_INCLUDED', 'NOVELTY_MASKED'}
+          for name, ch in d['channels'].items():
+              assert ch['document_counts']['HT_SCREEN'] > 0
+              assert ch['document_counts']['HT_CONFIRM'] > 0
+              assert ch['document_counts']['NON_HT'] > 0
+          assert d['epistemic_gate']['new_anchor_established'] is False
+          assert d['epistemic_gate']['decipherment_established'] is False
+          print(json.dumps({
+              'control_replication_survivors': d['epistemic_gate']['control_replication_survivor_count'],
+              'novelty_replication_survivors': d['epistemic_gate']['novelty_masked_replication_survivor_count'],
+              'new_anchor_established': False,
+              'decipherment_established': False,
+          }, sort_keys=True))
+          PY
+
+      - name: Upload v0.7 execution receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-formula-transition-v0.7
+          path: artifacts/JANUS-LINEAR-A-FORMULA-TRANSITION-NEIGHBORHOOD-2026-08-14-v0.7.json
+          if-no-files-found: error
+          retention-days: 30
