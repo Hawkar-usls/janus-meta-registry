@@ -1,32 +1,36 @@
 # JANUS Linear A research pipeline
 
-This directory contains the executable research code used by the JANUS Linear A program. It is intentionally separated from `data/`, which stores persistent machine-readable specifications, immutable result summaries, falsification audits, reconciliations, claim ceilings, canonical state, and roadmaps.
+This directory is the executable layer of the JANUS Linear A program. Persistent scientific state lives in `data/`; executable methodology lives here in `research/linear_a/`; GitHub Actions under `.github/workflows/` provide actual execution receipts.
 
 ## Current canonical state
 
 Current recovery/source-of-truth node:
 
-- `data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.2.json`
+- `data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.3.json`
 
-Current representation baseline:
+Current typed representation baseline:
 
 - `data/JANUS-LINEAR-A-TYPED-TOKEN-CORRECTIVE-REPLAY-RESULT-2026-08-14-v0.6.2.json`
 
-v0.7 reconciliation:
+Current v0.7 reconciliation:
 
 - `data/JANUS-LINEAR-A-V0.7-DUAL-IMPLEMENTATION-RECONCILIATION-2026-08-14-v1.0.json`
+
+Current v0.8 result:
+
+- `data/JANUS-LINEAR-A-HIGHER-ORDER-NEIGHBORHOOD-RESULT-2026-08-14-v0.8.json`
 
 Historical states and receipts are never deleted. New canonical states supersede them only for current inference.
 
 ## Repository layout
 
-- `research/linear_a/` — executable parsers, statistical runners, null operators, corrective replay code, and independent implementations.
-- `data/` — frozen execution specifications, immutable results, failure audits, reconciliation nodes, canonical state, machine-readable roadmaps, and Connection candidates.
-- `.github/workflows/` — actual execution wiring; GitHub Actions artifacts are receipts, not the permanent scientific registry.
+- `research/linear_a/` — parsers, token-typing policies, null operators, statistical runners, corrective replay code, and independent implementations.
+- `data/` — frozen execution specs, immutable result summaries, failure audits, reconciliations, canonical state, Connection candidates, and roadmaps.
+- `.github/workflows/` — actual executions; Actions artifacts are receipts, not the permanent scientific registry.
 
-## Frozen source corpus
+## Frozen same-corpus baseline
 
-Primary execution freezes:
+Primary same-corpus work currently freezes:
 
 - repository: `mwenge/lineara.xyz`
 - commit: `43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a`
@@ -34,54 +38,33 @@ Primary execution freezes:
 - numeric inventory: `items_analysis/numbers.txt`
 - numeric inventory blob: `a17b8922297795a90ea6761f32f6ea020b733a6d`
 
-No result may silently switch corpus versions.
+No result may silently switch source versions.
 
-## Historical analysis stages
+## Historical v0.1–v0.6 stages
 
-### v0.1 — blind full-corpus structural analysis
+- `janus_linear_a_full_corpus.py` — blind full-corpus structural analysis.
+- `janus_linear_a_candidate_holdout.py` — train-only candidate discovery followed by true held-out replication.
+- `janus_linear_a_survivor_decomposition.py` — post-reveal known-structure decomposition.
+- `janus_linear_a_vir_subtype.py` — A100-102/VIR quantitative subtype audit.
+- `janus_linear_a_known_subtracted.py` — known-family-subtracted numeric cross-region search.
+- `janus_linear_a_record_role.py` — record-boundary / formula-slot cross-region search.
 
-`janus_linear_a_full_corpus.py`
+These runners remain preserved even where later representation corrections supersede their old inferential receipts.
 
-### v0.2 — candidate-specific true held-out replication
-
-`janus_linear_a_candidate_holdout.py`
-
-### v0.3 — post-reveal survivor decomposition
-
-`janus_linear_a_survivor_decomposition.py`
-
-### v0.4 — A100-102 / VIR-family quantitative subtype audit
-
-`janus_linear_a_vir_subtype.py`
-
-### v0.5 — known-family-subtracted cross-region numeric search
-
-`janus_linear_a_known_subtracted.py`
-
-### v0.6 — record-boundary / formula-slot cross-region search
-
-`janus_linear_a_record_role.py`
-
-These historical runners remain preserved even when later representation corrections supersede their pre-correction receipts for current inference.
-
-## Representation corrections
-
-### v0.6.1 — punctuation boundary policy
+## Representation correction v0.6.1 — punctuation boundary
 
 Files:
 
 - `janus_linear_a_parser_policy_v0_6_1.py`
 - `janus_linear_a_corrective_replay_v0_6_1.py`
 
-Trigger: a statistically strong `*900` record-role survivor was revealed to be Aegean word-separator punctuation rather than a semantic Linear A token.
+A strong pre-filter `*900` structural survivor was revealed to be Aegean word-separator punctuation, not a semantic Linear A token. The corrected policy removes `*900`, `*901`, `*902`, and `*903` before semantic hashing, scoring, null generation, numeric adjacency, and row geometry.
 
-Correction: `*900`, `*901`, `*902`, and `*903` are excluded before hashing, scoring, null generation, numeric adjacency, and row geometry. Historical receipts remain preserved.
-
-Audit:
+Permanent audit:
 
 - `data/JANUS-LINEAR-A-PARSER-BOUNDARY-CANARY-AUDIT-2026-08-14-v1.0.json`
 
-### v0.6.2 — typed-token semantic candidate universe
+## Representation correction v0.6.2 — typed candidate universe
 
 Files:
 
@@ -95,9 +78,9 @@ Typed classes:
 - `NUMERIC_APPROX_OR_UNCERTAIN`
 - `SEMANTIC_CANDIDATE`
 
-Only `SEMANTIC_CANDIDATE` may receive semantic word/suffix identity hashes. The corrective scan found 121 numeric-literal occurrences missed by the historical hard-coded fraction map across `¹⁄₅`, `¹⁄₃`, `≈¹⁄₆`, and `≈¹⁄₄`.
+Only `SEMANTIC_CANDIDATE` may receive semantic word/suffix identity hashes. The corrective scan found 121 numeric-literal occurrences that the historical hard-coded fraction parser had missed: `¹⁄₅`, `¹⁄₃`, `≈¹⁄₆`, and `≈¹⁄₄`.
 
-Audit:
+Permanent audit:
 
 - `data/JANUS-LINEAR-A-NUMERIC-LITERAL-TYPE-LEAK-AUDIT-2026-08-14-v1.0.json`
 
@@ -106,64 +89,43 @@ Authoritative typed replay:
 - run `31788159539`
 - artifact digest `sha256:24b42bedf2caa82d5fe0475d9268be2e6a54711181d0c53c8aabcd447f18a506`
 
-Current representation-level conclusion:
+Typed replay preserves known accounting/personnel controls but yields no novel numeric or record-role cross-region survivor.
 
-- known personnel/accounting controls remain recoverable after cleanup;
-- no novel numeric or record-role cross-region survivor remains;
-- `NEW_ANCHOR_ESTABLISHED = false`;
-- `DECIPHERMENT_ESTABLISHED = false`.
+## v0.7 — dual local-relation implementations
 
-## v0.7 — dual independent local-relation implementations
+Two materially different implementations were preserved and reconciled instead of silently choosing one.
 
-Two materially different v0.7 implementations now coexist intentionally. Neither is deleted or silently privileged. Their relationship is recorded in:
-
-- `data/JANUS-LINEAR-A-V0.7-DUAL-IMPLEMENTATION-RECONCILIATION-2026-08-14-v1.0.json`
-
-### v0.7 implementation A — screen/confirm + MASK geometry
+### Implementation A — screen/confirm + MASK geometry
 
 Runner:
 
 - `janus_linear_a_formula_transition_v0_7.py`
 
-Workflow:
-
-- `.github/workflows/janus-linear-a-formula-transition-v0-7.yml`
-
 Method:
 
 - local `TT` and `T-N-T` motifs;
-- deterministic `HT_SCREEN → HT_CONFIRM → NON_HT_REPLICATION`;
+- deterministic `HT_SCREEN → HT_CONFIRM → NON_HT`;
 - `CONTROL_INCLUDED` and `NOVELTY_MASKED` channels;
-- known `VIR* / KU-RO / KI-RO / PO-TO-KU-RO / GRA` positions are preserved as fixed `MASK` geometry in the novelty channel;
-- within-document semantic identity shuffle;
-- Bonferroni on confirmation and replication;
-- semantic reveal only after scoring.
+- known controls remain fixed `MASK` positions in the novelty channel so deletion cannot fabricate adjacency;
+- within-document semantic-identity shuffle;
+- Bonferroni on confirmation/replication.
 
 Execution:
 
 - run `31789138925`
 - artifact digest `sha256:d6587a682f561cd42d4badc7b54899a2c144ebc4759b14e8f3b353eefb0a4ef2`
 
-Result:
+Outcome:
 
-- known-control `SA·RA₂ → GRA` confirms across two disjoint HT partitions (`p_Bonf ≈ 0.00080`);
+- known-control `SA·RA₂ → GRA` confirms across disjoint HT partitions;
 - it is not evaluable in non-HT under frozen support minima;
-- novelty-masked channel has zero screen-eligible local `TT/TNT` motifs;
-- no novel cross-region survivor.
+- novelty-masked local TT/TNT channel has no screen-eligible novel motif.
 
-Permanent result:
-
-- `data/JANUS-LINEAR-A-FORMULA-TRANSITION-NEIGHBORHOOD-RESULT-2026-08-14-v0.7.json`
-
-### v0.7 implementation B — word-only triple-null max-T
+### Implementation B — word-only triple-null max-T
 
 Runner:
 
 - `janus_linear_a_formula_transition.py`
-
-Workflow:
-
-- `.github/workflows/janus-linear-a-formula-transition-v0.7.yml`
 
 Frozen spec:
 
@@ -172,46 +134,109 @@ Frozen spec:
 Method:
 
 - `WORD_ONLY` semantic representation;
-- six directed relation templates: `ADJACENT_TT`, `NUMERIC_BRIDGE_TNT`, `PRE_NUMERIC_BIGRAM_TTN`, `POST_NUMERIC_BIGRAM_NTT`, `ROW_PREFIX_TT`, `ROW_SUFFIX_TT`;
-- HT discovery, non-HT replication only after locked selection;
-- three destructive nulls: within-row identity shuffle, within-document identity shuffle, and predecessor/successor endpoint rewire;
-- max-T family-wise discovery control under all three nulls;
-- semantic reveal only after discovery/replication state is frozen.
+- six directed relation templates;
+- HT discovery;
+- three destructive nulls: within-row identity shuffle, within-document identity shuffle, and endpoint rewire;
+- max-T family-wise error control under all three nulls;
+- non-HT consulted only after locked HT selection.
 
 Execution:
 
 - run `31789134447`
 - artifact digest `sha256:106ce6f79633504e3c4913fea98497191a04465dc865ca39991a422fbbcad92f`
 
-Result:
+Outcome:
 
 - 27 HT-eligible semantic endpoints;
-- 79 scored nonzero directed hypotheses;
+- 79 scored nonzero hypotheses;
 - 0 pass all three max-T nulls;
-- 0 locked for non-HT replication;
-- no novel cross-region survivor.
+- 0 enter non-HT replication.
+
+Reconciliation node:
+
+- `data/JANUS-LINEAR-A-V0.7-DUAL-IMPLEMENTATION-RECONCILIATION-2026-08-14-v1.0.json`
+
+Reconciled claim ceiling:
+
+- intermediate candidates differ, as expected from different methods;
+- both converge on `NO_NOVEL_V0_7_CROSS_REGION_SURVIVOR`;
+- this is implementation-level convergence, not external corpus replication.
+
+## v0.8 — higher-order typed neighborhoods / specialization
+
+Frozen spec:
+
+- `data/JANUS-LINEAR-A-HIGHER-ORDER-NEIGHBORHOOD-EXECUTION-SPEC-2026-08-14-v0.8.json`
+
+Runner:
+
+- `janus_linear_a_higher_order_neighborhood_v0_8.py`
+
+Workflow:
+
+- `.github/workflows/janus-linear-a-higher-order-v0.8.yml`
+
+Design inherited the strongest safeguards from both v0.7 implementations:
+
+- disjoint `HT_SCREEN → HT_CONFIRM → NON_HT`;
+- `WORD_ONLY` semantic representation;
+- known controls as fixed `MASK` geometry in novelty analysis;
+- six frozen hypothesis families: TTT trigrams, T-N(bucket)-T, row-prefix/suffix TTT, IN and OUT neighborhood specialization;
+- three complementary nulls: row shuffle, document shuffle, template/endpoint rewire;
+- screen max-T within family plus Bonferroni across six families;
+- locked confirmation and replication;
+- explicit `NOT_EVALUABLE` semantics;
+- post-score semantic reveal.
+
+Execution:
+
+- run `31790304755`
+- head `422e2e14ee987a3c00a5c4149c94cb9871a97e2e`
+- artifact digest `sha256:3fe29f22073eeed57508e26260315110e11b8e9cbd4fd092278c3c3d4b356cea`
+
+Result:
+
+### CONTROL_INCLUDED
+
+- 22 eligible semantic IDs;
+- 19 tested specialization hypotheses;
+- 0 screen-selected;
+- 0 HT-confirmed;
+- 0 non-HT replicated.
+
+### NOVELTY_MASKED
+
+- 19 eligible semantic IDs;
+- 15 tested specialization hypotheses;
+- 1 screen-selected: `SA·RA₂`, OUT-neighborhood specialization;
+- screen corrected p under each of the three null families: approximately `0.003997`;
+- disjoint HT_CONFIRM support: 7 occurrences in 7 documents;
+- frozen specialization minimum: 8 occurrences in 5 documents;
+- state: `NOT_EVALUABLE`, not failed confirmation;
+- therefore 0 HT-confirmed and NON_HT was never entered.
+
+Post-score context matters: `SA·RA₂` was already the left endpoint of the v0.7 known-control motif `SA·RA₂→GRA`. Since GRA becomes a fixed MASK slot in the v0.8 novelty channel while `SA·RA₂` remains semantic, the specialization screen hit is consistent with a shadow of preserved known-control geometry. This contextual interpretation does not modify the frozen statistical outcome: the candidate is already `NOT_EVALUABLE` under the predeclared 8-occurrence HT_CONFIRM minimum.
 
 Permanent result:
 
-- `data/JANUS-LINEAR-A-FORMULA-TRANSITION-RESULT-2026-08-14-v0.7.json`
+- `data/JANUS-LINEAR-A-HIGHER-ORDER-NEIGHBORHOOD-RESULT-2026-08-14-v0.8.json`
 
-### Reconciled v0.7 conclusion
+Current v0.8 claim ceiling:
 
-The implementations disagree at the intermediate candidate level because they intentionally use different hypothesis families, partitions, known-control geometry, null models, and multiplicity rules. They agree at the claim ceiling:
+- novel higher-order cross-region survivors: 0;
+- `NEW_ANCHOR_ESTABLISHED = false`;
+- `DECIPHERMENT_ESTABLISHED = false`;
+- `EXTERNAL_REPLICATION_ESTABLISHED = false`.
 
-- `NO_NOVEL_V0_7_CROSS_REGION_SURVIVOR`
-- `NEW_ANCHOR_ESTABLISHED = false`
-- `DECIPHERMENT_ESTABLISHED = false`
-
-This is **implementation-level convergence on a negative novelty conclusion**, not external replication, because both consume the same frozen transcription corpus.
+The 8-occurrence confirmation minimum was not lowered to 7, and non-HT was not used to rescue the screen hit.
 
 ## Current promotion gate
 
-A new anchor requires:
+A genuinely new Linear A anchor requires:
 
 `TYPED CANDIDATE UNIVERSE → BLIND CANDIDATE/RELATION → RELATION-DESTROYING NULL SEPARATION → INDEPENDENT INTERNAL CONFIRMATION → CROSS-PARTITION REPLICATION → BEHAVIORAL CONSTRAINT → MORPHOLOGICAL/LEXICAL CONSISTENCY → INDEPENDENT TRANSCRIPTION/PARSER → INDEPENDENT IMPLEMENTATION`
 
-A green CI job proves only that the declared computation completed under its programmed claim ceiling.
+A green CI job proves computation and programmed claim-ceiling compliance only.
 
 ## Persistent evidence discipline
 
@@ -221,45 +246,30 @@ Every substantial experiment should have:
 2. a frozen execution spec in `data/` before claim-bearing execution when feasible;
 3. an actual CI run and artifact digest;
 4. an immutable result JSON in `data/`;
-5. explicit separation of PASS, FAIL, NOT_EVALUABLE, KNOWN_CONTROL, REPRESENTATION_FAILURE, and NO_PROMOTION;
+5. explicit PASS / FAIL / NOT_EVALUABLE / KNOWN_CONTROL / REPRESENTATION_FAILURE / NO_PROMOTION semantics;
 6. a canonical-state update only after result verification;
-7. a roadmap branch that was declared independently of the observed semantic label whenever possible.
+7. a predeclared roadmap branch independent of the observed semantic label whenever possible.
 
 Negative results and representation failures are scientific state, not cleanup noise.
 
-## Roadmap from canonical v2.2
+## Roadmap from canonical v2.3
 
 Canonical roadmap:
 
-- `data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.2.json`
+- `data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.3.json`
 
 Current sequence:
 
 1. **R0 — DONE:** typed candidate ontology v0.6.2.
-2. **R1 — DONE / RECONCILED NEGATIVE:** dual v0.7 local relation implementations; no novel cross-region survivor.
-3. **R2 — NEXT:** v0.8 higher-order typed neighborhoods / formula specialization.
-4. **R3 — BLOCKING EXTERNAL REPLICATION CLAIM:** independent transcription/parser source.
-5. **R4 — REQUIRED FOR FUTURE POSITIVE SURVIVOR:** independent implementation replay.
-6. **R5 — BLOCKED:** behavioral, alternative-segmentation, morphology, and lexical competition until a replicated structural survivor exists.
-7. **R6 — BLOCKED:** decipherment claim.
+2. **R1 — DONE / RECONCILED NEGATIVE:** dual v0.7 local relation implementations.
+3. **R2 — DONE NEGATIVE:** v0.8 higher-order typed neighborhoods; one novelty screen hit was not evaluable in disjoint HT_CONFIRM and no candidate entered non-HT replication.
+4. **R3 — NEXT:** fresh independent transcription/parser source audit.
+5. **R4 — BLOCKED UNTIL R3:** source-specific normalizer/parser under `research/linear_a/`.
+6. **R5 — BLOCKED UNTIL R3/R4:** frozen external-replication spec using locked transforms, not re-discovery.
+7. **R6 — REQUIRED FOR ANY FUTURE POSITIVE SURVIVOR:** independent implementation replay.
+8. **R7 — BLOCKED:** behavioral/morphological/lexical competition until an externally replicated structural survivor exists.
+9. **R8 — BLOCKED:** decipherment claim.
 
-### v0.8 design contract
+### Fresh-source independence rule
 
-v0.8 must inherit the strongest controls from both v0.7 implementations:
-
-- disjoint `HT_SCREEN → HT_CONFIRM → NON_HT` partitions;
-- known controls preserved as fixed `MASK` geometry where deletion would fabricate adjacency;
-- `WORD_ONLY` primary semantic representation;
-- higher-order targets tested uniformly, not selected from v0.7 near-signals;
-- complementary structure-preserving nulls, including row/document shuffles and graph/template endpoint rewiring;
-- max-T or equivalent family-wise discovery control;
-- post-score semantic reveal;
-- explicit `NOT_EVALUABLE` versus `FAILED_REPLICATION` semantics;
-- no threshold relaxation because v0.7 was negative.
-
-Predeclared v0.8 target families should include:
-
-- directed `T-T-T` trigrams;
-- `T-N(bucket)-T` motifs with frozen numeric buckets;
-- MASK-aware row-boundary predecessor/successor signatures;
-- candidate-level in-neighbor/out-neighbor specialization.
+A different website, file format, or wrapper is not enough. A source can count toward external replication only after provenance audit establishes meaningful independence in transcription/editorial decisions and a source-specific parser/normalizer is implemented without passing the data through `mwenge/lineara.xyz` assumptions.
