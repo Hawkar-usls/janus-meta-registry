@@ -1,0 +1,68 @@
+name: JANUS Linear A R3B-0 Notti 2018 source-parser integrity audit v0.1
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'data/JANUS-LINEAR-A-R3B-0-NOTTI-2018-SOURCE-PARSER-INTEGRITY-AUDIT-SPEC-2026-08-14-v0.1.json'
+      - 'research/linear_a/janus_linear_a_r3b0_notti_2018_source_parser_integrity_audit_v0_1.py'
+      - '.github/workflows/janus-linear-a-r3b0-notti-2018-source-parser-integrity-audit-v0-1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install PDF dependency
+        run: python -m pip install --disable-pip-version-check 'pypdf[crypto]==5.9.0'
+      - name: Compile source-only audit runner
+        run: python -m py_compile research/linear_a/janus_linear_a_r3b0_notti_2018_source_parser_integrity_audit_v0_1.py
+      - name: Execute frozen source-only parser audit
+        run: |
+          python research/linear_a/janus_linear_a_r3b0_notti_2018_source_parser_integrity_audit_v0_1.py \
+            --spec data/JANUS-LINEAR-A-R3B-0-NOTTI-2018-SOURCE-PARSER-INTEGRITY-AUDIT-SPEC-2026-08-14-v0.1.json \
+            --out data/JANUS-LINEAR-A-R3B-0-NOTTI-2018-SOURCE-PARSER-INTEGRITY-AUDIT-RESULT-2026-08-14-v0.1.json \
+            --pdf-tmp /tmp/notti-2018-source-parser-audit.pdf
+      - name: Enforce source-only corrective admission
+        run: |
+          python - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-R3B-0-NOTTI-2018-SOURCE-PARSER-INTEGRITY-AUDIT-RESULT-2026-08-14-v0.1.json'
+          x=json.load(open(p,encoding='utf-8'))
+          assert x['status']=='SOURCE_PARSER_PARENT_DEFECT_CONFIRMED_SOURCE_ONLY_CORRECTIVE_CONTRACT_READY'
+          assert x['all_checks_pass'] is True
+          assert x['summary']['THE9_parent_truncation_defect_confirmed'] is True
+          assert x['summary']['reference_readings_fetched'] is False
+          assert x['summary']['zero_sign_ids']==[]
+          assert x['summary']['classification_counts']['AMBIGUOUS_MULTIFRAGMENT_SOURCE_ROW'] >= 1
+          print(json.dumps(x['summary'],indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-notti-2018-source-parser-integrity-audit-v0-1
+          path: data/JANUS-LINEAR-A-R3B-0-NOTTI-2018-SOURCE-PARSER-INTEGRITY-AUDIT-RESULT-2026-08-14-v0.1.json
+          if-no-files-found: error
+          retention-days: 90
+      - name: Persist source-only audit
+        env:
+          RESULT: data/JANUS-LINEAR-A-R3B-0-NOTTI-2018-SOURCE-PARSER-INTEGRITY-AUDIT-RESULT-2026-08-14-v0.1.json
+        run: |
+          git config user.name 'JANUS Evidence Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add "$RESULT"
+          git commit -m 'Register Linear A Notti 2018 source-parser integrity audit v0.1' || true
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then exit 0; fi
+            git pull --rebase origin main
+          done
+          exit 1
