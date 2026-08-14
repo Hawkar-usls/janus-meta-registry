@@ -1,0 +1,95 @@
+name: JANUS Linear A R3C external parser-family fingerprint v0.1
+
+on:
+  push:
+    paths:
+      - ".github/workflows/janus-linear-a-r3c-external-parser-fingerprint-v0-1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fingerprint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compile frozen runner
+        run: python3 -m py_compile research/linear_a/janus_linear_a_r3c_external_parser_fingerprint_v0_1.py
+
+      - name: Verify freeze precedes execution
+        run: |
+          python3 - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-R3C-1D-EXTERNAL-PARSER-FAMILY-FINGERPRINT-SPEC-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['status']=='FROZEN_BEFORE_EXECUTION'
+          assert d['contamination']['external_MDP_reports_LEDGER_419_known_before_execution'] is True
+          assert d['contamination']['therefore_count_419_has_no_blind_credit'] is True
+          PY
+
+      - name: Checkout exact Briakos historical source
+        uses: actions/checkout@v4
+        with:
+          repository: mwenge/lineara.xyz
+          ref: 568f452c7a5ec80fa292cb307ead2fc6f65d07fb
+          path: external/mwenge-historical
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            LinearAInscriptions.js
+          sparse-checkout-cone-mode: false
+
+      - name: Re-prove source identity and execute fixed external parser
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C external/mwenge-historical rev-parse HEAD)" = "568f452c7a5ec80fa292cb307ead2fc6f65d07fb"
+          test "$(wc -c < external/mwenge-historical/LinearAInscriptions.js | tr -d ' ')" = "1609122"
+          test "$(sha256sum external/mwenge-historical/LinearAInscriptions.js | awk '{print $1}')" = "b7b383b93db55b504eb00c552a8b18c19a588e83bba7ff0ab93ca32277d8bfe2"
+          python3 research/linear_a/janus_linear_a_r3c_external_parser_fingerprint_v0_1.py \
+            --source external/mwenge-historical/LinearAInscriptions.js \
+            --output data/JANUS-LINEAR-A-R3C-1D-EXTERNAL-PARSER-FAMILY-FINGERPRINT-RESULT-2026-08-14-v0.1.json
+
+      - name: Enforce claim ceiling only
+        run: |
+          python3 - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-R3C-1D-EXTERNAL-PARSER-FAMILY-FINGERPRINT-RESULT-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['source']['identity_admitted'] is True
+          assert d['grading']['Briakos_code_identity_claimed'] is False
+          assert d['claim_ceiling']['Briakos_parser_reconstructed'] is False
+          assert d['claim_ceiling']['R3B_effect']=='NONE'
+          assert d['claim_ceiling']['decipherment'] is False
+          PY
+
+      - name: Upload immutable result
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r3c-external-parser-fingerprint-v0.1
+          path: data/JANUS-LINEAR-A-R3C-1D-EXTERNAL-PARSER-FAMILY-FINGERPRINT-RESULT-2026-08-14-v0.1.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Persist result with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "janus-proof-bot"
+          git config user.email "janus-proof-bot@users.noreply.github.com"
+          git add data/JANUS-LINEAR-A-R3C-1D-EXTERNAL-PARSER-FAMILY-FINGERPRINT-RESULT-2026-08-14-v0.1.json
+          git commit -m "Register Linear A external parser-family fingerprint v0.1"
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then pushed=1; break; fi
+            sleep "$attempt"
+          done
+          test "$pushed" = 1
