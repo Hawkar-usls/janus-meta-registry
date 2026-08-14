@@ -1,0 +1,121 @@
+name: JANUS Linear A canonical state v2.15
+
+on:
+  push:
+    paths:
+      - "data/JANUS-LINEAR-A-RESEARCH-STATE-PROMOTION-SPEC-2026-08-14-v2.15.json"
+      - ".github/workflows/janus-linear-a-canonical-state-v2-15.yml"
+  workflow_dispatch:
+permissions: {contents: write}
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - name: Re-read evidence and build v2.15 candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import copy,json,os
+          sp='data/JANUS-LINEAR-A-RESEARCH-STATE-PROMOTION-SPEC-2026-08-14-v2.15.json'
+          s=json.load(open(sp,encoding='utf-8'))
+          assert s['status']=='FROZEN_BEFORE_CANONICAL_PROMOTION'
+          p=json.load(open(s['parent_canonical']['path'],encoding='utf-8'))
+          assert p['version']==s['parent_canonical']['required_version'] and p['status']==s['parent_canonical']['required_status']
+          ev={}
+          for k,r in s['required_new_evidence'].items():
+              assert os.path.exists(r['path']), (k,r['path'])
+              d=json.load(open(r['path'],encoding='utf-8')); assert d['status']==r['required_status'], (k,d.get('status'),r['required_status']); ev[k]=d
+          w=ev['current_windows_comparison']; r=ev['current_resource_routing']; m=ev['current_method_differential']; pc=s['promotion_checks']
+          checks={
+            'bundle_sha':w['source']['sha256']==pc['current_bundle_sha256'],
+            'bundle_bytes':w['source']['bytes']==pc['current_bundle_bytes'],
+            'uralic_absent':w['Uralic_member_name_present'] is False,
+            'identity_targets':w['historical_comparison_summary']['targets']==pc['historical_identity_targets'],
+            'identity_byte_identical':w['historical_comparison_summary']['byte_identical']==pc['historical_byte_identical_targets'],
+            'one_plaintext_py':r['answers']['plaintext_python_source_member_count']==pc['plaintext_python_source_count'],
+            'zero_pyc':r['answers']['python_bytecode_member_count']==pc['python_bytecode_count'],
+            'base_candidate':any(x['name']==pc['BaseSheet_candidate_path'] for x in r['answers']['BaseSheet_candidates']),
+            'slots':m['target_summary']['comparison_slots']==pc['target_function_comparison_slots'],
+            'all_hist_present':m['target_summary']['historical_occurrences_present']==11,
+            'identical7':m['target_summary']['ast_structurally_identical_occurrences']==pc['target_function_AST_identical'],
+            'changed4':m['target_summary']['ast_changed_or_missing_occurrences']==pc['target_function_AST_changed'],
+            'dimension':m['current_BaseSheet']['sheets'][0]['declared_dimension']==pc['BaseSheet_declared_dimension'],
+            'headers':m['current_BaseSheet']['first_sheet_first_row_text']==pc['BaseSheet_headers'],
+            'header_continuity':m['current_BaseSheet']['first_sheet_headers_equal_historical_csv_headers'] is True,
+            'no_exec':m['safety']['current_source_executed'] is False and m['safety']['current_source_imported'] is False,
+            'paper_method_not_admitted':m['claim_ceiling']['paper_exact_2024_method_identity_established'] is False,
+            'paper_inputs_not_admitted':m['claim_ceiling']['paper_exact_2024_inputs_established'] is False,
+            'R3B_none':m['claim_ceiling']['R3B_effect']=='NONE',
+            'no_anchor':m['claim_ceiling']['new_anchor'] is False,
+            'no_decipherment':m['claim_ceiling']['decipherment'] is False
+          }
+          assert all(checks.values()), {k:v for k,v in checks.items() if not v}
+          c=copy.deepcopy(p)
+          c['artifact_uuid']='JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.15-CANDIDATE'; c['version']='v2.15-candidate'; c['node_type']='canonical_research_state_candidate'; c['status']='CANDIDATE_PENDING_CANONICALITY_AUDIT'; c['timestamp']='2026-08-14T22:31:00+03:00'; c['title']='JANUS Linear A canonical candidate after current public-software provenance differential'
+          c['canonicality']={'current_source_of_truth':False,'parent_state':s['parent_canonical']['path'],'promotion_spec':sp,'promotion_prerequisites_pass':True,'history_is_not_deleted':True}
+          c['R3C_3_current_public_software_provenance']={
+            'status':'CURRENT_BUNDLE_QUARANTINED_METHOD_CONTINUITY_PARTIAL_PAPER_EXACT_BLOCKED',
+            'bundle_comparison':s['required_new_evidence']['current_windows_comparison']['path'],
+            'resource_routing':s['required_new_evidence']['current_resource_routing']['path'],
+            'corrected_method_differential':s['required_new_evidence']['current_method_differential']['path'],
+            'bundle_sha256':w['source']['sha256'],'bundle_bytes':w['source']['bytes'],'bundle_entries':w['quarantine']['entry_count'],
+            'Uralic_member_name_present':False,
+            'historical_identity_summary':w['historical_comparison_summary'],
+            'current_plaintext_source':{'path':'LinearADecipherment/LinearADecipherment.py','sha256':m['current_source']['sha256'],'bytes':m['current_source']['bytes']},
+            'method_target_summary':m['target_summary'],
+            'BaseSheet_current':{'path':m['current_BaseSheet']['path'],'sha256':m['current_BaseSheet']['sha256'],'dimension':m['current_BaseSheet']['sheets'][0]['declared_dimension'],'headers':m['current_BaseSheet']['first_sheet_first_row_text'],'schema_headers_match_historical':True},
+            'interpretation':'The current public Windows distribution preserves Complied_Gorilla and the four historical Ancient Egyptian, Luwian, Hittite, and Proto-Celtic dictionary files byte-for-byte, still exposes no Uralic-named resource, and includes plaintext current Python source. Across 11 predeclared historical/current target-function occurrences, 7 are normalized-AST identical and 4 differ. The historical main General Decipherment loader/update path is structurally continuous, while the secondary rem_vowel/updateGeneralDeciphermentTable2/openFileDialog1/openFileDialog2 path changed. BaseSheet changed container CSV to XLSX but retains A1:C1336 and the headers Source / NEW FORMAT / Linear A. This narrows software provenance but does not identify the exact 2024 study snapshot.'
+          }
+          for row in c.get('roadmap',[]):
+              if row.get('id')=='R3C_3_CORRECTIVE_LANGUAGE_MATCH_AUDIT': row['status']='HISTORICAL_STRESS_DONE_CURRENT_METHOD_PROVENANCE_NARROWED_PAPER_EXACT_2024_BLOCKED'
+          c['next_atomic_requirements']=[
+            {'id':'P0_RILA_S1_BYTE_ACQUISITION','action':'Continue lawful exact-byte acquisition of RILA-S1 or another alternate-editorial transcription; quarantine and R3B0 receipt before content search.'},
+            {'id':'P1_R3C_3_PAPER_SNAPSHOT_BRIDGE','action':'Use Git history/public distribution chronology and exact member identities to localize the software/data snapshot closest to the 2024 study; Uralic remains the explicit missing public resource.'},
+            {'id':'P1_R3C_3_URALIC_ACQUISITION','action':'Acquire exact Uralic study input or provenance from lawful public/supplementary source before any five-language paper-exact audit.'},
+            {'id':'P2_R3C_1F_BRIAKOS_METHOD_MATERIAL','action':'Continue lawful Briakos method-material recovery without target-guided subset fitting.'},
+            {'id':'P3_R3D_PETROLITO_XML_BYTES','action':'Continue historical TEI-EpiDoc byte recovery with fixed L1 ceiling.'}
+          ]
+          c['highest_admissible_claim']=p['highest_admissible_claim'] + ' JANUS has now acquired and quarantined the exact current public Windows software bundle and statically compared its plaintext method source to the recovered 2021 historical source. Five of seven predeclared historical resource targets remain byte-identical, including Complied_Gorilla and four language dictionaries; no Uralic-named resource is present. Seven of eleven predeclared target-function occurrences are normalized-AST identical and four differ. The primary historical General Decipherment path remains structurally continuous, while a secondary path changed. BaseSheet moved from CSV to XLSX but preserves A1:C1336 and the same three headers. These facts narrow software lineage but do not identify the exact 2024 study snapshot or inputs, reproduce the paper, establish a language relationship, change R3B, create an anchor, or decipher Linear A.'
+          c['claim_ceiling'].update({'R3C_3_current_public_bundle_exact_bytes_recovered':True,'R3C_3_current_plaintext_method_source_recovered':True,'R3C_3_current_vs_historical_AST_differential_established':True,'R3C_3_current_vs_historical_identical_target_occurrences':7,'R3C_3_current_vs_historical_changed_target_occurrences':4,'R3C_3_Uralic_public_bundle_resource_found':False,'R3C_3_paper_exact_2024_method_identity_established':False,'R3C_3_paper_exact_2024_input_identity_established':False,'R3C_3_published_2024_matches_reproduced':False,'R3C_3_language_family_relationship_established':False,'R3B_0_alternate_editorial_source_bytes_acquired':False,'external_transcription_replication_established':False,'new_anchor_established':False,'decipherment_established':False,'promotion':'BLOCKED'})
+          out='data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.15-CANDIDATE.json'; open(out,'w',encoding='utf-8').write(json.dumps(c,ensure_ascii=False,indent=2)+'\n'); json.dump(checks,open('/tmp/v215-checks.json','w'),ensure_ascii=False,indent=2)
+          PY
+      - name: Canonicality audit and promote v2.15
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import copy,json
+          cp='data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.15-CANDIDATE.json'; c=json.load(open(cp,encoding='utf-8')); checks=json.load(open('/tmp/v215-checks.json'))
+          assert c['status']=='CANDIDATE_PENDING_CANONICALITY_AUDIT' and all(checks.values())
+          assert c['R3C_3_current_public_software_provenance']['Uralic_member_name_present'] is False
+          assert c['R3C_3_current_public_software_provenance']['method_target_summary']['ast_structurally_identical_occurrences']==7
+          assert c['claim_ceiling']['R3C_3_paper_exact_2024_method_identity_established'] is False
+          assert c['claim_ceiling']['external_transcription_replication_established'] is False and c['claim_ceiling']['new_anchor_established'] is False and c['claim_ceiling']['decipherment_established'] is False
+          audit={'artifact_uuid':'JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.15','version':'v2.15','node_type':'canonicality_audit_result','status':'CANONICALITY_AUDIT_PASS','candidate':cp,'promotion_spec':'data/JANUS-LINEAR-A-RESEARCH-STATE-PROMOTION-SPEC-2026-08-14-v2.15.json','checks':checks,'all_checks_pass':True,'claim_ceiling':{'R3B_effect':'NONE','new_anchor':False,'decipherment':False}}
+          ap='data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.15.json'; open(ap,'w',encoding='utf-8').write(json.dumps(audit,ensure_ascii=False,indent=2)+'\n')
+          out=copy.deepcopy(c); out['artifact_uuid']='JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.15'; out['version']='v2.15'; out['node_type']='canonical_research_state'; out['status']='CURRENT_CANONICAL_RESEARCH_STATE'; out['canonicality'].update({'current_source_of_truth':True,'candidate_path':cp,'canonicality_audit':ap,'canonicality_audit_status':'CANONICALITY_AUDIT_PASS','promotion_rule_satisfied':True})
+          open('data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.15.json','w',encoding='utf-8').write(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-canonical-state-v2.15
+          path: |
+            data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.15-CANDIDATE.json
+            data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.15.json
+            data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.15.json
+          if-no-files-found: error
+          retention-days: 90
+      - name: Persist canonical v2.15 with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'janus-proof-bot'; git config user.email 'janus-proof-bot@users.noreply.github.com'
+          git add data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.15-CANDIDATE.json data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.15.json data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.15.json
+          git commit -m 'Promote Linear A canonical research state v2.15 after current software provenance differential'
+          pushed=0
+          for attempt in 1 2 3 4 5; do git fetch origin main; git rebase origin/main; if git push origin HEAD:main; then pushed=1; break; fi; sleep "$attempt"; done
+          test "$pushed" = 1
