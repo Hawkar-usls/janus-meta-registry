@@ -1,0 +1,197 @@
+name: JANUS Linear A SigLA parser-integrity preflight v0.1
+
+on:
+  push:
+    paths:
+      - "research/linear_a/janus_linear_a_sigla_parser_integrity_preflight_v0_1.py"
+      - "research/linear_a/janus_linear_a_sigla_inventory_audit.py"
+      - "research/linear_a/janus_linear_a_sigla_structural_schema_probe_v0_1.py"
+      - "data/JANUS-LINEAR-A-SIGLA-PARSER-INTEGRITY-PREFLIGHT-SPEC-2026-08-14-v0.1.json"
+      - ".github/workflows/janus-linear-a-sigla-parser-integrity-preflight-v0-1.yml"
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  sigla-parser-integrity-preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      BRIDGE_RUN_ID: "31792232087"
+      BRIDGE_ARTIFACT_ID: "9215930408"
+      BRIDGE_ARTIFACT_NAME: "janus-linear-a-sigla-document-bridge-v0.1"
+      BRIDGE_ARTIFACT_DIGEST: "sha256:58ee76d08ae2aba79e0788421c99b453bc82949e7fa439bc381dfa45c0b42ab9"
+
+    steps:
+      - name: Checkout JANUS registry
+        uses: actions/checkout@v4
+
+      - name: Compile parser preflight runner
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            research/linear_a/janus_linear_a_sigla_parser_integrity_preflight_v0_1.py \
+            research/linear_a/janus_linear_a_sigla_inventory_audit.py \
+            research/linear_a/janus_linear_a_sigla_structural_schema_probe_v0_1.py
+
+      - name: Validate frozen preflight spec
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-SIGLA-PARSER-INTEGRITY-PREFLIGHT-SPEC-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['status']=='FROZEN_BEFORE_686_DOCUMENT_VALIDATION'
+          assert d['scientific_claim_bearing'] is False
+          u=d['frozen_universe']
+          assert u['document_count']==686
+          assert u['sampling']=='NONE_FULL_FROZEN_UNIVERSE'
+          assert u['replacement'] is False
+          assert u['actions_run_id']==31792232087
+          assert u['actions_artifact_id']==9215930408
+          assert u['actions_artifact_digest']=='sha256:58ee76d08ae2aba79e0788421c99b453bc82949e7fa439bc381dfa45c0b42ab9'
+          asset=d['frozen_sigla_asset_gate']
+          assert asset['required_sha256']=='cc624f148fd84c94fd2910b0adf92ecace25f52f9175664122bdf8384a8f1b9d'
+          assert asset['required_bytes']==2516528
+          r=d['readiness_gate_inherited_from_frozen_R3A_4']
+          assert r['parent_spec_commit']=='502095da1d9e715b4d20b697b3fa85e91f132a04'
+          assert r['minimum_parse_success_documents']==400
+          assert r['minimum_parse_success_fraction_of_686']==0.80
+          assert r['frozen_scientific_thresholds_changed'] is False
+          n=d['network_policy']
+          assert n['maximum_concurrent_document_fetches']==4
+          assert n['automatic_retry_count']==1
+          assert n['replacement_document_allowed'] is False
+          assert d['claim_ceiling']['R3A_4_scoring_admitted'] is False
+          assert d['claim_ceiling']['external_transcription_replication_established'] is False
+          PY
+
+      - name: Validate immutable 686-pair bridge artifact metadata
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          curl -fsSL \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/${BRIDGE_ARTIFACT_ID}" \
+            > /tmp/bridge-artifact-metadata.json
+          python3 - <<'PY'
+          import json, os
+          d=json.load(open('/tmp/bridge-artifact-metadata.json',encoding='utf-8'))
+          assert d['id']==int(os.environ['BRIDGE_ARTIFACT_ID'])
+          assert d['name']==os.environ['BRIDGE_ARTIFACT_NAME']
+          assert d['digest']==os.environ['BRIDGE_ARTIFACT_DIGEST']
+          assert d['expired'] is False
+          assert d['workflow_run']['id']==int(os.environ['BRIDGE_RUN_ID'])
+          print(json.dumps({'artifact_id':d['id'],'digest':d['digest'],'run_id':d['workflow_run']['id']},sort_keys=True))
+          PY
+
+      - name: Download exact frozen 686-pair bridge artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: janus-linear-a-sigla-document-bridge-v0.1
+          path: artifacts/source-bridge
+          run-id: 31792232087
+          github-token: ${{ github.token }}
+
+      - name: Execute full-universe parser-integrity preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/parser-preflight-pages
+          python3 research/linear_a/janus_linear_a_sigla_parser_integrity_preflight_v0_1.py \
+            --bridge-artifact-root artifacts/source-bridge \
+            --out data/JANUS-LINEAR-A-SIGLA-PARSER-INTEGRITY-PREFLIGHT-RESULT-2026-08-14-v0.1.json \
+            --snapshot-dir artifacts/parser-preflight-pages
+
+      - name: Validate preflight result and admission semantics
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, pathlib
+          p='data/JANUS-LINEAR-A-SIGLA-PARSER-INTEGRITY-PREFLIGHT-RESULT-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['scientific_claim_bearing'] is False
+          assert d['universe']['document_count']==686
+          assert d['universe']['sampling']=='NONE_FULL_FROZEN_UNIVERSE'
+          assert d['universe']['replacement_used'] is False
+          assert d['universe']['mwenge_transcription_content_accessed'] is False
+          asset=d['source_asset_gate']
+          if not asset['pass']:
+              assert d['status']=='BLOCKED_SOURCE_ASSET_CANARY_FAIL'
+              assert len(d['documents'])==0
+              assert d['summary']['R3A_4_scoring_admitted'] is False
+          else:
+              assert d['status'] in {'PREFLIGHT_EXECUTED_ADMITTED','PREFLIGHT_EXECUTED_BLOCKED'}
+              assert len(d['documents'])==686
+              s=d['summary']
+              assert s['attempted_document_count']==686
+              assert s['interface_evaluable_count']+s['not_evaluable_count']==686
+              assert s['pass_document_count']==s['pass_zero_word_count']+s['pass_positive_word_count']
+              assert 0.0 <= s['parser_integrity_success_fraction_of_686'] <= 1.0
+              admitted=(
+                  s['pass_document_count']>=400
+                  and s['parser_integrity_success_fraction_of_686']>=0.80
+                  and s['deterministic_mismatch_count']==0
+              )
+              assert s['R3A_4_scoring_admitted']==admitted
+              assert d['status']==('PREFLIGHT_EXECUTED_ADMITTED' if admitted else 'PREFLIGHT_EXECUTED_BLOCKED')
+              for row in d['documents']:
+                  assert row['state'] in {
+                    'PASS_ZERO_WORD','PASS_POSITIVE_WORD','NOT_EVALUABLE_FETCH_OR_INTERFACE',
+                    'FAIL_REPORTED_COUNT_PARSE','FAIL_SEQUENCE_COUNT_MISMATCH',
+                    'FAIL_ZERO_WORD_STRUCTURE_LEAK','FAIL_POSITIVE_WORD_STRUCTURE_COUNT',
+                    'FAIL_STRICT_ORDINAL_RELATION'
+                  }
+                  assert row['visible_transliteration_stored'] is False
+                  assert row['raw_sequence_list_stored'] is False
+              snaps=list(pathlib.Path('artifacts/parser-preflight-pages').glob('*.html'))
+              assert len(snaps) == 686 - d['summary']['not_evaluable_count'], (len(snaps),d['summary']['not_evaluable_count'])
+          b=d.get('blindness_receipt',{})
+          if b:
+              assert b['positional_role_scores_computed'] is False
+              assert b['candidate_recurrence_scores_computed'] is False
+              assert b['permutation_tests_computed'] is False
+              assert b['visible_transliteration_stored'] is False
+              assert b['raw_sequence_lists_stored'] is False
+          c=d['claim_ceiling']
+          assert c['R3A_4_scoring_admitted']==d['summary']['R3A_4_scoring_admitted']
+          assert c['external_transcription_replication_established'] is False
+          assert c['new_lexical_anchor_established'] is False
+          assert c['decipherment_established'] is False
+          assert c['promotion']=='BLOCKED'
+          print(json.dumps(d['summary'],sort_keys=True))
+          PY
+
+      - name: Persist parser-integrity preflight result
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "janus-proof-bot"
+          git config user.email "janus-proof-bot@users.noreply.github.com"
+          git add data/JANUS-LINEAR-A-SIGLA-PARSER-INTEGRITY-PREFLIGHT-RESULT-2026-08-14-v0.1.json
+          if git diff --cached --quiet; then
+            echo "No parser preflight result delta to commit"
+          else
+            git commit -m "Register SigLA parser-integrity preflight v0.1"
+            git push origin HEAD:main
+          fi
+
+      - name: Upload parser-integrity receipt and exact word-view snapshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-sigla-parser-integrity-preflight-v0.1
+          path: |
+            data/JANUS-LINEAR-A-SIGLA-PARSER-INTEGRITY-PREFLIGHT-RESULT-2026-08-14-v0.1.json
+            artifacts/parser-preflight-pages/*.html
+            /tmp/bridge-artifact-metadata.json
+          if-no-files-found: error
+          retention-days: 30
