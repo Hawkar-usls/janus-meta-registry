@@ -1,0 +1,69 @@
+name: JANUS Linear A SigLA word-view probe v0.1
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'research/linear_a/janus_linear_a_sigla_word_view_probe_v0_1.py'
+      - 'data/JANUS-LINEAR-A-SIGLA-WORD-VIEW-PROBE-SPEC-2026-08-14-v0.1.json'
+      - '.github/workflows/janus-linear-a-sigla-word-view-probe-v0-1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sigla-word-view-probe:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout JANUS registry
+        uses: actions/checkout@v4
+
+      - name: Validate frozen probe spec
+        run: |
+          python3 - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-SIGLA-WORD-VIEW-PROBE-SPEC-2026-08-14-v0.1.json'
+          d=json.load(open(p, encoding='utf-8'))
+          assert d['status']=='FROZEN_BEFORE_EXECUTION'
+          assert d['sampling']['sample']==['ZA10b','KNZb5','KHWc2012']
+          assert d['claim_ceiling']['new_anchor_established'] is False
+          assert d['claim_ceiling']['decipherment_established'] is False
+          PY
+
+      - name: Run SigLA native word-view probe
+        env:
+          PYTHONPATH: research/linear_a
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/sigla-word-view-snapshots
+          python3 research/linear_a/janus_linear_a_sigla_word_view_probe_v0_1.py \
+            --out artifacts/JANUS-LINEAR-A-SIGLA-WORD-VIEW-PROBE-RESULT-2026-08-14-v0.1.json \
+            --snapshot-dir artifacts/sigla-word-view-snapshots
+
+      - name: Validate probe claim ceiling
+        run: |
+          python3 - <<'PY'
+          import json
+          p='artifacts/JANUS-LINEAR-A-SIGLA-WORD-VIEW-PROBE-RESULT-2026-08-14-v0.1.json'
+          d=json.load(open(p, encoding='utf-8'))
+          assert d['status']=='TECHNICAL_WORD_VIEW_PROBE_EXECUTED'
+          assert len(d['pages'])==3
+          assert all(x['reported_word_count'] >= 1 for x in d['pages'])
+          g=d['epistemic_gate']
+          assert g['technical_word_view_contract_established'] is True
+          assert g['cross_digitization_content_replication_established'] is False
+          assert g['external_transcription_replication_established'] is False
+          assert g['new_anchor_established'] is False
+          assert g['decipherment_established'] is False
+          PY
+
+      - name: Upload probe receipt and frozen HTML snapshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-sigla-word-view-probe-v0.1
+          path: |
+            artifacts/JANUS-LINEAR-A-SIGLA-WORD-VIEW-PROBE-RESULT-2026-08-14-v0.1.json
+            artifacts/sigla-word-view-snapshots/*.html
+          if-no-files-found: error
+          retention-days: 30
