@@ -1,0 +1,162 @@
+name: JANUS Linear A transcription IR hardening v1.2.1
+
+on:
+  push:
+    paths:
+      - ".github/workflows/janus-linear-a-transcription-ir-hardening-v1-2-1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  validate-hardening:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compile cumulative hardening stack
+        run: |
+          python3 -m py_compile \
+            research/linear_a/janus_linear_a_transcription_ir_v1_0.py \
+            research/linear_a/janus_linear_a_transcription_ir_hardening_v1_1.py \
+            research/linear_a/janus_linear_a_transcription_ir_hardening_v1_2_1.py
+
+      - name: Verify corrective freeze and empirical coverage trigger
+        run: |
+          python3 - <<'PY'
+          import json
+          spec=json.load(open('data/JANUS-LINEAR-A-TRANSCRIPTION-IR-HARDENING-SPEC-2026-08-14-v1.2.1.json',encoding='utf-8'))
+          review=json.load(open('data/JANUS-LINEAR-A-TRANSCRIPTION-IR-HARDENING-PREVALIDATION-REVIEW-2026-08-14-v1.2.json',encoding='utf-8'))
+          v11=json.load(open('data/JANUS-LINEAR-A-TRANSCRIPTION-IR-HARDENING-VALIDATION-RESULT-2026-08-14-v1.1.json',encoding='utf-8'))
+          coverage=json.load(open('data/JANUS-LINEAR-A-R3C-2B-REAL-IR-HARDENING-COVERAGE-AUDIT-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert spec['status']=='FROZEN_BEFORE_IMPLEMENTATION_VALIDATION'
+          assert review['status']=='PREVALIDATION_REJECTED_TAXONOMY_MISMATCH'
+          assert review['validation_workflow_executed'] is False
+          assert spec['corrects']['v1_2_admitted'] is False
+          assert v11['status']==spec['parents']['v1_1_required_status']
+          assert coverage['status']==spec['empirical_trigger']['required_status']
+          assert coverage['D5']['all_4_source_split_symptoms_confirmed'] is True
+          assert coverage['D5']['all_4_directly_projectable_by_surface_only_v1_1'] is False
+          assert coverage['D6']['all_3_directly_projectable_by_v1_1_conflict_binding'] is True
+          PY
+
+      - name: Run base v1.0 regression
+        run: python3 research/linear_a/janus_linear_a_transcription_ir_v1_0.py self-test > /tmp/base-v1.0.json
+
+      - name: Run admitted v1.1 regression
+        env:
+          PYTHONPATH: research/linear_a
+        run: python3 research/linear_a/janus_linear_a_transcription_ir_hardening_v1_1.py --self-test > /tmp/v1.1.json
+
+      - name: Run v1.2.1 self-test
+        env:
+          PYTHONPATH: research/linear_a
+        run: python3 research/linear_a/janus_linear_a_transcription_ir_hardening_v1_2_1.py --self-test > /tmp/v1.2.1.json
+
+      - name: Build validation result
+        run: |
+          python3 - <<'PY'
+          import json
+          b=json.load(open('/tmp/base-v1.0.json',encoding='utf-8'))
+          p=json.load(open('/tmp/v1.1.json',encoding='utf-8'))
+          h=json.load(open('/tmp/v1.2.1.json',encoding='utf-8'))
+          positive=[
+            'inherited_v1_1_with_empty_v1_2_1_pass',
+            'valid_unresolved_separator_witness_pass',
+            'unresolved_without_witness_rejected',
+            'unresolved_SIGN_witness_rejected',
+            'surface_same_surface_rejected',
+            'line_same_segment_rejected',
+            'same_group_rejected',
+            'destructive_merge_rejected',
+            'linguistic_wordhood_claim_rejected',
+            'view_without_boundary_policy_rejected',
+            'view_without_unresolved_policy_rejected',
+            'view_with_fail_closed_policies_pass',
+            'v1_1_regression_self_test_pass'
+          ]
+          assert all(h[k] is True for k in positive), {k:h[k] for k in positive if h[k] is not True}
+          assert h['javascript_executed'] is False and h['decipherment_performed'] is False
+          result={
+            'artifact_uuid':'JANUS-LINEAR-A-TRANSCRIPTION-IR-HARDENING-VALIDATION-RESULT-2026-08-14-v1.2.1',
+            'version':'v1.2.1','node_type':'transcription_ir_hardening_validation_result','status':'HARDENING_V1_2_1_ADMITTED',
+            'frozen_spec':'data/JANUS-LINEAR-A-TRANSCRIPTION-IR-HARDENING-SPEC-2026-08-14-v1.2.1.json',
+            'implementation':'research/linear_a/janus_linear_a_transcription_ir_hardening_v1_2_1.py',
+            'prevalidation_rejected_predecessor':'data/JANUS-LINEAR-A-TRANSCRIPTION-IR-HARDENING-PREVALIDATION-REVIEW-2026-08-14-v1.2.json',
+            'base_v1_0_regression':b,
+            'v1_1_regression':p,
+            'v1_2_1_self_test':h,
+            'taxonomy_binding':{
+              'evidence_class_used_for_exact_boundary_witness':'MECHANICAL_EXACT',
+              'unresolved_witness_allowlist':['SEPARATOR','PUNCTUATION','DAMAGE','GAP','ILLEGIBLE','EDITORIAL_MARK','UNKNOWN_SOURCE_TOKEN','MASK'],
+              'base_taxonomy_rewritten':False
+            },
+            'admitted_generic_capabilities':{
+              'SOURCE_CONTINUATION_ACROSS_BOUNDARY':True,
+              'boundary_classes':['SURFACE','LINE','UNRESOLVED_SURFACE_OR_LINE'],
+              'unresolved_boundary_requires_nonsemantic_source_witness':True,
+              'unresolved_boundary_kind_promotion_forbidden_in_claim_view':True,
+              'destructive_merge_forbidden':True,
+              'linguistic_wordhood_promotion_forbidden':True,
+              'inherits_v1_1_identity_conflict_binding':True,
+              'v1_1_modified':False,
+              'base_ir_format_changed':False
+            },
+            'claim_ceiling':{
+              'generic_source_fidelity_hardening':True,
+              'v1_2_predecessor_admitted':False,
+              'D5_boundary_kind_resolved':False,
+              'linguistic_wordhood_proved':False,
+              'JANUS_independent_D5_D6_discovery':False,
+              'R3B_effect':'NONE','new_anchor':False,'decipherment':False
+            }
+          }
+          pth='data/JANUS-LINEAR-A-TRANSCRIPTION-IR-HARDENING-VALIDATION-RESULT-2026-08-14-v1.2.1.json'
+          open(pth,'w',encoding='utf-8').write(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
+          print(json.dumps({'status':result['status'],'self_test':h},sort_keys=True))
+          PY
+
+      - name: Enforce admitted claim ceiling
+        run: |
+          python3 - <<'PY'
+          import json
+          d=json.load(open('data/JANUS-LINEAR-A-TRANSCRIPTION-IR-HARDENING-VALIDATION-RESULT-2026-08-14-v1.2.1.json',encoding='utf-8'))
+          assert d['status']=='HARDENING_V1_2_1_ADMITTED'
+          assert d['admitted_generic_capabilities']['v1_1_modified'] is False
+          assert d['admitted_generic_capabilities']['base_ir_format_changed'] is False
+          assert d['claim_ceiling']['v1_2_predecessor_admitted'] is False
+          assert d['claim_ceiling']['D5_boundary_kind_resolved'] is False
+          assert d['claim_ceiling']['R3B_effect']=='NONE'
+          assert d['claim_ceiling']['new_anchor'] is False
+          assert d['claim_ceiling']['decipherment'] is False
+          PY
+
+      - name: Upload immutable validation result
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-transcription-ir-hardening-v1.2.1
+          path: data/JANUS-LINEAR-A-TRANSCRIPTION-IR-HARDENING-VALIDATION-RESULT-2026-08-14-v1.2.1.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Persist result with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "janus-proof-bot"
+          git config user.email "janus-proof-bot@users.noreply.github.com"
+          git add data/JANUS-LINEAR-A-TRANSCRIPTION-IR-HARDENING-VALIDATION-RESULT-2026-08-14-v1.2.1.json
+          git commit -m "Register Linear A transcription IR hardening validation v1.2.1"
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then pushed=1; break; fi
+            sleep "$attempt"
+          done
+          test "$pushed" = 1
