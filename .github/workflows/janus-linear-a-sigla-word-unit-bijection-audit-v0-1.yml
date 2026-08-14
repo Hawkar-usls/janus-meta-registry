@@ -1,0 +1,156 @@
+name: JANUS Linear A SigLA word-unit bijection audit v0.1
+
+on:
+  push:
+    paths:
+      - "research/linear_a/janus_linear_a_sigla_word_unit_bijection_audit_v0_1.py"
+      - "data/JANUS-LINEAR-A-SIGLA-WORD-UNIT-BIJECTION-AUDIT-SPEC-2026-08-14-v0.1.json"
+      - ".github/workflows/janus-linear-a-sigla-word-unit-bijection-audit-v0-1.yml"
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  sigla-word-unit-bijection-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      SOURCE_RUN_ID: "31795304484"
+      SOURCE_ARTIFACT_ID: "9217125592"
+      SOURCE_ARTIFACT_NAME: "janus-linear-a-sigla-structural-capability-inventory-v0.1"
+      SOURCE_ARTIFACT_DIGEST: "sha256:c827581c2c996b6d962d4574e42c1bcfcace489d2bb4a44ba3d1a61db3c27913"
+
+    steps:
+      - name: Checkout JANUS registry
+        uses: actions/checkout@v4
+
+      - name: Validate frozen bijection audit spec
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-SIGLA-WORD-UNIT-BIJECTION-AUDIT-SPEC-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['status']=='FROZEN_BEFORE_WORD_UNIT_BIJECTION_AUDIT'
+          assert d['scientific_claim_bearing'] is False
+          p=d['parent_inventory']
+          assert p['result_commit']=='0c2588ffabd68a723a58539290598ae4f4f07b70'
+          assert p['actions_run_id']==31795304484
+          assert p['actions_artifact_id']==9217125592
+          assert p['actions_artifact_digest']=='sha256:c827581c2c996b6d962d4574e42c1bcfcace489d2bb4a44ba3d1a61db3c27913'
+          assert p['sample_size']==32
+          assert p['capability_positive_count']==19
+          assert p['capability_negative_count']==13
+          assert d['audit_population']['live_fetch_forbidden'] is True
+          assert d['audit_population']['mwenge_content_access_forbidden'] is True
+          assert d['claim_ceiling']['external_transcription_replication_established'] is False
+          PY
+
+      - name: Validate immutable source artifact metadata
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          curl -fsSL \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/${SOURCE_ARTIFACT_ID}" \
+            > /tmp/source-artifact-metadata.json
+          python3 - <<'PY'
+          import json, os
+          d=json.load(open('/tmp/source-artifact-metadata.json',encoding='utf-8'))
+          assert d['id']==int(os.environ['SOURCE_ARTIFACT_ID'])
+          assert d['name']==os.environ['SOURCE_ARTIFACT_NAME']
+          assert d['digest']==os.environ['SOURCE_ARTIFACT_DIGEST']
+          assert d['expired'] is False
+          assert d['workflow_run']['id']==int(os.environ['SOURCE_RUN_ID'])
+          PY
+
+      - name: Download exact frozen structural capability artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: janus-linear-a-sigla-structural-capability-inventory-v0.1
+          path: artifacts/source-capability
+          run-id: 31795304484
+          github-token: ${{ github.token }}
+
+      - name: Execute frozen 19-document word-unit bijection audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/linear_a/janus_linear_a_sigla_word_unit_bijection_audit_v0_1.py \
+            --artifact-root artifacts/source-capability \
+            --out data/JANUS-LINEAR-A-SIGLA-WORD-UNIT-BIJECTION-AUDIT-RESULT-2026-08-14-v0.1.json
+
+      - name: Validate bijection result and claim ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-SIGLA-WORD-UNIT-BIJECTION-AUDIT-RESULT-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['status']=='WORD_UNIT_BIJECTION_AUDIT_EXECUTED'
+          assert d['scientific_claim_bearing'] is False
+          pop=d['population']
+          assert pop['frozen_capability_positive_documents']==19
+          assert len(pop['audited_documents'])==19
+          assert len(set(pop['audited_documents']))==19
+          assert pop['resampling_used'] is False
+          assert pop['replacement_used'] is False
+          assert pop['live_fetch_used'] is False
+          assert pop['mwenge_content_accessed'] is False
+          assert len(d['documents'])==19
+          for x in d['documents']:
+              assert x['popup_word_count']>0
+              assert x['svg_word_anchor_count']>0
+              assert x['literal_transcription_payload_extracted'] is False
+          s=d['summary']
+          assert s['audited_document_count']==19
+          assert 0 <= s['count_parity_document_count'] <= 19
+          assert 0 <= s['exact_fragment_reference_bijection_document_count'] <= 19
+          assert s['universal_count_parity']==(s['count_parity_document_count']==19)
+          assert s['universal_exact_fragment_reference_bijection']==(s['exact_fragment_reference_bijection_document_count']==19)
+          b=d['interpretation_boundary']
+          assert b['structural_reference_bijection_is_linguistic_word_validation'] is False
+          assert b['left_even_or_right_odd_mapping_inferred'] is False
+          assert b['literal_transcription_payload_extracted'] is False
+          g=d['epistemic_gate']
+          assert g['word_class_structural_bijection_established']==s['universal_exact_fragment_reference_bijection']
+          assert g['content_payload_grammar_frozen'] is False
+          assert g['cross_digitization_content_replication_established'] is False
+          assert g['external_transcription_replication_established'] is False
+          assert g['new_anchor_established'] is False
+          assert g['decipherment_established'] is False
+          assert d['claim_ceiling']['promotion']=='BLOCKED'
+          print(json.dumps(s,sort_keys=True))
+          PY
+
+      - name: Persist word-unit bijection audit result
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "janus-proof-bot"
+          git config user.email "janus-proof-bot@users.noreply.github.com"
+          git add data/JANUS-LINEAR-A-SIGLA-WORD-UNIT-BIJECTION-AUDIT-RESULT-2026-08-14-v0.1.json
+          if git diff --cached --quiet; then
+            echo "No bijection result delta to commit"
+          else
+            git commit -m "Register SigLA word-unit structural bijection audit v0.1"
+            git push origin HEAD:main
+          fi
+
+      - name: Upload bijection audit receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-sigla-word-unit-bijection-audit-v0.1
+          path: |
+            data/JANUS-LINEAR-A-SIGLA-WORD-UNIT-BIJECTION-AUDIT-RESULT-2026-08-14-v0.1.json
+            /tmp/source-artifact-metadata.json
+          if-no-files-found: error
+          retention-days: 30
