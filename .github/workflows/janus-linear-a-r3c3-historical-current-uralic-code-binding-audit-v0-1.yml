@@ -1,0 +1,94 @@
+name: JANUS Linear A R3C-3 historical/current Uralic code-binding audit v0.1
+
+on:
+  push:
+    paths:
+      - ".github/workflows/janus-linear-a-r3c3-historical-current-uralic-code-binding-audit-v0-1.yml"
+      - "research/linear_a/janus_linear_a_r3c3_historical_current_uralic_code_binding_audit_v0_1.py"
+      - "data/JANUS-LINEAR-A-R3C-3-HISTORICAL-CURRENT-URALIC-CODE-BINDING-AUDIT-SPEC-2026-08-14-v0.1.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  code-binding-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify frozen parents and compile
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          s=json.load(open('data/JANUS-LINEAR-A-R3C-3-HISTORICAL-CURRENT-URALIC-CODE-BINDING-AUDIT-SPEC-2026-08-14-v0.1.json',encoding='utf-8'))
+          p=json.load(open('data/JANUS-LINEAR-A-R3C-3-ALL-PUBLIC-PACKAGE-MEMBER-NAME-AUDIT-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert s['status']=='FROZEN_BEFORE_EXECUTION'
+          assert p['status']==s['parents']['required_parent_status']
+          assert p['summary']['Uralic_named_member_total']==0
+          assert s['static_analysis']['module_execution'] is False
+          assert s['static_analysis']['module_import'] is False
+          assert s['claim_ceiling']['external_or_user_supplied_Uralic_channel_proved'] is False
+          PY
+          python3 -m py_compile research/linear_a/janus_linear_a_r3c3_historical_current_uralic_code_binding_audit_v0_1.py
+      - name: Acquire exact historical and current public bundles
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p external/r3c3-code-binding
+          H='external/r3c3-code-binding/historical-mac.zip'
+          C='external/r3c3-code-binding/current-win.zip'
+          curl --fail --location --retry 4 --retry-all-errors --connect-timeout 20 --max-time 180 'https://raw.githubusercontent.com/L-Colin/Linear-A-decipherment-programme/fab66e715b18607c4b383782e7f4d1b86a26d725/LinearADecipherment(Mac).zip' --output "$H"
+          curl --fail --location --retry 4 --retry-all-errors --connect-timeout 20 --max-time 300 'https://raw.githubusercontent.com/L-Colin/Linear-A-decipherment-programme/f6f61a38c00afb627a4db40575f433801581405c/LinearADecipherment(Win).zip' --output "$C"
+          test "$(git hash-object "$H")" = 'b58e8a3043911f6de921be39bbf516755839829f'
+          test "$(sha256sum "$H" | awk '{print $1}')" = 'a4627d4c2e26668593e8f6f9c8a004ae75bb3f1bbf497a39c0d4a772c9012850'
+          test "$(git hash-object "$C")" = '64da67661eee9d64deae8f6d599c4789085aa9e4'
+          test "$(sha256sum "$C" | awk '{print $1}')" = 'd2a1582160456bd51d3f831017e7d15f92d712763286c66c0279ffd59aad2d16'
+      - name: Static AST language-name binding audit only
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/linear_a/janus_linear_a_r3c3_historical_current_uralic_code_binding_audit_v0_1.py \
+            --historical-bundle external/r3c3-code-binding/historical-mac.zip \
+            --current-bundle external/r3c3-code-binding/current-win.zip \
+            --out data/JANUS-LINEAR-A-R3C-3-HISTORICAL-CURRENT-URALIC-CODE-BINDING-AUDIT-RESULT-2026-08-14-v0.1.json \
+            | tee /tmp/uralic-code-binding.json
+      - name: Enforce static-only inference ceiling
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          d=json.load(open('data/JANUS-LINEAR-A-R3C-3-HISTORICAL-CURRENT-URALIC-CODE-BINDING-AUDIT-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert d['status'] in {'URALIC_NAME_ABSENT_FROM_HISTORICAL_AND_CURRENT_PLAINTEXT_SOURCE','URALIC_NAME_PRESENT_IN_RECOVERED_PLAINTEXT_SOURCE'}
+          assert d['historical_source']['ast_parse_success'] is True
+          assert d['current_source']['ast_parse_success'] is True
+          assert d['safety']['historical_source_executed'] is False
+          assert d['safety']['current_source_executed'] is False
+          assert d['safety']['historical_source_imported'] is False
+          assert d['safety']['current_source_imported'] is False
+          assert d['claim_ceiling']['external_or_user_supplied_Uralic_channel_proved'] is False
+          assert d['claim_ceiling']['paper_exact_2024_input_identity_established'] is False
+          assert d['claim_ceiling']['R3B_effect']=='NONE'
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r3c3-historical-current-uralic-code-binding-v0.1
+          path: |
+            data/JANUS-LINEAR-A-R3C-3-HISTORICAL-CURRENT-URALIC-CODE-BINDING-AUDIT-SPEC-2026-08-14-v0.1.json
+            data/JANUS-LINEAR-A-R3C-3-HISTORICAL-CURRENT-URALIC-CODE-BINDING-AUDIT-RESULT-2026-08-14-v0.1.json
+          if-no-files-found: error
+      - name: Persist result with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'janus-proof-bot'; git config user.email 'janus-proof-bot@users.noreply.github.com'
+          git add data/JANUS-LINEAR-A-R3C-3-HISTORICAL-CURRENT-URALIC-CODE-BINDING-AUDIT-RESULT-2026-08-14-v0.1.json
+          git commit -m 'Register Linear A R3C-3 historical/current Uralic code-binding audit v0.1'
+          pushed=0
+          for attempt in 1 2 3 4 5; do git fetch origin main; git rebase origin/main; if git push origin HEAD:main; then pushed=1; break; fi; sleep "$attempt"; done
+          test "$pushed" = 1
