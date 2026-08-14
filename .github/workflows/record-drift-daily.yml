@@ -4,6 +4,13 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '0 5 * * *'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/record-drift-daily.yml'
+      - 'tools/record_drift/t1_runner.py'
+      - 'data/JANUS-RECORD-DRIFT-OBSERVATORY-v0.1.json'
+      - 'data/JANUS-RECORD-DRIFT-BASELINE-T0-v0.1.json'
 
 permissions:
   contents: write
