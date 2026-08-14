@@ -1,0 +1,84 @@
+name: JANUS Linear A R5-0 word-level role learning v0.1
+on:
+  push:
+    paths:
+      - "data/JANUS-LINEAR-A-R5-0-EXECUTE-REQUEST-2026-08-14-v0.1.json"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  learn_words:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Install numeric dependency
+        run: python -m pip install --disable-pip-version-check "numpy>=2.0"
+      - name: Verify frozen R5 inputs
+        run: |
+          python -m py_compile research/linear_a/janus_linear_a_r5_word_level_role_learning_v0_1.py
+          python - <<'PY'
+          import json
+          s=json.load(open('data/JANUS-LINEAR-A-R5-0-WORD-LEVEL-SELF-SUPERVISED-ROLE-LEARNING-SPEC-2026-08-14-v0.1.json',encoding='utf-8'))
+          c=json.load(open('data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.21.json',encoding='utf-8'))
+          assert c['version']=='v2.21' and c['status']=='CURRENT_CANONICAL_RESEARCH_STATE'
+          assert s['source']['frozen_commit']=='43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a'
+          assert s['cross_validation']['folds']==5
+          assert s['certainty']['none_reinterpreted_as_certain'] is False
+          assert s['certainty']['doubtful_reinterpreted_as_certain'] is False
+          assert s['models']['M1_WORD_PPMI_SVD']['rank']==32
+          assert s['vocabulary']['minimum_train_word_frequency']==4
+          assert s['source']['translations_used'] is False
+          assert s['source']['external_language_dictionary_used'] is False
+          PY
+      - name: Fetch exact preservation-mirror corpus
+        run: |
+          git clone --quiet https://github.com/Hawkar-usls/lineara.xyz.git /tmp/lineara
+          git -C /tmp/lineara checkout --quiet 43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a
+          test "$(git -C /tmp/lineara rev-parse HEAD)" = "43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a"
+      - name: Execute five-fold word-level role learning
+        env:
+          PYTHONPATH: research/linear_a
+        run: |
+          python research/linear_a/janus_linear_a_r5_word_level_role_learning_v0_1.py \
+            --corpus /tmp/lineara \
+            --spec data/JANUS-LINEAR-A-R5-0-WORD-LEVEL-SELF-SUPERVISED-ROLE-LEARNING-SPEC-2026-08-14-v0.1.json \
+            --out data/JANUS-LINEAR-A-R5-0-WORD-LEVEL-SELF-SUPERVISED-ROLE-LEARNING-RESULT-2026-08-14-v0.1.json
+      - name: Enforce R5 evidence and ceiling
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open('data/JANUS-LINEAR-A-R5-0-WORD-LEVEL-SELF-SUPERVISED-ROLE-LEARNING-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert x['status'] in {'WORD_LEVEL_CROSS_VALIDATED_ROLE_STRUCTURE_SIGNAL_PRESENT','WORD_LEVEL_CROSS_VALIDATED_ROLE_STRUCTURE_SIGNAL_NOT_ADMITTED'}
+          assert x['source']['frozen_commit']=='43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a'
+          assert len(x['fold_results'])==5
+          assert x['leakage_firewall']['word_labels_visible_during_training'] is False
+          assert x['leakage_firewall']['none_reinterpreted_as_certain'] is False
+          assert x['leakage_firewall']['translations_used'] is False
+          assert x['leakage_firewall']['external_language_dictionary_used'] is False
+          assert x['leakage_firewall']['Notti_readings_used'] is False
+          e=x['epistemic_gate']
+          assert e['word_meanings_established'] is False
+          assert e['semantic_equivalence_established'] is False
+          assert e['translation_established'] is False
+          assert e['phonetic_value_established'] is False
+          assert e['new_anchor_established'] is False
+          assert e['decipherment_established'] is False
+          assert e['R3B_external_replication_established'] is False
+          print(json.dumps({'status':x['status'],'admission':x['admission'],'aggregate':x['aggregate_masked_word_prediction'],'CV_role_analogy_count':x['cross_fold_word_role_analogy']['CV_role_analogy_count']},sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r5-word-role-v0-1
+          path: data/JANUS-LINEAR-A-R5-0-WORD-LEVEL-SELF-SUPERVISED-ROLE-LEARNING-RESULT-2026-08-14-v0.1.json
+          if-no-files-found: error
+          retention-days: 90
+      - name: Persist R5 result
+        run: |
+          git config user.name 'JANUS Evidence Bot'; git config user.email 'actions@users.noreply.github.com'
+          git add data/JANUS-LINEAR-A-R5-0-WORD-LEVEL-SELF-SUPERVISED-ROLE-LEARNING-RESULT-2026-08-14-v0.1.json
+          git commit -m 'Register Linear A R5-0 word-level role learning result v0.1' || true
+          for attempt in 1 2 3 4 5; do if git push origin HEAD:main; then exit 0; fi; git pull --rebase origin main; done; exit 1
