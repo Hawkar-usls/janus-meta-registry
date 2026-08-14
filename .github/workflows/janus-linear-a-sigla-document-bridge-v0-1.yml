@@ -1,0 +1,100 @@
+name: JANUS Linear A SigLA document bridge v0.1
+
+on:
+  push:
+    paths:
+      - "research/linear_a/janus_linear_a_sigla_document_bridge_v0_1.py"
+      - "research/linear_a/janus_linear_a_sigla_inventory_audit.py"
+      - "data/JANUS-LINEAR-A-SIGLA-DOCUMENT-IDENTITY-BRIDGE-SPEC-2026-08-14-v0.1.json"
+      - ".github/workflows/janus-linear-a-sigla-document-bridge-v0-1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sigla-document-bridge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout JANUS registry
+        uses: actions/checkout@v4
+
+      - name: Validate frozen bridge spec
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-SIGLA-DOCUMENT-IDENTITY-BRIDGE-SPEC-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['status']=='FROZEN_BEFORE_BRIDGE_EXECUTION'
+          assert d['source_freeze']['SIGLA']['required_content_sha256']=='c1d25f91dccf334c3cf24b52c1e4a279970cebd3f5c6f377569de076360170cd'
+          assert d['source_freeze']['SIGLA']['required_document_count']==802
+          assert d['bridge_transform']['name']=='SIGLA_REMOVE_ASCII_SPACES_ONLY'
+          assert 'a->r' in d['forbidden_transformations']
+          assert d['claim_ceiling']['external_transcription_replication_established'] is False
+          PY
+
+      - name: Fetch frozen mwenge baseline
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --quiet https://github.com/mwenge/lineara.xyz.git /tmp/lineara
+          git -C /tmp/lineara checkout --quiet 43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a
+          test "$(git -C /tmp/lineara rev-parse HEAD)" = "43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a"
+
+      - name: Execute frozen SigLA bridge v0.1
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          python3 research/linear_a/janus_linear_a_sigla_document_bridge_v0_1.py \
+            --mwenge-root /tmp/lineara \
+            --out artifacts/JANUS-LINEAR-A-SIGLA-DOCUMENT-IDENTITY-BRIDGE-RESULT-2026-08-14-v0.1.json \
+            --save-sigla-snapshot artifacts/SIGLA-browse-bridge-v0.1.html
+
+      - name: Validate bridge and claim ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          p='artifacts/JANUS-LINEAR-A-SIGLA-DOCUMENT-IDENTITY-BRIDGE-RESULT-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['frozen_spec']['commit']=='0dad57a21d2d864e4c81ac8b0e9f1004497d1ca6'
+          assert d['sources']['SIGLA']['content_sha256']=='c1d25f91dccf334c3cf24b52c1e4a279970cebd3f5c6f377569de076360170cd'
+          assert d['sources']['SIGLA']['document_count']==802
+          assert d['transform']['name']=='SIGLA_REMOVE_ASCII_SPACES_ONLY'
+          assert d['transform']['posthoc_extension_used'] is False
+          b=d['bridge']
+          assert b['collision_free_one_to_one_match_count']>=0
+          assert len(b['matched_pairs'])==b['collision_free_one_to_one_match_count']
+          assert len(b['sigla_only_ids'])==b['sigla_only_count']
+          assert len(b['mwenge_only_ids'])==b['mwenge_only_count']
+          g=d['epistemic_gate']
+          assert g['document_identity_bridge_established_for_collision_free_matches'] is True
+          assert g['cross_digitization_content_replication_established'] is False
+          assert g['external_transcription_replication_established'] is False
+          assert g['new_anchor_established'] is False
+          assert g['decipherment_established'] is False
+          print(json.dumps({
+            'bridge_matches': b['collision_free_one_to_one_match_count'],
+            'sigla_match_fraction': b['sigla_match_fraction'],
+            'sigla_only': b['sigla_only_count'],
+            'mwenge_only': b['mwenge_only_count'],
+            'sigla_collisions': b['sigla_transform_collision_count'],
+            'mwenge_collisions': b['mwenge_transform_collision_count'],
+            'external_transcription_replication_established': False,
+          },sort_keys=True))
+          PY
+
+      - name: Upload bridge receipt and frozen snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-sigla-document-bridge-v0.1
+          path: |
+            artifacts/JANUS-LINEAR-A-SIGLA-DOCUMENT-IDENTITY-BRIDGE-RESULT-2026-08-14-v0.1.json
+            artifacts/SIGLA-browse-bridge-v0.1.html
+          if-no-files-found: error
+          retention-days: 30
