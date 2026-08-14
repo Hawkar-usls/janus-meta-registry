@@ -1,0 +1,141 @@
+name: JANUS Linear A transcription IR hardening v1.1
+
+on:
+  push:
+    paths:
+      - ".github/workflows/janus-linear-a-transcription-ir-hardening-v1-1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  validate-hardening:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compile base and hardening cores
+        run: |
+          python3 -m py_compile \
+            research/linear_a/janus_linear_a_transcription_ir_v1_0.py \
+            research/linear_a/janus_linear_a_transcription_ir_hardening_v1_1.py
+
+      - name: Verify freeze and external prior-art basis
+        run: |
+          python3 - <<'PY'
+          import json
+          spec=json.load(open('data/JANUS-LINEAR-A-TRANSCRIPTION-IR-HARDENING-SPEC-2026-08-14-v1.1.json',encoding='utf-8'))
+          parent=json.load(open('data/JANUS-LINEAR-A-R3C-2-LOGOS-DEFECT-CONFORMANCE-RESULT-2026-08-14-v0.1.1.json',encoding='utf-8'))
+          d6=json.load(open('data/JANUS-LINEAR-A-R3C-2A-LOGOS-D6-CORRECTIVE-REPLAY-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert spec['status']=='FROZEN_BEFORE_IMPLEMENTATION_VALIDATION'
+          assert spec['base']['base_format_changed'] is False
+          assert parent['D5']['confirmed_case_count']==4
+          assert parent['D5']['all_seeded_source_symptoms_confirmed'] is True
+          assert d6['status']=='CONFIRMED_EXTERNAL_REPLAY_CORRECTED'
+          assert d6['seeded']['all_3_copresent'] is True
+          assert d6['claim_ceiling']['JANUS_independent_discovery'] is False
+          PY
+
+      - name: Run base v1.0 regression self-test
+        run: python3 research/linear_a/janus_linear_a_transcription_ir_v1_0.py --self-test > /tmp/base-v1.0-self-test.json
+
+      - name: Run v1.1 hardening self-test
+        env:
+          PYTHONPATH: research/linear_a
+        run: python3 research/linear_a/janus_linear_a_transcription_ir_hardening_v1_1.py --self-test > /tmp/v1.1-self-test.json
+
+      - name: Build validation result
+        run: |
+          python3 - <<'PY'
+          import hashlib, json
+          base=json.load(open('/tmp/base-v1.0-self-test.json',encoding='utf-8'))
+          hard=json.load(open('/tmp/v1.1-self-test.json',encoding='utf-8'))
+          prior=json.load(open('data/JANUS-LINEAR-A-R3C-2-LOGOS-DEFECT-CONFORMANCE-RESULT-2026-08-14-v0.1.1.json',encoding='utf-8'))
+          d6=json.load(open('data/JANUS-LINEAR-A-R3C-2A-LOGOS-D6-CORRECTIVE-REPLAY-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          required=[
+            'base_v1_0_fixture_still_valid','valid_hardened_fixture_pass','same_surface_continuation_rejected',
+            'destructive_merge_rejected','unresolved_conflict_semantic_authority_rejected',
+            'claim_view_without_continuation_policy_rejected','claim_view_without_conflict_policy_rejected',
+            'claim_view_with_fail_closed_policies_pass'
+          ]
+          assert all(hard[k] is True for k in required), hard
+          result={
+            'artifact_uuid':'JANUS-LINEAR-A-TRANSCRIPTION-IR-HARDENING-VALIDATION-RESULT-2026-08-14-v1.1',
+            'version':'v1.1','node_type':'transcription_ir_hardening_validation_result','status':'HARDENING_V1_1_ADMITTED',
+            'frozen_spec':'data/JANUS-LINEAR-A-TRANSCRIPTION-IR-HARDENING-SPEC-2026-08-14-v1.1.json',
+            'implementation':'research/linear_a/janus_linear_a_transcription_ir_hardening_v1_1.py',
+            'base_core':'research/linear_a/janus_linear_a_transcription_ir_v1_0.py',
+            'base_regression_self_test':base,
+            'hardening_self_test':hard,
+            'external_prior_art_binding':{
+              'D5_confirmed_cases':prior['D5']['confirmed_case_count'],
+              'D5_all_confirmed':prior['D5']['all_seeded_source_symptoms_confirmed'],
+              'D6_corrective_status':d6['status'],
+              'D6_all_3_copresent':d6['seeded']['all_3_copresent'],
+              'JANUS_blind_discovery_credit':False
+            },
+            'admitted_generic_capabilities':{
+              'source_continuation_across_surface_relation':True,
+              'destructive_group_merge_forbidden':True,
+              'unresolved_sign_identity_conflict_binding':True,
+              'semantic_authority_from_unresolved_conflict_forbidden':True,
+              'claim_view_requires_continuation_policy':True,
+              'claim_view_requires_conflict_exclusion_policy':True,
+              'base_ir_format_unchanged':True
+            },
+            'claim_ceiling':{
+              'generic_source_fidelity_hardening':True,
+              'JANUS_independent_discovery':False,
+              'linguistic_word_continuation_proved':False,
+              'A319_semantics_assigned':False,
+              'R3B_effect':'NONE','new_anchor':False,'decipherment':False
+            }
+          }
+          p='data/JANUS-LINEAR-A-TRANSCRIPTION-IR-HARDENING-VALIDATION-RESULT-2026-08-14-v1.1.json'
+          open(p,'w',encoding='utf-8').write(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
+          print(json.dumps({'status':result['status'],'hardening_self_test':hard},sort_keys=True))
+          PY
+
+      - name: Enforce admitted claim ceiling
+        run: |
+          python3 - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-TRANSCRIPTION-IR-HARDENING-VALIDATION-RESULT-2026-08-14-v1.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['status']=='HARDENING_V1_1_ADMITTED'
+          assert d['admitted_generic_capabilities']['base_ir_format_unchanged'] is True
+          assert d['claim_ceiling']['JANUS_independent_discovery'] is False
+          assert d['claim_ceiling']['R3B_effect']=='NONE'
+          assert d['claim_ceiling']['new_anchor'] is False
+          assert d['claim_ceiling']['decipherment'] is False
+          PY
+
+      - name: Upload immutable validation result
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-transcription-ir-hardening-v1.1
+          path: data/JANUS-LINEAR-A-TRANSCRIPTION-IR-HARDENING-VALIDATION-RESULT-2026-08-14-v1.1.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Persist validation result with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "janus-proof-bot"
+          git config user.email "janus-proof-bot@users.noreply.github.com"
+          git add data/JANUS-LINEAR-A-TRANSCRIPTION-IR-HARDENING-VALIDATION-RESULT-2026-08-14-v1.1.json
+          git commit -m "Register Linear A transcription IR hardening validation v1.1"
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then pushed=1; break; fi
+            sleep "$attempt"
+          done
+          test "$pushed" = 1
