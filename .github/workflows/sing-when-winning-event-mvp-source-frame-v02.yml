@@ -1,0 +1,40 @@
+name: Sing When You're Winning event-MVP source frame v0.2
+
+on:
+  push:
+    paths:
+      - 'data/JANUS-SING-WHEN-YOURE-WINNING-ENUMERATED-EVENT-MVP-SOURCE-FRAME-v0.1.json'
+      - 'data/JANUS-SING-WHEN-YOURE-WINNING-ENUMERATED-EVENT-MVP-SOURCE-FRAME-EXTENSION-v0.2.json'
+      - 'tools/verify_sing_when_youre_winning_event_mvp_source_frame_v02.py'
+      - '.github/workflows/sing-when-winning-event-mvp-source-frame-v02.yml'
+  pull_request:
+    paths:
+      - 'data/JANUS-SING-WHEN-YOURE-WINNING-ENUMERATED-EVENT-MVP-SOURCE-FRAME-v0.1.json'
+      - 'data/JANUS-SING-WHEN-YOURE-WINNING-ENUMERATED-EVENT-MVP-SOURCE-FRAME-EXTENSION-v0.2.json'
+      - 'tools/verify_sing_when_youre_winning_event_mvp_source_frame_v02.py'
+      - '.github/workflows/sing-when-winning-event-mvp-source-frame-v02.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify-event-mvp-source-frame:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout JANUS registry
+        uses: actions/checkout@v4
+      - name: Verify enumeration, correction and anti-rescue invariants
+        run: python3 tools/verify_sing_when_youre_winning_event_mvp_source_frame_v02.py
+      - name: Enforce source-frame closure ceiling
+        run: |
+          python3 - <<'PY'
+          import json
+          p = json.load(open('data/JANUS-SING-WHEN-YOURE-WINNING-ENUMERATED-EVENT-MVP-SOURCE-FRAME-EXTENSION-v0.2.json', encoding='utf-8'))
+          assert p['enumeration_state']['total_candidates'] == 43
+          assert p['enumeration_state']['enumeration_threshold_met'] is True
+          assert p['enumeration_state']['frame_closed'] is False
+          assert p['base_integrity_correction']['recomputed_from_v0_1_candidate_records'] == 17
+          assert p['scientific_effect']['matched_genre_prevalence'] == 'UNKNOWN'
+          assert p['scientific_effect']['rarity_claim'] == 'BLOCKED'
+          print('source-frame closure ceiling: PASS')
+          PY
