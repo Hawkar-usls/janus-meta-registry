@@ -1,0 +1,55 @@
+name: Connection hidden-pattern held-out rewire
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'data/JANUS-CONNECTION-HIDDEN-PATTERN-HELDOUT-GRAPH-FIXTURE-2026-08-14-v0.1.json'
+      - 'tools/connection/janus_connection_hidden_pattern_heldout_rewire_v0_1.py'
+      - '.github/workflows/connection-hidden-pattern-heldout-rewire.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  rewire:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Execute exact held-out destructive rewire
+        run: |
+          mkdir -p out
+          python tools/connection/janus_connection_hidden_pattern_heldout_rewire_v0_1.py \
+            --out out/JANUS-CONNECTION-HIDDEN-PATTERN-HELDOUT-REWIRE-RESULT-2026-08-14-v0.1.json
+      - name: Enforce promotion boundaries
+        run: |
+          python - <<'PY'
+          import json, pathlib
+          d=json.loads(pathlib.Path('out/JANUS-CONNECTION-HIDDEN-PATTERN-HELDOUT-REWIRE-RESULT-2026-08-14-v0.1.json').read_text())
+          assert d['HIDDEN-001']['status']=='PASS_HELDOUT_H001_ASSIGNMENT_REWIRE'
+          assert d['HIDDEN-002']['status']=='PASS_HELDOUT_H002_ASSIGNMENT_REWIRE'
+          assert d['HIDDEN-003']['status']=='PASS_HELDOUT_H003_FIRST_BREAK_REWIRE'
+          assert d['HIDDEN-001']['family_count'] >= 5
+          assert d['HIDDEN-002']['family_count'] >= 5
+          assert d['HIDDEN-003']['family_count'] >= 5
+          c=d['claim_ceiling']
+          assert c['internal_heldout_transport_strong'] is True
+          assert c['unbiased_discovery_p_values'] is False
+          assert c['human_blindness_empirically_measured'] is False
+          assert c['organizational_independence'] is False
+          assert c['external_replication'] is False
+          assert c['scientific_novelty'] is False
+          assert c['family_wide_connection_promotion'] is False
+          print('PASS_HELDOUT_REWIRE_CLAIM_CEILING')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: connection-hidden-pattern-heldout-rewire-v0.1
+          path: out/JANUS-CONNECTION-HIDDEN-PATTERN-HELDOUT-REWIRE-RESULT-2026-08-14-v0.1.json
+          if-no-files-found: error
+          retention-days: 30
