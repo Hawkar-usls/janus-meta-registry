@@ -6,6 +6,7 @@ on:
       - "research/linear_a/janus_linear_a_full_corpus.py"
       - "research/linear_a/janus_linear_a_candidate_holdout.py"
       - "research/linear_a/janus_linear_a_survivor_decomposition.py"
+      - "research/linear_a/janus_linear_a_vir_subtype.py"
       - ".github/workflows/janus-linear-a-full-corpus.yml"
   workflow_dispatch:
 
@@ -60,6 +61,16 @@ jobs:
             --permutations 5000 \
             --seed 260814225
 
+      - name: Run A100-102 versus VIR-family subtype audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/linear_a/janus_linear_a_vir_subtype.py \
+            --corpus /tmp/lineara \
+            --out artifacts/JANUS-LINEAR-A-VIR-SUBTYPE-2026-08-14-v0.4.json \
+            --permutations 20000 \
+            --seed 260814325
+
       - name: Validate receipt claim ceiling
         shell: bash
         run: |
@@ -69,27 +80,28 @@ jobs:
           p1 = 'artifacts/JANUS-LINEAR-A-FULL-CORPUS-RUN-2026-08-14.json'
           p2 = 'artifacts/JANUS-LINEAR-A-CANDIDATE-HOLDOUT-2026-08-14-v0.2.json'
           p3 = 'artifacts/JANUS-LINEAR-A-SURVIVOR-DECOMPOSITION-2026-08-14-v0.3.json'
+          p4 = 'artifacts/JANUS-LINEAR-A-VIR-SUBTYPE-2026-08-14-v0.4.json'
           d1 = json.load(open(p1, encoding='utf-8'))
           d2 = json.load(open(p2, encoding='utf-8'))
           d3 = json.load(open(p3, encoding='utf-8'))
+          d4 = json.load(open(p4, encoding='utf-8'))
           frozen = '43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a'
-          assert d1['source']['frozen_commit'] == frozen
-          assert d2['source']['frozen_commit'] == frozen
-          assert d3['source']['frozen_commit'] == frozen
+          for d in (d1, d2, d3, d4):
+              assert d['source']['frozen_commit'] == frozen
+              assert d['epistemic_gate']['new_anchor_established'] is False
+              assert d['epistemic_gate']['decipherment_established'] is False
           assert d1['corpus_counts']['parsed_inscriptions'] >= 300
           assert d1['corpus_counts']['token_to_number_pairs'] >= 100
           assert d3['corpus_counts']['token_to_number_pairs'] >= 100
-          for d in (d1, d2, d3):
-              assert d['epistemic_gate']['new_anchor_established'] is False
-              assert d['epistemic_gate']['decipherment_established'] is False
           assert d3['epistemic_gate']['promotion'] == 'BLOCKED'
+          assert d4['counts']['a100_102_pairs'] >= 3
           print(json.dumps({
               'parsed_inscriptions': d1['corpus_counts']['parsed_inscriptions'],
               'token_to_number_pairs': d1['corpus_counts']['token_to_number_pairs'],
-              'candidate_specific_heldout_gate': d2['epistemic_gate']['candidate_specific_heldout_gate_pass'],
               'heldout_survivor_count': d2['epistemic_gate']['heldout_survivor_count'],
               'RO_promotable_as_new_anchor': d3['epistemic_gate']['RO_promotable_as_new_anchor'],
               'VIR_promotable_as_new_anchor': d3['epistemic_gate']['VIR_promotable_as_new_anchor'],
+              'A100_102_quantitative_subtype_candidate': d4['epistemic_gate']['quantitative_subtype_candidate'],
               'new_anchor_established': False,
               'decipherment_established': False,
           }, sort_keys=True))
@@ -98,10 +110,11 @@ jobs:
       - name: Upload execution receipts
         uses: actions/upload-artifact@v4
         with:
-          name: janus-linear-a-full-corpus-receipts-v0.3
+          name: janus-linear-a-full-corpus-receipts-v0.4
           path: |
             artifacts/JANUS-LINEAR-A-FULL-CORPUS-RUN-2026-08-14.json
             artifacts/JANUS-LINEAR-A-CANDIDATE-HOLDOUT-2026-08-14-v0.2.json
             artifacts/JANUS-LINEAR-A-SURVIVOR-DECOMPOSITION-2026-08-14-v0.3.json
+            artifacts/JANUS-LINEAR-A-VIR-SUBTYPE-2026-08-14-v0.4.json
           if-no-files-found: error
           retention-days: 30
