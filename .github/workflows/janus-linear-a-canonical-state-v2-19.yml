@@ -1,0 +1,68 @@
+name: JANUS Linear A canonical state v2.19
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/janus-linear-a-canonical-state-v2-19.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Compile v2.19 promotion auditor
+        run: python -m py_compile research/linear_a/janus_linear_a_canonical_state_v2_19.py
+      - name: Re-read frontier evidence and build candidate, audit, canonical
+        run: |
+          python research/linear_a/janus_linear_a_canonical_state_v2_19.py \
+            --spec data/JANUS-LINEAR-A-RESEARCH-STATE-PROMOTION-SPEC-2026-08-14-v2.19.json \
+            --candidate-out data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.19-CANDIDATE.json \
+            --canonical-out data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.19.json \
+            --audit-out data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.19.json
+      - name: Enforce canonical audit and strict claim ceiling
+        run: |
+          python - <<'PY'
+          import json
+          c=json.load(open('data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.19.json',encoding='utf-8'))
+          a=json.load(open('data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.19.json',encoding='utf-8'))
+          assert a['status']=='CANONICALITY_AUDIT_PASS' and a['all_checks_pass'] is True
+          assert c['status']=='CURRENT_CANONICAL_RESEARCH_STATE'
+          assert c['version']=='v2.19'
+          f=c['R3B_strict_blind_acquisition_frontier']
+          assert f['sealed_candidate_count']==0
+          assert f['blind_eligibility_preserved'] is True
+          assert f['source_native_sign_readings_seen'] is False
+          g=c['global_claim_ceiling_v2_19']
+          assert g['strict_R3B_replication_established'] is False
+          assert g['new_anchor_established'] is False
+          assert g['decipherment_established'] is False
+          assert g['public_copy_absence_proved'] is False
+          print(json.dumps({'version':c['version'],'frontier':f['status'],'audit':a['status']},indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-canonical-state-v2-19
+          path: |
+            data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.19-CANDIDATE.json
+            data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.19.json
+            data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.19.json
+          if-no-files-found: error
+      - name: Persist v2.19 with concurrent-main recovery
+        run: |
+          git config user.name 'JANUS Evidence Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add \
+            data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.19-CANDIDATE.json \
+            data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.19.json \
+            data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.19.json
+          git commit -m 'Promote Linear A canonical research state v2.19' || true
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then exit 0; fi
+            git pull --rebase origin main
+          done
+          exit 1
