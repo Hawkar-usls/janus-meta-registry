@@ -1,0 +1,198 @@
+name: JANUS Linear A R3C-3 current Windows bundle quarantine v0.1
+
+on:
+  push:
+    paths:
+      - ".github/workflows/janus-linear-a-r3c3-current-windows-bundle-quarantine-v0-1.yml"
+      - "data/JANUS-LINEAR-A-R3C-3-CURRENT-WINDOWS-BUNDLE-QUARANTINE-SPEC-2026-08-14-v0.1.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  quarantine-current-windows:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify frozen spec and generic quarantine
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          s=json.load(open('data/JANUS-LINEAR-A-R3C-3-CURRENT-WINDOWS-BUNDLE-QUARANTINE-SPEC-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert s['status']=='FROZEN_BEFORE_EXECUTION'
+          assert s['source']['expected_bytes']==52012693
+          assert s['source']['expected_git_blob_sha1']=='64da67661eee9d64deae8f6d599c4789085aa9e4'
+          assert s['operations']['extract_to_filesystem'] is False
+          assert s['operations']['execute_binary_or_script'] is False
+          assert s['claim_ceiling']['paper_exact_2024_input_identity_established'] is False
+          PY
+          python3 -m py_compile research/linear_a/janus_linear_a_source_intake_quarantine_v0_1.py
+          python3 research/linear_a/janus_linear_a_source_intake_quarantine_v0_1.py self-test >/tmp/quarantine-self-test.json
+
+      - name: Acquire exact current public Windows bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p external/r3c3-current-win
+          OUT='external/r3c3-current-win/LinearADecipherment(Win).zip'
+          curl --fail --location --retry 4 --retry-all-errors --connect-timeout 20 --max-time 300 \
+            'https://raw.githubusercontent.com/L-Colin/Linear-A-decipherment-programme/f6f61a38c00afb627a4db40575f433801581405c/LinearADecipherment(Win).zip' \
+            --output "$OUT"
+          test "$(wc -c < "$OUT" | tr -d ' ')" = '52012693'
+          test "$(git hash-object "$OUT")" = '64da67661eee9d64deae8f6d599c4789085aa9e4'
+          sha256sum "$OUT" | tee /tmp/current-win-sha256.txt
+
+      - name: Non-executing generic ZIP quarantine
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/linear_a/janus_linear_a_source_intake_quarantine_v0_1.py quarantine \
+            'external/r3c3-current-win/LinearADecipherment(Win).zip' \
+            --out 'data/JANUS-LINEAR-A-R3C-3-CURRENT-WINDOWS-BUNDLE-QUARANTINE-RESULT-2026-08-14-v0.1.json'
+
+      - name: Build name-only language presence and historical identity comparison
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json,re
+          from pathlib import PurePosixPath,Path
+          sp='data/JANUS-LINEAR-A-R3C-3-CURRENT-WINDOWS-BUNDLE-QUARANTINE-SPEC-2026-08-14-v0.1.json'
+          qp='data/JANUS-LINEAR-A-R3C-3-CURRENT-WINDOWS-BUNDLE-QUARANTINE-RESULT-2026-08-14-v0.1.json'
+          s=json.load(open(sp,encoding='utf-8')); q=json.load(open(qp,encoding='utf-8'))
+          entries=(q.get('inventory') or {}).get('entries') or []
+          regular=[e for e in entries if not e.get('directory')]
+          by_name={e.get('name'):e for e in regular}
+          names=[str(e.get('name','')) for e in regular]
+          def presence(language):
+              lows=[n.lower() for n in names]
+              if language=='Ancient Egyptian': return [names[i] for i,x in enumerate(lows) if 'ancientegyptian' in x or 'ancient_egyptian' in x or 'ancient-egyptian' in x]
+              if language=='Luwian': return [names[i] for i,x in enumerate(lows) if 'luwian' in x]
+              if language=='Hittite': return [names[i] for i,x in enumerate(lows) if 'hittite' in x]
+              if language=='Proto-Celtic': return [names[i] for i,x in enumerate(lows) if 'proto_celtic' in x or 'proto-celtic' in x or 'protoceltic' in x]
+              if language=='Uralic':
+                  out=[]
+                  pat=re.compile(r'(^|[/_.-])uralic([/_.-]|$)',re.I)
+                  for n in names:
+                      base=PurePosixPath(n).name.lower()
+                      if pat.search(n) or base.startswith('uralic'):
+                          out.append(n)
+                  return out
+              raise KeyError(language)
+          lang={k:presence(k) for k in s['fixed_resource_name_presence_tests']}
+          comparisons=[]
+          for h in s['historical_member_identity_comparison']:
+              e=by_name.get(h['path'])
+              comparisons.append({
+                'path':h['path'],
+                'historical_sha256':h['historical_sha256'],
+                'current_present':e is not None,
+                'current_sha256':e.get('sha256') if e else None,
+                'byte_identical_to_historical':(e.get('sha256')==h['historical_sha256']) if e else False,
+                'current_declared_uncompressed_bytes':e.get('declared_uncompressed_bytes') if e else None
+              })
+          uralic=bool(lang['Uralic'])
+          status='CURRENT_BUNDLE_RESOURCE_SET_EXTENDS_HISTORICAL' if uralic else 'CURRENT_BUNDLE_RESOURCE_SET_NO_FIXED_LANGUAGE_EXTENSION'
+          inv=q.get('inventory') or {}
+          result={
+            'artifact_uuid':'JANUS-LINEAR-A-R3C-3-CURRENT-WINDOWS-BUNDLE-QUARANTINE-RESULT-2026-08-14-v0.1',
+            'version':'v0.1','node_type':'current_public_software_bundle_quarantine_and_name_inventory_result','status':status,
+            'frozen_spec':sp,
+            'source':{
+              'repository':s['source']['repository'],'commit':s['source']['commit'],'path':s['source']['path'],
+              'git_blob_sha1':s['source']['expected_git_blob_sha1'],'git_blob_sha1_verified':True,
+              'bytes':q['bytes'],'sha256':q['sha256']
+            },
+            'quarantine':{
+              'path':qp,'status':q['status'],'archive_format':inv.get('archive_format'),'entry_count':inv.get('entry_count'),
+              'declared_total_uncompressed_bytes':inv.get('declared_total_uncompressed_bytes'),
+              'code_or_executable_like_entry_count':inv.get('code_or_executable_like_entry_count'),
+              'global_flags':inv.get('global_flags',[]),'all_regular_file_payload_hashes_present':inv.get('all_regular_file_payload_hashes_present')
+            },
+            'fixed_language_member_name_presence':{k:{'present':bool(v),'matching_member_names':v} for k,v in lang.items()},
+            'Uralic_member_name_present':uralic,
+            'historical_member_identity_comparison':comparisons,
+            'historical_comparison_summary':{
+              'targets':len(comparisons),
+              'present_current':sum(x['current_present'] for x in comparisons),
+              'byte_identical':sum(x['byte_identical_to_historical'] for x in comparisons),
+              'different_or_missing':sum(not x['byte_identical_to_historical'] for x in comparisons)
+            },
+            'safety':{
+              'archive_extracted_to_filesystem':False,'binary_or_script_executed':False,'lexical_content_inspected':False,
+              'scientific_content_inspected':False,'member_payload_use':'SHA256_STREAMING_ONLY'
+            },
+            'readiness_effect':{
+              'current_public_bundle_exact_bytes_acquired':True,
+              'current_member_name_inventory_available':True,
+              'Uralic_resource_name_candidate_available':uralic,
+              'paper_exact_2024_input_receipt_admitted':False,
+              'scientific_five_language_execution_permitted':False
+            },
+            'claim_ceiling':{
+              'current_public_bundle_byte_identity_established':True,
+              'current_vs_historical_member_identity_changes_established':True,
+              'Uralic_member_name_presence_established':True,
+              'paper_exact_2024_input_identity_established':False,
+              'published_2024_matches_reproduced':False,
+              'language_family_relationship_established':False,
+              'R3B_effect':'NONE','new_anchor':False,'decipherment':False
+            }
+          }
+          out='data/JANUS-LINEAR-A-R3C-3-CURRENT-WINDOWS-BUNDLE-RESOURCE-COMPARISON-RESULT-2026-08-14-v0.1.json'
+          Path(out).write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print(json.dumps({'status':status,'bundle_sha256':q['sha256'],'entries':inv.get('entry_count'),'Uralic':uralic,'language_presence':{k:bool(v) for k,v in lang.items()},'historical_comparison':result['historical_comparison_summary'],'flags':inv.get('global_flags',[])},ensure_ascii=False,sort_keys=True))
+          PY
+
+      - name: Enforce non-execution and provenance ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          d=json.load(open('data/JANUS-LINEAR-A-R3C-3-CURRENT-WINDOWS-BUNDLE-RESOURCE-COMPARISON-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert d['source']['git_blob_sha1_verified'] is True
+          assert d['source']['bytes']==52012693
+          assert d['safety']['archive_extracted_to_filesystem'] is False
+          assert d['safety']['binary_or_script_executed'] is False
+          assert d['safety']['lexical_content_inspected'] is False
+          assert d['readiness_effect']['paper_exact_2024_input_receipt_admitted'] is False
+          assert d['readiness_effect']['scientific_five_language_execution_permitted'] is False
+          assert d['claim_ceiling']['paper_exact_2024_input_identity_established'] is False
+          assert d['claim_ceiling']['published_2024_matches_reproduced'] is False
+          PY
+
+      - name: Upload immutable current-bundle evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r3c3-current-windows-bundle-v0.1
+          path: |
+            data/JANUS-LINEAR-A-R3C-3-CURRENT-WINDOWS-BUNDLE-QUARANTINE-SPEC-2026-08-14-v0.1.json
+            data/JANUS-LINEAR-A-R3C-3-CURRENT-WINDOWS-BUNDLE-QUARANTINE-RESULT-2026-08-14-v0.1.json
+            data/JANUS-LINEAR-A-R3C-3-CURRENT-WINDOWS-BUNDLE-RESOURCE-COMPARISON-RESULT-2026-08-14-v0.1.json
+          if-no-files-found: error
+
+      - name: Persist current-bundle receipts with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'janus-proof-bot'
+          git config user.email 'janus-proof-bot@users.noreply.github.com'
+          git add data/JANUS-LINEAR-A-R3C-3-CURRENT-WINDOWS-BUNDLE-QUARANTINE-RESULT-2026-08-14-v0.1.json data/JANUS-LINEAR-A-R3C-3-CURRENT-WINDOWS-BUNDLE-RESOURCE-COMPARISON-RESULT-2026-08-14-v0.1.json
+          git commit -m 'Register Linear A R3C-3 current Windows bundle quarantine v0.1'
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then pushed=1; break; fi
+            sleep "$attempt"
+          done
+          test "$pushed" = 1
