@@ -1,0 +1,102 @@
+name: JANUS Linear A SigLA word-view interface probe v0.1
+
+on:
+  push:
+    paths:
+      - "research/linear_a/janus_linear_a_sigla_word_view_interface_probe_v0_1.py"
+      - "research/linear_a/janus_linear_a_sigla_inventory_audit.py"
+      - "data/JANUS-LINEAR-A-SIGLA-WORD-VIEW-INTERFACE-PROBE-SPEC-2026-08-14-v0.1.json"
+      - ".github/workflows/janus-linear-a-sigla-word-view-interface-probe-v0-1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sigla-word-view-interface-probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout JANUS registry
+        uses: actions/checkout@v4
+
+      - name: Validate frozen word-view probe spec
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-SIGLA-WORD-VIEW-INTERFACE-PROBE-SPEC-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['status']=='FROZEN_BEFORE_WORD_VIEW_PROBE_EXECUTION'
+          assert d['scientific_claim_bearing'] is False
+          assert len(d['sample'])==3
+          assert [x['bridge_key'] for x in d['sample']]==['ZA10b','KNZb5','KHWc2012']
+          assert d['route_contract']['word_view_relative']=='index-word.html'
+          assert d['claim_ceiling']['cross_digitization_content_replication_established'] is False
+          assert d['claim_ceiling']['external_transcription_replication_established'] is False
+          PY
+
+      - name: Run frozen SigLA word-view interface probe
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/word-view-pages
+          python3 research/linear_a/janus_linear_a_sigla_word_view_interface_probe_v0_1.py \
+            --out artifacts/JANUS-LINEAR-A-SIGLA-WORD-VIEW-INTERFACE-PROBE-RESULT-2026-08-14-v0.1.json \
+            --snapshot-dir artifacts/word-view-pages
+
+      - name: Validate word-view result and claim ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, pathlib
+          p='artifacts/JANUS-LINEAR-A-SIGLA-WORD-VIEW-INTERFACE-PROBE-RESULT-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['status']=='WORD_VIEW_INTERFACE_PROBE_EXECUTED_SUCCESS'
+          assert d['scientific_claim_bearing'] is False
+          assert d['frozen_spec']['commit']=='c22982cfc34fe1525011aadf3a1f801e50b7e55f'
+          assert d['pre_fetch_gate']['all_three_root_hashes_exactly_match_parent_freeze'] is True
+          assert d['sample_reused_without_resampling'] is True
+          assert [x['bridge_key'] for x in d['pages']]==['ZA10b','KNZb5','KHWc2012']
+          assert len(d['pages'])==3
+          for x in d['pages']:
+              r=x['root_refetch']
+              w=x['word_view']
+              assert r['http_status']==200
+              assert r['exact_hash_match'] is True
+              assert r['expected_sha256']==r['observed_sha256']
+              assert w['http_status']==200
+              assert w['content_length_bytes']>0
+              assert len(w['content_sha256'])==64
+              for field in ('anchors','scripts','stylesheets','class_id_attributes','tag_frequency','class_frequency','data_attributes','visible_marker_counts','ordered_nonempty_visible_text_blocks'):
+                  assert field in w
+          g=d['epistemic_gate']
+          assert g['word_view_interface_probe_established'] is True
+          assert g['sigla_source_adapter_contract_frozen'] is False
+          assert g['cross_digitization_content_replication_established'] is False
+          assert g['external_transcription_replication_established'] is False
+          assert g['new_anchor_established'] is False
+          assert g['decipherment_established'] is False
+          assert d['claim_ceiling']['promotion']=='BLOCKED'
+          snaps=list(pathlib.Path('artifacts/word-view-pages').glob('*.html'))
+          assert len(snaps)==6, len(snaps)
+          print(json.dumps({
+            'documents':[x['bridge_key'] for x in d['pages']],
+            'word_view_hashes':[x['word_view']['content_sha256'] for x in d['pages']],
+            'anchor_counts':[len(x['word_view']['anchors']) for x in d['pages']],
+            'text_block_counts':[len(x['word_view']['ordered_nonempty_visible_text_blocks']) for x in d['pages']],
+            'word_view_interface_probe_established':True,
+          },sort_keys=True))
+          PY
+
+      - name: Upload word-view probe receipt and exact snapshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-sigla-word-view-interface-probe-v0.1
+          path: |
+            artifacts/JANUS-LINEAR-A-SIGLA-WORD-VIEW-INTERFACE-PROBE-RESULT-2026-08-14-v0.1.json
+            artifacts/word-view-pages/*.html
+          if-no-files-found: error
+          retention-days: 30
