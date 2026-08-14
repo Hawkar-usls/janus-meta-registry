@@ -1,0 +1,208 @@
+name: JANUS Linear A canonical state v2.17
+
+on:
+  push:
+    paths:
+      - 'data/JANUS-LINEAR-A-RESEARCH-STATE-PROMOTION-SPEC-2026-08-14-v2.17.json'
+      - '.github/workflows/janus-linear-a-canonical-state-v2-17.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  promote:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Re-read parent and all load-bearing prerequisites
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          spec=json.load(open('data/JANUS-LINEAR-A-RESEARCH-STATE-PROMOTION-SPEC-2026-08-14-v2.17.json',encoding='utf-8'))
+          assert spec['status']=='FROZEN_BEFORE_EXECUTION'
+          parent=json.load(open(spec['parent_state'],encoding='utf-8'))
+          assert parent['status']==spec['required_parent_status']
+          assert parent['version']=='v2.16'
+          for p in spec['load_bearing_prerequisites']:
+              d=json.load(open(p['path'],encoding='utf-8'))
+              assert d['status']==p['required_status'], (p['path'], d['status'])
+          th=json.load(open('data/JANUS-LINEAR-A-R3B-0-NOTTI-THERA-EDITORIAL-CORPUS-FAMILY-QUALIFICATION-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          ph=json.load(open('data/JANUS-LINEAR-A-R3B-0-PAITO-PH13-EDITORIAL-WITNESS-QUALIFICATION-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          inv=spec['promotion_invariants']
+          assert th['historical_reference_identity_probe']['unique_matching_identity_count']==inv['thera_historical_reference_unique_identity_count']
+          assert th['historical_reference_identity_probe']['unique_matching_identity_count']>=inv['thera_reference_scale_must_be_at_least']
+          assert th['R3B_effect']['candidate_actual_overlap_frozen'] is False
+          assert th['R3B_effect']['R3B_1_admitted'] is False
+          assert ph['R3B_effect']['exact_editorial_source_bytes_admitted'] is False
+          assert ph['R3B_effect']['independent_transcription_replication_established'] is False
+          PY
+
+      - name: Build v2.17 candidate from v2.16 without deleting history
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import copy,json
+          from datetime import datetime, timezone, timedelta
+          parent_path='data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.16.json'
+          out_path='data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.17-CANDIDATE.json'
+          spec_path='data/JANUS-LINEAR-A-RESEARCH-STATE-PROMOTION-SPEC-2026-08-14-v2.17.json'
+          spec=json.load(open(spec_path,encoding='utf-8'))
+          th=json.load(open('data/JANUS-LINEAR-A-R3B-0-NOTTI-THERA-EDITORIAL-CORPUS-FAMILY-QUALIFICATION-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          ph=json.load(open('data/JANUS-LINEAR-A-R3B-0-PAITO-PH13-EDITORIAL-WITNESS-QUALIFICATION-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          forks=json.load(open('data/JANUS-LINEAR-A-R3C-3-PRESERVATION-FORK-RECEIPT-2026-08-14-v0.1.json',encoding='utf-8'))
+          d=copy.deepcopy(json.load(open(parent_path,encoding='utf-8')))
+          d['artifact_uuid']='JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.17'
+          d['version']='v2.17'
+          d['timestamp']=datetime.now(timezone(timedelta(hours=3))).isoformat()
+          d['title']='JANUS Linear A canonical candidate after qualification of concrete independent-editorial R3B acquisition targets'
+          d['status']='CANONICAL_CANDIDATE_PENDING_AUDIT'
+          d['canonicality']={
+            'current_source_of_truth':False,
+            'parent_state':parent_path,
+            'promotion_spec':spec_path,
+            'promotion_prerequisites_pass':True,
+            'history_is_not_deleted':True,
+            'candidate_path':out_path,
+            'canonicality_audit':'data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.17.json',
+            'canonicality_audit_status':'PENDING',
+            'promotion_rule_satisfied':False
+          }
+          lane=d.setdefault('R3B_independent_editorial_replication_lane',{})
+          lane['status']='QUALIFIED_ACQUISITION_FRONTIER_EXACT_BYTES_PENDING'
+          lane['R3B_0']='QUALIFIED_INDEPENDENT_EDITORIAL_CANDIDATES_IDENTIFIED_NO_ADMITTED_EXACT_CANDIDATE_BYTES'
+          lane['R3B_1']='RUNNER_READY_PENDING_EXACT_NOTTI_THERA_BYTES_AND_ACTUAL_OVERLAP_FREEZE'
+          lane['R3B_2']='BLOCKED'
+          lane['R3B_3']='BLOCKED'
+          lane['R3B_4']='BLOCKED'
+          lane['reason']='Concrete autoptic/editorial source candidates now exist, but R3B admission remains blocked until exact candidate bytes are acquired, sealed before content inspection, and actual source-native overlap is frozen.'
+          d['R3B_qualified_acquisition_frontier_v2_17']={
+            'status':'QUALIFIED_TARGETS_IDENTIFIED_BYTES_PENDING',
+            'preservation_forks':{
+              'receipt':'data/JANUS-LINEAR-A-R3C-3-PRESERVATION-FORK-RECEIPT-2026-08-14-v0.1.json',
+              'status':forks['status']
+            },
+            'priority_1_NOTTI_THERA_2021_2025':{
+              'qualification_result':'data/JANUS-LINEAR-A-R3B-0-NOTTI-THERA-EDITORIAL-CORPUS-FAMILY-QUALIFICATION-RESULT-2026-08-14-v0.1.json',
+              'status':th['status'],
+              'historical_reference_unique_Thera_IDs':th['historical_reference_identity_probe']['unique_matching_identity_count'],
+              'predeclared_R3B1_minimum':10,
+              'reference_scale_exceeds_minimum':th['historical_reference_identity_probe']['unique_matching_identity_count']>=10,
+              'candidate_actual_overlap_frozen':False,
+              'exact_candidate_bytes_admitted':False
+            },
+            'priority_2_PH13_PILOT':{
+              'qualification_result':'data/JANUS-LINEAR-A-R3B-0-PAITO-PH13-EDITORIAL-WITNESS-QUALIFICATION-RESULT-2026-08-14-v0.1.json',
+              'status':ph['status'],
+              'single_document_pilot_candidate_identified':True,
+              'exact_candidate_bytes_admitted':False,
+              'general_R3B1_satisfied':False
+            },
+            'next_atomic_requirement':'Acquire unchanged Notti 2021 and/or 2025 bytes first; seal provenance receipt before content inspection; inventory candidate-native document IDs only; freeze actual overlap; if actual overlap >=10, execute existing R3B_1 deterministic partition. PH13 remains a parallel one-document pilot.',
+            'independent_transcription_replication_established':False,
+            'new_anchor_established':False,
+            'decipherment_established':False
+          }
+          d['roadmap_delta_v2_17']={
+            'R3B_0_SOURCE_ACQUISITION':'QUALIFIED_TARGETS_IDENTIFIED_EXACT_BYTES_PENDING',
+            'R3B_1_OVERLAP_FREEZE':'READY_CONDITIONALLY_ON_EXACT_NOTTI_THERA_BYTES_AND_ACTUAL_OVERLAP_GE_10',
+            'R8_DECIPHERMENT':'BLOCKED'
+          }
+          d['highest_admissible_claim_v2_17']=spec['claim_ceiling']['allowed']
+          d['forbidden_claims_v2_17']=spec['claim_ceiling']['forbidden']
+          json.dump(d,open(out_path,'w',encoding='utf-8'),ensure_ascii=False,indent=2)
+          open(out_path,'a',encoding='utf-8').write('\n')
+          PY
+
+      - name: Audit candidate against persisted evidence and promote
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import copy,hashlib,json
+          from datetime import datetime,timezone
+          cpath='data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.17-CANDIDATE.json'
+          apath='data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.17.json'
+          opath='data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.17.json'
+          c=json.load(open(cpath,encoding='utf-8'))
+          th=json.load(open('data/JANUS-LINEAR-A-R3B-0-NOTTI-THERA-EDITORIAL-CORPUS-FAMILY-QUALIFICATION-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          ph=json.load(open('data/JANUS-LINEAR-A-R3B-0-PAITO-PH13-EDITORIAL-WITNESS-QUALIFICATION-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          checks={
+            'candidate_version_v2_17': c['version']=='v2.17',
+            'candidate_pending_before_audit': c['status']=='CANONICAL_CANDIDATE_PENDING_AUDIT',
+            'thera_qualification_status_exact': th['status']=='POTENTIAL_MULTI_DOCUMENT_AUTOPTIC_EDITORIAL_CORPUS_FAMILY_WITH_R3B1_SCALE_PENDING_EXACT_BYTES',
+            'thera_reference_identity_count_16': th['historical_reference_identity_probe']['unique_matching_identity_count']==16,
+            'thera_candidate_overlap_not_frozen': th['R3B_effect']['candidate_actual_overlap_frozen'] is False,
+            'thera_R3B1_not_admitted': th['R3B_effect']['R3B_1_admitted'] is False,
+            'PH13_qualification_status_exact': ph['status']=='POTENTIAL_INDEPENDENT_AUTOPTIC_RTI_EDITORIAL_WITNESS_PENDING_EXACT_BYTES',
+            'PH13_exact_bytes_not_admitted': ph['R3B_effect']['exact_editorial_source_bytes_admitted'] is False,
+            'state_no_replication': c['R3B_qualified_acquisition_frontier_v2_17']['independent_transcription_replication_established'] is False,
+            'state_no_anchor': c['R3B_qualified_acquisition_frontier_v2_17']['new_anchor_established'] is False,
+            'state_no_decipherment': c['R3B_qualified_acquisition_frontier_v2_17']['decipherment_established'] is False,
+            'parent_history_preserved': c['canonicality']['history_is_not_deleted'] is True
+          }
+          passed=all(checks.values())
+          audit={
+            'artifact_uuid':'JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.17',
+            'version':'v2.17',
+            'node_type':'canonicality_audit',
+            'executed_at_utc':datetime.now(timezone.utc).isoformat(),
+            'status':'CANONICALITY_AUDIT_PASS' if passed else 'CANONICALITY_AUDIT_FAIL',
+            'candidate_path':cpath,
+            'candidate_sha256':hashlib.sha256(open(cpath,'rb').read()).hexdigest(),
+            'checks':checks,
+            'all_checks_pass':passed
+          }
+          json.dump(audit,open(apath,'w',encoding='utf-8'),ensure_ascii=False,indent=2); open(apath,'a',encoding='utf-8').write('\n')
+          assert passed
+          d=copy.deepcopy(c)
+          d['status']='CURRENT_CANONICAL_RESEARCH_STATE'
+          d['canonicality']['current_source_of_truth']=True
+          d['canonicality']['canonicality_audit_status']='CANONICALITY_AUDIT_PASS'
+          d['canonicality']['promotion_rule_satisfied']=True
+          json.dump(d,open(opath,'w',encoding='utf-8'),ensure_ascii=False,indent=2); open(opath,'a',encoding='utf-8').write('\n')
+          # Re-read the promoted file, do not trust in-memory object only.
+          r=json.load(open(opath,encoding='utf-8'))
+          assert r['status']=='CURRENT_CANONICAL_RESEARCH_STATE'
+          assert r['canonicality']['current_source_of_truth'] is True
+          assert r['R3B_qualified_acquisition_frontier_v2_17']['priority_1_NOTTI_THERA_2021_2025']['historical_reference_unique_Thera_IDs']==16
+          assert r['R3B_qualified_acquisition_frontier_v2_17']['independent_transcription_replication_established'] is False
+          PY
+
+      - name: Upload canonicality evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-canonical-state-v2.17
+          path: |
+            data/JANUS-LINEAR-A-RESEARCH-STATE-PROMOTION-SPEC-2026-08-14-v2.17.json
+            data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.17-CANDIDATE.json
+            data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.17.json
+            data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.17.json
+          if-no-files-found: error
+
+      - name: Persist v2.17 with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'janus-proof-bot'
+          git config user.email 'janus-proof-bot@users.noreply.github.com'
+          git add \
+            data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.17-CANDIDATE.json \
+            data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.17.json \
+            data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.17.json
+          git commit -m 'Promote Linear A canonical research state v2.17 after qualification of R3B editorial acquisition targets'
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then pushed=1; break; fi
+            sleep "$attempt"
+          done
+          test "$pushed" = 1
