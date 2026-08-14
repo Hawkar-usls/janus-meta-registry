@@ -105,7 +105,7 @@ def normalize_js_codepoint_escapes(
     payload_after_trailing_commas: str,
     trailing_comma_original_positions: list[int],
 ) -> tuple[str, list[dict[str, Any]]]:
-    """Normalize only active JS \u{HEX} escapes inside double-quoted strings.
+    r"""Normalize only active JS \u{HEX} escapes inside double-quoted strings.
 
     Ordinary JSON escapes are copied unchanged. A doubled backslash is consumed as
     an escaped backslash and therefore cannot activate a following u{...} form.
