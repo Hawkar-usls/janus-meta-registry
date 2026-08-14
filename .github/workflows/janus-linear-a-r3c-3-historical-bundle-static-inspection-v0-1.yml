@@ -1,0 +1,106 @@
+name: JANUS Linear A R3C-3 historical bundle static inspection v0.1
+
+on:
+  push:
+    paths:
+      - ".github/workflows/janus-linear-a-r3c-3-historical-bundle-static-inspection-v0-1.yml"
+      - "research/linear_a/janus_linear_a_r3c3_historical_bundle_static_inspection_v0_1.py"
+      - "data/JANUS-LINEAR-A-R3C-3-HISTORICAL-BUNDLE-STATIC-METHOD-INSPECTION-SPEC-2026-08-14-v0.1.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  static-inspection:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify frozen parents and compile static inspector
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          s=json.load(open('data/JANUS-LINEAR-A-R3C-3-HISTORICAL-BUNDLE-STATIC-METHOD-INSPECTION-SPEC-2026-08-14-v0.1.json',encoding='utf-8'))
+          a=json.load(open('data/JANUS-LINEAR-A-R3C-3-HISTORICAL-MAC-BUNDLE-ACQUISITION-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert s['status']=='FROZEN_BEFORE_EXECUTION'
+          assert a['status']==s['parent_acquisition']['required_status']
+          assert a['source']['sha256']==s['parent_acquisition']['bundle_sha256']
+          assert a['source']['git_blob_sha1_expected']==s['parent_acquisition']['bundle_git_blob_sha1']
+          assert s['static_python_analysis']['execution_forbidden'] is True
+          assert s['csv_structure_analysis']['persist_raw_lexical_values'] is False
+          PY
+          python3 -m py_compile research/linear_a/janus_linear_a_r3c3_historical_bundle_static_inspection_v0_1.py
+
+      - name: Reacquire exact immutable historical bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p external/r3c3-historical-mac
+          URL='https://raw.githubusercontent.com/L-Colin/Linear-A-decipherment-programme/fab66e715b18607c4b383782e7f4d1b86a26d725/LinearADecipherment(Mac).zip'
+          OUT='external/r3c3-historical-mac/LinearADecipherment(Mac).zip'
+          curl --fail --location --retry 4 --retry-all-errors --connect-timeout 20 --max-time 180 "$URL" --output "$OUT"
+          test "$(wc -c < "$OUT" | tr -d ' ')" = '1765475'
+          test "$(git hash-object "$OUT")" = 'b58e8a3043911f6de921be39bbf516755839829f'
+          test "$(sha256sum "$OUT" | awk '{print $1}')" = 'a4627d4c2e26668593e8f6f9c8a004ae75bb3f1bbf497a39c0d4a772c9012850'
+
+      - name: Static AST and CSV-structure inspection without extraction or execution
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/linear_a/janus_linear_a_r3c3_historical_bundle_static_inspection_v0_1.py \
+            'external/r3c3-historical-mac/LinearADecipherment(Mac).zip' \
+            --out 'data/JANUS-LINEAR-A-R3C-3-HISTORICAL-BUNDLE-STATIC-METHOD-INSPECTION-RESULT-2026-08-14-v0.1.json'
+
+      - name: Enforce non-execution and claim ceilings
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-R3C-3-HISTORICAL-BUNDLE-STATIC-METHOD-INSPECTION-RESULT-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['bundle']['sha256']=='a4627d4c2e26668593e8f6f9c8a004ae75bb3f1bbf497a39c0d4a772c9012850'
+          assert d['python_source']['sha256']=='bf204b1751f6b961a6f2f04b2576e3770cd29ae81e42c2a23f44d13d8458d76e'
+          assert d['base_sheet']['sha256']=='b0c34a080bede60a0c3bdb885db12d9626501e998b2fed6bebf19c7cce4009c5'
+          assert d['python_source']['ast_parse_success'] is True
+          assert d['safety']['archive_extracted_to_filesystem'] is False
+          assert d['safety']['python_executed'] is False
+          assert d['safety']['python_imported'] is False
+          assert d['safety']['raw_dictionary_rows_persisted'] is False
+          assert d['safety']['scientific_language_match_scoring_performed'] is False
+          assert d['readiness_effect']['paper_exact_2024_input_identity_admitted'] is False
+          assert d['claim_ceiling']['published_matches_reproduced'] is False
+          PY
+
+      - name: Upload immutable static-inspection evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r3c3-historical-static-inspection-v0.1
+          path: |
+            data/JANUS-LINEAR-A-R3C-3-HISTORICAL-BUNDLE-STATIC-METHOD-INSPECTION-SPEC-2026-08-14-v0.1.json
+            data/JANUS-LINEAR-A-R3C-3-HISTORICAL-BUNDLE-STATIC-METHOD-INSPECTION-RESULT-2026-08-14-v0.1.json
+          if-no-files-found: error
+
+      - name: Persist static-inspection result with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'janus-proof-bot'
+          git config user.email 'janus-proof-bot@users.noreply.github.com'
+          git add data/JANUS-LINEAR-A-R3C-3-HISTORICAL-BUNDLE-STATIC-METHOD-INSPECTION-RESULT-2026-08-14-v0.1.json
+          git commit -m 'Register Linear A R3C-3 historical static method inspection v0.1'
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then pushed=1; break; fi
+            sleep "$attempt"
+          done
+          test "$pushed" = 1
