@@ -1,0 +1,98 @@
+name: JANUS Linear A SigLA interface probe v0.1
+
+on:
+  push:
+    paths:
+      - "research/linear_a/janus_linear_a_sigla_interface_probe_v0_1.py"
+      - "research/linear_a/janus_linear_a_sigla_document_bridge_v0_1.py"
+      - "research/linear_a/janus_linear_a_sigla_inventory_audit.py"
+      - "data/JANUS-LINEAR-A-SIGLA-INTERFACE-PROBE-SPEC-2026-08-14-v0.1.json"
+      - ".github/workflows/janus-linear-a-sigla-interface-probe-v0-1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sigla-interface-probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout JANUS registry
+        uses: actions/checkout@v4
+
+      - name: Validate frozen probe spec
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-SIGLA-INTERFACE-PROBE-SPEC-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['status']=='FROZEN_BEFORE_INTERFACE_PROBE_EXECUTION'
+          assert d['scientific_claim_bearing'] is False
+          assert d['sample_selection']['sample_size']==3
+          assert d['sample_selection']['selection_occurs_before_document_page_fetch'] is True
+          assert d['claim_ceiling']['external_transcription_replication_established'] is False
+          PY
+
+      - name: Fetch frozen mwenge baseline
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --quiet https://github.com/mwenge/lineara.xyz.git /tmp/lineara
+          git -C /tmp/lineara checkout --quiet 43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a
+          test "$(git -C /tmp/lineara rev-parse HEAD)" = "43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a"
+
+      - name: Run deterministic SigLA interface probe
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/interface-pages
+          python3 research/linear_a/janus_linear_a_sigla_interface_probe_v0_1.py \
+            --mwenge-root /tmp/lineara \
+            --out artifacts/JANUS-LINEAR-A-SIGLA-INTERFACE-PROBE-RESULT-2026-08-14-v0.1.json \
+            --snapshot-dir artifacts/interface-pages
+
+      - name: Validate probe result and claim ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          p='artifacts/JANUS-LINEAR-A-SIGLA-INTERFACE-PROBE-RESULT-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['scientific_claim_bearing'] is False
+          assert d['frozen_spec']['commit']=='30ac55582efabda0ebbcbed87e66d2fdfe50c286'
+          assert d['browse_snapshot_sha256']=='c1d25f91dccf334c3cf24b52c1e4a279970cebd3f5c6f377569de076360170cd'
+          assert d['reconstructed_bridge_pair_count']==686
+          assert len(d['selected_documents'])==3
+          assert len({x['bridge_key'] for x in d['selected_documents']})==3
+          for x in d['selected_documents']:
+              assert x['http_status']==200
+              assert x['content_length_bytes']>0
+              assert len(x['content_sha256'])==64
+              assert x['snapshot_filename'].endswith('.html')
+          g=d['epistemic_gate']
+          assert g['technical_interface_probe_established'] is True
+          assert g['cross_digitization_content_replication_established'] is False
+          assert g['external_transcription_replication_established'] is False
+          assert g['new_anchor_established'] is False
+          assert g['decipherment_established'] is False
+          print(json.dumps({
+            'selected': [x['bridge_key'] for x in d['selected_documents']],
+            'page_hashes': [x['content_sha256'] for x in d['selected_documents']],
+            'candidate_interface_counts': [len(x['candidate_interface_values']) for x in d['selected_documents']],
+            'technical_interface_probe_established': True,
+          },sort_keys=True))
+          PY
+
+      - name: Upload interface probe receipt and page snapshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-sigla-interface-probe-v0.1
+          path: |
+            artifacts/JANUS-LINEAR-A-SIGLA-INTERFACE-PROBE-RESULT-2026-08-14-v0.1.json
+            artifacts/interface-pages/*.html
+          if-no-files-found: error
+          retention-days: 30
