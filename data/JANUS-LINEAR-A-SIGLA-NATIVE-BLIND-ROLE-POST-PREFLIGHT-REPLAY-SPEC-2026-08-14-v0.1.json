@@ -1,0 +1,88 @@
+{
+  "artifact_uuid": "JANUS-LINEAR-A-SIGLA-NATIVE-BLIND-ROLE-POST-PREFLIGHT-REPLAY-SPEC-2026-08-14-v0.1",
+  "timestamp": "2026-08-14T14:30:00+03:00",
+  "version": "v0.1",
+  "title": "JANUS Linear A SigLA-native blind-role post-preflight replay specification",
+  "node_type": "frozen_replay_specification",
+  "status": "FROZEN_BEFORE_POST_PREFLIGHT_REPLAY",
+  "scientific_claim_bearing": true,
+  "purpose": "Replay the exact frozen R3A_4 claim-bearing experiment only after the independently receipted 686/686 parser-integrity admission, without changing any scientific threshold, partition, candidate identity, null model or permutation count.",
+  "parser_admission": {
+    "receipt_path": "data/JANUS-LINEAR-A-SIGLA-PARSER-INTEGRITY-ADMISSION-RECEIPT-2026-08-14-v0.1.json",
+    "receipt_commit": "7399f19744a7521fb2477f0e7d2f9055c8a49093",
+    "required_state": "R3A_4_SCORING_ADMITTED_AFTER_FULL_UNIVERSE_PREFLIGHT",
+    "required_documents_pass": 686,
+    "required_deterministic_mismatches": 0,
+    "required_success_fraction": 1.0
+  },
+  "scientific_parent": {
+    "spec_path": "data/JANUS-LINEAR-A-SIGLA-NATIVE-BLIND-ROLE-DISCOVERY-SPEC-2026-08-14-v0.1.json",
+    "spec_commit": "502095da1d9e715b4d20b697b3fa85e91f132a04",
+    "runner_path": "research/linear_a/janus_linear_a_sigla_native_blind_role_v0_1.py",
+    "runner_commit": "bf6ff7d3cb7c29fe4ae28058edec925dd51966e6",
+    "runner_blob_sha": "1951d9e05105ae2c20e8c3d04784ccfbfc465d16",
+    "original_workflow_path": ".github/workflows/janus-linear-a-sigla-native-blind-role-v0-1.yml",
+    "original_workflow_commit": "a9686b06ba4b0a3936b4c4edc66adab9476d4228"
+  },
+  "pre_admission_execution": {
+    "result_path": "data/JANUS-LINEAR-A-SIGLA-NATIVE-BLIND-ROLE-DISCOVERY-RESULT-2026-08-14-v0.1.json",
+    "result_commit": "8199028abf6478ac26fda8d143aa2481d972485e",
+    "workflow_run_id": 31795779079,
+    "artifact_id": 9217320613,
+    "artifact_digest": "sha256:e87cf0a96c8f6f47510019a3b4078d78ed7dab2bfea66c58dd4fb9ef65e2fe81",
+    "temporal_class": "PRE_ADMISSION_EXECUTION",
+    "retroactively_admitted": false,
+    "preserved_outcome": "EXECUTED_VALID_NEGATIVE_NO_FULL_SURVIVOR"
+  },
+  "frozen_execution_parameters": {
+    "workers": 8,
+    "retries": 3,
+    "screen_permutations": 3000,
+    "confirm_permutations": 5000,
+    "test_permutations": 5000,
+    "alpha": 0.05,
+    "partition_namespace": "SIGLA-ROLE-PARTITION-v0.1",
+    "candidate_namespace": "SIGLA-WORD-v0.1",
+    "seed_namespace": "JANUS-SIGLA-BLIND-ROLE-v0.1",
+    "frozen_sigla_database_sha256": "cc624f148fd84c94fd2910b0adf92ecace25f52f9175664122bdf8384a8f1b9d",
+    "frozen_sigla_browse_sha256": "c1d25f91dccf334c3cf24b52c1e4a279970cebd3f5c6f377569de076360170cd",
+    "mwenge_commit": "43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a"
+  },
+  "mutation_prohibition": {
+    "scientific_spec_change": false,
+    "runner_change": false,
+    "threshold_change": false,
+    "partition_change": false,
+    "candidate_identity_change": false,
+    "null_model_change": false,
+    "permutation_count_change": false,
+    "posthoc_candidate_filter_change": false
+  },
+  "replay_comparison": {
+    "exact_projection_fields": [
+      "status",
+      "classification",
+      "source",
+      "parser_audit",
+      "partitions",
+      "blind_representation",
+      "SCREEN",
+      "CONFIRM",
+      "TEST",
+      "full_survivor_count",
+      "epistemic_gate"
+    ],
+    "comparison_rule": "Deep JSON equality after selecting only the exact projection fields from the original pre-admission result and the post-admission replay output.",
+    "full_byte_identity_required": false,
+    "reason_full_byte_identity_not_required": "The runner output contains receipt/context fields outside the scientific projection; replay validity is tied to the frozen scientific projection, source canaries and code identity rather than incidental wrapper metadata.",
+    "if_projection_differs": "Classify as SOURCE_OR_EXECUTION_DRIFT and do not promote either run by cherry-picking the preferred outcome."
+  },
+  "success_gate": "Parser admission validates, exact scientific spec and runner blobs validate, SigLA database/browse canaries validate, the exact runner executes, the scientific replay projection is deeply equal to the preserved pre-admission projection, and a separate immutable replay receipt is uploaded before registry persistence.",
+  "claim_ceiling": {
+    "maximum_if_exact_replay": "POST_PREFLIGHT_REPLAY_CONFIRMED_VALID_NEGATIVE_OR_PARENT_OUTCOME",
+    "external_transcription_replication_established": false,
+    "new_lexical_anchor_established": false,
+    "decipherment_established": false,
+    "forbidden": "Treating exact replay of an L1 shared-transcription source as external transcription replication."
+  }
+}
