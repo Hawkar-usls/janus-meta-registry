@@ -1,0 +1,239 @@
+name: JANUS Linear A canonical state v2.12
+
+on:
+  push:
+    paths:
+      - "data/JANUS-LINEAR-A-RESEARCH-STATE-PROMOTION-SPEC-2026-08-14-v2.12.json"
+      - ".github/workflows/janus-linear-a-canonical-state-v2-12.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Audit prerequisites and build v2.12 candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import copy,json,os
+          sp='data/JANUS-LINEAR-A-RESEARCH-STATE-PROMOTION-SPEC-2026-08-14-v2.12.json'
+          spec=json.load(open(sp,encoding='utf-8'))
+          assert spec['status']=='FROZEN_BEFORE_CANONICAL_PROMOTION'
+          parent=json.load(open(spec['parent_canonical']['path'],encoding='utf-8'))
+          assert parent['status']=='CURRENT_CANONICAL_RESEARCH_STATE' and parent['version']=='v2.11'
+          ev={}
+          for key,rule in spec['required_new_evidence'].items():
+              assert os.path.exists(rule['path']), (key,rule['path'])
+              d=json.load(open(rule['path'],encoding='utf-8'))
+              assert d['status']==rule['required_status'], (key,d['status'],rule['required_status'])
+              ev[key]=d
+          stage2=ev['Stage2_primary_method_evidence']
+          ntu=ev['NTU_archive_candidate']
+          quarantine=ev['source_intake_quarantine']
+          routing=ev['intake_routing']
+          matrix=ev['priority_matrix']
+          rila=ev['RILA_S1_request_packet']
+          r3c3=ev['R3C3_readiness']
+          r3d=ev['R3D_readiness']
+          assert stage2['claim_ceiling']['upstream_normalization_contract_complete'] is False
+          assert stage2['claim_ceiling']['scientific_execution_performed'] is False
+          assert ntu['claim_ceiling']['site_archive_recovered'] is False
+          assert ntu['claim_ceiling']['attachments_recovered'] is False
+          assert quarantine['claim_ceiling']['scientific_content_inspected'] is False
+          assert quarantine['claim_ceiling']['source_provenance_admitted'] is False
+          assert quarantine['not_admitted']['R3B_replication_admission'] is True
+          assert routing['skip_rules']['quarantine_may_be_skipped_for_new_external_bytes'] is False
+          assert routing['skip_rules']['lane_receipt_may_be_skipped_after_safe_quarantine'] is False
+          assert matrix['priority_order'][0]['priority']=='P0' and matrix['priority_order'][0]['lane']=='R3B_0_REAL_ALTERNATE_EDITORIAL_SOURCE_ACQUISITION'
+          assert matrix['operational_state']['outbound_requests_sent_by_JANUS'] is False
+          assert rila['claim_ceiling']['request_sent'] is False
+          assert rila['claim_ceiling']['source_bytes_acquired'] is False
+          assert rila['claim_ceiling']['visible_IRIS_frontmatter_attachment_counts_as_R3B_source'] is False
+          assert r3c3['admitted_receipt_count']==0 and r3c3['scientific_execution_performed'] is False
+          assert r3d['admitted_receipt_count']==0 and r3d['source_adapter_executed'] is False
+          assert parent['R3B_independent_editorial_replication_lane']['status']=='UNCHANGED_ACTIVE_BLOCKER'
+          assert parent['claim_ceiling']['external_transcription_replication_established'] is False
+          assert parent['claim_ceiling']['new_anchor_established'] is False
+          assert parent['claim_ceiling']['decipherment_established'] is False
+
+          c=copy.deepcopy(parent)
+          c['artifact_uuid']='JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.12-CANDIDATE'
+          c['version']='v2.12-candidate'
+          c['title']='JANUS Linear A canonical candidate after external-source acquisition and quarantine hardening'
+          c['timestamp']='2026-08-14T19:30:00+03:00'
+          c['node_type']='canonical_research_state_candidate'
+          c['status']='CANDIDATE_PENDING_CANONICALITY_AUDIT'
+          c['canonicality']={
+            'current_source_of_truth':False,
+            'parent_state':spec['parent_canonical']['path'],
+            'promotion_spec':sp,
+            'promotion_prerequisites_pass':True,
+            'history_is_not_deleted':True
+          }
+          c['EXTERNAL_SOURCE_INTAKE_INFRASTRUCTURE']={
+            'status':'HARDENED_GENERIC_QUARANTINE_AND_ROUTING_ADMITTED',
+            'quarantine_validation':spec['required_new_evidence']['source_intake_quarantine']['path'],
+            'quarantine_runner':'research/linear_a/janus_linear_a_source_intake_quarantine_v0_1.py',
+            'quarantine_validation_run':31817942872,
+            'quarantine_artifact_id':9225758881,
+            'quarantine_artifact_digest':'sha256:5d651740f97e90db5e992f3fbcd17efd437de663e89d47513a3482c56a2ea3a7',
+            'routing_spec':spec['required_new_evidence']['intake_routing']['path'],
+            'priority_matrix':spec['required_new_evidence']['priority_matrix']['path'],
+            'universal_pipeline':['ORIGINAL_BYTES','QUARANTINE','LANE_RECEIPT','PROVENANCE_ADMISSION','SCHEMA_OR_NORMALIZATION_FREEZE','ADAPTER_OR_EXECUTION_VIEW','SCIENCE'],
+            'quarantine_can_admit_R3B':False,
+            'scientific_content_inspected_by_quarantine':False,
+            'code_executed_by_quarantine':False
+          }
+          c['R3C_3_primary_method_evidence_update']={
+            'status':'STAGE2_EVIDENCE_ADDED_NORMALIZATION_STILL_INCOMPLETE',
+            'path':spec['required_new_evidence']['Stage2_primary_method_evidence']['path'],
+            'newly_resolved':['GD comparison CSV first column','GD2 Base Sheet first three columns Source/New Format/Linear A word','SD vowel removal on dictionary words','one-to-one character matching after modification'],
+            'still_unresolved':['case','whitespace','punctuation','Unicode normalization','diacritics','empty clusters','duplicate row behavior','paper-exact 2024 file identities'],
+            'frozen_v0_1_2_nulls_modified':False,
+            'scientific_execution_performed':False
+          }
+          c['R3C_3_NTU_archive_gateway']={
+            'status':'HISTORICAL_PROJECT_SITE_IDENTIFIED_PUBLIC_CONTENT_CURRENTLY_NOT_RECOVERED',
+            'path':spec['required_new_evidence']['NTU_archive_candidate']['path'],
+            'site_archive_recovered':False,
+            'attachments_recovered':False,
+            'automatic_2024_paper_identity':False
+          }
+          c['R3B_0_RILA_S1_acquisition_route']={
+            'status':'REQUEST_PACKET_READY_NOT_SENT',
+            'request_packet':spec['required_new_evidence']['RILA_S1_request_packet']['path'],
+            'official_request_copy_route_known':True,
+            'official_author_contact_known':True,
+            'request_sent':False,
+            'source_bytes_acquired':False,
+            'IRIS_frontmatter_counts_as_transcription_source':False,
+            'R3B_0_receipt_admitted':False
+          }
+          c['external_acquisition_operational_priority']={
+            'matrix':spec['required_new_evidence']['priority_matrix']['path'],
+            'P0':'R3B alternate-editorial source bytes',
+            'P1':'Nepal/Perono 2024 paper-exact inputs',
+            'P1_GATEWAY':'NTU Linear A project-site archive',
+            'P2':'Briakos code/corpus manifest',
+            'P3':'Petrolito 2015 TEI-EpiDoc L1 bytes',
+            'scientific_ranking_claimed':False
+          }
+          c['next_atomic_requirements']=[
+            {'id':'P0_R3B_RILA_S1_OR_OTHER_ALTERNATE_EDITORIAL_ACQUISITION','action':'Use the prepared lawful request route or another lawful byte-bearing route. Any new bytes must pass generic quarantine then R3B0 receipt before content inspection.'},
+            {'id':'P1_R3C_3_PAPER_EXACT_INPUT_ACQUISITION','action':'Obtain exact 2024 study inputs and enough preprocessing evidence to admit normalization; Stage-2 evidence alone remains insufficient.'},
+            {'id':'P1_GATEWAY_NTU_ARCHIVE_RECOVERY','action':'Recover authorized/archive-visible NTU project-site export/attachments and reconcile each file independently; do not infer 2024 identity from project lineage.'},
+            {'id':'P2_R3C_1F_BRIAKOS_METHOD_MATERIAL','action':'Continue lawful method-material recovery without target-guided 419 subset search.'},
+            {'id':'P3_R3D_PETROLITO_XML_BYTES','action':'Continue historical XML byte recovery; fixed current provenance ceiling remains L1.'}
+          ]
+          c['highest_admissible_claim']=parent['highest_admissible_claim'] + ' External-source acquisition is now hardened by a generic non-executing quarantine gate that records original SHA-256/byte identity, safely inventories ZIP/TAR members and hashes streamable member payloads without filesystem extraction or semantic parsing, while rejecting unsafe archive structures and explicitly withholding provenance/R3B admission. A current operational acquisition matrix places true alternate-editorial R3B source bytes first. For RILA-S1, a lawful CNR request-copy/author-contact route is now documented, but no request has been sent and the visible restricted frontmatter/index attachment is not treated as transcription-bearing source evidence. Additional Stage-2 primary-method evidence narrows R3C-3 input/preprocessing behavior but does not complete the normalization contract or permit scientific execution. The historical NTU project site is a recovery gateway only; no site archive or attachment bytes have been recovered.'
+          c['claim_ceiling'].update({
+            'generic_external_source_quarantine_admitted':True,
+            'external_source_routing_spec_frozen':True,
+            'external_acquisition_priority_matrix_current':True,
+            'R3B_RILA_S1_request_packet_ready':True,
+            'R3B_RILA_S1_request_sent':False,
+            'R3B_RILA_S1_source_bytes_acquired':False,
+            'R3C_3_Stage2_method_evidence_added':True,
+            'R3C_3_upstream_normalization_contract_complete':False,
+            'R3C_3_scientific_execution_performed':False,
+            'R3C_3_NTU_archive_recovered':False,
+            'R3D_corpus_bytes_recovered':False,
+            'R3B_0_alternate_editorial_source_bytes_acquired':False,
+            'external_transcription_replication_established':False,
+            'new_anchor_established':False,
+            'decipherment_established':False,
+            'promotion':'BLOCKED'
+          })
+          out='data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.12-CANDIDATE.json'
+          open(out,'w',encoding='utf-8').write(json.dumps(c,ensure_ascii=False,indent=2)+'\n')
+          PY
+
+      - name: Canonicality audit and promote v2.12
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import copy,json
+          cp='data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.12-CANDIDATE.json'
+          c=json.load(open(cp,encoding='utf-8'))
+          q=json.load(open('data/JANUS-LINEAR-A-SOURCE-INTAKE-QUARANTINE-VALIDATION-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          rila=json.load(open('data/JANUS-LINEAR-A-R3B-0-RILA-S1-ACQUISITION-REQUEST-PACKET-2026-08-14-v0.1.json',encoding='utf-8'))
+          r3c3=json.load(open('data/JANUS-LINEAR-A-R3C-3-READINESS-RESULT-2026-08-14-v0.1.2.json',encoding='utf-8'))
+          r3d=json.load(open('data/JANUS-LINEAR-A-R3D-PETROLITO-READINESS-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          stage2=json.load(open('data/JANUS-LINEAR-A-R3C-3-STAGE2-PRIMARY-METHOD-EVIDENCE-2026-08-14-v0.1.json',encoding='utf-8'))
+          ntu=json.load(open('data/JANUS-LINEAR-A-R3C-3-NTU-LINEAR-A-CORPUS-BLOG-ARCHIVE-RECOVERY-CANDIDATE-2026-08-14-v0.1.json',encoding='utf-8'))
+          checks={
+            'candidate_pending':c['status']=='CANDIDATE_PENDING_CANONICALITY_AUDIT',
+            'quarantine_admitted_nonsemantic':q['status']=='SOURCE_INTAKE_QUARANTINE_v0_1_ADMITTED' and q['claim_ceiling']['scientific_content_inspected'] is False and q['claim_ceiling']['source_provenance_admitted'] is False,
+            'RILA_request_unsent':rila['claim_ceiling']['request_sent'] is False,
+            'RILA_bytes_absent':rila['claim_ceiling']['source_bytes_acquired'] is False,
+            'RILA_frontmatter_not_R3B_source':rila['claim_ceiling']['visible_IRIS_frontmatter_attachment_counts_as_R3B_source'] is False,
+            'R3C3_zero_receipts_no_execution':r3c3['admitted_receipt_count']==0 and r3c3['scientific_execution_performed'] is False,
+            'Stage2_normalization_incomplete':stage2['claim_ceiling']['upstream_normalization_contract_complete'] is False,
+            'NTU_archive_absent':ntu['claim_ceiling']['site_archive_recovered'] is False and ntu['claim_ceiling']['attachments_recovered'] is False,
+            'R3D_bytes_absent_no_adapter':r3d['admitted_receipt_count']==0 and r3d['source_adapter_executed'] is False,
+            'R3B_blocked':c['R3B_independent_editorial_replication_lane']['status']=='UNCHANGED_ACTIVE_BLOCKER',
+            'R3B_source_bytes_absent':c['claim_ceiling']['R3B_0_alternate_editorial_source_bytes_acquired'] is False,
+            'no_external_replication':c['claim_ceiling']['external_transcription_replication_established'] is False,
+            'no_anchor':c['claim_ceiling']['new_anchor_established'] is False,
+            'no_decipherment':c['claim_ceiling']['decipherment_established'] is False
+          }
+          assert all(checks.values()), {k:v for k,v in checks.items() if not v}
+          audit={
+            'artifact_uuid':'JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.12',
+            'version':'v2.12','node_type':'canonicality_audit_result','status':'CANONICALITY_AUDIT_PASS',
+            'candidate':cp,'promotion_spec':'data/JANUS-LINEAR-A-RESEARCH-STATE-PROMOTION-SPEC-2026-08-14-v2.12.json',
+            'checks':checks,'all_checks_pass':True,
+            'claim_ceiling':{'new_scientific_claim':False,'R3B_effect':'NONE','new_anchor':False,'decipherment':False}
+          }
+          ap='data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.12.json'
+          open(ap,'w',encoding='utf-8').write(json.dumps(audit,ensure_ascii=False,indent=2)+'\n')
+          out=copy.deepcopy(c)
+          out['artifact_uuid']='JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.12'
+          out['version']='v2.12'; out['node_type']='canonical_research_state'; out['status']='CURRENT_CANONICAL_RESEARCH_STATE'
+          out['canonicality']['current_source_of_truth']=True
+          out['canonicality']['candidate_path']=cp
+          out['canonicality']['canonicality_audit']=ap
+          out['canonicality']['canonicality_audit_status']='CANONICALITY_AUDIT_PASS'
+          out['canonicality']['promotion_rule_satisfied']=True
+          op='data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.12.json'
+          open(op,'w',encoding='utf-8').write(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          PY
+
+      - name: Upload immutable v2.12 canonical package
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-canonical-state-v2.12
+          path: |
+            data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.12-CANDIDATE.json
+            data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.12.json
+            data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.12.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Persist canonical v2.12 with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "janus-proof-bot"
+          git config user.email "janus-proof-bot@users.noreply.github.com"
+          git add data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.12-CANDIDATE.json data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.12.json data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.12.json
+          git commit -m "Promote Linear A canonical research state v2.12 after external acquisition hardening"
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then pushed=1; break; fi
+            sleep "$attempt"
+          done
+          test "$pushed" = 1
