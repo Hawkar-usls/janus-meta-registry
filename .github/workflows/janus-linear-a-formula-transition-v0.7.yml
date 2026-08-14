@@ -1,0 +1,96 @@
+name: JANUS Linear A formula transition v0.7
+
+on:
+  push:
+    paths:
+      - "research/linear_a/janus_linear_a_formula_transition.py"
+      - "research/linear_a/janus_linear_a_token_typing_policy_v0_6_2.py"
+      - "research/linear_a/janus_linear_a_parser_policy_v0_6_1.py"
+      - ".github/workflows/janus-linear-a-formula-transition-v0.7.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  formula-transition:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout JANUS registry
+        uses: actions/checkout@v4
+
+      - name: Verify canonical parent state
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.0.json
+          python3 - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.0.json'
+          d=json.load(open(p, encoding='utf-8'))
+          assert d['artifact_uuid'] == 'JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.0'
+          assert d['current_representation_policy']['policy_id'] == 'JANUS-LINA-TOKEN-TYPING-POLICY-v0.6.2'
+          assert d['claim_ceiling']['new_anchor_established'] is False
+          assert d['claim_ceiling']['decipherment_established'] is False
+          print('Canonical parent v2.0 verified.')
+          PY
+
+      - name: Fetch frozen Linear A corpus
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --quiet https://github.com/mwenge/lineara.xyz.git /tmp/lineara
+          git -C /tmp/lineara checkout --quiet 43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a
+          test "$(git -C /tmp/lineara rev-parse HEAD)" = "43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a"
+          test -f /tmp/lineara/items_analysis/numbers.txt
+          echo "Frozen corpus verified."
+
+      - name: Run v0.7 directed formula-transition search
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/linear_a/janus_linear_a_formula_transition.py \
+            --corpus /tmp/lineara \
+            --out artifacts/JANUS-LINEAR-A-FORMULA-TRANSITION-CROSS-REGION-2026-08-14-v0.7.json \
+            --train-permutations 3000 \
+            --test-permutations 5000 \
+            --seed 260814625
+
+      - name: Validate v0.7 claim ceiling and typed universe
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          p='artifacts/JANUS-LINEAR-A-FORMULA-TRANSITION-CROSS-REGION-2026-08-14-v0.7.json'
+          d=json.load(open(p, encoding='utf-8'))
+          assert d['source']['frozen_commit'] == '43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a'
+          assert d['source']['token_typing_policy_id'] == 'JANUS-LINA-TOKEN-TYPING-POLICY-v0.6.2'
+          assert d['source']['canonical_parent_commit'] == 'fac7c305e7210c574439a62179e78cb26f13e743'
+          assert d['methodology']['representation'] == 'WORD_ONLY'
+          assert d['methodology']['candidate_type'] == 'SEMANTIC_CANDIDATE_ONLY'
+          assert len(d['methodology']['null_operators']) == 3
+          assert d['epistemic_gate']['typed_candidate_universe_frozen'] is True
+          assert d['epistemic_gate']['new_anchor_established'] is False
+          assert d['epistemic_gate']['decipherment_established'] is False
+          for item in d['post_score_reveal']['selected']:
+              for side in ('left_label','right_label'):
+                  label=item['discovery'][side]
+                  assert label not in {'*900','*901','*902','*903','¹⁄₅','¹⁄₃','≈¹⁄₆','≈¹⁄₄'}
+          print(json.dumps({
+              'eligible_HT_endpoints': d['corpus_counts']['eligible_semantic_endpoint_ids_HT'],
+              'train_selected': d['blind_discovery_receipt']['selected_count'],
+              'cross_region_survivors': d['epistemic_gate']['cross_region_survivor_count'],
+              'new_anchor_established': False,
+              'decipherment_established': False,
+          }, sort_keys=True))
+          PY
+
+      - name: Upload v0.7 receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-formula-transition-v0.7
+          path: artifacts/JANUS-LINEAR-A-FORMULA-TRANSITION-CROSS-REGION-2026-08-14-v0.7.json
+          if-no-files-found: error
+          retention-days: 30
