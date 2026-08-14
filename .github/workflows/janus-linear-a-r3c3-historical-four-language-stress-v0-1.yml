@@ -1,0 +1,133 @@
+name: JANUS Linear A R3C-3 historical four-language stress test v0.1
+
+on:
+  push:
+    paths:
+      - ".github/workflows/janus-linear-a-r3c3-historical-four-language-stress-v0-1.yml"
+      - "research/linear_a/janus_linear_a_r3c3_historical_four_language_stress_v0_1.py"
+      - "data/JANUS-LINEAR-A-R3C-3-HISTORICAL-FOUR-LANGUAGE-STRESS-TEST-SPEC-2026-08-14-v0.1.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  historical-stress:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify frozen parents and runner self-test
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          s=json.load(open('data/JANUS-LINEAR-A-R3C-3-HISTORICAL-FOUR-LANGUAGE-STRESS-TEST-SPEC-2026-08-14-v0.1.json',encoding='utf-8'))
+          required={
+            'data/JANUS-LINEAR-A-R3C-3-HISTORICAL-MAC-BUNDLE-ACQUISITION-RESULT-2026-08-14-v0.1.json':'HISTORICAL_BUNDLE_ACQUIRED_SAFE_STATIC_INVENTORY_COMPLETE',
+            'data/JANUS-LINEAR-A-R3C-3-HISTORICAL-BUNDLE-STATIC-METHOD-INSPECTION-RESULT-2026-08-14-v0.1.json':'STATIC_METHOD_AND_INPUT_STRUCTURE_RECOVERED_PARTIAL_2024_LANGUAGE_RESOURCE_SET',
+            'data/JANUS-LINEAR-A-R3C-3-HISTORICAL-METHOD-SEMANTIC-EXTRACTION-RESULT-2026-08-14-v0.1.1.json':'SEMANTIC_IR_EXTRACTED_COMPLETE_FOR_TARGETS',
+            'data/JANUS-LINEAR-A-R3C-3-HISTORICAL-DATAFLOW-RECONSTRUCTION-RESULT-2026-08-14-v0.1.json':'HISTORICAL_DATAFLOW_MACHINE_RECONSTRUCTED',
+            'data/JANUS-LINEAR-A-R3C-3-COMPLIED-LIST-CONSTRUCTION-PROBE-RESULT-2026-08-14-v0.1.json':'COMPLIED_LIST_CONSTRUCTION_SLICE_MACHINE_REPRESENTED'
+          }
+          assert s['status']=='FROZEN_BEFORE_EXECUTION'
+          assert s['scope']['languages_fixed']==['Ancient Egyptian','Luwian','Hittite','Proto-Celtic']
+          assert len(s['profiles_fixed_before_execution'])==3
+          assert s['multiple_testing_family']['cells']==12
+          assert s['permutation_protocol']['iterations_per_null_family']==10000
+          assert s['claim_ceiling']['paper_exact_2024_reproduction'] is False
+          for path,status in required.items():
+              d=json.load(open(path,encoding='utf-8'))
+              assert d['status']==status, (path,d.get('status'),status)
+          PY
+          python3 -m py_compile research/linear_a/janus_linear_a_r3c3_historical_four_language_stress_v0_1.py
+          python3 research/linear_a/janus_linear_a_r3c3_historical_four_language_stress_v0_1.py self-test | tee /tmp/r3c3-historical-stress-self-test.json
+
+      - name: Reacquire exact immutable historical bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p external/r3c3-historical-mac
+          OUT='external/r3c3-historical-mac/LinearADecipherment(Mac).zip'
+          curl --fail --location --retry 4 --retry-all-errors --connect-timeout 20 --max-time 180 \
+            'https://raw.githubusercontent.com/L-Colin/Linear-A-decipherment-programme/fab66e715b18607c4b383782e7f4d1b86a26d725/LinearADecipherment(Mac).zip' \
+            --output "$OUT"
+          test "$(wc -c < "$OUT" | tr -d ' ')" = '1765475'
+          test "$(git hash-object "$OUT")" = 'b58e8a3043911f6de921be39bbf516755839829f'
+          test "$(sha256sum "$OUT" | awk '{print $1}')" = 'a4627d4c2e26668593e8f6f9c8a004ae75bb3f1bbf497a39c0d4a772c9012850'
+
+      - name: Execute frozen historical four-language stress test
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/linear_a/janus_linear_a_r3c3_historical_four_language_stress_v0_1.py execute \
+            'external/r3c3-historical-mac/LinearADecipherment(Mac).zip' \
+            --out 'data/JANUS-LINEAR-A-R3C-3-HISTORICAL-FOUR-LANGUAGE-STRESS-TEST-RESULT-2026-08-14-v0.1.json' \
+            | tee /tmp/r3c3-historical-stress-compact.json
+
+      - name: Enforce source, family, and claim invariants before persistence
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-R3C-3-HISTORICAL-FOUR-LANGUAGE-STRESS-TEST-RESULT-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['status'] in {
+            'EXECUTED_HISTORICAL_NO_FWER_EXCESS',
+            'EXECUTED_HISTORICAL_DISCORDANT_NULLS',
+            'EXECUTED_HISTORICAL_TECHNICAL_OVERLAP_EXCESS'
+          }
+          assert d['bundle']['sha256']=='a4627d4c2e26668593e8f6f9c8a004ae75bb3f1bbf497a39c0d4a772c9012850'
+          assert d['family']['cells']==12
+          assert d['family']['languages']==['Ancient Egyptian','Luwian','Hittite','Proto-Celtic']
+          assert d['family']['profiles']==['P1_NUMBERED_RAW_LOWER','P2_MATCHED_RAW_LOWER','P3_MATCHED_HISTORICAL_GENERAL_DECIPHERMENT']
+          assert len(d['cells'])==12
+          assert d['null_families']['N1_WITHIN_LANGUAGE_COMPOSITION_PRESERVING']['iterations']==10000
+          assert d['null_families']['N2_POOLED_LENGTH_STRATIFIED_LANGUAGE_LABEL']['iterations']==10000
+          assert d['safety_and_contamination']['third_party_python_executed'] is False
+          assert d['safety_and_contamination']['raw_dictionary_words_persisted'] is False
+          assert d['safety_and_contamination']['post_result_profile_selection'] is False
+          assert d['claim_ceiling']['paper_exact_2024_reproduction'] is False
+          assert d['claim_ceiling']['language_family_relationship_established'] is False
+          assert d['claim_ceiling']['R3B_effect']=='NONE'
+          assert d['claim_ceiling']['new_anchor'] is False
+          assert d['claim_ceiling']['decipherment'] is False
+          for cell in d['cells']:
+              for null_id in ('N1_WITHIN_LANGUAGE_COMPOSITION_PRESERVING','N2_POOLED_LENGTH_STRATIFIED_LANGUAGE_LABEL'):
+                  x=cell[null_id]
+                  assert 0.0 <= x['unadjusted_empirical_one_sided_p'] <= 1.0
+                  assert 0.0 <= x['FWER_adjusted_p_max12'] <= 1.0
+                  assert x['FWER_adjusted_p_max12'] + 1e-15 >= x['unadjusted_empirical_one_sided_p']
+          PY
+
+      - name: Upload immutable stress-test evidence before interpretation
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r3c3-historical-four-language-stress-v0.1
+          path: |
+            data/JANUS-LINEAR-A-R3C-3-HISTORICAL-FOUR-LANGUAGE-STRESS-TEST-SPEC-2026-08-14-v0.1.json
+            data/JANUS-LINEAR-A-R3C-3-HISTORICAL-FOUR-LANGUAGE-STRESS-TEST-RESULT-2026-08-14-v0.1.json
+          if-no-files-found: error
+
+      - name: Persist result with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'janus-proof-bot'
+          git config user.email 'janus-proof-bot@users.noreply.github.com'
+          git add data/JANUS-LINEAR-A-R3C-3-HISTORICAL-FOUR-LANGUAGE-STRESS-TEST-RESULT-2026-08-14-v0.1.json
+          git commit -m 'Register Linear A R3C-3 historical four-language stress result v0.1'
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then pushed=1; break; fi
+            sleep "$attempt"
+          done
+          test "$pushed" = 1
