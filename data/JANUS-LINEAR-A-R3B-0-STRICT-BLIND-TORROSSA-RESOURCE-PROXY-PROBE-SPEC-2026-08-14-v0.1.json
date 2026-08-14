@@ -1,0 +1,36 @@
+{
+  "artifact_uuid": "JANUS-LINEAR-A-R3B-0-STRICT-BLIND-TORROSSA-RESOURCE-PROXY-PROBE-SPEC-2026-08-14-v0.1",
+  "version": "v0.1",
+  "node_type": "precontent_opaque_byte_probe_spec",
+  "parent_route_discovery": "data/JANUS-LINEAR-A-R3B-0-STRICT-BLIND-EXTERNAL-ROUTE-DISCOVERY-RESULT-2026-08-14-v0.1.json",
+  "routes": [
+    {
+      "candidate_id": "NOTTI_2021_THERA",
+      "url": "https://www.torrossa.com/gs/resourceProxy?an=4774693&publisher=F34885",
+      "provenance": "predeclared Torrossa delivery candidate frozen before fetch"
+    },
+    {
+      "candidate_id": "NOTTI_2024_PH13",
+      "url": "https://www.torrossa.com/gs/resourceProxy?an=5821475&publisher=F34885",
+      "provenance": "predeclared Torrossa delivery candidate frozen before fetch"
+    }
+  ],
+  "probe_contract": {
+    "opaque_get_only": true,
+    "parse_body": false,
+    "persist_body": false,
+    "pdf_magic_test_only": true,
+    "hash_all_returned_bytes": true,
+    "pdf_text_extraction": false,
+    "pdf_rendering": false,
+    "ocr": false,
+    "follow_redirects": true,
+    "no_authentication": true,
+    "no_purchase_or_cart_actions": true
+  },
+  "admission": "HTTP 200 plus body prefix %PDF- produces PRECONTENT_EXACT_PDF_BYTES_SEALED; every other response is non-admitted.",
+  "claim_ceiling": {
+    "allowed": "A Torrossa route may produce an exact opaque-byte seal before content inspection.",
+    "forbidden": ["No source-native reading inspection.", "No overlap selection.", "No comparison or R3B replication claim."]
+  }
+}
