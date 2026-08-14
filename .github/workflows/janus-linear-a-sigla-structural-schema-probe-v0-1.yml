@@ -1,0 +1,152 @@
+name: JANUS Linear A SigLA structural schema probe v0.1
+
+on:
+  push:
+    paths:
+      - "research/linear_a/janus_linear_a_sigla_structural_schema_probe_v0_1.py"
+      - "data/JANUS-LINEAR-A-SIGLA-WORD-VIEW-STRUCTURAL-SCHEMA-PROBE-SPEC-2026-08-14-v0.1.json"
+      - ".github/workflows/janus-linear-a-sigla-structural-schema-probe-v0-1.yml"
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  sigla-structural-schema-probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      SOURCE_RUN_ID: "31794720800"
+      SOURCE_ARTIFACT_ID: "9216887259"
+      SOURCE_ARTIFACT_NAME: "janus-linear-a-sigla-word-view-interface-probe-v0.1"
+      SOURCE_ARTIFACT_DIGEST: "sha256:d3c1bbbe4f1a4a2591c67c4998a8f0098eccc5d4ac89c9a7442343e43bd8f4bb"
+      SOURCE_HEAD_SHA: "1ce86c6f725ab41995e1c06214d64dd1615beae1"
+
+    steps:
+      - name: Checkout JANUS registry
+        uses: actions/checkout@v4
+
+      - name: Validate frozen structural probe spec
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-SIGLA-WORD-VIEW-STRUCTURAL-SCHEMA-PROBE-SPEC-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['status']=='FROZEN_BEFORE_STRUCTURAL_SCHEMA_PROBE'
+          assert d['scientific_claim_bearing'] is False
+          assert d['parent_contract']['commit']=='d30b3b632d0fc551dcb61d6ba5d425c3f2415643'
+          assert d['immutable_input']['artifact_id']==9216887259
+          assert d['immutable_input']['artifact_digest']=='sha256:d3c1bbbe4f1a4a2591c67c4998a8f0098eccc5d4ac89c9a7442343e43bd8f4bb'
+          assert d['immutable_input']['live_source_fetch_forbidden'] is True
+          assert d['immutable_input']['mwenge_content_access_forbidden'] is True
+          assert d['container_gate']['required_class']=='document-view'
+          assert d['container_gate']['required_count_per_page']==1
+          assert d['ranking']['content_values_used'] is False
+          assert d['claim_ceiling']['external_transcription_replication_established'] is False
+          PY
+
+      - name: Validate immutable source artifact metadata
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          curl -fsSL \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/${SOURCE_ARTIFACT_ID}" \
+            > /tmp/source-artifact-metadata.json
+          python3 - <<'PY'
+          import json, os
+          d=json.load(open('/tmp/source-artifact-metadata.json',encoding='utf-8'))
+          assert d['id']==int(os.environ['SOURCE_ARTIFACT_ID'])
+          assert d['name']==os.environ['SOURCE_ARTIFACT_NAME']
+          assert d['digest']==os.environ['SOURCE_ARTIFACT_DIGEST']
+          assert d['expired'] is False
+          wr=d['workflow_run']
+          assert wr['id']==int(os.environ['SOURCE_RUN_ID'])
+          assert wr['head_sha']==os.environ['SOURCE_HEAD_SHA']
+          PY
+
+      - name: Download exact frozen word-view artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: janus-linear-a-sigla-word-view-interface-probe-v0.1
+          path: artifacts/source-word-view-probe
+          run-id: 31794720800
+          github-token: ${{ github.token }}
+
+      - name: Execute structural schema probe
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/linear_a/janus_linear_a_sigla_structural_schema_probe_v0_1.py \
+            --artifact-root artifacts/source-word-view-probe \
+            --out data/JANUS-LINEAR-A-SIGLA-WORD-VIEW-STRUCTURAL-SCHEMA-PROBE-RESULT-2026-08-14-v0.1.json
+
+      - name: Validate structural result and claim ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-SIGLA-WORD-VIEW-STRUCTURAL-SCHEMA-PROBE-RESULT-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['status']=='STRUCTURAL_SCHEMA_PROBE_EXECUTED_SUCCESS'
+          assert d['scientific_claim_bearing'] is False
+          v=d['validation']
+          assert v['live_sigla_fetch_used'] is False
+          assert v['mwenge_content_accessed'] is False
+          assert v['documents']==['ZA10b','KNZb5','KHWc2012']
+          assert v['document_view_container_count_per_page']=={'ZA10b':1,'KNZb5':1,'KHWc2012':1}
+          assert d['common_relative_path_count']>0
+          assert len(d['mechanical_candidates'])>=d['common_relative_path_count']
+          for c in d['mechanical_candidates']:
+              assert c['family'] in {'COMMON_PATH','COMMON_REPEATED_PATH','COMMON_SELECTOR_BEARING_PATH'}
+              assert c['relative_path'].startswith('div.document-view') or '.document-view' in c['relative_path'].split('>')[0]
+          b=d['interpretation_boundary']
+          assert b['candidate_is_word_boundary'] is False
+          assert b['candidate_is_sign_boundary'] is False
+          assert b['candidate_is_morpheme_boundary'] is False
+          g=d['epistemic_gate']
+          assert g['structural_schema_probe_established'] is True
+          assert g['content_extraction_grammar_frozen'] is False
+          assert g['cross_digitization_content_replication_established'] is False
+          assert g['external_transcription_replication_established'] is False
+          assert g['new_anchor_established'] is False
+          assert g['decipherment_established'] is False
+          print(json.dumps({
+            'common_relative_path_count':d['common_relative_path_count'],
+            'mechanical_candidate_count':len(d['mechanical_candidates']),
+            'common_sibling_signature_count':len(d['common_sibling_signatures']),
+            'top_candidates':d['mechanical_candidates'][:8],
+          },ensure_ascii=False,sort_keys=True))
+          PY
+
+      - name: Persist structural schema probe result
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "janus-proof-bot"
+          git config user.email "janus-proof-bot@users.noreply.github.com"
+          git add data/JANUS-LINEAR-A-SIGLA-WORD-VIEW-STRUCTURAL-SCHEMA-PROBE-RESULT-2026-08-14-v0.1.json
+          if git diff --cached --quiet; then
+            echo "No structural result delta to commit"
+          else
+            git commit -m "Register SigLA word-view structural schema probe v0.1"
+            git push origin HEAD:main
+          fi
+
+      - name: Upload structural probe receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-sigla-structural-schema-probe-v0.1
+          path: |
+            data/JANUS-LINEAR-A-SIGLA-WORD-VIEW-STRUCTURAL-SCHEMA-PROBE-RESULT-2026-08-14-v0.1.json
+            /tmp/source-artifact-metadata.json
+          if-no-files-found: error
+          retention-days: 30
