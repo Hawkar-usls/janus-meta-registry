@@ -1,0 +1,42 @@
+name: Connection hidden006 held-out selector
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/connection/janus_connection_hidden006_heldout_selector_v0_1.py'
+      - '.github/workflows/connection-hidden006-heldout-selector.yml'
+  workflow_dispatch:
+jobs:
+  select:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Execute structure-only selection
+        run: |
+          mkdir -p out
+          python tools/connection/janus_connection_hidden006_heldout_selector_v0_1.py --repo-root . --panel-size 16 --out out/JANUS-CONNECTION-HIDDEN006-HELDOUT-SELECTION-2026-08-14-v0.1.json
+      - name: Enforce blindness and exclusions
+        run: |
+          python - <<'PY'
+          import json
+          p='out/JANUS-CONNECTION-HIDDEN006-HELDOUT-SELECTION-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          s=d['selector_semantics']; c=d['claim_ceiling']
+          assert s['reads_json_values'] is False
+          assert s['reads_titles'] is False
+          assert s['reads_status_values'] is False
+          assert s['connection_family_excluded'] is True
+          assert len(d['selected']) == len({x['family_stem'] for x in d['selected']})
+          assert not set(s['formulation_sources_excluded']) & {x['path'] for x in d['selected']}
+          assert c['body_outcomes_inspected_by_selector'] is False
+          assert c['hidden006_validated'] is False
+          print('PASS_H006_SELECTION_BLINDNESS', d['panel_size_selected'])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: connection-hidden006-heldout-selection-v0.1
+          path: out/JANUS-CONNECTION-HIDDEN006-HELDOUT-SELECTION-2026-08-14-v0.1.json
+          retention-days: 30
