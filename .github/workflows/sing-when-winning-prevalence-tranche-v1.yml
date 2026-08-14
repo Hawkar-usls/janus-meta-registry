@@ -1,0 +1,40 @@
+name: Sing When You're Winning matched prevalence tranche v1
+
+on:
+  push:
+    paths:
+      - "data/JANUS-SING-WHEN-YOURE-WINNING-MATCHED-PREVALENCE-PROTOCOL-v1.0.json"
+      - "data/JANUS-SING-WHEN-YOURE-WINNING-SPORTS-MVP-PREVALENCE-TRANCHE-01-v1.0.json"
+      - "tools/verify_sing_when_youre_winning_prevalence_tranche_v1.py"
+      - ".github/workflows/sing-when-winning-prevalence-tranche-v1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-prevalence-tranche:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout JANUS registry
+        uses: actions/checkout@v4
+
+      - name: Verify tranche counts and boundary derivation
+        run: python3 tools/verify_sing_when_youre_winning_prevalence_tranche_v1.py
+
+      - name: Enforce falsification and claim ceiling
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          p='data/JANUS-SING-WHEN-YOURE-WINNING-SPORTS-MVP-PREVALENCE-TRANCHE-01-v1.0.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['diagnostic_result']['existence_uniqueness_of_full_chain']=='FALSIFIED'
+          assert d['diagnostic_result']['existence_uniqueness_of_exactly_five']=='FALSIFIED'
+          assert d['epistemic_ceiling']['population_prevalence_claim'] is False
+          assert d['derived_counts']['full_chain_resolved'] >= 1
+          lebron=next(x for x in d['controls'] if x['id']=='MP-001')
+          assert lebron['visible_same_subject_instances']==5
+          assert lebron['chain_outcome_receipt'] is True
+          print('falsification preservation and claim ceiling: PASS')
+          PY
