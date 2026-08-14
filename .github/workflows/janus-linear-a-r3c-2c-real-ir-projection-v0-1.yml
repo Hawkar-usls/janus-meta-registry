@@ -1,0 +1,137 @@
+name: JANUS Linear A R3C-2C seven-document real IR projection v0.1
+
+on:
+  push:
+    paths:
+      - ".github/workflows/janus-linear-a-r3c-2c-real-ir-projection-v0-1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  real-projection:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compile cumulative projection stack
+        run: |
+          python3 -m py_compile \
+            research/linear_a/janus_linear_a_transcription_ir_v1_0.py \
+            research/linear_a/janus_linear_a_transcription_ir_hardening_v1_1.py \
+            research/linear_a/janus_linear_a_transcription_ir_hardening_v1_2_1.py \
+            research/linear_a/janus_linear_a_r3c_common_v0_1.py \
+            research/linear_a/janus_linear_a_r3c_source_loader_v0_3.py \
+            research/linear_a/janus_linear_a_r3c_source_loader_v0_4.py \
+            research/linear_a/janus_linear_a_r3c_real_ir_projection_v0_1.py
+
+      - name: Verify frozen projection prerequisites
+        run: |
+          python3 - <<'PY'
+          import json
+          spec=json.load(open('data/JANUS-LINEAR-A-R3C-2C-REAL-IR-PROJECTION-SPEC-2026-08-14-v0.1.json',encoding='utf-8'))
+          coverage=json.load(open('data/JANUS-LINEAR-A-R3C-2B-REAL-IR-HARDENING-COVERAGE-AUDIT-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          v11=json.load(open('data/JANUS-LINEAR-A-TRANSCRIPTION-IR-HARDENING-VALIDATION-RESULT-2026-08-14-v1.1.json',encoding='utf-8'))
+          v121=json.load(open('data/JANUS-LINEAR-A-TRANSCRIPTION-IR-HARDENING-VALIDATION-RESULT-2026-08-14-v1.2.1.json',encoding='utf-8'))
+          assert spec['status']=='FROZEN_BEFORE_EXECUTION'
+          assert coverage['status']==spec['parents']['required_coverage_status']
+          assert v11['status']=='HARDENING_V1_1_ADMITTED'
+          assert v121['status']==spec['parents']['required_v1_2_1_status']
+          assert spec['scope']['documents_total']==7
+          assert spec['claim_ceiling']['full_document_transcription_claimed'] is False
+          PY
+
+      - name: Checkout exact current source
+        uses: actions/checkout@v4
+        with:
+          repository: mwenge/lineara.xyz
+          ref: 43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a
+          path: external/mwenge-current
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            LinearAInscriptions.js
+          sparse-checkout-cone-mode: false
+
+      - name: Re-prove source and execute seven source-derived projections
+        shell: bash
+        env:
+          PYTHONPATH: research/linear_a
+        run: |
+          set -euo pipefail
+          test "$(git -C external/mwenge-current rev-parse HEAD)" = "43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a"
+          test "$(wc -c < external/mwenge-current/LinearAInscriptions.js | tr -d ' ')" = "1609137"
+          test "$(sha256sum external/mwenge-current/LinearAInscriptions.js | awk '{print $1}')" = "4da8e1f9693d30880ee505e56541fc189add70605bad88436c44a8e11a57764c"
+          rm -rf data/linear_a_r3c_2c_real_ir_v0_1
+          mkdir -p data/linear_a_r3c_2c_real_ir_v0_1
+          python3 research/linear_a/janus_linear_a_r3c_real_ir_projection_v0_1.py \
+            --source external/mwenge-current/LinearAInscriptions.js \
+            --output-dir data/linear_a_r3c_2c_real_ir_v0_1 \
+            --result data/JANUS-LINEAR-A-R3C-2C-REAL-IR-PROJECTION-RESULT-2026-08-14-v0.1.json
+
+      - name: Enforce source/claim invariants without grading seven-of-seven outcome yet
+        run: |
+          python3 - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-R3C-2C-REAL-IR-PROJECTION-RESULT-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['source_identity_admitted'] is True
+          assert d['projection_scope']=='MINIMAL_SOURCE_SPAN_NOT_FULL_DOCUMENT_TRANSCRIPTION'
+          assert d['summary']['documents_projected']==7
+          assert d['summary']['source_groups_destructively_merged'] is False
+          assert d['summary']['D5_boundary_kind_promoted'] is False
+          assert d['summary']['D6_semantic_authority_granted'] is False
+          assert d['claim_ceiling']['full_document_transcription_claimed'] is False
+          assert d['claim_ceiling']['D5_boundary_kind_resolved'] is False
+          assert d['claim_ceiling']['D6_A319_semantics_assigned'] is False
+          assert d['claim_ceiling']['R3B_effect']=='NONE'
+          assert d['claim_ceiling']['new_anchor'] is False
+          assert d['claim_ceiling']['decipherment'] is False
+          PY
+
+      - name: Upload immutable projection package before outcome grading
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r3c-2c-real-ir-projection-v0.1
+          path: |
+            data/JANUS-LINEAR-A-R3C-2C-REAL-IR-PROJECTION-RESULT-2026-08-14-v0.1.json
+            data/linear_a_r3c_2c_real_ir_v0_1/*.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Persist projection package with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "janus-proof-bot"
+          git config user.email "janus-proof-bot@users.noreply.github.com"
+          git add \
+            data/JANUS-LINEAR-A-R3C-2C-REAL-IR-PROJECTION-RESULT-2026-08-14-v0.1.json \
+            data/linear_a_r3c_2c_real_ir_v0_1
+          git commit -m "Register Linear A seven-document real IR projection v0.1"
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then pushed=1; break; fi
+            sleep "$attempt"
+          done
+          test "$pushed" = 1
+
+      - name: Grade all-seven admission only after immutable evidence persistence
+        run: |
+          python3 - <<'PY'
+          import json
+          d=json.load(open('data/JANUS-LINEAR-A-R3C-2C-REAL-IR-PROJECTION-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert d['status']=='REAL_7_DOCUMENT_PROJECTION_PASS', d['status']
+          assert d['summary']['projection_pass_count']==7
+          assert d['summary']['D5_pass']==4
+          assert d['summary']['D6_pass']==3
+          assert d['summary']['all_ir_hashes_unique'] is True
+          assert all(v['projection_pass'] is True for v in d['validations'])
+          PY
