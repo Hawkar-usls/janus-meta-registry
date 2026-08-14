@@ -7,28 +7,59 @@
   "hardening_manifest": "registry/connections/JANUS-CONNECTION-HARDENING-MANIFEST-2026-08-14-v2.0.json",
   "current_graph": "data/JANUS-CONNECTION-GRAPH-2026-08-14-v2.0.json",
   "historical_root": "registry/connections/JANUS-CONNECTION-v1.0.json",
-  "executed_benchmark": "data/JANUS-CONNECTION-SIX-STATE-BENCHMARK-2026-08-14-v1.1.json",
-  "benchmark_executor": "tools/connection/janus_connection_six_state_benchmark_v1_1.py",
+  "formal_core_benchmark": "data/JANUS-CONNECTION-SIX-STATE-BENCHMARK-2026-08-14-v1.1.json",
+  "formal_core_executor": "tools/connection/janus_connection_six_state_benchmark_v1_1.py",
   "historical_benchmark_v1_0": "data/JANUS-CONNECTION-SIX-STATE-BENCHMARK-2026-08-14-v1.0.json",
-  "authority_rule": "Use v2.0 for present interpretation, scoring, dependency collapse and promotion semantics. Preserve v1.0 and all historical scans as immutable discovery history. Executed formal-core benchmark results may raise only the specific tested relation cores, not the whole Connection family.",
+  "raw_field_projection_fixture": "data/JANUS-CONNECTION-RAW-FIELD-PROJECTION-FIXTURE-2026-08-14-v0.1.json",
+  "raw_field_benchmark": "data/JANUS-CONNECTION-RAW-FIELD-BENCHMARK-2026-08-14-v0.1.json",
+  "raw_field_executor": "tools/connection/janus_connection_raw_field_benchmark_v0_1.py",
+  "raw_field_ci_receipt": "data/JANUS-CONNECTION-RAW-FIELD-CI-RECEIPT-2026-08-14-v0.1.json",
+  "raw_field_ci_workflow": ".github/workflows/connection-raw-field-benchmark.yml",
+  "authority_rule": "Use v2.0 for present interpretation, scoring, dependency collapse and promotion semantics. Preserve v1.0 and historical scans/benchmarks as immutable discovery history. Promote only specifically tested relation cores. A raw-field promotion requires frozen pointer projection, schema/marginal-preserving destructive transforms, exact matched permutation null, claim-bounded interpretation and successful source replay. Never promote the whole Connection family from a subset of passing edges.",
   "current_claim_ceiling": {
     "internal_structural_recurrence": "SUPPORTED_AS_DISCOVERY_IN_SELECTED_DATA_BODY_BATCHES",
     "formal_relation_core_six_state_benchmark": "EXECUTED_INTERNAL_EXACT_ENUMERATION_WITH_EXPLICIT_STATE_TRANSFORMS",
     "formal_relation_core_candidate_results": "3_OF_3_PASS_RELATION_SPECIFIC_SIX_STATE_PROFILE",
     "negative_comparator_result": "RECLASSIFIED_AS_FRESHNESS_MEDIATED_NOT_PREDECESSOR_SPECIFIC",
-    "raw_json_field_permutation_benchmark": "NOT_EXECUTED",
-    "corpus_scale_matched_null": "NOT_EXECUTED",
-    "external_transport": "DESIGNED_CANDIDATE",
+    "raw_json_pointer_projection_benchmark": "EXECUTED_INTERNAL_EXACT_MATCHED_PERMUTATION",
+    "raw_json_pointer_projection_candidate_results": "3_OF_3_STRUCTURED_RELATIONS_PASS_RAW_FIELD_RELATION_SPECIFIC_PROFILE",
+    "raw_json_source_replay_ci": "PASS_SOURCE_PROJECTION_AND_BLOB_VERIFICATION",
+    "raw_json_source_replay_ci_run_id": 31782504423,
+    "adaptive_history_raw_field_status": "DEFERRED_RAW_FIELD_ELIGIBILITY_NATURAL_LANGUAGE_CARRIER",
+    "corpus_scale_cross_record_matched_null": "NOT_EXECUTED",
+    "held_out_external_transport": "NOT_EXECUTED",
     "external_replication": "NOT_CONFIRMED",
+    "population_level_significance_from_internal_permutation": false,
     "causal_proof_from_connection_benchmark": false,
     "scientific_novelty_from_connection_benchmark": false
   },
+  "measured_raw_field_results": {
+    "RF1_AIFC_FREEZE_BEFORE_TARGET": {
+      "promotion": "RAW_FIELD_RELATION_SPECIFIC_MEASURED",
+      "effect_real_minus_exact_null_mean": 0.7856701940035273,
+      "exact_null_tail_mass_at_real_score": 0.1,
+      "tail_mass_semantics": "STRUCTURAL_NULL_CALIBRATION_NOT_POPULATION_P_VALUE"
+    },
+    "RF2_PRE_RETURN_ANCHOR_TARGET": {
+      "promotion": "RAW_FIELD_RELATION_SPECIFIC_MEASURED",
+      "effect_real_minus_exact_null_mean": 0.9545454545454546,
+      "exact_null_tail_mass_at_real_score": 0.00909090909090909,
+      "tail_mass_semantics": "STRUCTURAL_NULL_CALIBRATION_NOT_POPULATION_P_VALUE"
+    },
+    "RF3_SIM3_COMMIT_BEFORE_REVEAL": {
+      "promotion": "RAW_FIELD_RELATION_SPECIFIC_MEASURED",
+      "effect_real_minus_exact_null_mean": 0.9375,
+      "exact_null_tail_mass_at_real_score": 0.017857142857142856,
+      "tail_mass_semantics": "STRUCTURAL_NULL_CALIBRATION_NOT_POPULATION_P_VALUE"
+    }
+  },
   "promotion_scope": {
-    "B1_ADAPTIVE_HISTORY_COPY": "RELATION_SPECIFIC_MEASURED_FORMAL_CORE",
-    "B2_PRE_RETURN_ANCHOR_TARGET": "RELATION_SPECIFIC_MEASURED_FORMAL_CORE",
-    "B3_SIM3_COMMIT_BEFORE_REVEAL": "RELATION_SPECIFIC_MEASURED_FORMAL_CORE",
+    "B1_ADAPTIVE_HISTORY_COPY": "RELATION_SPECIFIC_MEASURED_FORMAL_CORE_RAW_FIELD_DEFERRED",
+    "B2_PRE_RETURN_ANCHOR_TARGET": "RAW_FIELD_RELATION_SPECIFIC_MEASURED",
+    "B3_SIM3_COMMIT_BEFORE_REVEAL": "RAW_FIELD_RELATION_SPECIFIC_MEASURED",
+    "RF1_AIFC_FREEZE_BEFORE_TARGET": "RAW_FIELD_RELATION_SPECIFIC_MEASURED",
     "NC1_AUTHENTICITY_FRESHNESS_CURRENTNESS": "FRESHNESS_MEDIATED_CONTROL_CLASS_NOT_PREDECESSOR_SPECIFIC",
     "family_wide_promotion": "BLOCKED"
   },
-  "next_required_gate": "Run a frozen raw-JSON field-level implementation of the six-state benchmark on source bodies, with schema-preserving relation rewiring, matched permutation null distributions, continuous effects, exact provenance and failure retention. Only after that consider external held-out transport for applicable relations."
+  "next_required_gate": "Move from within-container relation specificity to cross-record and held-out transport. Freeze a corpus-scale source-event map, select structurally matched records without using Connection labels, run cross-record predecessor assignment permutations with multiplicity accounting, then execute at least one held-out source-family transport or external implementation. Preserve failed edges and do not convert structural null tail masses into discovery p-values."
 }
