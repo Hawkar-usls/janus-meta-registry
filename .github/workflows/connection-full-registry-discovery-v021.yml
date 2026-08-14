@@ -1,0 +1,56 @@
+name: Connection full-registry discovery v0.2.1
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '**/*.json'
+      - 'tools/connection/janus_connection_full_registry_discovery_v0_2.py'
+      - 'tools/connection/janus_connection_full_registry_discovery_v0_2_1.py'
+      - '.github/workflows/connection-full-registry-discovery-v021.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Execute hardened exhaustive discovery v0.2.1
+        run: |
+          mkdir -p out
+          python tools/connection/janus_connection_full_registry_discovery_v0_2_1.py \
+            --repo-root . \
+            --out out/JANUS-CONNECTION-FULL-REGISTRY-DISCOVERY-2026-08-14-v0.2.1.json
+      - name: Enforce 100 percent JSON accounting and claim boundaries
+        run: |
+          python - <<'PY'
+          import json, pathlib
+          p=pathlib.Path('out/JANUS-CONNECTION-FULL-REGISTRY-DISCOVERY-2026-08-14-v0.2.1.json')
+          d=json.loads(p.read_text(encoding='utf-8'))
+          actual=len([x for x in pathlib.Path('.').rglob('*.json') if '.git' not in x.parts and 'out' not in x.parts])
+          c=d['corpus']; e=d['epistemic_boundary']
+          assert d['engine_version']=='0.2.1'
+          assert c['json_files_seen']==actual
+          assert c['parsed']+c['raw_fallback_only']==actual
+          assert len(d['corpus_manifest'])==actual
+          assert e['every_json_accounted'] is True
+          assert e['malformed_json_included_via_bounded_raw_fallback'] is True
+          assert e['connection_family_zero_independent_support'] is True
+          assert e['integrity_derivatives_zero_independent_support'] is True
+          assert d['detector']['template_overlap_penalty'] is True
+          assert d['detector']['format_boilerplate_removed_from_operator_channel'] is True
+          print('PASS_EXHAUSTIVE_100_PERCENT_JSON_ACCOUNTING', actual)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: connection-full-registry-discovery-v0.2.1
+          path: out/JANUS-CONNECTION-FULL-REGISTRY-DISCOVERY-2026-08-14-v0.2.1.json
+          if-no-files-found: error
+          retention-days: 30
