@@ -6,6 +6,10 @@ This directory is the executable layer of the JANUS Linear A program. Persistent
 
 Current recovery/source-of-truth node:
 
+- `data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.4.json`
+
+Parent canonical state:
+
 - `data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.3.json`
 
 Current typed representation baseline:
@@ -16,15 +20,19 @@ Current v0.7 reconciliation:
 
 - `data/JANUS-LINEAR-A-V0.7-DUAL-IMPLEMENTATION-RECONCILIATION-2026-08-14-v1.0.json`
 
-Current v0.8 result:
+Canonical v0.8 result:
 
 - `data/JANUS-LINEAR-A-HIGHER-ORDER-NEIGHBORHOOD-RESULT-2026-08-14-v0.8.json`
+
+Supplementary v0.8 reconciliation:
+
+- `data/JANUS-LINEAR-A-V0.8-MULTI-IMPLEMENTATION-RECONCILIATION-2026-08-14-v1.0.json`
 
 Historical states and receipts are never deleted. New canonical states supersede them only for current inference.
 
 ## Repository layout
 
-- `research/linear_a/` — parsers, token-typing policies, null operators, statistical runners, corrective replay code, and independent implementations.
+- `research/linear_a/` — parsers, token-typing policies, null operators, statistical runners, corrective replay code, and independent/supplementary implementations.
 - `data/` — frozen execution specs, immutable result summaries, failure audits, reconciliations, canonical state, Connection candidates, and roadmaps.
 - `.github/workflows/` — actual executions; Actions artifacts are receipts, not the permanent scientific registry.
 
@@ -162,7 +170,7 @@ Reconciled claim ceiling:
 - both converge on `NO_NOVEL_V0_7_CROSS_REGION_SURVIVOR`;
 - this is implementation-level convergence, not external corpus replication.
 
-## v0.8 — higher-order typed neighborhoods / specialization
+## v0.8 — canonical higher-order typed neighborhoods / specialization
 
 Frozen spec:
 
@@ -194,9 +202,9 @@ Execution:
 - head `422e2e14ee987a3c00a5c4149c94cb9871a97e2e`
 - artifact digest `sha256:3fe29f22073eeed57508e26260315110e11b8e9cbd4fd092278c3c3d4b356cea`
 
-Result:
+### Canonical v0.8 result
 
-### CONTROL_INCLUDED
+#### CONTROL_INCLUDED
 
 - 22 eligible semantic IDs;
 - 19 tested specialization hypotheses;
@@ -204,7 +212,7 @@ Result:
 - 0 HT-confirmed;
 - 0 non-HT replicated.
 
-### NOVELTY_MASKED
+#### NOVELTY_MASKED
 
 - 19 eligible semantic IDs;
 - 15 tested specialization hypotheses;
@@ -221,7 +229,7 @@ Permanent result:
 
 - `data/JANUS-LINEAR-A-HIGHER-ORDER-NEIGHBORHOOD-RESULT-2026-08-14-v0.8.json`
 
-Current v0.8 claim ceiling:
+Canonical v0.8 claim ceiling:
 
 - novel higher-order cross-region survivors: 0;
 - `NEW_ANCHOR_ESTABLISHED = false`;
@@ -230,11 +238,99 @@ Current v0.8 claim ceiling:
 
 The 8-occurrence confirmation minimum was not lowered to 7, and non-HT was not used to rescue the screen hit.
 
+## v0.8 supplementary implementations and reconciliation
+
+Canonical v0.8 above remains the claim-bearing R2 execution. Two additional implementations are preserved as supplementary same-corpus evidence.
+
+### Supplementary A — sequence TTT/T-N(bucket)-T
+
+Runner:
+
+- `janus_linear_a_long_formula_v0_8.py`
+
+Execution:
+
+- run `31789704519`
+- artifact digest `sha256:00f0e8938bc49b3786c7511d8da8bfb7f8354939df83afde6e83ffb1d509145e`
+
+Permanent result:
+
+- `data/JANUS-LINEAR-A-LONG-FORMULA-NEIGHBORHOOD-RESULT-2026-08-14-v0.8.json`
+
+Classification guard:
+
+- `data/JANUS-LINEAR-A-V0.8-IMPLEMENTATION-A-CLASSIFICATION-2026-08-14-v1.0.json`
+
+Outcome:
+
+- novelty-masked TTT/TBT screen eligibility: 0;
+- known-control `GRA → 10PLUS → *304` reaches screen but is not evaluable in independent HT_CONFIRM;
+- no novel survivor.
+
+This is valid for its declared question but is not a replacement for the canonical R2 triple-null execution.
+
+### Supplementary B — row-aware HHI + triple-null studentized max-T
+
+Frozen spec:
+
+- `data/JANUS-LINEAR-A-V0.8-IMPLEMENTATION-B-EXECUTION-SPEC-2026-08-14-v1.0.json`
+
+Runner:
+
+- `janus_linear_a_higher_order_v0_8_b.py`
+
+Workflow:
+
+- `.github/workflows/janus-linear-a-v0-8-implementation-b.yml`
+
+Execution:
+
+- run `31790567289`
+- artifact ID `9215284223`
+- artifact digest `sha256:493b2b734e0dbfc7a0cff4ef726ba03b89fd5e1541aac643d3c66d1004b9a39b`
+
+Permanent result:
+
+- `data/JANUS-LINEAR-A-V0.8-IMPLEMENTATION-B-RESULT-2026-08-14-v1.0.json`
+
+Outcome:
+
+- 20 eligible semantic endpoints;
+- 33 blind hypotheses;
+- 2 hypotheses meet raw support minima;
+- 0 survive all three studentized max-T nulls;
+- 0 enter HT_CONFIRM;
+- 0 enter NON_HT.
+
+The most informative near-misses are reciprocal `SA·RA₂ ↔ CYP` specialization. Endpoint-rewire p_FWER is approximately `0.001`, but row/document p_FWER is approximately `0.99–1.0`. This means the endpoint coupling looks exceptional if endpoint marginals alone are preserved, but becomes ordinary once row/document composition is preserved. Complementary nulls therefore localize the structural source of an apparent relation rather than merely making the test stricter.
+
+### Multi-implementation reconciliation
+
+Current reconciliation:
+
+- `data/JANUS-LINEAR-A-V0.8-MULTI-IMPLEMENTATION-RECONCILIATION-2026-08-14-v1.0.json`
+
+Reconciled state:
+
+- canonical v0.8: one `SA·RA₂` novelty screen hit, then `NOT_EVALUABLE` in HT_CONFIRM;
+- supplementary A: no novelty screen-eligible sequence motif;
+- supplementary B: no triple-null screen selection;
+- all implementations: 0 HT-confirmed novel v0.8 survivor;
+- same-corpus implementation convergence is **not** external replication.
+
+`SA·RA₂` recurs as a structurally unusual identity across different observables, but recurrence at screen/near-miss level is not replication. It remains non-promotable.
+
+A historical A/B-only reconciliation was created before the already-existing canonical v0.8/v2.3 lineage was noticed:
+
+- `data/JANUS-LINEAR-A-V0.8-DUAL-IMPLEMENTATION-RECONCILIATION-2026-08-14-v1.0.json`
+
+It is intentionally preserved as noncanonical supplementary history. The governance correction is recorded in the multi-implementation reconciliation and canonical v2.4 rather than deleting the earlier artifact.
+
 ## Current promotion gate
 
 A genuinely new Linear A anchor requires:
 
-`TYPED CANDIDATE UNIVERSE → BLIND CANDIDATE/RELATION → RELATION-DESTROYING NULL SEPARATION → INDEPENDENT INTERNAL CONFIRMATION → CROSS-PARTITION REPLICATION → BEHAVIORAL CONSTRAINT → MORPHOLOGICAL/LEXICAL CONSISTENCY → INDEPENDENT TRANSCRIPTION/PARSER → INDEPENDENT IMPLEMENTATION`
+`TYPED CANDIDATE UNIVERSE → BLIND CANDIDATE/RELATION → RELATION-DESTROYING NULL SEPARATION → INDEPENDENT INTERNAL CONFIRMATION → CROSS-PARTITION REPLICATION → FRESH INDEPENDENT TRANSCRIPTION/PARSER → BEHAVIORAL CONSTRAINT → MORPHOLOGICAL/LEXICAL CONSISTENCY → INDEPENDENT IMPLEMENTATION`
 
 A green CI job proves computation and programmed claim-ceiling compliance only.
 
@@ -250,20 +346,20 @@ Every substantial experiment should have:
 6. a canonical-state update only after result verification;
 7. a predeclared roadmap branch independent of the observed semantic label whenever possible.
 
-Negative results and representation failures are scientific state, not cleanup noise.
+Negative results, representation failures, and governance/lineage corrections are scientific state, not cleanup noise.
 
-## Roadmap from canonical v2.3
+## Roadmap from canonical v2.4
 
 Canonical roadmap:
 
-- `data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.3.json`
+- `data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.4.json`
 
 Current sequence:
 
 1. **R0 — DONE:** typed candidate ontology v0.6.2.
 2. **R1 — DONE / RECONCILED NEGATIVE:** dual v0.7 local relation implementations.
-3. **R2 — DONE NEGATIVE:** v0.8 higher-order typed neighborhoods; one novelty screen hit was not evaluable in disjoint HT_CONFIRM and no candidate entered non-HT replication.
-4. **R3 — NEXT:** fresh independent transcription/parser source audit.
+3. **R2 — DONE NEGATIVE + SUPPLEMENTARY CONVERGENCE:** canonical v0.8 higher-order execution plus supplementary A/B; no HT-confirmed novel survivor.
+4. **R3 — ACTIVE NEXT / HIGH PRIORITY:** fresh independent transcription/parser source audit.
 5. **R4 — BLOCKED UNTIL R3:** source-specific normalizer/parser under `research/linear_a/`.
 6. **R5 — BLOCKED UNTIL R3/R4:** frozen external-replication spec using locked transforms, not re-discovery.
 7. **R6 — REQUIRED FOR ANY FUTURE POSITIVE SURVIVOR:** independent implementation replay.
@@ -272,4 +368,15 @@ Current sequence:
 
 ### Fresh-source independence rule
 
-A different website, file format, or wrapper is not enough. A source can count toward external replication only after provenance audit establishes meaningful independence in transcription/editorial decisions and a source-specific parser/normalizer is implemented without passing the data through `mwenge/lineara.xyz` assumptions.
+A different website, file format, wrapper, or mirror is not enough. A source can count toward external replication only after provenance audit establishes meaningful independence in transcription/editorial decisions and a source-specific parser/normalizer is implemented without passing the data through `mwenge/lineara.xyz` assumptions.
+
+Required R3 audit fields include:
+
+- maintainer/editor provenance;
+- primary transcription sources;
+- relationship to GORILA and other editions;
+- machine-readable availability;
+- sign-ID scheme;
+- numeric and punctuation conventions;
+- license/access conditions;
+- evidence of independence from `mwenge/lineara.xyz` transformations.
