@@ -1,0 +1,87 @@
+name: JANUS Linear A typed-token corrective replay
+
+on:
+  push:
+    paths:
+      - "research/linear_a/janus_linear_a_token_typing_policy_v0_6_2.py"
+      - "research/linear_a/janus_linear_a_corrective_replay_v0_6_2.py"
+      - "research/linear_a/janus_linear_a_parser_policy_v0_6_1.py"
+      - "research/linear_a/janus_linear_a_full_corpus.py"
+      - "research/linear_a/janus_linear_a_candidate_holdout.py"
+      - "research/linear_a/janus_linear_a_survivor_decomposition.py"
+      - "research/linear_a/janus_linear_a_vir_subtype.py"
+      - "research/linear_a/janus_linear_a_known_subtracted.py"
+      - "research/linear_a/janus_linear_a_record_role.py"
+      - ".github/workflows/janus-linear-a-typed-token-corrective-replay.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  typed-token-replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout JANUS registry
+        uses: actions/checkout@v4
+
+      - name: Fetch frozen Linear A corpus
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --quiet https://github.com/mwenge/lineara.xyz.git /tmp/lineara
+          git -C /tmp/lineara checkout --quiet 43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a
+          test "$(git -C /tmp/lineara rev-parse HEAD)" = "43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a"
+          test -f /tmp/lineara/items_analysis/numbers.txt
+          echo "Frozen corpus and numeric inventory verified."
+
+      - name: Run typed-token corrective replay v0.6.2
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/linear_a/janus_linear_a_corrective_replay_v0_6_2.py \
+            --corpus /tmp/lineara \
+            --out-dir artifacts/linear_a_typed_v0_6_2 \
+            --manifest artifacts/JANUS-LINEAR-A-TYPED-TOKEN-CORRECTIVE-REPLAY-MANIFEST-2026-08-14-v0.6.2.json
+
+      - name: Validate typed-token claim ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('artifacts/JANUS-LINEAR-A-TYPED-TOKEN-CORRECTIVE-REPLAY-MANIFEST-2026-08-14-v0.6.2.json')
+          m = json.load(open(p, encoding='utf-8'))
+          assert m['typing_policy']['policy_id'] == 'JANUS-LINA-TOKEN-TYPING-POLICY-v0.6.2'
+          assert m['punctuation_scan']['total_filtered_occurrences'] > 0
+          assert m['numeric_typing_scan']['legacy_missed_occurrences'] > 0
+          assert len(m['receipts']) == 6
+          assert m['epistemic_gate']['new_anchor_established'] is False
+          assert m['epistemic_gate']['decipherment_established'] is False
+          for item in m['receipts']:
+              d = json.load(open(item['path'], encoding='utf-8'))
+              assert d['source']['token_typing_policy_id'] == 'JANUS-LINA-TOKEN-TYPING-POLICY-v0.6.2'
+              assert d['epistemic_gate']['new_anchor_established'] is False
+              assert d['epistemic_gate']['decipherment_established'] is False
+          labels = [x.get('revealed_label') for x in m.get('final_record_role_selected_reveals', [])]
+          assert '¹⁄₅' not in labels
+          print(json.dumps({
+              'legacy_missed_numeric_occurrences': m['numeric_typing_scan']['legacy_missed_occurrences'],
+              'legacy_missed_numeric_unique_tokens': m['numeric_typing_scan']['legacy_missed_unique_tokens'],
+              'final_record_role_survivors': m['final_record_role_state'].get('cross_region_survivor_count'),
+              'new_anchor_established': False,
+              'decipherment_established': False,
+          }, sort_keys=True))
+          PY
+
+      - name: Upload typed-token receipts
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-typed-token-corrective-replay-v0.6.2
+          path: |
+            artifacts/JANUS-LINEAR-A-TYPED-TOKEN-CORRECTIVE-REPLAY-MANIFEST-2026-08-14-v0.6.2.json
+            artifacts/linear_a_typed_v0_6_2/*.json
+          if-no-files-found: error
+          retention-days: 30
