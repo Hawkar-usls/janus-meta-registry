@@ -1,0 +1,85 @@
+name: JANUS Linear A R6-0 numeric-adjacency roles v0.1
+on:
+  push:
+    paths:
+      - "data/JANUS-LINEAR-A-R6-0-EXECUTE-REQUEST-2026-08-14-v0.1.json"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  discover_roles:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Install inherited parser dependency
+        run: python -m pip install --disable-pip-version-check "numpy>=2.0"
+      - name: Verify frozen R6 inputs
+        run: |
+          python -m py_compile research/linear_a/janus_linear_a_r6_numeric_adjacency_roles_v0_1.py
+          python - <<'PY'
+          import json
+          s=json.load(open('data/JANUS-LINEAR-A-R6-0-CROSS-FITTED-NUMERIC-ADJACENCY-ROLE-SPEC-2026-08-14-v0.1.json',encoding='utf-8'))
+          p=json.load(open('data/JANUS-LINEAR-A-R5-0-WORD-LEVEL-SELF-SUPERVISED-ROLE-LEARNING-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert p['status']=='WORD_LEVEL_CROSS_VALIDATED_ROLE_STRUCTURE_SIGNAL_NOT_ADMITTED'
+          assert s['source']['frozen_commit']=='43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a'
+          assert s['train_selection_per_fold']['minimum_word_occurrences']==8
+          assert s['train_selection_per_fold']['minimum_documents']==4
+          assert s['train_selection_per_fold']['minimum_adjacency_rate']==0.70
+          assert s['cross_fitted_candidate_family']['minimum_folds_selected']==3
+          assert s['cross_fitted_candidate_family']['minimum_aggregate_heldout_occurrences']==5
+          assert s['cross_fitted_candidate_family']['minimum_aggregate_heldout_adjacency_rate']==0.75
+          assert s['statistical_gate']['FDR_q_max']==0.05
+          assert s['cross_fitting']['none_reinterpreted_as_certain'] is False
+          PY
+      - name: Fetch exact preservation-mirror corpus
+        run: |
+          git clone --quiet https://github.com/Hawkar-usls/lineara.xyz.git /tmp/lineara
+          git -C /tmp/lineara checkout --quiet 43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a
+          test "$(git -C /tmp/lineara rev-parse HEAD)" = "43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a"
+      - name: Execute cross-fitted numeric role discovery
+        env:
+          PYTHONPATH: research/linear_a
+        run: |
+          python research/linear_a/janus_linear_a_r6_numeric_adjacency_roles_v0_1.py \
+            --corpus /tmp/lineara \
+            --spec data/JANUS-LINEAR-A-R6-0-CROSS-FITTED-NUMERIC-ADJACENCY-ROLE-SPEC-2026-08-14-v0.1.json \
+            --out data/JANUS-LINEAR-A-R6-0-CROSS-FITTED-NUMERIC-ADJACENCY-ROLE-RESULT-2026-08-14-v0.1.json
+      - name: Enforce statistical and epistemic ceiling
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open('data/JANUS-LINEAR-A-R6-0-CROSS-FITTED-NUMERIC-ADJACENCY-ROLE-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert x['status'] in {'CROSS_FITTED_NUMERIC_ADJACENCY_ROLE_CANDIDATES_PRESENT','CROSS_FITTED_NUMERIC_ADJACENCY_ROLE_CANDIDATES_NOT_ESTABLISHED'}
+          assert x['source']['frozen_commit']=='43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a'
+          assert x['statistical_gate']['FDR_q_max']==0.05
+          assert x['leakage_firewall']['word_labels_used_for_selection_or_scoring'] is False
+          assert x['leakage_firewall']['translations_used'] is False
+          assert x['leakage_firewall']['external_dictionaries_used'] is False
+          assert x['leakage_firewall']['Notti_readings_used'] is False
+          e=x['epistemic_gate']
+          assert e['commodity_meanings_established'] is False
+          assert e['person_meanings_established'] is False
+          assert e['transaction_meanings_established'] is False
+          assert e['grammatical_labels_established'] is False
+          assert e['translation_established'] is False
+          assert e['phonetic_value_established'] is False
+          assert e['new_anchor_established'] is False
+          assert e['decipherment_established'] is False
+          print(json.dumps({'status':x['status'],'family':x['cross_fitted_candidate_family_size'],'admitted':x['admitted_role_candidate_count']},sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r6-numeric-roles-v0-1
+          path: data/JANUS-LINEAR-A-R6-0-CROSS-FITTED-NUMERIC-ADJACENCY-ROLE-RESULT-2026-08-14-v0.1.json
+          if-no-files-found: error
+          retention-days: 90
+      - name: Persist R6 result
+        run: |
+          git config user.name 'JANUS Evidence Bot'; git config user.email 'actions@users.noreply.github.com'
+          git add data/JANUS-LINEAR-A-R6-0-CROSS-FITTED-NUMERIC-ADJACENCY-ROLE-RESULT-2026-08-14-v0.1.json
+          git commit -m 'Register Linear A R6-0 numeric-adjacency role result v0.1' || true
+          for attempt in 1 2 3 4 5; do if git push origin HEAD:main; then exit 0; fi; git pull --rebase origin main; done; exit 1
