@@ -1,0 +1,73 @@
+name: JANUS Linear A canonical state v2.18
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'data/JANUS-LINEAR-A-RESEARCH-STATE-PROMOTION-SPEC-2026-08-14-v2.18.json'
+      - 'research/linear_a/janus_linear_a_promote_canonical_v2_18.py'
+      - '.github/workflows/janus-linear-a-canonical-state-v2-18.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile promotion auditor
+        run: python -m py_compile research/linear_a/janus_linear_a_promote_canonical_v2_18.py
+      - name: Re-read evidence, audit candidate and build canonical
+        run: python research/linear_a/janus_linear_a_promote_canonical_v2_18.py
+      - name: Enforce canonical audit PASS and strict claim ceiling
+        run: |
+          python - <<'PY'
+          import json
+          c=json.load(open('data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.18.json',encoding='utf-8'))
+          a=json.load(open('data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.18.json',encoding='utf-8'))
+          assert c['status']=='CURRENT_CANONICAL_RESEARCH_STATE'
+          assert c['version']=='v2.18'
+          assert c['canonicality']['current_source_of_truth'] is True
+          assert c['canonicality']['canonicality_audit_status']=='CANONICALITY_AUDIT_PASS'
+          assert a['status']=='CANONICALITY_AUDIT_PASS' and a['all_checks_pass'] is True
+          ctrl=c['R3B_nonblind_independent_editorial_corrective_control_2018']
+          s=ctrl['corrective_sign_id_conformance']
+          assert (s['family_size'],s['comparable'],s['exact_matches'],s['mismatches'],s['source_ambiguous_noncomparables'],s['empty_noncomparables'])==(13,9,7,2,4,0)
+          assert ctrl['source']['blind_novelty_credit'] is False
+          assert ctrl['strict_R3B_replication_established'] is False
+          assert ctrl['new_anchor_established'] is False
+          assert ctrl['decipherment_established'] is False
+          assert 'INELIGIBLE_FOR_BLIND_REPLICATION' in c['R3B_independent_editorial_replication_lane']['R3B_1']
+          print('canonical v2.18 bounded promotion PASS')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-canonical-v2-18-evidence
+          path: |
+            data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.18-CANDIDATE.json
+            data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.18.json
+            data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.18.json
+          if-no-files-found: error
+          retention-days: 90
+      - name: Persist v2.18 with concurrent-main recovery
+        run: |
+          git config user.name 'JANUS Evidence Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add \
+            data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.18-CANDIDATE.json \
+            data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.18.json \
+            data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.18.json
+          git commit -m 'Promote Linear A canonical state v2.18 after Notti 2018 corrective control' || true
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then exit 0; fi
+            git pull --rebase origin main
+          done
+          exit 1
