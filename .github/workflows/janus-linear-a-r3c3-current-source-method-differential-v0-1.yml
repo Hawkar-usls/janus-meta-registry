@@ -1,0 +1,87 @@
+name: JANUS Linear A R3C-3 current-vs-historical method differential v0.1
+
+on:
+  push:
+    paths:
+      - ".github/workflows/janus-linear-a-r3c3-current-source-method-differential-v0-1.yml"
+      - "research/linear_a/janus_linear_a_r3c3_current_source_method_differential_v0_1.py"
+      - "data/JANUS-LINEAR-A-R3C-3-CURRENT-SOURCE-METHOD-DIFFERENTIAL-SPEC-2026-08-14-v0.1.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  differential:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify frozen parents and compile
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          s=json.load(open('data/JANUS-LINEAR-A-R3C-3-CURRENT-SOURCE-METHOD-DIFFERENTIAL-SPEC-2026-08-14-v0.1.json',encoding='utf-8'))
+          h=json.load(open('data/JANUS-LINEAR-A-R3C-3-HISTORICAL-METHOD-SEMANTIC-EXTRACTION-RESULT-2026-08-14-v0.1.1.json',encoding='utf-8'))
+          r=json.load(open('data/JANUS-LINEAR-A-R3C-3-CURRENT-WINDOWS-STATIC-RESOURCE-ROUTING-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert s['status']=='FROZEN_BEFORE_EXECUTION'
+          assert h['status']=='SEMANTIC_IR_EXTRACTED_COMPLETE_FOR_TARGETS'
+          assert r['status']=='CURRENT_WINDOWS_STATIC_RESOURCE_ROUTING_COMPLETE'
+          assert r['readiness_effect']['plaintext_python_source_candidate_available'] is True
+          assert s['python_static_analysis']['module_execution'] is False
+          assert s['xlsx_static_schema']['persist_data_rows'] is False
+          PY
+          python3 -m py_compile research/linear_a/janus_linear_a_r3c3_current_source_method_differential_v0_1.py
+      - name: Reacquire exact current Windows bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p external/r3c3-current-win
+          OUT='external/r3c3-current-win/LinearADecipherment(Win).zip'
+          curl --fail --location --retry 4 --retry-all-errors --connect-timeout 20 --max-time 300 'https://raw.githubusercontent.com/L-Colin/Linear-A-decipherment-programme/f6f61a38c00afb627a4db40575f433801581405c/LinearADecipherment(Win).zip' --output "$OUT"
+          test "$(wc -c < "$OUT" | tr -d ' ')" = '52012693'
+          test "$(git hash-object "$OUT")" = '64da67661eee9d64deae8f6d599c4789085aa9e4'
+          test "$(sha256sum "$OUT" | awk '{print $1}')" = 'd2a1582160456bd51d3f831017e7d15f92d712763286c66c0279ffd59aad2d16'
+      - name: Execute static AST and BaseSheet schema differential
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/linear_a/janus_linear_a_r3c3_current_source_method_differential_v0_1.py 'external/r3c3-current-win/LinearADecipherment(Win).zip' --out data/JANUS-LINEAR-A-R3C-3-CURRENT-SOURCE-METHOD-DIFFERENTIAL-RESULT-2026-08-14-v0.1.json | tee /tmp/current-method-diff.json
+      - name: Enforce static-only claim ceiling
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          d=json.load(open('data/JANUS-LINEAR-A-R3C-3-CURRENT-SOURCE-METHOD-DIFFERENTIAL-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert d['status']=='CURRENT_METHOD_DIFFERENTIAL_COMPLETE'
+          assert d['current_source']['ast_parse_success'] is True
+          assert d['safety']['current_source_executed'] is False
+          assert d['safety']['current_source_imported'] is False
+          assert d['safety']['xlsx_formulas_executed'] is False
+          assert d['safety']['BaseSheet_data_rows_persisted'] is False
+          assert d['safety']['language_matching_performed'] is False
+          assert d['claim_ceiling']['paper_exact_2024_method_identity_established'] is False
+          assert d['claim_ceiling']['published_2024_matches_reproduced'] is False
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r3c3-current-source-method-differential-v0.1
+          path: |
+            data/JANUS-LINEAR-A-R3C-3-CURRENT-SOURCE-METHOD-DIFFERENTIAL-SPEC-2026-08-14-v0.1.json
+            data/JANUS-LINEAR-A-R3C-3-CURRENT-SOURCE-METHOD-DIFFERENTIAL-RESULT-2026-08-14-v0.1.json
+          if-no-files-found: error
+      - name: Persist differential result with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'janus-proof-bot'; git config user.email 'janus-proof-bot@users.noreply.github.com'
+          git add data/JANUS-LINEAR-A-R3C-3-CURRENT-SOURCE-METHOD-DIFFERENTIAL-RESULT-2026-08-14-v0.1.json
+          git commit -m 'Register Linear A R3C-3 current-vs-historical method differential v0.1'
+          pushed=0
+          for attempt in 1 2 3 4 5; do git fetch origin main; git rebase origin/main; if git push origin HEAD:main; then pushed=1; break; fi; sleep "$attempt"; done
+          test "$pushed" = 1
