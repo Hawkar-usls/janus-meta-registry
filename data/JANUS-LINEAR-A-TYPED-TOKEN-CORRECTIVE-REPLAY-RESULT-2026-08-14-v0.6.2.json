@@ -1,0 +1,277 @@
+{
+  "artifact_uuid": "JANUS-LINEAR-A-TYPED-TOKEN-CORRECTIVE-REPLAY-RESULT-2026-08-14-v0.6.2",
+  "timestamp": "2026-08-14T12:29:24+03:00",
+  "version": "v0.6.2",
+  "title": "JANUS Linear A typed-token corrective replay result",
+  "observer": "Oleksandr Ahapov / Hawkar + JANUS",
+  "node_type": "authoritative_execution_result",
+  "status": "EXECUTED_SUCCESS_NO_NEW_ANCHOR",
+  "authoritative_for_current_inference": true,
+  "supersedes_for_current_inference": [
+    "pre-filter v0.1-v0.6 evidence chain",
+    "punctuation-only corrective replay v0.6.1"
+  ],
+  "preserves_as_historical_evidence": [
+    "GitHub Actions run 31786529238 / pre-filter v0.6 bundle",
+    "GitHub Actions run 31787419817 / punctuation-only corrective replay v0.6.1"
+  ],
+  "execution_receipt": {
+    "workflow": ".github/workflows/janus-linear-a-typed-token-corrective-replay.yml",
+    "workflow_run_id": 31788159539,
+    "head_sha": "1ab3dfb922f376bf7890390de0b66553b75f3985",
+    "conclusion": "success",
+    "artifact_id": 9214373536,
+    "artifact_name": "janus-linear-a-typed-token-corrective-replay-v0.6.2",
+    "artifact_digest": "sha256:24b42bedf2caa82d5fe0475d9268be2e6a54711181d0c53c8aabcd447f18a506",
+    "claim_ceiling_validation": "success"
+  },
+  "frozen_source": {
+    "repository": "mwenge/lineara.xyz",
+    "commit": "43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a",
+    "item_html_files": 1720,
+    "parsed_inscriptions_after_typed_cleanup": 1660,
+    "parse_failures": 60,
+    "typed_token_to_exact_number_pairs": 1392,
+    "numeric_inventory": "items_analysis/numbers.txt",
+    "numeric_inventory_blob_sha": "a17b8922297795a90ea6761f32f6ea020b733a6d"
+  },
+  "representation_policy": {
+    "policy_id": "JANUS-LINA-TOKEN-TYPING-POLICY-v0.6.2",
+    "inherits": "JANUS-LINA-PARSER-POLICY-v0.6.1",
+    "candidate_space_precondition": "ONLY_SEMANTIC_CANDIDATE_TYPE_MAY_RECEIVE_WORD_OR_SUFFIX_HASH",
+    "types": {
+      "PUNCTUATION": "excluded before semantic identity construction",
+      "NUMERIC_EXACT": "parsed as numeric value/slot",
+      "NUMERIC_APPROX_OR_UNCERTAIN": "excluded from semantic identity and retained only as uncertain numeric structure",
+      "SEMANTIC_CANDIDATE": "eligible for blind word/suffix hashing and scoring"
+    },
+    "punctuation_filtered": {
+      "markers": ["*900", "*901", "*902", "*903"],
+      "observed_occurrences": 468,
+      "observed_marker_breakdown": {
+        "*900": 467,
+        "*903": 1
+      }
+    },
+    "numeric_typing_scan": {
+      "all_numeric_literal_occurrences": 2055,
+      "unique_numeric_literal_tokens": 37,
+      "legacy_missed_occurrences": 121,
+      "legacy_missed_unique_tokens": 4,
+      "legacy_missed_tokens": [
+        {"token": "¹⁄₅", "occurrences": 42, "documents": 21, "type": "NUMERIC_EXACT"},
+        {"token": "¹⁄₃", "occurrences": 41, "documents": 28, "type": "NUMERIC_EXACT"},
+        {"token": "≈¹⁄₆", "occurrences": 34, "documents": 20, "type": "NUMERIC_APPROX_OR_UNCERTAIN"},
+        {"token": "≈¹⁄₄", "occurrences": 4, "documents": 2, "type": "NUMERIC_APPROX_OR_UNCERTAIN"}
+      ]
+    }
+  },
+  "stage_results": [
+    {
+      "stage": "v0.1.2",
+      "status": "FULL_CORPUS_EXECUTION_RECEIPT",
+      "blind_numeric_candidate_gate_pass": false,
+      "strongest_familywise_corrected_p": 0.013197360527894421,
+      "new_anchor_established": false,
+      "decipherment_established": false,
+      "interpretation": "Non-null numeric structure remains detectable, but the global blind candidate gate is not sufficient for promotion."
+    },
+    {
+      "stage": "v0.2.2",
+      "status": "CANDIDATE_SPECIFIC_HELDOUT_EXECUTION_RECEIPT",
+      "candidate_specific_heldout_gate_pass": true,
+      "heldout_survivor_count": 3,
+      "survivors": [
+        {
+          "family": "word",
+          "revealed_label": "VIR+[?]",
+          "train_n": 13,
+          "train_regions": ["HT", "KH", "TY"],
+          "train_fwer_p": 0.0003999200159968006,
+          "test_n": 7,
+          "test_regions": ["HT", "PE", "PH"],
+          "heldout_bonferroni_p": 0.009598080383923215,
+          "heldout_same_direction": true
+        },
+        {
+          "family": "suffix",
+          "revealed_label": "VIR+[?]",
+          "train_n": 13,
+          "train_regions": ["HT", "KH", "TY"],
+          "train_fwer_p": 0.0021995600879824036,
+          "test_n": 7,
+          "test_regions": ["HT", "PE", "PH"],
+          "heldout_bonferroni_p": 0.02439512097580484,
+          "heldout_same_direction": true
+        },
+        {
+          "family": "suffix",
+          "revealed_label": "RO",
+          "train_n": 38,
+          "train_regions": ["AR", "GO", "HT", "ZA"],
+          "train_fwer_p": 0.012997400519896021,
+          "test_n": 12,
+          "test_regions": ["HT"],
+          "heldout_bonferroni_p": 0.013997200559888023,
+          "heldout_same_direction": true
+        }
+      ],
+      "new_anchor_established": false,
+      "decipherment_established": false,
+      "interpretation": "True train-only candidate discovery and locked held-out testing survives typed cleanup; survivor novelty still requires post-score falsification."
+    },
+    {
+      "stage": "v0.3.2",
+      "status": "POST_REVEAL_FALSIFICATION_RECEIPT",
+      "RO_promotable_as_new_anchor": false,
+      "VIR_promotable_as_new_anchor": false,
+      "RO_decomposition": {
+        "known_accounting_occurrences": 40,
+        "known_accounting_share": 0.8,
+        "known_accounting_words_excluded": ["KIRO", "KURO", "POTOKURO"],
+        "residual_non_known_ro_occurrences": 10,
+        "interpretation": "RO_SIGNAL_NOT_SHOWN_TO_SURVIVE_KNOWN_ACCOUNTING_OPERATOR_DECOMPOSITION"
+      },
+      "VIR_identity": {
+        "candidate_occurrences": 20,
+        "candidate_documents": 15,
+        "candidate_regions": ["HT", "KH", "PE", "PH", "TY"],
+        "unicode_forms": [{"unicode_word": "𐙇", "codepoint": "U+10647", "n": 20}],
+        "missing_unicode_mapping_occurrences": 0,
+        "sign_identity_gate_pass": false,
+        "interpretation": "FAIL_SIGN_IDENTITY_UNRESOLVED_OR_COLLAPSED"
+      },
+      "promotion": "BLOCKED",
+      "new_anchor_established": false,
+      "decipherment_established": false
+    },
+    {
+      "stage": "v0.4.2",
+      "status": "POST_REVEAL_QUANTITATIVE_SUBTYPE_AUDIT",
+      "quantitative_subtype_candidate": false,
+      "A100_102_vs_other_VIR": {
+        "delta_residual_log2": 1.3681710644773728,
+        "approx_quantity_ratio": 2.5814310504204485,
+        "two_sided_p": 0.09089545522723864
+      },
+      "A100_102_vs_VIR_313abc": {
+        "delta_residual_log2": 0.9976236972061365,
+        "approx_quantity_ratio": 1.996708456376869,
+        "two_sided_p": 0.2758862056897155
+      },
+      "promotion": "NO_PROMOTION",
+      "new_anchor_established": false,
+      "decipherment_established": false
+    },
+    {
+      "stage": "v0.5.2",
+      "status": "KNOWN_FAMILY_SUBTRACTED_CROSS_REGION_EXECUTION",
+      "cross_region_survivor_count": 0,
+      "near_signal": {
+        "revealed_label": "GRA",
+        "word_train_n": 36,
+        "word_train_effect_log2": 2.2982271279782447,
+        "word_train_fwer_p": 0.015996800639872025,
+        "word_test_n": 14,
+        "word_test_regions": ["AR", "KH", "KN", "ZA"],
+        "word_test_effect_log2": 0.5974426554509741,
+        "word_test_bonferroni_p": 0.1332866713328667,
+        "suffix_train_fwer_p": 0.044191161767646474,
+        "suffix_test_bonferroni_p": 0.1297870212978702,
+        "replication_pass": false
+      },
+      "promotion": "NO_PROMOTION",
+      "new_anchor_established": false,
+      "decipherment_established": false
+    },
+    {
+      "stage": "v0.6.2",
+      "status": "RECORD_ROLE_CROSS_REGION_EXECUTION",
+      "cross_region_survivor_count": 0,
+      "record_role_candidate_exists": false,
+      "selected_train_candidates_with_replication_evaluation": [
+        {
+          "family": "word",
+          "revealed_label": "*304",
+          "role": "PRE_NUMERIC",
+          "train_fwer_p": 0.0631873625274945,
+          "test_bonferroni_p": 0.7572242775722428,
+          "replication_pass": false
+        },
+        {
+          "family": "suffix",
+          "revealed_label": "RA₂",
+          "role": "PRE_NUMERIC",
+          "train_fwer_p": 0.002999400119976005,
+          "test_bonferroni_p": 0.7653234676532347,
+          "replication_pass": false
+        }
+      ],
+      "promotion": "NO_PROMOTION",
+      "new_anchor_established": false,
+      "decipherment_established": false
+    }
+  ],
+  "falsification_ledger": [
+    {
+      "candidate_or_path": "RO as novel anchor",
+      "outcome": "FALSIFIED_AS_NOVELTY",
+      "reason": "80% of observed RO-final occurrences are absorbed by known KU-RO/KI-RO/PO-TO-KU-RO accounting families; residual evidence does not establish novelty."
+    },
+    {
+      "candidate_or_path": "VIR+[?] as novel lexical anchor",
+      "outcome": "BLOCKED",
+      "reason": "Statistical association is robust but maps to known personnel-class structure and unresolved modifier identity; no new lexical reading is established."
+    },
+    {
+      "candidate_or_path": "A100-102 quantitative subtype",
+      "outcome": "FAILED_PREDECLARED_TWO_SIDED_NULL",
+      "reason": "Observed effect does not pass the region-preserving two-sided significance gate."
+    },
+    {
+      "candidate_or_path": "GRA cross-region numeric candidate",
+      "outcome": "FAILED_REPLICATION",
+      "reason": "Strong HT discovery does not pass non-HT replication."
+    },
+    {
+      "candidate_or_path": "*900 record-role survivor",
+      "outcome": "FALSIFIED_AS_PARSER_BOUNDARY_CANARY",
+      "reason": "Post-score identity is Aegean punctuation/word separator, not a semantic Linear A token."
+    },
+    {
+      "candidate_or_path": "¹⁄₅ structural token",
+      "outcome": "FALSIFIED_AS_NUMERIC_LITERAL_TYPE_LEAK",
+      "reason": "Frozen corpus numeric inventory classifies the token as a fraction; typed-token replay removes it from semantic candidate space."
+    }
+  ],
+  "scientific_state": {
+    "new_anchor_established": false,
+    "decipherment_established": false,
+    "current_novel_cross_region_numeric_survivor": false,
+    "current_novel_cross_region_record_role_survivor": false,
+    "known_structure_rediscovery_controls_work": true,
+    "representation_cleanup_preserved_known_structure_signals": true,
+    "interpretation": "The typed-token pipeline successfully rediscovers known accounting/personnel structure under blind/held-out controls, while every tested path to a novel anchor is currently blocked or falsified."
+  },
+  "infrastructure_successes": [
+    "True candidate-specific held-out test with train-only selection and frozen direction.",
+    "Family-wise max-T / Bonferroni correction retained across stages.",
+    "Post-score reveal prevented strong non-semantic *900 evidence from being promoted.",
+    "Full punctuation corrective replay executed with a distinct artifact digest.",
+    "Numeric-literal type leak was detected from a corrected negative result and repaired with a typed candidate universe.",
+    "Full typed-token replay completed successfully and retained the known-control signals while removing representation canaries."
+  ],
+  "claim_ceiling": {
+    "new_anchor_established": false,
+    "decipherment_established": false,
+    "highest_admissible_statement": "BLIND_AND_HELDOUT_REDISCOVERY_OF_KNOWN_STRUCTURES_PLUS_NEGATIVE_RESULTS_FOR_CURRENT_NOVEL_CANDIDATES",
+    "promotion": "BLOCKED"
+  },
+  "required_next": [
+    "Freeze the typed-token candidate ontology as a precondition for all subsequent Linear A experiments.",
+    "Move to formula-transition / neighborhood-role discovery without relaxing current error-control thresholds.",
+    "Require HT-only discovery and non-HT cross-region replication for v0.7 unless a genuinely fresh external corpus is introduced.",
+    "Add an independent transcription/parser source before any surviving structural candidate can be called externally replicated.",
+    "Run an independent implementation replay before promotion beyond structural candidate."
+  ]
+}
