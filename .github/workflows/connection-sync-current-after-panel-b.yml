@@ -1,0 +1,53 @@
+name: Connection sync CURRENT after Panel B
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/connection/janus_connection_sync_current_after_panel_b_v0_1.py'
+      - '.github/workflows/connection-sync-current-after-panel-b.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Apply surgical JSON mutation
+        run: |
+          python tools/connection/janus_connection_sync_current_after_panel_b_v0_1.py
+          python - <<'PY'
+          import json
+          p='registry/connections/CURRENT.json'
+          d=json.load(open(p,encoding='utf-8'))
+          b=d['external_panel_B']
+          assert b['patterns_promoted_to_external_transport']==[]
+          assert b['HIDDEN-002']['strong_repositories']==4
+          assert b['HIDDEN-002']['weak_repositories']==1
+          assert b['HIDDEN-002']['actual_output_supporting_repositories']==0
+          assert b['HIDDEN-002']['repository_external_transport'] is False
+          assert d['current_claim_ceiling']['repository_external_transport_any_hidden'] is False
+          assert d['current_claim_ceiling']['external_structural_recurrence_hidden_002_panel_B'] is True
+          assert d['next_required_gate']['name']=='EXTERNAL_PANEL_C_ACTUAL_RUN_ARTIFACTS'
+          assert d['exhaustive_discovery']['latest_completed_parent_snapshot']['exhaustive_accounting']=='PASS_953_OF_953'
+          print('PASS_CURRENT_PANEL_B_CLAIM_CEILING')
+          PY
+      - name: Commit CURRENT only
+        run: |
+          if git diff --quiet -- registry/connections/CURRENT.json; then
+            echo 'CURRENT already synchronized'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add registry/connections/CURRENT.json
+          git commit -m 'connection: sync CURRENT after external Panel B'
+          git push origin HEAD:main
