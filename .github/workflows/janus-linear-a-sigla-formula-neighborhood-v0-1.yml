@@ -1,0 +1,88 @@
+name: JANUS Linear A SigLA formula-neighborhood v0.1
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'research/linear_a/janus_linear_a_sigla_formula_neighborhood_v0_1.py'
+      - 'data/JANUS-LINEAR-A-SIGLA-FORMULA-NEIGHBORHOOD-SPEC-2026-08-14-v0.1.json'
+      - '.github/workflows/janus-linear-a-sigla-formula-neighborhood-v0-1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sigla-formula-neighborhood:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout JANUS registry
+        uses: actions/checkout@v4
+
+      - name: Fetch frozen mwenge identity-bridge corpus
+        run: |
+          set -euo pipefail
+          git clone --quiet https://github.com/mwenge/lineara.xyz.git /tmp/lineara
+          git -C /tmp/lineara checkout --quiet 43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a
+          test "$(git -C /tmp/lineara rev-parse HEAD)" = "43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a"
+
+      - name: Validate frozen formula-neighborhood spec
+        run: |
+          python3 - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-SIGLA-FORMULA-NEIGHBORHOOD-SPEC-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['status']=='FROZEN_BEFORE_CLAIM_BEARING_EXECUTION'
+          assert d['endpoint_eligibility_SCREEN']['minimum_word_occurrences']==8
+          assert d['endpoint_eligibility_SCREEN']['minimum_documents']==5
+          assert d['edge_eligibility_SCREEN']['minimum_edge_occurrences']==4
+          assert d['edge_eligibility_SCREEN']['minimum_edge_documents']==3
+          assert d['SCREEN']['permutations_per_null']==3000
+          assert d['CONFIRM']['permutations_per_null']==5000
+          assert d['TEST']['permutations_per_null']==5000
+          assert len(d['destructive_nulls'])==2
+          assert d['claim_ceiling']['new_lexical_anchor_established'] is False
+          assert d['claim_ceiling']['external_transcription_replication_established'] is False
+          assert d['claim_ceiling']['decipherment_established'] is False
+          PY
+
+      - name: Run SigLA directed formula-neighborhood discovery
+        env:
+          PYTHONPATH: research/linear_a
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          python3 research/linear_a/janus_linear_a_sigla_formula_neighborhood_v0_1.py \
+            --mwenge-root /tmp/lineara \
+            --out artifacts/JANUS-LINEAR-A-SIGLA-FORMULA-NEIGHBORHOOD-RESULT-2026-08-14-v0.1.json \
+            --workers 8 \
+            --screen-permutations 3000 \
+            --confirm-permutations 5000 \
+            --test-permutations 5000 \
+            --alpha 0.05
+
+      - name: Validate execution and claim ceiling
+        run: |
+          python3 - <<'PY'
+          import json
+          p='artifacts/JANUS-LINEAR-A-SIGLA-FORMULA-NEIGHBORHOOD-RESULT-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['source']['bridge_pair_count']==686
+          assert d['parser_audit']['parse_ok']>=400
+          assert d['parser_audit']['parse_success_fraction']>=0.80
+          assert d['blind_representation']['scoring_used_visible_transliteration'] is False
+          assert d['blind_representation']['ambiguous_word_slots_preserved_as_MASK'] is True
+          assert d['epistemic_gate']['new_lexical_anchor_established'] is False
+          assert d['epistemic_gate']['external_transcription_replication_established'] is False
+          assert d['epistemic_gate']['decipherment_established'] is False
+          if d['CONFIRM']['survivor_count']==0:
+              assert d['TEST']['locked_count']==0
+          PY
+
+      - name: Upload scientific execution receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-sigla-formula-neighborhood-v0.1
+          path: artifacts/JANUS-LINEAR-A-SIGLA-FORMULA-NEIGHBORHOOD-RESULT-2026-08-14-v0.1.json
+          if-no-files-found: error
+          retention-days: 30
