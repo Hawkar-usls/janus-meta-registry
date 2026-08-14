@@ -87,6 +87,7 @@ def summarize_changed_forms(parsed: dict) -> dict:
         "save_refid_class_histogram": dict(sorted(ref_classes.items())),
         "change_type_histogram": dict(sorted(change_types.items(), key=lambda kv: int(kv[0]))),
         "frozen_target_match_counts": target_counts,
+        "frozen_target_match_fingerprints": changed["target_matches"],
         "frozen_target_match_authority": "INCIDENTAL_EXTERNAL_FIXTURE_ONLY_NOT_JAMES_LINEAGE",
     }
 
@@ -145,6 +146,33 @@ def validate_fixture(root: Path, fixture: dict, parser) -> dict:
     return result
 
 
+def cross_fixture_negative_control(results: List[dict]) -> dict:
+    valid = [item for item in results if "structural_summary" in item]
+    target_names = sorted({
+        target
+        for item in valid
+        for target in item["structural_summary"]["frozen_target_match_counts"]
+    })
+    presence = {
+        target: [
+            item["structural_summary"]["frozen_target_match_counts"].get(target, 0) > 0
+            for item in valid
+        ]
+        for target in target_names
+    }
+    present_in_all = [target for target, values in presence.items() if values and all(values)]
+    locations = [item["header"]["location"] for item in valid]
+    return {
+        "fixture_header_locations": locations,
+        "target_presence_vectors": presence,
+        "targets_present_in_all_fixtures": present_in_all,
+        "mq04_present_in_all": "MQ04" in present_in_all,
+        "mqdadref_present_in_all": "MQDadRef" in present_in_all,
+        "presence_only_admission": "REJECTED_AS_VAULT112_OR_JAMES_STATE_DISCRIMINATOR",
+        "reason": "A target Changed Form can already be present in unrelated external fixtures whose save header location is Vault 101 Entrance. Future James inference must therefore use controlled differential fingerprints, not record presence alone.",
+    }
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--fixture-dir", required=True, type=Path)
@@ -169,6 +197,7 @@ def main() -> int:
             "fixture_identity_rule": "PINNED_COMMIT_PLUS_GIT_BLOB_SHA1_PLUS_SIZE",
         },
         "fixtures": results,
+        "cross_fixture_negative_control": cross_fixture_negative_control(results),
         "overall_status": "PASS_ON_ALL_PINNED_REAL_FO3_FIXTURES" if all_pass else "FAIL_ONE_OR_MORE_REAL_FO3_FIXTURES",
         "format_execution_established": all_pass,
         "real_james_t0_t3_lineage_present": False,
@@ -179,6 +208,7 @@ def main() -> int:
         "hard_rules": [
             "REAL_EXTERNAL_FIXTURE_FORMAT_PASS != USER_JAMES_T0_T3_EXECUTION",
             "INCIDENTAL_TARGET_FORMID_MATCH != JAMES_LINEAGE_EVIDENCE",
+            "TARGET_RECORD_PRESENCE_ALONE != VAULT112_SESSION_DISCRIMINATOR",
             "CHANGED_FORM_PRESENCE != AUTOBIOGRAPHICAL_MEMORY",
             "ENGINE_SAVE_STATE != IN_WORLD_MEMORY_CARRIER",
         ],
