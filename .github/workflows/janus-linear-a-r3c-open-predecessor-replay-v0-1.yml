@@ -1,0 +1,275 @@
+name: JANUS Linear A R3C open-predecessor replay v0.1
+
+on:
+  push:
+    paths:
+      - ".github/workflows/janus-linear-a-r3c-open-predecessor-replay-v0-1.yml"
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  r3c-open-predecessor-replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      HISTORICAL_COMMIT: "568f452c7a5ec80fa292cb307ead2fc6f65d07fb"
+      CURRENT_COMMIT: "43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a"
+      EXPECTED_HISTORICAL_BYTES: "1609122"
+      EXPECTED_HISTORICAL_SHA256: "b7b383b93db55b504eb00c552a8b18c19a588e83bba7ff0ab93ca32277d8bfe2"
+      SCIENTIFIC_ARTIFACT_NAME: "janus-linear-a-r3c-open-predecessor-scientific-v0.1"
+
+    steps:
+      - name: Checkout current JANUS registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compile R3C runners and validate frozen manifests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            research/linear_a/janus_linear_a_r3c_common_v0_1.py \
+            research/linear_a/janus_linear_a_r3c_historical_source_gate_v0_1.py \
+            research/linear_a/janus_linear_a_r3c_briakos_reproduction_v0_1.py \
+            research/linear_a/janus_linear_a_r3c_logos_defect_replay_v0_1.py
+          python3 - <<'PY'
+          import json
+          checks = [
+            ('data/JANUS-LINEAR-A-R3C-1A-BRIAKOS-HISTORICAL-CORPUS-RECOVERY-CANDIDATE-2026-08-14-v0.1.json','FROZEN_BEFORE_BYTE_HASH_EXECUTION'),
+            ('data/JANUS-LINEAR-A-R3C-1A-BRIAKOS-METHOD-MANIFEST-2026-08-14-v0.1.json','FROZEN_BEFORE_METRIC_EXECUTION'),
+            ('data/JANUS-LINEAR-A-R3C-2-LOGOS-DEFECT-CONFORMANCE-FREEZE-SPEC-2026-08-14-v0.1.json','FROZEN_BEFORE_REPLAY'),
+          ]
+          for path, status in checks:
+              d=json.load(open(path,encoding='utf-8'))
+              assert d['status']==status, (path,d.get('status'))
+          m=json.load(open(checks[1][0],encoding='utf-8'))
+          assert len(m['frozen_token_profiles'])==3
+          assert m['anti_overfit']['published_values_may_not_select_profile'] is True
+          assert m['anti_overfit']['report_all_profiles'] is True
+          c=json.load(open(checks[0][0],encoding='utf-8'))
+          assert c['published_historical_identity']['reported_bytes']==1609122
+          assert c['published_historical_identity']['reported_sha256']=='b7b383b93db55b504eb00c552a8b18c19a588e83bba7ff0ab93ca32277d8bfe2'
+          assert c['candidate_recovered_from_git_history']['commit']=='568f452c7a5ec80fa292cb307ead2fc6f65d07fb'
+          PY
+
+      - name: Checkout Briakos historical candidate by exact commit
+        uses: actions/checkout@v4
+        with:
+          repository: mwenge/lineara.xyz
+          ref: 568f452c7a5ec80fa292cb307ead2fc6f65d07fb
+          path: external/mwenge-historical
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            LinearAInscriptions.js
+          sparse-checkout-cone-mode: false
+
+      - name: Checkout JANUS current frozen mwenge source by exact commit
+        uses: actions/checkout@v4
+        with:
+          repository: mwenge/lineara.xyz
+          ref: 43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a
+          path: external/mwenge-current
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            LinearAInscriptions.js
+          sparse-checkout-cone-mode: false
+
+      - name: Prove exact Git refs and run fail-closed historical source gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C external/mwenge-historical rev-parse HEAD)" = "$HISTORICAL_COMMIT"
+          test "$(git -C external/mwenge-current rev-parse HEAD)" = "$CURRENT_COMMIT"
+          python3 research/linear_a/janus_linear_a_r3c_historical_source_gate_v0_1.py \
+            --source external/mwenge-historical/LinearAInscriptions.js \
+            --output data/JANUS-LINEAR-A-R3C-1A-BRIAKOS-HISTORICAL-CORPUS-RECOVERY-RESULT-2026-08-14-v0.1.json
+
+      - name: Execute Briakos replay only after exact historical source admission
+        shell: bash
+        run: |
+          set -euo pipefail
+          admitted=$(python3 - <<'PY'
+          import json
+          d=json.load(open('data/JANUS-LINEAR-A-R3C-1A-BRIAKOS-HISTORICAL-CORPUS-RECOVERY-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          print('yes' if d['checks']['exact_historical_bytes_admitted'] else 'no')
+          PY
+          )
+          if [ "$admitted" = "yes" ]; then
+            python3 research/linear_a/janus_linear_a_r3c_briakos_reproduction_v0_1.py \
+              --historical external/mwenge-historical/LinearAInscriptions.js \
+              --current external/mwenge-current/LinearAInscriptions.js \
+              --output data/JANUS-LINEAR-A-R3C-1-BRIAKOS-REPRODUCTION-RESULT-2026-08-14-v0.1.json
+          else
+            python3 - <<'PY'
+          import json
+          from pathlib import Path
+          gate=json.load(open('data/JANUS-LINEAR-A-R3C-1A-BRIAKOS-HISTORICAL-CORPUS-RECOVERY-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          out={
+            'artifact_uuid':'JANUS-LINEAR-A-R3C-1-BRIAKOS-REPRODUCTION-RESULT-2026-08-14-v0.1',
+            'version':'v0.1',
+            'node_type':'same_lineage_reproduction_result',
+            'status':'BLOCKED_HISTORICAL_SOURCE_HASH_NOT_ADMITTED',
+            'historical_source_gate':gate,
+            'scientific_metrics_computed':False,
+            'first_break':'SOURCE_IDENTITY',
+            'claim_ceiling':{'R3B_effect':'NONE','independent_transcription_replication':False,'new_anchor':False,'decipherment':False},
+          }
+          Path('data/JANUS-LINEAR-A-R3C-1-BRIAKOS-REPRODUCTION-RESULT-2026-08-14-v0.1.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+          fi
+
+      - name: Execute externally seeded logos D5 D6 conformance replay
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/linear_a/janus_linear_a_r3c_logos_defect_replay_v0_1.py \
+            --source external/mwenge-current/LinearAInscriptions.js \
+            --output data/JANUS-LINEAR-A-R3C-2-LOGOS-DEFECT-CONFORMANCE-RESULT-2026-08-14-v0.1.json
+
+      - name: Validate no-promotion and execution-order semantics
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          g=json.load(open('data/JANUS-LINEAR-A-R3C-1A-BRIAKOS-HISTORICAL-CORPUS-RECOVERY-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          b=json.load(open('data/JANUS-LINEAR-A-R3C-1-BRIAKOS-REPRODUCTION-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          l=json.load(open('data/JANUS-LINEAR-A-R3C-2-LOGOS-DEFECT-CONFORMANCE-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          admitted=g['checks']['exact_historical_bytes_admitted']
+          if admitted:
+              assert b['status'] != 'BLOCKED_HISTORICAL_SOURCE_HASH_NOT_ADMITTED'
+              assert b['historical']['source']['sha256']==g['observed_identity']['sha256']
+              assert b['historical']['source']['bytes']==g['observed_identity']['bytes']
+              assert b['summary']['all_frozen_profiles_reported'] is True
+              assert b['summary']['published_values_used_for_profile_selection'] is False
+          else:
+              assert b['status']=='BLOCKED_HISTORICAL_SOURCE_HASH_NOT_ADMITTED'
+              assert b['scientific_metrics_computed'] is False
+          assert l['external_prior_art']['JANUS_blind_discovery_credit'] is False
+          assert l['claim_ceiling']['R3B_effect']=='NONE'
+          assert l['claim_ceiling']['new_anchor'] is False
+          assert l['claim_ceiling']['decipherment'] is False
+          print(json.dumps({'source_gate':g['status'],'briakos':b['status'],'logos':l['status']},sort_keys=True))
+          PY
+
+      - name: Build pre-artifact scientific execution receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          paths={
+            'historical_source_gate':'data/JANUS-LINEAR-A-R3C-1A-BRIAKOS-HISTORICAL-CORPUS-RECOVERY-RESULT-2026-08-14-v0.1.json',
+            'briakos_reproduction':'data/JANUS-LINEAR-A-R3C-1-BRIAKOS-REPRODUCTION-RESULT-2026-08-14-v0.1.json',
+            'logos_defect_replay':'data/JANUS-LINEAR-A-R3C-2-LOGOS-DEFECT-CONFORMANCE-RESULT-2026-08-14-v0.1.json',
+          }
+          loaded={k:json.load(open(v,encoding='utf-8')) for k,v in paths.items()}
+          receipt={
+            'artifact_uuid':'JANUS-LINEAR-A-R3C-OPEN-PREDECESSOR-REPLAY-EXECUTION-RECEIPT-2026-08-14-v0.1',
+            'version':'v0.1',
+            'node_type':'workflow_execution_receipt',
+            'status':'SCIENTIFIC_OUTPUTS_EXECUTED_PENDING_ARTIFACT_BINDING',
+            'workflow':{
+              'repository':os.environ.get('GITHUB_REPOSITORY'),
+              'run_id':int(os.environ['GITHUB_RUN_ID']),
+              'run_attempt':int(os.environ['GITHUB_RUN_ATTEMPT']),
+              'head_sha':os.environ.get('GITHUB_SHA'),
+            },
+            'source_commits':{'historical':os.environ['HISTORICAL_COMMIT'],'current':os.environ['CURRENT_COMMIT']},
+            'results':{k:{'path':paths[k],'status':loaded[k]['status']} for k in paths},
+            'execution_order':{'historical_source_identity_before_scientific_metrics':True},
+            'claim_ceiling':{'R3B_effect':'NONE','independent_transcription_replication':False,'new_anchor':False,'decipherment':False},
+          }
+          Path('data/JANUS-LINEAR-A-R3C-OPEN-PREDECESSOR-REPLAY-EXECUTION-RECEIPT-2026-08-14-v0.1.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+
+      - name: Upload immutable scientific outputs before registry persistence
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r3c-open-predecessor-scientific-v0.1
+          path: |
+            data/JANUS-LINEAR-A-R3C-1A-BRIAKOS-HISTORICAL-CORPUS-RECOVERY-RESULT-2026-08-14-v0.1.json
+            data/JANUS-LINEAR-A-R3C-1-BRIAKOS-REPRODUCTION-RESULT-2026-08-14-v0.1.json
+            data/JANUS-LINEAR-A-R3C-2-LOGOS-DEFECT-CONFORMANCE-RESULT-2026-08-14-v0.1.json
+            data/JANUS-LINEAR-A-R3C-OPEN-PREDECESSOR-REPLAY-EXECUTION-RECEIPT-2026-08-14-v0.1.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Bind execution receipt to immutable scientific artifact
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          curl -fsSL \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/artifacts" \
+            > /tmp/r3c-artifacts.json
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          meta=json.load(open('/tmp/r3c-artifacts.json',encoding='utf-8'))
+          name=os.environ['SCIENTIFIC_ARTIFACT_NAME']
+          matches=[a for a in meta.get('artifacts',[]) if a.get('name')==name]
+          assert len(matches)==1, matches
+          a=matches[0]
+          p=Path('data/JANUS-LINEAR-A-R3C-OPEN-PREDECESSOR-REPLAY-EXECUTION-RECEIPT-2026-08-14-v0.1.json')
+          d=json.loads(p.read_text(encoding='utf-8'))
+          d['status']='SCIENTIFIC_OUTPUTS_EXECUTED_AND_ARTIFACT_BOUND'
+          d['scientific_artifact']={
+            'id':a['id'],
+            'name':a['name'],
+            'digest':a.get('digest'),
+            'size_in_bytes':a.get('size_in_bytes'),
+            'expired':a.get('expired'),
+          }
+          p.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          Path('/tmp/r3c-scientific-artifact-metadata.json').write_text(json.dumps(a,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+
+      - name: Upload bound receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r3c-open-predecessor-bound-receipt-v0.1
+          path: |
+            data/JANUS-LINEAR-A-R3C-OPEN-PREDECESSOR-REPLAY-EXECUTION-RECEIPT-2026-08-14-v0.1.json
+            /tmp/r3c-scientific-artifact-metadata.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Persist results with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "janus-proof-bot"
+          git config user.email "janus-proof-bot@users.noreply.github.com"
+          git add \
+            data/JANUS-LINEAR-A-R3C-1A-BRIAKOS-HISTORICAL-CORPUS-RECOVERY-RESULT-2026-08-14-v0.1.json \
+            data/JANUS-LINEAR-A-R3C-1-BRIAKOS-REPRODUCTION-RESULT-2026-08-14-v0.1.json \
+            data/JANUS-LINEAR-A-R3C-2-LOGOS-DEFECT-CONFORMANCE-RESULT-2026-08-14-v0.1.json \
+            data/JANUS-LINEAR-A-R3C-OPEN-PREDECESSOR-REPLAY-EXECUTION-RECEIPT-2026-08-14-v0.1.json
+          if git diff --cached --quiet; then
+            echo "No R3C result delta to persist"
+            exit 0
+          fi
+          git commit -m "Register Linear A R3C historical and predecessor replay v0.1"
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then
+              pushed=1
+              break
+            fi
+            sleep "$attempt"
+          done
+          test "$pushed" = 1
