@@ -1,0 +1,107 @@
+name: JANUS Linear A R3C annotation identity bridge v0.1
+
+on:
+  push:
+    paths:
+      - ".github/workflows/janus-linear-a-r3c-annotation-identity-bridge-v0-1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  bridge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compile runner and admitted parser stack
+        run: |
+          python3 -m py_compile \
+            research/linear_a/janus_linear_a_r3c_common_v0_1.py \
+            research/linear_a/janus_linear_a_r3c_source_loader_v0_3.py \
+            research/linear_a/janus_linear_a_r3c_source_loader_v0_4.py \
+            research/linear_a/janus_linear_a_r3c_annotation_identity_bridge_v0_1.py
+
+      - name: Verify identity-only freeze
+        run: |
+          python3 - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-IDENTITY-BRIDGE-SPEC-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['status']=='FROZEN_BEFORE_EXECUTION'
+          assert d['bridge_rule']['semantic_tag_values_used_for_selection'] is False
+          assert d['bridge_rule']['transliteratedWord_values_used_for_selection'] is False
+          assert d['anti_circularity']['no_subset_search_within_annotation_ids'] is True
+          PY
+
+      - name: Checkout exact historical inscription and annotation files
+        uses: actions/checkout@v4
+        with:
+          repository: mwenge/lineara.xyz
+          ref: 568f452c7a5ec80fa292cb307ead2fc6f65d07fb
+          path: external/mwenge-historical
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            LinearAInscriptions.js
+            annotations.js
+          sparse-checkout-cone-mode: false
+
+      - name: Re-prove inscription source and execute identity bridge
+        shell: bash
+        env:
+          PYTHONPATH: research/linear_a
+        run: |
+          set -euo pipefail
+          test "$(git -C external/mwenge-historical rev-parse HEAD)" = "568f452c7a5ec80fa292cb307ead2fc6f65d07fb"
+          test "$(wc -c < external/mwenge-historical/LinearAInscriptions.js | tr -d ' ')" = "1609122"
+          test "$(sha256sum external/mwenge-historical/LinearAInscriptions.js | awk '{print $1}')" = "b7b383b93db55b504eb00c552a8b18c19a588e83bba7ff0ab93ca32277d8bfe2"
+          python3 research/linear_a/janus_linear_a_r3c_annotation_identity_bridge_v0_1.py \
+            --inscriptions external/mwenge-historical/LinearAInscriptions.js \
+            --annotations external/mwenge-historical/annotations.js \
+            --output data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-IDENTITY-BRIDGE-RESULT-2026-08-14-v0.1.json
+
+      - name: Enforce source and claim gates only
+        run: |
+          python3 - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-IDENTITY-BRIDGE-RESULT-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['inscription_source_identity_admitted'] is True
+          assert d['annotation_source_identity_admitted'] is True
+          assert d['bridge']['semantic_tag_values_used_for_selection'] is False
+          assert d['grading']['Briakos_usage_of_this_bridge_claimed'] is False
+          assert d['claim_ceiling']['Briakos_parser_reconstructed'] is False
+          assert d['claim_ceiling']['R3B_effect']=='NONE'
+          assert d['claim_ceiling']['decipherment'] is False
+          PY
+
+      - name: Upload immutable result
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r3c-annotation-identity-bridge-v0.1
+          path: data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-IDENTITY-BRIDGE-RESULT-2026-08-14-v0.1.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Persist result with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "janus-proof-bot"
+          git config user.email "janus-proof-bot@users.noreply.github.com"
+          git add data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-IDENTITY-BRIDGE-RESULT-2026-08-14-v0.1.json
+          git commit -m "Register Linear A annotation identity bridge audit v0.1"
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then pushed=1; break; fi
+            sleep "$attempt"
+          done
+          test "$pushed" = 1
