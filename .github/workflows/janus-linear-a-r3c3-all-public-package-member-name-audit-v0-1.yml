@@ -1,0 +1,110 @@
+name: JANUS Linear A R3C-3 all-public-package member-name audit v0.1
+
+on:
+  push:
+    paths:
+      - ".github/workflows/janus-linear-a-r3c3-all-public-package-member-name-audit-v0-1.yml"
+      - "research/linear_a/janus_linear_a_r3c3_all_public_package_member_name_audit_v0_1.py"
+      - "data/JANUS-LINEAR-A-R3C-3-ALL-PUBLIC-PACKAGE-MEMBER-NAME-AUDIT-SPEC-2026-08-14-v0.1.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  member-name-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify frozen universe and compile auditor
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          s=json.load(open('data/JANUS-LINEAR-A-R3C-3-ALL-PUBLIC-PACKAGE-MEMBER-NAME-AUDIT-SPEC-2026-08-14-v0.1.json',encoding='utf-8'))
+          h=json.load(open('data/JANUS-LINEAR-A-R3C-3-UPSTREAM-GIT-PACKAGE-HISTORY-AUDIT-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert s['status']=='FROZEN_BEFORE_EXECUTION'
+          assert h['status']==s['parent_history_audit']['required_status']
+          assert h['summary']['unique_zip_blob_count']==6
+          assert len(s['public_zip_blob_universe'])==6
+          assert len({x['git_blob_sha1'] for x in s['public_zip_blob_universe']})==6
+          assert s['operations']['read_member_payload'] is False
+          assert s['operations']['extract_members'] is False
+          assert s['operations']['execute_members'] is False
+          assert s['claim_ceiling']['paper_exact_2024_input_identity_established'] is False
+          PY
+          python3 -m py_compile research/linear_a/janus_linear_a_r3c3_all_public_package_member_name_audit_v0_1.py
+
+      - name: Clone upstream as promisor repository and fetch all refs
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf external/r3c3-upstream-all-packages
+          git clone --filter=blob:none --no-checkout https://github.com/L-Colin/Linear-A-decipherment-programme.git external/r3c3-upstream-all-packages
+          git -C external/r3c3-upstream-all-packages fetch --all --tags --prune
+
+      - name: Audit central-directory names for all six exact public ZIP blobs
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/linear_a/janus_linear_a_r3c3_all_public_package_member_name_audit_v0_1.py \
+            external/r3c3-upstream-all-packages \
+            --out data/JANUS-LINEAR-A-R3C-3-ALL-PUBLIC-PACKAGE-MEMBER-NAME-AUDIT-RESULT-2026-08-14-v0.1.json \
+            | tee /tmp/all-public-package-name-audit.json
+
+      - name: Enforce six-blob coverage and name-only ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          d=json.load(open('data/JANUS-LINEAR-A-R3C-3-ALL-PUBLIC-PACKAGE-MEMBER-NAME-AUDIT-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert d['status'] in {'NO_URALIC_NAMED_MEMBER_IN_ANY_PUBLIC_PACKAGE_SNAPSHOT','URALIC_NAMED_MEMBER_FOUND_IN_PUBLIC_PACKAGE_HISTORY'}
+          assert d['summary']['unique_public_zip_blobs_expected']==6
+          assert d['summary']['unique_public_zip_blobs_audited']==6
+          assert len(d['bundles'])==6
+          assert d['summary']['all_git_blob_sha1_verified'] is True
+          assert d['summary']['all_byte_counts_verified'] is True
+          assert d['safety']['archive_member_payload_read'] is False
+          assert d['safety']['archive_members_extracted'] is False
+          assert d['safety']['archive_members_executed'] is False
+          assert d['safety']['full_member_name_inventory_persisted'] is False
+          assert d['claim_ceiling']['absence_of_Uralic_linguistic_data_proved'] is False
+          assert d['claim_ceiling']['paper_exact_2024_input_identity_established'] is False
+          assert d['claim_ceiling']['R3B_effect']=='NONE'
+          assert d['claim_ceiling']['new_anchor'] is False
+          assert d['claim_ceiling']['decipherment'] is False
+          PY
+
+      - name: Upload immutable member-name audit evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r3c3-all-public-package-member-name-audit-v0.1
+          path: |
+            data/JANUS-LINEAR-A-R3C-3-ALL-PUBLIC-PACKAGE-MEMBER-NAME-AUDIT-SPEC-2026-08-14-v0.1.json
+            data/JANUS-LINEAR-A-R3C-3-ALL-PUBLIC-PACKAGE-MEMBER-NAME-AUDIT-RESULT-2026-08-14-v0.1.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Persist member-name audit with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'janus-proof-bot'
+          git config user.email 'janus-proof-bot@users.noreply.github.com'
+          git add data/JANUS-LINEAR-A-R3C-3-ALL-PUBLIC-PACKAGE-MEMBER-NAME-AUDIT-RESULT-2026-08-14-v0.1.json
+          git commit -m 'Register Linear A R3C-3 all-public-package member-name audit v0.1'
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then pushed=1; break; fi
+            sleep "$attempt"
+          done
+          test "$pushed" = 1
