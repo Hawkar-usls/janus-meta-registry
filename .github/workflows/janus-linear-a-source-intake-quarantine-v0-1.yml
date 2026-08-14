@@ -1,0 +1,138 @@
+name: JANUS Linear A source-intake quarantine v0.1
+
+on:
+  push:
+    paths:
+      - "data/JANUS-LINEAR-A-SOURCE-INTAKE-QUARANTINE-SPEC-2026-08-14-v0.1.json"
+      - "research/linear_a/janus_linear_a_source_intake_quarantine_v0_1.py"
+      - ".github/workflows/janus-linear-a-source-intake-quarantine-v0-1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  validate-quarantine:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compile runner
+        run: python3 -m py_compile research/linear_a/janus_linear_a_source_intake_quarantine_v0_1.py
+
+      - name: Validate frozen quarantine contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          s=json.load(open('data/JANUS-LINEAR-A-SOURCE-INTAKE-QUARANTINE-SPEC-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert s['status']=='FROZEN_BEFORE_VALIDATION'
+          assert s['archive_inventory_rules']['filesystem_extraction'] is False
+          assert s['archive_inventory_rules']['entry_payload_may_be_streamed_only_for_cryptographic_hashing'] is True
+          assert s['archive_inventory_rules']['entry_payload_may_be_semantically_parsed'] is False
+          assert s['archive_inventory_rules']['entry_payload_may_be_executed'] is False
+          assert s['archive_inventory_rules']['duplicate_entry_names_preserved_in_ledger'] is True
+          assert s['source_specific_admission_firewall']['quarantine_PASS_is_not_R3B_admission'] is True
+          assert s['claim_ceiling']['scientific_content_inspected'] is False
+          assert s['claim_ceiling']['code_executed'] is False
+          assert s['claim_ceiling']['R3B_effect']=='NONE'
+          assert s['claim_ceiling']['decipherment'] is False
+          PY
+
+      - name: Execute synthetic fail-closed attack suite
+        shell: bash
+        env:
+          PYTHONPATH: research/linear_a
+        run: |
+          set -euo pipefail
+          python3 research/linear_a/janus_linear_a_source_intake_quarantine_v0_1.py self-test > /tmp/quarantine-self-test.json
+          python3 - <<'PY'
+          import json
+          d=json.load(open('/tmp/quarantine-self-test.json',encoding='utf-8'))
+          required=[
+            'safe_zip_inventory_pass','duplicate_name_preserved','code_like_entry_flagged_not_executed',
+            'safe_member_hashes_present','path_traversal_rejected','hashing_limit_fail_closed',
+            'raw_file_identity_pass','unsupported_container_fail_closed'
+          ]
+          assert all(d[k] is True for k in required), d
+          assert d['scientific_content_inspected'] is False
+          assert d['code_executed'] is False
+          assert d['archive_extracted_to_filesystem'] is False
+          assert d['R3B_effect']=='NONE'
+          assert d['decipherment'] is False
+          PY
+
+      - name: Build validation result
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          d=json.load(open('/tmp/quarantine-self-test.json',encoding='utf-8'))
+          result={
+            'artifact_uuid':'JANUS-LINEAR-A-SOURCE-INTAKE-QUARANTINE-VALIDATION-RESULT-2026-08-14-v0.1',
+            'version':'v0.1',
+            'node_type':'generic_external_source_intake_quarantine_validation_result',
+            'status':'SOURCE_INTAKE_QUARANTINE_v0_1_ADMITTED',
+            'spec':'data/JANUS-LINEAR-A-SOURCE-INTAKE-QUARANTINE-SPEC-2026-08-14-v0.1.json',
+            'runner':'research/linear_a/janus_linear_a_source_intake_quarantine_v0_1.py',
+            'self_test':d,
+            'admitted_capabilities':{
+              'top_level_SHA256_and_byte_identity':True,
+              'ZIP_and_TAR_family_metadata_inventory_without_filesystem_extraction':True,
+              'streamed_member_SHA256_without_semantic_parsing':True,
+              'duplicate_entry_ledger':True,
+              'path_traversal_symlink_hardlink_encryption_and_size_limit_fail_closed':True,
+              'code_like_entry_flagging_without_execution':True,
+              'unsupported_container_hold':True
+            },
+            'not_admitted':{
+              'RAR_or_7Z_unpacking':True,
+              'scientific_content_interpretation':True,
+              'source_provenance_admission':True,
+              'paper_exact_identity_admission':True,
+              'R3B_replication_admission':True
+            },
+            'claim_ceiling':{
+              'scientific_content_inspected':False,
+              'code_executed':False,
+              'source_provenance_admitted':False,
+              'R3B_effect':'NONE',
+              'new_anchor':False,
+              'decipherment':False
+            }
+          }
+          open('data/JANUS-LINEAR-A-SOURCE-INTAKE-QUARANTINE-VALIDATION-RESULT-2026-08-14-v0.1.json','w',encoding='utf-8').write(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
+          PY
+
+      - name: Upload immutable validation package
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-source-intake-quarantine-v0.1
+          path: |
+            /tmp/quarantine-self-test.json
+            data/JANUS-LINEAR-A-SOURCE-INTAKE-QUARANTINE-VALIDATION-RESULT-2026-08-14-v0.1.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Persist validation with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "janus-proof-bot"
+          git config user.email "janus-proof-bot@users.noreply.github.com"
+          git add data/JANUS-LINEAR-A-SOURCE-INTAKE-QUARANTINE-VALIDATION-RESULT-2026-08-14-v0.1.json
+          git commit -m "Admit Linear A generic source-intake quarantine v0.1"
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then pushed=1; break; fi
+            sleep "$attempt"
+          done
+          test "$pushed" = 1
