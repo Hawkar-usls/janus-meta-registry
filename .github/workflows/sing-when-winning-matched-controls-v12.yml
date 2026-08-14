@@ -1,0 +1,48 @@
+name: Sing When You're Winning matched controls v1.2
+
+on:
+  push:
+    paths:
+      - "data/JANUS-SING-WHEN-YOURE-WINNING-SOURCE-ONTOLOGY-PROTOCOL-AMENDMENT-v1.2.json"
+      - "data/JANUS-SING-WHEN-YOURE-WINNING-RECEIPT-ONTOLOGY-PROTOCOL-AMENDMENT-v1.1.json"
+      - "data/JANUS-SING-WHEN-YOURE-WINNING-PROVENANCE-MATCHED-24-CONTROL-STRESS-PANEL-v1.0.json"
+      - "tools/verify_sing_when_youre_winning_matched_controls_v12.py"
+      - ".github/workflows/sing-when-winning-matched-controls-v12.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-matched-controls:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout JANUS registry
+        uses: actions/checkout@v4
+
+      - name: Verify ontology and matched-control counts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/verify_sing_when_youre_winning_matched_controls_v12.py
+
+      - name: Enforce anti-rescue claim ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          s = json.load(open('data/JANUS-SING-WHEN-YOURE-WINNING-SOURCE-ONTOLOGY-PROTOCOL-AMENDMENT-v1.2.json', encoding='utf-8'))
+          r = json.load(open('data/JANUS-SING-WHEN-YOURE-WINNING-RECEIPT-ONTOLOGY-PROTOCOL-AMENDMENT-v1.1.json', encoding='utf-8'))
+          p = json.load(open('data/JANUS-SING-WHEN-YOURE-WINNING-PROVENANCE-MATCHED-24-CONTROL-STRESS-PANEL-v1.0.json', encoding='utf-8'))
+          assert s['no_silent_rewrite'] is True
+          assert s['primary_visual_source_endpoint']['name'] == 'SOURCE_PHYSICAL_SUBJECT'
+          assert r['preserves_original_endpoint'] is True
+          assert r['chain_endpoints']['CHAIN_LEGACY_BROAD']['status'] == 'PRIMARY_FALSIFICATION_ENDPOINT_FOR_THE_ORIGINAL_BROAD_HYPOTHESIS'
+          assert r['chain_endpoints']['CHAIN_OUTCOME_RECEIPT']['status'] == 'NEW_SECONDARY_HYPOTHESIS_TO_BE_TESTED_SEPARATELY'
+          assert p['derived_counts']['chain_legacy_broad_true'] >= 1
+          assert p['scientific_interpretation']['legacy_broad_hypothesis'] == 'WEAKENED_BY_DIRECT_COUNTEREXAMPLES'
+          assert p['scientific_interpretation']['outcome_receipt_hypothesis'] == 'SURVIVES_THIS_PURPOSIVE_STRESS_PANEL_BUT_UNVALIDATED'
+          print('anti-rescue claim ceiling: PASS')
+          PY
