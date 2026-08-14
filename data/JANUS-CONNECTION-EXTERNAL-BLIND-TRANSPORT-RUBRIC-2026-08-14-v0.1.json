@@ -1,0 +1,48 @@
+{
+  "schema": "janus.connection.external_blind_transport_rubric.v0.1",
+  "artifact_uuid": "JANUS-CONNECTION-EXTERNAL-BLIND-TRANSPORT-RUBRIC-2026-08-14-V0.1",
+  "status": "FROZEN_BEFORE_SELECTED_EXTERNAL_JSON_BODY_INSPECTION",
+  "selection_receipt": "data/JANUS-CONNECTION-EXTERNAL-BLIND-TRANSPORT-SELECTION-2026-08-14-v0.1.json",
+  "patterns": {
+    "HIDDEN-001": {
+      "name": "NON_TRANSITIVE_EVIDENCE_BINDING_LADDER",
+      "core": "Evidence or validity at layer N may license/usefully support a test at N+1 but does not automatically establish the stronger semantic/role/outcome claim at N+1.",
+      "STRONG_SUPPORT": "The JSON explicitly represents at least two non-equivalent evidence/identity/role/result layers and encodes a rule, type distinction, required discriminator, or separate field preventing automatic promotion from the weaker to the stronger layer.",
+      "WEAK_SUPPORT": "The JSON structurally distinguishes layers that plausibly prevent collapse, but the non-transitivity rule is implicit rather than explicit.",
+      "CONTRADICTION": "The JSON explicitly states or operationalizes that satisfying a weaker identity/evidence layer is sufficient by itself to establish the stronger semantic/role/outcome layer without any additional premise.",
+      "NOT_APPLICABLE": "The JSON has no meaningful weaker-to-stronger evidence/binding relation; mere nesting, references, schema composition or required fields alone are insufficient."
+    },
+    "HIDDEN-002": {
+      "name": "AMBIGUITY_IS_A_FIRST_CLASS_STATE",
+      "core": "When evidence does not discriminate a unique binding, unresolved/unknown/multiple candidates should remain representable until a discriminator arrives rather than being forced into a singleton.",
+      "STRONG_SUPPORT": "The JSON explicitly permits unknown/null/unspecified/multiple candidate states or optional unresolved fields and preserves them as distinct valid states until additional information is supplied.",
+      "WEAK_SUPPORT": "The JSON structurally permits omission/multiplicity/unknown-like values but does not explicitly connect them to insufficient discrimination.",
+      "CONTRADICTION": "The JSON explicitly forces exactly one semantic binding in a state that the same JSON identifies as underdetermined or unresolved, with no discriminator or declared default semantics.",
+      "NOT_APPLICABLE": "The JSON models a fully specified deterministic object or validation schema without an ambiguity/unknown/candidate-set question. Ordinary optional fields alone do not automatically count as support."
+    },
+    "HIDDEN-003": {
+      "name": "FIRST_BREAK_LOCALIZATION_GENERALIZATION",
+      "core": "For an ordered prerequisite chain, the earliest unsatisfied boundary is informative and should remain distinguishable rather than being collapsed into one aggregate pass/fail or score.",
+      "STRONG_SUPPORT": "The JSON represents an ordered prerequisite/validation/provenance chain in which later admission depends on earlier stages and exposes per-stage/per-location failure or status information sufficient to localize where admissibility first breaks.",
+      "WEAK_SUPPORT": "The JSON has an ordered dependency chain and stage-specific state, but first-break localization is only implicit or incomplete.",
+      "CONTRADICTION": "The JSON explicitly declares an ordered prerequisite chain but intentionally collapses all stage failures into one aggregate status while discarding stage/location identity and asserts that nothing relevant is lost.",
+      "NOT_APPLICABLE": "Unordered arrays, nested JSON structure, schema composition, field requirements or chronology without prerequisite semantics do not count as a boundary chain."
+    }
+  },
+  "classification_rules": {
+    "classify_every_selected_json": true,
+    "replacement_after_inspection": false,
+    "rubric_change_after_inspection": false,
+    "schema_files_may_be_not_applicable": true,
+    "absence_of_support_is_not_contradiction": true,
+    "same_repository_files_are_dependency_collapsed_for_promotion": true,
+    "repository_is_primary_external_family_unit": true,
+    "source_text_must_support_each_classification": true,
+    "connection_or_janus_vocabulary_in_external_source": "NOT_EXPECTED_AND_NOT_REQUIRED"
+  },
+  "promotion_rule": {
+    "minimum_for_external_transport_candidate": "At least two independently governed external repositories must provide STRONG_SUPPORT for a pattern, with zero direct CONTRADICTION, and support must survive a relation-destroying control appropriate to the represented structure.",
+    "external_replication_requires": "Independent implementation or analysis not authored/controlled by Hawkar-usls/JANUS; this rubric alone cannot establish external replication.",
+    "population_prevalence_claim": false
+  }
+}
