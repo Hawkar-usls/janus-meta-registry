@@ -1,0 +1,86 @@
+{
+  "artifact_uuid": "JANUS-LINEAR-A-SIGLA-NATIVE-BLIND-ROLE-DISCOVERY-SPEC-2026-08-14-v0.1",
+  "timestamp": "2026-08-14T14:14:00+03:00",
+  "version": "v0.1",
+  "title": "JANUS Linear A SigLA-native blind word-boundary role discovery",
+  "node_type": "frozen_execution_specification",
+  "status": "FROZEN_BEFORE_CLAIM_BEARING_EXECUTION",
+  "canonical_parent": "data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.4.json",
+  "technical_parent": "data/JANUS-LINEAR-A-SIGLA-WORD-VIEW-PROBE-RESULT-2026-08-14-v0.1.json",
+  "research_question": "Do any repeated SigLA-native word identities, represented only by standard sign-ID sequences, reproducibly specialize for document-initial or document-final word position more strongly than within-document identity-shuffle nulls predict?",
+  "source": {
+    "name": "SigLA — The Signs of Linear A",
+    "source_class": "L1_INDEPENDENT_DIGITIZATION_SHARED_TRANSCRIPTION",
+    "database_js_sha256": "cc624f148fd84c94fd2910b0adf92ecace25f52f9175664122bdf8384a8f1b9d",
+    "bridge_universe": "686 collision-free SigLA↔mwenge document identity pairs",
+    "external_transcription_replication_claim_allowed": false
+  },
+  "blind_representation": {
+    "candidate_identity": "SHA256('SIGLA-WORD-v0.1|' + exact SigLA seq-pattern sign-ID sequence)",
+    "scoring_uses": ["candidate hash", "document membership", "word ordinal", "document word count", "location only for final support gate"],
+    "forbidden_until_post_score_reveal": ["visible transliteration text", "known gloss", "Linear B reading", "JANUS prior semantic labels"],
+    "zero_word_and_singleton_documents": "retained in parser audit; only documents with >=2 parsed words enter INITIAL/FINAL role statistics"
+  },
+  "document_partition": {
+    "operator": "bucket = int(SHA256('SIGLA-ROLE-PARTITION-v0.1|' + bridge_key),16) mod 10",
+    "SCREEN": [0,1,2,3,4,5],
+    "CONFIRM": [6,7],
+    "TEST": [8,9],
+    "partition_fixed_before_content_scoring": true
+  },
+  "screen_gate": {
+    "candidate_min_occurrences": 8,
+    "candidate_min_documents": 5,
+    "roles": ["INITIAL", "FINAL"],
+    "null": "WITHIN_DOCUMENT_WORD_IDENTITY_SHUFFLE_PRESERVING_DOCUMENT_WORD_MULTISET_AND_WORD_SLOTS",
+    "permutations": 3000,
+    "effect": "observed role fraction minus mean null role fraction",
+    "multiplicity": "Bonferroni over all eligible candidate×role hypotheses",
+    "alpha": 0.05,
+    "direction": "ENRICHED_ONLY"
+  },
+  "confirm_gate": {
+    "candidate_role_locked_from_SCREEN": true,
+    "minimum_occurrences": 4,
+    "minimum_documents": 3,
+    "permutations": 5000,
+    "one_sided_locked_direction": true,
+    "multiplicity": "Bonferroni over SCREEN-selected hypotheses",
+    "alpha": 0.05,
+    "non_evaluability_is_not_failure": true
+  },
+  "test_gate": {
+    "candidate_role_locked_from_SCREEN": true,
+    "minimum_occurrences": 4,
+    "minimum_documents": 3,
+    "minimum_distinct_locations": 2,
+    "permutations": 5000,
+    "one_sided_locked_direction": true,
+    "multiplicity": "Bonferroni over CONFIRM-surviving hypotheses",
+    "alpha": 0.05,
+    "non_evaluability_is_not_failure": true
+  },
+  "parser_fail_closed": {
+    "word_sequence_extraction": "Only search-sequence anchors with explicit word-match @ !seq-pattern:{...}// are scientific words.",
+    "word_count_consistency": "If reported word count differs from extracted seq-pattern count, document is excluded and recorded as parser mismatch.",
+    "minimum_parse_success_documents": 400,
+    "minimum_parse_success_fraction_of_686": 0.80
+  },
+  "post_score_reveal": {
+    "allowed_only_after": "SCREEN/CONFIRM/TEST states are frozen",
+    "fields": ["SigLA sign-ID sequence", "visible transliteration", "representative documents"],
+    "classification": ["REPRODUCED_KNOWN_STRUCTURE", "NOVEL_CROSS_DIGITIZATION_STRUCTURAL_ROLE_CANDIDATE", "NO_SURVIVOR", "NOT_EVALUABLE"]
+  },
+  "claim_ceiling": {
+    "maximum_if_full_survivor": "NOVEL_CROSS_DIGITIZATION_STRUCTURAL_ROLE_CANDIDATE",
+    "external_transcription_replication_established": false,
+    "new_lexical_anchor_established": false,
+    "decipherment_established": false,
+    "forbidden": "Any translation/lexical meaning claim from positional specialization alone."
+  },
+  "roadmap_after_execution": {
+    "if_full_survivor": "Post-score literature novelty audit, mwenge cross-encoding comparison, behavioral/document-role audit, then independently implemented replay.",
+    "if_known_survivor": "Register blind rediscovery as positive control and subtract known family in a separately frozen follow-up.",
+    "if_no_survivor": "Preserve valid negative result and move to SigLA-native sign-within-word morphology / formula-neighborhood channel without lowering thresholds."
+  }
+}
