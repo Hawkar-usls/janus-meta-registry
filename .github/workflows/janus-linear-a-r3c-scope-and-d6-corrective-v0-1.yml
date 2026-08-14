@@ -1,0 +1,180 @@
+name: JANUS Linear A R3C scope and D6 corrective gates v0.1
+
+on:
+  push:
+    paths:
+      - ".github/workflows/janus-linear-a-r3c-scope-and-d6-corrective-v0-1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  scope-and-d6-corrective:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compile frozen runners and admitted parser stack
+        run: |
+          python3 -m py_compile \
+            research/linear_a/janus_linear_a_r3c_common_v0_1.py \
+            research/linear_a/janus_linear_a_r3c_source_loader_v0_3.py \
+            research/linear_a/janus_linear_a_r3c_source_loader_v0_4.py \
+            research/linear_a/janus_linear_a_r3c_briakos_scope_reconstruction_v0_1.py \
+            research/linear_a/janus_linear_a_r3c_logos_d6_corrective_replay_v0_1.py
+
+      - name: Verify preexecution freezes and parser admission
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          files = [
+            'data/JANUS-LINEAR-A-R3C-1B-BRIAKOS-SCOPE-RECONSTRUCTION-SPEC-2026-08-14-v0.1.json',
+            'data/JANUS-LINEAR-A-R3C-2A-LOGOS-D6-CORRECTIVE-REPLAY-SPEC-2026-08-14-v0.1.json',
+          ]
+          for p in files:
+              d=json.load(open(p,encoding='utf-8'))
+              assert d['status']=='FROZEN_BEFORE_EXECUTION'
+          a=json.load(open('data/JANUS-LINEAR-A-R3C-1A-JS-MAP-SEMANTICS-PARSER-VALIDATION-RESULT-2026-08-14-v0.4.json',encoding='utf-8'))
+          assert a['status']=='PARSER_V0_4_ADMITTED'
+          PY
+
+      - name: Checkout exact Briakos historical source
+        uses: actions/checkout@v4
+        with:
+          repository: mwenge/lineara.xyz
+          ref: 568f452c7a5ec80fa292cb307ead2fc6f65d07fb
+          path: external/mwenge-historical
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            LinearAInscriptions.js
+          sparse-checkout-cone-mode: false
+
+      - name: Checkout exact current frozen source
+        uses: actions/checkout@v4
+        with:
+          repository: mwenge/lineara.xyz
+          ref: 43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a
+          path: external/mwenge-current
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            LinearAInscriptions.js
+          sparse-checkout-cone-mode: false
+
+      - name: Re-prove exact source identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C external/mwenge-historical rev-parse HEAD)" = "568f452c7a5ec80fa292cb307ead2fc6f65d07fb"
+          test "$(wc -c < external/mwenge-historical/LinearAInscriptions.js | tr -d ' ')" = "1609122"
+          test "$(sha256sum external/mwenge-historical/LinearAInscriptions.js | awk '{print $1}')" = "b7b383b93db55b504eb00c552a8b18c19a588e83bba7ff0ab93ca32277d8bfe2"
+          test "$(git -C external/mwenge-current rev-parse HEAD)" = "43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a"
+          test "$(wc -c < external/mwenge-current/LinearAInscriptions.js | tr -d ' ')" = "1609137"
+          test "$(sha256sum external/mwenge-current/LinearAInscriptions.js | awk '{print $1}')" = "4da8e1f9693d30880ee505e56541fc189add70605bad88436c44a8e11a57764c"
+
+      - name: Execute frozen Briakos scope reconstruction
+        env:
+          PYTHONPATH: research/linear_a
+        run: |
+          python3 research/linear_a/janus_linear_a_r3c_briakos_scope_reconstruction_v0_1.py \
+            --source external/mwenge-historical/LinearAInscriptions.js \
+            --output data/JANUS-LINEAR-A-R3C-1B-BRIAKOS-SCOPE-RECONSTRUCTION-RESULT-2026-08-14-v0.1.json
+
+      - name: Execute frozen logos D6 corrective replay
+        env:
+          PYTHONPATH: research/linear_a
+        run: |
+          python3 research/linear_a/janus_linear_a_r3c_logos_d6_corrective_replay_v0_1.py \
+            --source external/mwenge-current/LinearAInscriptions.js \
+            --output data/JANUS-LINEAR-A-R3C-2A-LOGOS-D6-CORRECTIVE-REPLAY-RESULT-2026-08-14-v0.1.json
+
+      - name: Validate fail-closed result semantics without grading scientific outcomes
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          s=json.load(open('data/JANUS-LINEAR-A-R3C-1B-BRIAKOS-SCOPE-RECONSTRUCTION-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          d=json.load(open('data/JANUS-LINEAR-A-R3C-2A-LOGOS-D6-CORRECTIVE-REPLAY-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert s['source_identity_admitted'] is True
+          assert s['predeclared_scope']['target_guided_subset_search'] is False
+          assert s['execution_firewall']['R3B_effect']=='NONE'
+          assert s['execution_firewall']['decipherment'] is False
+          assert d['source_identity_admitted'] is True
+          assert d['correction']['conformance_predicate_corrected'] is True
+          assert d['correction']['scientific_source_changed'] is False
+          assert d['claim_ceiling']['JANUS_independent_discovery'] is False
+          assert d['claim_ceiling']['R3B_effect']=='NONE'
+          assert d['claim_ceiling']['decipherment'] is False
+          PY
+
+      - name: Build execution receipt
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib, json
+          paths=[
+            'data/JANUS-LINEAR-A-R3C-1B-BRIAKOS-SCOPE-RECONSTRUCTION-RESULT-2026-08-14-v0.1.json',
+            'data/JANUS-LINEAR-A-R3C-2A-LOGOS-D6-CORRECTIVE-REPLAY-RESULT-2026-08-14-v0.1.json',
+          ]
+          outs=[]
+          for p in paths:
+              raw=open(p,'rb').read()
+              d=json.loads(raw)
+              outs.append({'path':p,'sha256':hashlib.sha256(raw).hexdigest(),'bytes':len(raw),'status':d['status']})
+          receipt={
+            'artifact_uuid':'JANUS-LINEAR-A-R3C-SCOPE-D6-CORRECTIVE-EXECUTION-RECEIPT-2026-08-14-v0.1',
+            'version':'v0.1',
+            'node_type':'proof_carrying_execution_receipt',
+            'status':'EXECUTED_AND_PERSISTENCE_PENDING',
+            'source_identity':{
+              'historical_sha256':'b7b383b93db55b504eb00c552a8b18c19a588e83bba7ff0ab93ca32277d8bfe2',
+              'current_sha256':'4da8e1f9693d30880ee505e56541fc189add70605bad88436c44a8e11a57764c'
+            },
+            'outputs':outs,
+            'claim_ceiling':{'R3B_effect':'NONE','new_anchor':False,'decipherment':False}
+          }
+          p='data/JANUS-LINEAR-A-R3C-SCOPE-D6-CORRECTIVE-EXECUTION-RECEIPT-2026-08-14-v0.1.json'
+          open(p,'w',encoding='utf-8').write(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n')
+          PY
+
+      - name: Upload immutable gate outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r3c-scope-d6-corrective-v0.1
+          path: |
+            data/JANUS-LINEAR-A-R3C-1B-BRIAKOS-SCOPE-RECONSTRUCTION-RESULT-2026-08-14-v0.1.json
+            data/JANUS-LINEAR-A-R3C-2A-LOGOS-D6-CORRECTIVE-REPLAY-RESULT-2026-08-14-v0.1.json
+            data/JANUS-LINEAR-A-R3C-SCOPE-D6-CORRECTIVE-EXECUTION-RECEIPT-2026-08-14-v0.1.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Persist gate outputs with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "janus-proof-bot"
+          git config user.email "janus-proof-bot@users.noreply.github.com"
+          git add \
+            data/JANUS-LINEAR-A-R3C-1B-BRIAKOS-SCOPE-RECONSTRUCTION-RESULT-2026-08-14-v0.1.json \
+            data/JANUS-LINEAR-A-R3C-2A-LOGOS-D6-CORRECTIVE-REPLAY-RESULT-2026-08-14-v0.1.json \
+            data/JANUS-LINEAR-A-R3C-SCOPE-D6-CORRECTIVE-EXECUTION-RECEIPT-2026-08-14-v0.1.json
+          git commit -m "Register Linear A Briakos scope and logos D6 corrective results v0.1"
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then
+              pushed=1
+              break
+            fi
+            sleep "$attempt"
+          done
+          test "$pushed" = 1
