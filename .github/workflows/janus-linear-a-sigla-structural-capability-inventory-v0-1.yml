@@ -1,0 +1,155 @@
+name: JANUS Linear A SigLA structural capability inventory v0.1
+
+on:
+  push:
+    paths:
+      - "research/linear_a/janus_linear_a_sigla_structural_capability_inventory_v0_1.py"
+      - "data/JANUS-LINEAR-A-SIGLA-STRUCTURAL-CAPABILITY-INVENTORY-SPEC-2026-08-14-v0.1.json"
+      - ".github/workflows/janus-linear-a-sigla-structural-capability-inventory-v0-1.yml"
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  sigla-structural-capability-inventory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      BRIDGE_RUN_ID: "31792232087"
+      BRIDGE_ARTIFACT_ID: "9215930408"
+      BRIDGE_ARTIFACT_NAME: "janus-linear-a-sigla-document-bridge-v0.1"
+      BRIDGE_ARTIFACT_DIGEST: "sha256:58ee76d08ae2aba79e0788421c99b453bc82949e7fa439bc381dfa45c0b42ab9"
+
+    steps:
+      - name: Checkout JANUS registry
+        uses: actions/checkout@v4
+
+      - name: Validate frozen capability inventory spec
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-SIGLA-STRUCTURAL-CAPABILITY-INVENTORY-SPEC-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['status']=='FROZEN_BEFORE_STRUCTURAL_CAPABILITY_INVENTORY'
+          assert d['scientific_claim_bearing'] is False
+          assert d['frozen_identity_universe']['collision_free_pair_count']==686
+          assert d['frozen_identity_universe']['actions_run_id']==31792232087
+          assert d['frozen_identity_universe']['actions_artifact_id']==9215930408
+          assert d['frozen_identity_universe']['actions_artifact_digest']=='sha256:58ee76d08ae2aba79e0788421c99b453bc82949e7fa439bc381dfa45c0b42ab9'
+          assert d['sampling']['namespace']=='R3A3D-STRUCTURAL-CAPABILITY-v0.1'
+          assert d['sampling']['sample_size']==32
+          assert d['sampling']['selection_occurs_before_any_live_document_fetch'] is True
+          assert d['sampling']['selection_uses_transcription_content'] is False
+          assert d['sampling']['replacement_on_fetch_or_contract_failure'] is False
+          assert d['frozen_adapter_contract']['commit']=='d30b3b632d0fc551dcb61d6ba5d425c3f2415643'
+          assert d['claim_ceiling']['external_transcription_replication_established'] is False
+          PY
+
+      - name: Validate immutable bridge artifact metadata
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          curl -fsSL \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/${BRIDGE_ARTIFACT_ID}" \
+            > /tmp/bridge-artifact-metadata.json
+          python3 - <<'PY'
+          import json, os
+          d=json.load(open('/tmp/bridge-artifact-metadata.json',encoding='utf-8'))
+          assert d['id']==int(os.environ['BRIDGE_ARTIFACT_ID'])
+          assert d['name']==os.environ['BRIDGE_ARTIFACT_NAME']
+          assert d['digest']==os.environ['BRIDGE_ARTIFACT_DIGEST']
+          assert d['expired'] is False
+          assert d['workflow_run']['id']==int(os.environ['BRIDGE_RUN_ID'])
+          print(json.dumps({'artifact_id':d['id'],'digest':d['digest'],'run_id':d['workflow_run']['id']},sort_keys=True))
+          PY
+
+      - name: Download exact frozen 686-pair bridge artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: janus-linear-a-sigla-document-bridge-v0.1
+          path: artifacts/source-bridge
+          run-id: 31792232087
+          github-token: ${{ github.token }}
+
+      - name: Execute deterministic 32-document structural capability inventory
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/capability-pages
+          python3 research/linear_a/janus_linear_a_sigla_structural_capability_inventory_v0_1.py \
+            --bridge-artifact-root artifacts/source-bridge \
+            --out data/JANUS-LINEAR-A-SIGLA-STRUCTURAL-CAPABILITY-INVENTORY-RESULT-2026-08-14-v0.1.json \
+            --snapshot-dir artifacts/capability-pages
+
+      - name: Validate inventory result and claim ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-SIGLA-STRUCTURAL-CAPABILITY-INVENTORY-RESULT-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['status']=='STRUCTURAL_CAPABILITY_INVENTORY_EXECUTED'
+          assert d['scientific_claim_bearing'] is False
+          s=d['selection']
+          assert s['namespace']=='R3A3D-STRUCTURAL-CAPABILITY-v0.1'
+          assert s['sample_size']==32
+          assert s['selected_before_live_fetch'] is True
+          assert s['replacement_used'] is False
+          assert len(s['documents'])==32
+          assert len({x['bridge_key'] for x in s['documents']})==32
+          assert s['documents']==sorted(s['documents'],key=lambda x:x['rank'])
+          summary=d['summary']
+          assert summary['sample_size']==32
+          assert summary['root_adapter_pass_count']+summary['root_adapter_fail_count']==32
+          assert summary['word_view_attempt_count']==summary['root_adapter_pass_count']
+          assert summary['word_view_adapter_pass_count']+summary['word_view_adapter_fail_count']==summary['word_view_attempt_count']
+          assert summary['structurally_classified_count']==summary['word_view_adapter_pass_count']
+          assert summary['word_class_present_count']+summary['word_class_absent_count']==summary['structurally_classified_count']
+          b=d['interpretation_boundary']
+          assert b['source_native_word_class_is_linguistic_validation'] is False
+          assert b['inventory_is_content_replication'] is False
+          g=d['epistemic_gate']
+          assert g['structural_capability_inventory_established'] is True
+          assert g['content_extraction_grammar_frozen'] is False
+          assert g['cross_digitization_content_replication_established'] is False
+          assert g['external_transcription_replication_established'] is False
+          assert g['new_anchor_established'] is False
+          assert g['decipherment_established'] is False
+          assert d['claim_ceiling']['promotion']=='BLOCKED'
+          print(json.dumps(summary,ensure_ascii=False,sort_keys=True))
+          PY
+
+      - name: Persist capability inventory result
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "janus-proof-bot"
+          git config user.email "janus-proof-bot@users.noreply.github.com"
+          git add data/JANUS-LINEAR-A-SIGLA-STRUCTURAL-CAPABILITY-INVENTORY-RESULT-2026-08-14-v0.1.json
+          if git diff --cached --quiet; then
+            echo "No capability result delta to commit"
+          else
+            git commit -m "Register SigLA structural capability inventory v0.1"
+            git push origin HEAD:main
+          fi
+
+      - name: Upload capability inventory receipt and frozen sampled pages
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-sigla-structural-capability-inventory-v0.1
+          path: |
+            data/JANUS-LINEAR-A-SIGLA-STRUCTURAL-CAPABILITY-INVENTORY-RESULT-2026-08-14-v0.1.json
+            artifacts/capability-pages/*.html
+            /tmp/bridge-artifact-metadata.json
+          if-no-files-found: error
+          retention-days: 30
