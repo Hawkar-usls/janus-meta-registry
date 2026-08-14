@@ -1,0 +1,78 @@
+name: JANUS Linear A R3B-0 strict blind three-candidate byte acquisition v0.1
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/janus-linear-a-r3b0-strict-blind-three-candidate-byte-acquisition-v0-1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  acquire:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Compile acquisition runner
+        run: python -m py_compile research/linear_a/janus_linear_a_r3b0_strict_blind_three_candidate_byte_acquisition_v0_1.py
+
+      - name: Execute metadata-only endpoint discovery and opaque-byte sealing
+        run: |
+          python research/linear_a/janus_linear_a_r3b0_strict_blind_three_candidate_byte_acquisition_v0_1.py \
+            --spec data/JANUS-LINEAR-A-R3B-0-STRICT-BLIND-THREE-CANDIDATE-BYTE-ACQUISITION-SPEC-2026-08-14-v0.1.json \
+            --out data/JANUS-LINEAR-A-R3B-0-STRICT-BLIND-THREE-CANDIDATE-BYTE-ACQUISITION-RESULT-2026-08-14-v0.1.json
+
+      - name: Enforce pre-content claim ceiling
+        run: |
+          python - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-R3B-0-STRICT-BLIND-THREE-CANDIDATE-BYTE-ACQUISITION-RESULT-2026-08-14-v0.1.json'
+          x=json.load(open(p,encoding='utf-8'))
+          assert x['all_checks_pass'] is True
+          assert x['summary']['candidate_count'] == 3
+          assert x['summary']['source_native_sign_readings_seen'] is False
+          assert x['summary']['source_content_inspected'] is False
+          assert x['summary']['overlap_selected'] is False
+          assert x['summary']['scientific_comparison_performed'] is False
+          assert x['summary']['strict_r3b_replication_established'] is False
+          for c in x['candidate_results']:
+              for s in c['sealed_pdf_receipts']:
+                  assert s['pdf_magic'] == '%PDF-'
+                  assert s['byte_length'] > 0
+                  assert len(s['sha256']) == 64
+                  assert s['content_parser_imported'] is False
+                  assert s['pdf_text_extraction'] is False
+                  assert s['pdf_rendering'] is False
+                  assert s['ocr'] is False
+          print(json.dumps(x['summary'],indent=2))
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r3b0-strict-blind-byte-acquisition-v0-1
+          path: data/JANUS-LINEAR-A-R3B-0-STRICT-BLIND-THREE-CANDIDATE-BYTE-ACQUISITION-RESULT-2026-08-14-v0.1.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Persist pre-content byte-seal result
+        env:
+          RESULT: data/JANUS-LINEAR-A-R3B-0-STRICT-BLIND-THREE-CANDIDATE-BYTE-ACQUISITION-RESULT-2026-08-14-v0.1.json
+        run: |
+          git config user.name 'JANUS Evidence Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add "$RESULT"
+          git commit -m 'Register Linear A strict blind three-candidate byte acquisition v0.1' || true
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then exit 0; fi
+            git pull --rebase origin main
+          done
+          exit 1
