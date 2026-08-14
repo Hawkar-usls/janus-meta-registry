@@ -1,0 +1,102 @@
+name: Fallout 3 FOS Header Authentication v3.2a
+
+on:
+  pull_request:
+    paths:
+      - "registry/myth_busted/FALLOUT-3-FOS-HEADER-PLUGIN-AUTHENTICATION-GATE-v3.2a.json"
+      - "tools/fo3_fos_header_plugin_manifest_v0_1.py"
+      - "tests/test_fo3_fos_header_plugin_manifest_v0_1.py"
+      - ".github/workflows/fallout3-fos-header-auth-v3-2a.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "registry/myth_busted/FALLOUT-3-FOS-HEADER-PLUGIN-AUTHENTICATION-GATE-v3.2a.json"
+      - "tools/fo3_fos_header_plugin_manifest_v0_1.py"
+      - "tests/test_fo3_fos_header_plugin_manifest_v0_1.py"
+      - ".github/workflows/fallout3-fos-header-auth-v3-2a.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact event head
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Assert exact requested head
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          ACTUAL_HEAD="$(git rev-parse HEAD)"
+          echo "EXPECTED_HEAD=$EXPECTED_HEAD"
+          echo "ACTUAL_HEAD=$ACTUAL_HEAD"
+          test "$ACTUAL_HEAD" = "$EXPECTED_HEAD"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install pytest
+        run: python -m pip install --disable-pip-version-check pytest
+
+      - name: Compile parser
+        run: python -m py_compile tools/fo3_fos_header_plugin_manifest_v0_1.py
+
+      - name: Validate gate JSON
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          path = Path("registry/myth_busted/FALLOUT-3-FOS-HEADER-PLUGIN-AUTHENTICATION-GATE-v3.2a.json")
+          json.loads(path.read_text(encoding="utf-8"))
+          print(f"JSON_PASS {path}")
+          PY
+
+      - name: Run deterministic header/parser tests
+        run: python -m pytest -q tests/test_fo3_fos_header_plugin_manifest_v0_1.py
+
+      - name: Emit exact-head claim-ceiling receipt
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          python - <<'PY'
+          import json, os, subprocess
+          from pathlib import Path
+          actual = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+          expected = os.environ["EXPECTED_HEAD"]
+          receipt = {
+              "schema": "janus.fallout3.fos_header_auth.v3_2a.ci_receipt.v1",
+              "expected_head": expected,
+              "actual_head": actual,
+              "exact_head_match": actual == expected,
+              "real_t0_t3_inputs_present": False,
+              "fo3_header_plugin_parser_synthetic_tests": "PASS_IF_JOB_SUCCEEDS",
+              "body_change_state_decoder_established": False,
+              "structured_mqdadref_runtime_state_established": False,
+              "persisted_james_runtime_state_established": False,
+              "persisted_james_autobiographical_memory_established": False,
+              "claim_ceiling": "CI validates source-bounded header/plugin parsing logic only."
+          }
+          if not receipt["exact_head_match"]:
+              raise SystemExit("exact event-head mismatch")
+          Path("fallout3-fos-header-auth-v3-2a-ci-receipt.json").write_text(
+              json.dumps(receipt, indent=2) + "\n", encoding="utf-8"
+          )
+          print(json.dumps(receipt, indent=2))
+          PY
+
+      - name: Upload receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: fallout3-fos-header-auth-v3-2a-ci-receipt
+          path: fallout3-fos-header-auth-v3-2a-ci-receipt.json
+          if-no-files-found: error
