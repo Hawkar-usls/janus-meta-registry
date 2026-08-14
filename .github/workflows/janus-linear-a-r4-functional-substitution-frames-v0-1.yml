@@ -1,0 +1,121 @@
+name: JANUS Linear A R4-2 functional substitution frames v0.1
+
+on:
+  push:
+    paths:
+      - "data/JANUS-LINEAR-A-R4-2-EXECUTE-REQUEST-2026-08-14-v0.1.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout JANUS registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Verify R4-2 frozen inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile research/linear_a/janus_linear_a_r4_functional_substitution_frames_v0_1.py
+          python - <<'PY'
+          import json
+          s=json.load(open('data/JANUS-LINEAR-A-R4-2-CROSS-FITTED-FUNCTIONAL-SUBSTITUTION-FRAME-SPEC-2026-08-14-v0.1.json',encoding='utf-8'))
+          p=json.load(open('data/JANUS-LINEAR-A-R4-1-FIVE-FOLD-CROSS-VALIDATED-STRUCTURAL-LEARNING-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          c=json.load(open('data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.20.json',encoding='utf-8'))
+          assert c['version']=='v2.20' and c['status']=='CURRENT_CANONICAL_RESEARCH_STATE'
+          assert p['status']=='CROSS_VALIDATED_INTERNAL_CONTEXT_STRUCTURE_SIGNAL_PRESENT'
+          assert p['cross_fold_structural_analogy']['CV_replicated_pair_count']==4
+          assert s['candidate_family']['candidate_count_required']==4
+          assert s['cross_fitting']['target_reading_status']=='certain_only'
+          assert s['cross_fitting']['source_status_none_reinterpreted'] is False
+          assert s['candidate_family']['manual_candidate_addition_forbidden'] is True
+          assert s['candidate_family']['manual_candidate_removal_forbidden'] is True
+          PY
+
+      - name: Fetch exact preservation-mirror corpus
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --quiet https://github.com/Hawkar-usls/lineara.xyz.git /tmp/lineara
+          git -C /tmp/lineara checkout --quiet 43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a
+          test "$(git -C /tmp/lineara rev-parse HEAD)" = "43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a"
+          test "$(find /tmp/lineara/items -maxdepth 1 -name '*.html' | wc -l)" -ge 300
+
+      - name: Execute cross-fitted functional substitution audit
+        env:
+          PYTHONPATH: research/linear_a
+        shell: bash
+        run: |
+          set -euo pipefail
+          python research/linear_a/janus_linear_a_r4_functional_substitution_frames_v0_1.py \
+            --corpus /tmp/lineara \
+            --spec data/JANUS-LINEAR-A-R4-2-CROSS-FITTED-FUNCTIONAL-SUBSTITUTION-FRAME-SPEC-2026-08-14-v0.1.json \
+            --parent-r4-1 data/JANUS-LINEAR-A-R4-1-FIVE-FOLD-CROSS-VALIDATED-STRUCTURAL-LEARNING-RESULT-2026-08-14-v0.1.json \
+            --out data/JANUS-LINEAR-A-R4-2-CROSS-FITTED-FUNCTIONAL-SUBSTITUTION-FRAME-RESULT-2026-08-14-v0.1.json
+
+      - name: Enforce candidate family and claim ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          x=json.load(open('data/JANUS-LINEAR-A-R4-2-CROSS-FITTED-FUNCTIONAL-SUBSTITUTION-FRAME-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert x['status'] in {
+            'CROSS_FITTED_EXACT_FUNCTIONAL_SUBSTITUTION_EVIDENCE_PRESENT',
+            'CROSS_FITTED_EXACT_FUNCTIONAL_SUBSTITUTION_EVIDENCE_NOT_ESTABLISHED'
+          }
+          assert x['source']['frozen_commit']=='43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a'
+          assert x['candidate_count']==4 and len(x['pair_results'])==4
+          assert x['summary']['target_status']=='certain_only'
+          assert x['summary']['source_status_none_reinterpreted'] is False
+          assert x['leakage_firewall']['candidate_family_changed_after_R4_1'] is False
+          assert x['leakage_firewall']['source_labels_used_for_scoring'] is False
+          assert x['leakage_firewall']['translations_used'] is False
+          assert x['leakage_firewall']['external_dictionaries_used'] is False
+          assert x['leakage_firewall']['Notti_readings_used'] is False
+          assert x['leakage_firewall']['R3B_blind_eligibility_affected'] is False
+          e=x['epistemic_gate']
+          assert e['semantic_equivalence_established'] is False
+          assert e['grammatical_label_established'] is False
+          assert e['translation_established'] is False
+          assert e['phonetic_value_established'] is False
+          assert e['new_anchor_established'] is False
+          assert e['decipherment_established'] is False
+          assert e['R3B_external_replication_established'] is False
+          print(json.dumps({'status':x['status'],'summary':x['summary']},sort_keys=True))
+          PY
+
+      - name: Upload R4-2 result
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r4-functional-substitution-v0-1
+          path: data/JANUS-LINEAR-A-R4-2-CROSS-FITTED-FUNCTIONAL-SUBSTITUTION-FRAME-RESULT-2026-08-14-v0.1.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Persist R4-2 result with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          RESULT=data/JANUS-LINEAR-A-R4-2-CROSS-FITTED-FUNCTIONAL-SUBSTITUTION-FRAME-RESULT-2026-08-14-v0.1.json
+          git config user.name 'JANUS Evidence Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add "$RESULT"
+          git commit -m 'Register Linear A R4-2 functional substitution result v0.1' || true
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then exit 0; fi
+            git pull --rebase origin main
+          done
+          exit 1
