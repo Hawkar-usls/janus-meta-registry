@@ -1,0 +1,49 @@
+name: Sing When You're Winning boundary localization
+
+on:
+  push:
+    paths:
+      - "data/JANUS-SING-WHEN-YOURE-WINNING-BOUNDARY-LOCALIZED-ADVERSARIAL-EXECUTION-v1.0.json"
+      - "data/JANUS-SING-WHEN-YOURE-WINNING-SOURCE-ONTOLOGY-PROTOCOL-AMENDMENT-v1.1.json"
+      - "tools/verify_sing_when_youre_winning_boundary_localization.py"
+      - ".github/workflows/sing-when-winning-boundary-localization.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-boundaries:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout JANUS registry
+        uses: actions/checkout@v4
+
+      - name: Verify boundary execution consistency
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/verify_sing_when_youre_winning_boundary_localization.py \
+            data/JANUS-SING-WHEN-YOURE-WINNING-BOUNDARY-LOCALIZED-ADVERSARIAL-EXECUTION-v1.0.json
+
+      - name: Verify ontology amendment is explicit
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          p = 'data/JANUS-SING-WHEN-YOURE-WINNING-SOURCE-ONTOLOGY-PROTOCOL-AMENDMENT-v1.1.json'
+          d = json.load(open(p, encoding='utf-8'))
+          assert d['no_silent_rewrite'] is True
+          assert d['primary_source_endpoint']['name'] == 'SOURCE_STRICT_IDENTITY'
+          assert d['target_classification']['source_strict_identity'] is True
+          assert d['target_classification']['relation_type'] == 'SAME_REAL_SUBJECT_MULTIPLE_REPRESENTATIONS'
+          assert d['epistemic_effect']['claim_ceiling']
+          print(json.dumps({
+              'ontology_version': d['versioning']['version'],
+              'primary_source_endpoint': d['primary_source_endpoint']['name'],
+              'no_silent_rewrite': d['no_silent_rewrite'],
+              'target_relation_type': d['target_classification']['relation_type']
+          }, sort_keys=True))
+          PY
