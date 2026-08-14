@@ -1,0 +1,135 @@
+name: JANUS Linear A R3B-1 alternate editorial overlap freeze v0.1
+
+on:
+  push:
+    paths:
+      - "research/linear_a/janus_linear_a_r3b_overlap_freeze_v0_1.py"
+      - "data/JANUS-LINEAR-A-R3B-1-ALTERNATE-EDITORIAL-OVERLAP-FREEZE-SPEC-2026-08-14-v0.1.json"
+      - "data/JANUS-LINEAR-A-R3B-0-ACQUISITION-RECEIPT-MACHINE-CONTRACT-2026-08-14-v0.1.json"
+      - "data/JANUS-LINEAR-A-R3B-1-REFERENCE-IDENTITY-UNIVERSE-BINDING-2026-08-14-v0.1.json"
+      - ".github/workflows/janus-linear-a-r3b-1-overlap-freeze-v0-1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  r3b-1-overlap-freeze-readiness:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout current JANUS registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compile R3B-1 runner
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile research/linear_a/janus_linear_a_r3b_overlap_freeze_v0_1.py
+
+      - name: Validate frozen R3B-1 specification chain
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          spec=json.load(open('data/JANUS-LINEAR-A-R3B-1-ALTERNATE-EDITORIAL-OVERLAP-FREEZE-SPEC-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert spec['status']=='FROZEN_BEFORE_ANY_ALTERNATE_EDITORIAL_TRANSCRIPTION_CONTENT_IS_INSPECTED'
+          assert spec['scientific_claim_bearing'] is False
+          assert spec['deterministic_partition']['namespace']=='JANUS-R3B1-ALTERNATE-EDITORIAL-OVERLAP-v0.1'
+          assert spec['deterministic_partition']['minimum_collision_free_overlap_for_partition']==10
+          assert spec['deterministic_partition']['replacement'] is False
+          assert spec['deterministic_partition']['resampling'] is False
+          assert spec['partition_semantics']['SCIENTIFIC_HOLDOUT']['scientific_candidate_scoring'] is False
+          assert spec['manual_transcription_branch']['transcriber_must_not_receive_prior_JANUS_candidate_or_near_miss_list'] is True
+          assert spec['claim_ceiling']['external_transcription_replication_established'] is False
+
+          contract=json.load(open('data/JANUS-LINEAR-A-R3B-0-ACQUISITION-RECEIPT-MACHINE-CONTRACT-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert contract['status']=='FROZEN_BEFORE_SOURCE_ACQUISITION_RECEIPT_EXISTS'
+          assert contract['content_access_state_required_value']=='CONTENT_NOT_USED_FOR_JANUS_CANDIDATE_COMPARISON_BEFORE_R3B1_FREEZE'
+          assert 'ACQUIRED_BYTES_FROZEN_L2' in contract['admitted_status_values']
+
+          binding=json.load(open('data/JANUS-LINEAR-A-R3B-1-REFERENCE-IDENTITY-UNIVERSE-BINDING-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert binding['status']=='FROZEN_BEFORE_ALTERNATE_SOURCE_OVERLAP_SELECTION'
+          assert binding['source_identity_bridge']['commit']=='9f09b84856324ecd94ea48356fd8d880a6b95256'
+          assert binding['source_identity_bridge']['expected_collision_free_pair_count']==686
+          assert binding['reference_identity_projection']['transcription_content_loaded'] is False
+          PY
+
+      - name: Run R3B-1 synthetic fail-closed self-test
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          python3 research/linear_a/janus_linear_a_r3b_overlap_freeze_v0_1.py self-test | tee artifacts/r3b1-self-test.json
+          python3 - <<'PY'
+          import json
+          d=json.load(open('artifacts/r3b1-self-test.json',encoding='utf-8'))
+          assert d['receipt_contract_validated'] is True
+          assert d['identity_content_firewall_rejects_transcription'] is True
+          assert d['deterministic_partition_20_documents']=={'adapter_validation':4,'scientific_holdout':16}
+          assert d['collision_exclusion_preserved'] is True
+          assert d['scientific_content_used'] is False
+          PY
+
+      - name: Execute current registry readiness gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/linear_a/janus_linear_a_r3b_overlap_freeze_v0_1.py readiness \
+            --registry-root . \
+            --out data/JANUS-LINEAR-A-R3B-1-READINESS-RESULT-2026-08-14-v0.1.json
+
+      - name: Validate current blocked state without inventing source bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-R3B-1-READINESS-RESULT-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['status']=='BLOCKED_NO_ACQUIRED_SOURCE_RECEIPT'
+          assert d['scientific_claim_bearing'] is False
+          assert d['admitted_acquisition_receipt_count']==0
+          assert d['transcription_content_inspected'] is False
+          assert d['overlap_documents_frozen'] is False
+          assert d['claim_ceiling']['R3B_1_spec_frozen'] is True
+          assert d['claim_ceiling']['source_bytes_acquired'] is False
+          assert d['claim_ceiling']['overlap_frozen'] is False
+          assert d['claim_ceiling']['external_transcription_replication_established'] is False
+          assert d['claim_ceiling']['new_anchor_established'] is False
+          assert d['claim_ceiling']['decipherment_established'] is False
+          PY
+
+      - name: Upload immutable R3B-1 readiness receipt before persistence
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r3b-1-overlap-freeze-readiness-v0.1
+          path: |
+            data/JANUS-LINEAR-A-R3B-1-READINESS-RESULT-2026-08-14-v0.1.json
+            artifacts/r3b1-self-test.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Persist readiness result with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "janus-proof-bot"
+          git config user.email "janus-proof-bot@users.noreply.github.com"
+          git add data/JANUS-LINEAR-A-R3B-1-READINESS-RESULT-2026-08-14-v0.1.json
+          git commit -m "Register Linear A R3B-1 readiness v0.1"
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then
+              pushed=1
+              break
+            fi
+            sleep "$attempt"
+          done
+          test "$pushed" = 1
