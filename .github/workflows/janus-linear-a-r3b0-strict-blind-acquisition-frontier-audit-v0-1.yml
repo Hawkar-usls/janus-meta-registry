@@ -1,0 +1,61 @@
+name: JANUS Linear A R3B-0 strict blind acquisition frontier audit v0.1
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/janus-linear-a-r3b0-strict-blind-acquisition-frontier-audit-v0-1.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Compile frontier auditor
+        run: python -m py_compile research/linear_a/janus_linear_a_r3b0_strict_blind_acquisition_frontier_audit_v0_1.py
+      - name: Audit exact machine evidence and blindness ceiling
+        run: |
+          python research/linear_a/janus_linear_a_r3b0_strict_blind_acquisition_frontier_audit_v0_1.py \
+            --spec data/JANUS-LINEAR-A-R3B-0-STRICT-BLIND-ACQUISITION-FRONTIER-AUDIT-SPEC-2026-08-14-v0.1.json \
+            --out data/JANUS-LINEAR-A-R3B-0-STRICT-BLIND-ACQUISITION-FRONTIER-AUDIT-RESULT-2026-08-14-v0.1.json
+      - name: Enforce negative frontier and preserved blind eligibility
+        run: |
+          python - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-R3B-0-STRICT-BLIND-ACQUISITION-FRONTIER-AUDIT-RESULT-2026-08-14-v0.1.json'
+          x=json.load(open(p,encoding='utf-8'))
+          assert x['status']=='STRICT_BLIND_ACQUISITION_FRONTIER_NEGATIVE_BLINDNESS_PRESERVED'
+          assert x['all_checks_pass'] is True
+          s=x['summary']
+          assert s['candidate_count']==3 and s['sealed_candidate_count']==0
+          assert s['source_native_sign_readings_seen'] is False
+          assert s['source_content_inspected'] is False
+          assert s['overlap_selected'] is False
+          assert s['scientific_comparison_performed'] is False
+          assert s['strict_r3b_replication_established'] is False
+          assert s['blind_eligibility_destroyed'] is False
+          assert s['public_copy_absence_proved'] is False
+          print(json.dumps(s,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r3b0-strict-blind-frontier-audit-v0-1
+          path: data/JANUS-LINEAR-A-R3B-0-STRICT-BLIND-ACQUISITION-FRONTIER-AUDIT-RESULT-2026-08-14-v0.1.json
+          if-no-files-found: error
+      - name: Persist frontier audit
+        env:
+          RESULT: data/JANUS-LINEAR-A-R3B-0-STRICT-BLIND-ACQUISITION-FRONTIER-AUDIT-RESULT-2026-08-14-v0.1.json
+        run: |
+          git config user.name 'JANUS Evidence Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add "$RESULT"
+          git commit -m 'Register Linear A strict blind acquisition frontier audit v0.1' || true
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then exit 0; fi
+            git pull --rebase origin main
+          done
+          exit 1
