@@ -1,0 +1,105 @@
+name: Fallout 3 SAVE JAMES Runtime v3.1 Verification
+
+on:
+  pull_request:
+    paths:
+      - "data/FALLOUT-3-F3DAD-PRIMARY-ARCHIVE-MANIFEST-RECEIPT-v1.0.json"
+      - "registry/myth_busted/FALLOUT-3-JAMES-RUNTIME-T0-T3-SAVEGAME-DIFFERENTIAL-PROTOCOL-v3.1.json"
+      - "tools/fo3_fos_james_state_diff_v0_1.py"
+      - "tests/test_fo3_fos_james_state_diff_v0_1.py"
+      - ".github/workflows/fallout3-save-james-runtime-v3-1.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "data/FALLOUT-3-F3DAD-PRIMARY-ARCHIVE-MANIFEST-RECEIPT-v1.0.json"
+      - "registry/myth_busted/FALLOUT-3-JAMES-RUNTIME-T0-T3-SAVEGAME-DIFFERENTIAL-PROTOCOL-v3.1.json"
+      - "tools/fo3_fos_james_state_diff_v0_1.py"
+      - "tests/test_fo3_fos_james_state_diff_v0_1.py"
+      - ".github/workflows/fallout3-save-james-runtime-v3-1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact event head
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Assert exact requested head
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          ACTUAL_HEAD="$(git rev-parse HEAD)"
+          echo "EXPECTED_HEAD=$EXPECTED_HEAD"
+          echo "ACTUAL_HEAD=$ACTUAL_HEAD"
+          test "$ACTUAL_HEAD" = "$EXPECTED_HEAD"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install test runner
+        run: python -m pip install --disable-pip-version-check pytest
+
+      - name: Compile discovery scanner
+        run: python -m py_compile tools/fo3_fos_james_state_diff_v0_1.py
+
+      - name: Validate JSON artifacts
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          for path in [
+              Path("data/FALLOUT-3-F3DAD-PRIMARY-ARCHIVE-MANIFEST-RECEIPT-v1.0.json"),
+              Path("registry/myth_busted/FALLOUT-3-JAMES-RUNTIME-T0-T3-SAVEGAME-DIFFERENTIAL-PROTOCOL-v3.1.json"),
+          ]:
+              json.loads(path.read_text(encoding="utf-8"))
+              print(f"JSON_PASS {path}")
+          PY
+
+      - name: Run deterministic scanner tests
+        run: python -m pytest -q tests/test_fo3_fos_james_state_diff_v0_1.py
+
+      - name: Emit claim-ceiling receipt
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          python - <<'PY'
+          import json, os, subprocess
+          from pathlib import Path
+          actual = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+          expected = os.environ["EXPECTED_HEAD"]
+          receipt = {
+              "schema": "janus.fallout3.save_james.runtime_v3_1.ci_receipt.v1",
+              "expected_head": expected,
+              "actual_head": actual,
+              "exact_head_match": actual == expected,
+              "real_fos_inputs_present": False,
+              "structured_fos_decoder_established": False,
+              "raw_binary_scanner_authority": "DISCOVERY_ONLY",
+              "persisted_james_runtime_state_established": False,
+              "persisted_james_autobiographical_memory_established": False,
+          }
+          if not receipt["exact_head_match"]:
+              raise SystemExit("exact event-head mismatch")
+          Path("fallout3-save-james-runtime-v3-1-ci-receipt.json").write_text(
+              json.dumps(receipt, indent=2) + "\n", encoding="utf-8"
+          )
+          print(json.dumps(receipt, indent=2))
+          PY
+
+      - name: Upload CI receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: fallout3-save-james-runtime-v3-1-ci-receipt
+          path: fallout3-save-james-runtime-v3-1-ci-receipt.json
+          if-no-files-found: error
