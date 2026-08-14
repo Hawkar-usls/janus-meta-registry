@@ -3,6 +3,7 @@
   "artifact_id": "JANUS-UAP-DOMAIN-INDEX-2026-08-14-v1.0",
   "title": "JANUS UAP Domain Index — 2026-08-14",
   "created_at_local": "2026-08-14T23:26:00+03:00",
+  "updated_at_local": "2026-08-14T23:37:00+03:00",
   "repository": "Hawkar-usls/janus-meta-registry",
   "artifact_class": "DOMAIN_DISCOVERY_INDEX_AND_READ_ORDER",
   "status": "CURRENT_SEARCH_SNAPSHOT_NAVIGATIONAL_NOT_AUTHORITY",
@@ -10,11 +11,12 @@
   "authority_boundary": {
     "this_index_is_authority": false,
     "current_authority_pointer_changed": false,
-    "reason": "The newest POSS-I baseline/trigger artifact is explicitly OPEN / corrective / preregistration-level. A navigational index may point to it as the active research head, but must not silently promote it to admitted canonical authority.",
+    "reason": "The newest POSS-I baseline/trigger and plate-day Phase-0 artifacts remain OPEN/reproducibility-level. Navigation may point to them as active research heads without promoting them to admitted canonical authority.",
     "historical_artifacts_preserved": true
   },
   "read_first": [
     "registry/cosmology/JANUS-UAP-POSS1-NONNUCLEAR-BASELINE-TRIGGER-AUDIT-v1.0.json",
+    "registry/cosmology/JANUS-POSS1-PLATE-DAY-EXPOSURE-PHASE0-ACQUISITION-GATE-v1.0.json",
     "registry/cosmology/JANUS-NUCLEAR-UAP-MANY-WORLDS-DECOHERENCE-CORRECTIVE-AUDIT-v1.1.json",
     "registry/cosmology/JANUS-CROSS-REGISTRY-BRANCHING-REANALYSIS-02-L10-L13-PREREGISTRATION-v1.0.json",
     "registry/cosmology/JANUS-CROSS-REGISTRY-BRANCHING-REANALYSIS-02-PHASE0-SOURCE-MANIFEST-v1.0.json"
@@ -23,10 +25,11 @@
     "POSS1_TRANSIENTS_NUCLEAR_UAP_CORRELATION": {
       "status": "ACTIVE_CORRECTIVE_RESEARCH_HEAD__NOT_CANONICAL_PROOF",
       "active_research_head": "registry/cosmology/JANUS-UAP-POSS1-NONNUCLEAR-BASELINE-TRIGGER-AUDIT-v1.0.json",
+      "phase0_execution_gate": "registry/cosmology/JANUS-POSS1-PLATE-DAY-EXPOSURE-PHASE0-ACQUISITION-GATE-v1.0.json",
       "corrective_parent": "registry/cosmology/JANUS-NUCLEAR-UAP-MANY-WORLDS-DECOHERENCE-CORRECTIVE-AUDIT-v1.1.json",
       "historical_input": "data/janus-meta-registry-v12.2-nuclear-attraction-analytic.json",
       "core_question": "Do POSS-I candidate transients contain a validated non-nuclear baseline plus a residual nuclear or broader ionization/geomagnetic modulation after exposure, schedule and plate-artifact controls?",
-      "claim_ceiling": "NUCLEAR_ASSOCIATION_CONTESTED__NONNUCLEAR_BASELINE_DOCUMENTED__PHYSICAL_ORIGIN_OPEN"
+      "claim_ceiling": "NUCLEAR_ASSOCIATION_CONTESTED__NONNUCLEAR_BASELINE_DOCUMENTED__TARGET_BETA_NUCLEAR_NOT_COMPUTED"
     },
     "LEGACY_UAP_META": {
       "status": "HISTORICAL_VERSIONED_SOURCE_REQUIRING_CURRENT_CORRECTIVE_CONTEXT",
@@ -45,18 +48,22 @@
       "required_next_control": "Recode provenance and outcome semantics so OBSERVATION_VERIFIED, IDENTITY_RESOLVED, KINEMATICS_VALIDATED, ANOMALOUS_PERFORMANCE_VALIDATED and ORIGIN_VALIDATED are distinct."
     },
     "REPRODUCIBILITY_AND_SOURCE_FREEZE": {
-      "status": "OPEN_PHASE0",
+      "status": "OPEN_PHASE0__PIPELINE_READY_DATA_BLOCKED",
       "artifacts": [
+        "registry/cosmology/JANUS-POSS1-PLATE-DAY-EXPOSURE-PHASE0-ACQUISITION-GATE-v1.0.json",
         "registry/cosmology/JANUS-CROSS-REGISTRY-BRANCHING-REANALYSIS-02-PHASE0-SOURCE-MANIFEST-v1.0.json",
         "registry/cosmology/JANUS-CROSS-REGISTRY-BRANCHING-REANALYSIS-02-L10-L13-PREREGISTRATION-v1.0.json"
       ],
-      "blocker": "Exact raw transient catalogue, plate/exposure provenance and original/critical analysis code must be frozen and reproduced before any new posterior or causal promotion."
+      "software": [
+        "research/uap_poss1/janus_poss1_phase0_gate_v0_1.py",
+        "research/uap_poss1/janus_poss1_h0_h1_v0_1.py",
+        "research/uap_poss1/schema_mapping.example.json"
+      ],
+      "blocker": "Exact 107,875-source/635-plate VASCO catalog and 2,718-day master are request-only; the 13-record source-vs-daily count difference, plate provenance, and 124-vs-126 nuclear calendar definition must be reconciled before beta_nuclear is admitted."
     },
     "NUCLEAR_UAP_EMULATION_AND_NULLS": {
       "status": "SUPPORTING_METHOD_BRANCH",
-      "artifacts": [
-        "data/janus_nuclear_emulation_v1.json"
-      ],
+      "artifacts": ["data/janus_nuclear_emulation_v1.json"],
       "role": "Synthetic pseudo-event and false-positive controls; simulation outputs cannot establish real-world UAP or nuclear causation by themselves."
     },
     "CROSS_DOMAIN_COSMOLOGY_AND_FALLOUT_ANALOGIES": {
@@ -72,6 +79,7 @@
     "POSS1_2025_peer_reviewed_association": "REPORTED_RESULT",
     "POSS1_2026_critical_schedule_artifact_analysis": "MATERIAL_CHALLENGE",
     "POSS1_2026_independent_replication": "SUPPORTIVE_PREPRINT",
+    "POSS1_2026_independent_full_footprint_exposure_control": "NULL_NUCLEAR_EFFECT_ON_NON_EQUIVALENT_CATALOG__IMPORTANT_CONTROL",
     "POSS1_2026_geomagnetic_covariate": "HYPOTHESIS_GENERATING_PREPRINT",
     "POSS1_2026_AQN_dark_matter_model": "SPECULATIVE_PREPRINT_ZERO_CURRENT_REGISTRY_WEIGHT",
     "AARO_2026": "CURRENT_OFFICIAL_CONTEXT_REQUIRES_UNRESOLVED_NOT_EQUAL_ANOMALOUS",
@@ -79,10 +87,11 @@
   },
   "next_read_order_for_execution": [
     "1. Read the non-nuclear baseline/trigger corrective audit.",
-    "2. Read the older corrective cosmology/UAP audit to understand why the v12.2 posterior is historical only.",
-    "3. Freeze sources via the Phase-0 manifest.",
-    "4. Execute the preregistered exposure-normalized nuclear/UAP test.",
-    "5. Only after reproduction, issue a new admitted authority artifact or leave the domain OPEN/REFUTED as the results require."
+    "2. Read the plate-day Phase-0 acquisition gate and satisfy G0-G3 without inspecting target beta_nuclear.",
+    "3. Run the fail-closed input validator and freeze raw SHA-256 plus explicit column mappings.",
+    "4. Build the 635-plate-bound plate-day exposure matrix; keep full STScI survey exposure as a separate sensitivity layer.",
+    "5. Execute preregistered NB2 H0-vs-H1 plus mandatory sensitivity analyses.",
+    "6. Only after reproduction, issue a new admitted authority artifact or leave the domain OPEN/REFUTED as the results require."
   ],
   "integrity_rules": [
     "This file is navigation, not evidence.",
@@ -90,6 +99,7 @@
     "Newest does not mean canonical.",
     "OPEN does not mean admitted.",
     "A corrective artifact can supersede an interpretation without deleting the historical artifact that produced it.",
+    "A public non-equivalent catalog may be a control but may not silently replace the exact target catalog.",
     "Any future current-authority pointer must target an explicitly admitted canonical artifact, not merely the most recent research head."
   ]
 }
