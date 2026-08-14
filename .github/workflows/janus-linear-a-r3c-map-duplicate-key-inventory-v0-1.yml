@@ -1,0 +1,104 @@
+name: JANUS Linear A R3C Map duplicate-key inventory v0.1
+
+on:
+  push:
+    paths:
+      - ".github/workflows/janus-linear-a-r3c-map-duplicate-key-inventory-v0-1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  inventory-duplicate-keys:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compile diagnostic stack
+        run: |
+          python3 -m py_compile \
+            research/linear_a/janus_linear_a_r3c_common_v0_1.py \
+            research/linear_a/janus_linear_a_r3c_source_loader_v0_3.py \
+            research/linear_a/janus_linear_a_r3c_map_duplicate_key_inventory_v0_1.py
+
+      - name: Checkout exact historical source
+        uses: actions/checkout@v4
+        with:
+          repository: mwenge/lineara.xyz
+          ref: 568f452c7a5ec80fa292cb307ead2fc6f65d07fb
+          path: external/mwenge-historical
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            LinearAInscriptions.js
+          sparse-checkout-cone-mode: false
+
+      - name: Checkout current frozen source
+        uses: actions/checkout@v4
+        with:
+          repository: mwenge/lineara.xyz
+          ref: 43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a
+          path: external/mwenge-current
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            LinearAInscriptions.js
+          sparse-checkout-cone-mode: false
+
+      - name: Verify sources and inventory duplicate keys only
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C external/mwenge-historical rev-parse HEAD)" = "568f452c7a5ec80fa292cb307ead2fc6f65d07fb"
+          test "$(git -C external/mwenge-current rev-parse HEAD)" = "43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a"
+          test "$(sha256sum external/mwenge-historical/LinearAInscriptions.js | awk '{print $1}')" = "b7b383b93db55b504eb00c552a8b18c19a588e83bba7ff0ab93ca32277d8bfe2"
+          python3 research/linear_a/janus_linear_a_r3c_map_duplicate_key_inventory_v0_1.py \
+            --historical external/mwenge-historical/LinearAInscriptions.js \
+            --current external/mwenge-current/LinearAInscriptions.js \
+            --output data/JANUS-LINEAR-A-R3C-1A-MAP-DUPLICATE-KEY-INVENTORY-RESULT-2026-08-14-v0.1.json
+
+      - name: Enforce diagnostic-only semantics
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-R3C-1A-MAP-DUPLICATE-KEY-INVENTORY-RESULT-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['status']=='DUPLICATE_KEY_INVENTORY_COMPLETE'
+          assert d['semantics_applied'] is False
+          assert d['safety']['duplicate_resolution_performed'] is False
+          assert d['safety']['scientific_metrics_computed'] is False
+          PY
+
+      - name: Upload duplicate-key inventory
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r3c-map-duplicate-key-inventory-v0.1
+          path: data/JANUS-LINEAR-A-R3C-1A-MAP-DUPLICATE-KEY-INVENTORY-RESULT-2026-08-14-v0.1.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Persist inventory with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "janus-proof-bot"
+          git config user.email "janus-proof-bot@users.noreply.github.com"
+          git add data/JANUS-LINEAR-A-R3C-1A-MAP-DUPLICATE-KEY-INVENTORY-RESULT-2026-08-14-v0.1.json
+          git commit -m "Register Linear A duplicate Map-key inventory v0.1"
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then
+              pushed=1
+              break
+            fi
+            sleep "$attempt"
+          done
+          test "$pushed" = 1
