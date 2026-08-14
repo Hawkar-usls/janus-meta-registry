@@ -1,0 +1,176 @@
+name: JANUS Linear A SigLA parser-integrity preflight v0.1.1 receipt recovery
+
+on:
+  push:
+    paths:
+      - ".github/workflows/janus-linear-a-sigla-parser-integrity-preflight-v0-1-1.yml"
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  sigla-parser-integrity-preflight-receipt-recovery:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      BRIDGE_RUN_ID: "31792232087"
+      BRIDGE_ARTIFACT_ID: "9215930408"
+      BRIDGE_ARTIFACT_NAME: "janus-linear-a-sigla-document-bridge-v0.1"
+      BRIDGE_ARTIFACT_DIGEST: "sha256:58ee76d08ae2aba79e0788421c99b453bc82949e7fa439bc381dfa45c0b42ab9"
+
+    steps:
+      - name: Checkout current JANUS registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Prove scientific inputs unchanged from failed persistence run
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse e1e977434a994011fb9f35188f61e16d8aeb7a74:data/JANUS-LINEAR-A-SIGLA-PARSER-INTEGRITY-PREFLIGHT-SPEC-2026-08-14-v0.1.json)" = \
+               "$(git rev-parse HEAD:data/JANUS-LINEAR-A-SIGLA-PARSER-INTEGRITY-PREFLIGHT-SPEC-2026-08-14-v0.1.json)"
+          test "$(git rev-parse f3a6682bafe572433234fe17f19bdf0ebaa8d570:research/linear_a/janus_linear_a_sigla_parser_integrity_preflight_v0_1.py)" = \
+               "$(git rev-parse HEAD:research/linear_a/janus_linear_a_sigla_parser_integrity_preflight_v0_1.py)"
+          python3 -m py_compile \
+            research/linear_a/janus_linear_a_sigla_parser_integrity_preflight_v0_1.py \
+            research/linear_a/janus_linear_a_sigla_inventory_audit.py \
+            research/linear_a/janus_linear_a_sigla_structural_schema_probe_v0_1.py
+
+      - name: Validate frozen preflight spec
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-SIGLA-PARSER-INTEGRITY-PREFLIGHT-SPEC-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['status']=='FROZEN_BEFORE_686_DOCUMENT_VALIDATION'
+          assert d['scientific_claim_bearing'] is False
+          u=d['frozen_universe']
+          assert u['document_count']==686
+          assert u['sampling']=='NONE_FULL_FROZEN_UNIVERSE'
+          assert u['replacement'] is False
+          assert u['actions_artifact_id']==9215930408
+          assert u['actions_artifact_digest']=='sha256:58ee76d08ae2aba79e0788421c99b453bc82949e7fa439bc381dfa45c0b42ab9'
+          asset=d['frozen_sigla_asset_gate']
+          assert asset['required_sha256']=='cc624f148fd84c94fd2910b0adf92ecace25f52f9175664122bdf8384a8f1b9d'
+          assert asset['required_bytes']==2516528
+          r=d['readiness_gate_inherited_from_frozen_R3A_4']
+          assert r['minimum_parse_success_documents']==400
+          assert r['minimum_parse_success_fraction_of_686']==0.80
+          assert r['frozen_scientific_thresholds_changed'] is False
+          PY
+
+      - name: Validate immutable 686-pair bridge artifact metadata
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          curl -fsSL \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/${BRIDGE_ARTIFACT_ID}" \
+            > /tmp/bridge-artifact-metadata.json
+          python3 - <<'PY'
+          import json, os
+          d=json.load(open('/tmp/bridge-artifact-metadata.json',encoding='utf-8'))
+          assert d['id']==int(os.environ['BRIDGE_ARTIFACT_ID'])
+          assert d['name']==os.environ['BRIDGE_ARTIFACT_NAME']
+          assert d['digest']==os.environ['BRIDGE_ARTIFACT_DIGEST']
+          assert d['expired'] is False
+          assert d['workflow_run']['id']==int(os.environ['BRIDGE_RUN_ID'])
+          PY
+
+      - name: Download exact frozen 686-pair bridge artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: janus-linear-a-sigla-document-bridge-v0.1
+          path: artifacts/source-bridge
+          run-id: 31792232087
+          github-token: ${{ github.token }}
+
+      - name: Re-execute exact frozen full-universe preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/parser-preflight-pages
+          python3 research/linear_a/janus_linear_a_sigla_parser_integrity_preflight_v0_1.py \
+            --bridge-artifact-root artifacts/source-bridge \
+            --out data/JANUS-LINEAR-A-SIGLA-PARSER-INTEGRITY-PREFLIGHT-RESULT-2026-08-14-v0.1.json \
+            --snapshot-dir artifacts/parser-preflight-pages
+
+      - name: Validate admission semantics
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, pathlib
+          p='data/JANUS-LINEAR-A-SIGLA-PARSER-INTEGRITY-PREFLIGHT-RESULT-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['scientific_claim_bearing'] is False
+          assert d['source_asset_gate']['pass'] is True
+          assert d['status'] in {'PREFLIGHT_EXECUTED_ADMITTED','PREFLIGHT_EXECUTED_BLOCKED'}
+          assert len(d['documents'])==686
+          s=d['summary']
+          assert s['attempted_document_count']==686
+          assert s['interface_evaluable_count']+s['not_evaluable_count']==686
+          assert s['pass_document_count']==s['pass_zero_word_count']+s['pass_positive_word_count']
+          admitted=(
+              s['pass_document_count']>=400
+              and s['parser_integrity_success_fraction_of_686']>=0.80
+              and s['deterministic_mismatch_count']==0
+          )
+          assert s['R3A_4_scoring_admitted']==admitted
+          assert d['status']==('PREFLIGHT_EXECUTED_ADMITTED' if admitted else 'PREFLIGHT_EXECUTED_BLOCKED')
+          assert d['blindness_receipt']['positional_role_scores_computed'] is False
+          assert d['blindness_receipt']['candidate_recurrence_scores_computed'] is False
+          assert d['blindness_receipt']['permutation_tests_computed'] is False
+          assert d['blindness_receipt']['visible_transliteration_stored'] is False
+          assert d['blindness_receipt']['raw_sequence_lists_stored'] is False
+          assert d['claim_ceiling']['external_transcription_replication_established'] is False
+          assert d['claim_ceiling']['new_lexical_anchor_established'] is False
+          assert d['claim_ceiling']['decipherment_established'] is False
+          snaps=list(pathlib.Path('artifacts/parser-preflight-pages').glob('*.html'))
+          assert len(snaps)==686-s['not_evaluable_count']
+          print(json.dumps(s,sort_keys=True))
+          PY
+
+      - name: Upload immutable receipt before registry persistence
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-sigla-parser-integrity-preflight-v0.1.1
+          path: |
+            data/JANUS-LINEAR-A-SIGLA-PARSER-INTEGRITY-PREFLIGHT-RESULT-2026-08-14-v0.1.json
+            artifacts/parser-preflight-pages/*.html
+            /tmp/bridge-artifact-metadata.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Persist result with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "janus-proof-bot"
+          git config user.email "janus-proof-bot@users.noreply.github.com"
+          git add data/JANUS-LINEAR-A-SIGLA-PARSER-INTEGRITY-PREFLIGHT-RESULT-2026-08-14-v0.1.json
+          if git diff --cached --quiet; then
+            echo "No parser preflight result delta to commit"
+            exit 0
+          fi
+          git commit -m "Register SigLA parser-integrity preflight v0.1"
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then
+              pushed=1
+              break
+            fi
+            sleep "$attempt"
+          done
+          test "$pushed" = 1
