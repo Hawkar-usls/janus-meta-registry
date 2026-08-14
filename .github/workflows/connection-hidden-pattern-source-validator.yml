@@ -1,0 +1,31 @@
+name: Connection hidden-pattern source validator
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'data/JANUS-CONNECTION-FULL-CORPUS-HIDDEN-PATTERNS-2026-08-14-v1.0.json'
+      - 'data/JANUS-SING-WHEN-YOURE-WINNING-SOURCE-ONTOLOGY-PROTOCOL-AMENDMENT-v1.2.json'
+      - 'data/JANUS-SING-WHEN-YOURE-WINNING-BOUNDARY-LOCALIZED-SCORING-SPEC-v1.0.json'
+      - 'registry/myth_busted/FALLOUT-3-VAULT112A-PUBLIC-DERIVED-POD-ROLE-ANCHOR-HARDENING-v2.4.json'
+      - 'data/JANUS-LINEAR-A-SIGLA-DOCUMENT-IDENTITY-BRIDGE-RESULT-2026-08-14-v0.1.json'
+      - 'data/SCOBY-D1-CHITIN-BIOCOMPOSITE-v1.0.json'
+      - 'data/JANUS-CONNECTION-SCAN-2026-08-13-015-DATA-BATCH-001.json'
+      - 'tools/connection/janus_connection_hidden_pattern_source_validator_v1_0.py'
+      - '.github/workflows/connection-hidden-pattern-source-validator.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate pinned source bodies and anti-circularity
+        run: python tools/connection/janus_connection_hidden_pattern_source_validator_v1_0.py
