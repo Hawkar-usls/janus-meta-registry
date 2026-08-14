@@ -1,26 +1,32 @@
 # JANUS Linear A research pipeline
 
-This directory contains the executable research code used by the JANUS Linear A program. It is intentionally separated from `data/`, which stores persistent, machine-readable registry state, immutable result summaries, failure audits, claim ceilings, and roadmaps.
+This directory contains the executable research code used by the JANUS Linear A program. It is intentionally separated from `data/`, which stores persistent machine-readable specifications, immutable result summaries, falsification audits, reconciliations, claim ceilings, canonical state, and roadmaps.
 
 ## Current canonical state
 
-Current persistent research state:
+Current recovery/source-of-truth node:
 
-- `data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.1.json`
+- `data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.2.json`
 
 Current representation baseline:
 
 - `data/JANUS-LINEAR-A-TYPED-TOKEN-CORRECTIVE-REPLAY-RESULT-2026-08-14-v0.6.2.json`
 
-Latest relation-level execution result:
+v0.7 reconciliation:
 
-- `data/JANUS-LINEAR-A-FORMULA-TRANSITION-NEIGHBORHOOD-RESULT-2026-08-14-v0.7.json`
+- `data/JANUS-LINEAR-A-V0.7-DUAL-IMPLEMENTATION-RECONCILIATION-2026-08-14-v1.0.json`
 
-Historical execution receipts and failure audits are never deleted. New canonical states supersede them only for current inference.
+Historical states and receipts are never deleted. New canonical states supersede them only for current inference.
+
+## Repository layout
+
+- `research/linear_a/` — executable parsers, statistical runners, null operators, corrective replay code, and independent implementations.
+- `data/` — frozen execution specifications, immutable results, failure audits, reconciliation nodes, canonical state, machine-readable roadmaps, and Connection candidates.
+- `.github/workflows/` — actual execution wiring; GitHub Actions artifacts are receipts, not the permanent scientific registry.
 
 ## Frozen source corpus
 
-Primary execution currently freezes:
+Primary execution freezes:
 
 - repository: `mwenge/lineara.xyz`
 - commit: `43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a`
@@ -28,73 +34,59 @@ Primary execution currently freezes:
 - numeric inventory: `items_analysis/numbers.txt`
 - numeric inventory blob: `a17b8922297795a90ea6761f32f6ea020b733a6d`
 
-No result may silently switch corpus versions. A new corpus version requires a new receipt and provenance record.
+No result may silently switch corpus versions.
 
-## Executable stages
+## Historical analysis stages
 
-### v0.1 — full-corpus blind structural analysis
+### v0.1 — blind full-corpus structural analysis
 
-File: `janus_linear_a_full_corpus.py`
-
-Parses the frozen corpus, hashes eligible identities before scoring, tests token/suffix association with numeric behavior, runs destructive nulls, and delays semantic reveal until scoring is frozen.
+`janus_linear_a_full_corpus.py`
 
 ### v0.2 — candidate-specific true held-out replication
 
-File: `janus_linear_a_candidate_holdout.py`
-
-Separates train-only discovery from locked unseen-document testing. This stage remains an important infrastructure control because it successfully rediscovers known personnel/accounting structure without making a novelty claim.
+`janus_linear_a_candidate_holdout.py`
 
 ### v0.3 — post-reveal survivor decomposition
 
-File: `janus_linear_a_survivor_decomposition.py`
+`janus_linear_a_survivor_decomposition.py`
 
-Tests whether statistical survivors are already explained by known accounting/personnel structures and blocks novelty when a known explanation absorbs the signal.
+### v0.4 — A100-102 / VIR-family quantitative subtype audit
 
-### v0.4 — A100-102 versus VIR-family subtype audit
-
-File: `janus_linear_a_vir_subtype.py`
-
-Tests a predeclared quantitative subtype hypothesis under region-preserving nulls. The hypothesis did not pass its predeclared gate.
+`janus_linear_a_vir_subtype.py`
 
 ### v0.5 — known-family-subtracted cross-region numeric search
 
-File: `janus_linear_a_known_subtracted.py`
-
-Removes already explained dominant families before HT discovery and non-HT cross-region replication. No novel cross-region numeric survivor remained after the typed corrective replay.
+`janus_linear_a_known_subtracted.py`
 
 ### v0.6 — record-boundary / formula-slot cross-region search
 
-File: `janus_linear_a_record_role.py`
+`janus_linear_a_record_role.py`
 
-Tests row/document roles such as `ROW_INITIAL`, `ROW_FINAL`, `PRE_NUMERIC`, `POST_NUMERIC`, `DOC_INITIAL`, `DOC_FINAL`, `NONNUMERIC_ONLY_ROW`, and `SOLE_TOKEN_ROW` with within-document identity shuffling. No novel record-role survivor remained after typed cleanup.
+These historical runners remain preserved even when later representation corrections supersede their pre-correction receipts for current inference.
 
-## Corrective representation policies
+## Representation corrections
 
-The v0.1-v0.6 algorithms remain preserved as historical code. Corrective policies replayed the full chain rather than silently rewriting earlier receipts.
-
-### v0.6.1 — punctuation-aware parser policy
+### v0.6.1 — punctuation boundary policy
 
 Files:
 
 - `janus_linear_a_parser_policy_v0_6_1.py`
 - `janus_linear_a_corrective_replay_v0_6_1.py`
 
-Trigger: a highly significant `*900` record-role survivor was revealed to be Aegean punctuation rather than a semantic token.
+Trigger: a statistically strong `*900` record-role survivor was revealed to be Aegean word-separator punctuation rather than a semantic Linear A token.
 
-Correction: exclude `*900`, `*901`, `*902`, and `*903` before hashing, scoring, null generation, numeric adjacency, and row geometry while retaining `*904`, which belongs to the Linear A sign repertoire.
+Correction: `*900`, `*901`, `*902`, and `*903` are excluded before hashing, scoring, null generation, numeric adjacency, and row geometry. Historical receipts remain preserved.
 
-Permanent audit:
+Audit:
 
 - `data/JANUS-LINEAR-A-PARSER-BOUNDARY-CANARY-AUDIT-2026-08-14-v1.0.json`
 
-### v0.6.2 — typed-token candidate universe
+### v0.6.2 — typed-token semantic candidate universe
 
 Files:
 
 - `janus_linear_a_token_typing_policy_v0_6_2.py`
 - `janus_linear_a_corrective_replay_v0_6_2.py`
-
-Trigger: after punctuation correction, `¹⁄₅` became a top structural candidate even though the frozen numeric inventory identifies it as a numeral.
 
 Typed classes:
 
@@ -103,130 +95,171 @@ Typed classes:
 - `NUMERIC_APPROX_OR_UNCERTAIN`
 - `SEMANTIC_CANDIDATE`
 
-Only `SEMANTIC_CANDIDATE` may receive semantic identity hashes. The corrective scan found 121 previously missed numeric-literal occurrences across `¹⁄₅`, `¹⁄₃`, `≈¹⁄₆`, and `≈¹⁄₄`.
+Only `SEMANTIC_CANDIDATE` may receive semantic word/suffix identity hashes. The corrective scan found 121 numeric-literal occurrences missed by the historical hard-coded fraction map across `¹⁄₅`, `¹⁄₃`, `≈¹⁄₆`, and `≈¹⁄₄`.
 
-Permanent audit:
+Audit:
 
 - `data/JANUS-LINEAR-A-NUMERIC-LITERAL-TYPE-LEAK-AUDIT-2026-08-14-v1.0.json`
 
 Authoritative typed replay:
 
-- GitHub Actions run `31788159539`
+- run `31788159539`
 - artifact digest `sha256:24b42bedf2caa82d5fe0475d9268be2e6a54711181d0c53c8aabcd447f18a506`
 
-## v0.7 — formula-transition / neighborhood-role discovery
+Current representation-level conclusion:
 
-File: `janus_linear_a_formula_transition_v0_7.py`
+- known personnel/accounting controls remain recoverable after cleanup;
+- no novel numeric or record-role cross-region survivor remains;
+- `NEW_ANCHOR_ESTABLISHED = false`;
+- `DECIPHERMENT_ESTABLISHED = false`.
+
+## v0.7 — dual independent local-relation implementations
+
+Two materially different v0.7 implementations now coexist intentionally. Neither is deleted or silently privileged. Their relationship is recorded in:
+
+- `data/JANUS-LINEAR-A-V0.7-DUAL-IMPLEMENTATION-RECONCILIATION-2026-08-14-v1.0.json`
+
+### v0.7 implementation A — screen/confirm + MASK geometry
+
+Runner:
+
+- `janus_linear_a_formula_transition_v0_7.py`
 
 Workflow:
 
 - `.github/workflows/janus-linear-a-formula-transition-v0-7.yml`
 
-Purpose:
+Method:
 
-- move from single-token role tests to local relation tests;
-- test `TT` directed adjacency and `T-N-T` semantic-token / numeric-slot / semantic-token motifs;
-- use `HT_SCREEN → HT_CONFIRM → NON_HT_REPLICATION` rather than one HT partition for both generation and confirmation;
-- run a `CONTROL_INCLUDED` channel and a `NOVELTY_MASKED` channel;
-- preserve known-family positions as fixed `MASK` geometry rather than deleting them and creating artificial adjacency;
-- use `WITHIN_DOCUMENT_SEMANTIC_IDENTITY_SHUFFLE`, preserving document-local marginals and token-type geometry while destroying identity↔neighborhood coupling;
-- reveal semantic labels only after scoring.
+- local `TT` and `T-N-T` motifs;
+- deterministic `HT_SCREEN → HT_CONFIRM → NON_HT_REPLICATION`;
+- `CONTROL_INCLUDED` and `NOVELTY_MASKED` channels;
+- known `VIR* / KU-RO / KI-RO / PO-TO-KU-RO / GRA` positions are preserved as fixed `MASK` geometry in the novelty channel;
+- within-document semantic identity shuffle;
+- Bonferroni on confirmation and replication;
+- semantic reveal only after scoring.
 
 Execution:
 
-- GitHub Actions run `31789138925`
-- artifact ID `9214757238`
+- run `31789138925`
 - artifact digest `sha256:d6587a682f561cd42d4badc7b54899a2c144ebc4759b14e8f3b353eefb0a4ef2`
-- workflow conclusion: `success`
 
 Result:
 
-- control screen: 3 selected motifs;
-- control independent HT confirmation: 1 survivor, `SA·RA₂ → GRA`, Bonferroni `p ≈ 0.00080`;
-- that survivor was **not evaluable** in non-HT under the frozen minimum occurrence/document/region gate, so this is not classified as a failed replication p-value;
-- novelty-masked screen: 0 eligible motifs after the frozen `VIR* / KU-RO / KI-RO / PO-TO-KU-RO / GRA` mask;
-- novelty-masked confirmation/replication: 0 survivors.
-
-Scientific classification:
-
-- `VALID_NEGATIVE_FOR_TESTED_LOCAL_TT_TNT_ONTOLOGY`
-- `NEW_ANCHOR_ESTABLISHED = false`
-- `DECIPHERMENT_ESTABLISHED = false`
-- promotion remains `BLOCKED`.
+- known-control `SA·RA₂ → GRA` confirms across two disjoint HT partitions (`p_Bonf ≈ 0.00080`);
+- it is not evaluable in non-HT under frozen support minima;
+- novelty-masked channel has zero screen-eligible local `TT/TNT` motifs;
+- no novel cross-region survivor.
 
 Permanent result:
 
 - `data/JANUS-LINEAR-A-FORMULA-TRANSITION-NEIGHBORHOOD-RESULT-2026-08-14-v0.7.json`
 
-## Current scientific state
+### v0.7 implementation B — word-only triple-null max-T
 
-The strongest admissible state is deliberately narrower than decipherment:
+Runner:
 
-- known personnel/accounting structure can be rediscovered under blind and held-out controls;
-- parser punctuation and numeric-literal canaries have been identified and corrected through full replays;
-- no novel numeric, record-role, or local `TT/TNT` formula survivor currently clears the declared gates;
-- one known-control adjacency motif is confirmed across two HT partitions but lacks sufficient non-HT support for evaluation;
-- no new lexical anchor is established;
-- no decipherment claim is admissible.
+- `janus_linear_a_formula_transition.py`
 
-## CI execution
+Workflow:
 
-Historical/full workflow:
+- `.github/workflows/janus-linear-a-formula-transition-v0.7.yml`
 
-- `.github/workflows/janus-linear-a-full-corpus.yml`
+Frozen spec:
 
-Corrective workflows:
+- `data/JANUS-LINEAR-A-FORMULA-TRANSITION-EXECUTION-SPEC-2026-08-14-v0.7.json`
 
-- `.github/workflows/janus-linear-a-punctuation-corrective-replay.yml`
-- `.github/workflows/janus-linear-a-typed-token-corrective-replay.yml`
+Method:
 
-Relation workflow:
+- `WORD_ONLY` semantic representation;
+- six directed relation templates: `ADJACENT_TT`, `NUMERIC_BRIDGE_TNT`, `PRE_NUMERIC_BIGRAM_TTN`, `POST_NUMERIC_BIGRAM_NTT`, `ROW_PREFIX_TT`, `ROW_SUFFIX_TT`;
+- HT discovery, non-HT replication only after locked selection;
+- three destructive nulls: within-row identity shuffle, within-document identity shuffle, and predecessor/successor endpoint rewire;
+- max-T family-wise discovery control under all three nulls;
+- semantic reveal only after discovery/replication state is frozen.
 
-- `.github/workflows/janus-linear-a-formula-transition-v0-7.yml`
+Execution:
 
-GitHub Actions artifacts are execution evidence, not the permanent research registry. Permanent `data/` nodes store exact run IDs, head SHAs, artifact IDs/digests, scientific outcomes, and claim ceilings.
+- run `31789134447`
+- artifact digest `sha256:106ce6f79633504e3c4913fea98497191a04465dc865ca39991a422fbbcad92f`
 
-## Persistent registry layer
+Result:
 
-Every substantial execution or correction should record, at minimum:
+- 27 HT-eligible semantic endpoints;
+- 79 scored nonzero directed hypotheses;
+- 0 pass all three max-T nulls;
+- 0 locked for non-HT replication;
+- no novel cross-region survivor.
 
-- code path and code commit;
-- corpus repository and frozen corpus commit;
-- GitHub Actions run ID and artifact digest;
-- parser/token ontology version;
-- test family and null operator;
-- partition discipline;
-- selected candidates and post-reveal identity only after scoring;
-- positive, negative, failed, and non-evaluable gate outcomes separately;
-- novelty/falsification classification;
-- claim ceiling;
-- next required falsification step;
-- roadmap and blocked promotion conditions.
+Permanent result:
 
-Negative results must be preserved. A failed null, failed replication, non-evaluable replication, known-anchor rediscovery, parser/type defect, or representation failure is part of the scientific state and must not be erased by later runs.
+- `data/JANUS-LINEAR-A-FORMULA-TRANSITION-RESULT-2026-08-14-v0.7.json`
 
-## Promotion gate
+### Reconciled v0.7 conclusion
 
-A genuinely new Linear A anchor requires:
+The implementations disagree at the intermediate candidate level because they intentionally use different hypothesis families, partitions, known-control geometry, null models, and multiplicity rules. They agree at the claim ceiling:
 
-`TYPED CANDIDATE UNIVERSE → BLIND CANDIDATE/RELATION → RELATION-DESTROYING NULL → INDEPENDENT CONFIRMATION → CROSS-PARTITION REPLICATION → BEHAVIORAL CONSTRAINT → MORPHOLOGICAL/LEXICAL CONSISTENCY → INDEPENDENT TRANSCRIPTION/PARSER → INDEPENDENT IMPLEMENTATION`
+- `NO_NOVEL_V0_7_CROSS_REGION_SURVIVOR`
+- `NEW_ANCHOR_ESTABLISHED = false`
+- `DECIPHERMENT_ESTABLISHED = false`
 
-A green CI job proves only that the declared computation completed and its receipt satisfied the programmed claim ceiling. It does not by itself establish a decipherment, new lexical value, or linguistic meaning.
+This is **implementation-level convergence on a negative novelty conclusion**, not external replication, because both consume the same frozen transcription corpus.
 
-## Roadmap
+## Current promotion gate
 
-Canonical roadmap is maintained in:
+A new anchor requires:
 
-- `data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.1.json`
+`TYPED CANDIDATE UNIVERSE → BLIND CANDIDATE/RELATION → RELATION-DESTROYING NULL SEPARATION → INDEPENDENT INTERNAL CONFIRMATION → CROSS-PARTITION REPLICATION → BEHAVIORAL CONSTRAINT → MORPHOLOGICAL/LEXICAL CONSISTENCY → INDEPENDENT TRANSCRIPTION/PARSER → INDEPENDENT IMPLEMENTATION`
+
+A green CI job proves only that the declared computation completed under its programmed claim ceiling.
+
+## Persistent evidence discipline
+
+Every substantial experiment should have:
+
+1. executable code in `research/linear_a/`;
+2. a frozen execution spec in `data/` before claim-bearing execution when feasible;
+3. an actual CI run and artifact digest;
+4. an immutable result JSON in `data/`;
+5. explicit separation of PASS, FAIL, NOT_EVALUABLE, KNOWN_CONTROL, REPRESENTATION_FAILURE, and NO_PROMOTION;
+6. a canonical-state update only after result verification;
+7. a roadmap branch that was declared independently of the observed semantic label whenever possible.
+
+Negative results and representation failures are scientific state, not cleanup noise.
+
+## Roadmap from canonical v2.2
+
+Canonical roadmap:
+
+- `data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.2.json`
 
 Current sequence:
 
 1. **R0 — DONE:** typed candidate ontology v0.6.2.
-2. **R1 — DONE / VALID NEGATIVE:** v0.7 local `TT/TNT` formula-transition discovery.
-3. **R2 — NEXT:** v0.8 longer formula neighborhoods and numeric-bucket-conditioned motifs, with no lowering of v0.7 error-control thresholds.
+2. **R1 — DONE / RECONCILED NEGATIVE:** dual v0.7 local relation implementations; no novel cross-region survivor.
+3. **R2 — NEXT:** v0.8 higher-order typed neighborhoods / formula specialization.
 4. **R3 — BLOCKING EXTERNAL REPLICATION CLAIM:** independent transcription/parser source.
-5. **R4 — BLOCKING PROMOTION BEYOND STRUCTURAL CANDIDATE:** independent implementation replay.
-6. **R5 — BLOCKED:** behavioral, morphology, alternative-segmentation, and lexical competition until a replicated structural survivor exists.
-7. **R6 — BLOCKED:** decipherment until multiple independently replicated lexical anchors and grammar-level predictive success exist.
+5. **R4 — REQUIRED FOR FUTURE POSITIVE SURVIVOR:** independent implementation replay.
+6. **R5 — BLOCKED:** behavioral, alternative-segmentation, morphology, and lexical competition until a replicated structural survivor exists.
+7. **R6 — BLOCKED:** decipherment claim.
 
-For v0.8, semantic reveal remains forbidden until motif ontology, numeric buckets, relation direction, null family, selection thresholds, and replication tests have been frozen.
+### v0.8 design contract
+
+v0.8 must inherit the strongest controls from both v0.7 implementations:
+
+- disjoint `HT_SCREEN → HT_CONFIRM → NON_HT` partitions;
+- known controls preserved as fixed `MASK` geometry where deletion would fabricate adjacency;
+- `WORD_ONLY` primary semantic representation;
+- higher-order targets tested uniformly, not selected from v0.7 near-signals;
+- complementary structure-preserving nulls, including row/document shuffles and graph/template endpoint rewiring;
+- max-T or equivalent family-wise discovery control;
+- post-score semantic reveal;
+- explicit `NOT_EVALUABLE` versus `FAILED_REPLICATION` semantics;
+- no threshold relaxation because v0.7 was negative.
+
+Predeclared v0.8 target families should include:
+
+- directed `T-T-T` trigrams;
+- `T-N(bucket)-T` motifs with frozen numeric buckets;
+- MASK-aware row-boundary predecessor/successor signatures;
+- candidate-level in-neighbor/out-neighbor specialization.
