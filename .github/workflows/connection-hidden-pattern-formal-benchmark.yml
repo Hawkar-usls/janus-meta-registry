@@ -1,0 +1,57 @@
+name: Connection hidden-pattern formal benchmark
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'tools/connection/janus_connection_hidden_pattern_formal_benchmark_v1_0.py'
+      - 'data/JANUS-SING-WHEN-YOURE-WINNING-SOURCE-ONTOLOGY-PROTOCOL-AMENDMENT-v1.2.json'
+      - 'data/JANUS-SING-WHEN-YOURE-WINNING-BOUNDARY-LOCALIZED-SCORING-SPEC-v1.0.json'
+      - 'registry/myth_busted/FALLOUT-3-VAULT112A-PUBLIC-DERIVED-POD-ROLE-ANCHOR-HARDENING-v2.4.json'
+      - 'data/JANUS-LINEAR-A-SIGLA-DOCUMENT-IDENTITY-BRIDGE-RESULT-2026-08-14-v0.1.json'
+      - 'data/SCOBY-D1-CHITIN-BIOCOMPOSITE-v1.0.json'
+      - '.github/workflows/connection-hidden-pattern-formal-benchmark.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Execute exact formal benchmark
+        run: |
+          mkdir -p out
+          python tools/connection/janus_connection_hidden_pattern_formal_benchmark_v1_0.py \
+            --out out/JANUS-CONNECTION-HIDDEN-PATTERN-FORMAL-BENCHMARK-2026-08-14-v1.0.json
+      - name: Enforce claim ceilings and expected classifications
+        run: |
+          python - <<'PY'
+          import json, pathlib
+          p=pathlib.Path('out/JANUS-CONNECTION-HIDDEN-PATTERN-FORMAL-BENCHMARK-2026-08-14-v1.0.json')
+          d=json.loads(p.read_text())
+          assert d['HIDDEN-001']['status']=='PASS_FROZEN_MAPPING_DISCRIMINABILITY'
+          assert d['HIDDEN-002']['status']=='PASS_AMBIGUITY_PRESERVATION_FORMAL_CORE'
+          assert d['HIDDEN-003']['status']=='PASS_FIRST_BREAK_INFORMATION_ADVANTAGE'
+          c=d['claim_ceiling']
+          assert c['formal_method_core_measured'] is True
+          assert c['unbiased_discovery_significance'] is False
+          assert c['human_blindness_measured'] is False
+          assert c['cross_record_held_out_transport'] is False
+          assert c['external_replication'] is False
+          assert c['scientific_novelty'] is False
+          assert c['family_wide_connection_promotion'] is False
+          print('PASS_FORMAL_BENCHMARK_CLAIM_CEILING')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: connection-hidden-pattern-formal-benchmark-v1.0
+          path: out/JANUS-CONNECTION-HIDDEN-PATTERN-FORMAL-BENCHMARK-2026-08-14-v1.0.json
+          if-no-files-found: error
+          retention-days: 30
