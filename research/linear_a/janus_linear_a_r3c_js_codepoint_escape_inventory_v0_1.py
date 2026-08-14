@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Inventory active JavaScript \u{...} escapes inside double-quoted source strings.
+r"""Inventory active JavaScript \u{...} escapes inside double-quoted source strings.
 
 Diagnostic only. No source mutation, parsing, eval, or JavaScript execution.
 """
@@ -46,8 +46,6 @@ def inventory(path: str) -> dict:
             i += 1
             continue
 
-        # We are at an active escape introducer. A doubled backslash consumes both
-        # characters and therefore does not activate a following u{...} sequence.
         if i + 1 >= len(text):
             i += 1
             continue
@@ -77,8 +75,6 @@ def inventory(path: str) -> dict:
             })
             i = close + 1 if close >= 0 else i + 2
             continue
-
-        # Skip ordinary JSON/JS two-character escape.
         i += 2
 
     return {
