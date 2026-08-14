@@ -1,0 +1,114 @@
+{
+  "artifact_uuid": "JANUS-LINEAR-A-R3B-0-STRICT-BLIND-THREE-CANDIDATE-BYTE-ACQUISITION-SPEC-2026-08-14-v0.1",
+  "version": "v0.1",
+  "node_type": "precontent_exact_byte_acquisition_spec",
+  "frozen_at": "2026-08-14T22:53:00+03:00",
+  "parent_canonical_state": "data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.18.json",
+  "purpose": "Attempt lawful exact-byte acquisition of three alternate-editorial Linear A publications without inspecting source-native transcription content before SHA-256 sealing.",
+  "blindness_contract": {
+    "preseal_allowed": [
+      "bibliographic title",
+      "author",
+      "year",
+      "DOI/ISBN/handle",
+      "publisher/repository metadata",
+      "filename",
+      "reported file size",
+      "abstract-level prose that does not disclose source-native sign sequences"
+    ],
+    "preseal_forbidden": [
+      "PDF text extraction",
+      "PDF page rendering",
+      "OCR",
+      "inspection of sign sequences",
+      "inspection of transcription tables",
+      "selection of overlap documents based on source readings",
+      "comparison against mwenge/SigLA/reference readings"
+    ],
+    "byte_seal_must_precede_any_content_inspection": true,
+    "abstract_metadata_already_seen": true,
+    "source_native_sign_readings_seen": false,
+    "blind_overlap_selection_performed": false
+  },
+  "candidates": [
+    {
+      "candidate_id": "NOTTI_2021_THERA",
+      "metadata_url": "https://apeiron.iulm.it/handle/10808/38127",
+      "handle": "10808/38127",
+      "expected_filename": "Notti_Pasiphae_2021.pdf",
+      "reported_size_label": "1 MB",
+      "publication_year": 2021,
+      "publication_type": "journal_article",
+      "strict_blind_eligibility_before_run": "ELIGIBLE_IF_EXACT_BYTES_CAN_BE_SEALED_WITHOUT_SOURCE_READING_EXPOSURE"
+    },
+    {
+      "candidate_id": "NOTTI_2025_THERA_MONOGRAPH",
+      "metadata_url": "https://apeiron.iulm.it/handle/10808/69027",
+      "handle": "10808/69027",
+      "expected_filename": "Notti Writing Late Bronze Age Thera 2025.pdf",
+      "reported_size_label": "9.93 MB",
+      "publication_year": 2025,
+      "publication_type": "monograph",
+      "strict_blind_eligibility_before_run": "ELIGIBLE_IF_EXACT_BYTES_CAN_BE_SEALED_WITHOUT_SOURCE_READING_EXPOSURE"
+    },
+    {
+      "candidate_id": "NOTTI_2024_PH13",
+      "metadata_url": "https://apeiron.iulm.it/handle/10808/58104",
+      "secondary_metadata_url": "https://www.torrossa.com/it/resources/an/5821475",
+      "handle": "10808/58104",
+      "doi": "10.19272/202433301020",
+      "expected_filename": "2024 Linear A Phaistos PH 13.pdf",
+      "reported_size_label": "1.04 MB in IULM; 0.89 Mb in Torrossa metadata",
+      "publication_year": 2024,
+      "publication_type": "journal_article",
+      "strict_blind_eligibility_before_run": "ELIGIBLE_IF_EXACT_BYTES_CAN_BE_SEALED_WITHOUT_SOURCE_READING_EXPOSURE"
+    }
+  ],
+  "endpoint_discovery_policy": {
+    "allowed_metadata_transports": ["HTTPS GET of metadata HTML only"],
+    "allowed_endpoint_patterns": ["/retrieve/", "/bitstream/", "direct PDF URL discovered in metadata anchor attributes"],
+    "do_not_follow_arbitrary_site_links": true,
+    "do_not_use_search_snippets_for_transcription_content": true,
+    "candidate_endpoint_must_be_bound_to_expected_filename_or_same metadata record": true
+  },
+  "byte_acquisition_policy": {
+    "download_mode": "opaque bytes only",
+    "content_parser_imported": false,
+    "pdf_text_extraction": false,
+    "pdf_rendering": false,
+    "ocr": false,
+    "required_seal_fields": [
+      "candidate_id",
+      "resolved_byte_url",
+      "http_status",
+      "content_type",
+      "byte_length",
+      "sha256",
+      "pdf_magic"
+    ],
+    "pdf_magic_required_for_admission": "%PDF-",
+    "store_pdf_bytes_in_repository": false
+  },
+  "outcome_classes": [
+    "PRECONTENT_EXACT_PDF_BYTES_SEALED",
+    "METADATA_RETRIEVE_ENDPOINT_FOUND_BUT_BYTES_RESTRICTED",
+    "METADATA_NO_BYTE_ENDPOINT_FOUND",
+    "FETCHED_NONPDF_RESPONSE_NOT_ADMITTED",
+    "NETWORK_OR_TRANSPORT_FAILURE_NOT_ADMITTED"
+  ],
+  "promotion_rule": {
+    "strict_r3b_candidate_receipt_possible": "At least one candidate must reach PRECONTENT_EXACT_PDF_BYTES_SEALED while source_native_sign_readings_seen remains false.",
+    "scientific_reading_allowed_in_this_gate": false,
+    "canonical_state_promotion_allowed_in_this_gate": false
+  },
+  "claim_ceiling": {
+    "allowed": "Exact opaque source bytes may be sealed as a strict R3B candidate acquisition receipt if acquired before any source-native sign reading inspection.",
+    "forbidden": [
+      "No source reading may be reported.",
+      "No overlap may be selected from the acquired content.",
+      "No editorial agreement/disagreement may be calculated.",
+      "No anchor or decipherment claim may be made.",
+      "Acquisition alone does not establish R3B replication."
+    ]
+  }
+}
