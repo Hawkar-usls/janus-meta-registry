@@ -107,18 +107,18 @@ def main() -> None:
             (d["key"], d["occurrence_count"], d["all_payloads_identical"])
             for d in c["duplicates"]
         ],
-        "semantics_applied": false,
+        "semantics_applied": False,
         "safety": {
-            "javascript_executed": false,
-            "eval_used": false,
-            "scientific_metrics_computed": false,
-            "duplicate_resolution_performed": false
+            "javascript_executed": False,
+            "eval_used": False,
+            "scientific_metrics_computed": False,
+            "duplicate_resolution_performed": False
         },
         "claim_ceiling": {
-            "diagnostic_only": true,
+            "diagnostic_only": True,
             "R3B_effect": "NONE",
-            "new_anchor": false,
-            "decipherment": false
+            "new_anchor": False,
+            "decipherment": False
         }
     }
     Path(args.output).write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
