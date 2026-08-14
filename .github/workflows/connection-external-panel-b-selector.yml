@@ -1,0 +1,49 @@
+name: Connection external Panel B selector
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/connection/janus_connection_external_panel_b_selector_v0_1.py'
+      - '.github/workflows/connection-external-panel-b-selector.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  select:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Execute body-blind path-only selector
+        run: |
+          mkdir -p out
+          python tools/connection/janus_connection_external_panel_b_selector_v0_1.py \
+            --out out/JANUS-CONNECTION-EXTERNAL-PANEL-B-RESULT-RECORDS-SELECTION-2026-08-14-v0.1.json
+      - name: Enforce blindness and provenance gates
+        run: |
+          python - <<'PY'
+          import json
+          p='out/JANUS-CONNECTION-EXTERNAL-PANEL-B-RESULT-RECORDS-SELECTION-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['status']=='BODY_BLIND_EXTERNAL_PANEL_B_SELECTION_EXECUTED'
+          assert d['selected_body_inspection_performed'] is False
+          assert d['selection_used_json_values'] is False
+          assert d['selection_used_code_search'] is False
+          assert d['selection_used_checkout'] is False
+          assert d['summary']['repositories_frozen']==8
+          assert d['summary']['independent_governance_namespaces']==8
+          assert d['summary']['all_commit_tree_verification_pass'] is True
+          assert d['summary']['all_selector_body_reads_false'] is True
+          assert not d['claim_ceiling']['external_transport_established_by_selection']
+          print('PASS_PANEL_B_BODY_BLIND_SELECTION_CEILING')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: connection-external-panel-b-selection-v0.1
+          path: out/JANUS-CONNECTION-EXTERNAL-PANEL-B-RESULT-RECORDS-SELECTION-2026-08-14-v0.1.json
+          retention-days: 30
