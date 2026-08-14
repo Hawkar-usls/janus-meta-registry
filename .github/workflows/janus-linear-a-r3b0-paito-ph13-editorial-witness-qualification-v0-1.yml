@@ -1,0 +1,87 @@
+name: JANUS Linear A R3B-0 Paito PH13 editorial witness qualification v0.1
+
+on:
+  push:
+    paths:
+      - 'data/JANUS-LINEAR-A-R3B-0-PAITO-PH13-EDITORIAL-WITNESS-QUALIFICATION-SPEC-2026-08-14-v0.1.json'
+      - 'research/linear_a/janus_linear_a_r3b0_paito_ph13_editorial_witness_qualification_v0_1.py'
+      - '.github/workflows/janus-linear-a-r3b0-paito-ph13-editorial-witness-qualification-v0-1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  qualify:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify frozen pre-content gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-R3B-0-PAITO-PH13-EDITORIAL-WITNESS-QUALIFICATION-SPEC-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['status']=='FROZEN_BEFORE_EXECUTION'
+          assert d['pre_content_qualification_rules']['candidate_pdf_may_not_be_opened_or_parsed_in_this_gate'] is True
+          assert d['single_document_pilot_lane']['does_not_satisfy_R3B_1_general_minimum_overlap_10'] is True
+          PY
+          python3 -m py_compile research/linear_a/janus_linear_a_r3b0_paito_ph13_editorial_witness_qualification_v0_1.py
+
+      - name: Execute metadata-only qualification
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/linear_a/janus_linear_a_r3b0_paito_ph13_editorial_witness_qualification_v0_1.py \
+            --out data/JANUS-LINEAR-A-R3B-0-PAITO-PH13-EDITORIAL-WITNESS-QUALIFICATION-RESULT-2026-08-14-v0.1.json
+
+      - name: Enforce content firewall and bounded verdict
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-R3B-0-PAITO-PH13-EDITORIAL-WITNESS-QUALIFICATION-RESULT-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['status'] in {
+            'POTENTIAL_INDEPENDENT_AUTOPTIC_RTI_EDITORIAL_WITNESS_PENDING_EXACT_BYTES',
+            'BIBLIOGRAPHIC_ONLY_NOT_EDITORIAL_WITNESS',
+            'QUALIFICATION_BLOCKED_SOURCE_METADATA_UNAVAILABLE'
+          }
+          assert not any(d['content_firewall'].values())
+          assert d['R3B_effect']['exact_editorial_source_bytes_admitted'] is False
+          assert d['R3B_effect']['general_R3B_1_overlap_freeze_satisfied'] is False
+          assert d['R3B_effect']['independent_transcription_replication_established'] is False
+          PY
+
+      - name: Upload immutable qualification evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r3b0-paito-ph13-qualification-v0.1
+          path: |
+            data/JANUS-LINEAR-A-R3B-0-PAITO-PH13-EDITORIAL-WITNESS-QUALIFICATION-SPEC-2026-08-14-v0.1.json
+            data/JANUS-LINEAR-A-R3B-0-PAITO-PH13-EDITORIAL-WITNESS-QUALIFICATION-RESULT-2026-08-14-v0.1.json
+          if-no-files-found: error
+
+      - name: Persist result with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'janus-proof-bot'
+          git config user.email 'janus-proof-bot@users.noreply.github.com'
+          git add data/JANUS-LINEAR-A-R3B-0-PAITO-PH13-EDITORIAL-WITNESS-QUALIFICATION-RESULT-2026-08-14-v0.1.json
+          git commit -m 'Register Linear A R3B-0 Paito PH13 editorial witness qualification v0.1'
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then pushed=1; break; fi
+            sleep "$attempt"
+          done
+          test "$pushed" = 1
