@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - "data/JANUS-LINEAR-A-R4-2-EXECUTE-REQUEST-2026-08-14-v0.1.json"
+      - "data/JANUS-LINEAR-A-R4-2-EXECUTE-REQUEST-2026-08-14-v0.1.1.json"
   workflow_dispatch:
 
 permissions:
@@ -24,6 +25,9 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install inherited R4 dependency
+        run: python -m pip install --disable-pip-version-check "numpy>=2.0"
+
       - name: Verify R4-2 frozen inputs
         shell: bash
         run: |
@@ -34,6 +38,7 @@ jobs:
           s=json.load(open('data/JANUS-LINEAR-A-R4-2-CROSS-FITTED-FUNCTIONAL-SUBSTITUTION-FRAME-SPEC-2026-08-14-v0.1.json',encoding='utf-8'))
           p=json.load(open('data/JANUS-LINEAR-A-R4-1-FIVE-FOLD-CROSS-VALIDATED-STRUCTURAL-LEARNING-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
           c=json.load(open('data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.20.json',encoding='utf-8'))
+          f=json.load(open('data/JANUS-LINEAR-A-R4-2-FAILED-RUN-RECEIPT-2026-08-14-v0.1.json',encoding='utf-8'))
           assert c['version']=='v2.20' and c['status']=='CURRENT_CANONICAL_RESEARCH_STATE'
           assert p['status']=='CROSS_VALIDATED_INTERNAL_CONTEXT_STRUCTURE_SIGNAL_PRESENT'
           assert p['cross_fold_structural_analogy']['CV_replicated_pair_count']==4
@@ -42,6 +47,10 @@ jobs:
           assert s['cross_fitting']['source_status_none_reinterpreted'] is False
           assert s['candidate_family']['manual_candidate_addition_forbidden'] is True
           assert s['candidate_family']['manual_candidate_removal_forbidden'] is True
+          assert f['status']=='FAILED_BEFORE_R4_2_SCIENTIFIC_EXECUTION'
+          assert f['failure']['scientific_pair_scoring_started'] is False
+          assert f['corrective_scope']['candidate_family_change_allowed'] is False
+          assert f['corrective_scope']['exact_frame_threshold_change_allowed'] is False
           PY
 
       - name: Fetch exact preservation-mirror corpus
