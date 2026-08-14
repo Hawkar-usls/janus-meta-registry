@@ -1,0 +1,226 @@
+name: JANUS Linear A conditional canonical state v2.9
+
+on:
+  push:
+    paths:
+      - "data/JANUS-LINEAR-A-R3C-2C-REAL-IR-PROJECTION-RESULT-2026-08-14-v0.1.json"
+      - ".github/workflows/janus-linear-a-canonical-state-v2-9-conditional.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  conditional-promotion:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Audit all v2.9 promotion prerequisites and build candidate
+        run: |
+          python3 - <<'PY'
+          import copy, json, os, sys
+          spec=json.load(open('data/JANUS-LINEAR-A-RESEARCH-STATE-PROMOTION-SPEC-2026-08-14-v2.9.json',encoding='utf-8'))
+          parent=json.load(open(spec['parent_canonical']['path'],encoding='utf-8'))
+          assert spec['status']=='FROZEN_BEFORE_PROJECTION_OUTCOME_PROMOTION'
+          assert parent['status']==spec['parent_canonical']['required_status']
+          req=spec['new_evidence_required']
+          evidence={}
+          for key, rule in req.items():
+              if not os.path.exists(rule['path']):
+                  raise SystemExit(f'PROMOTION_BLOCKED_MISSING:{key}:{rule["path"]}')
+              d=json.load(open(rule['path'],encoding='utf-8'))
+              evidence[key]=d
+              assert d['status']==rule['required_status'], (key,d['status'],rule['required_status'])
+          projection=evidence['real_projection']
+          assert projection['summary']['projection_pass_count']==req['real_projection']['required_projection_pass_count']
+          assert projection['summary']['D5_pass']==req['real_projection']['required_D5_pass']
+          assert projection['summary']['D6_pass']==req['real_projection']['required_D6_pass']
+          assert projection['summary']['D5_boundary_kind_promoted'] is False
+          assert projection['summary']['D6_semantic_authority_granted'] is False
+          assert projection['claim_ceiling']['full_document_transcription_claimed'] is False
+          assert projection['claim_ceiling']['D5_boundary_kind_resolved'] is False
+          assert projection['claim_ceiling']['D6_A319_semantics_assigned'] is False
+          v121=evidence['v1_2_1_validation']
+          assert v121['admitted_generic_capabilities']['v1_1_modified'] is False
+          assert v121['admitted_generic_capabilities']['base_ir_format_changed'] is False
+          review=evidence['v1_2_prevalidation_review']
+          assert review['validation_workflow_executed'] is False
+
+          c=copy.deepcopy(parent)
+          c['artifact_uuid']='JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.9-CANDIDATE'
+          c['version']='v2.9-candidate'
+          c['node_type']='canonical_research_state_candidate'
+          c['status']='CANDIDATE_PENDING_CANONICALITY_AUDIT'
+          c['timestamp']='2026-08-14T18:14:00+03:00'
+          c['canonicality']={
+            'current_source_of_truth':False,
+            'parent_state':spec['parent_canonical']['path'],
+            'promotion_spec':'data/JANUS-LINEAR-A-RESEARCH-STATE-PROMOTION-SPEC-2026-08-14-v2.9.json',
+            'promotion_prerequisites_pass':True,
+            'history_is_not_deleted':True
+          }
+          c['R3C_2B_real_hardening_coverage']={
+            'status':evidence['coverage_audit']['status'],
+            'path':req['coverage_audit']['path'],
+            'D5_all_4_source_split_symptoms_confirmed':evidence['coverage_audit']['D5']['all_4_source_split_symptoms_confirmed'],
+            'D5_surface_only_v1_1_direct_count':0,
+            'D5_boundary_classification':'NEWLINE_OR_LINE_BREAK_ONLY_BOUNDARY_KIND_UNRESOLVED',
+            'D6_all_3_directly_projectable_v1_1':evidence['coverage_audit']['D6']['all_3_directly_projectable_by_v1_1_conflict_binding'],
+            'v1_1_invalidated':False
+          }
+          c['TRANSCRIPTION_IR_HARDENING_v1_2_lineage']={
+            'v1_2_status':'PREVALIDATION_REJECTED_TAXONOMY_MISMATCH',
+            'v1_2_review':req['v1_2_prevalidation_review']['path'],
+            'v1_2_1_status':evidence['v1_2_1_validation']['status'],
+            'v1_2_1_validation':req['v1_2_1_validation']['path'],
+            'profile_id':'JANUS-LINEAR-TRANSCRIPTION-IR-HARDENING-v1.2.1',
+            'new_relation':'SOURCE_CONTINUATION_ACROSS_BOUNDARY',
+            'boundary_classes':['SURFACE','LINE','UNRESOLVED_SURFACE_OR_LINE'],
+            'v1_1_modified':False,
+            'base_ir_format_changed':False
+          }
+          c['R3C_2C_real_ir_projection']={
+            'status':projection['status'],
+            'path':req['real_projection']['path'],
+            'projection_scope':projection['projection_scope'],
+            'documents_projected':projection['summary']['documents_projected'],
+            'projection_pass_count':projection['summary']['projection_pass_count'],
+            'D5_pass':projection['summary']['D5_pass'],
+            'D6_pass':projection['summary']['D6_pass'],
+            'all_ir_hashes_unique':projection['summary']['all_ir_hashes_unique'],
+            'source_groups_destructively_merged':False,
+            'D5_boundary_kind_promoted':False,
+            'D6_semantic_authority_granted':False
+          }
+          # Update roadmap append-only in semantic sense: preserve previous entries and replace only named next-gate statuses.
+          roadmap=[]
+          seen=set()
+          for row in c.get('roadmap',[]):
+              rid=row.get('id')
+              if rid=='R3C_2B_REAL_IR_HARDENING_PROJECTION':
+                  roadmap.append({'id':'R3C_2B_REAL_IR_HARDENING_COVERAGE','status':'DONE_V1_1_D5_BOUNDARY_GAP_D6_COVERED'})
+                  roadmap.append({'id':'TRANSCRIPTION_IR_HARDENING_v1_2','status':'PRESERVED_PREVALIDATION_REJECTED'})
+                  roadmap.append({'id':'TRANSCRIPTION_IR_HARDENING_v1_2_1','status':'DONE_ADMITTED_CUMULATIVE_BOUNDARY_HARDENING'})
+                  roadmap.append({'id':'R3C_2C_REAL_IR_PROJECTION','status':'DONE_7_OF_7_PASS'})
+                  seen.update({'R3C_2B_REAL_IR_HARDENING_COVERAGE','TRANSCRIPTION_IR_HARDENING_v1_2','TRANSCRIPTION_IR_HARDENING_v1_2_1','R3C_2C_REAL_IR_PROJECTION'})
+              else:
+                  roadmap.append(row)
+                  if rid: seen.add(rid)
+          if 'R3C_3_CORRECTIVE_LANGUAGE_MATCH_AUDIT' not in seen:
+              roadmap.append({'id':'R3C_3_CORRECTIVE_LANGUAGE_MATCH_AUDIT','status':'PLANNED_METHOD_NOT_FROZEN'})
+          else:
+              for row in roadmap:
+                  if row.get('id')=='R3C_3_CORRECTIVE_LANGUAGE_MATCH_AUDIT': row['status']='PLANNED_METHOD_NOT_FROZEN'
+          c['roadmap']=roadmap
+          c['next_atomic_requirements']=[
+            {
+              'id':'R3C_3_METHOD_FREEZE',
+              'action':'Locate primary/external prior-art definition of the planned corrective language-match audit and freeze method before execution; do not infer method from its roadmap label.'
+            },
+            {
+              'id':'R3C_1F_PRIMARY_METHOD_MATERIAL_ACQUISITION',
+              'action':'Continue lawful search for Briakos code/supplementary corpus manifest; target-guided 419 subset search remains forbidden.'
+            },
+            {
+              'id':'R3B_0_REAL_SOURCE_ACQUISITION',
+              'action':'Continue lawful acquisition of exact alternate-editorial source bytes under frozen R3B0 receipt contract.'
+            }
+          ]
+          c['highest_admissible_claim']=parent['highest_admissible_claim'] + ' Additionally, a real-source coverage audit established that the four externally seeded D5 splits are mechanically present in the current mwenge source but the flat source exposes only newline/line-break witnesses and does not resolve whether each boundary is a physical surface transition or a ruled-line transition. An additive v1.2.1 hardening profile is admitted, preserving v1.1 and the base IR format while representing SOURCE_CONTINUATION_ACROSS_BOUNDARY with SURFACE, LINE, or UNRESOLVED_SURFACE_OR_LINE classes and fail-closed claim-view policies. A seven-document minimal source-span projection has passed cumulative base/v1.1/v1.2.1 validation and negative/positive scientific-view firewall canaries for all four D5 and three D6 cases. These are technical source-span projections, not full-document transcriptions; D5 boundary kind and linguistic wordhood remain unresolved, and D6 assigns no semantics to A319/*904.'
+          c['claim_ceiling'].update({
+            'transcription_IR_hardening_v1_2_prevalidation_rejected_preserved':True,
+            'transcription_IR_hardening_v1_2_1_admitted':True,
+            'real_7_document_minimal_IR_projection_admitted':True,
+            'full_document_transcriptions_completed':False,
+            'D5_boundary_kind_resolved':False,
+            'D5_linguistic_wordhood_proved':False,
+            'D6_A319_semantics_assigned':False,
+            'R3B_0_alternate_editorial_source_bytes_acquired':False,
+            'external_transcription_replication_established':False,
+            'new_anchor_established':False,
+            'decipherment_established':False,
+            'promotion':'BLOCKED'
+          })
+          out='data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.9-CANDIDATE.json'
+          open(out,'w',encoding='utf-8').write(json.dumps(c,ensure_ascii=False,indent=2)+'\n')
+          PY
+
+      - name: Audit candidate and promote canonical v2.9
+        run: |
+          python3 - <<'PY'
+          import copy, json
+          cand='data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.9-CANDIDATE.json'
+          c=json.load(open(cand,encoding='utf-8'))
+          p=json.load(open('data/JANUS-LINEAR-A-R3C-2C-REAL-IR-PROJECTION-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          h=json.load(open('data/JANUS-LINEAR-A-TRANSCRIPTION-IR-HARDENING-VALIDATION-RESULT-2026-08-14-v1.2.1.json',encoding='utf-8'))
+          checks={
+            'candidate_status':c['status']=='CANDIDATE_PENDING_CANONICALITY_AUDIT',
+            'projection_7_of_7':p['status']=='REAL_7_DOCUMENT_PROJECTION_PASS' and p['summary']['projection_pass_count']==7,
+            'projection_D5_4':p['summary']['D5_pass']==4,
+            'projection_D6_3':p['summary']['D6_pass']==3,
+            'projection_no_boundary_promotion':p['summary']['D5_boundary_kind_promoted'] is False,
+            'projection_no_D6_semantics':p['summary']['D6_semantic_authority_granted'] is False,
+            'v121_admitted':h['status']=='HARDENING_V1_2_1_ADMITTED',
+            'v121_preserves_v11':h['admitted_generic_capabilities']['v1_1_modified'] is False,
+            'R3B_blocked':c['R3B_independent_editorial_replication_lane']['status']=='UNCHANGED_ACTIVE_BLOCKER',
+            'no_external_replication':c['claim_ceiling']['external_transcription_replication_established'] is False,
+            'no_anchor':c['claim_ceiling']['new_anchor_established'] is False,
+            'no_decipherment':c['claim_ceiling']['decipherment_established'] is False,
+          }
+          assert all(checks.values()), {k:v for k,v in checks.items() if not v}
+          audit={
+            'artifact_uuid':'JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.9',
+            'version':'v2.9','node_type':'canonicality_audit_result','status':'CANONICALITY_AUDIT_PASS',
+            'candidate':cand,'promotion_spec':'data/JANUS-LINEAR-A-RESEARCH-STATE-PROMOTION-SPEC-2026-08-14-v2.9.json',
+            'checks':checks,'all_checks_pass':True,
+            'claim_ceiling':{'R3B_effect':'NONE','new_anchor':False,'decipherment':False}
+          }
+          ap='data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.9.json'
+          open(ap,'w',encoding='utf-8').write(json.dumps(audit,ensure_ascii=False,indent=2)+'\n')
+          out=copy.deepcopy(c)
+          out['artifact_uuid']='JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.9'
+          out['version']='v2.9'; out['node_type']='canonical_research_state'; out['status']='CURRENT_CANONICAL_RESEARCH_STATE'
+          out['canonicality']['current_source_of_truth']=True
+          out['canonicality']['candidate_path']=cand
+          out['canonicality']['canonicality_audit']=ap
+          out['canonicality']['canonicality_audit_status']='CANONICALITY_AUDIT_PASS'
+          out['canonicality']['promotion_rule_satisfied']=True
+          op='data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.9.json'
+          open(op,'w',encoding='utf-8').write(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          PY
+
+      - name: Upload immutable canonical package
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-canonical-state-v2.9
+          path: |
+            data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.9-CANDIDATE.json
+            data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.9.json
+            data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.9.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Persist canonical package with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "janus-proof-bot"
+          git config user.email "janus-proof-bot@users.noreply.github.com"
+          git add \
+            data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.9-CANDIDATE.json \
+            data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.9.json \
+            data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.9.json
+          git commit -m "Promote Linear A canonical research state v2.9 after real IR projection"
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then pushed=1; break; fi
+            sleep "$attempt"
+          done
+          test "$pushed" = 1
