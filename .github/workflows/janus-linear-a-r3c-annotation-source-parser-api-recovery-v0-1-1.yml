@@ -1,0 +1,117 @@
+name: JANUS Linear A R3C annotation source parser API recovery v0.1.1
+
+on:
+  push:
+    paths:
+      - ".github/workflows/janus-linear-a-r3c-annotation-source-parser-api-recovery-v0-1-1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compile recovery stack
+        run: |
+          python3 -m py_compile \
+            research/linear_a/janus_linear_a_r3c_common_v0_1.py \
+            research/linear_a/janus_linear_a_r3c_annotation_source_identity_api_recovery_v0_1_1.py \
+            research/linear_a/janus_linear_a_r3c_annotation_parser_validation_v0_1.py
+
+      - name: Verify recovery and parser freezes
+        run: |
+          python3 - <<'PY'
+          import json
+          r=json.load(open('data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-SOURCE-IDENTITY-API-RECOVERY-SPEC-2026-08-14-v0.1.1.json',encoding='utf-8'))
+          p=json.load(open('data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-TRAILING-COMMA-PARSER-SPEC-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert r['status']=='FROZEN_BEFORE_RECOVERY_EXECUTION'
+          assert r['transport_change_only']['document_ids_parsed'] is False
+          assert r['transport_change_only']['Briakos_419_used'] is False
+          assert p['status']=='FROZEN_BEFORE_EXECUTION'
+          PY
+
+      - name: Execute path-history API reconciliation
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          python3 research/linear_a/janus_linear_a_r3c_annotation_source_identity_api_recovery_v0_1_1.py \
+            --output data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-SOURCE-IDENTITY-API-RECOVERY-RESULT-2026-08-14-v0.1.1.json
+
+      - name: Checkout exact historical annotations only
+        uses: actions/checkout@v4
+        with:
+          repository: mwenge/lineara.xyz
+          ref: 568f452c7a5ec80fa292cb307ead2fc6f65d07fb
+          path: external/mwenge-annotation
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            annotations.js
+          sparse-checkout-cone-mode: false
+
+      - name: Re-prove observed bytes and validate parser-only view
+        shell: bash
+        env:
+          PYTHONPATH: research/linear_a
+        run: |
+          set -euo pipefail
+          test "$(git -C external/mwenge-annotation rev-parse HEAD)" = "568f452c7a5ec80fa292cb307ead2fc6f65d07fb"
+          test "$(git -C external/mwenge-annotation rev-parse HEAD:annotations.js)" = "db2661cc680f90120cb8a60d4e5b8a3e0c3e0092"
+          test "$(wc -c < external/mwenge-annotation/annotations.js | tr -d ' ')" = "2239932"
+          test "$(sha256sum external/mwenge-annotation/annotations.js | awk '{print $1}')" = "7ce1f87a98827d059a732cc00506c635b4d5f65b2d0e2f1592fc2b67827758cd"
+          python3 research/linear_a/janus_linear_a_r3c_annotation_parser_validation_v0_1.py \
+            --source external/mwenge-annotation/annotations.js \
+            --output data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-TRAILING-COMMA-PARSER-VALIDATION-RESULT-2026-08-14-v0.1.json
+
+      - name: Enforce transport and parser ceilings
+        run: |
+          python3 - <<'PY'
+          import json
+          s=json.load(open('data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-SOURCE-IDENTITY-API-RECOVERY-RESULT-2026-08-14-v0.1.1.json',encoding='utf-8'))
+          p=json.load(open('data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-TRAILING-COMMA-PARSER-VALIDATION-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert s['path_history']['complete_under_frozen_pagination_rule'] is True
+          assert s['firewall']['annotation_semantics_parsed'] is False
+          assert s['firewall']['document_ids_parsed'] is False
+          assert s['interpretation']['published_byte_count_called_exact'] is False
+          assert s['claim_ceiling']['R3B_effect']=='NONE'
+          assert p['safety']['annotation_document_identities_scored'] is False
+          assert p['safety']['javascript_executed'] is False
+          assert p['claim_ceiling']['R3B_effect']=='NONE'
+          PY
+
+      - name: Upload immutable recovery outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r3c-annotation-source-parser-api-recovery-v0.1.1
+          path: |
+            data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-SOURCE-IDENTITY-API-RECOVERY-RESULT-2026-08-14-v0.1.1.json
+            data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-TRAILING-COMMA-PARSER-VALIDATION-RESULT-2026-08-14-v0.1.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Persist outputs with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "janus-proof-bot"
+          git config user.email "janus-proof-bot@users.noreply.github.com"
+          git add \
+            data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-SOURCE-IDENTITY-API-RECOVERY-RESULT-2026-08-14-v0.1.1.json \
+            data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-TRAILING-COMMA-PARSER-VALIDATION-RESULT-2026-08-14-v0.1.json
+          git commit -m "Register Linear A annotation source/parser API recovery v0.1.1"
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then pushed=1; break; fi
+            sleep "$attempt"
+          done
+          test "$pushed" = 1
