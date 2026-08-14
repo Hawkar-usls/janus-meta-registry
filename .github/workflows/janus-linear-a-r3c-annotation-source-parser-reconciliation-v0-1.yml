@@ -1,0 +1,122 @@
+name: JANUS Linear A R3C annotation source and parser reconciliation v0.1
+
+on:
+  push:
+    paths:
+      - ".github/workflows/janus-linear-a-r3c-annotation-source-parser-reconciliation-v0-1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compile reconciliation stack
+        run: |
+          python3 -m py_compile \
+            research/linear_a/janus_linear_a_r3c_common_v0_1.py \
+            research/linear_a/janus_linear_a_r3c_annotation_source_identity_reconciliation_v0_1.py \
+            research/linear_a/janus_linear_a_r3c_annotation_parser_validation_v0_1.py
+
+      - name: Verify freezes precede execution
+        run: |
+          python3 - <<'PY'
+          import json
+          specs=[
+            'data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-SOURCE-IDENTITY-RECONCILIATION-SPEC-2026-08-14-v0.1.json',
+            'data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-TRAILING-COMMA-PARSER-SPEC-2026-08-14-v0.1.json',
+          ]
+          expected=['FROZEN_BEFORE_RECONCILIATION','FROZEN_BEFORE_EXECUTION']
+          for p,s in zip(specs,expected):
+              d=json.load(open(p,encoding='utf-8')); assert d['status']==s
+          diag=json.load(open('data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-JS-DIAGNOSTIC-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert diag['status']=='FIRST_STRICT_JSON_BREAK_LOCALIZED'
+          assert diag['lexical_candidates']['trailing_comma_candidate'] is True
+          assert diag['safety']['identity_scoring_performed'] is False
+          PY
+
+      - name: Checkout historical source with full Git history
+        uses: actions/checkout@v4
+        with:
+          repository: mwenge/lineara.xyz
+          ref: 568f452c7a5ec80fa292cb307ead2fc6f65d07fb
+          path: external/mwenge-history
+          fetch-depth: 0
+
+      - name: Re-prove observed historical annotation bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C external/mwenge-history rev-parse HEAD)" = "568f452c7a5ec80fa292cb307ead2fc6f65d07fb"
+          test "$(git -C external/mwenge-history rev-parse HEAD:annotations.js)" = "db2661cc680f90120cb8a60d4e5b8a3e0c3e0092"
+          test "$(wc -c < external/mwenge-history/annotations.js | tr -d ' ')" = "2239932"
+          test "$(sha256sum external/mwenge-history/annotations.js | awk '{print $1}')" = "7ce1f87a98827d059a732cc00506c635b4d5f65b2d0e2f1592fc2b67827758cd"
+
+      - name: Execute source identity reconciliation over Git history
+        run: |
+          python3 research/linear_a/janus_linear_a_r3c_annotation_source_identity_reconciliation_v0_1.py \
+            --repo external/mwenge-history \
+            --output data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-SOURCE-IDENTITY-RECONCILIATION-RESULT-2026-08-14-v0.1.json
+
+      - name: Execute parser-only validation
+        env:
+          PYTHONPATH: research/linear_a
+        run: |
+          python3 research/linear_a/janus_linear_a_r3c_annotation_parser_validation_v0_1.py \
+            --source external/mwenge-history/annotations.js \
+            --output data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-TRAILING-COMMA-PARSER-VALIDATION-RESULT-2026-08-14-v0.1.json
+
+      - name: Enforce source/parser claim ceilings
+        run: |
+          python3 - <<'PY'
+          import json
+          s=json.load(open('data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-SOURCE-IDENTITY-RECONCILIATION-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          p=json.load(open('data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-TRAILING-COMMA-PARSER-VALIDATION-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert s['firewall']['annotation_semantics_inspected'] is False
+          assert s['firewall']['document_ids_inspected'] is False
+          assert s['interpretation']['published_byte_count_called_exact'] is False
+          assert s['claim_ceiling']['full_Briakos_source_identity_from_prefix_alone'] is False
+          assert p['safety']['annotation_document_identities_scored'] is False
+          assert p['safety']['javascript_executed'] is False
+          assert p['safety']['eval_used'] is False
+          assert p['claim_ceiling']['parser_only'] is True
+          assert p['claim_ceiling']['R3B_effect']=='NONE'
+          assert p['claim_ceiling']['decipherment'] is False
+          PY
+
+      - name: Upload immutable reconciliation results
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r3c-annotation-source-parser-reconciliation-v0.1
+          path: |
+            data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-SOURCE-IDENTITY-RECONCILIATION-RESULT-2026-08-14-v0.1.json
+            data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-TRAILING-COMMA-PARSER-VALIDATION-RESULT-2026-08-14-v0.1.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Persist results with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "janus-proof-bot"
+          git config user.email "janus-proof-bot@users.noreply.github.com"
+          git add \
+            data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-SOURCE-IDENTITY-RECONCILIATION-RESULT-2026-08-14-v0.1.json \
+            data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-TRAILING-COMMA-PARSER-VALIDATION-RESULT-2026-08-14-v0.1.json
+          git commit -m "Register Linear A annotation source and parser reconciliation v0.1"
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then pushed=1; break; fi
+            sleep "$attempt"
+          done
+          test "$pushed" = 1
