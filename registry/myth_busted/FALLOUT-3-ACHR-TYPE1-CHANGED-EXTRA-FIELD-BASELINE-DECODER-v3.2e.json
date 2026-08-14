@@ -1,0 +1,220 @@
+{
+  "schema": "janus.meta_registry.fallout3_achr_type1_changed_extra_field_baseline_decoder.v3_2e",
+  "artifact_id": "FALLOUT-3-ACHR-TYPE1-CHANGED-EXTRA-FIELD-BASELINE-DECODER-v3.2e",
+  "title": "Fallout 3 — MQDadRef ACHR Changed Extra / Script-Instance Baseline Decoder v3.2e",
+  "created_at_local": "2026-08-14T16:53:00+03:00",
+  "repository": "Hawkar-usls/janus-meta-registry",
+  "artifact_class": "REAL_SAVE_TYPE_AWARE_RUNTIME_BASELINE_AND_FALSE_POSITIVE_REDUCTION_GATE",
+  "status": "PASS_REAL_3_OF_3_SOURCE_BOUND_PREFIX_EXTRA0D_MQDADSCRIPT_BASELINE_FULL_ACHR_PAYLOAD_STILL_PARTIAL",
+  "parents": [
+    "registry/myth_busted/FALLOUT-3-FOS-REAL-EXTERNAL-CORPUS-EXECUTION-GATE-v3.2d.json",
+    "registry/myth_busted/FALLOUT-3-FOS-STRUCTURED-CHANGED-FORM-REFID-GATE-v3.2c.json",
+    "registry/myth_busted/FALLOUT-3-VAULT112A-REAL-ESM-RADIAL-SLOT-NEURAL-HUB-AUDIT-v2.4.1.json",
+    "registry/myth_busted/FALLOUT-3-JAMES-RUNTIME-T0-T3-SAVEGAME-DIFFERENTIAL-PROTOCOL-v3.1.json"
+  ],
+  "question": "Can the nonspecific MQDadRef ChangeType-1 payload observed in unrelated real Fallout 3 saves be decomposed far enough to distinguish script-instance and ordinary actor runtime fields from a future Vault112-localized James transition?",
+  "external_real_save_corpus": {
+    "repository": "Nexus-Mods/Vortex",
+    "commit": "87eb92131c2e85dd52d4fdb9a69d41b4eb9148e6",
+    "fixtures": ["fallout3_1.fos", "fallout3_2.fos", "fallout3_3.fos"],
+    "header_location_all_three": "Vault 101 Entrance",
+    "authority": "NEGATIVE_CONTROL_FORMAT_AND_BASELINE_ONLY_NOT_JAMES_T1_T2_T3"
+  },
+  "source_authority": {
+    "xedit": {
+      "repository": "TES5Edit/TES5Edit",
+      "commit": "93cc0bc5a1251936c3c7859eee3150eda12a62d7",
+      "path": "Core/wbDefinitionsFO3Saves.pas",
+      "establishes": [
+        "ChangeType 01 is ACHR",
+        "wbChangedACHR inherits ChangedCharacter -> ChangedActor -> ChangedMobileObject",
+        "ChangedMobileObject begins with pipe-terminated Process Level",
+        "actor Changed Extra branch is selected by mask including bit31",
+        "Changed Extra is an array of Extra Type plus type-specific union payload",
+        "the 0x0D-mapped union grammar in this context is Script ID plus Script Event List",
+        "MobileObject fields follow wbChangedREFR before process-state payload"
+      ]
+    },
+    "independent_crosscheck": {
+      "repository": "slfx77/fallout-xbox-360-utils",
+      "commit": "f3e3793224e84947d91916c09895c253ab5d874f",
+      "paths": [
+        "src/FalloutXbox360Utils/Core/Formats/SaveGame/FormDataReader.cs",
+        "src/FalloutXbox360Utils/Core/Formats/SaveGame/ExtraDataDecoder.cs",
+        "src/FalloutXbox360Utils/Core/Formats/SaveGame/ExtraDataTypeHandlers.cs",
+        "src/FalloutXbox360Utils/Core/Formats/SaveGame/ActorDecoder.cs"
+      ],
+      "establishes": [
+        "typed SaveData values use pipe 0x7C delimiters",
+        "VSVal low two bits encode width and decoded value is raw >> 2",
+        "ExtraDataList begins VSVal count then type byte then type-specific payload",
+        "actor payload order independently places Process Level before REFR/ExtraData",
+        "type 0x0D decoder grammar is RefID plus script-local/event state"
+      ]
+    }
+  },
+  "source_label_disagreement": {
+    "type_hex": "0x0D",
+    "xedit_context_label": "Script",
+    "independent_decoder_label": "ActivateRef",
+    "binary_grammar_agreement": true,
+    "policy": "DO_NOT_CANONICALIZE_FROM_LABEL_ALONE; USE PRIMARY_ESM TARGET RESOLUTION AND FIELD GRAMMAR",
+    "resolution_for_mqdadref": "The embedded RefID resolves in all three controls to 0001F40A, which F3DAD primary ESM evidence identifies as MQDadScript. Therefore the record is admitted as MQDadScript script-instance/local runtime state for this target, while the global semantic naming of ExtraType 0x0D remains source-disputed."
+  },
+  "primary_esm_identity_bridge": {
+    "physical_actor_ref": "00019D09 MQDadRef",
+    "base_npc": "00019CEF MQDad",
+    "base_script": "0001F40A MQDadScript",
+    "source": "F3DAD primary Fallout3.esm lineage recorded in v2.4.1",
+    "memory_implication": "NONE_BY_ITSELF"
+  },
+  "real_record_invariant": {
+    "target": "00019D09 MQDadRef",
+    "change_type": 1,
+    "change_type_name": "ACHR",
+    "change_flags_hex": "0x80000000",
+    "form_version": 21,
+    "payload_length_bytes": 397,
+    "payload_sha256_varies_across_controls": true
+  },
+  "decoded_real_prefix": {
+    "all_three": {
+      "process_level": 3,
+      "process_level_class": "LOW",
+      "extra_count_vsval_raw_hex": "04",
+      "extra_count": 1,
+      "extra_type_sequence": ["0x0D"],
+      "extra_0d_script_var_count": 0,
+      "extra_0d_has_event_data": 0,
+      "extra_0d_script_flag": 0,
+      "mobile_Unk078": 0,
+      "mobile_Unk06C": null,
+      "mobile_Unk070": null
+    },
+    "save_local_extra_0d_refids": {
+      "fallout3_1.fos": "001A3F",
+      "fallout3_2.fos": "001125",
+      "fallout3_3.fos": "001A1E"
+    },
+    "resolved_extra_0d_refid_all_three": "0001F40A MQDadScript",
+    "save_refid_lesson": "Different three-byte save-local RefID values can resolve to the same authored FormID because type-0 RefIDs index each save's FormID array. Raw SaveRefID equality or inequality is not cross-save identity evidence."
+  },
+  "mobile_object_baseline": {
+    "decoded_post_refr_fields": 14,
+    "stable_fields": {
+      "Byt084": -1,
+      "Byt085": 0,
+      "Byt07C": 1,
+      "Byt07F": 1,
+      "Byt080": 1,
+      "Byt07D": 0,
+      "Byt07E": 0,
+      "Byt086": 1,
+      "Unk078": 0,
+      "Byt081": 0,
+      "Byt083": 0,
+      "Unk06C": null,
+      "Unk070": null
+    },
+    "variable_fields": {
+      "Unk074": [1068961068, 1067736583, 1069336144]
+    },
+    "interpretation": "The first admitted field-level variation in these unrelated Vault 101 controls is ordinary MobileObject runtime variability. It explains part of the raw MQDadRef payload-hash divergence without invoking Vault112, Tranquility Lane, memory, or serialization."
+  },
+  "falsified_shortcuts": [
+    {
+      "shortcut": "Different raw MQDadRef payload SHA-256 implies a James memory transition",
+      "status": "REJECTED",
+      "reason": "Type-aware decoding localizes at least one difference to ordinary MobileObject Unk074 while Extra 0x0D structure is stable."
+    },
+    {
+      "shortcut": "Different 3-byte Extra RefID means a different authored object",
+      "status": "REJECTED",
+      "reason": "001A3F, 001125 and 001A1E all resolve to authored FormID 0001F40A."
+    },
+    {
+      "shortcut": "MQDadRef bit31 ExtraData is a memory payload",
+      "status": "REJECTED_AS_UNSUPPORTED",
+      "reason": "The decoded real Extra entry resolves to MQDadScript and contains zero script/local vars and no event block in all three controls."
+    },
+    {
+      "shortcut": "Any future change in the MQDadScript Extra block is autobiographical memory",
+      "status": "FORBIDDEN",
+      "reason": "At most it initially establishes script-instance/local runtime state. A separate authored semantic bridge would be required for memory semantics."
+    }
+  ],
+  "runtime_admission_upgrade": {
+    "old_rule": "presence plus payload/header differential above external baseline",
+    "new_rule": "resolve save-local RefIDs first, then compare semantically decoded fields within a controlled same-lineage T1/T2/T3 series; classify script-instance, MobileObject, process, actor and quest layers separately before any event attribution",
+    "mandatory_controls": [
+      "same plugin environment or explicit compatibility proof",
+      "no-op save pair near each boundary",
+      "resolved FormID identity rather than raw SaveRefID bytes",
+      "field-level classification for each claimed differential",
+      "temporal localization to the T1/T2/T3 transition",
+      "separate MQ04 quest-state and MQDadRef actor-state tracks"
+    ]
+  },
+  "admission_ladder": [
+    {"level": "E0", "name": "REAL_FO3_STRUCTURAL_EXECUTION", "status": "PASS_3_OF_3_FROM_v3.2d"},
+    {"level": "E1", "name": "VSVAL_AND_PIPE_GRAMMAR", "status": "PASS_SOURCE_PLUS_INDEPENDENT_CROSSCHECK_PLUS_REAL_BYTES"},
+    {"level": "E2", "name": "MQDADREF_PROCESS_LEVEL", "status": "PASS_LOWPROCESS_3_OF_3"},
+    {"level": "E3", "name": "MQDADREF_CHANGED_EXTRA_FRAMING", "status": "PASS_COUNT_1_TYPE_0D_3_OF_3"},
+    {"level": "E4", "name": "EXTRA_0D_PRIMARY_REF_RESOLUTION", "status": "PASS_0001F40A_MQDADSCRIPT_3_OF_3"},
+    {"level": "E5", "name": "EXTRA_0D_SCRIPT_LOCAL_EVENT_PREFIX", "status": "PASS_ZERO_VARS_NO_EVENT_3_OF_3"},
+    {"level": "E6", "name": "MOBILEOBJECT_POST_REFR_PREFIX", "status": "PASS_14_FIELDS_3_OF_3"},
+    {"level": "E7", "name": "LOWPROCESS_AND_REMAINING_ACTOR_FIELD_DECODE", "status": "OPEN"},
+    {"level": "E8", "name": "CONTROLLED_USER_JAMES_T1_T2_T3_FIELD_DIFFERENTIAL", "status": "BLOCKED_NO_USER_FOS_LINEAGE"},
+    {"level": "E9", "name": "CROSS_EXIT_JAMES_ENGINE_PERSISTENCE", "status": "NOT_ESTABLISHED"},
+    {"level": "E10", "name": "AUTOBIOGRAPHICAL_MEMORY_PAYLOAD", "status": "NOT_ESTABLISHED"},
+    {"level": "E11", "name": "IN_WORLD_BRAUN_SERIALIZATION", "status": "NOT_ESTABLISHED"}
+  ],
+  "first_break_model": {
+    "resolved": [
+      "real format execution",
+      "save RefID resolution",
+      "ACHR process-level framing",
+      "Changed Extra list framing",
+      "MQDadScript script-instance binding",
+      "first 14 MobileObject post-REFR fields"
+    ],
+    "current_format_side_break": "LOWPROCESS_AND_REMAINING_ACTOR_FIELD_DECODE",
+    "current_experiment_side_break": "CONTROLLED_USER_JAMES_T1_T2_T3_SAVES_NOT_PRESENT",
+    "meaning": "Without user boundary saves, format research can still reduce false-positive space by decoding the remaining ordinary actor/process baseline. It cannot substitute that work for the missing controlled James lineage."
+  },
+  "implementation": {
+    "decoder": "tools/fo3_fos_achr_changed_extra_probe_v0_1.py",
+    "tests": "tests/test_fo3_fos_achr_changed_extra_probe_v0_1.py",
+    "workflow": ".github/workflows/fallout3-fos-achr-extra-probe-v3-2e.yml",
+    "ci_policy": "Workflow checks exact event head, runs deterministic adversarial tests, then executes the decoder against the three pinned external real saves and emits a machine-readable receipt. Run IDs are intentionally external receipts rather than self-referential constants embedded in this gate."
+  },
+  "claim_ceiling": {
+    "allowed": [
+      "MQDadRef's source-bound ACHR prefix is reproducibly decodable on three external real Fallout 3 saves.",
+      "The sole decoded Changed Extra entry in those controls resolves to MQDadScript and contains no saved script variables or event block.",
+      "Raw MQDadRef payload hashes and save-local RefIDs are too nonspecific for SAVE JAMES inference.",
+      "At least one raw payload difference is localized to ordinary MobileObject runtime state."
+    ],
+    "not_allowed": [
+      "The external fixtures are Vault112 or Tranquility Lane lineage saves.",
+      "MQDadScript locals are James autobiographical memory.",
+      "Unk074 is a memory field.",
+      "A future script-local change proves Braun serialization.",
+      "Engine actor persistence is an in-world neural memory carrier.",
+      "SAVE JAMES is a vanilla executable rescue path."
+    ]
+  },
+  "hard_rules": [
+    "RAW_SAVE_REFID != CROSS_SAVE_AUTHORED_IDENTITY",
+    "RAW_PAYLOAD_HASH_DIFFERENCE != SEMANTIC_EVENT",
+    "MQDADSCRIPT_INSTANCE_STATE != AUTOBIOGRAPHICAL_MEMORY",
+    "MOBILEOBJECT_RUNTIME_VARIABILITY != TRANQUILITY_LANE_EVENT",
+    "ENGINE_SAVE_STATE != IN_WORLD_MEMORY_CARRIER"
+  ],
+  "next_gate": {
+    "name": "FALLOUT-3-MQDADREF-LOWPROCESS-AND-ACTOR-BASELINE-DECODER-v3.2f",
+    "status": "OPEN_WITH_EXISTING_REAL_EXTERNAL_FIXTURES",
+    "purpose": "Continue from byte 54 of the 397-byte MQDadRef payload through BaseProcess/LowProcess and actor unconditional fields, classify stable versus variable runtime fields, and shrink the nonspecific baseline before any user T1/T2/T3 differential is admitted.",
+    "claim_limit": "Process/actor field semantics remain engine runtime state. No decoded field may be promoted to autobiographical memory without an independent authored semantic bridge."
+  }
+}
