@@ -1,0 +1,150 @@
+name: JANUS Linear A canonical state v2.8 audit
+
+on:
+  push:
+    paths:
+      - ".github/workflows/janus-linear-a-canonical-state-v2-8.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  canonicality-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate candidate against load-bearing persisted results
+        run: |
+          python3 - <<'PY'
+          import copy, json
+          candidate_path='data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.8-CANDIDATE.json'
+          c=json.load(open(candidate_path,encoding='utf-8'))
+          assert c['status']=='CANDIDATE_PENDING_CANONICALITY_AUDIT'
+          assert c['canonicality']['current_source_of_truth'] is False
+          assert c['canonicality']['parent_state']['commit']=='406cd35762bc8b07fa85ccc006ed87261a4ca69f'
+
+          checks={}
+          def load(name,path,status):
+              d=json.load(open(path,encoding='utf-8'))
+              checks[name]={'path':path,'observed_status':d.get('status'),'required_status':status,'pass':d.get('status')==status}
+              assert checks[name]['pass'], checks[name]
+              return d
+
+          parser=load('parser_v0_4','data/JANUS-LINEAR-A-R3C-1A-JS-MAP-SEMANTICS-PARSER-VALIDATION-RESULT-2026-08-14-v0.4.json','PARSER_V0_4_ADMITTED')
+          briakos=load('briakos_clean','data/JANUS-LINEAR-A-R3C-1-BRIAKOS-REPRODUCTION-RESULT-2026-08-14-v0.1.1.json','R3C_1_REPRODUCTION_FAILED_OR_METHOD_MISMATCH')
+          scope=load('briakos_scope','data/JANUS-LINEAR-A-R3C-1B-BRIAKOS-SCOPE-RECONSTRUCTION-RESULT-2026-08-14-v0.1.json','BRIAKOS_SCOPE_HYPOTHESIS_NOT_REPRODUCED')
+          mdp=load('mdp_control','data/JANUS-LINEAR-A-R3C-1D-EXTERNAL-PARSER-FAMILY-FINGERPRINT-RESULT-2026-08-14-v0.1.json','COUNT_ONLY_COLLISION')
+          access=load('public_materials','data/JANUS-LINEAR-A-R3C-1C-BRIAKOS-REPRODUCIBILITY-MATERIALS-ACCESS-AUDIT-2026-08-14-v0.1.json','PUBLIC_ITEM_EXPOSES_PDF_ONLY_DESPITE_THESIS_REPRODUCIBILITY_STATEMENTS')
+          recon=load('annotation_multi_transport','data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-MULTI-TRANSPORT-RECONCILIATION-RESULT-2026-08-14-v0.1.json','MULTI_TRANSPORT_RECONCILED_CHARACTER_COUNT_EXPLANATION_EXACT')
+          annparser=load('annotation_parser','data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-TRAILING-COMMA-PARSER-VALIDATION-RESULT-2026-08-14-v0.1.json','ANNOTATION_PARSER_ADMITTED')
+          bridge=load('annotation_bridge','data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-IDENTITY-BRIDGE-RECOVERY-RESULT-2026-08-14-v0.1.1.json','ANNOTATION_IDENTITY_LAYER_DOES_NOT_RECONSTRUCT_BRIAKOS_CORPUS')
+          logos_parent=json.load(open('data/JANUS-LINEAR-A-R3C-2-LOGOS-DEFECT-CONFORMANCE-RESULT-2026-08-14-v0.1.1.json',encoding='utf-8'))
+          checks['logos_D5']={'path':'data/JANUS-LINEAR-A-R3C-2-LOGOS-DEFECT-CONFORMANCE-RESULT-2026-08-14-v0.1.1.json','pass':logos_parent['D5']['confirmed_case_count']==4 and logos_parent['D5']['all_seeded_source_symptoms_confirmed'] is True}
+          assert checks['logos_D5']['pass']
+          d6=load('logos_D6_corrected','data/JANUS-LINEAR-A-R3C-2A-LOGOS-D6-CORRECTIVE-REPLAY-RESULT-2026-08-14-v0.1.json','CONFIRMED_EXTERNAL_REPLAY_CORRECTED')
+          ir=load('ir_hardening_v1_1','data/JANUS-LINEAR-A-TRANSCRIPTION-IR-HARDENING-VALIDATION-RESULT-2026-08-14-v1.1.json','HARDENING_V1_1_ADMITTED')
+
+          invariant_checks={
+            'historical_source_sha':briakos['historical']['source']['sha256']=='b7b383b93db55b504eb00c552a8b18c19a588e83bba7ff0ab93ca32277d8bfe2',
+            'historical_source_exact_admitted':briakos['historical']['source']['exact_historical_bytes_admitted'] is True,
+            'briakos_targets_26':briakos['summary']['primary_comparable_target_count']==26,
+            'briakos_matches_0':briakos['summary']['match_count']==0,
+            'briakos_divergences_26':briakos['summary']['divergence_count']==26,
+            'scope_no_target_search':scope['predeclared_scope']['target_guided_subset_search'] is False,
+            'mdp_count_only':len(mdp['grading']['count_only_collisions'])>0 and len(mdp['grading']['strong_candidates'])==0,
+            'annotation_lineage_dual_transport':recon['lineage_reconciliation_pass'] is True,
+            'annotation_size_exact_character_explanation':recon['size_metric_reconciliation_pass'] is True and recon['reconciled_source_observation']['published_numeric_size_exact_measurement']=='full_unicode_codepoints',
+            'annotation_no_author_implementation_inference':recon['epistemic_interpretation']['author_measurement_implementation_inferred'] is False,
+            'annotation_parser_1723':annparser['parse']['top_level_item_count']==1723,
+            'annotation_bridge_1717':bridge['bridge']['intersection_count']==1717,
+            'annotation_bridge_no_subset_search':bridge['grading']['posthoc_subset_search_performed'] is False,
+            'D5_4_of_4':logos_parent['D5']['confirmed_case_count']==4,
+            'D6_3_of_3':d6['seeded']['all_3_copresent'] is True and len(d6['seeded']['documents'])==3,
+            'IR_v1_1_base_unchanged':ir['admitted_generic_capabilities']['base_ir_format_unchanged'] is True,
+            'IR_v1_1_no_blind_credit':ir['claim_ceiling']['JANUS_independent_discovery'] is False,
+            'IR_v1_1_no_decipherment':ir['claim_ceiling']['decipherment'] is False,
+            'R3B_still_blocked':c['R3B_independent_editorial_replication_lane']['status']=='UNCHANGED_ACTIVE_BLOCKER',
+            'candidate_no_anchor':c['claim_ceiling']['new_anchor_established'] is False,
+            'candidate_no_decipherment':c['claim_ceiling']['decipherment_established'] is False,
+          }
+          assert all(invariant_checks.values()), {k:v for k,v in invariant_checks.items() if not v}
+
+          audit={
+            'artifact_uuid':'JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.8',
+            'version':'v2.8','node_type':'canonicality_audit_result','status':'CANONICALITY_AUDIT_PASS',
+            'candidate':candidate_path,
+            'parent_state_commit':'406cd35762bc8b07fa85ccc006ed87261a4ca69f',
+            'result_status_checks':checks,
+            'invariant_checks':invariant_checks,
+            'all_status_checks_pass':all(v['pass'] for v in checks.values()),
+            'all_invariants_pass':all(invariant_checks.values()),
+            'claim_ceiling':{'R3B_effect':'NONE','new_anchor':False,'decipherment':False}
+          }
+          audit_path='data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.8.json'
+          open(audit_path,'w',encoding='utf-8').write(json.dumps(audit,ensure_ascii=False,indent=2)+'\n')
+
+          canonical=copy.deepcopy(c)
+          canonical['artifact_uuid']='JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.8'
+          canonical['version']='v2.8'
+          canonical['node_type']='canonical_research_state'
+          canonical['status']='CURRENT_CANONICAL_RESEARCH_STATE'
+          canonical['canonicality']['current_source_of_truth']=True
+          canonical['canonicality']['candidate_path']=candidate_path
+          canonical['canonicality']['canonicality_audit']=audit_path
+          canonical['canonicality']['canonicality_audit_status']='CANONICALITY_AUDIT_PASS'
+          canonical['canonicality']['promotion_rule_satisfied']=True
+          canonical_path='data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.8.json'
+          open(canonical_path,'w',encoding='utf-8').write(json.dumps(canonical,ensure_ascii=False,indent=2)+'\n')
+          print(json.dumps({'audit':audit['status'],'canonical':canonical['status'],'checks':len(checks),'invariants':len(invariant_checks)},sort_keys=True))
+          PY
+
+      - name: Re-read promoted canonical and audit
+        run: |
+          python3 - <<'PY'
+          import json
+          a=json.load(open('data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.8.json',encoding='utf-8'))
+          c=json.load(open('data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.8.json',encoding='utf-8'))
+          assert a['status']=='CANONICALITY_AUDIT_PASS'
+          assert a['all_status_checks_pass'] is True and a['all_invariants_pass'] is True
+          assert c['status']=='CURRENT_CANONICAL_RESEARCH_STATE'
+          assert c['canonicality']['promotion_rule_satisfied'] is True
+          assert c['claim_ceiling']['R3B_0_alternate_editorial_source_bytes_acquired'] is False
+          assert c['claim_ceiling']['external_transcription_replication_established'] is False
+          assert c['claim_ceiling']['new_anchor_established'] is False
+          assert c['claim_ceiling']['decipherment_established'] is False
+          PY
+
+      - name: Upload immutable canonical package
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-canonical-state-v2.8
+          path: |
+            data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.8.json
+            data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.8.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Persist canonical package with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "janus-proof-bot"
+          git config user.email "janus-proof-bot@users.noreply.github.com"
+          git add \
+            data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.8.json \
+            data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.8.json
+          git commit -m "Promote Linear A canonical research state v2.8 after audit"
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then pushed=1; break; fi
+            sleep "$attempt"
+          done
+          test "$pushed" = 1
