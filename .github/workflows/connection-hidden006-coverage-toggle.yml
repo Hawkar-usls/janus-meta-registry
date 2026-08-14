@@ -1,0 +1,47 @@
+name: Connection hidden006 coverage toggle
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'data/JANUS-CONNECTION-HIDDEN006-COVERAGE-TOGGLE-FIXTURE-2026-08-14-v0.1.json'
+      - 'tools/connection/janus_connection_hidden006_coverage_toggle_v0_1.py'
+      - '.github/workflows/connection-hidden006-coverage-toggle.yml'
+  workflow_dispatch:
+jobs:
+  coverage-toggle:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Execute exact coverage/sensitivity mapping permutations
+        run: |
+          mkdir -p out
+          python tools/connection/janus_connection_hidden006_coverage_toggle_v0_1.py \
+            --fixture data/JANUS-CONNECTION-HIDDEN006-COVERAGE-TOGGLE-FIXTURE-2026-08-14-v0.1.json \
+            --out out/JANUS-CONNECTION-HIDDEN006-COVERAGE-TOGGLE-RESULT-2026-08-14-v0.1.json
+      - name: Enforce claim ceiling
+        run: |
+          python - <<'PY'
+          import json
+          p='out/JANUS-CONNECTION-HIDDEN006-COVERAGE-TOGGLE-RESULT-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['status']=='PASS_HIDDEN006_HELDOUT_COVERAGE_RELATION_CALIBRATION'
+          assert d['source_blob_verification']=='PASS_ALL'
+          assert d['combined']['family_count'] >= 4
+          assert d['combined']['exact_combined_assignments'] == 1296
+          assert d['combined']['all_deterministic_adjacent_swaps_destroy_exact_mapping'] is True
+          c=d['claim_ceiling']
+          assert c['counterfactual_branches_observed'] is False
+          assert c['external_transport'] is False
+          assert c['external_replication'] is False
+          assert c['scientific_novelty'] is False
+          assert c['family_wide_connection_promotion'] is False
+          print('PASS_HIDDEN006_CLAIM_CEILING')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: connection-hidden006-coverage-toggle-v0.1
+          path: out/JANUS-CONNECTION-HIDDEN006-COVERAGE-TOGGLE-RESULT-2026-08-14-v0.1.json
+          retention-days: 30
