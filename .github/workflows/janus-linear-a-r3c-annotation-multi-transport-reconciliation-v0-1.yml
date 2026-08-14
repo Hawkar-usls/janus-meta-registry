@@ -1,0 +1,81 @@
+name: JANUS Linear A R3C annotation multi-transport reconciliation v0.1
+
+on:
+  push:
+    paths:
+      - ".github/workflows/janus-linear-a-r3c-annotation-multi-transport-reconciliation-v0-1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compile reconciliation runner
+        run: python3 -m py_compile research/linear_a/janus_linear_a_r3c_annotation_multi_transport_reconciliation_v0_1.py
+
+      - name: Verify freeze and parent results
+        run: |
+          python3 - <<'PY'
+          import json
+          spec=json.load(open('data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-MULTI-TRANSPORT-RECONCILIATION-SPEC-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert spec['status']=='FROZEN_BEFORE_EXECUTION'
+          for p in spec['inputs'].values():
+              json.load(open(p,encoding='utf-8'))
+          PY
+
+      - name: Execute reconciliation
+        run: |
+          python3 research/linear_a/janus_linear_a_r3c_annotation_multi_transport_reconciliation_v0_1.py \
+            --git-history data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-SOURCE-IDENTITY-RECONCILIATION-RESULT-2026-08-14-v0.1.json \
+            --api-history data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-SOURCE-IDENTITY-API-RECOVERY-RESULT-2026-08-14-v0.1.1.json \
+            --size-metric data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-SIZE-METRIC-DISAMBIGUATION-RESULT-2026-08-14-v0.1.json \
+            --output data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-MULTI-TRANSPORT-RECONCILIATION-RESULT-2026-08-14-v0.1.json
+
+      - name: Enforce reconciliation and claim ceiling
+        run: |
+          python3 - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-MULTI-TRANSPORT-RECONCILIATION-RESULT-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['status']=='MULTI_TRANSPORT_RECONCILED_CHARACTER_COUNT_EXPLANATION_EXACT'
+          assert d['lineage_reconciliation_pass'] is True
+          assert d['size_metric_reconciliation_pass'] is True
+          assert d['epistemic_interpretation']['author_measurement_implementation_inferred'] is False
+          assert d['epistemic_interpretation']['byte_exact_Briakos_annotation_source_claimed'] is False
+          assert d['claim_ceiling']['R3B_effect']=='NONE'
+          assert d['claim_ceiling']['decipherment'] is False
+          PY
+
+      - name: Upload immutable result
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r3c-annotation-multi-transport-reconciliation-v0.1
+          path: data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-MULTI-TRANSPORT-RECONCILIATION-RESULT-2026-08-14-v0.1.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Persist result with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "janus-proof-bot"
+          git config user.email "janus-proof-bot@users.noreply.github.com"
+          git add data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-MULTI-TRANSPORT-RECONCILIATION-RESULT-2026-08-14-v0.1.json
+          git commit -m "Register Linear A annotation multi-transport reconciliation v0.1"
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then pushed=1; break; fi
+            sleep "$attempt"
+          done
+          test "$pushed" = 1
