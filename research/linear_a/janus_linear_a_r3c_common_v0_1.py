@@ -1,10 +1,18 @@
 #!/usr/bin/env python3
 """Shared source/metric layer for JANUS Linear A R3C v0.1.
 
-This module is intentionally semantic-light.  It parses the public lineara.xyz
+This module is intentionally semantic-light. It parses the public lineara.xyz
 JavaScript Map payload, preserves source literals, exposes frozen tokenization
 profiles, and supplies deterministic descriptive statistics used by R3C
 predecessor replays.
+
+Parser correction lineage:
+- strict JSON was attempted first and failed on source-valid JavaScript trailing commas;
+- v0.1 correction is frozen by JANUS-LINEAR-A-R3C-1A-JS-TRAILING-COMMA-
+  PARSER-CORRECTION-SPEC-2026-08-14-v0.1;
+- only commas outside double-quoted strings immediately preceding ] or } modulo
+  whitespace are omitted from the additive parse view;
+- original source bytes remain authoritative and are never mutated or executed.
 """
 from __future__ import annotations
 
@@ -19,6 +27,7 @@ from pathlib import Path
 from typing import Any, Iterable
 
 MAP_MARKER = "new Map("
+PARSE_TRANSFORM_ID = "JANUS-JS-LITERAL-TRAILING-COMMA-ONLY-v0.1"
 ASCII_ALPHA_RE = re.compile(r"[A-Z]")
 PURE_ASCII_NUMERIC_RE = re.compile(r"^[+-]?(?:\d+(?:\.\d+)?|\d+\s*/\s*\d+)$")
 SUBSCRIPT_TO_ASCII = str.maketrans({
@@ -37,6 +46,86 @@ def sha256_bytes(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
+def normalize_js_trailing_commas(payload: str) -> tuple[str, list[dict[str, Any]]]:
+    """Return a strict-JSON parse view plus a receipt of removed JS trailing commas.
+
+    This scanner is deliberately narrower than a JavaScript parser. It tracks only
+    JSON-style double-quoted strings and escapes. Outside strings, a comma is omitted
+    iff the next non-whitespace character is a closing array/object delimiter.
+    Nothing else is normalized, guessed, evaluated, or executed.
+    """
+    out: list[str] = []
+    removals: list[dict[str, Any]] = []
+    in_string = False
+    escaped = False
+    i = 0
+    n = len(payload)
+    while i < n:
+        ch = payload[i]
+        if in_string:
+            out.append(ch)
+            if escaped:
+                escaped = False
+            elif ch == "\\":
+                escaped = True
+            elif ch == '"':
+                in_string = False
+            i += 1
+            continue
+
+        if ch == '"':
+            in_string = True
+            out.append(ch)
+            i += 1
+            continue
+
+        if ch == ",":
+            j = i + 1
+            while j < n and payload[j].isspace():
+                j += 1
+            if j < n and payload[j] in "]}":
+                removals.append({
+                    "original_payload_position": i,
+                    "closing_delimiter": payload[j],
+                    "whitespace_characters_between": j - i - 1,
+                })
+                i += 1
+                continue
+
+        out.append(ch)
+        i += 1
+
+    if in_string:
+        raise ValueError("LINEARA_PARSE_VIEW_UNTERMINATED_DOUBLE_QUOTED_STRING")
+    return "".join(out), removals
+
+
+def parser_transform_self_test() -> dict[str, Any]:
+    fixture = '[{"a":["x",],"b":{"c":1,},"literal":"comma,] stays",},]'
+    normalized, removals = normalize_js_trailing_commas(fixture)
+    parsed = json.loads(normalized)
+    assert parsed == [{"a": ["x"], "b": {"c": 1}, "literal": "comma,] stays"}]
+    assert parsed[0]["literal"] == "comma,] stays"
+    assert len(removals) == 4
+    unsupported = '[{"a":undefined,}]'
+    normalized_unsupported, unsupported_removals = normalize_js_trailing_commas(unsupported)
+    unsupported_failed_closed = False
+    try:
+        json.loads(normalized_unsupported)
+    except json.JSONDecodeError:
+        unsupported_failed_closed = True
+    assert unsupported_failed_closed
+    assert len(unsupported_removals) == 1
+    return {
+        "transform_id": PARSE_TRANSFORM_ID,
+        "synthetic_trailing_comma_removals": len(removals),
+        "quoted_literal_preserved": True,
+        "unsupported_identifier_failed_closed": unsupported_failed_closed,
+        "javascript_executed": False,
+        "eval_used": False,
+    }
+
+
 def load_lineara_map(path: str | Path) -> tuple[dict[str, dict[str, Any]], dict[str, Any]]:
     p = Path(path)
     raw = p.read_bytes()
@@ -49,7 +138,14 @@ def load_lineara_map(path: str | Path) -> tuple[dict[str, dict[str, Any]], dict[
     if payload_end < payload_start:
         raise ValueError("LINEARA_MAP_TERMINATOR_NOT_FOUND")
     payload = text[payload_start:payload_end].strip()
-    entries = json.loads(payload)
+    normalized_payload, removals = normalize_js_trailing_commas(payload)
+    try:
+        entries = json.loads(normalized_payload)
+    except json.JSONDecodeError as exc:
+        raise ValueError(
+            f"LINEARA_STRICT_JSON_PARSE_FAILED_AFTER_{PARSE_TRANSFORM_ID}:"
+            f"line={exc.lineno}:column={exc.colno}:pos={exc.pos}:message={exc.msg}"
+        ) from exc
     if not isinstance(entries, list):
         raise ValueError("LINEARA_MAP_PAYLOAD_NOT_LIST")
     out: dict[str, dict[str, Any]] = {}
@@ -70,6 +166,19 @@ def load_lineara_map(path: str | Path) -> tuple[dict[str, dict[str, Any]], dict[
         "bytes": len(raw),
         "sha256": sha256_bytes(raw),
         "document_count": len(out),
+        "parse_view": {
+            "transform_id": PARSE_TRANSFORM_ID,
+            "payload_character_count": len(payload),
+            "normalized_payload_character_count": len(normalized_payload),
+            "normalized_payload_sha256": sha256_bytes(normalized_payload.encode("utf-8")),
+            "trailing_comma_removal_count": len(removals),
+            "trailing_comma_original_positions": [r["original_payload_position"] for r in removals],
+            "trailing_comma_removals": removals,
+            "strict_json_parse_success": True,
+            "source_bytes_mutated": False,
+            "javascript_executed": False,
+            "eval_used": False,
+        },
     }
     return out, meta
 
