@@ -1,0 +1,136 @@
+name: JANUS Linear A R3C-2C projection diagnostic decision v0.1
+
+on:
+  push:
+    paths:
+      - "data/JANUS-LINEAR-A-R3C-2C-REAL-IR-PROJECTION-DIAGNOSTIC-RESULT-2026-08-14-v0.1.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  decide:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Read persisted diagnostic and build decision receipt
+        id: decision
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os
+          p='data/JANUS-LINEAR-A-R3C-2C-REAL-IR-PROJECTION-DIAGNOSTIC-RESULT-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          status=d['status']
+          first_failure=None
+          for row in d['documents']:
+              if row.get('build_status')=='EXCEPTION' or row.get('validation_status')=='EXCEPTION':
+                  first_failure={
+                    'document':row['document'],'kind':row['kind'],
+                    'stage':'BUILD' if row.get('build_status')=='EXCEPTION' else 'VALIDATION',
+                    'exception_type':row.get('exception_type'),'exception_message':row.get('exception_message')
+                  }
+                  break
+              if row.get('validation_status')=='COMPLETED' and not row.get('validation',{}).get('projection_pass',False):
+                  first_failure={
+                    'document':row['document'],'kind':row['kind'],'stage':'VALIDATION_NONPASS',
+                    'validation':row.get('validation')
+                  }
+                  break
+          allow=status=='DIAGNOSTIC_ALL_7_WOULD_VALIDATE'
+          receipt={
+            'artifact_uuid':'JANUS-LINEAR-A-R3C-2C-PROJECTION-DIAGNOSTIC-DECISION-2026-08-14-v0.1',
+            'version':'v0.1','node_type':'projection_recovery_decision','status':'RECOVERY_ALLOWED_TRANSIENT_OR_UNPERSISTED_PARENT_FAILURE' if allow else 'RECOVERY_BLOCKED_TEMPLATE_OR_VALIDATION_FAILURE',
+            'diagnostic':p,'diagnostic_status':status,
+            'summary':d['summary'],'first_failure':first_failure,
+            'recovery_allowed':allow,
+            'frozen_projection_spec_modified':False,
+            'claim_ceiling':{'real_projection_admitted':False,'R3B_effect':'NONE','new_anchor':False,'decipherment':False}
+          }
+          out='data/JANUS-LINEAR-A-R3C-2C-PROJECTION-DIAGNOSTIC-DECISION-2026-08-14-v0.1.json'
+          open(out,'w',encoding='utf-8').write(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n')
+          with open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf-8') as fh:
+              fh.write('allow_recovery=' + ('true' if allow else 'false') + '\n')
+          print(json.dumps({'diagnostic_status':status,'allow_recovery':allow,'first_failure':first_failure},ensure_ascii=False,sort_keys=True))
+          PY
+
+      - name: Persist decision receipt first
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "janus-proof-bot"
+          git config user.email "janus-proof-bot@users.noreply.github.com"
+          git add data/JANUS-LINEAR-A-R3C-2C-PROJECTION-DIAGNOSTIC-DECISION-2026-08-14-v0.1.json
+          git commit -m "Register Linear A R3C-2C diagnostic recovery decision v0.1"
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then pushed=1; break; fi
+            sleep "$attempt"
+          done
+          test "$pushed" = 1
+
+      - name: Checkout exact current source only if diagnostic permits recovery
+        if: steps.decision.outputs.allow_recovery == 'true'
+        uses: actions/checkout@v4
+        with:
+          repository: mwenge/lineara.xyz
+          ref: 43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a
+          path: external/mwenge-current
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            LinearAInscriptions.js
+          sparse-checkout-cone-mode: false
+
+      - name: Execute unchanged frozen projection only after diagnostic permission
+        if: steps.decision.outputs.allow_recovery == 'true'
+        shell: bash
+        env:
+          PYTHONPATH: research/linear_a
+        run: |
+          set -euo pipefail
+          test "$(git -C external/mwenge-current rev-parse HEAD)" = "43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a"
+          test "$(sha256sum external/mwenge-current/LinearAInscriptions.js | awk '{print $1}')" = "4da8e1f9693d30880ee505e56541fc189add70605bad88436c44a8e11a57764c"
+          rm -rf data/linear_a_r3c_2c_real_ir_v0_1
+          mkdir -p data/linear_a_r3c_2c_real_ir_v0_1
+          python3 research/linear_a/janus_linear_a_r3c_real_ir_projection_v0_1.py \
+            --source external/mwenge-current/LinearAInscriptions.js \
+            --output-dir data/linear_a_r3c_2c_real_ir_v0_1 \
+            --result data/JANUS-LINEAR-A-R3C-2C-REAL-IR-PROJECTION-RESULT-2026-08-14-v0.1.json
+
+      - name: Persist recovered package if permitted
+        if: steps.decision.outputs.allow_recovery == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "janus-proof-bot"
+          git config user.email "janus-proof-bot@users.noreply.github.com"
+          git add data/JANUS-LINEAR-A-R3C-2C-REAL-IR-PROJECTION-RESULT-2026-08-14-v0.1.json data/linear_a_r3c_2c_real_ir_v0_1
+          git commit -m "Recover Linear A seven-document real IR projection v0.1 after diagnostic"
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then pushed=1; break; fi
+            sleep "$attempt"
+          done
+          test "$pushed" = 1
+
+      - name: Enforce 7-of-7 only on permitted recovery
+        if: steps.decision.outputs.allow_recovery == 'true'
+        run: |
+          python3 - <<'PY'
+          import json
+          d=json.load(open('data/JANUS-LINEAR-A-R3C-2C-REAL-IR-PROJECTION-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert d['status']=='REAL_7_DOCUMENT_PROJECTION_PASS'
+          assert d['summary']['projection_pass_count']==7
+          PY
