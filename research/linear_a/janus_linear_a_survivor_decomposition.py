@@ -22,10 +22,10 @@ import janus_linear_a_full_corpus as base
 VERSION = "JANUS-LINA-SURVIVOR-DECOMPOSITION-v0.3"
 KNOWN_RO_ACCOUNTING_WORDS = {"KURO", "POTOKURO", "KIRO"}
 UNICODE_BLOCK_RE = re.compile(
-    r"<transcribed-reading-unicode\\b[^>]*>.*?<reading-text>(.*?)</reading-text>.*?</transcribed-reading-unicode>",
+    r"<transcribed-reading-unicode\b[^>]*>.*?<reading-text>(.*?)</reading-text>.*?</transcribed-reading-unicode>",
     flags=re.IGNORECASE | re.DOTALL,
 )
-UNICODE_WORD_RE = re.compile(r'<word\\s+number="(\\d+)"[^>]*>(.*?)</word>', flags=re.IGNORECASE | re.DOTALL)
+UNICODE_WORD_RE = re.compile(r'<word\s+number="(\d+)"[^>]*>(.*?)</word>', flags=re.IGNORECASE | re.DOTALL)
 TAG_RE = re.compile(r"<[^>]+>")
 
 
