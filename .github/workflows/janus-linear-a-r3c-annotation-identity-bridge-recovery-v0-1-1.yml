@@ -1,0 +1,119 @@
+name: JANUS Linear A R3C annotation identity bridge recovery v0.1.1
+
+on:
+  push:
+    paths:
+      - ".github/workflows/janus-linear-a-r3c-annotation-identity-bridge-recovery-v0-1-1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  recover-bridge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compile bridge recovery stack
+        run: |
+          python3 -m py_compile \
+            research/linear_a/janus_linear_a_r3c_common_v0_1.py \
+            research/linear_a/janus_linear_a_r3c_source_loader_v0_3.py \
+            research/linear_a/janus_linear_a_r3c_source_loader_v0_4.py \
+            research/linear_a/janus_linear_a_r3c_annotation_parser_validation_v0_1.py \
+            research/linear_a/janus_linear_a_r3c_annotation_identity_bridge_recovery_v0_1_1.py
+
+      - name: Enforce recovery prerequisites before source checkout
+        run: |
+          python3 - <<'PY'
+          import json
+          spec=json.load(open('data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-IDENTITY-BRIDGE-RECOVERY-SPEC-2026-08-14-v0.1.1.json',encoding='utf-8'))
+          src=json.load(open('data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-SOURCE-IDENTITY-RECONCILIATION-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          par=json.load(open('data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-TRAILING-COMMA-PARSER-VALIDATION-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          assert spec['status']=='FROZEN_BEFORE_RECOVERY_EXECUTION'
+          assert src['status']==spec['required_prerequisites']['source_reconciliation_required_status']
+          assert par['status']==spec['required_prerequisites']['parser_validation_required_status']
+          assert spec['anti_circularity']['no_posthoc_subset_search'] is True
+          assert spec['parent_failed_run']['scientific_result_inheritance'] is False
+          PY
+
+      - name: Checkout exact historical inscription and annotation sources
+        uses: actions/checkout@v4
+        with:
+          repository: mwenge/lineara.xyz
+          ref: 568f452c7a5ec80fa292cb307ead2fc6f65d07fb
+          path: external/mwenge-historical
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            LinearAInscriptions.js
+            annotations.js
+          sparse-checkout-cone-mode: false
+
+      - name: Re-prove exact observed source candidates
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C external/mwenge-historical rev-parse HEAD)" = "568f452c7a5ec80fa292cb307ead2fc6f65d07fb"
+          test "$(sha256sum external/mwenge-historical/LinearAInscriptions.js | awk '{print $1}')" = "b7b383b93db55b504eb00c552a8b18c19a588e83bba7ff0ab93ca32277d8bfe2"
+          test "$(sha256sum external/mwenge-historical/annotations.js | awk '{print $1}')" = "7ce1f87a98827d059a732cc00506c635b4d5f65b2d0e2f1592fc2b67827758cd"
+
+      - name: Execute fresh identity-only bridge recovery
+        env:
+          PYTHONPATH: research/linear_a
+        run: |
+          python3 research/linear_a/janus_linear_a_r3c_annotation_identity_bridge_recovery_v0_1_1.py \
+            --inscriptions external/mwenge-historical/LinearAInscriptions.js \
+            --annotations external/mwenge-historical/annotations.js \
+            --source-reconciliation data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-SOURCE-IDENTITY-RECONCILIATION-RESULT-2026-08-14-v0.1.json \
+            --parser-validation data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-TRAILING-COMMA-PARSER-VALIDATION-RESULT-2026-08-14-v0.1.json \
+            --output data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-IDENTITY-BRIDGE-RECOVERY-RESULT-2026-08-14-v0.1.1.json
+
+      - name: Enforce identity-only and claim ceilings
+        run: |
+          python3 - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-IDENTITY-BRIDGE-RECOVERY-RESULT-2026-08-14-v0.1.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['recovery_lineage']['failed_run_scientific_result_inherited'] is False
+          assert d['recovery_lineage']['fresh_execution'] is True
+          assert d['bridge']['annotation_semantic_tags_used_for_selection'] is False
+          assert d['bridge']['annotation_transliteratedWord_used_for_selection'] is False
+          assert d['bridge']['annotation_word_glyphs_used_for_selection'] is False
+          assert d['grading']['posthoc_subset_search_performed'] is False
+          assert d['published_annotation_byte_count_exact_match_claimed'] is False
+          assert d['claim_ceiling']['Briakos_parser_reconstructed'] is False
+          assert d['claim_ceiling']['Briakos_annotation_bridge_usage_proved'] is False
+          assert d['claim_ceiling']['R3B_effect']=='NONE'
+          assert d['claim_ceiling']['decipherment'] is False
+          PY
+
+      - name: Upload immutable bridge result
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r3c-annotation-identity-bridge-recovery-v0.1.1
+          path: data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-IDENTITY-BRIDGE-RECOVERY-RESULT-2026-08-14-v0.1.1.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Persist bridge result with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "janus-proof-bot"
+          git config user.email "janus-proof-bot@users.noreply.github.com"
+          git add data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-IDENTITY-BRIDGE-RECOVERY-RESULT-2026-08-14-v0.1.1.json
+          git commit -m "Register Linear A annotation identity bridge recovery v0.1.1"
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then pushed=1; break; fi
+            sleep "$attempt"
+          done
+          test "$pushed" = 1
