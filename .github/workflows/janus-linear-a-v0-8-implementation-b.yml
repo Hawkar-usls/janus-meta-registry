@@ -1,0 +1,111 @@
+name: JANUS Linear A v0.8 Implementation B
+
+on:
+  push:
+    paths:
+      - "research/linear_a/janus_linear_a_higher_order_v0_8_b.py"
+      - "research/linear_a/janus_linear_a_formula_transition.py"
+      - "research/linear_a/janus_linear_a_token_typing_policy_v0_6_2.py"
+      - "data/JANUS-LINEAR-A-V0.8-IMPLEMENTATION-B-EXECUTION-SPEC-2026-08-14-v1.0.json"
+      - ".github/workflows/janus-linear-a-v0-8-implementation-b.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  v0-8-b:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout JANUS registry
+        uses: actions/checkout@v4
+
+      - name: Fetch frozen Linear A corpus
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --quiet https://github.com/mwenge/lineara.xyz.git /tmp/lineara
+          git -C /tmp/lineara checkout --quiet 43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a
+          test "$(git -C /tmp/lineara rev-parse HEAD)" = "43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a"
+
+      - name: Validate frozen execution spec exists
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-V0.8-IMPLEMENTATION-B-EXECUTION-SPEC-2026-08-14-v1.0.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['status']=='FROZEN_BEFORE_IMPLEMENTATION_B_EXECUTION'
+          assert d['error_control']['HT_SCREEN']['permutations_per_null']==3000
+          assert d['error_control']['HT_CONFIRM']['permutations_per_null']==5000
+          assert d['error_control']['NON_HT']['permutations_per_null']==5000
+          assert len(d['destructive_nulls'])==3
+          assert d['claim_ceiling']['new_anchor_established'] is False
+          PY
+
+      - name: Run v0.8 Implementation B triple-null max-T
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/linear_a/janus_linear_a_higher_order_v0_8_b.py \
+            --corpus /tmp/lineara \
+            --out artifacts/JANUS-LINEAR-A-V0.8-IMPLEMENTATION-B-RESULT-2026-08-14-v1.0.json \
+            --screen-permutations 3000 \
+            --confirm-permutations 5000 \
+            --test-permutations 5000 \
+            --min-endpoint-occurrences 8 \
+            --min-endpoint-docs 5 \
+            --min-pair-occurrences 4 \
+            --min-pair-docs 3 \
+            --confirm-min-events 2 \
+            --confirm-min-docs 2 \
+            --test-min-events 3 \
+            --test-min-docs 2 \
+            --test-min-regions 2 \
+            --alpha 0.05
+
+      - name: Validate B architecture and claim ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          p='artifacts/JANUS-LINEAR-A-V0.8-IMPLEMENTATION-B-RESULT-2026-08-14-v1.0.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['frozen_execution_spec']['commit']=='2f45e76977ec209a8bc1f3697db4991fc3317017'
+          assert d['source']['representation']=='WORD_ONLY_ROW_AWARE'
+          expected={
+            'WITHIN_ROW_SEMANTIC_IDENTITY_SHUFFLE_PRESERVING_TYPED_SLOTS_MASKS_AND_ROW_TOKEN_MULTISET',
+            'WITHIN_DOCUMENT_SEMANTIC_IDENTITY_SHUFFLE_PRESERVING_TYPED_SLOTS_MASKS_AND_DOCUMENT_TOKEN_MULTISET',
+            'GRAPH_ENDPOINT_REWIRE_PRESERVING_RELATION_CONTEXT_AND_ENDPOINT_MARGINALS',
+          }
+          assert set(d['nulls'])==expected
+          assert d['corpus_counts']['HT_SCREEN']>0
+          assert d['corpus_counts']['HT_CONFIRM']>0
+          assert d['corpus_counts']['NON_HT']>0
+          assert d['epistemic_gate']['new_anchor_established'] is False
+          assert d['epistemic_gate']['decipherment_established'] is False
+          assert d['epistemic_gate']['external_replication_established'] is False
+          if d['HT_CONFIRM']['survivor_count']==0:
+              assert d['NON_HT_REPLICATION']['locked_count']==0
+              assert d['NON_HT_REPLICATION']['tested']==[]
+          print(json.dumps({
+            'screen_selected': d['screen']['selected_count'],
+            'confirm_evaluable': d['HT_CONFIRM']['evaluable_count'],
+            'confirm_survivors': d['HT_CONFIRM']['survivor_count'],
+            'non_ht_evaluable': d['NON_HT_REPLICATION']['evaluable_count'],
+            'non_ht_survivors': d['NON_HT_REPLICATION']['survivor_count'],
+            'new_anchor_established': False,
+            'decipherment_established': False,
+          },sort_keys=True))
+          PY
+
+      - name: Upload v0.8-B execution receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-v0.8-implementation-b
+          path: artifacts/JANUS-LINEAR-A-V0.8-IMPLEMENTATION-B-RESULT-2026-08-14-v1.0.json
+          if-no-files-found: error
+          retention-days: 30
