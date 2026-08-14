@@ -1,0 +1,57 @@
+name: Connection raw-field benchmark
+
+on:
+  push:
+    paths:
+      - 'data/JANUS-CONNECTION-RAW-FIELD-PROJECTION-FIXTURE-2026-08-14-v0.1.json'
+      - 'data/JANUS-CONNECTION-RAW-FIELD-BENCHMARK-2026-08-14-v0.1.json'
+      - 'tools/connection/janus_connection_raw_field_benchmark_v0_1.py'
+      - 'registry/research_portfolio/AIFC-AUDITABLE-INDEPENDENT-FUTURE-CHALLENGE-RESEARCH-DOSSIER-v1.0.0.json'
+      - 'data/proofs/JANUS-CAUSAL-CONSISTENCY-WITNESS-PRIORITY-CAPSULE-v1.0.json'
+      - 'data/JANUS-SIM-3-EXTERNAL-WITNESS-GUEST-INVITATION-v1.0.json'
+      - '.github/workflows/connection-raw-field-benchmark.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Replay from source JSON
+        run: |
+          python tools/connection/janus_connection_raw_field_benchmark_v0_1.py \
+            --repo-root . \
+            --fixture data/JANUS-CONNECTION-RAW-FIELD-PROJECTION-FIXTURE-2026-08-14-v0.1.json \
+            --output /tmp/connection-raw-field-replay.json
+      - name: Enforce claim and provenance gates
+        run: |
+          python - <<'PY'
+          import json
+          p='/tmp/connection-raw-field-replay.json'
+          d=json.load(open(p, encoding='utf-8'))
+          checks=d['source_projection_verification']
+          assert isinstance(checks, list) and len(checks)==3, checks
+          assert all(x['projection_equal'] is True for x in checks), checks
+          assert all(x['blob_equal'] is True for x in checks), checks
+          assert d['summary']['raw_field_candidate_pass_count']==3
+          assert d['summary']['raw_field_candidate_total']==3
+          assert d['summary']['family_wide_promotion']=='BLOCKED'
+          assert d['deferred']['B1_ADAPTIVE_HISTORY_COPY']['status']=='DEFERRED_RAW_FIELD_ELIGIBILITY'
+          expected={
+            'RF1-AIFC-FREEZE-BEFORE-TARGET': 0.7856701940035273,
+            'RF2-PRETURN-ANCHOR-TARGET': 0.9545454545454546,
+            'RF3-SIM3-COMMIT-BEFORE-REVEAL': 0.9375,
+          }
+          for b in d['benchmarks']:
+              assert b['classification']=='PASS_RAW_FIELD_RELATION_SPECIFIC_PROFILE'
+              assert abs(b['effect_real_minus_null_mean']-expected[b['edge_id']]) < 1e-12
+          print('PASS_CONNECTION_RAW_FIELD_SOURCE_REPLAY_3_OF_3')
+          PY
