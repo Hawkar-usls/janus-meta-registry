@@ -1,0 +1,100 @@
+name: JANUS Linear A longer formula v0.8
+
+on:
+  push:
+    paths:
+      - "research/linear_a/janus_linear_a_long_formula_v0_8.py"
+      - "research/linear_a/janus_linear_a_formula_transition_v0_7.py"
+      - "research/linear_a/janus_linear_a_token_typing_policy_v0_6_2.py"
+      - "research/linear_a/janus_linear_a_parser_policy_v0_6_1.py"
+      - "research/linear_a/janus_linear_a_full_corpus.py"
+      - ".github/workflows/janus-linear-a-long-formula-v0-8.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  long-formula:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout JANUS registry
+        uses: actions/checkout@v4
+
+      - name: Fetch frozen Linear A corpus
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --quiet https://github.com/mwenge/lineara.xyz.git /tmp/lineara
+          git -C /tmp/lineara checkout --quiet 43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a
+          test "$(git -C /tmp/lineara rev-parse HEAD)" = "43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a"
+          test -f /tmp/lineara/items_analysis/numbers.txt
+          echo "Frozen corpus verified."
+
+      - name: Run longer-formula discovery v0.8
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/linear_a/janus_linear_a_long_formula_v0_8.py \
+            --corpus /tmp/lineara \
+            --out artifacts/JANUS-LINEAR-A-LONG-FORMULA-NEIGHBORHOOD-2026-08-14-v0.8.json \
+            --screen-permutations 2000 \
+            --confirm-permutations 5000 \
+            --test-permutations 10000 \
+            --min-screen-n 4 \
+            --min-screen-docs 2 \
+            --screen-p-threshold 0.05 \
+            --max-screen-candidates 40 \
+            --min-confirm-n 2 \
+            --min-confirm-docs 2 \
+            --confirm-alpha 0.05 \
+            --min-test-n 2 \
+            --min-test-docs 2 \
+            --min-test-regions 2 \
+            --test-alpha 0.05
+
+      - name: Validate v0.8 frozen thresholds and claim ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          p = 'artifacts/JANUS-LINEAR-A-LONG-FORMULA-NEIGHBORHOOD-2026-08-14-v0.8.json'
+          d = json.load(open(p, encoding='utf-8'))
+          assert d['source']['typed_token_policy'] == 'JANUS-LINA-TOKEN-TYPING-POLICY-v0.6.2'
+          assert d['inherits_method_from'] == 'JANUS-LINA-FORMULA-TRANSITION-v0.7'
+          t = d['threshold_freeze']
+          assert t['lowered_after_negative_result'] is False
+          assert t['screen_permutations'] == 2000
+          assert t['confirm_permutations'] == 5000
+          assert t['test_permutations'] == 10000
+          assert t['min_screen_n'] == 4
+          assert t['min_screen_docs'] == 2
+          assert t['screen_p_threshold'] == 0.05
+          assert t['min_confirm_n'] == 2
+          assert t['min_confirm_docs'] == 2
+          assert t['confirm_alpha_bonferroni'] == 0.05
+          assert t['min_test_n'] == 2
+          assert t['min_test_docs'] == 2
+          assert t['min_test_regions'] == 2
+          assert t['test_alpha_bonferroni'] == 0.05
+          assert d['null_model']['operator'] == 'WITHIN_DOCUMENT_SEMANTIC_IDENTITY_SHUFFLE'
+          assert set(d['channels']) == {'CONTROL_INCLUDED', 'NOVELTY_MASKED'}
+          assert d['epistemic_gate']['new_anchor_established'] is False
+          assert d['epistemic_gate']['decipherment_established'] is False
+          print(json.dumps({
+              'control_replication_survivors': d['epistemic_gate']['control_replication_survivor_count'],
+              'novelty_replication_survivors': d['epistemic_gate']['novelty_masked_replication_survivor_count'],
+              'new_anchor_established': False,
+              'decipherment_established': False,
+          }, sort_keys=True))
+          PY
+
+      - name: Upload v0.8 execution receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-long-formula-v0.8
+          path: artifacts/JANUS-LINEAR-A-LONG-FORMULA-NEIGHBORHOOD-2026-08-14-v0.8.json
+          if-no-files-found: error
+          retention-days: 30
