@@ -1,0 +1,221 @@
+name: JANUS Linear A canonical state v2.10
+
+on:
+  push:
+    paths:
+      - "data/JANUS-LINEAR-A-RESEARCH-STATE-PROMOTION-SPEC-2026-08-14-v2.10.json"
+      - ".github/workflows/janus-linear-a-canonical-state-v2-10.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Audit promotion prerequisites and build v2.10 candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import copy, json, os
+          p='data/JANUS-LINEAR-A-RESEARCH-STATE-PROMOTION-SPEC-2026-08-14-v2.10.json'
+          spec=json.load(open(p,encoding='utf-8'))
+          assert spec['status']=='FROZEN_BEFORE_CANONICAL_PROMOTION'
+          parent=json.load(open(spec['parent_canonical']['path'],encoding='utf-8'))
+          assert parent['status']=='CURRENT_CANONICAL_RESEARCH_STATE'
+          assert parent['version']=='v2.9'
+          ev={}
+          for key, rule in spec['required_new_evidence'].items():
+              assert os.path.exists(rule['path']), (key, rule['path'])
+              d=json.load(open(rule['path'],encoding='utf-8'))
+              assert d['status']==rule['required_status'], (key,d['status'],rule['required_status'])
+              ev[key]=d
+          assert ev['v0_1_prevalidation_review']['scientific_execution_performed'] is False
+          assert ev['v0_1_1_prevalidation_review']['scientific_execution_performed'] is False
+          corrected=ev['corrected_method_spec']
+          assert corrected['fixed_languages']==['Ancient Egyptian','Luwian','Hittite','Proto-Celtic','Uralic']
+          assert corrected['permutation_protocol']['iterations_per_null_family']==10000
+          assert set(corrected['null_families'])=={'N1_WITHIN_LANGUAGE_COMPOSITION_PRESERVING','N2_POOLED_LENGTH_STRATIFIED_LANGUAGE_LABEL'}
+          assert corrected['contamination_firewall']['JANUS_blind_discovery_credit'] is False
+          readiness=ev['readiness']
+          assert readiness['admitted_receipt_count']==0
+          assert readiness['scientific_execution_performed'] is False
+          assert readiness['published_matches_reproduced'] is False
+          acquisition=ev['acquisition_packet']
+          assert acquisition['claim_ceiling']['request_sent'] is False
+          assert acquisition['claim_ceiling']['paper_exact_inputs_acquired'] is False
+          assert os.path.exists(spec['required_runner'])
+          assert os.path.exists(spec['required_workflow'])
+          assert parent['R3B_independent_editorial_replication_lane']['status']=='UNCHANGED_ACTIVE_BLOCKER'
+
+          c=copy.deepcopy(parent)
+          c['artifact_uuid']='JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.10-CANDIDATE'
+          c['version']='v2.10-candidate'
+          c['title']='JANUS Linear A canonical candidate after R3C-3 corrective language-match method freeze and readiness gate'
+          c['timestamp']='2026-08-14T18:49:00+03:00'
+          c['node_type']='canonical_research_state_candidate'
+          c['status']='CANDIDATE_PENDING_CANONICALITY_AUDIT'
+          c['canonicality']={
+            'current_source_of_truth':False,
+            'parent_state':spec['parent_canonical']['path'],
+            'promotion_spec':p,
+            'promotion_prerequisites_pass':True,
+            'history_is_not_deleted':True
+          }
+          c['R3C_3_corrective_language_match_audit']={
+            'status':'METHOD_RUNNER_DONE_READINESS_BLOCKED_PAPER_EXACT_INPUTS',
+            'target_prior_art':'Nepal & Perono Cacciafoco 2024, DOI 10.3390/info15020073',
+            'primary_method_reconstruction':spec['required_new_evidence']['primary_method_reconstruction']['path'],
+            'preserved_rejected_specs':[
+              {'version':'v0.1','review':spec['required_new_evidence']['v0_1_prevalidation_review']['path'],'reason':'INCOMPLETE_UPSTREAM_NORMALIZATION_CONTRACT'},
+              {'version':'v0.1.1','review':spec['required_new_evidence']['v0_1_1_prevalidation_review']['path'],'reason':'MACHINE_KEY_TYPO_ONLY'}
+            ],
+            'corrected_frozen_spec':spec['required_new_evidence']['corrected_method_spec']['path'],
+            'execution_input_receipt_contract':spec['required_new_evidence']['execution_input_receipt_contract']['path'],
+            'runner':spec['required_runner'],
+            'validation_workflow':spec['required_workflow'],
+            'validation_run':31815936676,
+            'readiness_artifact_id':9224988240,
+            'readiness_artifact_digest':'sha256:987e4509b8addd266879299cfc8d7bfa8d0921d1e6e2808beaed0ad5d4d67548',
+            'readiness':spec['required_new_evidence']['readiness']['path'],
+            'readiness_status':readiness['status'],
+            'admitted_execution_receipts':readiness['admitted_receipt_count'],
+            'scientific_execution_performed':False,
+            'published_matches_reproduced':False,
+            'primary_statistic':'UNIQUE_LINEAR_A_CLUSTER_HIT_COUNT over raw exact admitted consonant-cluster matches before manual semantics',
+            'null_families':['N1_WITHIN_LANGUAGE_COMPOSITION_PRESERVING','N2_POOLED_LENGTH_STRATIFIED_LANGUAGE_LABEL'],
+            'permutations_per_null_family':10000,
+            'familywise_control':'permutation max-statistic across five fixed languages',
+            'technical_signal_ceiling':'TECHNICAL_OVERLAP_EXCESS_SIGNAL_ONLY; not language relationship/cognacy/translation/decipherment',
+            'acquisition_packet':spec['required_new_evidence']['acquisition_packet']['path'],
+            'author_request_sent':False,
+            'paper_exact_inputs_acquired':False
+          }
+          for row in c.get('roadmap',[]):
+              if row.get('id')=='R3C_3_CORRECTIVE_LANGUAGE_MATCH_AUDIT':
+                  row['status']='METHOD_RUNNER_DONE_READINESS_BLOCKED_PAPER_EXACT_INPUTS'
+          c['next_atomic_requirements']=[
+            {
+              'id':'R3C_3_PAPER_EXACT_INPUT_ACQUISITION',
+              'action':'Lawfully obtain the paper-exact Linear A master list, five fixed dictionary inputs, master-list/phonetic-grid provenance, and enough exact preprocessing evidence to admit the upstream normalization contract. Do not reverse engineer selected published match tables.'
+            },
+            {
+              'id':'R3C_1F_PRIMARY_METHOD_MATERIAL_ACQUISITION',
+              'action':'Continue lawful search for Briakos code/supplementary corpus manifest; target-guided 419 subset search remains forbidden.'
+            },
+            {
+              'id':'R3B_0_REAL_SOURCE_ACQUISITION',
+              'action':'Continue lawful acquisition of exact alternate-editorial source bytes under the frozen R3B0 receipt contract.'
+            }
+          ]
+          c['highest_admissible_claim']=parent['highest_admissible_claim'] + ' The R3C-3 corrective language-match lane is now methodologically frozen against Nepal and Perono Cacciafoco (2024): the five-language family is fixed, the primary unit is the complete raw exact consonant-cluster match universe before manual semantic filtering, two pre-frozen matched null families and max-stat familywise control are implemented, and the runner passes deterministic synthetic validation. Scientific execution remains blocked because no paper-exact study-input receipt or admitted upstream normalization contract is present. The public packaged application and README are methodological prior art, not substitutes for paper-exact input identity. Therefore no published language match has been reproduced by this gate and no language-family relationship, anchor, independent transcription replication, or decipherment is established.'
+          c['claim_ceiling'].update({
+            'R3C_3_primary_method_reconstructed':True,
+            'R3C_3_corrected_method_v0_1_2_frozen':True,
+            'R3C_3_runner_validated_synthetic_only':True,
+            'R3C_3_paper_exact_execution_input_receipt_admitted':False,
+            'R3C_3_scientific_execution_performed':False,
+            'R3C_3_published_matches_reproduced':False,
+            'R3C_3_language_family_relationship_established':False,
+            'R3B_0_alternate_editorial_source_bytes_acquired':False,
+            'external_transcription_replication_established':False,
+            'new_anchor_established':False,
+            'decipherment_established':False,
+            'promotion':'BLOCKED'
+          })
+          out='data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.10-CANDIDATE.json'
+          open(out,'w',encoding='utf-8').write(json.dumps(c,ensure_ascii=False,indent=2)+'\n')
+          PY
+
+      - name: Canonicality audit and promote v2.10
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import copy,json
+          cp='data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.10-CANDIDATE.json'
+          c=json.load(open(cp,encoding='utf-8'))
+          ready=json.load(open('data/JANUS-LINEAR-A-R3C-3-READINESS-RESULT-2026-08-14-v0.1.2.json',encoding='utf-8'))
+          s=json.load(open('data/JANUS-LINEAR-A-R3C-3-CORRECTIVE-LANGUAGE-MATCH-AUDIT-SPEC-2026-08-14-v0.1.2.json',encoding='utf-8'))
+          r0=json.load(open('data/JANUS-LINEAR-A-R3C-3-CORRECTIVE-LANGUAGE-MATCH-AUDIT-PREVALIDATION-REVIEW-2026-08-14-v0.1.json',encoding='utf-8'))
+          r1=json.load(open('data/JANUS-LINEAR-A-R3C-3-CORRECTIVE-LANGUAGE-MATCH-AUDIT-PREVALIDATION-REVIEW-2026-08-14-v0.1.1.json',encoding='utf-8'))
+          acq=json.load(open('data/JANUS-LINEAR-A-R3C-3-PAPER-DATA-ACQUISITION-PACKET-2026-08-14-v0.1.json',encoding='utf-8'))
+          checks={
+            'candidate_pending':c['status']=='CANDIDATE_PENDING_CANONICALITY_AUDIT',
+            'v0_1_rejected_unexecuted':r0['status'].startswith('PREVALIDATION_REJECTED') and r0['scientific_execution_performed'] is False,
+            'v0_1_1_rejected_unexecuted':r1['status'].startswith('PREVALIDATION_REJECTED') and r1['scientific_execution_performed'] is False,
+            'v0_1_2_frozen':s['status']=='FROZEN_BEFORE_EXECUTION_CORRECTED_NORMALIZATION_GATE',
+            'five_languages_fixed':s['fixed_languages']==['Ancient Egyptian','Luwian','Hittite','Proto-Celtic','Uralic'],
+            'two_nulls_frozen':set(s['null_families'])=={'N1_WITHIN_LANGUAGE_COMPOSITION_PRESERVING','N2_POOLED_LENGTH_STRATIFIED_LANGUAGE_LABEL'},
+            'readiness_blocked_zero_receipts':ready['status']=='BLOCKED_MISSING_PAPER_EXACT_INPUT_RECEIPTS_AND_NORMALIZATION_CONTRACT' and ready['admitted_receipt_count']==0,
+            'no_scientific_execution':ready['scientific_execution_performed'] is False,
+            'request_unsent':acq['claim_ceiling']['request_sent'] is False,
+            'paper_inputs_not_acquired':acq['claim_ceiling']['paper_exact_inputs_acquired'] is False,
+            'R3B_blocked':c['R3B_independent_editorial_replication_lane']['status']=='UNCHANGED_ACTIVE_BLOCKER',
+            'no_external_replication':c['claim_ceiling']['external_transcription_replication_established'] is False,
+            'no_language_relationship':c['claim_ceiling']['R3C_3_language_family_relationship_established'] is False,
+            'no_anchor':c['claim_ceiling']['new_anchor_established'] is False,
+            'no_decipherment':c['claim_ceiling']['decipherment_established'] is False
+          }
+          assert all(checks.values()), {k:v for k,v in checks.items() if not v}
+          audit={
+            'artifact_uuid':'JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.10',
+            'version':'v2.10','node_type':'canonicality_audit_result','status':'CANONICALITY_AUDIT_PASS',
+            'candidate':cp,'promotion_spec':'data/JANUS-LINEAR-A-RESEARCH-STATE-PROMOTION-SPEC-2026-08-14-v2.10.json',
+            'checks':checks,'all_checks_pass':True,
+            'claim_ceiling':{'R3C_3_scientific_execution_performed':False,'language_family_relationship_established':False,'R3B_effect':'NONE','new_anchor':False,'decipherment':False}
+          }
+          ap='data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.10.json'
+          open(ap,'w',encoding='utf-8').write(json.dumps(audit,ensure_ascii=False,indent=2)+'\n')
+          out=copy.deepcopy(c)
+          out['artifact_uuid']='JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.10'
+          out['version']='v2.10'
+          out['node_type']='canonical_research_state'
+          out['status']='CURRENT_CANONICAL_RESEARCH_STATE'
+          out['canonicality']['current_source_of_truth']=True
+          out['canonicality']['candidate_path']=cp
+          out['canonicality']['canonicality_audit']=ap
+          out['canonicality']['canonicality_audit_status']='CANONICALITY_AUDIT_PASS'
+          out['canonicality']['promotion_rule_satisfied']=True
+          op='data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.10.json'
+          open(op,'w',encoding='utf-8').write(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          PY
+
+      - name: Upload immutable v2.10 canonical package
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-canonical-state-v2.10
+          path: |
+            data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.10-CANDIDATE.json
+            data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.10.json
+            data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.10.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Persist canonical v2.10 package with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "janus-proof-bot"
+          git config user.email "janus-proof-bot@users.noreply.github.com"
+          git add \
+            data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.10-CANDIDATE.json \
+            data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.10.json \
+            data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.10.json
+          git commit -m "Promote Linear A canonical research state v2.10 after R3C-3 method gate"
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then pushed=1; break; fi
+            sleep "$attempt"
+          done
+          test "$pushed" = 1
