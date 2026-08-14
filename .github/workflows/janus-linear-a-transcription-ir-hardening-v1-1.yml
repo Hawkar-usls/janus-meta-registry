@@ -42,7 +42,7 @@ jobs:
           PY
 
       - name: Run base v1.0 regression self-test
-        run: python3 research/linear_a/janus_linear_a_transcription_ir_v1_0.py --self-test > /tmp/base-v1.0-self-test.json
+        run: python3 research/linear_a/janus_linear_a_transcription_ir_v1_0.py self-test > /tmp/base-v1.0-self-test.json
 
       - name: Run v1.1 hardening self-test
         env:
@@ -88,6 +88,12 @@ jobs:
               'claim_view_requires_conflict_exclusion_policy':True,
               'base_ir_format_unchanged':True
             },
+            'recovery_lineage':{
+              'failed_run_id':31810810151,
+              'failed_run_receipt':'data/JANUS-LINEAR-A-TRANSCRIPTION-IR-HARDENING-FAILED-RUN-RECEIPT-2026-08-14-v1.1.json',
+              'failed_run_result_inherited':False,
+              'only_recovery_change':'base v1.0 CLI invocation --self-test -> self-test'
+            },
             'claim_ceiling':{
               'generic_source_fidelity_hardening':True,
               'JANUS_independent_discovery':False,
@@ -109,6 +115,7 @@ jobs:
           d=json.load(open(p,encoding='utf-8'))
           assert d['status']=='HARDENING_V1_1_ADMITTED'
           assert d['admitted_generic_capabilities']['base_ir_format_unchanged'] is True
+          assert d['recovery_lineage']['failed_run_result_inherited'] is False
           assert d['claim_ceiling']['JANUS_independent_discovery'] is False
           assert d['claim_ceiling']['R3B_effect']=='NONE'
           assert d['claim_ceiling']['new_anchor'] is False
