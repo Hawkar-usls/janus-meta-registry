@@ -1,0 +1,220 @@
+name: JANUS Linear A canonical state v2.11
+
+on:
+  push:
+    paths:
+      - "data/JANUS-LINEAR-A-RESEARCH-STATE-PROMOTION-SPEC-2026-08-14-v2.11.json"
+      - ".github/workflows/janus-linear-a-canonical-state-v2-11.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Audit v2.11 prerequisites and build candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import copy,json,os
+          sp='data/JANUS-LINEAR-A-RESEARCH-STATE-PROMOTION-SPEC-2026-08-14-v2.11.json'
+          spec=json.load(open(sp,encoding='utf-8'))
+          assert spec['status']=='FROZEN_BEFORE_CANONICAL_PROMOTION'
+          parent=json.load(open(spec['parent_canonical']['path'],encoding='utf-8'))
+          assert parent['status']=='CURRENT_CANONICAL_RESEARCH_STATE'
+          assert parent['version']=='v2.10'
+          ev={}
+          for key,rule in spec['required_new_evidence'].items():
+              assert os.path.exists(rule['path']), (key,rule['path'])
+              d=json.load(open(rule['path'],encoding='utf-8'))
+              assert d['status']==rule['required_status'], (key,d['status'],rule['required_status'])
+              ev[key]=d
+          candidate=ev['R3D_candidate']
+          protocol=ev['R3D_protocol']
+          contract=ev['R3D_receipt_contract']
+          ready=ev['R3D_readiness']
+          briakos=ev['R3C_1F_access_recheck']
+          assert candidate['provenance_classification']['JANUS_independence_class']=='L1_INDEPENDENT_DIGITIZATION_SHARED_TRANSCRIPTION_WITH_GORILA_EDITORIAL_CHECK'
+          assert candidate['provenance_classification']['R3B_external_replication_eligible'] is False
+          assert candidate['claim_ceiling']['corpus_bytes_recovered'] is False
+          assert protocol['provenance_ceiling']['R3B_replication_credit'] is False
+          assert protocol['XML_security_policy']['external_entity_resolution'] is False
+          assert contract['claim_ceiling']['R3B_replication_credit'] is False
+          assert ready['admitted_receipt_count']==0
+          assert ready['scientific_content_scored'] is False
+          assert ready['source_adapter_executed'] is False
+          assert ready['R3B_replication_credit'] is False
+          assert briakos['claim_ceiling']['419_scope_resolved'] is False
+          assert briakos['claim_ceiling']['target_guided_subset_search_performed'] is False
+          assert parent['R3B_independent_editorial_replication_lane']['status']=='UNCHANGED_ACTIVE_BLOCKER'
+          assert parent['claim_ceiling']['external_transcription_replication_established'] is False
+          assert parent['claim_ceiling']['new_anchor_established'] is False
+          assert parent['claim_ceiling']['decipherment_established'] is False
+          assert os.path.exists(spec['required_runner']) and os.path.exists(spec['required_workflow'])
+
+          c=copy.deepcopy(parent)
+          c['artifact_uuid']='JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.11-CANDIDATE'
+          c['version']='v2.11-candidate'
+          c['title']='JANUS Linear A canonical candidate after historical TEI-EpiDoc R3D source-recovery gate'
+          c['timestamp']='2026-08-14T19:05:00+03:00'
+          c['node_type']='canonical_research_state_candidate'
+          c['status']='CANDIDATE_PENDING_CANONICALITY_AUDIT'
+          c['canonicality']={
+            'current_source_of_truth':False,
+            'parent_state':spec['parent_canonical']['path'],
+            'promotion_spec':sp,
+            'promotion_prerequisites_pass':True,
+            'history_is_not_deleted':True
+          }
+          c['R3D_historical_TEI_EpiDoc_digitization_robustness']={
+            'lane_id':'R3D_HISTORICAL_TEI_EPIDOC_DIGITIZATION_ROBUSTNESS',
+            'status':'INFRASTRUCTURE_READY_BLOCKED_BYTES_NOT_RECOVERED',
+            'source':'Petrolito et al. 2015 Linear A Digital Corpus',
+            'doi':'10.18653/v1/W15-3715',
+            'historical_endpoint':'http://ling.ied.edu.hk/~gregoire/lineara',
+            'provenance_class':'L1_INDEPENDENT_DIGITIZATION_SHARED_TRANSCRIPTION_WITH_GORILA_EDITORIAL_CHECK',
+            'candidate':spec['required_new_evidence']['R3D_candidate']['path'],
+            'recovery_protocol':spec['required_new_evidence']['R3D_protocol']['path'],
+            'receipt_contract':spec['required_new_evidence']['R3D_receipt_contract']['path'],
+            'runner':spec['required_runner'],
+            'validation_workflow':spec['required_workflow'],
+            'validation_run':31816943558,
+            'readiness_artifact_id':9225379259,
+            'readiness_artifact_digest':'sha256:4e62f46919b8d8efe19e4f372165e6fc0c90a023bf256d3646c4b0184b34385e',
+            'readiness':spec['required_new_evidence']['R3D_readiness']['path'],
+            'admitted_byte_receipts':0,
+            'XML_documents_inspected':0,
+            'source_adapter_executed':False,
+            'scientific_content_scored':False,
+            'R3B_replication_credit':False,
+            'R3B_auto_promotion_forbidden':True
+          }
+          c['R3C_1F_primary_method_material_access']={
+            'status':briakos['status'],
+            'path':spec['required_new_evidence']['R3C_1F_access_recheck']['path'],
+            'new_primary_method_material_acquired':False,
+            'Briakos_419_scope_resolved':False,
+            'target_guided_subset_search_performed':False
+          }
+          roadmap=c.setdefault('roadmap',[])
+          ids={r.get('id') for r in roadmap if isinstance(r,dict)}
+          if 'R3D_HISTORICAL_TEI_EPIDOC_DIGITIZATION_ROBUSTNESS' not in ids:
+              roadmap.append({'id':'R3D_HISTORICAL_TEI_EPIDOC_DIGITIZATION_ROBUSTNESS','status':'INFRASTRUCTURE_READY_BLOCKED_BYTES_NOT_RECOVERED'})
+          for row in roadmap:
+              if row.get('id')=='R3C_1F_PRIMARY_METHOD_MATERIAL_ACQUISITION':
+                  row['status']='PUBLIC_PRIMARY_METHOD_MATERIALS_NOT_LOCATED_BLOCKER_PRESERVED'
+          c['next_atomic_requirements']=[
+            {'id':'R3D_PETROLITO_XML_BYTE_RECOVERY','action':'Recover original, institution-supplied, archive-replayed, or lineage-verified mirror bytes of the 2015 TEI-EpiDoc corpus. Complete the frozen acquisition receipt before XML schema/content inspection.'},
+            {'id':'R3C_3_PAPER_EXACT_INPUT_ACQUISITION','action':'Lawfully obtain the Nepal/Perono 2024 paper-exact Linear A master list, five fixed dictionaries, provenance, and upstream normalization evidence.'},
+            {'id':'R3C_1F_PRIMARY_METHOD_MATERIAL_ACQUISITION','action':'Continue lawful author/institution recovery of Briakos code/corpus manifest; target-guided 419 subset search remains forbidden.'},
+            {'id':'R3B_0_REAL_SOURCE_ACQUISITION','action':'Continue lawful acquisition of exact alternate-editorial source bytes under the frozen R3B0 receipt contract.'}
+          ]
+          c['highest_admissible_claim']=parent['highest_admissible_claim'] + ' A separate R3D historical-source lane has now reconstructed the identity and provenance of Petrolito et al. (2015), a Linear A TEI-EpiDoc/Unicode digital corpus derived from Younger transcription material and manually checked against GORILA. Because this lineage is shared with established transcription traditions, JANUS classifies it conservatively as L1 independent digitization with GORILA editorial checking, not L2/L3 independent transcription evidence. Recovery, acquisition-receipt and XML security/schema gates are implemented and CI-validated, but no corpus bytes have been recovered, no XML document content has been inspected, and no R3D source adapter has been executed. R3B remains unchanged and independently blocked.'
+          c['claim_ceiling'].update({
+            'R3D_source_identity_and_lineage_reconstructed':True,
+            'R3D_recovery_protocol_and_receipt_contract_frozen':True,
+            'R3D_readiness_runner_validated':True,
+            'R3D_corpus_bytes_recovered':False,
+            'R3D_XML_documents_inspected':False,
+            'R3D_source_adapter_executed':False,
+            'R3D_R3B_replication_credit':False,
+            'R3C_1F_public_method_material_acquired':False,
+            'R3C_1F_419_scope_resolved':False,
+            'R3B_0_alternate_editorial_source_bytes_acquired':False,
+            'external_transcription_replication_established':False,
+            'new_anchor_established':False,
+            'decipherment_established':False,
+            'promotion':'BLOCKED'
+          })
+          out='data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.11-CANDIDATE.json'
+          open(out,'w',encoding='utf-8').write(json.dumps(c,ensure_ascii=False,indent=2)+'\n')
+          PY
+
+      - name: Canonicality audit and promote v2.11
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import copy,json
+          cp='data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.11-CANDIDATE.json'
+          c=json.load(open(cp,encoding='utf-8'))
+          r=json.load(open('data/JANUS-LINEAR-A-R3D-PETROLITO-READINESS-RESULT-2026-08-14-v0.1.json',encoding='utf-8'))
+          cand=json.load(open('data/JANUS-LINEAR-A-R3D-PETROLITO-TEI-EPIDOC-SOURCE-RECOVERY-CANDIDATE-2026-08-14-v0.1.json',encoding='utf-8'))
+          br=json.load(open('data/JANUS-LINEAR-A-R3C-1F-BRIAKOS-PRIMARY-METHOD-MATERIAL-ACCESS-RECHECK-2026-08-14-v0.1.json',encoding='utf-8'))
+          checks={
+            'candidate_pending':c['status']=='CANDIDATE_PENDING_CANONICALITY_AUDIT',
+            'R3D_lineage_L1':cand['provenance_classification']['JANUS_independence_class']=='L1_INDEPENDENT_DIGITIZATION_SHARED_TRANSCRIPTION_WITH_GORILA_EDITORIAL_CHECK',
+            'R3D_bytes_absent':r['status']=='BLOCKED_BYTES_NOT_RECOVERED' and r['admitted_receipt_count']==0,
+            'R3D_no_content_scoring':r['scientific_content_scored'] is False,
+            'R3D_no_adapter':r['source_adapter_executed'] is False,
+            'R3D_no_R3B_credit':r['R3B_replication_credit'] is False and c['claim_ceiling']['R3D_R3B_replication_credit'] is False,
+            'Briakos_blocker_preserved':br['claim_ceiling']['new_primary_method_material_acquired'] is False and br['claim_ceiling']['419_scope_resolved'] is False,
+            'no_target_guided_419_search':br['claim_ceiling']['target_guided_subset_search_performed'] is False,
+            'R3B_blocked':c['R3B_independent_editorial_replication_lane']['status']=='UNCHANGED_ACTIVE_BLOCKER',
+            'no_external_replication':c['claim_ceiling']['external_transcription_replication_established'] is False,
+            'no_anchor':c['claim_ceiling']['new_anchor_established'] is False,
+            'no_decipherment':c['claim_ceiling']['decipherment_established'] is False
+          }
+          assert all(checks.values()), {k:v for k,v in checks.items() if not v}
+          audit={
+            'artifact_uuid':'JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.11',
+            'version':'v2.11','node_type':'canonicality_audit_result','status':'CANONICALITY_AUDIT_PASS',
+            'candidate':cp,'promotion_spec':'data/JANUS-LINEAR-A-RESEARCH-STATE-PROMOTION-SPEC-2026-08-14-v2.11.json',
+            'checks':checks,'all_checks_pass':True,
+            'claim_ceiling':{'R3D_bytes_recovered':False,'R3B_effect':'NONE','new_anchor':False,'decipherment':False}
+          }
+          ap='data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.11.json'
+          open(ap,'w',encoding='utf-8').write(json.dumps(audit,ensure_ascii=False,indent=2)+'\n')
+          out=copy.deepcopy(c)
+          out['artifact_uuid']='JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.11'
+          out['version']='v2.11'
+          out['node_type']='canonical_research_state'
+          out['status']='CURRENT_CANONICAL_RESEARCH_STATE'
+          out['canonicality']['current_source_of_truth']=True
+          out['canonicality']['candidate_path']=cp
+          out['canonicality']['canonicality_audit']=ap
+          out['canonicality']['canonicality_audit_status']='CANONICALITY_AUDIT_PASS'
+          out['canonicality']['promotion_rule_satisfied']=True
+          op='data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.11.json'
+          open(op,'w',encoding='utf-8').write(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          PY
+
+      - name: Upload immutable v2.11 canonical package
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-canonical-state-v2.11
+          path: |
+            data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.11-CANDIDATE.json
+            data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.11.json
+            data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.11.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Persist canonical v2.11 package with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "janus-proof-bot"
+          git config user.email "janus-proof-bot@users.noreply.github.com"
+          git add \
+            data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.11-CANDIDATE.json \
+            data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.11.json \
+            data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.11.json
+          git commit -m "Promote Linear A canonical research state v2.11 after R3D recovery gate"
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then pushed=1; break; fi
+            sleep "$attempt"
+          done
+          test "$pushed" = 1
