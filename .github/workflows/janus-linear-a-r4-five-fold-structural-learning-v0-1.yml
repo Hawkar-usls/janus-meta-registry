@@ -1,0 +1,129 @@
+name: JANUS Linear A R4-1 five-fold structural learning v0.1
+
+on:
+  push:
+    paths:
+      - "data/JANUS-LINEAR-A-R4-1-EXECUTE-REQUEST-2026-08-14-v0.1.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  cross_validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout JANUS registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install numeric dependency
+        run: python -m pip install --disable-pip-version-check "numpy>=2.0"
+
+      - name: Verify frozen R4-1 inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile research/linear_a/janus_linear_a_r4_self_supervised_structural_learning_v0_1.py
+          python -m py_compile research/linear_a/janus_linear_a_r4_five_fold_structural_learning_v0_1.py
+          python - <<'PY'
+          import json
+          s=json.load(open('data/JANUS-LINEAR-A-R4-1-FIVE-FOLD-CROSS-VALIDATED-STRUCTURAL-LEARNING-SPEC-2026-08-14-v0.1.json',encoding='utf-8'))
+          p=json.load(open('data/JANUS-LINEAR-A-R4-0-SELF-SUPERVISED-STRUCTURAL-LEARNING-RESULT-2026-08-14-v0.1.1.json',encoding='utf-8'))
+          assert p['status']=='BLOCKED_INSUFFICIENT_EVALUABLE_TEST_MASKS'
+          assert p['heldout_masked_prediction']['evaluable_test_masks']==41
+          assert s['cross_validation']['folds']==5
+          assert s['cross_validation']['evaluation_target_status']=='certain_only'
+          assert s['cross_validation']['source_status_none_reinterpreted'] is False
+          assert s['model_frozen_from_R4_0']['minimum_train_target_frequency']==5
+          assert s['model_frozen_from_R4_0']['directional_context_window']==2
+          assert s['model_frozen_from_R4_0']['svd_rank']==32
+          assert s['model_frozen_from_R4_0']['hyperparameter_changes_after_R4_0_result'] is False
+          PY
+
+      - name: Fetch exact preservation-mirror corpus
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --quiet https://github.com/Hawkar-usls/lineara.xyz.git /tmp/lineara
+          git -C /tmp/lineara checkout --quiet 43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a
+          test "$(git -C /tmp/lineara rev-parse HEAD)" = "43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a"
+          test "$(find /tmp/lineara/items -maxdepth 1 -name '*.html' | wc -l)" -ge 300
+
+      - name: Execute five-fold document-held-out learning
+        env:
+          PYTHONPATH: research/linear_a
+        shell: bash
+        run: |
+          set -euo pipefail
+          python research/linear_a/janus_linear_a_r4_five_fold_structural_learning_v0_1.py \
+            --corpus /tmp/lineara \
+            --spec data/JANUS-LINEAR-A-R4-1-FIVE-FOLD-CROSS-VALIDATED-STRUCTURAL-LEARNING-SPEC-2026-08-14-v0.1.json \
+            --parent-result data/JANUS-LINEAR-A-R4-0-SELF-SUPERVISED-STRUCTURAL-LEARNING-RESULT-2026-08-14-v0.1.1.json \
+            --out data/JANUS-LINEAR-A-R4-1-FIVE-FOLD-CROSS-VALIDATED-STRUCTURAL-LEARNING-RESULT-2026-08-14-v0.1.json
+
+      - name: Enforce cross-validation and epistemic ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-R4-1-FIVE-FOLD-CROSS-VALIDATED-STRUCTURAL-LEARNING-RESULT-2026-08-14-v0.1.json'
+          x=json.load(open(p,encoding='utf-8'))
+          assert x['status'] in {
+            'CROSS_VALIDATED_INTERNAL_CONTEXT_STRUCTURE_SIGNAL_PRESENT',
+            'CROSS_VALIDATED_INTERNAL_CONTEXT_STRUCTURE_SIGNAL_NOT_ADMITTED'
+          }
+          assert x['source']['frozen_commit']=='43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a'
+          assert x['source']['parsed_documents'] >= 300
+          assert len(x['fold_results'])==5
+          assert x['fold_assignment']['each_document_held_out_exactly_once'] is True
+          assert x['parent_R4_0']['promotion_inherited'] is False
+          assert x['leakage_firewall']['source_status_none_reinterpreted'] is False
+          assert x['leakage_firewall']['source_status_doubtful_reinterpreted'] is False
+          assert x['leakage_firewall']['translations_used'] is False
+          assert x['leakage_firewall']['language_dictionaries_used'] is False
+          assert x['leakage_firewall']['Notti_2021_2025_PH13_content_used'] is False
+          assert x['leakage_firewall']['R3B_blind_eligibility_affected'] is False
+          assert x['epistemic_gate']['translation_established'] is False
+          assert x['epistemic_gate']['phonetic_value_established'] is False
+          assert x['epistemic_gate']['new_anchor_established'] is False
+          assert x['epistemic_gate']['decipherment_established'] is False
+          assert x['epistemic_gate']['R3B_external_replication_established'] is False
+          print(json.dumps({
+            'status':x['status'],
+            'admission':x['admission'],
+            'aggregate':x['aggregate_masked_prediction'],
+            'CV_replicated_pair_count':x['cross_fold_structural_analogy']['CV_replicated_pair_count']
+          },sort_keys=True))
+          PY
+
+      - name: Upload R4-1 result
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r4-five-fold-v0-1
+          path: data/JANUS-LINEAR-A-R4-1-FIVE-FOLD-CROSS-VALIDATED-STRUCTURAL-LEARNING-RESULT-2026-08-14-v0.1.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Persist R4-1 result with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          RESULT=data/JANUS-LINEAR-A-R4-1-FIVE-FOLD-CROSS-VALIDATED-STRUCTURAL-LEARNING-RESULT-2026-08-14-v0.1.json
+          git config user.name 'JANUS Evidence Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add "$RESULT"
+          git commit -m 'Register Linear A R4-1 five-fold structural learning result v0.1' || true
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then exit 0; fi
+            git pull --rebase origin main
+          done
+          exit 1
