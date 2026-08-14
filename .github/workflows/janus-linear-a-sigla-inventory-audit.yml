@@ -1,0 +1,101 @@
+name: JANUS Linear A SigLA inventory audit
+
+on:
+  push:
+    paths:
+      - "research/linear_a/janus_linear_a_sigla_inventory_audit.py"
+      - "data/JANUS-LINEAR-A-SIGLA-CROSS-DIGITIZATION-INVENTORY-SPEC-2026-08-14-v1.0.json"
+      - ".github/workflows/janus-linear-a-sigla-inventory-audit.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sigla-inventory-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout JANUS registry
+        uses: actions/checkout@v4
+
+      - name: Validate frozen R3A inventory spec
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-SIGLA-CROSS-DIGITIZATION-INVENTORY-SPEC-2026-08-14-v1.0.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['status']=='FROZEN_BEFORE_EXECUTION'
+          assert d['source_B']['expected_public_document_count_at_spec_time']==802
+          assert d['source_B']['external_transcription_independence'] is False
+          assert d['claim_ceiling']['external_transcription_replication_established'] is False
+          assert d['claim_ceiling']['new_anchor_established'] is False
+          assert d['claim_ceiling']['decipherment_established'] is False
+          PY
+
+      - name: Fetch frozen mwenge baseline
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --quiet https://github.com/mwenge/lineara.xyz.git /tmp/lineara
+          git -C /tmp/lineara checkout --quiet 43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a
+          test "$(git -C /tmp/lineara rev-parse HEAD)" = "43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a"
+          test "$(find /tmp/lineara/items -maxdepth 1 -type f -name '*.html' | wc -l)" -ge 1500
+
+      - name: Run SigLA cross-digitization inventory audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          python3 research/linear_a/janus_linear_a_sigla_inventory_audit.py \
+            --mwenge-root /tmp/lineara \
+            --out artifacts/JANUS-LINEAR-A-SIGLA-CROSS-DIGITIZATION-INVENTORY-RESULT-2026-08-14-v1.0.json \
+            --save-sigla-snapshot artifacts/SIGLA-browse-2026-08-14.html
+
+      - name: Validate inventory result and claim ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          p='artifacts/JANUS-LINEAR-A-SIGLA-CROSS-DIGITIZATION-INVENTORY-RESULT-2026-08-14-v1.0.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['frozen_spec']['commit']=='776c79480a022d4f9a1fffaea31fb0123460dc55'
+          s=d['sources']['SIGLA']
+          m=d['sources']['MWENGE']
+          assert s['http_status']==200
+          assert s['content_length_bytes']>0
+          assert s['extracted_document_count']>=700
+          if s['stated_document_count'] is not None:
+              assert s['stated_document_count']==s['extracted_document_count']
+          assert m['frozen_commit']=='43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a'
+          assert m['item_html_count']>=1500
+          g=d['epistemic_gate']
+          assert g['cross_digitization_inventory_audit_established'] is True
+          assert g['cross_digitization_content_replication_established'] is False
+          assert g['external_transcription_replication_established'] is False
+          assert g['new_anchor_established'] is False
+          assert g['decipherment_established'] is False
+          assert g['promotion']=='NO_PROMOTION'
+          print(json.dumps({
+            'sigla_documents': s['extracted_document_count'],
+            'sigla_stated': s['stated_document_count'],
+            'mwenge_items': m['item_html_count'],
+            'raw_overlap': d['comparison']['raw_exact_overlap_count'],
+            'normalized_overlap': d['comparison']['conservative_normalized_overlap_count'],
+            'sigla_sha256': s['content_sha256'],
+            'external_transcription_replication_established': False,
+          },sort_keys=True))
+          PY
+
+      - name: Upload R3A inventory receipt and source snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-sigla-inventory-audit-v1.0
+          path: |
+            artifacts/JANUS-LINEAR-A-SIGLA-CROSS-DIGITIZATION-INVENTORY-RESULT-2026-08-14-v1.0.json
+            artifacts/SIGLA-browse-2026-08-14.html
+          if-no-files-found: error
+          retention-days: 30
