@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - "research/linear_a/janus_linear_a_full_corpus.py"
+      - "research/linear_a/janus_linear_a_candidate_holdout.py"
       - ".github/workflows/janus-linear-a-full-corpus.yml"
   workflow_dispatch:
 
@@ -38,32 +39,51 @@ jobs:
             --permutations 5000 \
             --seed 260814025
 
+      - name: Run candidate-specific held-out replication
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/linear_a/janus_linear_a_candidate_holdout.py \
+            --corpus /tmp/lineara \
+            --out artifacts/JANUS-LINEAR-A-CANDIDATE-HOLDOUT-2026-08-14-v0.2.json \
+            --permutations 5000 \
+            --seed 260814125
+
       - name: Validate receipt claim ceiling
         shell: bash
         run: |
           set -euo pipefail
           python3 - <<'PY'
           import json
-          p = 'artifacts/JANUS-LINEAR-A-FULL-CORPUS-RUN-2026-08-14.json'
-          d = json.load(open(p, encoding='utf-8'))
-          assert d['source']['frozen_commit'] == '43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a'
-          assert d['corpus_counts']['parsed_inscriptions'] >= 300
-          assert d['corpus_counts']['token_to_number_pairs'] >= 100
-          assert d['epistemic_gate']['new_anchor_established'] is False
-          assert d['epistemic_gate']['decipherment_established'] is False
+          p1 = 'artifacts/JANUS-LINEAR-A-FULL-CORPUS-RUN-2026-08-14.json'
+          p2 = 'artifacts/JANUS-LINEAR-A-CANDIDATE-HOLDOUT-2026-08-14-v0.2.json'
+          d1 = json.load(open(p1, encoding='utf-8'))
+          d2 = json.load(open(p2, encoding='utf-8'))
+          assert d1['source']['frozen_commit'] == '43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a'
+          assert d2['source']['frozen_commit'] == '43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a'
+          assert d1['corpus_counts']['parsed_inscriptions'] >= 300
+          assert d1['corpus_counts']['token_to_number_pairs'] >= 100
+          assert d1['epistemic_gate']['new_anchor_established'] is False
+          assert d1['epistemic_gate']['decipherment_established'] is False
+          assert d2['epistemic_gate']['new_anchor_established'] is False
+          assert d2['epistemic_gate']['decipherment_established'] is False
           print(json.dumps({
-              'parsed_inscriptions': d['corpus_counts']['parsed_inscriptions'],
-              'token_to_number_pairs': d['corpus_counts']['token_to_number_pairs'],
-              'candidate_gate': d['epistemic_gate']['blind_numeric_candidate_gate_pass'],
-              'strongest_fwer_p': d['epistemic_gate']['strongest_familywise_corrected_p'],
-              'claim_ceiling': d['epistemic_gate']['promotion'],
+              'parsed_inscriptions': d1['corpus_counts']['parsed_inscriptions'],
+              'token_to_number_pairs': d1['corpus_counts']['token_to_number_pairs'],
+              'global_candidate_gate': d1['epistemic_gate']['blind_numeric_candidate_gate_pass'],
+              'candidate_specific_heldout_gate': d2['epistemic_gate']['candidate_specific_heldout_gate_pass'],
+              'heldout_survivor_count': d2['epistemic_gate']['heldout_survivor_count'],
+              'new_anchor_established': False,
+              'decipherment_established': False,
           }, sort_keys=True))
           PY
 
-      - name: Upload execution receipt
+      - name: Upload execution receipts
         uses: actions/upload-artifact@v4
         with:
-          name: janus-linear-a-full-corpus-receipt
-          path: artifacts/JANUS-LINEAR-A-FULL-CORPUS-RUN-2026-08-14.json
+          name: janus-linear-a-full-corpus-receipts-v0.2
+          path: |
+            artifacts/JANUS-LINEAR-A-FULL-CORPUS-RUN-2026-08-14.json
+            artifacts/JANUS-LINEAR-A-CANDIDATE-HOLDOUT-2026-08-14-v0.2.json
           if-no-files-found: error
           retention-days: 30
