@@ -1,0 +1,216 @@
+name: JANUS Linear A canonical state v2.13
+
+on:
+  push:
+    paths:
+      - "data/JANUS-LINEAR-A-RESEARCH-STATE-PROMOTION-SPEC-2026-08-14-v2.13.json"
+      - ".github/workflows/janus-linear-a-canonical-state-v2-13.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Audit prerequisites and build v2.13 candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import copy,json,os
+          sp='data/JANUS-LINEAR-A-RESEARCH-STATE-PROMOTION-SPEC-2026-08-14-v2.13.json'
+          spec=json.load(open(sp,encoding='utf-8'))
+          assert spec['status']=='FROZEN_BEFORE_CANONICAL_PROMOTION'
+          parent=json.load(open(spec['parent_canonical']['path'],encoding='utf-8'))
+          assert parent['status']=='CURRENT_CANONICAL_RESEARCH_STATE' and parent['version']=='v2.12'
+          ev={}
+          for key,rule in spec['required_new_evidence'].items():
+              assert os.path.exists(rule['path']), (key,rule['path'])
+              d=json.load(open(rule['path'],encoding='utf-8'))
+              assert d['status']==rule['required_status'], (key,d['status'],rule['required_status'])
+              ev[key]=d
+          p0=ev['P0_readiness']
+          digital=ev['RILA_digital_route']
+          acad=ev['RILA_Academia_candidate']
+          contacts=ev['RILA_contacts']
+          ctla=ev['CTLA_request_packet']
+          tmt=ev['TMT_request_packet']
+          assert p0['route_ranking']==['RILA_S1','CTLA_SECOND_EDITION_1994','TMT_1999']
+          assert p0['requests_sent']==0 and p0['source_bytes_acquired']==0 and p0['R3B_0_admitted_receipts']==0
+          assert p0['scientific_content_inspected'] is False
+          assert digital['claim_ceiling']['full_digital_edition_existence_confirmed'] is True
+          assert digital['claim_ceiling']['local_source_bytes_acquired'] is False
+          assert digital['claim_ceiling']['R3B_0_receipt_admitted'] is False
+          assert acad['claim_ceiling']['source_bytes_acquired'] is False
+          assert acad['claim_ceiling']['R3B_0_receipt_admitted'] is False
+          assert contacts['claim_ceiling']['request_sent'] is False
+          assert ctla['claim_ceiling']['publisher_request_sent'] is False
+          assert ctla['claim_ceiling']['source_bytes_acquired'] is False
+          assert ctla['claim_ceiling']['CTLA_independence_class_admitted'] is False
+          assert tmt['claim_ceiling']['request_sent'] is False
+          assert tmt['claim_ceiling']['source_bytes_acquired'] is False
+          assert tmt['claim_ceiling']['TMT_independence_class_admitted'] is False
+          assert parent['R3B_independent_editorial_replication_lane']['status']=='UNCHANGED_ACTIVE_BLOCKER'
+          assert parent['claim_ceiling']['R3B_0_alternate_editorial_source_bytes_acquired'] is False
+          assert parent['claim_ceiling']['external_transcription_replication_established'] is False
+          assert parent['claim_ceiling']['new_anchor_established'] is False
+          assert parent['claim_ceiling']['decipherment_established'] is False
+          assert os.path.exists(spec['required_runner']) and os.path.exists(spec['required_workflow'])
+
+          c=copy.deepcopy(parent)
+          c['artifact_uuid']='JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.13-CANDIDATE'
+          c['version']='v2.13-candidate'
+          c['title']='JANUS Linear A canonical candidate after multi-route R3B P0 acquisition readiness'
+          c['timestamp']='2026-08-14T19:51:00+03:00'
+          c['node_type']='canonical_research_state_candidate'
+          c['status']='CANDIDATE_PENDING_CANONICALITY_AUDIT'
+          c['canonicality']={
+            'current_source_of_truth':False,
+            'parent_state':spec['parent_canonical']['path'],
+            'promotion_spec':sp,
+            'promotion_prerequisites_pass':True,
+            'history_is_not_deleted':True
+          }
+          c['R3B_0_P0_acquisition_readiness']={
+            'status':'MULTI_ROUTE_READY_RILA_DIGITAL_EDITION_EXISTS_ZERO_BYTES',
+            'readiness_result':spec['required_new_evidence']['P0_readiness']['path'],
+            'readiness_runner':spec['required_runner'],
+            'readiness_workflow':spec['required_workflow'],
+            'readiness_run':31818991445,
+            'readiness_artifact_id':9226161536,
+            'readiness_artifact_digest':'sha256:f028bdd118fb134331cd2a1b68fda2f0e27064288a7b3a58949d790141846e5e',
+            'route_order':['RILA_S1','CTLA_SECOND_EDITION_1994','TMT_1999'],
+            'requests_sent':0,
+            'source_bytes_acquired':0,
+            'R3B_0_admitted_receipts':0,
+            'RILA_S1':{
+              'digital_edition_existence_confirmed':True,
+              'digital_route_reconciliation':spec['required_new_evidence']['RILA_digital_route']['path'],
+              'Academia_public_byte_candidate':spec['required_new_evidence']['RILA_Academia_candidate']['path'],
+              'current_contact_routes':spec['required_new_evidence']['RILA_contacts']['path'],
+              'local_PDF_bytes_acquired':False,
+              'R3B0_admitted':False
+            },
+            'CTLA':{
+              'request_packet':spec['required_new_evidence']['CTLA_request_packet']['path'],
+              'candidate_class':'PROMISING_ALTERNATE_EDITORIAL_CANDIDATE_PROVENANCE_NOT_YET_ADMITTED',
+              'independence_class_admitted':False,
+              'source_bytes_acquired':False
+            },
+            'TMT':{
+              'request_packet':spec['required_new_evidence']['TMT_request_packet']['path'],
+              'candidate_class':'CANDIDATE_ALTERNATE_EDITORIAL_SOURCE_PROVENANCE_NOT_YET_ADMITTED',
+              'independence_class_admitted':False,
+              'source_bytes_acquired':False
+            }
+          }
+          c['next_atomic_requirements']=[
+            {'id':'P0_RILA_S1_BYTE_ACQUISITION','action':'Prefer lawful public/institutional acquisition of the confirmed RILA-S1 digital edition. If local bytes remain unavailable, use the prepared CNR/author request route. Any PDF bytes must pass quarantine and R3B0 receipt before transcription search.'},
+            {'id':'P0_CTLA_BYTE_ACQUISITION','action':'If RILA-S1 remains inaccessible, continue lawful CTLA digital/archive access through Peeters/library routes; classify editorial independence only after byte/provenance receipt.'},
+            {'id':'P0_TMT_BYTE_ACQUISITION','action':'Use the prepared TMT author route only if needed; provenance/independence remains unresolved until exact source receipt.'},
+            {'id':'P1_R3C_3_PAPER_EXACT_INPUT_ACQUISITION','action':'Obtain exact Nepal/Perono 2024 study inputs and normalization evidence; do not infer missing preprocessing.'},
+            {'id':'P2_R3C_1F_BRIAKOS_METHOD_MATERIAL','action':'Continue lawful Briakos method-material recovery without target-guided 419 subset fitting.'},
+            {'id':'P3_R3D_PETROLITO_XML_BYTES','action':'Continue historical TEI-EpiDoc byte recovery with fixed L1 ceiling.'}
+          ]
+          c['highest_admissible_claim']=parent['highest_admissible_claim'] + ' The R3B acquisition lane is now operationally ready across three independent lawful routes ranked RILA-S1, CTLA and TMT. For RILA-S1, official publisher metadata confirms that a full digital PDF edition exists and an institutional EFA Academia document object advertises a free-PDF route whose preview reaches transcription-bearing sections, but JANUS has not acquired or hashed the PDF bytes and the current tool transport cannot retrieve the attachment. CTLA and TMT request routes are prepared, but neither has acquired bytes or an admitted independence class. Therefore P0 readiness is an acquisition-state result only: zero requests sent, zero source bytes acquired, zero R3B0 receipts, and external transcription replication remains blocked.'
+          c['claim_ceiling'].update({
+            'R3B_P0_multi_route_acquisition_ready':True,
+            'R3B_RILA_S1_full_digital_edition_existence_confirmed':True,
+            'R3B_RILA_S1_local_source_bytes_acquired':False,
+            'R3B_CTLA_source_bytes_acquired':False,
+            'R3B_CTLA_independence_class_admitted':False,
+            'R3B_TMT_source_bytes_acquired':False,
+            'R3B_TMT_independence_class_admitted':False,
+            'R3B_P0_requests_sent':0,
+            'R3B_0_alternate_editorial_source_bytes_acquired':False,
+            'external_transcription_replication_established':False,
+            'new_anchor_established':False,
+            'decipherment_established':False,
+            'promotion':'BLOCKED'
+          })
+          out='data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.13-CANDIDATE.json'
+          open(out,'w',encoding='utf-8').write(json.dumps(c,ensure_ascii=False,indent=2)+'\n')
+          PY
+
+      - name: Canonicality audit and promote v2.13
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import copy,json
+          cp='data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.13-CANDIDATE.json'
+          c=json.load(open(cp,encoding='utf-8'))
+          p0=json.load(open('data/JANUS-LINEAR-A-R3B-0-P0-ACQUISITION-READINESS-RESULT-2026-08-14-v1.0.json',encoding='utf-8'))
+          digital=json.load(open('data/JANUS-LINEAR-A-R3B-0-RILA-S1-DIGITAL-EDITION-ROUTE-RECONCILIATION-2026-08-14-v0.1.json',encoding='utf-8'))
+          ctla=json.load(open('data/JANUS-LINEAR-A-R3B-0-CTLA-ACQUISITION-REQUEST-PACKET-2026-08-14-v0.1.json',encoding='utf-8'))
+          tmt=json.load(open('data/JANUS-LINEAR-A-R3B-0-TMT-ACQUISITION-REQUEST-PACKET-2026-08-14-v0.1.json',encoding='utf-8'))
+          checks={
+            'candidate_pending':c['status']=='CANDIDATE_PENDING_CANONICALITY_AUDIT',
+            'P0_ready_zero_bytes':p0['status']=='P0_READY_FOR_LAWFUL_ACQUISITION_NO_BYTES' and p0['source_bytes_acquired']==0,
+            'P0_zero_requests':p0['requests_sent']==0,
+            'P0_zero_R3B0_receipts':p0['R3B_0_admitted_receipts']==0,
+            'RILA_digital_exists_bytes_absent':digital['claim_ceiling']['full_digital_edition_existence_confirmed'] is True and digital['claim_ceiling']['local_source_bytes_acquired'] is False,
+            'CTLA_bytes_absent_independence_unadmitted':ctla['claim_ceiling']['source_bytes_acquired'] is False and ctla['claim_ceiling']['CTLA_independence_class_admitted'] is False,
+            'TMT_bytes_absent_independence_unadmitted':tmt['claim_ceiling']['source_bytes_acquired'] is False and tmt['claim_ceiling']['TMT_independence_class_admitted'] is False,
+            'R3B_blocked':c['R3B_independent_editorial_replication_lane']['status']=='UNCHANGED_ACTIVE_BLOCKER',
+            'no_external_replication':c['claim_ceiling']['external_transcription_replication_established'] is False,
+            'no_anchor':c['claim_ceiling']['new_anchor_established'] is False,
+            'no_decipherment':c['claim_ceiling']['decipherment_established'] is False
+          }
+          assert all(checks.values()), {k:v for k,v in checks.items() if not v}
+          audit={
+            'artifact_uuid':'JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.13',
+            'version':'v2.13','node_type':'canonicality_audit_result','status':'CANONICALITY_AUDIT_PASS',
+            'candidate':cp,'promotion_spec':'data/JANUS-LINEAR-A-RESEARCH-STATE-PROMOTION-SPEC-2026-08-14-v2.13.json',
+            'checks':checks,'all_checks_pass':True,
+            'claim_ceiling':{'new_scientific_claim':False,'R3B_effect':'NONE','new_anchor':False,'decipherment':False}
+          }
+          ap='data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.13.json'
+          open(ap,'w',encoding='utf-8').write(json.dumps(audit,ensure_ascii=False,indent=2)+'\n')
+          out=copy.deepcopy(c)
+          out['artifact_uuid']='JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.13'
+          out['version']='v2.13'; out['node_type']='canonical_research_state'; out['status']='CURRENT_CANONICAL_RESEARCH_STATE'
+          out['canonicality']['current_source_of_truth']=True
+          out['canonicality']['candidate_path']=cp
+          out['canonicality']['canonicality_audit']=ap
+          out['canonicality']['canonicality_audit_status']='CANONICALITY_AUDIT_PASS'
+          out['canonicality']['promotion_rule_satisfied']=True
+          op='data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.13.json'
+          open(op,'w',encoding='utf-8').write(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          PY
+
+      - name: Upload immutable v2.13 canonical package
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-canonical-state-v2.13
+          path: |
+            data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.13-CANDIDATE.json
+            data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.13.json
+            data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.13.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Persist canonical v2.13 with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "janus-proof-bot"
+          git config user.email "janus-proof-bot@users.noreply.github.com"
+          git add data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.13-CANDIDATE.json data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-14-v2.13.json data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.13.json
+          git commit -m "Promote Linear A canonical research state v2.13 after P0 acquisition readiness"
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then pushed=1; break; fi
+            sleep "$attempt"
+          done
+          test "$pushed" = 1
