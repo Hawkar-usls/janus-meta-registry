@@ -8,6 +8,7 @@ on:
       - "research/linear_a/janus_linear_a_survivor_decomposition.py"
       - "research/linear_a/janus_linear_a_vir_subtype.py"
       - "research/linear_a/janus_linear_a_known_subtracted.py"
+      - "research/linear_a/janus_linear_a_record_role.py"
       - ".github/workflows/janus-linear-a-full-corpus.yml"
   workflow_dispatch:
 
@@ -83,6 +84,17 @@ jobs:
             --test-permutations 10000 \
             --seed 260814425
 
+      - name: Run record-role cross-region search
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 research/linear_a/janus_linear_a_record_role.py \
+            --corpus /tmp/lineara \
+            --out artifacts/JANUS-LINEAR-A-RECORD-ROLE-CROSS-REGION-2026-08-14-v0.6.json \
+            --train-permutations 5000 \
+            --test-permutations 10000 \
+            --seed 260814525
+
       - name: Validate receipt claim ceiling
         shell: bash
         run: |
@@ -95,10 +107,11 @@ jobs:
               'artifacts/JANUS-LINEAR-A-SURVIVOR-DECOMPOSITION-2026-08-14-v0.3.json',
               'artifacts/JANUS-LINEAR-A-VIR-SUBTYPE-2026-08-14-v0.4.json',
               'artifacts/JANUS-LINEAR-A-KNOWN-SUBTRACTED-CROSS-REGION-2026-08-14-v0.5.json',
+              'artifacts/JANUS-LINEAR-A-RECORD-ROLE-CROSS-REGION-2026-08-14-v0.6.json',
           ]
-          d1, d2, d3, d4, d5 = [json.load(open(p, encoding='utf-8')) for p in paths]
+          d1, d2, d3, d4, d5, d6 = [json.load(open(p, encoding='utf-8')) for p in paths]
           frozen = '43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a'
-          for d in (d1, d2, d3, d4, d5):
+          for d in (d1, d2, d3, d4, d5, d6):
               assert d['source']['frozen_commit'] == frozen
               assert d['epistemic_gate']['new_anchor_established'] is False
               assert d['epistemic_gate']['decipherment_established'] is False
@@ -107,12 +120,15 @@ jobs:
           assert d3['epistemic_gate']['promotion'] == 'BLOCKED'
           assert d4['counts']['a100_102_pairs'] >= 3
           assert d5['methodology']['replication_is_pristine_unseen_holdout'] is False
+          assert d6['methodology']['replication_is_pristine_unseen_holdout'] is False
           print(json.dumps({
               'parsed_inscriptions': d1['corpus_counts']['parsed_inscriptions'],
               'heldout_survivor_count_v02': d2['epistemic_gate']['heldout_survivor_count'],
               'RO_promotable_as_new_anchor': d3['epistemic_gate']['RO_promotable_as_new_anchor'],
               'A100_102_quantitative_subtype_candidate': d4['epistemic_gate']['quantitative_subtype_candidate'],
               'known_subtracted_cross_region_survivors': d5['epistemic_gate']['cross_region_survivor_count'],
+              'record_role_cross_region_survivors': d6['epistemic_gate']['cross_region_survivor_count'],
+              'record_role_candidate_exists': d6['epistemic_gate']['record_role_candidate_exists'],
               'new_anchor_established': False,
               'decipherment_established': False,
           }, sort_keys=True))
@@ -121,12 +137,13 @@ jobs:
       - name: Upload execution receipts
         uses: actions/upload-artifact@v4
         with:
-          name: janus-linear-a-full-corpus-receipts-v0.5
+          name: janus-linear-a-full-corpus-receipts-v0.6
           path: |
             artifacts/JANUS-LINEAR-A-FULL-CORPUS-RUN-2026-08-14.json
             artifacts/JANUS-LINEAR-A-CANDIDATE-HOLDOUT-2026-08-14-v0.2.json
             artifacts/JANUS-LINEAR-A-SURVIVOR-DECOMPOSITION-2026-08-14-v0.3.json
             artifacts/JANUS-LINEAR-A-VIR-SUBTYPE-2026-08-14-v0.4.json
             artifacts/JANUS-LINEAR-A-KNOWN-SUBTRACTED-CROSS-REGION-2026-08-14-v0.5.json
+            artifacts/JANUS-LINEAR-A-RECORD-ROLE-CROSS-REGION-2026-08-14-v0.6.json
           if-no-files-found: error
           retention-days: 30
