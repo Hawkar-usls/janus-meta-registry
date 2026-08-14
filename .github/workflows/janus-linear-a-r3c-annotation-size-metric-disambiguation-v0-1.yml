@@ -1,0 +1,99 @@
+name: JANUS Linear A R3C annotation size metric disambiguation v0.1
+
+on:
+  push:
+    paths:
+      - ".github/workflows/janus-linear-a-r3c-annotation-size-metric-disambiguation-v0-1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  disambiguate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compile runner
+        run: |
+          python3 -m py_compile \
+            research/linear_a/janus_linear_a_r3c_annotation_parser_validation_v0_1.py \
+            research/linear_a/janus_linear_a_r3c_annotation_size_metric_disambiguation_v0_1.py
+
+      - name: Verify contaminated hypothesis freeze
+        run: |
+          python3 - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-SIZE-METRIC-DISAMBIGUATION-SPEC-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['status']=='FROZEN_BEFORE_EXECUTION'
+          assert d['hypothesis_generation_contamination']['therefore_blind_credit'] is False
+          assert d['claim_ceiling']['metadata_only'] is True
+          PY
+
+      - name: Checkout exact historical annotation source
+        uses: actions/checkout@v4
+        with:
+          repository: mwenge/lineara.xyz
+          ref: 568f452c7a5ec80fa292cb307ead2fc6f65d07fb
+          path: external/mwenge-annotation
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            annotations.js
+          sparse-checkout-cone-mode: false
+
+      - name: Re-prove source and execute metric disambiguation
+        shell: bash
+        env:
+          PYTHONPATH: research/linear_a
+        run: |
+          set -euo pipefail
+          test "$(sha256sum external/mwenge-annotation/annotations.js | awk '{print $1}')" = "7ce1f87a98827d059a732cc00506c635b4d5f65b2d0e2f1592fc2b67827758cd"
+          python3 research/linear_a/janus_linear_a_r3c_annotation_size_metric_disambiguation_v0_1.py \
+            --source external/mwenge-annotation/annotations.js \
+            --output data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-SIZE-METRIC-DISAMBIGUATION-RESULT-2026-08-14-v0.1.json
+
+      - name: Enforce metadata-only claim ceiling
+        run: |
+          python3 - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-SIZE-METRIC-DISAMBIGUATION-RESULT-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['interpretation']['author_measurement_implementation_inferred'] is False
+          assert d['interpretation']['unit_label_mismatch_called_proven'] is False
+          assert d['interpretation']['blind_credit'] is False
+          assert d['claim_ceiling']['metadata_only'] is True
+          assert d['claim_ceiling']['R3B_effect']=='NONE'
+          assert d['claim_ceiling']['decipherment'] is False
+          PY
+
+      - name: Upload immutable result
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r3c-annotation-size-metric-disambiguation-v0.1
+          path: data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-SIZE-METRIC-DISAMBIGUATION-RESULT-2026-08-14-v0.1.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Persist result with concurrent-main recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "janus-proof-bot"
+          git config user.email "janus-proof-bot@users.noreply.github.com"
+          git add data/JANUS-LINEAR-A-R3C-1E-ANNOTATION-SIZE-METRIC-DISAMBIGUATION-RESULT-2026-08-14-v0.1.json
+          git commit -m "Register Linear A annotation size metric disambiguation v0.1"
+          pushed=0
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then pushed=1; break; fi
+            sleep "$attempt"
+          done
+          test "$pushed" = 1
