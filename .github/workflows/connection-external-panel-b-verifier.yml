@@ -1,0 +1,56 @@
+name: Connection external Panel B verifier
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/connection/janus_connection_external_panel_b_verifier_v0_1.py'
+      - 'data/JANUS-CONNECTION-EXTERNAL-PANEL-B-RESULT-RECORDS-SELECTION-2026-08-14-v0.1.json'
+      - 'data/JANUS-CONNECTION-EXTERNAL-PANEL-B-RUBRIC-2026-08-14-v0.1.json'
+      - 'data/JANUS-CONNECTION-EXTERNAL-PANEL-B-RESULT-2026-08-14-v0.1.json'
+      - '.github/workflows/connection-external-panel-b-verifier.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify selection, labels, collapse and transport threshold
+        run: |
+          mkdir -p out
+          python tools/connection/janus_connection_external_panel_b_verifier_v0_1.py \
+            --selection data/JANUS-CONNECTION-EXTERNAL-PANEL-B-RESULT-RECORDS-SELECTION-2026-08-14-v0.1.json \
+            --rubric data/JANUS-CONNECTION-EXTERNAL-PANEL-B-RUBRIC-2026-08-14-v0.1.json \
+            --result data/JANUS-CONNECTION-EXTERNAL-PANEL-B-RESULT-2026-08-14-v0.1.json \
+            > out/JANUS-CONNECTION-EXTERNAL-PANEL-B-VERIFICATION-RECEIPT-2026-08-14-v0.1.json
+      - name: Enforce verifier receipt and claim ceiling
+        run: |
+          python - <<'PY'
+          import json
+          p='out/JANUS-CONNECTION-EXTERNAL-PANEL-B-VERIFICATION-RECEIPT-2026-08-14-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['status']=='PASS_EXTERNAL_PANEL_B_MECHANICAL_VERIFICATION'
+          assert d['selected_records']==21
+          assert d['repositories']==8
+          assert d['promoted']==[]
+          assert d['recomputed']['HIDDEN-002']['strong_repositories']==4
+          assert d['recomputed']['HIDDEN-002']['weak_repositories']==1
+          assert d['recomputed']['HIDDEN-002']['actual_output_supporting_repositories']==0
+          assert d['recomputed']['HIDDEN-002']['outcome']=='EXTERNAL_RECURRENCE_OBSERVED_NOT_TRANSPORT_PROMOTED'
+          assert d['recomputed']['HIDDEN-001']['outcome']=='EXTERNAL_PANEL_B_NOT_TRANSPORTED'
+          assert d['recomputed']['HIDDEN-003']['outcome']=='EXTERNAL_PANEL_B_NOT_TRANSPORTED'
+          assert d['recomputed']['HIDDEN-006']['outcome']=='EXTERNAL_PANEL_B_NOT_TRANSPORTED'
+          print('PASS_EXTERNAL_PANEL_B_VERIFIER_CLAIM_CEILING')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: connection-external-panel-b-verification-v0.1
+          path: out/JANUS-CONNECTION-EXTERNAL-PANEL-B-VERIFICATION-RECEIPT-2026-08-14-v0.1.json
+          retention-days: 30
