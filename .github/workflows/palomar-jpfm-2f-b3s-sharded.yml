@@ -1,0 +1,193 @@
+name: Palomar JPFM-2F-B3S sharded compatibility replay
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/palomar-jpfm-2f-b3s-sharded.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  shard:
+    name: b3s-shard-${{ matrix.shard }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        shard: [0, 1, 2, 3]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install frozen replay environment
+        run: |
+          sudo apt-get update >/dev/null
+          sudo apt-get install -y source-extractor psfex >/dev/null
+          if ! command -v sex >/dev/null 2>&1; then
+            if command -v source-extractor >/dev/null 2>&1; then sudo ln -sf "$(command -v source-extractor)" /usr/local/bin/sex; else sudo ln -sf "$(command -v sextractor)" /usr/local/bin/sex; fi
+          fi
+          command -v sex
+          command -v psfex
+          python -m pip install -q \
+            numpy==2.2.6 pandas==2.3.1 scipy==1.16.1 requests==2.32.4 \
+            astropy==8.0.1 photutils==3.0.0 opencv-python-headless==5.0.0.93 \
+            'fsspec[http]==2026.6.0'
+          git clone -q --filter=blob:none --no-checkout https://github.com/jannefi/poss1-plate-slice.git work/poss1-src
+          git -C work/poss1-src checkout -q 4005e200541b321ead3d6608f0162a14430ef1c2
+          test "$(git -C work/poss1-src rev-parse HEAD)" = "4005e200541b321ead3d6608f0162a14430ef1c2"
+
+      - name: Syntax, preregistration and external-label firewall gates
+        run: |
+          python -m py_compile \
+            tools/palomar/jpfm_2f_b2_tile_lineage_replay.py \
+            tools/palomar/jpfm_2f_b3_shape_compat_replay.py \
+            tools/palomar/jpfm_2f_b3s_shard.py \
+            tools/palomar/jpfm_2f_b3s_aggregate.py
+          python - <<'PY'
+          import json, pathlib
+          p=pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-B3S-SHARDED-EXECUTION-PLAN-v1.0.json')
+          d=json.loads(p.read_text())
+          assert d['status']=='PREREGISTERED_AFTER_B3_WALLCLOCK_TIMEOUT_WITHOUT_B3_OUTCOME__BEFORE_B3S_OUTCOME'
+          assert d['sharding_contract']['shard_count']==4
+          assert d['frozen_sample']['same_64_as_B1_B2_B3'] is True
+          assert d['external_label_firewall']['external_label_reveal_after_B3S'] is False
+          print('PASS_JPFM_2F_B3S_EXECUTION_PLAN_GATE')
+          PY
+          if grep -Eiq 'kp\.gfz|aa\.usno|nuclear-explosions|bluebook|nuforc' \
+             tools/palomar/jpfm_2f_b3s_shard.py tools/palomar/jpfm_2f_b3s_aggregate.py; then
+            echo 'FAIL: external-label source present in B3S code'; exit 1
+          fi
+          if grep -Eiq 'hdul\[0\]\.data|remote_hdu\.data' tools/palomar/jpfm_2f_b3s_shard.py; then
+            echo 'FAIL: forbidden full remote plate access in B3S shard runner'; exit 1
+          fi
+          echo 'PASS_JPFM_2F_B3S_FIREWALL_GATE'
+
+      - name: Execute deterministic tile shard
+        run: |
+          mkdir -p work/b3s-${{ matrix.shard }} work/out-${{ matrix.shard }}
+          python tools/palomar/jpfm_2f_b3s_shard.py \
+            --manifest data/JANUS-PALOMAR-JPFM-2F-A-BLIND-STRUCTURAL-CLUSTER-MANIFEST-RUN-001.csv.gz \
+            --upstream-root work/poss1-src \
+            --work-dir work/b3s-${{ matrix.shard }} \
+            --out-dir work/out-${{ matrix.shard }} \
+            --shard-index ${{ matrix.shard }} \
+            --shard-count 4
+
+      - name: Validate shard receipt without global inference
+        run: |
+          SHARD='${{ matrix.shard }}' python - <<'PY'
+          import gzip, hashlib, io, json, os, pathlib, pandas as pd
+          i=int(os.environ['SHARD'])
+          root=pathlib.Path(f'work/out-{i}')
+          rp=root/f'JANUS-PALOMAR-JPFM-2F-B3S-SHARD-{i}-RECEIPT-RUN-001.json'
+          r=json.loads(rp.read_text())
+          assert r['status']=='EXECUTED_SHARD_RECEIPT__NO_GLOBAL_OUTCOME'
+          assert r['shard']['index']==i and r['shard']['count']==4
+          assert r['shard']['distinct_tiles']==13
+          assert r['external_label_firewall']['external_label_reveal_authorized'] is False
+          sp=root/r['sidecar']['path']; gz=sp.read_bytes(); raw=gzip.decompress(gz)
+          assert hashlib.sha256(gz).hexdigest()==r['sidecar']['gzip_sha256']
+          assert hashlib.sha256(raw).hexdigest()==r['sidecar']['csv_sha256']
+          df=pd.read_csv(io.BytesIO(raw))
+          assert len(df)==r['sidecar']['rows'] and df.src_id.nunique()==len(df)
+          print('PASS_JPFM_2F_B3S_SHARD_ARTIFACT_GATE', i, 'rows', len(df))
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jpfm-2f-b3s-shard-${{ matrix.shard }}
+          path: work/out-${{ matrix.shard }}/
+          if-no-files-found: error
+          retention-days: 30
+
+  aggregate:
+    name: b3s-aggregate
+    needs: shard
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install aggregate environment
+        run: |
+          python -m pip install -q numpy==2.2.6 pandas==2.3.1 requests==2.32.4 astropy==8.0.1
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: jpfm-2f-b3s-shard-*
+          path: work/shards
+          merge-multiple: true
+
+      - name: Aggregate exact shard union and evaluate frozen B3 gates
+        run: |
+          python tools/palomar/jpfm_2f_b3s_aggregate.py \
+            --manifest data/JANUS-PALOMAR-JPFM-2F-A-BLIND-STRUCTURAL-CLUSTER-MANIFEST-RUN-001.csv.gz \
+            --shards-dir work/shards \
+            --plan data/JANUS-PALOMAR-JPFM-2F-B3S-SHARDED-EXECUTION-PLAN-v1.0.json \
+            --out-json data/JANUS-PALOMAR-JPFM-2F-B3S-SHARD-AGGREGATE-RUN-001.json \
+            --out-sidecar-gz data/JANUS-PALOMAR-JPFM-2F-B3S-SHARD-AGGREGATE-SIDECAR-RUN-001.csv.gz
+
+      - name: Validate aggregate artifact without forcing PASS
+        run: |
+          python - <<'PY'
+          import gzip, hashlib, io, json, pathlib, pandas as pd
+          jp=pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-B3S-SHARD-AGGREGATE-RUN-001.json')
+          cp=pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-B3S-SHARD-AGGREGATE-SIDECAR-RUN-001.csv.gz')
+          d=json.loads(jp.read_text())
+          allowed={
+            'PASS_SHAPE_COMPATIBILITY_REPLAY__PIXEL_MORPHOLOGY_PILOT_ADMITTED',
+            'FAIL_CLOSED_TILE_OR_DETECTION_REPLAY','FAIL_CLOSED_OBJECT_LINEAGE',
+            'FAIL_CLOSED_RAW_MORPHOLOGY','FAIL_CLOSED_SHAPE_COMPATIBILITY_REPAIR'
+          }
+          assert d['status']=='EXECUTED_AND_SHARD_INTEGRITY_VERIFIED'
+          assert d['outcome'] in allowed
+          assert d['shard_integrity']['gate_pass'] is True
+          assert d['shard_integrity']['shard_count']==4
+          assert d['shard_integrity']['distinct_tiles_union']==52
+          assert d['shard_integrity']['source_rows_union']==64
+          assert d['shard_integrity']['source_ids_unique']==64
+          assert d['external_label_firewall']['external_label_reveal_authorized'] is False
+          gz=cp.read_bytes(); raw=gzip.decompress(gz)
+          assert hashlib.sha256(gz).hexdigest()==d['sidecar']['gzip_sha256']
+          assert hashlib.sha256(raw).hexdigest()==d['sidecar']['csv_sha256']
+          df=pd.read_csv(io.BytesIO(raw)); assert len(df)==64 and df.src_id.nunique()==64
+          print('PASS_JPFM_2F_B3S_AGGREGATE_ARTIFACT_GATE', d['outcome'])
+          PY
+
+      - name: Preserve compact shard receipts
+        run: |
+          cp work/shards/JANUS-PALOMAR-JPFM-2F-B3S-SHARD-*-RECEIPT-RUN-001.json data/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jpfm-2f-b3s-aggregate-run-001
+          path: |
+            data/JANUS-PALOMAR-JPFM-2F-B3S-SHARD-AGGREGATE-RUN-001.json
+            data/JANUS-PALOMAR-JPFM-2F-B3S-SHARD-AGGREGATE-SIDECAR-RUN-001.csv.gz
+            data/JANUS-PALOMAR-JPFM-2F-B3S-SHARD-*-RECEIPT-RUN-001.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Commit validated aggregate and compact receipts only
+        run: |
+          git config user.name 'janus-jpfm-ci'
+          git config user.email 'actions@users.noreply.github.com'
+          git add \
+            data/JANUS-PALOMAR-JPFM-2F-B3S-SHARD-AGGREGATE-RUN-001.json \
+            data/JANUS-PALOMAR-JPFM-2F-B3S-SHARD-AGGREGATE-SIDECAR-RUN-001.csv.gz \
+            data/JANUS-PALOMAR-JPFM-2F-B3S-SHARD-*-RECEIPT-RUN-001.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Record JPFM-2F-B3S sharded morphology replay [skip ci]'
+          git pull --rebase origin main
+          git push
