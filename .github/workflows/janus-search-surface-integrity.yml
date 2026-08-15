@@ -3,6 +3,7 @@ name: "JANUS Search Surface integrity"
 on:
   push:
     paths:
+      - 'README.md'
       - 'index.html'
       - '404.html'
       - 'assets/site.css'
@@ -21,6 +22,7 @@ on:
       - '.github/workflows/janus-search-surface-integrity.yml'
   pull_request:
     paths:
+      - 'README.md'
       - 'index.html'
       - '404.html'
       - 'assets/site.css'
@@ -104,6 +106,11 @@ jobs:
           for required in ['JANUS Meta Registry', 'GAMARJOBA GEN_ANCVALE', 'JANUS ANTIFUCK', 'Linear A', 'P vs NP remains open']:
               assert required in guide, f'llms.txt missing {required}'
 
+          readme = Path('README.md').read_text(encoding='utf-8')
+          assert base in readme, 'README must expose the Pages site'
+          assert 'data/JANUS-SEARCH-SURFACE-v1.0.json' in readme
+          assert 'navigation, not scientific authority' in readme
+
           cfg = json.loads(Path('data/JANUS-SEARCH-SURFACE-v1.0.json').read_text(encoding='utf-8'))
           assert cfg['base_url'] == base
           assert cfg['pages_configuration_observed']['enabled'] is True
@@ -126,6 +133,7 @@ jobs:
           print(f'INDEXABLE_PAGE_COUNT={len(pages)}')
           print(f'UNIQUE_TITLE_COUNT={len(titles)}')
           print(f'SITEMAP_URL_COUNT={len(locs)}')
+          print('README_SITE_BINDING=PASS')
           print('META_KEYWORDS=ABSENT')
           print('RANKING_GUARANTEE=FALSE')
           print('SEARCH_CONSOLE_VERIFIED=FALSE')
