@@ -9,7 +9,7 @@
   const MAX_PER_LOGIN = 3;
   const MAX_CHARS = 100;
   const LIVE_CACHE_KEY = 'janus-guestbook-live-v1';
-  const LIVE_CACHE_MS = 5 * 60 * 1000;
+  const LIVE_CACHE_MS = 60 * 1000;
 
   const latinMap = {
     '@': 'a', '$': 's', '0': 'o', '1': 'i', '3': 'e', '4': 'a', '5': 's', '7': 't',
