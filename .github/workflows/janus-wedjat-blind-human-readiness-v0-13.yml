@@ -1,0 +1,38 @@
+name: JANUS Wedjat blind human readiness v0.13
+
+on:
+  pull_request:
+    paths:
+      - 'research/wedjat/janus_wedjat_blind_human_packet_builder_v0_13.py'
+      - 'research/wedjat/WEDJAT_BLIND_HUMAN_ANNOTATOR_INSTRUCTIONS_v0_13.md'
+      - 'research/wedjat/wedjat_blind_source_manifest_v0_13.example.json'
+      - 'data/JANUS-WEDJAT-BLIND-HUMAN-ANNOTATION-READINESS-2026-08-16-v0.13.json'
+      - '.github/workflows/janus-wedjat-blind-human-readiness-v0-13.yml'
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Compile packet builder
+        run: python -m py_compile research/wedjat/janus_wedjat_blind_human_packet_builder_v0_13.py
+      - name: Verify frozen readiness artifact
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('data/JANUS-WEDJAT-BLIND-HUMAN-ANNOTATION-READINESS-2026-08-16-v0.13.json')
+          d=json.loads(p.read_text())
+          assert d['status']=='BLIND_PACKET_INFRASTRUCTURE_READY_PRIMARY_HUMAN_GATE_BLOCKED_ON_EXACT_SOURCE_BYTES_AND_TWO_HUMAN_SUBMISSIONS'
+          assert d['current_runtime_contact_sheet_audit']['primary_blind_annotation_eligible'] is False
+          assert d['official_source_reachability_check_2026_08_16']['raw_byte_acquisition_in_active_execution_environment']=='NOT_COMPLETED'
+          fw=set(d['claim_firewall'])
+          assert 'PACKET_BUILDER_IS_NOT_A_HUMAN_ANNOTATOR' in fw
+          assert 'NO_GLYPH_SCORING_BEFORE_BOTH_HUMAN_PACKAGES_ARE_FROZEN' in fw
+          assert d['two_human_submission_gate']['minimum']==2
+          print('v0.13 readiness canaries PASS')
+          PY
