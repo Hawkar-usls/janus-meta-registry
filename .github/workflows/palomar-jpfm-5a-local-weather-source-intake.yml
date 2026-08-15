@@ -1,0 +1,62 @@
+name: Palomar JPFM-5A local weather intake
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'data/JANUS-PALOMAR-JPFM-5A-LOCAL-WEATHER-ACQUISITION-GATE-v1.0.json'
+      - 'tools/palomar/jpfm_5a_local_weather_source_intake.py'
+      - '.github/workflows/palomar-jpfm-5a-local-weather-source-intake.yml'
+permissions:
+  contents: write
+jobs:
+  intake:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: python -m pip install pandas==2.3.1 requests==2.32.4
+      - run: python -m py_compile tools/palomar/jpfm_5a_local_weather_source_intake.py
+      - name: Verify source-only admission
+        run: |
+          python - <<'PY'
+          import json,pathlib
+          d=json.loads(pathlib.Path('data/JANUS-PALOMAR-JPFM-5A-LOCAL-WEATHER-ACQUISITION-GATE-v1.0.json').read_text())
+          assert d['status']=='PREREGISTERED_SOURCE_ACQUISITION_GATE__NO_POSS_OR_BLUEBOOK_OUTCOME_JOIN'
+          assert d['outcome_blindness']['poss1_access'] is False
+          assert d['current_authority_changed'] is False
+          print('PASS_5A_ACQUISITION_GATE')
+          PY
+      - name: Resolve and freeze official NCEI station source
+        run: |
+          mkdir -p out
+          python tools/palomar/jpfm_5a_local_weather_source_intake.py --out out/JANUS-PALOMAR-JPFM-5A-LOCAL-WEATHER-SOURCE-INTAKE-v1.0.json
+      - name: Validate source-only result
+        run: |
+          python - <<'PY'
+          import json,pathlib
+          d=json.loads(pathlib.Path('out/JANUS-PALOMAR-JPFM-5A-LOCAL-WEATHER-SOURCE-INTAKE-v1.0.json').read_text())
+          assert d['status']=='OUTCOME_BLIND_NCEI_STATION_SELECTED_AND_SOURCE_FROZEN'
+          assert d['coverage']['rows_in_window']>0
+          assert d['outcome_blindness']['poss1_access'] is False
+          assert d['outcome_blindness']['association_computed'] is False
+          print('PASS_5A_SOURCE_INTAKE')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jpfm-5a-local-weather-source-intake-v1
+          path: out/JANUS-PALOMAR-JPFM-5A-LOCAL-WEATHER-SOURCE-INTAKE-v1.0.json
+          retention-days: 30
+          if-no-files-found: error
+      - name: Commit compact source intake
+        run: |
+          cp out/JANUS-PALOMAR-JPFM-5A-LOCAL-WEATHER-SOURCE-INTAKE-v1.0.json data/JANUS-PALOMAR-JPFM-5A-LOCAL-WEATHER-SOURCE-INTAKE-v1.0.json
+          git config user.name 'janus-jpfm-ci'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/JANUS-PALOMAR-JPFM-5A-LOCAL-WEATHER-SOURCE-INTAKE-v1.0.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Add JPFM-5A Palomar weather source intake [skip ci]'
+          git pull --rebase origin main
+          git push
