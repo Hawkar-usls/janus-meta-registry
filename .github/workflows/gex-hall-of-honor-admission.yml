@@ -18,7 +18,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p registry/hall_of_honor
-          cat .gex-stage/part*.b64 | tr -d '\n' | base64 -d > registry/hall_of_honor/GEX-THE-GREEN-CHANNEL-v1.2.json
+          cat .gex-stage/gzpart*.b64 | tr -d '\n' | base64 -d | gzip -d > registry/hall_of_honor/GEX-THE-GREEN-CHANNEL-v1.2.json
           echo "6cc6f83c5b1f108b4483bf3dc46f06148e2da12aa3ea92f5a1f280f46d1143ba  registry/hall_of_honor/GEX-THE-GREEN-CHANNEL-v1.2.json" | sha256sum -c -
           python -m json.tool registry/hall_of_honor/GEX-THE-GREEN-CHANNEL-v1.2.json >/dev/null
       - name: Surface Channel 001 in START_HERE
