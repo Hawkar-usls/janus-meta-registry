@@ -1,0 +1,40 @@
+name: "✦ JANUS Guestbook"
+description: "Leave one short public message for the JANUS guestbook ticker. GitHub login becomes the displayed nickname."
+title: "[GUESTBOOK] "
+labels:
+  - "janus-guestbook"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Welcome to the JANUS Guestbook
+
+        Your GitHub login will be shown as the nickname in the public ticker, for example:
+
+        `@your-login: your message`
+
+        **House rules**
+        - maximum **100 characters** per message;
+        - maximum **3 guestbook submissions per GitHub account**;
+        - criticism and disagreement with JANUS are allowed;
+        - a message that combines `JANUS / Janus / Янус` with profanity or a direct degrading insult is automatically excluded from the ticker and recorded only in the quarantine audit ledger;
+        - do not submit secrets, private data, doxxing material, graphic/illegal content, or personal crisis information.
+
+        Publication is automatic after deterministic checks. There is no manual approval queue.
+
+  - type: textarea
+    id: message
+    attributes:
+      label: Message
+      description: "One short public message. Keep it within 100 characters."
+      placeholder: "Negative results are still results. Keep the door open."
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: public-consent
+    attributes:
+      label: Public display
+      options:
+        - label: "I understand that my GitHub login and accepted message may be displayed publicly on the JANUS website."
+          required: true
