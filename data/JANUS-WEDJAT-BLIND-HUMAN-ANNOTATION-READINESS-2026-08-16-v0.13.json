@@ -1,0 +1,78 @@
+{
+  "artifact_uuid": "JANUS-WEDJAT-BLIND-HUMAN-ANNOTATION-READINESS-2026-08-16-v0.13",
+  "version": "v0.13",
+  "timestamp_date": "2026-08-16",
+  "status": "BLIND_PACKET_INFRASTRUCTURE_READY_PRIMARY_HUMAN_GATE_BLOCKED_ON_EXACT_SOURCE_BYTES_AND_TWO_HUMAN_SUBMISSIONS",
+  "parent": "data/JANUS-WEDJAT-BLIND-HUMAN-ANATOMICAL-ANNOTATION-PROTOCOL-2026-08-15-v0.12.json",
+  "purpose": "Turn the preregistered two-human anatomical gate into an executable packet workflow without pretending that two computational procedures or the current contact sheet are independent human annotations.",
+  "packet_builder": {
+    "path": "research/wedjat/janus_wedjat_blind_human_packet_builder_v0_13.py",
+    "behavior": [
+      "SHA-256 seals exact source files before packet derivation.",
+      "Checks any preregistered expected source SHA-256 before use.",
+      "Computes a canonical decoded-pixel SHA-256 from mode, width, height and raw decoded pixels.",
+      "Randomizes object order with a private deterministic seed.",
+      "Creates opaque IDs WJ-001... and keeps object/date/period/source mapping only in PRIVATE_MAP.json.",
+      "Losslessly re-encodes exact decoded pixels to metadata-free PNG without crop, mirror, rotation, denoise, contrast adjustment or rescale.",
+      "Verifies the blind PNG canonical pixel hash equals the source canonical pixel hash.",
+      "Creates one raw-pixel annotation template per blind image and a frozen public bundle receipt."
+    ],
+    "important_distinction": "SOURCE_FILE_SHA256 proves the acquired source byte sequence; PIXEL_SHA256 proves the blind view preserves the same decoded pixel matrix after metadata/filename de-identification."
+  },
+  "annotator_instructions": "research/wedjat/WEDJAT_BLIND_HUMAN_ANNOTATOR_INSTRUCTIONS_v0_13.md",
+  "private_manifest_example": "research/wedjat/wedjat_blind_source_manifest_v0_13.example.json",
+  "current_runtime_contact_sheet_audit": {
+    "path_basename": "wedjat_contact.jpg",
+    "sha256": "05f5b1e03b1a198cdc333c3c3eac9619eef3653d45075830b3b33c24707198aa",
+    "byte_length": 45109,
+    "pixel_dimensions": [840, 1020],
+    "format": "JPEG",
+    "contains_visible_source_filenames_object_ids": true,
+    "is_multi_image_composite": true,
+    "primary_blind_annotation_eligible": false,
+    "reason": "The sheet visibly prints object-derived filenames and contains multiple rescaled images in one composite. It is useful only as a visual contact/reference sheet; using it would violate both blindness and exact-source-pixel requirements."
+  },
+  "prior_local_image_receipts_from_v0_11": {
+    "555588": "89a15eb551edc2f072e93507e114a80140612e028b4f2cded4dee8c8baa6855d",
+    "551474": "e694ed25da382766b94ac18c7022292fe392e07f073b4ff7aeddf5ee8d93b98f",
+    "566845": "ae2078083535488dca96135949fcdf9c1959f4bc26df7384391da8f3268b4445",
+    "558320": "daeeb38a883fc11a5af8b55610f348c62e83de27ed0bd37750414ae5b3f869b8",
+    "547767": "f56e311ac778014bfe0bc2f2b7d2d57c9603abeaebdcc2f12e29fd72ebc4c716",
+    "status": "HISTORICAL_REGISTRY_RECEIPTS_ONLY_NOT_REACQUIRED_IN_CURRENT_RUNTIME",
+    "rule": "Do not construct a new blind package from the contact sheet or infer exact individual source bytes from these historical hashes. Reacquire or explicitly provide the individual source files and verify their hashes."
+  },
+  "official_source_reachability_check_2026_08_16": {
+    "555588": "official Met IIIF image endpoint rendered in browser retrieval",
+    "551474": "official Met IIIF image endpoint rendered in browser retrieval",
+    "558320": "official Met IIIF image endpoint rendered in browser retrieval",
+    "547767": "official Met IIIF image endpoint rendered in browser retrieval",
+    "566845": "official Met object page confirms a public-domain downloadable image; the previously recorded direct image endpoint cache-missed in the browser retrieval used for this readiness check",
+    "raw_byte_acquisition_in_active_execution_environment": "NOT_COMPLETED",
+    "interpretation": "Source visibility is not equivalent to exact source-byte possession. Primary packet generation remains blocked until exact individual bytes are locally available and SHA-256 verified."
+  },
+  "two_human_submission_gate": {
+    "minimum": 2,
+    "independence": "Each annotator receives only public_packet and the frozen instructions; neither receives PRIVATE_MAP.json, chronology metadata, glyph targets, fraction labels, prior JANUS scores, or the other submission.",
+    "required_submission_state": "Both completed annotation package trees are SHA-256 frozen before any private mapping or glyph scoring is unlocked.",
+    "third_annotator": "Only triggered by the v0.12 anatomical agreement rules; never used to tune a desired glyph result."
+  },
+  "unlock_sequence": [
+    "ACQUIRE_EXACT_INDIVIDUAL_OFFICIAL_IMAGE_BYTES",
+    "VERIFY_SOURCE_SHA256_AND_IMAGE_ELIGIBILITY",
+    "BUILD_BLIND_PUBLIC_PACKET_AND_PRIVATE_MAP",
+    "FREEZE_PUBLIC_PACKET_RECEIPT",
+    "COLLECT_HUMAN_ANNOTATOR_A_INDEPENDENT_SUBMISSION",
+    "COLLECT_HUMAN_ANNOTATOR_B_INDEPENDENT_SUBMISSION",
+    "SHA256_FREEZE_BOTH_SUBMISSIONS",
+    "RUN_PREDECLARED_INTER_ANNOTATOR_AGREEMENT",
+    "ONLY_THEN_UNLOCK_OBJECT_ID_PERIOD_AND_GLYPH_SCORING"
+  ],
+  "highest_admissible_claim": "The infrastructure needed for a genuine blind two-human Wedjat anatomical annotation is now specified and executable, including byte sealing, pixel-preserving anonymization, private/public separation, and frozen submission templates. The actual human gate is not yet passed: the current contact sheet is inadmissible for primary annotation, exact individual official source bytes have not been reacquired in the active runtime, and two independent human submissions do not yet exist.",
+  "claim_firewall": [
+    "PACKET_BUILDER_IS_NOT_A_HUMAN_ANNOTATOR",
+    "CONTACT_SHEET_IS_NOT_PRIMARY_SOURCE_IMAGE_BYTES",
+    "TWO_COMPUTATIONAL_METHODS_ARE_NOT_TWO_HUMAN_ANNOTATORS",
+    "NO_GLYPH_SCORING_BEFORE_BOTH_HUMAN_PACKAGES_ARE_FROZEN",
+    "NO_FRACTION_BINARY_ASCII_PYTHON_HIDDEN_TEXT_OR_DECIPHERMENT_PROMOTION"
+  ]
+}
