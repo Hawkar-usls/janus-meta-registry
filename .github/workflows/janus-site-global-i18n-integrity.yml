@@ -62,6 +62,14 @@ jobs:
               Path('fundamentum/index.html'),
               Path('gamarjoba-gen-ancvale/index.html'),
           ]
+          research_card_pages = [
+              Path('antifuck/index.html'),
+              Path('linear-a/index.html'),
+              Path('wedjat/index.html'),
+              Path('scoby-skingpt/index.html'),
+              Path('aifc/index.html'),
+              Path('fundamentum/index.html'),
+          ]
           all_pages = [main, *secondary]
 
           for path in all_pages:
@@ -80,6 +88,11 @@ jobs:
               assert 'data-i18n-ua=' in text, f'{path}: missing UA bindings'
               assert 'data-i18n-ru=' in text, f'{path}: missing RU bindings'
 
+          for path in research_card_pages:
+              text = path.read_text(encoding='utf-8')
+              assert text.count('class="card wide"') >= 4, f'{path}: research cards were lost'
+              assert text.count('class="tagrow"') >= 4, f'{path}: research card tags were lost'
+
           primary_js = Path('assets/i18n.js').read_text(encoding='utf-8')
           page_js = Path('assets/page-i18n.js').read_text(encoding='utf-8')
           key = 'janus-site-language-v1'
@@ -90,6 +103,7 @@ jobs:
           print(f'GLOBAL_I18N_PAGES={len(all_pages)}')
           print('GLOBAL_I18N_LANGS=EN,UA,ru')
           print('GLOBAL_I18N_STORAGE_KEY=janus-site-language-v1')
+          print('RESEARCH_CARD_STRUCTURE=PASS')
           print('LEGACY_RU_ONLY_APPENDICES=0')
           print('GLOBAL_I18N_INTEGRITY=PASS')
           PY
