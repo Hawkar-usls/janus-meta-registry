@@ -1,0 +1,51 @@
+name: Palomar JPFM-4A XE454 FITS time audit
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'tools/palomar/jpfm_4a_xe454_fits_time_audit.py'
+      - '.github/workflows/palomar-jpfm-4a-xe454-fits-time-audit.yml'
+permissions:
+  contents: write
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: python -m pip install requests==2.32.4
+      - run: python -m py_compile tools/palomar/jpfm_4a_xe454_fits_time_audit.py
+      - name: Freeze raw FITS header cards
+        run: |
+          mkdir -p out
+          python tools/palomar/jpfm_4a_xe454_fits_time_audit.py --out out/JANUS-PALOMAR-JPFM-4A-XE454-FITS-TIME-CARD-AUDIT-v1.0.json
+      - name: Validate source-only contract
+        run: |
+          python - <<'PY'
+          import json,pathlib
+          d=json.loads(pathlib.Path('out/JANUS-PALOMAR-JPFM-4A-XE454-FITS-TIME-CARD-AUDIT-v1.0.json').read_text())
+          assert d['status']=='PUBLIC_FITS_RAW_HEADER_CARD_FROZEN__INTERPRETATION_GATE_PENDING'
+          assert d['plate_id']=='XE454'
+          assert d['selected_raw_cards']['DATE-OBS']
+          assert d['outcome_access']['bluebook'] is False
+          print('PASS_XE454_RAW_TIME_CARD_GATE')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jpfm-4a-xe454-fits-time-audit-v1
+          path: out/JANUS-PALOMAR-JPFM-4A-XE454-FITS-TIME-CARD-AUDIT-v1.0.json
+          retention-days: 30
+          if-no-files-found: error
+      - name: Commit compact header audit
+        run: |
+          cp out/JANUS-PALOMAR-JPFM-4A-XE454-FITS-TIME-CARD-AUDIT-v1.0.json data/JANUS-PALOMAR-JPFM-4A-XE454-FITS-TIME-CARD-AUDIT-v1.0.json
+          git config user.name 'janus-jpfm-ci'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/JANUS-PALOMAR-JPFM-4A-XE454-FITS-TIME-CARD-AUDIT-v1.0.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Add XE454 FITS time-card audit [skip ci]'
+          git pull --rebase origin main
+          git push
