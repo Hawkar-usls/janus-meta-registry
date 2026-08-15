@@ -1,0 +1,86 @@
+name: JANUS Linear A canonical state v2.30
+
+on:
+  push:
+    paths:
+      - "data/JANUS-LINEAR-A-RESEARCH-STATE-PROMOTION-REQUEST-2026-08-15-v2.30.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile v2.30 promotion auditor
+        run: python -m py_compile research/linear_a/janus_linear_a_canonical_state_v2_30.py
+      - name: Build and audit v2.30
+        shell: bash
+        run: |
+          set -euo pipefail
+          python research/linear_a/janus_linear_a_canonical_state_v2_30.py \
+            --spec data/JANUS-LINEAR-A-RESEARCH-STATE-PROMOTION-SPEC-2026-08-15-v2.30.json \
+            --candidate-out data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-15-v2.30-CANDIDATE.json \
+            --canonical-out data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-15-v2.30.json \
+            --audit-out data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-15-v2.30.json
+      - name: Enforce first probable structural-function claim ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          s=json.load(open('data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-15-v2.30.json',encoding='utf-8'))
+          a=json.load(open('data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-15-v2.30.json',encoding='utf-8'))
+          assert s['version']=='v2.30' and s['status']=='CURRENT_CANONICAL_RESEARCH_STATE'
+          assert a['status']=='CANONICALITY_AUDIT_PASS' and a['all_checks_pass'] is True
+          g=s['global_claim_ceiling_v2_30']
+          assert g['probable_region_scoped_structural_function_established'] is True
+          assert g['admitted_source_word']=='KU-RO'
+          assert g['admitted_structural_function']=='ROW-OPENING-LIKE'
+          assert g['admitted_scope_region']=='HT'
+          assert g['universal_cross_region_function_established'] is False
+          assert g['exact_word_meaning_established'] is False
+          assert g['translation_established'] is False
+          assert g['phonetic_value_established'] is False
+          assert g['language_family_established'] is False
+          assert g['new_anchor_established'] is False
+          assert g['decipherment_established'] is False
+          assert g['strict_R3B_replication_established'] is False
+          r=s['R7_first_probable_structural_function']
+          assert r['established'] is True and r['source_word']=='KU-RO'
+          assert r['probable_structural_function_label']=='ROW-OPENING-LIKE'
+          assert r['region']=='HT' and r['scope']=='REGION_SCOPED'
+          assert r['frozen_hypothesis_for_future_external_test'] is True
+          assert r['cross_region_generalization_established'] is False
+          assert r['exact_word_meaning_established'] is False
+          assert r['translation_established'] is False
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-canonical-v2-30
+          path: |
+            data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-15-v2.30-CANDIDATE.json
+            data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-15-v2.30.json
+            data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-15-v2.30.json
+          retention-days: 90
+      - name: Persist v2.30
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'JANUS Evidence Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-15-v2.30-CANDIDATE.json data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-15-v2.30.json data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-15-v2.30.json
+          git commit -m 'Promote Linear A canonical research state v2.30' || true
+          for i in 1 2 3 4 5; do
+            if git push origin HEAD:main; then exit 0; fi
+            git pull --rebase origin main
+          done
+          exit 1
