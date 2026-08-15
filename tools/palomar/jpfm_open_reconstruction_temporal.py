@@ -64,7 +64,7 @@ HEADER_WORKERS = 10
 # in the atmosphere or at the surface. Unknown/unlisted types are excluded and
 # surfaced, never silently coerced.
 PHYSICAL_ATMOSPHERIC_SURFACE_TYPES = {
-    "AIRDROP", "TOWER", "SURFACE", "BARGE", "BALLOON", "ROCKET", "ATMOSPH"
+    "AIRDROP", "TOWER", "SURFACE", "BARGE", "SHIP", "BALLOON", "ROCKET", "ATMOSPH"
 }
 
 SESSION = requests.Session()
