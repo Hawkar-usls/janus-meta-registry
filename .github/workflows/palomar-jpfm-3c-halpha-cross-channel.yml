@@ -5,6 +5,7 @@ on:
     paths:
       - 'data/JANUS-PALOMAR-JPFM-3C-HALPHA-CROSS-CHANNEL-ADMISSION-v1.0.json'
       - 'tools/palomar/jpfm_3c_halpha_cross_channel.py'
+      - 'tools/palomar/jpfm_3c_halpha_cross_channel_v02.py'
       - '.github/workflows/palomar-jpfm-3c-halpha-cross-channel.yml'
 permissions:
   contents: write
@@ -26,6 +27,7 @@ jobs:
           python -m py_compile tools/palomar/jpfm_open_reconstruction_temporal.py
           python -m py_compile tools/palomar/jpfm_schedule_confound_decomposition.py
           python -m py_compile tools/palomar/jpfm_3c_halpha_cross_channel.py
+          python -m py_compile tools/palomar/jpfm_3c_halpha_cross_channel_v02.py
       - name: Verify preregistration and source-only parent
         run: |
           python - <<'PY'
@@ -42,17 +44,24 @@ jobs:
       - name: Execute JPFM-3C
         run: |
           mkdir -p out
-          python tools/palomar/jpfm_3c_halpha_cross_channel.py --out out/JANUS-PALOMAR-JPFM-3C-HALPHA-CROSS-CHANNEL-RUN-001.json
+          python tools/palomar/jpfm_3c_halpha_cross_channel_v02.py --out out/JANUS-PALOMAR-JPFM-3C-HALPHA-CROSS-CHANNEL-RUN-001.json
       - name: Validate claim ceiling
         run: |
           python - <<'PY'
-          import json,pathlib
+          import json,pathlib,math
           d=json.loads(pathlib.Path('out/JANUS-PALOMAR-JPFM-3C-HALPHA-CROSS-CHANNEL-RUN-001.json').read_text())
           assert d['status']=='EXECUTED'
           assert d['primary_coverage_minutes']==720
           assert d['aggregate_verdict']['code'] in {'HALPHA_SHARED_CROSS_CHANNEL_PATTERN_ADMITTED','NO_HALPHA_CROSS_CHANNEL_PATTERN_ADMITTED'}
           assert d['current_authority_changed'] is False
           assert 'NO_CAUSALITY' in d['claim_ceiling']
+          def walk(x):
+              if isinstance(x,dict):
+                  for v in x.values(): yield from walk(v)
+              elif isinstance(x,list):
+                  for v in x: yield from walk(v)
+              elif isinstance(x,float): yield x
+          assert all(math.isfinite(x) for x in walk(d))
           print('PASS_3C_RESULT_GATE')
           PY
       - uses: actions/upload-artifact@v4
