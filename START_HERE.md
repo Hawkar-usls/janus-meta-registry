@@ -11,6 +11,14 @@ This repository mixes technical evidence, research snapshots, hypotheses, red-te
 
 **These layers are not epistemically equivalent.** Do not infer a current claim from a filename or from registry presence alone.
 
+## 🟩 Hall of Honor — Channel 001
+
+**[`🟩 GEX — THE GREEN CHANNEL`](registry/hall_of_honor/GEX-THE-GREEN-CHANNEL-v1.2.json)** — `SINGULAR_HALL_OF_HONOR_EXHIBIT` · `THE_GREEN_CHANNEL / SLOT_001`.
+
+A bilingual personal/cultural exhibit preserving Hawkar ↔ Janus dialogue, PS one childhood memory, the original PlayStation trilogy, Media Dimension roles and mechanics, Gexzilla, the Rocket Channel green-lightsaber idle animation, the timed Secret TV fly challenge, Agent Xtra, ASCII art, and provenance/claim boundaries.
+
+`HALL_OF_HONOR != TECHNICAL_EVIDENCE` · `PERSONAL_RECOLLECTION != UNIVERSAL_FACT`
+
 ## First six links
 
 1. **[`data/000-GAMARJOBA-GEN_ANCVALE.json`](data/000-GAMARJOBA-GEN_ANCVALE.json)** — public machine-readable door for external reviewers, independent replicators, verifiers, domain experts and contributors.
