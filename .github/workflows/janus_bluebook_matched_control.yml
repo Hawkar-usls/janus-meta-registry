@@ -1,0 +1,84 @@
+name: JANUS Blue Book Matched Control
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/janus_bluebook_matched_control.yml'
+      - 'research/uap_poss1/janus_bluebook_exact_date_matched_control_v0_1.py'
+      - 'research/uap_poss1/janus_bluebook_spotcheck_manifest_v0_2.py'
+      - 'registry/cosmology/JANUS-BLUEBOOK-EXACT-DATE-MATCHED-CONTROL-PREREG-v1.0.json'
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  matched-control:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      INDEX_ARTIFACT_ID: '9243186827'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Compile frozen analysis runners
+        run: |
+          python -m py_compile research/uap_poss1/janus_bluebook_exact_date_matched_control_v0_1.py
+          python -m py_compile research/uap_poss1/janus_bluebook_spotcheck_manifest_v0_2.py
+
+      - name: Download frozen full-index artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p work/bluebook_control/index work/bluebook_control/out
+          curl --fail --location \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/${INDEX_ARTIFACT_ID}/zip" \
+            -o work/bluebook_control/index.zip
+          sha256sum work/bluebook_control/index.zip
+          unzip -q work/bluebook_control/index.zip -d work/bluebook_control/index
+          test -f work/bluebook_control/index/bluebook_case_index_blind.csv
+          test "$(sha256sum work/bluebook_control/index/bluebook_case_index_blind.csv | awk '{print $1}')" = "f3beb68121a11bab9cfe63699edbad69e027e472e1f137ad34b4373a1d16841c"
+
+      - name: Freeze nuclear-blind validation sample
+        run: |
+          python research/uap_poss1/janus_bluebook_spotcheck_manifest_v0_2.py \
+            --blind-index work/bluebook_control/index/bluebook_case_index_blind.csv \
+            --output work/bluebook_control/out/spotcheck_manifest.json \
+            --positive-n 12 --negative-n 12
+
+      - name: Execute preregistered 50k x 2 matched controls
+        run: |
+          python research/uap_poss1/janus_bluebook_exact_date_matched_control_v0_1.py \
+            --blind-index work/bluebook_control/index/bluebook_case_index_blind.csv \
+            --output work/bluebook_control/out/matched_control_result.json \
+            --permutations 50000
+
+      - name: Emit receipts
+        if: always()
+        run: |
+          echo '=== SPOTCHECK ==='
+          test -f work/bluebook_control/out/spotcheck_manifest.json && cat work/bluebook_control/out/spotcheck_manifest.json || true
+          echo '=== MATCHED CONTROL ==='
+          test -f work/bluebook_control/out/matched_control_result.json && cat work/bluebook_control/out/matched_control_result.json || true
+
+      - name: Upload matched-control receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-bluebook-matched-control
+          path: |
+            work/bluebook_control/out/spotcheck_manifest.json
+            work/bluebook_control/out/matched_control_result.json
+          if-no-files-found: warn
+          retention-days: 30
