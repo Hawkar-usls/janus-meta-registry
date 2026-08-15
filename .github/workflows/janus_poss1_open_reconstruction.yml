@@ -1,0 +1,94 @@
+name: JANUS POSS-I Open Reconstruction
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/janus_poss1_open_reconstruction.yml'
+      - 'research/uap_poss1/janus_poss1_open_release_intake_v0_1.py'
+      - 'research/uap_poss1/janus_poss1_h0_h1_v0_1.py'
+      - 'research/uap_poss1/requirements-tested.txt'
+      - 'registry/cosmology/JANUS-POSS1-OPEN-PUBLIC-RECONSTRUCTION-COHORT-v1.0.json'
+
+permissions:
+  contents: read
+
+jobs:
+  open-reconstruction:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: 'pip'
+
+      - name: Install frozen analysis dependencies
+        run: python -m pip install -r research/uap_poss1/requirements-tested.txt
+
+      - name: Compile runners
+        run: |
+          python -m py_compile research/uap_poss1/janus_poss1_open_release_intake_v0_1.py
+          python -m py_compile research/uap_poss1/janus_poss1_h0_h1_v0_1.py
+
+      - name: Build public plate-day matrices
+        run: |
+          rm -rf work/uap_poss1_open
+          python research/uap_poss1/janus_poss1_open_release_intake_v0_1.py --out-dir work/uap_poss1_open
+
+      - name: Fit strict calendar primary and window sensitivities
+        run: |
+          for radius in 1 2 4; do
+            term="nuclear_window_m${radius}_p${radius}"
+            python research/uap_poss1/janus_poss1_h0_h1_v0_1.py \
+              --matrix work/uap_poss1_open/plate_day_open_strict.csv \
+              --output "work/uap_poss1_open/model_strict_m${radius}_p${radius}.json" \
+              --exposure-col exposure_tile_min \
+              --nuclear-term "$term" \
+              --covariates year_centered,season_sin,season_cos
+          done
+
+      - name: Fit broad calendar primary and window sensitivities
+        run: |
+          for radius in 1 2 4; do
+            term="nuclear_window_m${radius}_p${radius}"
+            python research/uap_poss1/janus_poss1_h0_h1_v0_1.py \
+              --matrix work/uap_poss1_open/plate_day_open_broad.csv \
+              --output "work/uap_poss1_open/model_broad_m${radius}_p${radius}.json" \
+              --exposure-col exposure_tile_min \
+              --nuclear-term "$term" \
+              --covariates year_centered,season_sin,season_cos
+          done
+
+      - name: Emit machine-readable receipts to log
+        if: always()
+        run: |
+          echo '=== OPEN INTAKE RECEIPT ==='
+          test -f work/uap_poss1_open/open_intake_receipt.json && cat work/uap_poss1_open/open_intake_receipt.json || true
+          echo '=== CALENDAR DIAGNOSTIC ==='
+          test -f work/uap_poss1_open/nuclear_calendar_diagnostic.json && cat work/uap_poss1_open/nuclear_calendar_diagnostic.json || true
+          for f in work/uap_poss1_open/model_*.json; do
+            test -f "$f" || continue
+            echo "=== MODEL $f ==="
+            cat "$f"
+          done
+
+      - name: Upload frozen public reconstruction receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-poss1-open-reconstruction
+          path: |
+            work/uap_poss1_open/open_intake_receipt.json
+            work/uap_poss1_open/nuclear_calendar_diagnostic.json
+            work/uap_poss1_open/nuclear_calendar_sipri_*.csv
+            work/uap_poss1_open/plate_metadata.csv
+            work/uap_poss1_open/plate_day_open_*.csv
+            work/uap_poss1_open/model_*.json
+          if-no-files-found: warn
+          retention-days: 30
