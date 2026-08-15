@@ -21,28 +21,40 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Validate background asset and presentation wrapper
-        shell: bash
         run: |
-          set -euo pipefail
-          test -f assets/janus-temple-hero-v1.webp
-          test -f assets/site-base.css
-          test -f assets/site.css
+          python - <<'PY'
+          import hashlib
+          from pathlib import Path
 
-          bytes="$(wc -c < assets/janus-temple-hero-v1.webp)"
-          test "$bytes" -gt 80000
-          test "$bytes" -lt 350000
+          hero = Path('assets/janus-temple-hero-v1.webp')
+          wrapper = Path('assets/site.css')
+          base = Path('assets/site-base.css')
 
-          file assets/janus-temple-hero-v1.webp | grep -qi 'Web/P\|WebP'
-          grep -Fq "@import url('./site-base.css');" assets/site.css
-          grep -Fq "url('./janus-temple-hero-v1.webp')" assets/site.css
-          grep -Fq '.temple-stage{display:none!important}' assets/site.css
-          grep -Fq '#06111c' assets/site.css
-          grep -Fq '#39c6ff' assets/site.css
-          grep -Fq '#7ae7ff' assets/site.css
-          grep -Fq '#c8a96b' assets/site.css
-          grep -Fq 'Cinzel' assets/site.css
+          assert hero.is_file()
+          assert wrapper.is_file()
+          assert base.is_file()
 
-          echo "JANUS_EPIC_TEMPLE_HERO_INTEGRITY=PASS"
-          echo "HERO_BYTES=$bytes"
-          echo "BASE_STYLESHEET_PRESERVED=TRUE"
-          echo "GENERATED_ART_IS_PRESENTATION_ONLY=TRUE"
+          data = hero.read_bytes()
+          assert 80_000 < len(data) < 350_000, len(data)
+          assert data[:4] == b'RIFF', data[:4]
+          assert data[8:12] == b'WEBP', data[8:12]
+
+          sha256 = hashlib.sha256(data).hexdigest()
+          expected = '00f1bef9a5b6ab252e5b8a583415c6f72c4f689e3ae3cdf7f766eb70a8fc8776'
+          assert sha256 == expected, (sha256, expected)
+
+          css = wrapper.read_text(encoding='utf-8')
+          assert "@import url('./site-base.css');" in css
+          assert "url('./janus-temple-hero-v1.webp')" in css
+          assert '.temple-stage{display:none!important}' in css
+          for token in ['#06111c', '#39c6ff', '#7ae7ff', '#c8a96b', 'Cinzel']:
+              assert token in css
+          assert 'presentation-only' in css.lower()
+
+          print('JANUS_EPIC_TEMPLE_HERO_INTEGRITY=PASS')
+          print(f'HERO_BYTES={len(data)}')
+          print(f'HERO_SHA256={sha256}')
+          print('WEBP_HEADER=PASS')
+          print('BASE_STYLESHEET_PRESERVED=TRUE')
+          print('GENERATED_ART_IS_PRESENTATION_ONLY=TRUE')
+          PY
