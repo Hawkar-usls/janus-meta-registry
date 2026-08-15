@@ -10,8 +10,9 @@ from pathlib import Path
 import requests
 
 NASA_URL='https://ntrs.nasa.gov/citations/19720015241'
-CIA_URL='https://www.cia.gov/readingroom/document/cia-rdp88b00831r000100210004-6'
-UA='JANUS-JPFM-4A-human-made-source-freezer/1.0'
+CIA_AUTHORITY_URL='https://www.cia.gov/readingroom/document/cia-rdp88b00831r000100210004-6'
+CIA_TRANSPORT_URL='https://www.cia.gov/readingroom/print/1450291'
+UA='JANUS-JPFM-4A-human-made-source-freezer/1.1'
 
 
 def sha256(b:bytes)->str:return hashlib.sha256(b).hexdigest()
@@ -29,13 +30,12 @@ def fetch(session,url):
     return {'url':url,'final_url':r.url,'http_status':r.status_code,'sha256':sha256(b),'bytes':len(b),'normalized_text_sha256':sha256(text.encode()),'normalized_text_chars':len(text),'text':text}
 
 def marker(source,pat):
-    m=re.search(pat,source['text'],flags=re.I)
-    return bool(m)
+    return bool(re.search(pat,source['text'],flags=re.I))
 
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,required=True);a=ap.parse_args()
-    s=requests.Session();s.headers['User-Agent']=UA
-    nasa=fetch(s,NASA_URL);cia=fetch(s,CIA_URL)
+    s=requests.Session();s.headers.update({'User-Agent':UA,'Accept':'text/html,application/xhtml+xml'})
+    nasa=fetch(s,NASA_URL);cia=fetch(s,CIA_TRANSPORT_URL)
     gates={
       'nasa':{
         'document_id_19720015241':marker(nasa,r'19720015241'),
@@ -60,7 +60,12 @@ def main():
       'status':'PUBLIC_AUTHORITY_SOURCE_BYTES_FROZEN__NO_OUTCOME_JOIN',
       'sources':{
         'NASA_WDC_A_SOUNDING_ROCKET_CATALOGUE':{k:v for k,v in nasa.items() if k!='text'},
-        'CIA_SAC_HISTORICAL_STUDY_62_VOL2':{k:v for k,v in cia.items() if k!='text'}
+        'CIA_SAC_HISTORICAL_STUDY_62_VOL2':{
+          **{k:v for k,v in cia.items() if k!='text'},
+          'authority_record_url':CIA_AUTHORITY_URL,
+          'transport_url':CIA_TRANSPORT_URL,
+          'transport_semantics':'CIA printer endpoint for the same Reading Room record; used to avoid redirect loop on automated byte freeze.'
+        }
       },
       'authority_marker_gates':gates,
       'population_semantics':{
@@ -70,7 +75,7 @@ def main():
       'pdf_policy':{
         'nasa_pdf_not_required_for_this_freeze':True,
         'cia_pdf_not_required_for_this_freeze':True,
-        'note':'This artifact freezes public authority landing-page bytes and population semantics only. It does not parse or infer unseen PDF pages.'
+        'note':'This artifact freezes public authority HTML/print bytes and population semantics only. It does not parse or infer unseen PDF pages.'
       },
       'outcome_blindness':{'bluebook_access':False,'poss1_access':False,'nuclear_calendar_access':False,'association_computed':False},
       'next_gate':'Acquire row-level launch/event manifests and explicit completeness/opportunity before any Blue Book or POSS-I temporal join.',
