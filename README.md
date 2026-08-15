@@ -7,6 +7,8 @@
 ![Audit](https://img.shields.io/badge/technical%20core-audited-2ea043)
 ![Class](https://img.shields.io/badge/class-provenance%20%2F%20history-6e7681)
 
+**[Open the search-friendly JANUS Research site](https://hawkar-usls.github.io/janus-meta-registry/)** · [Research index](https://hawkar-usls.github.io/janus-meta-registry/research/) · [External review door](https://hawkar-usls.github.io/janus-meta-registry/gamarjoba-gen-ancvale/)
+
 </div>
 
 ## Status
@@ -15,9 +17,17 @@
 
 It is **not one scientific theory** and **not a flagship research result**. Different archived objects carry different evidence classes.
 
+## Search / discovery surface
+
+GitHub Pages provides a crawlable human-readable discovery layer at **https://hawkar-usls.github.io/janus-meta-registry/**. Topic pages expose concise titles, descriptions, canonical URLs, Open Graph metadata, JSON-LD, internal links, `robots.txt`, `sitemap.xml`, and direct routes back to repository evidence.
+
+The website is **navigation, not scientific authority**. Versioned JSON, code, receipts and current-authority objects in this repository remain authoritative for claims. Search indexing and ranking are not guaranteed.
+
+Machine-readable search-surface architecture: [`data/JANUS-SEARCH-SURFACE-v1.0.json`](data/JANUS-SEARCH-SURFACE-v1.0.json).
+
 ## GAMARJOBA GEN_ANCVALE — open invitation
 
-If you arrived here looking for a way to **review, challenge, reproduce, falsify, correct, or independently extend** JANUS work, start with **[`data/000-GAMARJOBA-GEN_ANCVALE.json`](data/000-GAMARJOBA-GEN_ANCVALE.json)**.
+If you arrived here looking for a way to **review, challenge, reproduce, falsify, correct, or independently extend** JANUS work, start with **[`data/000-GAMARJOBA-GEN_ANCVALE.json`](data/000-GAMARJOBA-GEN_ANCVALE.json)** or the human-readable [GAMARJOBA GEN_ANCVALE page](https://hawkar-usls.github.io/janus-meta-registry/gamarjoba-gen-ancvale/).
 
 It is the stable machine-readable public door to current external-review, independent-replication, verifier, domain-expert, red-team, prior-art, and safe contribution opportunities across the registry. **Agreement with JANUS is not required. Negative results, failed replications, corrections, and skeptical reviews are welcome.**
 
