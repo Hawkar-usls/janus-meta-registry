@@ -1,0 +1,89 @@
+name: Palomar JPFM-2F-C2A sample freeze
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/palomar-jpfm-2f-c2a-sample-freeze.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  freeze:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install freeze environment
+        run: python -m pip install -q pandas==2.3.1
+      - name: Syntax, admission and firewall gates
+        run: |
+          python -m py_compile tools/palomar/jpfm_2f_c2a_freeze_stratified_sample.py
+          python - <<'PY'
+          import json, pathlib
+          a=json.loads(pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-C2A-STRATIFIED-UPSTREAM-MORPHOLOGY-SAMPLE-FREEZE-ADMISSION-v1.0.json').read_text())
+          assert a['status']=='PREREGISTERED_BEFORE_C2A_SAMPLE_MANIFEST_AND_BEFORE_ANY_C2A_PIXEL_REPLAY'
+          assert a['selection_contract']['total_sources']==512
+          assert a['selection_contract']['typical_per_cluster']==16
+          assert a['selection_contract']['unusual_per_cluster']==16
+          assert a['expected_pre_pixel_topology']['distinct_tiles']==360
+          assert a['expected_pre_pixel_topology']['distinct_plates']==234
+          assert a['external_label_firewall']['external_label_reveal_authorized'] is False
+          print('PASS_JPFM_2F_C2A_SAMPLE_ADMISSION_GATE')
+          PY
+          if grep -Eiq 'kp\.gfz|aa\.usno|nuclear-explosions|bluebook|nuforc|hdu\.section|fits\.open|opencv|source-extractor|psfex' tools/palomar/jpfm_2f_c2a_freeze_stratified_sample.py; then
+            echo 'FAIL: pixel/morphology/external-label dependency found in sample-freeze runner'; exit 1
+          fi
+          echo 'PASS_JPFM_2F_C2A_SAMPLE_FIREWALL_GATE'
+      - name: Freeze exact deterministic 512-source manifest
+        run: |
+          python tools/palomar/jpfm_2f_c2a_freeze_stratified_sample.py \
+            --c0m-result data/JANUS-PALOMAR-JPFM-2F-C0M-FULL-S0-HEADER-ONLY-ACQUISITION-MAP-RUN-001.json \
+            --c0m-map data/JANUS-PALOMAR-JPFM-2F-C0M-FULL-S0-HEADER-ONLY-ACQUISITION-MAP-RUN-001.csv.gz \
+            --out-json data/JANUS-PALOMAR-JPFM-2F-C2A-STRATIFIED-UPSTREAM-MORPHOLOGY-SAMPLE-FREEZE-RUN-001.json \
+            --out-manifest-gz data/JANUS-PALOMAR-JPFM-2F-C2A-STRATIFIED-UPSTREAM-MORPHOLOGY-SAMPLE-FREEZE-RUN-001.csv.gz
+      - name: Validate frozen sample artifact
+        run: |
+          python - <<'PY'
+          import gzip, hashlib, io, json, pathlib, pandas as pd
+          jp=pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-C2A-STRATIFIED-UPSTREAM-MORPHOLOGY-SAMPLE-FREEZE-RUN-001.json')
+          cp=pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-C2A-STRATIFIED-UPSTREAM-MORPHOLOGY-SAMPLE-FREEZE-RUN-001.csv.gz')
+          d=json.loads(jp.read_text())
+          assert d['status']=='FROZEN_BEFORE_C2A_PIXEL_REPLAY'
+          assert d['selection']['rows']==512 and d['selection']['distinct_tiles']==360 and d['selection']['distinct_plates']==234
+          assert d['selection']['pixel_or_morphology_features_used'] is False
+          assert d['external_label_firewall']['external_label_reveal_authorized'] is False
+          gz=cp.read_bytes(); raw=gzip.decompress(gz)
+          assert hashlib.sha256(gz).hexdigest()==d['manifest']['gzip_sha256']
+          assert hashlib.sha256(raw).hexdigest()==d['manifest']['csv_sha256']
+          df=pd.read_csv(io.BytesIO(raw))
+          assert len(df)==512 and df.src_id.nunique()==512 and df.tile_id.nunique()==360 and df.plate_id.nunique()==234
+          assert all(v==32 for v in df.groupby('structural_cluster').size())
+          assert all(v==16 for v in df.groupby(['structural_cluster','sample_role']).size())
+          print('PASS_JPFM_2F_C2A_SAMPLE_ARTIFACT_GATE')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jpfm-2f-c2a-sample-freeze-run-001
+          path: |
+            data/JANUS-PALOMAR-JPFM-2F-C2A-STRATIFIED-UPSTREAM-MORPHOLOGY-SAMPLE-FREEZE-RUN-001.json
+            data/JANUS-PALOMAR-JPFM-2F-C2A-STRATIFIED-UPSTREAM-MORPHOLOGY-SAMPLE-FREEZE-RUN-001.csv.gz
+          if-no-files-found: error
+          retention-days: 30
+      - name: Commit frozen sample before C2A pixel replay
+        run: |
+          git config user.name 'janus-jpfm-ci'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/JANUS-PALOMAR-JPFM-2F-C2A-STRATIFIED-UPSTREAM-MORPHOLOGY-SAMPLE-FREEZE-RUN-001.json \
+                  data/JANUS-PALOMAR-JPFM-2F-C2A-STRATIFIED-UPSTREAM-MORPHOLOGY-SAMPLE-FREEZE-RUN-001.csv.gz
+          git diff --cached --quiet && exit 0
+          git commit -m 'Freeze JPFM-2F-C2A 512-source label-blind sample [skip ci]'
+          git pull --rebase origin main
+          git push
