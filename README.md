@@ -15,6 +15,17 @@
 
 It is **not one scientific theory** and **not a flagship research result**. Different archived objects carry different evidence classes.
 
+## GAMARJOBA GEN_ANCVALE — open invitation
+
+If you arrived here looking for a way to **review, challenge, reproduce, falsify, correct, or independently extend** JANUS work, start with **[`data/000-GAMARJOBA-GEN_ANCVALE.json`](data/000-GAMARJOBA-GEN_ANCVALE.json)**.
+
+It is the stable machine-readable public door to current external-review, independent-replication, verifier, domain-expert, red-team, prior-art, and safe contribution opportunities across the registry. **Agreement with JANUS is not required. Negative results, failed replications, corrections, and skeptical reviews are welcome.**
+
+Public discussion: [GAMARJOBA GEN_ANCVALE — Issue #91](https://github.com/Hawkar-usls/janus-meta-registry/issues/91)  
+Contact: **Hawkar** · GitHub `@Hawkar-usls` · Telegram `@Hawkar_lol` · `hawkarlol@gmail.com`
+
+The name `GEN_ANCVALE` is Hawkar's wordplay tribute to the classic game **Enclave**; it does not imply affiliation with the game's creators or rights holders.
+
 ## Technical reviewers — start here
 
 The strongest technical material is separated from the symbolic archive by a current audit layer:
