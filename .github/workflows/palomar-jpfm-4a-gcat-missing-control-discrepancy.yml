@@ -1,0 +1,55 @@
+name: Palomar JPFM-4A GCAT missing-control discrepancy
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'tools/palomar/jpfm_4a_gcat_missing_control_discrepancy.py'
+      - '.github/workflows/palomar-jpfm-4a-gcat-missing-control-discrepancy.yml'
+permissions:
+  contents: write
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: python -m pip install requests==2.32.4
+      - run: python -m py_compile tools/palomar/jpfm_4a_gcat_missing_control_discrepancy.py
+      - name: Localize GCAT missing official controls
+        run: |
+          mkdir -p out
+          python tools/palomar/jpfm_4a_gcat_missing_control_discrepancy.py \
+            --out out/JANUS-PALOMAR-JPFM-4A-GCAT-MISSING-OFFICIAL-CONTROL-DISCREPANCY-v1.0.json
+      - name: Validate discrepancy audit contract
+        run: |
+          python - <<'PY'
+          import json,pathlib
+          d=json.loads(pathlib.Path('out/JANUS-PALOMAR-JPFM-4A-GCAT-MISSING-OFFICIAL-CONTROL-DISCREPANCY-v1.0.json').read_text())
+          assert d['status']=='SOURCE_DISCREPANCY_AUDIT_EXECUTED__GCAT_4_OF_6_GATE_REMAINS_FAILED'
+          assert len(d['controls'])==2
+          assert d['admission']['gcat_as_complete_or_replacement_manifest']=='REJECTED_BY_PRE_FROZEN_6_OF_6_GATE'
+          assert d['admission']['posthoc_rescue_of_6_of_6_gate'] is False
+          assert d['outcome_blindness']['bluebook_access'] is False
+          assert d['outcome_blindness']['poss1_access'] is False
+          assert d['current_authority_changed'] is False
+          print('PASS_GCAT_MISSING_CONTROL_DISCREPANCY_GATE')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jpfm-4a-gcat-missing-control-discrepancy-v1
+          path: out/JANUS-PALOMAR-JPFM-4A-GCAT-MISSING-OFFICIAL-CONTROL-DISCREPANCY-v1.0.json
+          retention-days: 30
+          if-no-files-found: error
+      - name: Commit discrepancy receipt
+        run: |
+          cp out/JANUS-PALOMAR-JPFM-4A-GCAT-MISSING-OFFICIAL-CONTROL-DISCREPANCY-v1.0.json data/JANUS-PALOMAR-JPFM-4A-GCAT-MISSING-OFFICIAL-CONTROL-DISCREPANCY-v1.0.json
+          git config user.name 'janus-jpfm-ci'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/JANUS-PALOMAR-JPFM-4A-GCAT-MISSING-OFFICIAL-CONTROL-DISCREPANCY-v1.0.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Add JPFM-4A GCAT missing-control discrepancy receipt [skip ci]'
+          git pull --rebase origin main
+          git push
