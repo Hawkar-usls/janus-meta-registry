@@ -1,0 +1,55 @@
+name: JANUS Blue Book Human Witness Intake
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/janus_bluebook_human_witness.yml'
+      - 'research/uap_poss1/janus_bluebook_nara_metadata_intake_v0_1.py'
+      - 'registry/cosmology/JANUS-POSS1-HUMAN-WITNESS-TEMPORAL-CONTROL-v1.0.json'
+
+permissions:
+  contents: read
+
+jobs:
+  bluebook-public-intake:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Compile intake
+        run: python -m py_compile research/uap_poss1/janus_bluebook_nara_metadata_intake_v0_1.py
+
+      - name: Inspect official NARA Blue Book public metadata
+        run: |
+          rm -rf work/bluebook_nara
+          python research/uap_poss1/janus_bluebook_nara_metadata_intake_v0_1.py --out-dir work/bluebook_nara
+
+      - name: Emit receipt
+        if: always()
+        run: |
+          test -f work/bluebook_nara/nara_metadata_intake_receipt.json && cat work/bluebook_nara/nara_metadata_intake_receipt.json || true
+          echo '=== ZIP MANIFEST ==='
+          test -f work/bluebook_nara/nara_595466_zip_manifest.csv && head -80 work/bluebook_nara/nara_595466_zip_manifest.csv || true
+          echo '=== DATE CANDIDATES ==='
+          test -f work/bluebook_nara/nara_date_candidates.csv && head -80 work/bluebook_nara/nara_date_candidates.csv || true
+
+      - name: Upload public intake diagnostic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-bluebook-nara-public-intake
+          path: |
+            work/bluebook_nara/nara_metadata_intake_receipt.json
+            work/bluebook_nara/nara_595466_zip_manifest.csv
+            work/bluebook_nara/nara_date_candidates.csv
+          if-no-files-found: warn
+          retention-days: 30
