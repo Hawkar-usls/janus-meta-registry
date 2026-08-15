@@ -6,6 +6,7 @@ on:
       - 'data/JANUS-OPIR-ANTIFUCK-INDEPENDENT-HOLDOUT-PROTOCOL-v1.0.json'
       - 'data/JANUS-OPIR-ANTIFUCK-H1-CHALLENGE-KIT-v1.0.json'
       - 'data/JANUS-OPIR-ANTIFUCK-FROZEN-EVALUATOR-POLICY-v1.0.json'
+      - 'data/JANUS-OPIR-ANTIFUCK-FROZEN-EVALUATOR-SELFTEST-RESULT-2026-08-15-v1.0.json'
       - 'data/JANUS-ARMOR-OF-GOD-CURRENT-AUTHORITY.json'
       - 'research/antifuck/janus_opir_antifuck_policy_v1_3.py'
       - 'research/antifuck/janus_opir_antifuck_h1_verify.py'
@@ -16,6 +17,7 @@ on:
       - 'data/JANUS-OPIR-ANTIFUCK-INDEPENDENT-HOLDOUT-PROTOCOL-v1.0.json'
       - 'data/JANUS-OPIR-ANTIFUCK-H1-CHALLENGE-KIT-v1.0.json'
       - 'data/JANUS-OPIR-ANTIFUCK-FROZEN-EVALUATOR-POLICY-v1.0.json'
+      - 'data/JANUS-OPIR-ANTIFUCK-FROZEN-EVALUATOR-SELFTEST-RESULT-2026-08-15-v1.0.json'
       - 'data/JANUS-ARMOR-OF-GOD-CURRENT-AUTHORITY.json'
       - 'research/antifuck/janus_opir_antifuck_policy_v1_3.py'
       - 'research/antifuck/janus_opir_antifuck_h1_verify.py'
@@ -30,7 +32,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Validate preregistered separation, frozen evaluator and blocked promotions
+      - name: Validate separation, evaluator certificates and blocked H1 promotion
         run: |
           python - <<'PY'
           import json
@@ -38,8 +40,8 @@ jobs:
           p=json.loads(Path('data/JANUS-OPIR-ANTIFUCK-INDEPENDENT-HOLDOUT-PROTOCOL-v1.0.json').read_text(encoding='utf-8'))
           k=json.loads(Path('data/JANUS-OPIR-ANTIFUCK-H1-CHALLENGE-KIT-v1.0.json').read_text(encoding='utf-8'))
           e=json.loads(Path('data/JANUS-OPIR-ANTIFUCK-FROZEN-EVALUATOR-POLICY-v1.0.json').read_text(encoding='utf-8'))
+          c=json.loads(Path('data/JANUS-OPIR-ANTIFUCK-FROZEN-EVALUATOR-SELFTEST-RESULT-2026-08-15-v1.0.json').read_text(encoding='utf-8'))
           a=json.loads(Path('data/JANUS-ARMOR-OF-GOD-CURRENT-AUTHORITY.json').read_text(encoding='utf-8'))
-
           assert p['status']=='PREREGISTERED_NOT_EXECUTED'
           h1=p['tracks']['H1_INDEPENDENT_SYNTHETIC_HOLDOUT']; h2=p['tracks']['H2_LAWFUL_OBSERVATIONAL_PLATFORM_AUDIT']
           assert h1['minimum_cases']>=100 and h1['minimum_families']>=10
@@ -53,42 +55,38 @@ jobs:
           state=p['current_state']
           assert state['protocol_frozen'] is True and state['H1_package_created'] is False and state['H1_executed'] is False
           assert state['H2_authorized'] is False and state['effectiveness_claim']=='BLOCKED'
-
           assert k['status']=='INFRASTRUCTURE_READY_H1_NOT_AUTHORED_NOT_EXECUTED'
           for key,value in k['acceptance_binding']['thresholds'].items(): assert gates[key]==value
-          assert k['current_state']['external_holdout_author_assigned'] is False
-          assert k['current_state']['H1_executed'] is False
-
+          assert k['current_state']['external_holdout_author_assigned'] is False and k['current_state']['H1_executed'] is False
           assert e['status']=='FROZEN_IMPLEMENTATION_CANDIDATE_AWAITING_MERGE_COMMIT_BINDING'
           assert e['policy_id']=='JANUS-OPIR-ANTIFUCK-POLICY-v1.3-freeze1'
-          assert e['implementation']=='research/antifuck/janus_opir_antifuck_policy_v1_3.py'
-          assert e['h1_protocol']=='data/JANUS-OPIR-ANTIFUCK-INDEPENDENT-HOLDOUT-PROTOCOL-v1.0.json'
-          assert e['h1_verifier']=='research/antifuck/janus_opir_antifuck_h1_verify.py'
           assert e['output_contract']['public_bot_fact_constant'] is False
           assert e['development_selftest']['independent_h1'] is False
-          assert e['h1_freeze_semantics']['external_holdout_author_assigned'] is False
-          assert e['h1_freeze_semantics']['external_h1_package_exists'] is False
-          assert e['h1_freeze_semantics']['labels_revealed'] is False
-          assert e['h1_freeze_semantics']['prediction_package_exists'] is False
-
+          assert c['status']=='FROZEN_EVALUATOR_DEVELOPMENT_PASS_NOT_INDEPENDENT_H1'
+          assert c['policy_selftest_result']['SELFTEST_IS_INDEPENDENT_H1'] is False
+          assert c['blinded_e2e_result']['E2E_IS_INDEPENDENT_H1'] is False
+          assert c['current_h1_state']['H1_executed'] is False
           assert a['h1_evaluator_policy_reference']=='data/JANUS-OPIR-ANTIFUCK-FROZEN-EVALUATOR-POLICY-v1.0.json'
-          assert a['h1_evaluator_implementation_reference']=='research/antifuck/janus_opir_antifuck_policy_v1_3.py'
-          assert a['next_required_gate_status']=='EVALUATOR_AND_VERIFIER_READY_H1_NOT_AUTHORED_NOT_EXECUTED'
+          assert a['h1_evaluator_selftest_result_reference']=='data/JANUS-OPIR-ANTIFUCK-FROZEN-EVALUATOR-SELFTEST-RESULT-2026-08-15-v1.0.json'
+          assert a['next_required_gate_status']=='EVALUATOR_AND_VERIFIER_DEVELOPMENT_CERTIFIED_H1_NOT_AUTHORED_NOT_EXECUTED'
           assert a['h1_evaluator_exists'] is True
-          assert a['h1_evaluator_policy_id']=='JANUS-OPIR-ANTIFUCK-POLICY-v1.3-freeze1'
+          assert a['h1_evaluator_development_selftest_pass'] is True
+          assert a['h1_evaluator_development_e2e_pass'] is True
           assert a['h1_evaluator_selftest_is_independent_h1'] is False
           assert a['h1_external_author_assigned'] is False
           assert a['h1_package_created'] is False
+          assert a['h1_predictions_created'] is False
+          assert a['h1_labels_revealed'] is False
           assert a['h1_executed'] is False
           assert a['independent_holdout_pass'] is False
           assert a['real_world_effectiveness_established'] is False
           print('HOLDOUT_PROTOCOL_INTEGRITY=PASS')
-          print('H1_BLINDED_EVALUATOR=READY')
+          print('H1_BLINDED_EVALUATOR_DEVELOPMENT_CERTIFIED=True')
           print('H1_EXTERNAL_AUTHOR_ASSIGNED=False')
           print('H1_EXECUTED=False')
           print('EFFECTIVENESS_CLAIM=BLOCKED')
           PY
-      - name: Self-test blinded evaluator without labels
+      - name: Replay blinded evaluator self-test
         run: python research/antifuck/janus_opir_antifuck_policy_v1_3.py --self-test
-      - name: Verify engineering verifier without claiming H1
+      - name: Replay engineering verifier without claiming H1
         run: python research/antifuck/janus_opir_antifuck_h1_verify.py --self-test
