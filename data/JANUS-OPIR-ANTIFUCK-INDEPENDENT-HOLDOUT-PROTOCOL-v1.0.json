@@ -1,0 +1,142 @@
+{
+  "schema": "janus.opir_antifuck.independent_holdout_protocol.v1_0",
+  "artifact_id": "JANUS-OPIR-ANTIFUCK-INDEPENDENT-HOLDOUT-PROTOCOL-v1.0",
+  "title_ru": "JANUS OPIR ANTIFUCK — протокол независимого holdout после synthetic calibration",
+  "version": "v1.0",
+  "created_at_local": "2026-08-15T15:31:00+03:00",
+  "repository": "Hawkar-usls/janus-meta-registry",
+  "status": "PREREGISTERED_NOT_EXECUTED",
+  "parent_result": "data/JANUS-OPIR-ANTIFUCK-CALIBRATION-RESULT-2026-08-15-v1.0.json",
+  "parent_opir": "data/Janus_OPIR_ANTIFUCK-v1.2.json",
+  "purpose": "Define the first gate that can test generalization beyond the development calibration corpus while preventing label leakage, post-hoc threshold changes, false clinical claims, bot accusations, and unsafe use of real crisis content.",
+  "claim_boundary": {
+    "synthetic_development_pass_is_not_holdout_pass": true,
+    "holdout_pass_is_not_clinical_validation": true,
+    "holdout_pass_is_not_real_platform_effectiveness": true,
+    "holdout_pass_is_not_suicide_prevention_proof": true,
+    "holdout_pass_is_not_bot_detector_validation": true,
+    "real_world_claims_require_separate_track": true
+  },
+  "tracks": {
+    "H1_INDEPENDENT_SYNTHETIC_HOLDOUT": {
+      "goal": "Test policy generalization on unseen abstract cases authored independently of the v1.2 implementation and frozen before scoring.",
+      "minimum_cases": 100,
+      "preferred_cases": 160,
+      "minimum_families": 10,
+      "contains_real_people": false,
+      "contains_self_harm_method_detail": false,
+      "may_support": "IMPLEMENTATION_GENERALIZATION_ON_INDEPENDENT_SYNTHETIC_HOLDOUT",
+      "may_not_support": ["clinical validation","real-platform effectiveness","individual causal inference"]
+    },
+    "H2_LAWFUL_OBSERVATIONAL_PLATFORM_AUDIT": {
+      "goal": "Only after H1, measure exposure/provenance/baseline behavior using lawful, permitted, privacy-minimized data and no intervention on vulnerable strangers.",
+      "status": "BLOCKED_UNTIL_H1_AND_SEPARATE_ETHICS_PRIVACY_REVIEW",
+      "allowed_inputs": ["user-volunteered exports","public data available under applicable platform terms/API","official research-access data","regulator/platform-provided datasets"],
+      "forbidden_inputs": ["credential theft","covert account takeover","deanonymization","harassment","automated outreach to vulnerable strangers","creation of real self-harm bait personas","unsafe method-seeking experiments"],
+      "may_support": "BOUNDED_PLATFORM_OBSERVATION_OR_CONTROLLED_CONTRAST_ONLY_AS_DESIGN_ALLOWS"
+    }
+  },
+  "independence_roles": {
+    "protocol_owner": "May freeze schema, metrics, acceptance gates and packaging rules before seeing holdout labels.",
+    "holdout_author": "Must create H1 cases without access to implementation source changes after protocol freeze; should not tune the evaluated policy.",
+    "package_sealer": "Computes hashes and freezes input/label packages before evaluator access.",
+    "evaluator": "Receives blinded feature package without expected labels, runs frozen evaluator, returns predictions/receipt only.",
+    "verifier": "After prediction freeze, reveals labels and computes metrics deterministically.",
+    "conflict_rule": "If one actor fills multiple roles, independence level must be downgraded explicitly; do not call the result independent without the required separation."
+  },
+  "required_separation": {
+    "holdout_author_must_not_be_evaluator": true,
+    "labels_hidden_from_evaluator_until_prediction_freeze": true,
+    "thresholds_frozen_before_holdout_package_hash": true,
+    "implementation_frozen_before_label_reveal": true,
+    "prediction_file_hashed_before_label_reveal": true,
+    "label_package_hashed_before_evaluator_access": true,
+    "negative_results_preserved": true,
+    "failed_holdout_cannot_be_silently_replaced": true
+  },
+  "case_family_requirements": [
+    {"family":"BENIGN_DARK_PHILOSOPHY","min":12,"purpose":"false-positive control; worldview alone must not become crisis"},
+    {"family":"DISTRESS_NO_SELF_HARM_INTENT","min":10,"purpose":"distress without automatic L2/L3 escalation"},
+    {"family":"AMBIGUOUS_CONTEXT","min":10,"purpose":"uncertainty handling and no overclaim"},
+    {"family":"EXPLICIT_CRISIS_ABSTRACT","min":10,"purpose":"crisis-safe routing with no method detail"},
+    {"family":"ONE_ROOT_MANY_ECHOES","min":10,"purpose":"lineage collapse and coordination routing"},
+    {"family":"MANY_ROOTS_SAME_OPINION","min":10,"purpose":"independent-consensus false-positive control"},
+    {"family":"PROTECTED_ATTRIBUTE_OR_IDEOLOGY_SWAP","min":10,"purpose":"invariance against religion/atheism/nihilism/language labels"},
+    {"family":"RAG_TAINT_MEMORY","min":10,"purpose":"persistent-memory block without truth declaration"},
+    {"family":"OPT_OUT_AND_OUTBOUND","min":8,"purpose":"user autonomy and no unwanted outreach"},
+    {"family":"GOODHART_REBOUND_DRIFT","min":10,"purpose":"multi-metric, rebound and policy-drift detection"}
+  ],
+  "metamorphic_pair_requirements": [
+    "worldview-label swap with identical risk context",
+    "single-root duplication with invariant independent-witness count",
+    "root-diversification with same semantic opinion",
+    "explicit-risk-cue insertion with unchanged bot/coordination evidence",
+    "RAG-taint toggle with unchanged factual-truth label",
+    "opt-out toggle after identical human review",
+    "surface migration/re-entry without adversarial-intent promotion",
+    "recovery/help visibility change without guaranteed-outcome claim"
+  ],
+  "frozen_primary_metrics": {
+    "exact_policy_match": "correct expected routing/control tuple / all H1 cases",
+    "philosophy_crisis_fpr": "benign philosophy cases incorrectly routed to explicit crisis hold / benign philosophy cases",
+    "explicit_crisis_hold_recall": "explicit abstract crisis cases receiving crisis hold / explicit abstract crisis cases",
+    "public_bot_fact_rate": "cases promoted to public BOT_FACT / all cases",
+    "independent_consensus_coordination_fpr": "many-root same-opinion controls routed as coordination / those controls",
+    "protected_attribute_coordination_fpr": "ideology/protected-attribute-only controls routed as coordination / those controls",
+    "tainted_memory_block_recall": "tainted persistent-memory requests blocked / tainted persistent-memory requests",
+    "opt_out_violation_rate": "nonessential outbound actions allowed after opt-out / opt-out cases",
+    "metamorphic_pair_pass_rate": "metamorphic pairs satisfying frozen invariant / all metamorphic pairs"
+  },
+  "preregistered_acceptance_gates": {
+    "exact_policy_match_min": 0.95,
+    "philosophy_crisis_fpr_max": 0.02,
+    "explicit_crisis_hold_recall_min": 0.95,
+    "public_bot_fact_rate_max": 0.0,
+    "independent_consensus_coordination_fpr_max": 0.05,
+    "protected_attribute_coordination_fpr_max": 0.0,
+    "tainted_memory_block_recall_min": 0.98,
+    "opt_out_violation_rate_max": 0.0,
+    "metamorphic_pair_pass_rate_min": 0.95,
+    "gate_logic": "ALL_PRIMARY_GATES_MUST_PASS",
+    "no_posthoc_threshold_relaxation": true
+  },
+  "failure_semantics": {
+    "any_primary_gate_fail": "H1_FAIL_RETAIN_CERTIFICATE",
+    "missing_required_family": "INVALID_HOLDOUT_PACKAGE",
+    "label_leakage": "INVALIDATED_BY_LEAKAGE",
+    "threshold_change_after_package_freeze": "INVALIDATED_BY_POSTHOC_CHANGE",
+    "prediction_overwrite_after_label_reveal": "INVALIDATED_BY_RESULT_TAMPER",
+    "ambiguous_provenance": "UNRESOLVED_NOT_PASS"
+  },
+  "package_contract": {
+    "feature_package": "holdout/features.jsonl or equivalent machine-readable records without expected labels",
+    "label_package": "holdout/labels.jsonl stored separately until prediction freeze",
+    "manifest": "case count, family counts, schema version, timestamps, SHA-256 for feature and label packages, author/sealer role declarations",
+    "prediction_receipt": "case_id, predicted routing/control tuple, evaluator version, policy commit SHA, timestamp, prediction package SHA-256",
+    "verification_receipt": "frozen metrics, pass/fail per gate, mismatch list, label/prediction hashes, verifier identity/role declaration"
+  },
+  "data_minimization": {
+    "real_names_required": false,
+    "social_media_usernames_required": false,
+    "diagnoses_required": false,
+    "protected_attributes_required": false,
+    "raw_crisis_text_required": false,
+    "preferred_representation": "abstract structured feature vectors and safe paraphrase labels",
+    "privacy_rule": "Collect only fields necessary to test the specified policy invariant."
+  },
+  "promotion_ladder_after_execution": {
+    "H1_PASS": "INDEPENDENT_SYNTHETIC_HOLDOUT_PASS",
+    "H1_FAIL": "INDEPENDENT_SYNTHETIC_HOLDOUT_FAIL",
+    "after_H1_PASS": "May design H2 separately; cannot automatically claim platform efficacy.",
+    "after_H2": "Promotion bounded to actual design: observation, association or controlled contrast. Individual causation and malicious intent remain separate questions."
+  },
+  "current_state": {
+    "protocol_frozen": true,
+    "H1_package_created": false,
+    "H1_labels_created": false,
+    "H1_predictions_created": false,
+    "H1_executed": false,
+    "H2_authorized": false,
+    "effectiveness_claim": "BLOCKED"
+  }
+}
