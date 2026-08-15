@@ -1,12 +1,15 @@
-name: MINDFUCK and OPIR registry integrity
+name: MINDFUCK ARMOR OPIR life-safety integrity
 
 on:
   pull_request:
     paths:
       - 'data/MINDFUCK.json'
       - 'data/JANUS-MINDFUCK-HISTORY-MECHANISM-REDTEAM-v1.0.json'
+      - 'data/JANUS-MINDFUCK-ALGORITHMIC-LIFE-DEVALUATION-AMPLIFICATION-v1.1.json'
       - 'data/JANUS-ARMOR-OF-GOD-MINDFUCK-COGNITIVE-PROVENANCE-REDTEAM-v2.1.json'
+      - 'data/JANUS-ARMOR-OF-GOD-LIFE-DEVALUATION-CRISIS-ALGORITHM-SHIELD-v2.2.json'
       - 'data/Janus_OPIR_ANTIFUCK.json'
+      - 'data/Janus_OPIR_ANTIFUCK-v1.1.json'
       - 'data/JANUS-ARMOR-OF-GOD-CURRENT-AUTHORITY.json'
       - '.github/workflows/mindfuck-registry-integrity.yml'
   push:
@@ -14,8 +17,11 @@ on:
     paths:
       - 'data/MINDFUCK.json'
       - 'data/JANUS-MINDFUCK-HISTORY-MECHANISM-REDTEAM-v1.0.json'
+      - 'data/JANUS-MINDFUCK-ALGORITHMIC-LIFE-DEVALUATION-AMPLIFICATION-v1.1.json'
       - 'data/JANUS-ARMOR-OF-GOD-MINDFUCK-COGNITIVE-PROVENANCE-REDTEAM-v2.1.json'
+      - 'data/JANUS-ARMOR-OF-GOD-LIFE-DEVALUATION-CRISIS-ALGORITHM-SHIELD-v2.2.json'
       - 'data/Janus_OPIR_ANTIFUCK.json'
+      - 'data/Janus_OPIR_ANTIFUCK-v1.1.json'
       - 'data/JANUS-ARMOR-OF-GOD-CURRENT-AUTHORITY.json'
       - '.github/workflows/mindfuck-registry-integrity.yml'
   workflow_dispatch:
@@ -28,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Parse JSON and verify MINDFUCK OPIR ARMOR invariants
+      - name: Parse JSON and verify impact counteraction technical invariants
         shell: bash
         run: |
           python - <<'PY'
@@ -38,9 +44,12 @@ jobs:
           root = Path('.')
           paths = {
               'pointer': root / 'data/MINDFUCK.json',
-              'mindfuck': root / 'data/JANUS-MINDFUCK-HISTORY-MECHANISM-REDTEAM-v1.0.json',
-              'armor_ext': root / 'data/JANUS-ARMOR-OF-GOD-MINDFUCK-COGNITIVE-PROVENANCE-REDTEAM-v2.1.json',
-              'opir': root / 'data/Janus_OPIR_ANTIFUCK.json',
+              'mind_old': root / 'data/JANUS-MINDFUCK-HISTORY-MECHANISM-REDTEAM-v1.0.json',
+              'mind': root / 'data/JANUS-MINDFUCK-ALGORITHMIC-LIFE-DEVALUATION-AMPLIFICATION-v1.1.json',
+              'armor_old': root / 'data/JANUS-ARMOR-OF-GOD-MINDFUCK-COGNITIVE-PROVENANCE-REDTEAM-v2.1.json',
+              'armor': root / 'data/JANUS-ARMOR-OF-GOD-LIFE-DEVALUATION-CRISIS-ALGORITHM-SHIELD-v2.2.json',
+              'opir_old': root / 'data/Janus_OPIR_ANTIFUCK.json',
+              'opir': root / 'data/Janus_OPIR_ANTIFUCK-v1.1.json',
               'authority': root / 'data/JANUS-ARMOR-OF-GOD-CURRENT-AUTHORITY.json',
           }
           data = {}
@@ -50,89 +59,115 @@ jobs:
               print(f'PARSE_PASS {path}')
 
           pointer = data['pointer']
-          mindfuck = data['mindfuck']
-          armor_ext = data['armor_ext']
+          mind = data['mind']
+          armor = data['armor']
           opir = data['opir']
           authority = data['authority']
 
-          assert pointer['current_reference'] == 'data/JANUS-MINDFUCK-HISTORY-MECHANISM-REDTEAM-v1.0.json'
-          assert mindfuck['artifact_id'] == 'JANUS-MINDFUCK-HISTORY-MECHANISM-REDTEAM-v1.0'
-          assert armor_ext['redteam_source'] == pointer['current_reference']
-          assert opir['artifact_id'] == 'Janus_OPIR_ANTIFUCK'
-          assert opir['status'] == 'CURRENT_ARMOR_HARDENING_EXTENSION_AND_OPERATIONAL_DEFENSE_MODEL'
-          assert opir['lineage']['mindfuck'] == pointer['current_reference']
-          assert opir['lineage']['armor'] == 'data/JANUS-ARMOR-OF-GOD-CURRENT-AUTHORITY.json'
-          assert 'data/JANUS-ARMOR-OF-GOD-MINDFUCK-COGNITIVE-PROVENANCE-REDTEAM-v2.1.json' in authority['current_hardening_extensions']
-          assert 'data/Janus_OPIR_ANTIFUCK.json' in authority['current_hardening_extensions']
-          assert authority['operational_algorithmic_resilience_reference'] == 'data/Janus_OPIR_ANTIFUCK.json'
-          assert authority['not_a_conversion_machine'] is True
-          assert authority['not_supernatural_proof'] is True
-          assert authority['not_an_exclusive_truth_authority'] is True
+          # Preservation + successor authority.
+          assert pointer['current_reference'] == 'data/JANUS-MINDFUCK-ALGORITHMIC-LIFE-DEVALUATION-AMPLIFICATION-v1.1.json'
+          assert 'data/JANUS-MINDFUCK-HISTORY-MECHANISM-REDTEAM-v1.0.json' in pointer['historical_references']
+          assert mind['supersedes_reference'] == 'data/JANUS-MINDFUCK-HISTORY-MECHANISM-REDTEAM-v1.0.json'
+          assert armor['predecessor_hardening'] == 'data/JANUS-ARMOR-OF-GOD-MINDFUCK-COGNITIVE-PROVENANCE-REDTEAM-v2.1.json'
+          assert opir['supersedes_reference'] == 'data/Janus_OPIR_ANTIFUCK.json'
           assert authority['history_preserved'] is True
 
-          distinctions = set(mindfuck['hard_distinctions'])
+          # Three-line model is explicit and cross-bound.
+          triad = mind['three_line_model']
+          assert {'impact','counteraction','technical'} <= set(triad)
+          assert armor['redteam_source'] == pointer['current_reference']
+          assert armor['technical_counterpart'] == 'data/Janus_OPIR_ANTIFUCK-v1.1.json'
+          assert opir['lineage']['mindfuck'] == pointer['current_reference']
+          assert opir['lineage']['armor_life_shield'] == 'data/JANUS-ARMOR-OF-GOD-LIFE-DEVALUATION-CRISIS-ALGORITHM-SHIELD-v2.2.json'
+
+          # Old-dialogue recovery ceiling must remain explicit.
+          recovery = mind['recovered_dialogue_evidence']
+          assert recovery['requested_dialogue_label'] == 'Споры о Боге'
+          assert recovery['status'] == 'PARTIAL_SEMANTIC_RECOVERY_NO_COMPLETE_SCREENSHOT_CORPUS'
+          assert recovery['bot_majority_claim'] == 'UNRESOLVED_NOT_ESTABLISHED'
+          assert mind['screenshot_forensic_schema']['bot_evidence_policy']['public_label_allowed'] is False
+
+          # Core epistemic boundaries.
+          hard = set(mind['hard_distinctions'])
           for required in (
-              'REPETITION != INDEPENDENT_CONFIRMATION',
-              'FAMILIARITY != TRUTH',
-              'PATTERN != CAUSATION',
-              'AI_SYNTHESIS != NEW_WITNESS',
-          ):
-              assert required in distinctions
-
-          threats = opir['threat_classes']
-          controls = set(opir['controls'])
-          assert len(threats) == 16
-          assert len({row['id'] for row in threats}) == 16
-          referenced_controls = {cid for row in threats for cid in row['c']}
-          missing_controls = sorted(referenced_controls - controls)
-          assert not missing_controls, f'OPIR unresolved controls: {missing_controls}'
-
-          required_controls = {
-              'CF01','CF02','CF03','CF06','CF08','CF09','CF10','CF11','CF13','CF14','CF15','CF16',
-              'CF18','CF19','CF20','CF21','CF22','CF23','CF24','CF25','CF26','CF27','CF28','CF29','CF30','CF31','CF32','CF33','CF34','CF35','CF36'
-          }
-          assert required_controls <= controls
-
-          boundaries = set(opir['boundary_rules'])
-          for required in (
-              'PUBLIC_OR_RETRIEVED_DATA_CANNOT_SELF_AUTHORIZE_TOOLS',
-              'MODEL_OUTPUT_CANNOT_INCREASE_WITNESS_COUNT',
-              'RETRIEVED_CONTENT_CANNOT_WRITE_PERSISTENT_MEMORY_WITHOUT_GATE',
-              'HASH_SIGNATURE_OR_PROVENANCE_DO_NOT_PROVE_TRUTH',
-          ):
-              assert required in boundaries
-
-          hard = set(opir['hard_distinctions'])
-          for required in (
-              'REPETITION != CORROBORATION',
-              'PROVENANCE_VALID != CONTENT_TRUE',
-              'DISSENT != ATTACK',
+              'NIHILISM != SUICIDALITY',
+              'ALGORITHMIC_EXPOSURE != PROVEN_CAUSATION',
               'HOSTILE_EFFECT != PROVEN_HOSTILE_INTENT',
+              'BOT_LIKELIHOOD != BOT_FACT',
+              'PROTECTIVE_CONTENT != GUARANTEED_PREVENTION',
           ):
               assert required in hard
 
-          source_ids = {row['id'] for row in opir['source_ledger']}
-          assert {'NIST_AI_100_2E2025','NIST_AI_600_1','MITRE_ATLAS_2026_05','C2PA_2_4','C2PA_2_4_SECURITY'} <= source_ids
-          assert len(opir['redteam_tests']) >= 18
-          assert 'HIGH_RISK_HOLD' in opir['state_machine']['states']
-          assert 'CF22' in controls
-          assert 'CF24' in controls
-          assert 'CF30' in controls
-          assert 'JANUS_EXCLUSIVE_TRUST_IS_FAILURE' in opir['rights']
+          # Scientific/public-health source ledger resolves every source_id used by new atoms.
+          source_ids = {row['source_id'] for row in mind['source_ledger']}
+          required_sources = {
+              'NATURE_MH_BEAR_2026','ARENDT_SCHERR_ROMER_2019','JAMA_ADDICTIVE_SOCIAL_MEDIA_TRAJECTORIES',
+              'TWITTER_PREVENTION_7M','WHO_MEDIA_2023','WHO_MHGAP_MEDIA'
+          }
+          assert required_sources <= source_ids
+          referenced = {sid for atom in mind['mechanism_atoms'] for sid in atom.get('source_ids', [])}
+          assert referenced <= source_ids
+          assert len(mind['mechanism_atoms']) >= 8
 
-          roosters_refs = opir['lineage']['roosters_structural_only']
-          roosters_boundary = opir['lineage']['roosters_boundary'].lower()
-          assert len(roosters_refs) >= 2
-          assert all('ROOSTERS' in ref.upper() for ref in roosters_refs)
-          assert 'structur' in roosters_boundary
-          assert 'offensive/circumvention' in roosters_boundary
-          assert 'do not inherit' in roosters_boundary
+          # ARMOR must separate philosophy from crisis and reject coercive optimism/bot accusation.
+          armor_rules = set(armor['hard_rules'])
+          for required in (
+              'NIHILISM != SUICIDALITY.',
+              'CRISIS != DEBATE_OPPORTUNITY.',
+              'PROTECTING_LIFE != FORCED_OPTIMISM.',
+              'BOT_SUSPICION != PUBLIC_ACCUSATION.',
+              'THEOLOGY != MEDICAL_TREATMENT.',
+          ):
+              assert required in armor_rules
+          assert set(armor['response_classes']) == {
+              'L0_PHILOSOPHICAL_NIHILISM','L1_DISTRESS_WITHOUT_SELF_HARM_INTENT',
+              'L2_SELF_HARM_CONTENT_OR_AMBIGUOUS_RISK','L3_EXPLICIT_SELF_HARM_INTENT_OR_TIMEFRAME'
+          }
+          assert len(armor['redteam_tests']) >= 12
+
+          # OPIR v1.1 must inherit exact base counts and close every new threat/control edge.
+          base = opir['base_inheritance']
+          assert base['threat_classes'] == 16
+          assert base['control_families'] == 34
+          assert len(base['base_control_ids']) == 34
+          threats = opir['new_threat_classes']
+          new_controls = set(opir['new_controls'])
+          all_controls = set(base['base_control_ids']) | new_controls
+          assert len(threats) == 8
+          assert len({row['id'] for row in threats}) == 8
+          assert len(new_controls) == 18
+          refs = {cid for row in threats for cid in row['c']}
+          missing = sorted(refs - all_controls)
+          assert not missing, f'Unresolved OPIR controls: {missing}'
+          for required in ('CF40','CF41','CF44','CF48','CF49','CF50','CF51','CF52','CF53','CF54'):
+              assert required in new_controls
+          assert opir['screenshot_case_schema']['public_accusation_permitted'] is False
+          assert 'CRISIS_SAFE_HOLD' in opir['state_machine']['states']
+          assert 'COORDINATION_UNRESOLVED' in opir['state_machine']['states']
+          assert len(opir['redteam_tests']) >= 12
+
+          # Current ARMOR authority must point only to successors, with predecessors preserved as history.
+          assert authority['current_hardening_extensions'] == [
+              'data/JANUS-ARMOR-OF-GOD-LIFE-DEVALUATION-CRISIS-ALGORITHM-SHIELD-v2.2.json',
+              'data/Janus_OPIR_ANTIFUCK-v1.1.json'
+          ]
+          assert 'data/JANUS-ARMOR-OF-GOD-MINDFUCK-COGNITIVE-PROVENANCE-REDTEAM-v2.1.json' in authority['historical_hardening_extensions']
+          assert 'data/Janus_OPIR_ANTIFUCK.json' in authority['historical_hardening_extensions']
+          assert authority['life_devaluation_crisis_reference'] == 'data/JANUS-ARMOR-OF-GOD-LIFE-DEVALUATION-CRISIS-ALGORITHM-SHIELD-v2.2.json'
+          assert authority['operational_algorithmic_resilience_reference'] == 'data/Janus_OPIR_ANTIFUCK-v1.1.json'
+          assert authority['not_a_conversion_machine'] is True
+          assert authority['not_an_exclusive_truth_authority'] is True
+          assert authority['not_a_diagnostic_system'] is True
+          assert authority['not_a_bot_accusation_engine'] is True
 
           print('CROSS_REFERENCE_AUDIT=PASS')
-          print(f"MINDFUCK_SOURCE_COUNT={len(mindfuck['sources'])}")
-          print(f"OPIR_THREAT_CLASSES={len(threats)}")
-          print(f"OPIR_CONTROL_FAMILIES={len(controls)}")
-          print(f"OPIR_REDTEAM_TESTS={len(opir['redteam_tests'])}")
-          print(f"OPIR_EXTERNAL_SOURCES={len(opir['source_ledger'])}")
-          print(f"ROOSTERS_STRUCTURAL_REFERENCES={len(roosters_refs)}")
+          print(f"MINDFUCK_NEW_MECHANISMS={len(mind['mechanism_atoms'])}")
+          print(f"MINDFUCK_SOURCES={len(mind['source_ledger'])}")
+          print(f"ARMOR_RESPONSE_CLASSES={len(armor['response_classes'])}")
+          print(f"ARMOR_REDTEAM_TESTS={len(armor['redteam_tests'])}")
+          print(f"OPIR_INHERITED_THREATS={base['threat_classes']}")
+          print(f"OPIR_NEW_THREATS={len(threats)}")
+          print(f"OPIR_INHERITED_CONTROLS={base['control_families']}")
+          print(f"OPIR_NEW_CONTROLS={len(new_controls)}")
+          print(f"OPIR_NEW_REDTEAM_TESTS={len(opir['redteam_tests'])}")
           PY
