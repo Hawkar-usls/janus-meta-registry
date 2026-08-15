@@ -1,0 +1,155 @@
+name: JANUS Linear A R7-E0 KU-RO frozen execution
+
+on:
+  push:
+    branches:
+      - 'research/r7-e0-ku-ro-mechanism'
+    paths:
+      - 'data/JANUS-LINEAR-A-R7-E0-KU-RO-EXECUTE-REQUEST-2026-08-15-v0.1.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  frozen-corpus-execution:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout execution branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install inherited parser dependency
+        run: python -m pip install "numpy>=2.0"
+
+      - name: Verify execute request and frozen operator lineage
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" = 'research/r7-e0-ku-ro-mechanism'
+          python - <<'PY'
+          import json
+          r=json.load(open('data/JANUS-LINEAR-A-R7-E0-KU-RO-EXECUTE-REQUEST-2026-08-15-v0.1.json',encoding='utf-8'))
+          assert r['status']=='EXECUTE_FROZEN_E0_OPERATORS'
+          assert r['operator_freeze_commit_sha']=='4270372d5eb9ef9c60d95a2284c0d392a80847f4'
+          assert r['frozen_corpus_commit']=='43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a'
+          assert r['target']=='KU-RO' and r['region']=='HT'
+          assert r['vocabulary_search_authorized'] is False
+          assert r['threshold_retuning_authorized'] is False
+          assert r['semantic_or_phonetic_input_authorized'] is False
+          assert r['canonical_auto_promotion_authorized'] is False
+          PY
+          git diff --exit-code 4270372d5eb9ef9c60d95a2284c0d392a80847f4 HEAD -- \
+            data/JANUS-LINEAR-A-R7-E0-KU-RO-MECHANISM-SPEC-2026-08-15-v0.1.json \
+            data/JANUS-LINEAR-A-R7-E0-KU-RO-MECHANISM-EXECUTION-SPEC-2026-08-15-v0.1.json \
+            research/linear_a/janus_linear_a_r7_ku_ro_mechanism_v0_1.py \
+            research/linear_a/janus_linear_a_r7_e0_ku_ro_evidence_v0_1.py \
+            research/linear_a/test_janus_linear_a_r7_ku_ro_mechanism_v0_1.py \
+            research/linear_a/test_janus_linear_a_r7_e0_ku_ro_evidence_v0_1.py
+
+      - name: Re-run frozen canaries immediately before corpus access
+        env:
+          PYTHONPATH: research/linear_a
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            research/linear_a/janus_linear_a_r7_ku_ro_mechanism_v0_1.py \
+            research/linear_a/janus_linear_a_r7_e0_ku_ro_evidence_v0_1.py
+          python research/linear_a/test_janus_linear_a_r7_ku_ro_mechanism_v0_1.py -v
+          python research/linear_a/test_janus_linear_a_r7_e0_ku_ro_evidence_v0_1.py -v
+
+      - name: Fetch exact frozen Linear A corpus
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --quiet https://github.com/Hawkar-usls/lineara.xyz.git /tmp/lineara
+          git -C /tmp/lineara checkout --quiet 43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a
+          test "$(git -C /tmp/lineara rev-parse HEAD)" = "43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a"
+
+      - name: Produce frozen R7-E0 evidence
+        env:
+          PYTHONPATH: research/linear_a
+        shell: bash
+        run: |
+          set -euo pipefail
+          python research/linear_a/janus_linear_a_r7_e0_ku_ro_evidence_v0_1.py \
+            --corpus /tmp/lineara \
+            --spec data/JANUS-LINEAR-A-R7-E0-KU-RO-MECHANISM-SPEC-2026-08-15-v0.1.json \
+            --execution-spec data/JANUS-LINEAR-A-R7-E0-KU-RO-MECHANISM-EXECUTION-SPEC-2026-08-15-v0.1.json \
+            --c3-result data/JANUS-LINEAR-A-R7-C3-REGION-SCOPED-PROBABLE-FUNCTION-ADMISSION-RESULT-2026-08-15-v0.1.json \
+            --out data/JANUS-LINEAR-A-R7-E0-KU-RO-MECHANISM-EVIDENCE-2026-08-15-v0.1.json
+
+      - name: Apply frozen R7-E0 admission gate
+        env:
+          PYTHONPATH: research/linear_a
+        shell: bash
+        run: |
+          set -euo pipefail
+          python research/linear_a/janus_linear_a_r7_ku_ro_mechanism_v0_1.py \
+            --spec data/JANUS-LINEAR-A-R7-E0-KU-RO-MECHANISM-SPEC-2026-08-15-v0.1.json \
+            --evidence data/JANUS-LINEAR-A-R7-E0-KU-RO-MECHANISM-EVIDENCE-2026-08-15-v0.1.json \
+            --output data/JANUS-LINEAR-A-R7-E0-KU-RO-MECHANISM-RESULT-2026-08-15-v0.1.json
+          cat data/JANUS-LINEAR-A-R7-E0-KU-RO-MECHANISM-RESULT-2026-08-15-v0.1.json
+
+      - name: Enforce claim ceiling and write execution receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib,json,os
+          ep='data/JANUS-LINEAR-A-R7-E0-KU-RO-MECHANISM-EVIDENCE-2026-08-15-v0.1.json'
+          rp='data/JANUS-LINEAR-A-R7-E0-KU-RO-MECHANISM-RESULT-2026-08-15-v0.1.json'
+          e=json.load(open(ep,encoding='utf-8')); r=json.load(open(rp,encoding='utf-8'))
+          assert e['vocabulary_ranking_performed'] is False
+          assert e['semantic_inputs_used'] is False and e['phonetic_inputs_used'] is False
+          assert e['external_meaning_inputs_used'] is False and e['post_reveal_retuning'] is False
+          for key in ('exact_word_meaning_established','translation_established','phonetic_value_established','language_family_established','new_anchor_established','decipherment_established','universal_cross_region_function_established','external_replication_established'):
+              assert r[key] is False
+          def sha(path): return hashlib.sha256(open(path,'rb').read()).hexdigest()
+          receipt={
+            'artifact_uuid':'JANUS-LINEAR-A-R7-E0-KU-RO-EXECUTION-RECEIPT-2026-08-15-v0.1',
+            'status':'FROZEN_E0_EXECUTION_COMPLETED',
+            'github_trigger_sha':os.environ['GITHUB_SHA'],
+            'operator_freeze_commit_sha':'4270372d5eb9ef9c60d95a2284c0d392a80847f4',
+            'frozen_corpus_commit':'43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a',
+            'evidence_sha256':sha(ep),
+            'result_sha256':sha(rp),
+            'canonical_auto_promotion_performed':False,
+            'result_status':r['status'],
+            'mechanism_refinement_established':r['mechanism_refinement_established'],
+            'admitted_refinement':r['admitted_refinement'],
+          }
+          open('data/JANUS-LINEAR-A-R7-E0-KU-RO-EXECUTION-RECEIPT-2026-08-15-v0.1.json','w',encoding='utf-8').write(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n')
+          print(json.dumps(receipt,sort_keys=True))
+          PY
+
+      - name: Upload immutable execution package
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r7-e0-ku-ro-frozen-execution
+          path: |
+            data/JANUS-LINEAR-A-R7-E0-KU-RO-MECHANISM-EVIDENCE-2026-08-15-v0.1.json
+            data/JANUS-LINEAR-A-R7-E0-KU-RO-MECHANISM-RESULT-2026-08-15-v0.1.json
+            data/JANUS-LINEAR-A-R7-E0-KU-RO-EXECUTION-RECEIPT-2026-08-15-v0.1.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Persist E0 evidence package on execution branch only
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'JANUS Evidence Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add \
+            data/JANUS-LINEAR-A-R7-E0-KU-RO-MECHANISM-EVIDENCE-2026-08-15-v0.1.json \
+            data/JANUS-LINEAR-A-R7-E0-KU-RO-MECHANISM-RESULT-2026-08-15-v0.1.json \
+            data/JANUS-LINEAR-A-R7-E0-KU-RO-EXECUTION-RECEIPT-2026-08-15-v0.1.json
+          git commit -m 'Register frozen Linear A R7-E0 KU-RO mechanism evidence v0.1'
+          git push origin HEAD:research/r7-e0-ku-ro-mechanism
