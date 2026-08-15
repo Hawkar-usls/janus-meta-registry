@@ -1,0 +1,124 @@
+name: JANUS Linear A R7-E1 frozen discovery
+
+on:
+  push:
+    branches:
+      - 'research/r7-e1-anonymous-local-role-graph'
+    paths:
+      - 'data/JANUS-LINEAR-A-R7-E1-DISCOVERY-EXECUTE-REQUEST-2026-08-15-v0.1.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  frozen-discovery:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install inherited parser dependency
+        run: python -m pip install "numpy>=2.0"
+      - name: Verify request and science freeze
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" = 'research/r7-e1-anonymous-local-role-graph'
+          python - <<'PY'
+          import json
+          r=json.load(open('data/JANUS-LINEAR-A-R7-E1-DISCOVERY-EXECUTE-REQUEST-2026-08-15-v0.1.json',encoding='utf-8'))
+          assert r['status']=='EXECUTE_FROZEN_E1_DISCOVERY_ONLY'
+          assert r['science_freeze_commit_sha']=='2fa791e1d3deb5d7cb67adaef8509bad8b3c8e9d'
+          assert r['science_freeze_ci_run']==31879280796
+          assert r['science_freeze_ci_conclusion']=='success'
+          assert r['holdout_execution_authorized'] is False
+          assert r['holdout_content_inspection_authorized'] is False
+          assert r['manual_atom_edit_authorized'] is False
+          PY
+          git diff --exit-code 2fa791e1d3deb5d7cb67adaef8509bad8b3c8e9d HEAD -- \
+            data/JANUS-LINEAR-A-R7-E1-ANONYMOUS-LOCAL-ROLE-GRAPH-SPEC-2026-08-15-v0.1.json \
+            research/linear_a/janus_linear_a_r7_e1_anonymous_local_role_graph_v0_1.py \
+            research/linear_a/test_janus_linear_a_r7_e1_anonymous_local_role_graph_v0_1.py \
+            .github/workflows/janus-linear-a-r7-e1-anonymous-local-role-graph.yml
+      - name: Re-run frozen canaries before corpus access
+        env:
+          PYTHONPATH: research/linear_a
+        run: |
+          python research/linear_a/janus_linear_a_r7_e1_anonymous_local_role_graph_v0_1.py \
+            --spec data/JANUS-LINEAR-A-R7-E1-ANONYMOUS-LOCAL-ROLE-GRAPH-SPEC-2026-08-15-v0.1.json \
+            --validate-spec --out /tmp/e1-spec-validation.json
+          python research/linear_a/test_janus_linear_a_r7_e1_anonymous_local_role_graph_v0_1.py -v
+      - name: Fetch exact frozen corpus
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --quiet https://github.com/Hawkar-usls/lineara.xyz.git /tmp/lineara
+          git -C /tmp/lineara checkout --quiet 43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a
+          test "$(git -C /tmp/lineara rev-parse HEAD)" = '43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a'
+      - name: Execute discovery partition only
+        env:
+          PYTHONPATH: research/linear_a
+        run: |
+          python research/linear_a/janus_linear_a_r7_e1_anonymous_local_role_graph_v0_1.py \
+            --spec data/JANUS-LINEAR-A-R7-E1-ANONYMOUS-LOCAL-ROLE-GRAPH-SPEC-2026-08-15-v0.1.json \
+            --mode discovery \
+            --corpus /tmp/lineara \
+            --out data/JANUS-LINEAR-A-R7-E1-ANONYMOUS-ROLE-DISCOVERY-2026-08-15-v0.1.json
+      - name: Enforce discovery-only firewall and write receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib,json,os
+          p='data/JANUS-LINEAR-A-R7-E1-ANONYMOUS-ROLE-DISCOVERY-2026-08-15-v0.1.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['partition']=='discovery'
+          assert d['holdout_content_parsed'] is False
+          assert d['inference_claim_established'] is False
+          assert d['load_audit']['partition']=='discovery'
+          assert d['load_audit']['HT_files_skipped_before_parse_due_to_other_partition'] > 0
+          for k in ('specific_semantic_function_established','exact_word_meaning_established','translation_established','phonetic_value_established','language_family_established','new_anchor_established','universal_cross_region_function_established','external_replication_established','decipherment_established'):
+              assert d[k] is False
+          raw=hashlib.sha256(open(p,'rb').read()).hexdigest()
+          canonical=hashlib.sha256(json.dumps(d,sort_keys=True,ensure_ascii=False,separators=(',',':')).encode()).hexdigest()
+          receipt={
+            'artifact_uuid':'JANUS-LINEAR-A-R7-E1-DISCOVERY-EXECUTION-RECEIPT-2026-08-15-v0.1',
+            'status':'FROZEN_E1_DISCOVERY_COMPLETED',
+            'github_trigger_sha':os.environ['GITHUB_SHA'],
+            'science_freeze_commit_sha':'2fa791e1d3deb5d7cb67adaef8509bad8b3c8e9d',
+            'frozen_corpus_commit':'43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a',
+            'discovery_raw_file_sha256':raw,
+            'discovery_canonical_json_sha256':canonical,
+            'discovery_status':d['status'],
+            'selected_atom_ids':d['selected_atom_ids'],
+            'holdout_content_parsed':False,
+            'holdout_execution_performed':False,
+          }
+          out='data/JANUS-LINEAR-A-R7-E1-DISCOVERY-EXECUTION-RECEIPT-2026-08-15-v0.1.json'
+          open(out,'w',encoding='utf-8').write(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n')
+          print(json.dumps(receipt,sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r7-e1-frozen-discovery
+          path: |
+            data/JANUS-LINEAR-A-R7-E1-ANONYMOUS-ROLE-DISCOVERY-2026-08-15-v0.1.json
+            data/JANUS-LINEAR-A-R7-E1-DISCOVERY-EXECUTION-RECEIPT-2026-08-15-v0.1.json
+          if-no-files-found: error
+          retention-days: 90
+      - name: Persist discovery package on research branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'JANUS Evidence Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add \
+            data/JANUS-LINEAR-A-R7-E1-ANONYMOUS-ROLE-DISCOVERY-2026-08-15-v0.1.json \
+            data/JANUS-LINEAR-A-R7-E1-DISCOVERY-EXECUTION-RECEIPT-2026-08-15-v0.1.json
+          git commit -m 'Register frozen Linear A R7-E1 anonymous-role discovery v0.1'
+          git push origin HEAD:research/r7-e1-anonymous-local-role-graph
