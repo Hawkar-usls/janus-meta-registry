@@ -6,7 +6,7 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/janus_bluebook_exact_date_index.yml'
-      - 'research/uap_poss1/janus_bluebook_public_case_index_v0_1.py'
+      - 'research/uap_poss1/janus_bluebook_public_case_index_v0_2.py'
 
 permissions:
   contents: read
@@ -24,31 +24,28 @@ jobs:
         with:
           python-version: '3.13'
 
-      - name: Compile runner
-        run: python -m py_compile research/uap_poss1/janus_bluebook_public_case_index_v0_1.py
+      - name: Compile corrected runner
+        run: python -m py_compile research/uap_poss1/janus_bluebook_public_case_index_v0_2.py
 
-      - name: Build discovery pilot
+      - name: Build full public exact-date index
         run: |
           rm -rf work/bluebook_exact
-          python research/uap_poss1/janus_bluebook_public_case_index_v0_1.py \
+          python research/uap_poss1/janus_bluebook_public_case_index_v0_2.py \
             --out-dir work/bluebook_exact \
-            --max-pages 80 \
-            --workers 6
+            --workers 8
 
-      - name: Emit discovery receipt
+      - name: Emit full receipt
         if: always()
         run: |
           test -f work/bluebook_exact/bluebook_public_case_index_receipt.json && cat work/bluebook_exact/bluebook_public_case_index_receipt.json || true
-          echo '=== DISCOVERED URL SAMPLE ==='
-          test -f work/bluebook_exact/discovered_urls.txt && head -40 work/bluebook_exact/discovered_urls.txt || true
-          echo '=== BLIND CASE SAMPLE ==='
-          test -f work/bluebook_exact/bluebook_case_index_blind.csv && head -25 work/bluebook_exact/bluebook_case_index_blind.csv || true
+          echo '=== BLIND INDEX HEAD ==='
+          test -f work/bluebook_exact/bluebook_case_index_blind.csv && head -15 work/bluebook_exact/bluebook_case_index_blind.csv || true
 
-      - name: Upload discovery pilot
+      - name: Upload full frozen index
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: janus-bluebook-exact-date-index-pilot
+          name: janus-bluebook-exact-date-index-full
           path: |
             work/bluebook_exact/govweird_robots.txt
             work/bluebook_exact/discovered_urls.txt
