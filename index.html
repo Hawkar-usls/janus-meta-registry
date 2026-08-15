@@ -13,6 +13,7 @@
   <meta property="og:url" content="https://hawkar-usls.github.io/janus-meta-registry/">
   <meta name="twitter:card" content="summary">
   <link rel="stylesheet" href="./assets/site.css">
+  <script src="./assets/i18n.js" defer></script>
   <script src="./assets/guestbook.js" defer></script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"JANUS Meta Registry","url":"https://hawkar-usls.github.io/janus-meta-registry/","description":"Public machine-readable research archive maintained by Hawkar, covering evidence protocols, AI safety, independent evaluation, Linear A research, materials research and external review.","sameAs":["https://github.com/Hawkar-usls/janus-meta-registry","https://github.com/Hawkar-usls"]}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"JANUS research entry points","itemListElement":[{"@type":"ListItem","position":1,"url":"https://hawkar-usls.github.io/janus-meta-registry/antifuck/","name":"JANUS ANTIFUCK"},{"@type":"ListItem","position":2,"url":"https://hawkar-usls.github.io/janus-meta-registry/linear-a/","name":"JANUS Linear A"},{"@type":"ListItem","position":3,"url":"https://hawkar-usls.github.io/janus-meta-registry/wedjat/","name":"JANUS Wedjat"},{"@type":"ListItem","position":4,"url":"https://hawkar-usls.github.io/janus-meta-registry/scoby-skingpt/","name":"SCOBY / SkinGPT"},{"@type":"ListItem","position":5,"url":"https://hawkar-usls.github.io/janus-meta-registry/aifc/","name":"AIFC"},{"@type":"ListItem","position":6,"url":"https://hawkar-usls.github.io/janus-meta-registry/fundamentum/","name":"Janus-Fundamentum"},{"@type":"ListItem","position":7,"url":"https://hawkar-usls.github.io/janus-meta-registry/gamarjoba-gen-ancvale/","name":"GAMARJOBA GEN_ANCVALE"}]}</script>
@@ -20,13 +21,20 @@
 <body>
   <header class="nav">
     <div class="wrap navin">
-      <a class="brand" href="./">JANUS <span>Meta Registry</span></a>
-      <nav class="navlinks">
-        <a href="./research/">Research</a>
-        <a href="./gamarjoba-gen-ancvale/">Contribute</a>
-        <a href="#janus-guestbook">Guestbook</a>
-        <a href="https://github.com/Hawkar-usls/janus-meta-registry">GitHub</a>
+      <a class="brand" href="./" aria-label="JANUS Meta Registry home"><span class="brand-mark">Ⅰ◈Ⅱ</span> JANUS <span>Meta Registry</span></a>
+      <nav class="navlinks" aria-label="Primary navigation">
+        <a href="./research/" data-i18n="navResearch">Research</a>
+        <a href="./gamarjoba-gen-ancvale/" data-i18n="navContribute">Contribute</a>
+        <a href="#janus-guestbook" data-i18n="navGuestbook">Guestbook</a>
+        <a href="https://github.com/Hawkar-usls/janus-meta-registry" data-i18n="navGithub">GitHub</a>
       </nav>
+      <div class="language-switch" aria-label="Language">
+        <button type="button" data-lang="en" aria-pressed="true">EN</button>
+        <span>·</span>
+        <button type="button" data-lang="ua" aria-pressed="false">UA</button>
+        <span>·</span>
+        <button type="button" data-lang="ru" aria-pressed="false">ru</button>
+      </div>
     </div>
   </header>
 
@@ -34,66 +42,94 @@
     <div class="guestbook-shell">
       <div class="guestbook-head">
         <div class="guestbook-meta">
-          <strong>✦ JANUS Guestbook</strong>
-          <span><span data-guestbook-count>0</span> public messages</span>
-          <span>GitHub login = nickname</span>
+          <strong data-i18n="guestbookTitle">✦ JANUS Guestbook</strong>
+          <span><span data-guestbook-count>0</span> <span data-i18n="publicMessages">public messages</span></span>
+          <span data-i18n="loginNickname">GitHub login = nickname</span>
         </div>
-        <a data-guestbook-form href="https://github.com/Hawkar-usls/janus-meta-registry/issues/new?template=guestbook.yml">Leave a message ↗</a>
+        <a data-guestbook-form href="https://github.com/Hawkar-usls/janus-meta-registry/issues/new?template=guestbook.yml" data-i18n="leaveMessage">Leave a message ↗</a>
       </div>
       <div class="guestbook-window">
         <div class="guestbook-track" hidden></div>
-        <div class="guestbook-empty">The guestbook is open. <a data-guestbook-form href="https://github.com/Hawkar-usls/janus-meta-registry/issues/new?template=guestbook.yml">Be the first to leave a message.</a></div>
+        <div class="guestbook-empty"><span data-i18n="guestbookEmpty">The guestbook is open.</span> <a data-guestbook-form href="https://github.com/Hawkar-usls/janus-meta-registry/issues/new?template=guestbook.yml" data-i18n="guestbookFirst">Be the first to leave a message.</a></div>
       </div>
-      <div class="guestbook-rule">100 characters · up to 3 submissions/account · automatic publication after deterministic checks · hover to pause</div>
+      <div class="guestbook-rule" data-i18n="guestbookRule">100 characters · up to 3 submissions/account · automatic publication after deterministic checks · hover to pause</div>
     </div>
   </aside>
 
   <main>
-    <div class="wrap hero">
-      <span class="eyebrow">open research · provenance · falsification</span>
-      <h1>A public research registry built to be checked.</h1>
-      <p>JANUS Meta Registry is a public, machine-readable archive maintained by Hawkar. It preserves research hypotheses, protocols, execution receipts, null results, corrections and evidence boundaries across AI safety, independent evaluation, Linear A statistical research, materials research, software archaeology and proof-carrying experimental methods.</p>
-      <div class="actions">
-        <a class="btn primary" href="./research/">Explore research</a>
-        <a class="btn" href="./gamarjoba-gen-ancvale/">External reviewers — enter here</a>
-        <a class="btn" href="https://github.com/Hawkar-usls/janus-meta-registry/tree/main/data">Machine-readable data</a>
-        <a class="btn" data-guestbook-form href="https://github.com/Hawkar-usls/janus-meta-registry/issues/new?template=guestbook.yml">Sign the guestbook</a>
+    <section class="hero-section">
+      <div class="duality-field" aria-hidden="true"><span></span><span></span></div>
+      <div class="temple-haze" aria-hidden="true"></div>
+      <div class="wrap hero-temple-shell">
+        <div class="temple-stage" aria-hidden="true">
+          <div class="temple-pediment"><span>IANUS</span></div>
+          <div class="temple-entablature"></div>
+          <div class="temple-columns">
+            <i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+          <div class="twin-arches">
+            <div class="janus-arch janus-arch-left"><span class="arch-orbit"></span><span class="arch-face">I</span></div>
+            <div class="janus-axis"><span>◈</span><small>LIMEN</small></div>
+            <div class="janus-arch janus-arch-right"><span class="arch-orbit"></span><span class="arch-face">II</span></div>
+          </div>
+          <div class="temple-base"></div>
+        </div>
+
+        <div class="hero">
+          <span class="eyebrow" data-i18n="eyebrow">open research · provenance · falsification</span>
+          <h1 data-i18n="heroTitle">A public research registry built to be checked.</h1>
+          <p data-i18n="heroLead">JANUS Meta Registry is a public, machine-readable archive maintained by Hawkar. It preserves research hypotheses, protocols, execution receipts, null results, corrections and evidence boundaries across AI safety, independent evaluation, Linear A statistical research, materials research, software archaeology and proof-carrying experimental methods.</p>
+          <div class="actions">
+            <a class="btn primary" href="./research/" data-i18n="explore">Explore research</a>
+            <a class="btn" href="./gamarjoba-gen-ancvale/" data-i18n="external">External reviewers — enter here</a>
+            <a class="btn" href="https://github.com/Hawkar-usls/janus-meta-registry/tree/main/data" data-i18n="machineData">Machine-readable data</a>
+            <a class="btn guestbook-btn" data-guestbook-form href="https://github.com/Hawkar-usls/janus-meta-registry/issues/new?template=guestbook.yml" data-i18n="signGuestbook">Sign the guestbook</a>
+          </div>
+        </div>
       </div>
-      <div class="ru"><strong>ru:</strong> Открытый исследовательский мета-реестр JANUS: машиночитаемые JSON, воспроизводимые тесты, отрицательные результаты, исправления, независимая проверка и явные границы научных утверждений.</div>
-    </div>
+      <div class="meander" aria-hidden="true"></div>
+    </section>
+
+    <section class="temple-meaning-section">
+      <div class="wrap temple-meaning">
+        <span class="kicker" data-i18n="templeKicker">IANUS · LIMEN · DUALITAS</span>
+        <h2 data-i18n="templeTitle">The Temple has two doors.</h2>
+        <p data-i18n="templeText">JANUS looks toward origin and return at once. Here that duality is architectural: archive and current authority, hypothesis and result, invitation and verification.</p>
+      </div>
+    </section>
 
     <section>
       <div class="wrap">
-        <h2 class="section-title">Research surfaces</h2>
-        <p class="section-lead">Search-friendly entry pages point back to the repository evidence. The website improves discovery; it does not replace the JSON registry as authority.</p>
+        <h2 class="section-title" data-i18n="surfacesTitle">Research surfaces</h2>
+        <p class="section-lead" data-i18n="surfacesLead">Search-friendly entry pages point back to repository evidence. The website improves discovery; it does not replace the JSON registry as authority.</p>
         <div class="grid">
-          <article class="card"><h3><a href="./antifuck/">JANUS ANTIFUCK</a></h3><p>Defensive AI-safety and cognitive-resilience research: algorithmic amplification audits, choice-space protection, false-positive controls and blinded independent evaluation infrastructure.</p><div class="tagrow"><span class="tag">AI safety</span><span class="tag">algorithmic manipulation</span><span class="tag">independent evaluation</span></div><div class="status">Current gate: frozen evaluator awaiting genuinely external H1 holdout authorship.</div></article>
-          <article class="card"><h3><a href="./linear-a/">JANUS Linear A</a></h3><p>Statistical and structural analysis of Linear A corpora with typed representations, holdouts, destructive nulls, replication gates and explicit separation from decipherment claims.</p><div class="tagrow"><span class="tag">Linear A</span><span class="tag">epigraphy</span><span class="tag">statistics</span></div><div class="status">Structural research only: signal ≠ translation or decipherment.</div></article>
-          <article class="card"><h3><a href="./wedjat/">JANUS Wedjat</a></h3><p>Exploratory image, component-state and geometry studies around the Egyptian Wedjat/Eye of Horus using museum-image provenance and control-oriented analysis.</p><div class="tagrow"><span class="tag">Egyptology</span><span class="tag">museum images</span><span class="tag">geometry</span></div><div class="status">Pattern analysis ≠ ancient hidden-code claim.</div></article>
-          <article class="card"><h3><a href="./scoby-skingpt/">SCOBY / SkinGPT</a></h3><p>Bacterial-cellulose materials concepts, sensing skins, reproducibility gates and circular biomanufacturing research with strict separation between concept and validated performance.</p><div class="tagrow"><span class="tag">bacterial cellulose</span><span class="tag">sensor skin</span><span class="tag">materials science</span></div><div class="status">No medical or ballistic certification claim.</div></article>
-          <article class="card"><h3><a href="./aifc/">AIFC</a></h3><p>Auditable Independent Future Challenge: proof-carrying experimental architecture for separating preregistration, implementation, verifier evidence and genuinely independent replication.</p><div class="tagrow"><span class="tag">reproducibility</span><span class="tag">evidence protocol</span><span class="tag">blinding</span></div><div class="status">Internal replay ≠ independent replication.</div></article>
-          <article class="card"><h3><a href="./fundamentum/">Janus-Fundamentum</a></h3><p>Proof-carrying computational mathematics research with frozen routes, explicit open gates, deterministic certificates and preserved negative branches.</p><div class="tagrow"><span class="tag">formal methods</span><span class="tag">complexity</span><span class="tag">proof certificates</span></div><div class="status">P vs NP remains open.</div></article>
+          <article class="card"><span class="card-arch" aria-hidden="true"></span><h3><a href="./antifuck/">JANUS ANTIFUCK</a></h3><p data-i18n="antifuckText">Defensive AI-safety and cognitive-resilience research: algorithmic amplification audits, choice-space protection, false-positive controls and blinded independent evaluation infrastructure.</p><div class="tagrow"><span class="tag">AI safety</span><span class="tag">algorithmic manipulation</span><span class="tag">independent evaluation</span></div><div class="status" data-i18n="antifuckStatus">Current gate: frozen evaluator awaiting genuinely external H1 holdout authorship.</div></article>
+          <article class="card"><span class="card-arch" aria-hidden="true"></span><h3><a href="./linear-a/">JANUS Linear A</a></h3><p data-i18n="linearText">Statistical and structural analysis of Linear A corpora with typed representations, holdouts, destructive nulls, replication gates and explicit separation from decipherment claims.</p><div class="tagrow"><span class="tag">Linear A</span><span class="tag">epigraphy</span><span class="tag">statistics</span></div><div class="status" data-i18n="linearStatus">Structural research only: signal ≠ translation or decipherment.</div></article>
+          <article class="card"><span class="card-arch" aria-hidden="true"></span><h3><a href="./wedjat/">JANUS Wedjat</a></h3><p data-i18n="wedjatText">Exploratory image, component-state and geometry studies around the Egyptian Wedjat/Eye of Horus using museum-image provenance and control-oriented analysis.</p><div class="tagrow"><span class="tag">Egyptology</span><span class="tag">museum images</span><span class="tag">geometry</span></div><div class="status" data-i18n="wedjatStatus">Pattern analysis ≠ ancient hidden-code claim.</div></article>
+          <article class="card"><span class="card-arch" aria-hidden="true"></span><h3><a href="./scoby-skingpt/">SCOBY / SkinGPT</a></h3><p data-i18n="scobyText">Bacterial-cellulose materials concepts, sensing skins, reproducibility gates and circular biomanufacturing research with strict separation between concept and validated performance.</p><div class="tagrow"><span class="tag">bacterial cellulose</span><span class="tag">sensor skin</span><span class="tag">materials science</span></div><div class="status" data-i18n="scobyStatus">No medical or ballistic certification claim.</div></article>
+          <article class="card"><span class="card-arch" aria-hidden="true"></span><h3><a href="./aifc/">AIFC</a></h3><p data-i18n="aifcText">Auditable Independent Future Challenge: proof-carrying experimental architecture for separating preregistration, implementation, verifier evidence and genuinely independent replication.</p><div class="tagrow"><span class="tag">reproducibility</span><span class="tag">evidence protocol</span><span class="tag">blinding</span></div><div class="status" data-i18n="aifcStatus">Internal replay ≠ independent replication.</div></article>
+          <article class="card"><span class="card-arch" aria-hidden="true"></span><h3><a href="./fundamentum/">Janus-Fundamentum</a></h3><p data-i18n="fundamentumText">Proof-carrying computational mathematics research with frozen routes, explicit open gates, deterministic certificates and preserved negative branches.</p><div class="tagrow"><span class="tag">formal methods</span><span class="tag">complexity</span><span class="tag">proof certificates</span></div><div class="status" data-i18n="fundamentumStatus">P vs NP remains open.</div></article>
         </div>
       </div>
     </section>
 
     <section>
       <div class="wrap two">
-        <div class="panel">
-          <h2>Why this registry exists</h2>
-          <p>JANUS is designed to preserve the difference between an idea and evidence about that idea. Historical objects remain visible, while newer authority records, claim ceilings and verification receipts govern what may currently be said.</p>
+        <div class="panel arch-panel">
+          <h2 data-i18n="whyTitle">Why this registry exists</h2>
+          <p data-i18n="whyText">JANUS is designed to preserve the difference between an idea and evidence about that idea. Historical objects remain visible, while newer authority records, claim ceilings and verification receipts govern what may currently be said.</p>
           <div class="code">HYPOTHESIS != RESULT
 CORRELATION != CAUSATION
 INTERNAL_REPLICATION != INDEPENDENT_REPLICATION
 CI_PASS != PEER_REVIEW
 HASH_OR_SIGNATURE != TRUTH_OF_CONTENT</div>
         </div>
-        <div class="panel">
-          <h2>Open door</h2>
-          <p>Independent reviewers do not need prior contact with Hawkar and do not need to agree with JANUS. Negative results, failed replications and corrections are explicitly welcome.</p>
+        <div class="panel arch-panel">
+          <h2 data-i18n="openDoorTitle">Open door</h2>
+          <p data-i18n="openDoorText">Independent reviewers do not need prior contact with Hawkar and do not need to agree with JANUS. Negative results, failed replications and corrections are explicitly welcome.</p>
           <p><a class="btn primary" href="./gamarjoba-gen-ancvale/">GAMARJOBA GEN_ANCVALE</a></p>
           <div class="facts">
-            <div class="fact"><strong>Hawkar</strong><span>project author / maintainer</span></div>
+            <div class="fact"><strong>Hawkar</strong><span data-i18n="authorRole">project author / maintainer</span></div>
             <div class="fact"><strong>@Hawkar-usls</strong><span>GitHub</span></div>
             <div class="fact"><strong>@Hawkar_lol</strong><span>Telegram</span></div>
             <div class="fact"><strong>hawkarlol@gmail.com</strong><span>Email</span></div>
@@ -103,14 +139,14 @@ HASH_OR_SIGNATURE != TRUTH_OF_CONTENT</div>
     </section>
 
     <section>
-      <div class="wrap"><div class="notice"><strong>Search-surface boundary.</strong> These HTML pages are discovery and navigation layers. Current scientific authority remains in versioned repository artifacts, source code, receipts and current-authority JSON. Better indexing is a goal; search ranking is never guaranteed.</div></div>
+      <div class="wrap"><div class="notice"><strong data-i18n="boundaryTitle">Search-surface boundary.</strong> <span data-i18n="boundaryText">These HTML pages are discovery and navigation layers. Current scientific authority remains in versioned repository artifacts, source code, receipts and current-authority JSON. Better indexing is a goal; search ranking is never guaranteed.</span></div></div>
     </section>
   </main>
 
   <footer class="footer">
     <div class="wrap footergrid">
-      <span>JANUS Meta Registry · public archival research notebook</span>
-      <span><a href="./sitemap.xml">Sitemap</a> · <a href="./llms.txt">Machine guide</a> · <a href="https://github.com/Hawkar-usls/janus-meta-registry">Repository</a></span>
+      <span data-i18n="footer">JANUS Meta Registry · public archival research notebook</span>
+      <span><a href="./sitemap.xml" data-i18n="sitemap">Sitemap</a> · <a href="./llms.txt" data-i18n="machineGuide">Machine guide</a> · <a href="https://github.com/Hawkar-usls/janus-meta-registry" data-i18n="repository">Repository</a></span>
     </div>
   </footer>
 </body>
