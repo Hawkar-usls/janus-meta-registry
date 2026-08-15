@@ -44,7 +44,7 @@ def expected_events():
     b=json.loads(BUMPER.read_text());m=json.loads(BIOMED.read_text());out=[]
     for e in b['events']:
         if e['status']=='LAUNCHED':
-            out.append({'source':'BUMPER_OFFICIAL_MANIFEST','event_id':e['round'].replace(' ','_'),'date':e['date'],'vehicle_expected':'Bumper','location_expected':e['site']})
+            out.append({'source':'BUMPER_OFFICIAL_MANIFEST','event_id':e['round'].replace(' ','_'),'date':e['date'],'vehicle_expected':'Bumper','location_expected':e.get('location') or b.get('campaign_scope',{}).get('location')})
     for e in m['events']:
         if e['status'].startswith('LAUNCHED'):
             out.append({'source':'NASA_BIOMEDICAL_OFFICIAL_MANIFEST','event_id':e['event_id'],'date':e['date'],'vehicle_expected':e['vehicle'],'location_expected':e['location']})
