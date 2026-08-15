@@ -47,6 +47,8 @@ jobs:
           result_path='data/JANUS-WEDJAT-COMPONENT-STATE-SPACE-RESULT-2026-08-15-v0.2.json'
           r=json.load(open(result_path,encoding='utf-8'))
           actual=hashlib.sha256(open(code_path,'rb').read()).hexdigest()
+          print('RECORDED_CODE_SHA256', r['code']['sha256'])
+          print('ACTUAL_CODE_SHA256', actual)
           assert r['code']['sha256']==actual
           assert r['status']=='SIX_BIT_STATE_SPACE_EXACT_IMAGE_HALVING_NOT_SUPPORTED'
           s=r['exact_state_space_result']
