@@ -1,0 +1,61 @@
+name: JANUS Linear A R7-D0 region scoped object status v0.1
+on:
+  push:
+    paths: ["data/JANUS-LINEAR-A-R7-D0-EXECUTE-REQUEST-2026-08-15-v0.1.json"]
+  workflow_dispatch:
+permissions: {contents: write}
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - run: python -m pip install "numpy>=2.0"
+      - name: Verify frozen D0
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile research/linear_a/janus_linear_a_r7_region_scoped_object_status_v0_1.py
+          python - <<'PY'
+          import json
+          s=json.load(open('data/JANUS-LINEAR-A-R7-D0-REGION-SCOPED-OBJECT-STATUS-VALIDATION-SPEC-2026-08-15-v0.1.json'))
+          c=json.load(open('data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-15-v2.29.json'))
+          p=json.load(open('data/JANUS-LINEAR-A-R7-C0-POSITIONAL-TEMPLATE-ROLE-RESULT-2026-08-15-v0.1.json'))
+          p2=json.load(open('data/JANUS-LINEAR-A-R7-C2-STRUCTURE-DESTROYING-NULL-RESULT-2026-08-15-v0.1.json'))
+          assert c['version']=='v2.29' and c['canonicality']['canonicality_audit_status']=='CANONICALITY_AUDIT_PASS'
+          assert p['admitted_candidate_count']==8 and p2['survivor_count']==8 and s['frozen_candidate_count']==8
+          assert s['object_block_null']['permutations']==5000
+          assert s['D0_candidate_gate']['FDR_q_max']==0.05
+          assert s['status_robustness_gate']['minimum_supported_strata']==2
+          assert s['C3_probable_region_scoped_support_floor']['minimum_occurrences']==20
+          assert s['C3_probable_region_scoped_support_floor']['minimum_physical_objects']==15
+          PY
+      - name: Fetch corpus
+        run: |
+          git clone --quiet https://github.com/Hawkar-usls/lineara.xyz.git /tmp/lineara
+          git -C /tmp/lineara checkout --quiet 43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a
+      - name: Execute D0
+        env: {PYTHONPATH: research/linear_a}
+        run: python research/linear_a/janus_linear_a_r7_region_scoped_object_status_v0_1.py --corpus /tmp/lineara --spec data/JANUS-LINEAR-A-R7-D0-REGION-SCOPED-OBJECT-STATUS-VALIDATION-SPEC-2026-08-15-v0.1.json --parent-canonical data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-15-v2.29.json --c0-result data/JANUS-LINEAR-A-R7-C0-POSITIONAL-TEMPLATE-ROLE-RESULT-2026-08-15-v0.1.json --c2-result data/JANUS-LINEAR-A-R7-C2-STRUCTURE-DESTROYING-NULL-RESULT-2026-08-15-v0.1.json --out data/JANUS-LINEAR-A-R7-D0-REGION-SCOPED-OBJECT-STATUS-VALIDATION-RESULT-2026-08-15-v0.1.json
+      - name: Enforce ceiling
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open('data/JANUS-LINEAR-A-R7-D0-REGION-SCOPED-OBJECT-STATUS-VALIDATION-RESULT-2026-08-15-v0.1.json'))
+          assert x['frozen_candidate_count']==8 and x['candidate_family_changed'] is False and len(x['candidate_results'])==8
+          assert not any(x['leakage_firewall'].values())
+          assert x['epistemic_gate']['probable_region_scoped_function_established'] is False
+          assert x['epistemic_gate']['universal_probable_function_established'] is False
+          assert x['epistemic_gate']['decipherment_established'] is False
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r7-d0-region-object-status-v0-1
+          path: data/JANUS-LINEAR-A-R7-D0-REGION-SCOPED-OBJECT-STATUS-VALIDATION-RESULT-2026-08-15-v0.1.json
+      - name: Persist
+        shell: bash
+        run: |
+          set -euo pipefail; git config user.name 'JANUS Evidence Bot'; git config user.email 'actions@users.noreply.github.com'; git add data/JANUS-LINEAR-A-R7-D0-REGION-SCOPED-OBJECT-STATUS-VALIDATION-RESULT-2026-08-15-v0.1.json; git commit -m 'Register Linear A R7-D0 region-scoped object/status result v0.1' || true; for i in 1 2 3 4 5; do git push origin HEAD:main && exit 0 || git pull --rebase origin main; done; exit 1
