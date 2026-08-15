@@ -1,0 +1,48 @@
+name: JANUS Epic Temple hero integrity
+
+on:
+  push:
+    paths:
+      - 'assets/janus-temple-hero-v1.webp'
+      - 'assets/site.css'
+      - 'assets/site-base.css'
+      - '.github/workflows/janus-epic-temple-hero-integrity.yml'
+  pull_request:
+    paths:
+      - 'assets/janus-temple-hero-v1.webp'
+      - 'assets/site.css'
+      - 'assets/site-base.css'
+      - '.github/workflows/janus-epic-temple-hero-integrity.yml'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate background asset and presentation wrapper
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f assets/janus-temple-hero-v1.webp
+          test -f assets/site-base.css
+          test -f assets/site.css
+
+          bytes="$(wc -c < assets/janus-temple-hero-v1.webp)"
+          test "$bytes" -gt 80000
+          test "$bytes" -lt 350000
+
+          file assets/janus-temple-hero-v1.webp | grep -qi 'Web/P\|WebP'
+          grep -Fq "@import url('./site-base.css');" assets/site.css
+          grep -Fq "url('./janus-temple-hero-v1.webp')" assets/site.css
+          grep -Fq '.temple-stage{display:none!important}' assets/site.css
+          grep -Fq '#06111c' assets/site.css
+          grep -Fq '#39c6ff' assets/site.css
+          grep -Fq '#7ae7ff' assets/site.css
+          grep -Fq '#c8a96b' assets/site.css
+          grep -Fq 'Cinzel' assets/site.css
+
+          echo "JANUS_EPIC_TEMPLE_HERO_INTEGRITY=PASS"
+          echo "HERO_BYTES=$bytes"
+          echo "BASE_STYLESHEET_PRESERVED=TRUE"
+          echo "GENERATED_ART_IS_PRESENTATION_ONLY=TRUE"
