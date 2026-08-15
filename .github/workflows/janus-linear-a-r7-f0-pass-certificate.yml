@@ -1,0 +1,132 @@
+name: JANUS Linear A R7-F0 PASS certificate
+
+on:
+  push:
+    branches:
+      - 'research/r7-f0-ku-ro-downstream-slot'
+    paths:
+      - 'data/JANUS-LINEAR-A-R7-F0-DOWNSTREAM-SLOT-PASS-CERTIFICATE-2026-08-15-v0.1.json'
+      - '.github/workflows/janus-linear-a-r7-f0-pass-certificate.yml'
+  pull_request:
+    paths:
+      - 'data/JANUS-LINEAR-A-R7-F0-DOWNSTREAM-SLOT-PASS-CERTIFICATE-2026-08-15-v0.1.json'
+      - '.github/workflows/janus-linear-a-r7-f0-pass-certificate.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-pass-certificate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify frozen F0 science lineage remains byte-identical
+        run: |
+          set -euo pipefail
+          git diff --exit-code 8b6c2ca0e63939abc95c24d7c33c5bed901e381d HEAD -- \
+            data/JANUS-LINEAR-A-R7-F0-KU-RO-DOWNSTREAM-SLOT-SPEC-2026-08-15-v0.1.json \
+            research/linear_a/janus_linear_a_r7_f0_ku_ro_downstream_slot_v0_1.py \
+            research/linear_a/test_janus_linear_a_r7_f0_ku_ro_downstream_slot_v0_1.py \
+            .github/workflows/janus-linear-a-r7-f0-ku-ro-downstream-slot.yml
+
+      - name: Verify result hashes and execution binding
+        run: |
+          python - <<'PY'
+          import hashlib,json
+          cp='data/JANUS-LINEAR-A-R7-F0-DOWNSTREAM-SLOT-PASS-CERTIFICATE-2026-08-15-v0.1.json'
+          rp='data/JANUS-LINEAR-A-R7-F0-KU-RO-DOWNSTREAM-SLOT-RESULT-2026-08-15-v0.1.json'
+          xp='data/JANUS-LINEAR-A-R7-F0-EXECUTION-RECEIPT-2026-08-15-v0.1.json'
+          c=json.load(open(cp,encoding='utf-8')); r=json.load(open(rp,encoding='utf-8')); x=json.load(open(xp,encoding='utf-8'))
+          raw=hashlib.sha256(open(rp,'rb').read()).hexdigest()
+          canonical=hashlib.sha256(json.dumps(r,sort_keys=True,ensure_ascii=False,separators=(',',':')).encode()).hexdigest()
+          assert raw==x['result_raw_file_sha256']==c['provenance_hashes']['result_raw_file_sha256']
+          assert canonical==x['result_canonical_json_sha256']==c['provenance_hashes']['result_canonical_json_sha256']
+          assert x['github_trigger_sha']=='7340824dae187d0ed7fa298d6a042af7c9f6f43c'
+          assert x['science_freeze_commit_sha']=='8b6c2ca0e63939abc95c24d7c33c5bed901e381d'
+          assert x['science_freeze_ci_run']==31879990080
+          assert x['frozen_corpus_commit']=='43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a'
+          assert c['execution']['github_actions_run']==31880034283
+          assert x['result_status']==c['status']==r['status']=='CROSS_FITTED_KU_RO_DOWNSTREAM_SLOT_ORGANIZATION_ESTABLISHED'
+          print('R7_F0_EXECUTION_AND_HASH_BINDING_PASS')
+          PY
+
+      - name: Verify support and Holm-admitted TWO_KIND channel
+        run: |
+          python - <<'PY'
+          import json,math
+          c=json.load(open('data/JANUS-LINEAR-A-R7-F0-DOWNSTREAM-SLOT-PASS-CERTIFICATE-2026-08-15-v0.1.json',encoding='utf-8'))
+          r=json.load(open('data/JANUS-LINEAR-A-R7-F0-KU-RO-DOWNSTREAM-SLOT-RESULT-2026-08-15-v0.1.json',encoding='utf-8'))
+          assert r['target_events']==c['support']['target_events']==29
+          assert r['target_physical_objects']==c['support']['target_physical_objects']==23
+          assert r['background_events']==c['support']['background_events']==621
+          assert r['exchangeable_target_events']==c['support']['exchangeable_target_events']==28
+          assert math.isclose(r['exchangeable_target_event_fraction'],28/29,rel_tol=0,abs_tol=1e-15)
+          assert math.isclose(r['maximum_single_target_object_event_fraction'],2/29,rel_tol=0,abs_tol=1e-15)
+          assert r['support_pass'] is True
+          rows={x['channel']:x for x in r['channel_results']}
+          assert set(rows)=={'NEXT_KIND','NEXT_LEX_OR_KIND','TWO_KIND'}
+          nk=rows['NEXT_KIND']
+          assert math.isclose(nk['observed_information_gain_bits'],0.25263579530536756,rel_tol=0,abs_tol=1e-15)
+          assert math.isclose(nk['observed_minus_null_mean_bits'],0.2133086017739843,rel_tol=0,abs_tol=1e-15)
+          assert nk['Holm_adjusted_p']==0.03219356128774245 and nk['channel_admitted'] is False
+          nl=rows['NEXT_LEX_OR_KIND']
+          assert math.isclose(nl['observed_information_gain_bits'],-0.2154502855789603,rel_tol=0,abs_tol=1e-15)
+          assert nl['Holm_adjusted_p']==0.003199360127974405
+          assert nl['observed_gain_pass'] is False and nl['positive_object_fraction_pass'] is False and nl['channel_admitted'] is False
+          tw=rows['TWO_KIND']
+          assert math.isclose(tw['observed_information_gain_bits'],0.47489207690836105,rel_tol=0,abs_tol=1e-15)
+          assert math.isclose(tw['null_mean_information_gain_bits'],-0.1306145755192877,rel_tol=0,abs_tol=1e-15)
+          assert math.isclose(tw['observed_minus_null_mean_bits'],0.6055066524276488,rel_tol=0,abs_tol=1e-15)
+          assert math.isclose(tw['positive_target_object_fraction'],17/23,rel_tol=0,abs_tol=1e-15)
+          assert tw['permutations']==5000 and tw['ge_observed']==2
+          assert tw['empirical_p']==0.0005998800239952009
+          assert tw['Holm_adjusted_p']==0.0017996400719856027
+          for k in ('support_pass','observed_gain_pass','null_excess_pass','positive_object_fraction_pass','Holm_pass','channel_admitted'):
+              assert tw[k] is True
+          assert tw['admitted_constraint_label']=='TWO-SLOT-DOWNSTREAM-TEMPLATE-CONSTRAINT'
+          assert r['admitted_channel_count']==1
+          assert r['admitted_constraint_labels']==['TWO-SLOT-DOWNSTREAM-TEMPLATE-CONSTRAINT']
+          assert r['internal_cross_fitted_downstream_slot_organization_established'] is True
+          print('R7_F0_TWO_KIND_ADMISSION_VERIFIED')
+          PY
+
+      - name: Verify descriptive signature decomposition exactly from admitted channel
+        run: |
+          python - <<'PY'
+          import json,collections
+          c=json.load(open('data/JANUS-LINEAR-A-R7-F0-DOWNSTREAM-SLOT-PASS-CERTIFICATE-2026-08-15-v0.1.json',encoding='utf-8'))
+          r=json.load(open('data/JANUS-LINEAR-A-R7-F0-KU-RO-DOWNSTREAM-SLOT-RESULT-2026-08-15-v0.1.json',encoding='utf-8'))
+          tw=next(x for x in r['channel_results'] if x['channel']=='TWO_KIND')
+          counts=collections.Counter(x['raw_signature'] for x in tw['target_event_scores'])
+          expected={'N|END':17,'N|W':5,'W|N':3,'N|N':3,'W|END':1}
+          assert dict(counts)==expected
+          desc=c['post_result_descriptive_decomposition_not_separate_inference']
+          assert desc['target_event_signature_counts']==expected
+          assert desc['dominant_signature']=='N|END'
+          assert desc['dominant_signature_target_event_fraction']==17/29
+          assert desc['TOTAL_or_SUMMARY_semantic_label_admitted'] is False
+          print('R7_F0_DESCRIPTIVE_DECOMPOSITION_VERIFIED')
+          PY
+
+      - name: Verify development-corpus and semantic claim ceiling
+        run: |
+          python - <<'PY'
+          import json
+          c=json.load(open('data/JANUS-LINEAR-A-R7-F0-DOWNSTREAM-SLOT-PASS-CERTIFICATE-2026-08-15-v0.1.json',encoding='utf-8'))
+          r=json.load(open('data/JANUS-LINEAR-A-R7-F0-KU-RO-DOWNSTREAM-SLOT-RESULT-2026-08-15-v0.1.json',encoding='utf-8'))
+          assert r['internal_cross_fitted_development_corpus_test'] is True
+          assert r['cold_or_external_replication'] is False
+          assert c['admission']['internal_cross_fitted_downstream_slot_organization_established'] is True
+          assert c['scientific_state_after_f0']['internal_cross_fitted_downstream_slot_organization_established'] is True
+          for key in ('specific_semantic_function_established','exact_word_meaning_established','translation_established','phonetic_value_established','language_family_established','new_anchor_established','universal_cross_region_function_established','external_replication_established','decipherment_established'):
+              assert r[key] is False
+              assert c['scientific_state_after_f0'][key] is False
+          assert r['canonical_auto_promotion_performed'] is False
+          assert c['canonical_auto_promotion_performed'] is False
+          assert all(v is True for k,v in c['next_lane_constraints'].items() if k not in ('next_lane_id','next_lane_name'))
+          print('R7_F0_CLAIM_CEILING_VERIFIED')
+          PY
