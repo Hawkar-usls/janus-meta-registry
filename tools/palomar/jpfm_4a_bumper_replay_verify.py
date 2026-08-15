@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Replay verifier for the pre-frozen Bumper Cape phase; this comment intentionally carries no scientific semantic change.
 from __future__ import annotations
 
 import argparse
