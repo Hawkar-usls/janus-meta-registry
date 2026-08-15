@@ -1,0 +1,70 @@
+name: JANUS Linear A R7-E1 underpowered certificate
+
+on:
+  push:
+    branches:
+      - 'research/r7-e1-anonymous-local-role-graph'
+    paths:
+      - 'data/JANUS-LINEAR-A-R7-E1-UNDERPOWERED-DISCOVERY-CERTIFICATE-2026-08-15-v0.1.json'
+      - '.github/workflows/janus-linear-a-r7-e1-underpowered-certificate.yml'
+  pull_request:
+    paths:
+      - 'data/JANUS-LINEAR-A-R7-E1-UNDERPOWERED-DISCOVERY-CERTIFICATE-2026-08-15-v0.1.json'
+      - '.github/workflows/janus-linear-a-r7-e1-underpowered-certificate.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-negative-discovery:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify frozen science lineage remains unchanged
+        run: |
+          set -euo pipefail
+          git diff --exit-code 2fa791e1d3deb5d7cb67adaef8509bad8b3c8e9d HEAD -- \
+            data/JANUS-LINEAR-A-R7-E1-ANONYMOUS-LOCAL-ROLE-GRAPH-SPEC-2026-08-15-v0.1.json \
+            research/linear_a/janus_linear_a_r7_e1_anonymous_local_role_graph_v0_1.py \
+            research/linear_a/test_janus_linear_a_r7_e1_anonymous_local_role_graph_v0_1.py \
+            .github/workflows/janus-linear-a-r7-e1-anonymous-local-role-graph.yml
+      - name: Verify discovery certificate against persisted evidence and receipt
+        run: |
+          python - <<'PY'
+          import hashlib,json
+          cert=json.load(open('data/JANUS-LINEAR-A-R7-E1-UNDERPOWERED-DISCOVERY-CERTIFICATE-2026-08-15-v0.1.json',encoding='utf-8'))
+          dpath='data/JANUS-LINEAR-A-R7-E1-ANONYMOUS-ROLE-DISCOVERY-2026-08-15-v0.1.json'
+          rpath='data/JANUS-LINEAR-A-R7-E1-DISCOVERY-EXECUTION-RECEIPT-2026-08-15-v0.1.json'
+          d=json.load(open(dpath,encoding='utf-8')); r=json.load(open(rpath,encoding='utf-8'))
+          raw=hashlib.sha256(open(dpath,'rb').read()).hexdigest()
+          canonical=hashlib.sha256(json.dumps(d,sort_keys=True,ensure_ascii=False,separators=(',',':')).encode()).hexdigest()
+          assert cert['status']=='E1_DISCOVERY_PROFILE_NOT_FROZEN_RETAIN_ROW-OPENING-LIKE'
+          assert d['status']==cert['status']==r['discovery_status']
+          assert d['holdout_content_parsed'] is False
+          assert r['holdout_content_parsed'] is False and r['holdout_execution_performed'] is False
+          assert cert['discovery_execution']['holdout_content_parsed'] is False
+          assert cert['discovery_execution']['holdout_execution_performed'] is False
+          assert raw==r['discovery_raw_file_sha256']==cert['discovery_execution']['discovery_raw_file_sha256']
+          assert canonical==r['discovery_canonical_json_sha256']==cert['discovery_execution']['discovery_canonical_json_sha256']
+          gate=cert['support_gate']
+          assert d['total_target_events_in_opened_partition']==gate['total_target_events_in_opened_partition']==15
+          assert d['exchangeable_target_events']==gate['exchangeable_target_events']==9
+          assert gate['preregistered_minimum_exchangeable_target_events']==10
+          assert gate['support_gate_pass'] is False
+          assert [x['atom_id'] for x in cert['discovery_only_candidate_atoms']]==d['selected_atom_ids']
+          assert all(x['admitted_or_frozen_profile_atom'] is False for x in cert['discovery_only_candidate_atoms'])
+          assert cert['interpretation']['anonymous_local_role_profile_established'] is False
+          assert cert['interpretation']['holdout_must_remain_unopened_under_e1_v0_1'] is True
+          assert all(v is False for v in cert['claim_ceiling'].values())
+          assert cert['canonical_auto_promotion_performed'] is False
+          print('R7_E1_UNDERPOWERED_CERTIFICATE_VERIFIED')
+          PY
+      - name: Assert no E1 holdout result was persisted
+        run: |
+          set -euo pipefail
+          test ! -e data/JANUS-LINEAR-A-R7-E1-ANONYMOUS-ROLE-HOLDOUT-RESULT-2026-08-15-v0.1.json
+          test ! -e data/JANUS-LINEAR-A-R7-E1-HOLDOUT-EXECUTION-RECEIPT-2026-08-15-v0.1.json
+          echo R7_E1_HOLDOUT_REMAINS_UNOPENED
