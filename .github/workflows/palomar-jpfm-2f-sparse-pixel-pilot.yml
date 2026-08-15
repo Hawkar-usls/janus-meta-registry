@@ -1,0 +1,122 @@
+name: Palomar JPFM-2F-B sparse pixel morphology pilot
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/palomar-jpfm-2f-sparse-pixel-pilot.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  jpfm-2f-pixel-pilot:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install frozen sparse-FITS environment
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install \
+            numpy==2.2.6 \
+            pandas==2.3.1 \
+            scipy==1.16.1 \
+            requests==2.32.4 \
+            astropy==8.0.1 \
+            'fsspec[http]==2026.6.0'
+          python -m pip freeze | sort | tee /tmp/jpfm-2f-b-pip-freeze.txt
+
+      - name: Syntax gate
+        run: python -m py_compile tools/palomar/jpfm_2f_sparse_pixel_morphology_pilot.py
+
+      - name: Verify frozen admission and source firewall
+        run: |
+          python - <<'PY'
+          import json, pathlib
+          p = pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-B-SPARSE-PIXEL-MORPHOLOGY-PILOT-ADMISSION-v1.0.json')
+          d = json.loads(p.read_text(encoding='utf-8'))
+          assert d['status'] == 'PREREGISTERED_BEFORE_PIXEL_PILOT_OUTCOME'
+          assert d['sample_contract']['n'] == 64
+          assert d['sample_contract']['per_structural_cluster'] == 4
+          assert d['pixel_transport']['stamp_size_px'] == 161
+          assert d['post_pilot_rule'].startswith('External temporal/human/environmental labels remain sealed')
+          print('PASS_JPFM_2F_B_ADMISSION_GATE')
+          PY
+          if grep -Eiq 'kp\.gfz|aa\.usno|nuclear-explosions|bluebook|nuforc|DATE-OBS|date_obs' tools/palomar/jpfm_2f_sparse_pixel_morphology_pilot.py; then
+            echo 'FAIL: external-label source or date access present in pixel pilot runner'
+            exit 1
+          fi
+          if grep -Eiq 'hdul\[0\]\.data|hdu\.data' tools/palomar/jpfm_2f_sparse_pixel_morphology_pilot.py; then
+            echo 'FAIL: full image array access present in sparse pixel runner'
+            exit 1
+          fi
+          grep -q 'hdu.section' tools/palomar/jpfm_2f_sparse_pixel_morphology_pilot.py
+          echo 'PASS_SPARSE_SECTION_AND_LABEL_FIREWALL_SOURCE_SCAN'
+
+      - name: Execute 64-source blind sparse pixel pilot
+        run: |
+          python tools/palomar/jpfm_2f_sparse_pixel_morphology_pilot.py \
+            --manifest data/JANUS-PALOMAR-JPFM-2F-A-BLIND-STRUCTURAL-CLUSTER-MANIFEST-RUN-001.csv.gz \
+            --out-json data/JANUS-PALOMAR-JPFM-2F-B-SPARSE-PIXEL-MORPHOLOGY-PILOT-RUN-001.json \
+            --out-csv-gz data/JANUS-PALOMAR-JPFM-2F-B-SPARSE-PIXEL-MORPHOLOGY-PILOT-SIDECAR-RUN-001.csv.gz
+
+      - name: Validate pilot artifact without forcing a PASS outcome
+        run: |
+          python - <<'PY'
+          import gzip, hashlib, json, pathlib, pandas as pd, io
+          jp = pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-B-SPARSE-PIXEL-MORPHOLOGY-PILOT-RUN-001.json')
+          cp = pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-B-SPARSE-PIXEL-MORPHOLOGY-PILOT-SIDECAR-RUN-001.csv.gz')
+          d = json.loads(jp.read_text(encoding='utf-8'))
+          allowed = {
+            'PASS_SPARSE_PIXEL_TRANSPORT_AND_RAW_MORPHOLOGY__LOCAL_PSF_REFERENCE_FEASIBLE',
+            'PASS_SPARSE_PIXEL_TRANSPORT_AND_RAW_MORPHOLOGY__LOCAL_PSF_REFERENCE_INSUFFICIENT',
+            'FAIL_CLOSED_TRANSPORT',
+            'FAIL_CLOSED_SOURCE_RECOVERY_OR_MORPHOLOGY'
+          }
+          assert d['status'] == 'EXECUTED'
+          assert d['outcome'] in allowed
+          assert d['sample']['rows'] == 64
+          assert d['sample']['clusters'] == 16
+          assert d['transport']['full_image_array_accessed'] is False
+          assert d['transport']['plate_addressed'] is True
+          assert d['external_label_firewall']['date_or_external_labels_available_to_runner'] is False
+          assert d['external_label_firewall']['external_label_reveal_authorized'] is False
+          raw = gzip.decompress(cp.read_bytes())
+          assert hashlib.sha256(raw).hexdigest() == d['sidecar']['csv_sha256']
+          assert hashlib.sha256(cp.read_bytes()).hexdigest() == d['sidecar']['gzip_sha256']
+          df = pd.read_csv(io.BytesIO(raw))
+          assert len(df) == 64
+          assert df.src_id.nunique() == 64
+          assert df.structural_cluster.nunique() == 16
+          print('PASS_JPFM_2F_B_RESULT_ARTIFACT_GATE', d['outcome'])
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jpfm-2f-b-sparse-pixel-pilot-run-001
+          path: |
+            data/JANUS-PALOMAR-JPFM-2F-B-SPARSE-PIXEL-MORPHOLOGY-PILOT-RUN-001.json
+            data/JANUS-PALOMAR-JPFM-2F-B-SPARSE-PIXEL-MORPHOLOGY-PILOT-SIDECAR-RUN-001.csv.gz
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Commit only validated blind pilot result
+        run: |
+          git config user.name 'janus-jpfm-ci'
+          git config user.email 'actions@users.noreply.github.com'
+          git add \
+            data/JANUS-PALOMAR-JPFM-2F-B-SPARSE-PIXEL-MORPHOLOGY-PILOT-RUN-001.json \
+            data/JANUS-PALOMAR-JPFM-2F-B-SPARSE-PIXEL-MORPHOLOGY-PILOT-SIDECAR-RUN-001.csv.gz
+          git diff --cached --quiet && exit 0
+          git commit -m 'Record JPFM-2F-B sparse pixel morphology pilot [skip ci]'
+          git pull --rebase origin main
+          git push
