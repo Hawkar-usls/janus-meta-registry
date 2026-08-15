@@ -1,0 +1,60 @@
+name: JANUS Blue Book Exact-Date Index
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/janus_bluebook_exact_date_index.yml'
+      - 'research/uap_poss1/janus_bluebook_public_case_index_v0_1.py'
+
+permissions:
+  contents: read
+
+jobs:
+  exact-date-index:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Compile runner
+        run: python -m py_compile research/uap_poss1/janus_bluebook_public_case_index_v0_1.py
+
+      - name: Build discovery pilot
+        run: |
+          rm -rf work/bluebook_exact
+          python research/uap_poss1/janus_bluebook_public_case_index_v0_1.py \
+            --out-dir work/bluebook_exact \
+            --max-pages 80 \
+            --workers 6
+
+      - name: Emit discovery receipt
+        if: always()
+        run: |
+          test -f work/bluebook_exact/bluebook_public_case_index_receipt.json && cat work/bluebook_exact/bluebook_public_case_index_receipt.json || true
+          echo '=== DISCOVERED URL SAMPLE ==='
+          test -f work/bluebook_exact/discovered_urls.txt && head -40 work/bluebook_exact/discovered_urls.txt || true
+          echo '=== BLIND CASE SAMPLE ==='
+          test -f work/bluebook_exact/bluebook_case_index_blind.csv && head -25 work/bluebook_exact/bluebook_case_index_blind.csv || true
+
+      - name: Upload discovery pilot
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-bluebook-exact-date-index-pilot
+          path: |
+            work/bluebook_exact/govweird_robots.txt
+            work/bluebook_exact/discovered_urls.txt
+            work/bluebook_exact/bluebook_case_index_blind.csv
+            work/bluebook_exact/bluebook_case_index_nuclear_joined.csv
+            work/bluebook_exact/bluebook_daily_counts.csv
+            work/bluebook_exact/bluebook_public_case_index_receipt.json
+          if-no-files-found: warn
+          retention-days: 30
