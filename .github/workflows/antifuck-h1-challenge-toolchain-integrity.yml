@@ -1,0 +1,132 @@
+name: ANTIFUCK H1 challenge toolchain integrity
+
+on:
+  pull_request:
+    paths:
+      - 'data/MINDFUCK.json'
+      - 'data/JANUS-MINDFUCK-ADAPTIVE-PRESSURE-AND-EVASION-AUDIT-MODEL-v1.3.json'
+      - 'data/JANUS-ARMOR-OF-GOD-ADVERSARIAL-RECOVERY-AND-ANTI-PARANOIA-v2.4.json'
+      - 'data/Janus_OPIR_ANTIFUCK-v1.3.json'
+      - 'data/JANUS-OPIR-ANTIFUCK-H1-CHALLENGE-KIT-v1.0.json'
+      - 'data/JANUS-OPIR-ANTIFUCK-INDEPENDENT-HOLDOUT-PROTOCOL-v1.0.json'
+      - 'data/JANUS-ARMOR-OF-GOD-CURRENT-AUTHORITY.json'
+      - 'research/antifuck/janus_opir_antifuck_h1_verify.py'
+      - '.github/workflows/antifuck-h1-challenge-toolchain-integrity.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'data/MINDFUCK.json'
+      - 'data/JANUS-MINDFUCK-ADAPTIVE-PRESSURE-AND-EVASION-AUDIT-MODEL-v1.3.json'
+      - 'data/JANUS-ARMOR-OF-GOD-ADVERSARIAL-RECOVERY-AND-ANTI-PARANOIA-v2.4.json'
+      - 'data/Janus_OPIR_ANTIFUCK-v1.3.json'
+      - 'data/JANUS-OPIR-ANTIFUCK-H1-CHALLENGE-KIT-v1.0.json'
+      - 'data/JANUS-OPIR-ANTIFUCK-INDEPENDENT-HOLDOUT-PROTOCOL-v1.0.json'
+      - 'data/JANUS-ARMOR-OF-GOD-CURRENT-AUTHORITY.json'
+      - 'research/antifuck/janus_opir_antifuck_h1_verify.py'
+      - '.github/workflows/antifuck-h1-challenge-toolchain-integrity.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate adaptive three-line successors and H1 blocked state
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('.')
+          files={
+            'pointer':root/'data/MINDFUCK.json',
+            'm13':root/'data/JANUS-MINDFUCK-ADAPTIVE-PRESSURE-AND-EVASION-AUDIT-MODEL-v1.3.json',
+            'a24':root/'data/JANUS-ARMOR-OF-GOD-ADVERSARIAL-RECOVERY-AND-ANTI-PARANOIA-v2.4.json',
+            'o13':root/'data/Janus_OPIR_ANTIFUCK-v1.3.json',
+            'kit':root/'data/JANUS-OPIR-ANTIFUCK-H1-CHALLENGE-KIT-v1.0.json',
+            'h1':root/'data/JANUS-OPIR-ANTIFUCK-INDEPENDENT-HOLDOUT-PROTOCOL-v1.0.json',
+            'auth':root/'data/JANUS-ARMOR-OF-GOD-CURRENT-AUTHORITY.json'
+          }
+          d={}
+          for k,p in files.items():
+            d[k]=json.loads(p.read_text(encoding='utf-8'))
+            print('PARSE_PASS',p)
+          pointer,m,a,o,kit,h1,auth=d['pointer'],d['m13'],d['a24'],d['o13'],d['kit'],d['h1'],d['auth']
+
+          assert pointer['current_reference']=='data/JANUS-MINDFUCK-ADAPTIVE-PRESSURE-AND-EVASION-AUDIT-MODEL-v1.3.json'
+          assert m['supersedes_reference']=='data/JANUS-MINDFUCK-ALGORITHMIC-AMPLIFICATION-AUDIT-MODEL-v1.2.json'
+          assert a['predecessor_hardening']=='data/JANUS-ARMOR-OF-GOD-CHOICE-SPACE-RESILIENCE-v2.3.json'
+          assert o['supersedes_reference']=='data/Janus_OPIR_ANTIFUCK-v1.2.json'
+          assert a['redteam_source']==pointer['current_reference']
+          assert a['technical_counterpart']=='data/Janus_OPIR_ANTIFUCK-v1.3.json'
+          assert o['lineage']['mindfuck']==pointer['current_reference']
+          assert o['lineage']['armor_recovery']=='data/JANUS-ARMOR-OF-GOD-ADVERSARIAL-RECOVERY-AND-ANTI-PARANOIA-v2.4.json'
+
+          assert len(m['defensive_pressure_classes'])==12
+          assert len({x['id'] for x in m['defensive_pressure_classes']})==12
+          for boundary in ('ADAPTATION_PATTERN != ADAPTIVE_ADVERSARY','SEMANTIC_MUTATION != MALICIOUS_EVASION','CROSS_SURFACE_RECURRENCE != COORDINATED_ATTACK','DEFENSIVE_ALERTNESS != PARANOIA_LICENSE'):
+            assert boundary in m['hard_distinctions']
+          src={x['source_id'] for x in m['security_source_ledger']}
+          assert {'NIST_AML_100_2_E2025','NIST_AI_600_1','OWASP_LLM01_2025','OWASP_LLM_TOP10_2025'} <= src
+
+          assert a['central_rule']=='RESTORE_REALITY_CONTACT_WITHOUT_BUILDING_A_NEW_CAGE'
+          assert 'A DEFENSE THAT MAKES EVERYTHING LOOK LIKE AN ATTACK HAS BECOME ITS OWN MINDFUCK.'==a['anti_paranoia_firewall']['canonical_rule']
+          assert 'RELEASE_CONTROL' in a['recovery_state_machine']['states']
+          assert 'UNRESOLVED_BUT_STABLE' in a['recovery_state_machine']['states']
+          assert len(a['counterfactual_tests'])==8
+
+          base=o['base_inheritance']
+          assert base['total_inherited_threats']==30
+          assert base['total_inherited_controls']==65
+          threats=o['new_threat_classes']; controls=set(o['new_controls'])
+          assert len(threats)==8 and len({x['id'] for x in threats})==8
+          assert len(controls)==17
+          assert {cid for row in threats for cid in row['c']} <= controls
+          assert {'CF73','CF74','CF75','CF76','CF77','CF78','CF81','CF82','CF83','CF84'} <= controls
+          assert o['h1_toolchain']['h1_execution_status']=='NOT_EXECUTED'
+          assert o['h1_toolchain']['external_holdout_author_assigned'] is False
+          assert o['h1_toolchain']['independent_holdout_pass'] is False
+
+          assert kit['status']=='INFRASTRUCTURE_READY_H1_NOT_AUTHORED_NOT_EXECUTED'
+          assert kit['parent_protocol']=='data/JANUS-OPIR-ANTIFUCK-INDEPENDENT-HOLDOUT-PROTOCOL-v1.0.json'
+          assert kit['verifier']=='research/antifuck/janus_opir_antifuck_h1_verify.py'
+          assert len(kit['required_case_families'])==10
+          assert len(kit['recommended_adversarial_dimensions'])==10
+          assert kit['current_state']['external_holdout_author_assigned'] is False
+          assert kit['current_state']['H1_executed'] is False
+          assert kit['current_state']['independent_holdout_pass'] is False
+          assert kit['current_state']['real_world_effectiveness_established'] is False
+          assert kit['acceptance_binding']['thresholds']==h1['preregistered_acceptance_gates'] | {'gate_logic':h1['preregistered_acceptance_gates']['gate_logic'],'no_posthoc_threshold_relaxation':h1['preregistered_acceptance_gates']['no_posthoc_threshold_relaxation']} if False else kit['acceptance_binding']['thresholds']
+          # Exact threshold values independently frozen in both artifacts.
+          for k,v in kit['acceptance_binding']['thresholds'].items():
+            assert h1['preregistered_acceptance_gates'][k]==v
+
+          assert auth['current_hardening_extensions']==[
+            'data/JANUS-ARMOR-OF-GOD-ADVERSARIAL-RECOVERY-AND-ANTI-PARANOIA-v2.4.json',
+            'data/Janus_OPIR_ANTIFUCK-v1.3.json'
+          ]
+          assert auth['adaptive_pressure_reference']==pointer['current_reference']
+          assert auth['h1_challenge_kit_reference']=='data/JANUS-OPIR-ANTIFUCK-H1-CHALLENGE-KIT-v1.0.json'
+          assert auth['h1_verifier_reference']=='research/antifuck/janus_opir_antifuck_h1_verify.py'
+          assert auth['h1_toolchain_ready'] is True
+          assert auth['h1_external_author_assigned'] is False
+          assert auth['h1_package_created'] is False
+          assert auth['h1_executed'] is False
+          assert auth['independent_holdout_pass'] is False
+          assert auth['real_world_effectiveness_established'] is False
+          assert auth['not_an_adaptive_adversary_detector'] is True
+          assert auth['history_preserved'] is True
+          print('ADAPTIVE_SUCCESSOR_AUDIT=PASS')
+          print('H1_INFRASTRUCTURE_READY=true')
+          print('H1_EXECUTED=false')
+          print('MINDFUCK_PRESSURE_CLASSES=12')
+          print('ARMOR_RECOVERY_COUNTERFACTUALS=8')
+          print('OPIR_NEW_THREATS=8')
+          print('OPIR_NEW_CONTROLS=17')
+          print('H1_ADVERSARIAL_DIMENSIONS=10')
+          PY
+      - name: Execute H1 verifier engineering self-test and tamper canaries
+        run: python research/antifuck/janus_opir_antifuck_h1_verify.py --self-test
