@@ -10,6 +10,7 @@ on:
       - '.github/workflows/record-drift-daily.yml'
       - 'tools/record_drift/t1_runner.py'
       - 'tools/record_drift/full_surface_runner.py'
+      - 'tools/record_drift/full_surface_runner_v0_2_1.py'
       - 'data/JANUS-RECORD-DRIFT-OBSERVATORY-v0.1.json'
       - 'data/JANUS-RECORD-DRIFT-OBSERVATORY-v0.2.json'
       - 'data/JANUS-RECORD-DRIFT-BASELINE-T0-v0.1.json'
@@ -30,8 +31,8 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Run Record Drift v0.2 full-surface observer
-        run: python tools/record_drift/full_surface_runner.py
+      - name: Run Record Drift v0.2.1 full-surface observer
+        run: python tools/record_drift/full_surface_runner_v0_2_1.py
 
       - name: Commit append-only journal entry
         run: |
@@ -42,5 +43,5 @@ jobs:
             echo "No journal change to commit"
             exit 0
           fi
-          git commit -m "record-drift: daily v0.2 full-surface journal $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git commit -m "record-drift: daily v0.2.1 full-surface journal $(date -u +%Y-%m-%dT%H:%M:%SZ)"
           git push
