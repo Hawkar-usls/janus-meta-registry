@@ -1,0 +1,111 @@
+name: JANUS Linear A R7-A0 anchored formula family v0.1
+
+on:
+  push:
+    paths:
+      - "data/JANUS-LINEAR-A-R7-A0-EXECUTE-REQUEST-2026-08-15-v0.1.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  anchored_formula:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install inherited parser dependency
+        run: python -m pip install "numpy>=2.0"
+      - name: Verify frozen R7-A0 inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile research/linear_a/janus_linear_a_r7_anchored_formula_family_v0_1.py
+          python - <<'PY'
+          import json
+          s=json.load(open('data/JANUS-LINEAR-A-R7-A0-ANCHORED-FORMULA-FAMILY-SPEC-2026-08-15-v0.1.json',encoding='utf-8'))
+          c=json.load(open('data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-15-v2.25.json',encoding='utf-8'))
+          assert c['version']=='v2.25' and c['status']=='CURRENT_CANONICAL_RESEARCH_STATE'
+          assert c['canonicality']['canonicality_audit_status']=='CANONICALITY_AUDIT_PASS'
+          assert s['parent_canonical_target']=='v2.25'
+          assert s['source']['frozen_commit']=='43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a'
+          assert s['typed_neighbor']['none_or_doubtful_is_never_reinterpreted_as_certain'] is True
+          assert s['unit']['exact_anchor_must_be_certain'] is True
+          assert s['cross_fitting']['candidate_selection_train_only'] is True
+          assert s['train_candidate_gate']['manual_candidate_addition_forbidden'] is True
+          assert s['train_candidate_gate']['manual_candidate_removal_forbidden'] is True
+          assert s['heldout_candidate_gate']['minimum_selected_folds']==3
+          assert s['heldout_candidate_gate']['FDR_q_max']==0.05
+          PY
+      - name: Fetch exact preservation-mirror corpus
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --quiet https://github.com/Hawkar-usls/lineara.xyz.git /tmp/lineara
+          git -C /tmp/lineara checkout --quiet 43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a
+          test "$(git -C /tmp/lineara rev-parse HEAD)" = "43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a"
+      - name: Execute R7-A0 anchored formula-family discovery
+        env:
+          PYTHONPATH: research/linear_a
+        shell: bash
+        run: |
+          set -euo pipefail
+          python research/linear_a/janus_linear_a_r7_anchored_formula_family_v0_1.py \
+            --corpus /tmp/lineara \
+            --spec data/JANUS-LINEAR-A-R7-A0-ANCHORED-FORMULA-FAMILY-SPEC-2026-08-15-v0.1.json \
+            --parent-canonical data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-15-v2.25.json \
+            --out data/JANUS-LINEAR-A-R7-A0-ANCHORED-FORMULA-FAMILY-RESULT-2026-08-15-v0.1.json
+      - name: Enforce R7-A0 evidence and ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          x=json.load(open('data/JANUS-LINEAR-A-R7-A0-ANCHORED-FORMULA-FAMILY-RESULT-2026-08-15-v0.1.json',encoding='utf-8'))
+          assert x['status'] in {'CROSS_FITTED_ANCHORED_FORMULA_FAMILY_CANDIDATES_ADMITTED','CROSS_FITTED_ANCHORED_FORMULA_FAMILY_CANDIDATES_NOT_ESTABLISHED'}
+          l=x['leakage_firewall']; e=x['epistemic_gate']
+          assert l['R7_0_thresholds_relaxed'] is False
+          assert l['candidate_selection_used_heldout_documents'] is False
+          assert l['source_labels_used_for_selection_or_scoring'] is False
+          assert l['none_or_doubtful_reinterpreted_as_certain'] is False
+          assert l['translations_used'] is False and l['external_dictionaries_used'] is False
+          assert l['Linear_B_supervision_used'] is False and l['Notti_readings_used'] is False
+          assert l['manual_candidate_addition_or_removal'] is False
+          assert e['probable_function_established'] is False
+          assert e['word_meaning_established'] is False
+          assert e['translation_established'] is False
+          assert e['phonetic_value_established'] is False
+          assert e['new_anchor_established'] is False
+          assert e['decipherment_established'] is False
+          assert len(x['admitted_candidates'])==x['admitted_candidate_count']
+          for r in x['admitted_candidates']:
+            assert r['ANCHORED_FORMULA_FAMILY_CANDIDATE_ADMITTED'] is True
+            assert r['selected_fold_count']>=3 and r['heldout_occurrences']>=6 and r['heldout_document_count']>=4
+            assert r['heldout_precision']>=0.60 and r['BH_q']<=0.05
+          print(json.dumps({'status':x['status'],'family':x['cross_fitted_candidate_family_size'],'admitted':x['admitted_candidate_count']},sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r7-a0-anchored-formula-v0-1
+          path: data/JANUS-LINEAR-A-R7-A0-ANCHORED-FORMULA-FAMILY-RESULT-2026-08-15-v0.1.json
+          retention-days: 90
+      - name: Persist R7-A0 result
+        shell: bash
+        run: |
+          set -euo pipefail
+          RESULT=data/JANUS-LINEAR-A-R7-A0-ANCHORED-FORMULA-FAMILY-RESULT-2026-08-15-v0.1.json
+          git config user.name 'JANUS Evidence Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add "$RESULT"
+          git commit -m 'Register Linear A R7-A0 anchored formula-family result v0.1' || true
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then exit 0; fi
+            git pull --rebase origin main
+          done
+          exit 1
