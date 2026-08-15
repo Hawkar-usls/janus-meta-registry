@@ -2,8 +2,8 @@
 """JPFM-2F-A label-blind structural/artifact stratification.
 
 Consumes only the frozen public POSS-I S0 release, tile manifest, repair ledger,
-plate correction table and plate primary headers.  It deliberately excludes all
-external temporal/environmental/witness labels.  The output is a deterministic
+plate correction table and plate primary headers. It deliberately excludes all
+external temporal/environmental/witness labels. The output is a deterministic
 structural cluster manifest that must be frozen before any later label reveal.
 """
 from __future__ import annotations
@@ -16,7 +16,6 @@ import hashlib
 import io
 import json
 import math
-import re
 import time
 from pathlib import Path
 
@@ -493,8 +492,9 @@ def main():
     }).sort_values("src_id", kind="stable").reset_index(drop=True)
     manifest_csv = manifest.to_csv(index=False, lineterminator="\n", float_format="%.12g").encode("utf-8")
     manifest_csv_sha = sha256_bytes(manifest_csv)
-    with gzip.GzipFile(filename="", mode="wb", fileobj=args.out_manifest_gz.open("wb"), mtime=0) as gz:
-        gz.write(manifest_csv)
+    with args.out_manifest_gz.open("wb") as fout:
+        with gzip.GzipFile(filename="", mode="wb", fileobj=fout, mtime=0) as gz:
+            gz.write(manifest_csv)
     manifest_gz_sha = sha256_bytes(args.out_manifest_gz.read_bytes())
 
     cluster_summary = cluster_summaries(d, model_raw, labels, anomaly_score)
@@ -520,13 +520,13 @@ def main():
             "tile_join_complete": bool(not d.plate_id.isna().any()),
             "header_join_complete": bool(not d.plate_ra_deg.isna().any()),
             "model_matrix_finite": bool(np.isfinite(z).all()),
-            "full_plate_image_arrays_downloaded": false,
+            "full_plate_image_arrays_downloaded": False,
         },
         "blind_feature_contract": {
             "raw_features": RAW_FEATURES,
             "model_features": MODEL_FEATURES,
-            "absolute_coordinates_used_as_model_features": false,
-            "date_or_external_labels_available_to_model": false,
+            "absolute_coordinates_used_as_model_features": False,
+            "date_or_external_labels_available_to_model": False,
             "scaling": scaling,
             "raw_feature_quantiles": {col: quantiles(raw[col]) for col in RAW_FEATURES},
         },
