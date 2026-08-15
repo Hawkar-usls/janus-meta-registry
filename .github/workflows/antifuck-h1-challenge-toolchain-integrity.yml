@@ -99,10 +99,8 @@ jobs:
           assert kit['current_state']['H1_executed'] is False
           assert kit['current_state']['independent_holdout_pass'] is False
           assert kit['current_state']['real_world_effectiveness_established'] is False
-          assert kit['acceptance_binding']['thresholds']==h1['preregistered_acceptance_gates'] | {'gate_logic':h1['preregistered_acceptance_gates']['gate_logic'],'no_posthoc_threshold_relaxation':h1['preregistered_acceptance_gates']['no_posthoc_threshold_relaxation']} if False else kit['acceptance_binding']['thresholds']
-          # Exact threshold values independently frozen in both artifacts.
-          for k,v in kit['acceptance_binding']['thresholds'].items():
-            assert h1['preregistered_acceptance_gates'][k]==v
+          for key,value in kit['acceptance_binding']['thresholds'].items():
+            assert h1['preregistered_acceptance_gates'][key]==value
 
           assert auth['current_hardening_extensions']==[
             'data/JANUS-ARMOR-OF-GOD-ADVERSARIAL-RECOVERY-AND-ANTI-PARANOIA-v2.4.json',
