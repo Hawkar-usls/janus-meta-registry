@@ -1,0 +1,96 @@
+name: Palomar JPFM-2F-C0H header-only WCS equivalence
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/palomar-jpfm-2f-c0h-header-only-wcs.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  jpfm-2f-c0h:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install frozen header-only environment
+        run: |
+          python -m pip install -q numpy==2.2.6 pandas==2.3.1 scipy==1.16.1 requests==2.32.4 astropy==8.0.1 'fsspec[http]==2026.6.0'
+          git clone -q --filter=blob:none --no-checkout https://github.com/jannefi/poss1-plate-slice.git work/poss1-src
+          git -C work/poss1-src checkout -q 4005e200541b321ead3d6608f0162a14430ef1c2
+          test "$(git -C work/poss1-src rev-parse HEAD)" = "4005e200541b321ead3d6608f0162a14430ef1c2"
+      - name: Syntax, admission and no-pixel-access gates
+        run: |
+          python -m py_compile tools/palomar/jpfm_2f_c0h_header_only_wcs_equivalence.py
+          python - <<'PY'
+          import json, pathlib
+          a=json.loads(pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-C0H-HEADER-ONLY-TILE-WCS-EQUIVALENCE-ADMISSION-v1.0.json').read_text())
+          assert a['status']=='PREREGISTERED_AFTER_C0_PASS_BEFORE_C0H_OUTCOME'
+          assert a['header_only_method']['image_pixels_read'] is False
+          assert '<= 1e-6 pixel' in a['predeclared_gates']['equivalence_primary']
+          assert '<= 1e-9 arcsec/pixel' in a['predeclared_gates']['pixel_scale_equivalence']
+          p=json.loads(pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-C0-CORRECTED-TILE-WCS-LOCATOR-RUN-001.json').read_text())
+          assert p['outcome']=='PASS_CORRECTED_TILE_WCS_DIRECT_PIXEL_LOCATOR'
+          assert p['external_label_firewall']['external_label_reveal_authorized'] is False
+          print('PASS_JPFM_2F_C0H_ADMISSION_PARENT_GATE')
+          PY
+          if grep -Eq 'hdu\.section|hdu\.data|np\.asarray\(hdu' tools/palomar/jpfm_2f_c0h_header_only_wcs_equivalence.py; then
+            echo 'FAIL: pixel access pattern found in header-only runner'; exit 1
+          fi
+          if grep -Eiq 'kp\.gfz|aa\.usno|nuclear-explosions|bluebook|nuforc' tools/palomar/jpfm_2f_c0h_header_only_wcs_equivalence.py; then
+            echo 'FAIL: external-label source found'; exit 1
+          fi
+          echo 'PASS_JPFM_2F_C0H_NO_PIXEL_AND_FIREWALL_GATE'
+      - name: Execute header-only WCS equivalence
+        run: |
+          python tools/palomar/jpfm_2f_c0h_header_only_wcs_equivalence.py \
+            --manifest data/JANUS-PALOMAR-JPFM-2F-A-BLIND-STRUCTURAL-CLUSTER-MANIFEST-RUN-001.csv.gz \
+            --c0-result data/JANUS-PALOMAR-JPFM-2F-C0-CORRECTED-TILE-WCS-LOCATOR-RUN-001.json \
+            --c0-sidecar data/JANUS-PALOMAR-JPFM-2F-C0-CORRECTED-TILE-WCS-LOCATOR-SIDECAR-RUN-001.csv.gz \
+            --upstream-root work/poss1-src \
+            --out-json data/JANUS-PALOMAR-JPFM-2F-C0H-HEADER-ONLY-TILE-WCS-EQUIVALENCE-RUN-001.json \
+            --out-sidecar-gz data/JANUS-PALOMAR-JPFM-2F-C0H-HEADER-ONLY-TILE-WCS-EQUIVALENCE-SIDECAR-RUN-001.csv.gz
+      - name: Validate C0H artifact without forcing PASS
+        run: |
+          python - <<'PY'
+          import gzip, hashlib, io, json, pathlib, pandas as pd
+          jp=pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-C0H-HEADER-ONLY-TILE-WCS-EQUIVALENCE-RUN-001.json')
+          cp=pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-C0H-HEADER-ONLY-TILE-WCS-EQUIVALENCE-SIDECAR-RUN-001.csv.gz')
+          d=json.loads(jp.read_text())
+          assert d['status']=='EXECUTED'
+          assert d['outcome'] in {'PASS_HEADER_ONLY_TILE_WCS_EQUIVALENCE','FAIL_CLOSED_HEADER_OR_TILE_IDENTITY','FAIL_CLOSED_HEADER_ONLY_WCS_EQUIVALENCE'}
+          assert d['transport_contract']['remote_image_section_accessed'] is False
+          assert d['transport_contract']['remote_image_array_materialized'] is False
+          assert d['external_label_firewall']['external_label_reveal_authorized'] is False
+          gz=cp.read_bytes(); raw=gzip.decompress(gz)
+          assert hashlib.sha256(gz).hexdigest()==d['sidecar']['gzip_sha256']
+          assert hashlib.sha256(raw).hexdigest()==d['sidecar']['csv_sha256']
+          df=pd.read_csv(io.BytesIO(raw)); assert len(df)==64 and df.src_id.nunique()==64
+          print('PASS_JPFM_2F_C0H_RESULT_ARTIFACT_GATE', d['outcome'])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jpfm-2f-c0h-header-only-wcs-run-001
+          path: |
+            data/JANUS-PALOMAR-JPFM-2F-C0H-HEADER-ONLY-TILE-WCS-EQUIVALENCE-RUN-001.json
+            data/JANUS-PALOMAR-JPFM-2F-C0H-HEADER-ONLY-TILE-WCS-EQUIVALENCE-SIDECAR-RUN-001.csv.gz
+          if-no-files-found: error
+          retention-days: 30
+      - name: Commit validated C0H result
+        run: |
+          git config user.name 'janus-jpfm-ci'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/JANUS-PALOMAR-JPFM-2F-C0H-HEADER-ONLY-TILE-WCS-EQUIVALENCE-RUN-001.json \
+                  data/JANUS-PALOMAR-JPFM-2F-C0H-HEADER-ONLY-TILE-WCS-EQUIVALENCE-SIDECAR-RUN-001.csv.gz
+          git diff --cached --quiet && exit 0
+          git commit -m 'Record JPFM-2F-C0H header-only WCS equivalence [skip ci]'
+          git pull --rebase origin main
+          git push
