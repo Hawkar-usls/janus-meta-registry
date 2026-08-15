@@ -1,0 +1,116 @@
+name: Palomar JPFM-2E schedule confound decomposition
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'data/JANUS-PALOMAR-JPFM-2E-SCHEDULE-CONFOUND-DECOMPOSITION-ADMISSION-v1.0.json'
+      - 'tools/palomar/jpfm_schedule_confound_decomposition.py'
+      - '.github/workflows/palomar-jpfm-schedule-confound-decomposition.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  jpfm-2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install frozen analysis environment
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install \
+            numpy==2.2.6 \
+            pandas==2.3.1 \
+            scipy==1.16.1 \
+            statsmodels==0.14.5 \
+            requests==2.32.4
+          python -m pip freeze | sort | tee /tmp/jpfm-2e-pip-freeze.txt
+
+      - name: Syntax gate
+        run: |
+          python -m py_compile tools/palomar/jpfm_open_reconstruction_temporal.py
+          python -m py_compile tools/palomar/jpfm_schedule_confound_decomposition.py
+
+      - name: Verify frozen admission precedes result
+        run: |
+          python - <<'PY'
+          import json, pathlib
+          p = pathlib.Path('data/JANUS-PALOMAR-JPFM-2E-SCHEDULE-CONFOUND-DECOMPOSITION-ADMISSION-v1.0.json')
+          d = json.loads(p.read_text(encoding='utf-8'))
+          assert d['status'] == 'PREREGISTERED_BEFORE_JPFM_2E_OUTCOME'
+          assert d['frozen_primary_arm'] == 'OPEN_ALL_REPORTED_125'
+          assert [x['id'] for x in d['conditional_rate_ladder']] == [
+              'M0_OPPORTUNITY_ONLY', 'M1_SEASON', 'M2_MONTH_YEAR',
+              'M3_SKY_FOOTPRINT', 'M4_ACQUISITION_ASTROMETRY',
+              'M5_LUNAR', 'M6_GEOMAGNETIC_FULL'
+          ]
+          print('PASS_JPFM_2E_ADMISSION_GATE')
+          PY
+
+      - name: Execute preregistered JPFM-2E
+        run: |
+          mkdir -p out
+          python tools/palomar/jpfm_schedule_confound_decomposition.py \
+            --out out/JANUS-PALOMAR-JPFM-2E-SCHEDULE-CONFOUND-DECOMPOSITION-RUN-001.json
+
+      - name: Validate JPFM-2E result and claim ceiling
+        run: |
+          python - <<'PY'
+          import json, math, pathlib
+          p = pathlib.Path('out/JANUS-PALOMAR-JPFM-2E-SCHEDULE-CONFOUND-DECOMPOSITION-RUN-001.json')
+          d = json.loads(p.read_text(encoding='utf-8'))
+          assert d['status'] == 'EXECUTED'
+          assert d['bindings']['poss_commit'] == '4005e200541b321ead3d6608f0162a14430ef1c2'
+          assert d['cohort']['plates'] == 640
+          assert d['cohort']['observed_nights'] == 312
+          assert d['cohort']['all_observed_nights_candidate_positive'] is True
+          assert d['forensic_summary']['schedule_identity_passed_all_calendar_arms'] is True
+          assert d['forensic_summary']['primary_binary_endpoint_identity'] == 'ANY_CANDIDATE == PALOMAR_OBSERVED_NIGHT'
+          assert math.isclose(d['forensic_summary']['primary_all_calendar_binary_OR'], 1.4093645484949833, rel_tol=0, abs_tol=1e-12)
+          assert math.isclose(d['forensic_summary']['primary_all_calendar_fisher_p'], 0.03907987968450547, rel_tol=0, abs_tol=1e-12)
+          assert d['bindings']['geomagnetic']['window_rows'] == 2718
+          assert d['bindings']['geomagnetic']['definitive_indicator_min'] >= 1
+          assert d['bindings']['lunar']['responses'] == 312
+          assert d['human_layer_specificity_control']['STARLIKE_WITNESS_specific_to_nuclear_dates'] == 'NO'
+          assert d['human_layer_specificity_control']['pooled_into_photographic_model'] is False
+          assert 'NO_NUCLEAR_CAUSALITY' in d['claim_ceiling']
+          assert 'NO_UAP_ORIGIN_IDENTIFICATION' in d['claim_ceiling']
+          assert d['aggregate_verdict']['code'] in {
+              'SCHEDULE_BINARY_ASSOCIATION_IDENTIFIED__RESIDUAL_POSITIVE_RATE_SIGNAL_SURVIVES',
+              'SCHEDULE_BINARY_ASSOCIATION_IDENTIFIED__NO_ROBUST_POSITIVE_RESIDUAL_RATE_SIGNAL'
+          }
+          for arm in ('OPEN_ALL_REPORTED_125','OPEN_NON_UW_123','PHYSICAL_ATMOSPHERIC_SURFACE'):
+              a = d['calendar_arms'][arm]
+              assert a['schedule_identity_gate']['any_candidate_equals_observed_night'] is True
+              assert len(a['conditional_rate_model_ladder']) == 7
+              assert a['conditional_rate_model_ladder'][-1]['model_id'] == 'M6_GEOMAGNETIC_FULL'
+          print('PASS_JPFM_2E_RESULT_GATE')
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jpfm-2e-schedule-confound-run-001
+          path: out/JANUS-PALOMAR-JPFM-2E-SCHEDULE-CONFOUND-DECOMPOSITION-RUN-001.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Commit only validated JPFM-2E result
+        run: |
+          cp out/JANUS-PALOMAR-JPFM-2E-SCHEDULE-CONFOUND-DECOMPOSITION-RUN-001.json \
+             data/JANUS-PALOMAR-JPFM-2E-SCHEDULE-CONFOUND-DECOMPOSITION-RUN-001.json
+          git config user.name 'janus-jpfm-ci'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/JANUS-PALOMAR-JPFM-2E-SCHEDULE-CONFOUND-DECOMPOSITION-RUN-001.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Add JPFM-2E schedule confound decomposition result [skip ci]'
+          git pull --rebase origin main
+          git push
