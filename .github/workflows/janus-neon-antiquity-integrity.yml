@@ -1,0 +1,86 @@
+name: JANUS Neon Antiquity visual integrity
+
+on:
+  push:
+    paths:
+      - 'index.html'
+      - 'assets/site.css'
+      - 'assets/i18n.js'
+      - 'assets/guestbook.js'
+      - '.github/workflows/janus-neon-antiquity-integrity.yml'
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'assets/site.css'
+      - 'assets/i18n.js'
+      - 'assets/guestbook.js'
+      - '.github/workflows/janus-neon-antiquity-integrity.yml'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Syntax-check browser scripts
+        run: |
+          node --check assets/i18n.js
+          node --check assets/guestbook.js
+      - name: Validate Neon Antiquity and language contracts
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          html = Path('index.html').read_text(encoding='utf-8')
+          css = Path('assets/site.css').read_text(encoding='utf-8')
+          js = Path('assets/i18n.js').read_text(encoding='utf-8')
+
+          # Temple / duality visual contract.
+          for marker in [
+              'temple-stage', 'temple-pediment', 'temple-columns', 'twin-arches',
+              'janus-arch-left', 'janus-arch-right', 'janus-axis', 'duality-field',
+              'meander', 'card-arch'
+          ]:
+              assert marker in html or marker in css, marker
+          assert '>IANUS<' in html
+          assert '>LIMEN<' in html
+          assert '#06111c' in css.lower()
+          assert '#39c6ff' in css.lower()
+          assert '#7ae7ff' in css.lower()
+          assert '#c8a96b' in css.lower()
+          assert 'Cinzel' in css
+
+          # Language switch is exactly EN / UA / lowercase ru.
+          assert 'data-lang="en"' in html and '>EN<' in html
+          assert 'data-lang="ua"' in html and '>UA<' in html
+          assert 'data-lang="ru"' in html and '>ru<' in html
+          assert '>RU<' not in html
+          for lang in ['en:', 'ua:', 'ru:']:
+              assert lang in js
+          for key in [
+              'heroTitle', 'heroLead', 'templeTitle', 'templeText', 'surfacesTitle',
+              'whyTitle', 'openDoorTitle', 'guestbookTitle', 'guestbookRule'
+          ]:
+              assert js.count(key + ':') == 3, (key, js.count(key + ':'))
+          assert "localStorage.setItem(KEY, lang)" in js
+          assert "document.documentElement.lang" in js
+
+          # Existing live guestbook and SEO surface remain wired.
+          assert './assets/guestbook.js' in html
+          assert './assets/i18n.js' in html
+          assert 'id="janus-guestbook"' in html
+          assert 'data-guestbook-form' in html
+          assert '<link rel="canonical" href="https://hawkar-usls.github.io/janus-meta-registry/">' in html
+          assert 'application/ld+json' in html
+
+          print('JANUS_NEON_ANTIQUITY_INTEGRITY=PASS')
+          print('TEMPLE_ARCHES=2')
+          print('DUALITY_BACKDROP=PASS')
+          print('LANGUAGES=EN,UA,ru')
+          print('LANGUAGE_PREFERENCE_PERSISTED=TRUE')
+          print('GUESTBOOK_WIRING_PRESERVED=TRUE')
+          print('SEO_METADATA_PRESERVED=TRUE')
+          PY
