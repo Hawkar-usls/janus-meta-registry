@@ -1,0 +1,100 @@
+name: JANUS Linear A R4-3 cross-region transfer v0.1
+
+on:
+  push:
+    paths:
+      - "data/JANUS-LINEAR-A-R4-3-EXECUTE-REQUEST-2026-08-15-v0.1.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  transfer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install numeric dependency
+        run: python -m pip install 'numpy>=2.0'
+      - name: Verify frozen R4-3 inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile research/linear_a/janus_linear_a_r4_cross_region_transfer_v0_1.py
+          python - <<'PY'
+          import json
+          s=json.load(open('data/JANUS-LINEAR-A-R4-3-CROSS-REGION-TRANSFER-SPEC-2026-08-15-v0.1.json',encoding='utf-8'))
+          c=json.load(open('data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.23.json',encoding='utf-8'))
+          assert c['version']=='v2.23' and c['status']=='CURRENT_CANONICAL_RESEARCH_STATE'
+          assert s['source']['frozen_commit']=='43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a'
+          assert s['region_selection']['selected_region_count']==3
+          assert s['region_selection']['selection_uses_target_labels'] is False
+          assert s['region_selection']['selection_uses_prediction_metrics'] is False
+          assert s['transfer_protocol']['hyperparameters_changed_after_R4_1'] is False
+          assert s['admission_gate']['no_threshold_relaxation_after_results'] is True
+          PY
+      - name: Fetch exact preservation-mirror corpus
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --quiet https://github.com/Hawkar-usls/lineara.xyz.git /tmp/lineara
+          git -C /tmp/lineara checkout --quiet 43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a
+          test "$(git -C /tmp/lineara rev-parse HEAD)" = "43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a"
+      - name: Execute cross-region transfer audit
+        env:
+          PYTHONPATH: research/linear_a
+        shell: bash
+        run: |
+          set -euo pipefail
+          python research/linear_a/janus_linear_a_r4_cross_region_transfer_v0_1.py \
+            --corpus /tmp/lineara \
+            --spec data/JANUS-LINEAR-A-R4-3-CROSS-REGION-TRANSFER-SPEC-2026-08-15-v0.1.json \
+            --out data/JANUS-LINEAR-A-R4-3-CROSS-REGION-TRANSFER-RESULT-2026-08-15-v0.1.json
+      - name: Enforce transfer result and claim ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          x=json.load(open('data/JANUS-LINEAR-A-R4-3-CROSS-REGION-TRANSFER-RESULT-2026-08-15-v0.1.json',encoding='utf-8'))
+          assert x['status'] in {'CROSS_REGION_INTERNAL_CONTEXT_STRUCTURE_TRANSFER_ADMITTED','CROSS_REGION_INTERNAL_CONTEXT_STRUCTURE_TRANSFER_NOT_ESTABLISHED'}
+          assert len(x['region_selection']['selected_regions'])==3
+          assert x['source']['frozen_commit']=='43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a'
+          assert x['leakage_firewall']['heldout_region_documents_used_for_training'] is False
+          assert x['leakage_firewall']['heldout_metrics_used_for_region_selection'] is False
+          assert x['leakage_firewall']['translations_used'] is False
+          assert x['leakage_firewall']['external_dictionaries_used'] is False
+          e=x['epistemic_gate']
+          assert e['semantic_equivalence_established'] is False
+          assert e['translation_established'] is False
+          assert e['phonetic_value_established'] is False
+          assert e['new_anchor_established'] is False
+          assert e['decipherment_established'] is False
+          assert e['R3B_external_replication_established'] is False
+          print(json.dumps({'status':x['status'],'selected_regions':x['region_selection']['selected_regions'],'admission':x['admission']},indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r4-cross-region-transfer-v0-1
+          path: data/JANUS-LINEAR-A-R4-3-CROSS-REGION-TRANSFER-RESULT-2026-08-15-v0.1.json
+          if-no-files-found: error
+      - name: Persist R4-3 result
+        shell: bash
+        run: |
+          set -euo pipefail
+          RESULT=data/JANUS-LINEAR-A-R4-3-CROSS-REGION-TRANSFER-RESULT-2026-08-15-v0.1.json
+          git config user.name 'JANUS Evidence Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add "$RESULT"
+          git commit -m 'Register Linear A R4-3 cross-region transfer result v0.1' || true
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then exit 0; fi
+            git pull --rebase origin main
+          done
+          exit 1
