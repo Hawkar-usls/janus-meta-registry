@@ -1,0 +1,130 @@
+name: MINDFUCK registry integrity
+
+on:
+  pull_request:
+    paths:
+      - 'data/MINDFUCK.json'
+      - 'data/JANUS-MINDFUCK-HISTORY-MECHANISM-REDTEAM-v1.0.json'
+      - 'data/JANUS-ARMOR-OF-GOD-MINDFUCK-COGNITIVE-PROVENANCE-REDTEAM-v2.1.json'
+      - 'data/JANUS-ARMOR-OF-GOD-CURRENT-AUTHORITY.json'
+      - '.github/workflows/mindfuck-registry-integrity.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'data/MINDFUCK.json'
+      - 'data/JANUS-MINDFUCK-HISTORY-MECHANISM-REDTEAM-v1.0.json'
+      - 'data/JANUS-ARMOR-OF-GOD-MINDFUCK-COGNITIVE-PROVENANCE-REDTEAM-v2.1.json'
+      - 'data/JANUS-ARMOR-OF-GOD-CURRENT-AUTHORITY.json'
+      - '.github/workflows/mindfuck-registry-integrity.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Parse JSON and verify authority/provenance invariants
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path('.')
+          files = {
+              'pointer': root / 'data/MINDFUCK.json',
+              'mindfuck': root / 'data/JANUS-MINDFUCK-HISTORY-MECHANISM-REDTEAM-v1.0.json',
+              'armor_ext': root / 'data/JANUS-ARMOR-OF-GOD-MINDFUCK-COGNITIVE-PROVENANCE-REDTEAM-v2.1.json',
+              'armor_authority': root / 'data/JANUS-ARMOR-OF-GOD-CURRENT-AUTHORITY.json',
+          }
+
+          data = {}
+          for key, path in files.items():
+              with path.open('r', encoding='utf-8') as fh:
+                  data[key] = json.load(fh)
+              print(f'PARSE_PASS {path}')
+
+          pointer = data['pointer']
+          mindfuck = data['mindfuck']
+          armor_ext = data['armor_ext']
+          authority = data['armor_authority']
+
+          assert pointer['current_reference'] == 'data/JANUS-MINDFUCK-HISTORY-MECHANISM-REDTEAM-v1.0.json'
+          assert mindfuck['artifact_id'] == 'JANUS-MINDFUCK-HISTORY-MECHANISM-REDTEAM-v1.0'
+          assert mindfuck['status'] == 'CURRENT_CANONICAL_MINDFUCK_REFERENCE'
+          assert armor_ext['redteam_source'] == pointer['current_reference']
+          assert armor_ext['base_core'] == authority['current_core']
+          assert armor_ext['base_deep_audit'] == authority['current_deep_audit']
+          assert 'data/JANUS-ARMOR-OF-GOD-MINDFUCK-COGNITIVE-PROVENANCE-REDTEAM-v2.1.json' in authority['current_hardening_extensions']
+          assert authority['cognitive_provenance_reference'] == 'data/MINDFUCK.json'
+          assert authority['not_a_conversion_machine'] is True
+          assert authority['not_supernatural_proof'] is True
+          assert authority['history_preserved'] is True
+          assert pointer['not_a_manipulation_manual'] is True
+          assert pointer['not_causal_proof_of_modern_conspiracies'] is True
+
+          source_ids = {s['source_id'] for s in mindfuck['sources']}
+          referenced = set()
+          for row in mindfuck.get('historical_lineage', []):
+              referenced.update(row.get('source_ids', []))
+          for row in mindfuck.get('mechanism_atoms', []):
+              referenced.update(row.get('source_ids', []))
+          missing = sorted(referenced - source_ids)
+          assert not missing, f'Unresolved source_ids: {missing}'
+
+          distinctions = set(mindfuck['hard_distinctions'])
+          required_distinctions = {
+              'REPETITION != INDEPENDENT_CONFIRMATION',
+              'FAMILIARITY != TRUTH',
+              'PATTERN != CAUSATION',
+              'AI_SYNTHESIS != NEW_WITNESS',
+          }
+          assert required_distinctions <= distinctions
+
+          gates = {g['gate'] for g in mindfuck['defensive_protocol']['gates']}
+          required_gates = {
+              'EXPLICIT_CLAIM_GATE',
+              'SOURCE_GATE',
+              'LINEAGE_GATE',
+              'REPETITION_GATE',
+              'PATTERN_GATE',
+              'FALSIFIABILITY_GATE',
+              'IRONY_GATE',
+              'STAKES_GATE',
+              'AI_GATE',
+              'AUTONOMY_GATE',
+              'CORRECTION_LINEAGE_GATE',
+          }
+          assert required_gates <= gates
+
+          firewall = set(armor_ext['new_cross_cutting_layer']['hard_rules'])
+          for invariant in (
+              'REPETITION != EVIDENCE.',
+              'FAMILIARITY != TRUTH.',
+              'MULTIPLE_REPOSTS != MULTIPLE_WITNESSES.',
+              'MULTIPLE_AI_OUTPUTS != INDEPENDENT_REPLICATION.',
+              'PATTERN != CAUSATION.',
+              'COINCIDENCE != COMMAND.',
+          ):
+              assert invariant in firewall
+
+          forbidden = set(armor_ext['anti_manipulation_addendum']['forbidden'])
+          assert 'invented rumors or fake evidence' in forbidden
+          assert 'AI sock-puppet consensus' in forbidden
+          assert 'child targeting' in forbidden
+
+          assert len(mindfuck['sources']) >= 20
+          assert len(mindfuck['mechanism_atoms']) >= 10
+          assert len(mindfuck['provenance_failure_modes']) >= 8
+          assert len(armor_ext['armor_redteam_tests']) >= 8
+
+          print('CROSS_REFERENCE_AUDIT=PASS')
+          print(f"SOURCE_COUNT={len(mindfuck['sources'])}")
+          print(f"MECHANISM_ATOMS={len(mindfuck['mechanism_atoms'])}")
+          print(f"PROVENANCE_FAILURE_MODES={len(mindfuck['provenance_failure_modes'])}")
+          print(f"DEFENSIVE_GATES={len(mindfuck['defensive_protocol']['gates'])}")
+          print(f"ARMOR_REDTEAM_TESTS={len(armor_ext['armor_redteam_tests'])}")
+          PY
