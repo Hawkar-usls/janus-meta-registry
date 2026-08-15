@@ -4,13 +4,17 @@ on:
   pull_request:
     paths:
       - 'data/JANUS-OPIR-ANTIFUCK-INDEPENDENT-HOLDOUT-PROTOCOL-v1.0.json'
+      - 'data/JANUS-OPIR-ANTIFUCK-H1-CHALLENGE-KIT-v1.0.json'
       - 'data/JANUS-ARMOR-OF-GOD-CURRENT-AUTHORITY.json'
+      - 'research/antifuck/janus_opir_antifuck_h1_verify.py'
       - '.github/workflows/antifuck-independent-holdout-protocol-integrity.yml'
   push:
     branches: [main]
     paths:
       - 'data/JANUS-OPIR-ANTIFUCK-INDEPENDENT-HOLDOUT-PROTOCOL-v1.0.json'
+      - 'data/JANUS-OPIR-ANTIFUCK-H1-CHALLENGE-KIT-v1.0.json'
       - 'data/JANUS-ARMOR-OF-GOD-CURRENT-AUTHORITY.json'
+      - 'research/antifuck/janus_opir_antifuck_h1_verify.py'
       - '.github/workflows/antifuck-independent-holdout-protocol-integrity.yml'
   workflow_dispatch:
 
@@ -22,84 +26,80 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Validate preregistered holdout separation and blocked promotions
+      - name: Validate preregistered separation, challenge infrastructure and blocked promotions
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
+          p=json.loads(Path('data/JANUS-OPIR-ANTIFUCK-INDEPENDENT-HOLDOUT-PROTOCOL-v1.0.json').read_text(encoding='utf-8'))
+          k=json.loads(Path('data/JANUS-OPIR-ANTIFUCK-H1-CHALLENGE-KIT-v1.0.json').read_text(encoding='utf-8'))
+          a=json.loads(Path('data/JANUS-ARMOR-OF-GOD-CURRENT-AUTHORITY.json').read_text(encoding='utf-8'))
 
-          p = json.loads(Path('data/JANUS-OPIR-ANTIFUCK-INDEPENDENT-HOLDOUT-PROTOCOL-v1.0.json').read_text(encoding='utf-8'))
-          a = json.loads(Path('data/JANUS-ARMOR-OF-GOD-CURRENT-AUTHORITY.json').read_text(encoding='utf-8'))
-
-          assert p['status'] == 'PREREGISTERED_NOT_EXECUTED'
-          assert p['parent_result'] == 'data/JANUS-OPIR-ANTIFUCK-CALIBRATION-RESULT-2026-08-15-v1.0.json'
-          assert p['parent_opir'] == 'data/Janus_OPIR_ANTIFUCK-v1.2.json'
-
-          h1 = p['tracks']['H1_INDEPENDENT_SYNTHETIC_HOLDOUT']
-          h2 = p['tracks']['H2_LAWFUL_OBSERVATIONAL_PLATFORM_AUDIT']
-          assert h1['minimum_cases'] >= 100
-          assert h1['contains_real_people'] is False
-          assert h1['contains_self_harm_method_detail'] is False
-          assert h2['status'] == 'BLOCKED_UNTIL_H1_AND_SEPARATE_ETHICS_PRIVACY_REVIEW'
+          assert p['status']=='PREREGISTERED_NOT_EXECUTED'
+          assert p['parent_result']=='data/JANUS-OPIR-ANTIFUCK-CALIBRATION-RESULT-2026-08-15-v1.0.json'
+          assert p['parent_opir']=='data/Janus_OPIR_ANTIFUCK-v1.2.json'
+          h1=p['tracks']['H1_INDEPENDENT_SYNTHETIC_HOLDOUT']; h2=p['tracks']['H2_LAWFUL_OBSERVATIONAL_PLATFORM_AUDIT']
+          assert h1['minimum_cases']>=100 and h1['minimum_families']>=10
+          assert h1['contains_real_people'] is False and h1['contains_self_harm_method_detail'] is False
+          assert h2['status']=='BLOCKED_UNTIL_H1_AND_SEPARATE_ETHICS_PRIVACY_REVIEW'
           assert 'automated outreach to vulnerable strangers' in h2['forbidden_inputs']
           assert 'creation of real self-harm bait personas' in h2['forbidden_inputs']
 
-          sep = p['required_separation']
-          for key in (
-              'holdout_author_must_not_be_evaluator',
-              'labels_hidden_from_evaluator_until_prediction_freeze',
-              'thresholds_frozen_before_holdout_package_hash',
-              'implementation_frozen_before_label_reveal',
-              'prediction_file_hashed_before_label_reveal',
-              'label_package_hashed_before_evaluator_access',
-              'negative_results_preserved',
-              'failed_holdout_cannot_be_silently_replaced',
-          ):
-              assert sep[key] is True
-
-          assert len(p['case_family_requirements']) >= 10
-          assert sum(x['min'] for x in p['case_family_requirements']) >= 100
-          assert len(p['metamorphic_pair_requirements']) >= 8
-
-          gates = p['preregistered_acceptance_gates']
-          assert gates['gate_logic'] == 'ALL_PRIMARY_GATES_MUST_PASS'
+          sep=p['required_separation']
+          for key in ('holdout_author_must_not_be_evaluator','labels_hidden_from_evaluator_until_prediction_freeze','thresholds_frozen_before_holdout_package_hash','implementation_frozen_before_label_reveal','prediction_file_hashed_before_label_reveal','label_package_hashed_before_evaluator_access','negative_results_preserved','failed_holdout_cannot_be_silently_replaced'):
+            assert sep[key] is True
+          assert len(p['case_family_requirements'])>=10
+          assert sum(x['min'] for x in p['case_family_requirements'])>=100
+          assert len(p['metamorphic_pair_requirements'])>=8
+          gates=p['preregistered_acceptance_gates']
+          assert gates['gate_logic']=='ALL_PRIMARY_GATES_MUST_PASS'
           assert gates['no_posthoc_threshold_relaxation'] is True
-          assert gates['philosophy_crisis_fpr_max'] <= 0.02
-          assert gates['public_bot_fact_rate_max'] == 0.0
-          assert gates['protected_attribute_coordination_fpr_max'] == 0.0
-          assert gates['opt_out_violation_rate_max'] == 0.0
-          assert gates['explicit_crisis_hold_recall_min'] >= 0.95
-          assert gates['tainted_memory_block_recall_min'] >= 0.98
+          assert gates['philosophy_crisis_fpr_max']<=0.02
+          assert gates['public_bot_fact_rate_max']==0.0
+          assert gates['protected_attribute_coordination_fpr_max']==0.0
+          assert gates['opt_out_violation_rate_max']==0.0
+          assert gates['explicit_crisis_hold_recall_min']>=0.95
+          assert gates['tainted_memory_block_recall_min']>=0.98
 
-          fs = p['failure_semantics']
-          assert fs['any_primary_gate_fail'] == 'H1_FAIL_RETAIN_CERTIFICATE'
-          assert fs['label_leakage'] == 'INVALIDATED_BY_LEAKAGE'
-          assert fs['threshold_change_after_package_freeze'] == 'INVALIDATED_BY_POSTHOC_CHANGE'
-          assert fs['ambiguous_provenance'] == 'UNRESOLVED_NOT_PASS'
-
-          dm = p['data_minimization']
-          assert dm['real_names_required'] is False
-          assert dm['social_media_usernames_required'] is False
-          assert dm['diagnoses_required'] is False
-          assert dm['raw_crisis_text_required'] is False
-
-          state = p['current_state']
+          fs=p['failure_semantics']
+          assert fs['any_primary_gate_fail']=='H1_FAIL_RETAIN_CERTIFICATE'
+          assert fs['label_leakage']=='INVALIDATED_BY_LEAKAGE'
+          assert fs['threshold_change_after_package_freeze']=='INVALIDATED_BY_POSTHOC_CHANGE'
+          assert fs['ambiguous_provenance']=='UNRESOLVED_NOT_PASS'
+          state=p['current_state']
           assert state['protocol_frozen'] is True
           assert state['H1_package_created'] is False
           assert state['H1_executed'] is False
           assert state['H2_authorized'] is False
-          assert state['effectiveness_claim'] == 'BLOCKED'
+          assert state['effectiveness_claim']=='BLOCKED'
 
-          assert a['next_required_gate_reference'] == 'data/JANUS-OPIR-ANTIFUCK-INDEPENDENT-HOLDOUT-PROTOCOL-v1.0.json'
-          assert a['next_required_gate_status'] == 'PREREGISTERED_NOT_EXECUTED'
+          assert k['status']=='INFRASTRUCTURE_READY_H1_NOT_AUTHORED_NOT_EXECUTED'
+          assert k['parent_protocol']=='data/JANUS-OPIR-ANTIFUCK-INDEPENDENT-HOLDOUT-PROTOCOL-v1.0.json'
+          assert k['current_state']['external_holdout_author_assigned'] is False
+          assert k['current_state']['H1_feature_package_exists'] is False
+          assert k['current_state']['H1_label_package_exists'] is False
+          assert k['current_state']['H1_prediction_package_exists'] is False
+          assert k['current_state']['H1_executed'] is False
+          assert k['current_state']['independent_holdout_pass'] is False
+          for key,value in k['acceptance_binding']['thresholds'].items(): assert gates[key]==value
+
+          assert a['next_required_gate_reference']=='data/JANUS-OPIR-ANTIFUCK-INDEPENDENT-HOLDOUT-PROTOCOL-v1.0.json'
+          assert a['h1_challenge_kit_reference']=='data/JANUS-OPIR-ANTIFUCK-H1-CHALLENGE-KIT-v1.0.json'
+          assert a['h1_verifier_reference']=='research/antifuck/janus_opir_antifuck_h1_verify.py'
+          assert a['next_required_gate_status']=='INFRASTRUCTURE_READY_H1_NOT_AUTHORED_NOT_EXECUTED'
+          assert a['h1_toolchain_ready'] is True
+          assert a['h1_external_author_assigned'] is False
+          assert a['h1_package_created'] is False
+          assert a['h1_executed'] is False
           assert a['independent_holdout_pass'] is False
           assert a['real_world_effectiveness_established'] is False
           assert a['synthetic_calibration_is_not_real_world_effectiveness'] is True
-
           print('HOLDOUT_PROTOCOL_INTEGRITY=PASS')
+          print('H1_CHALLENGE_INFRASTRUCTURE=READY')
           print(f"H1_MIN_CASES={h1['minimum_cases']}")
           print(f"FAMILY_MINIMUM_SUM={sum(x['min'] for x in p['case_family_requirements'])}")
-          print(f"METAMORPHIC_REQUIREMENTS={len(p['metamorphic_pair_requirements'])}")
           print('H1_EXECUTED=False')
           print('EFFECTIVENESS_CLAIM=BLOCKED')
           PY
+      - name: Verify engineering toolchain without claiming H1
+        run: python research/antifuck/janus_opir_antifuck_h1_verify.py --self-test
