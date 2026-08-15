@@ -9,6 +9,7 @@ on:
       - 'research/uap_poss1/janus_poss1_open_release_intake_v0_1.py'
       - 'research/uap_poss1/janus_poss1_open_release_intake_v0_2.py'
       - 'research/uap_poss1/janus_poss1_h0_h1_v0_1.py'
+      - 'research/uap_poss1/janus_poss1_open_posthoc_diagnostics_v0_1.py'
       - 'research/uap_poss1/requirements-tested.txt'
       - 'registry/cosmology/JANUS-POSS1-OPEN-PUBLIC-RECONSTRUCTION-COHORT-v1.0.json'
 
@@ -38,6 +39,7 @@ jobs:
           python -m py_compile research/uap_poss1/janus_poss1_open_release_intake_v0_1.py
           python -m py_compile research/uap_poss1/janus_poss1_open_release_intake_v0_2.py
           python -m py_compile research/uap_poss1/janus_poss1_h0_h1_v0_1.py
+          python -m py_compile research/uap_poss1/janus_poss1_open_posthoc_diagnostics_v0_1.py
 
       - name: Build public plate-day matrices
         run: |
@@ -68,6 +70,23 @@ jobs:
               --covariates year_centered,season_sin,season_cos
           done
 
+      - name: Run post-hoc exact-lag and year-blocked schedule diagnostics
+        run: |
+          python research/uap_poss1/janus_poss1_open_posthoc_diagnostics_v0_1.py \
+            --matrix work/uap_poss1_open/plate_day_open_strict.csv \
+            --calendar work/uap_poss1_open/nuclear_calendar_sipri_strict.csv \
+            --output work/uap_poss1_open/posthoc_strict.json \
+            --exposure-col exposure_tile_min \
+            --permutations 20000 \
+            --seed 20260815
+          python research/uap_poss1/janus_poss1_open_posthoc_diagnostics_v0_1.py \
+            --matrix work/uap_poss1_open/plate_day_open_broad.csv \
+            --calendar work/uap_poss1_open/nuclear_calendar_sipri_broad.csv \
+            --output work/uap_poss1_open/posthoc_broad.json \
+            --exposure-col exposure_tile_min \
+            --permutations 20000 \
+            --seed 20260815
+
       - name: Emit machine-readable receipts to log
         if: always()
         run: |
@@ -75,9 +94,9 @@ jobs:
           test -f work/uap_poss1_open/open_intake_receipt.json && cat work/uap_poss1_open/open_intake_receipt.json || true
           echo '=== CALENDAR DIAGNOSTIC ==='
           test -f work/uap_poss1_open/nuclear_calendar_diagnostic.json && cat work/uap_poss1_open/nuclear_calendar_diagnostic.json || true
-          for f in work/uap_poss1_open/model_*.json; do
+          for f in work/uap_poss1_open/model_*.json work/uap_poss1_open/posthoc_*.json; do
             test -f "$f" || continue
-            echo "=== MODEL $f ==="
+            echo "=== RESULT $f ==="
             cat "$f"
           done
 
@@ -93,5 +112,6 @@ jobs:
             work/uap_poss1_open/plate_metadata.csv
             work/uap_poss1_open/plate_day_open_*.csv
             work/uap_poss1_open/model_*.json
+            work/uap_poss1_open/posthoc_*.json
           if-no-files-found: warn
           retention-days: 30
