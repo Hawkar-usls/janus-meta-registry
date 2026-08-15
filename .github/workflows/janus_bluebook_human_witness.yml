@@ -7,6 +7,7 @@ on:
     paths:
       - '.github/workflows/janus_bluebook_human_witness.yml'
       - 'research/uap_poss1/janus_bluebook_nara_metadata_intake_v0_1.py'
+      - 'research/uap_poss1/janus_bluebook_nara_metadata_intake_v0_2.py'
       - 'registry/cosmology/JANUS-POSS1-HUMAN-WITNESS-TEMPORAL-CONTROL-v1.0.json'
 
 permissions:
@@ -26,12 +27,14 @@ jobs:
           python-version: '3.13'
 
       - name: Compile intake
-        run: python -m py_compile research/uap_poss1/janus_bluebook_nara_metadata_intake_v0_1.py
+        run: |
+          python -m py_compile research/uap_poss1/janus_bluebook_nara_metadata_intake_v0_1.py
+          python -m py_compile research/uap_poss1/janus_bluebook_nara_metadata_intake_v0_2.py
 
       - name: Inspect official NARA Blue Book public metadata
         run: |
           rm -rf work/bluebook_nara
-          python research/uap_poss1/janus_bluebook_nara_metadata_intake_v0_1.py --out-dir work/bluebook_nara
+          python research/uap_poss1/janus_bluebook_nara_metadata_intake_v0_2.py --out-dir work/bluebook_nara
 
       - name: Emit receipt
         if: always()
