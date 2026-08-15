@@ -1,0 +1,123 @@
+name: Palomar JPFM-2F-C1A sparse-stamp direct morphology
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/palomar-jpfm-2f-c1a-sparse-stamp-morphology.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  jpfm-2f-c1a:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install frozen sparse-stamp environment
+        run: |
+          python -m pip install -q \
+            numpy==2.2.6 pandas==2.3.1 scipy==1.16.1 \
+            astropy==8.0.1 opencv-python-headless==5.0.0.93 \
+            'fsspec[http]==2026.6.0'
+
+      - name: Syntax, preregistration, parent and firewall gates
+        run: |
+          python -m py_compile tools/palomar/jpfm_2f_c1a_sparse_stamp_direct_morphology.py
+          python - <<'PY'
+          import json, pathlib
+          a=json.loads(pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-C1A-NAMED-PLATE-SPARSE-STAMP-DIRECT-MORPHOLOGY-ADMISSION-v1.0.json').read_text())
+          assert a['status']=='PREREGISTERED_BEFORE_C0M_OUTCOME__EXECUTION_CONDITIONAL_ON_C0M_PASS'
+          assert a['pixel_transport_contract']['stamp_size_px']==81
+          assert a['pixel_transport_contract']['nearest_source_search'] is False
+          assert a['pixel_transport_contract']['peak_recentering'] is False
+          assert a['pixel_transport_contract']['plate_substitution'] is False
+          assert a['predeclared_C1A_gates']['transport'].startswith('64/64')
+          assert '95%' in a['predeclared_C1A_gates']['central_signal'] and '>= 5.0' in a['predeclared_C1A_gates']['central_signal']
+          assert a['external_label_firewall']['external_label_reveal_authorized'] is False
+          c0m=json.loads(pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-C0M-FULL-S0-HEADER-ONLY-ACQUISITION-MAP-RUN-001.json').read_text())
+          assert c0m['outcome']=='PASS_FULL_S0_HEADER_ONLY_ACQUISITION_MAP_FROZEN'
+          assert c0m['manifest']['rows']==122820
+          assert c0m['external_label_firewall']['external_label_reveal_authorized'] is False
+          b3s=json.loads(pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-B3S-SHARD-AGGREGATE-RUN-001.json').read_text())
+          assert b3s['outcome']=='PASS_SHAPE_COMPATIBILITY_REPLAY__PIXEL_MORPHOLOGY_PILOT_ADMITTED'
+          assert b3s['external_label_firewall']['external_label_reveal_authorized'] is False
+          print('PASS_JPFM_2F_C1A_ADMISSION_PARENT_GATE')
+          PY
+          if grep -Eiq 'kp\.gfz|aa\.usno|nuclear-explosions|bluebook|nuforc' tools/palomar/jpfm_2f_c1a_sparse_stamp_direct_morphology.py; then
+            echo 'FAIL: external-label source present in C1A runner'; exit 1
+          fi
+          if grep -Eiq 'hdul\[[^]]+\]\.data|hdu\.data|remote_hdu\.data' tools/palomar/jpfm_2f_c1a_sparse_stamp_direct_morphology.py; then
+            echo 'FAIL: forbidden full-array access pattern in C1A runner'; exit 1
+          fi
+          grep -q 'hdu.section' tools/palomar/jpfm_2f_c1a_sparse_stamp_direct_morphology.py
+          echo 'PASS_JPFM_2F_C1A_SPARSE_TRANSPORT_AND_FIREWALL_GATE'
+
+      - name: Execute frozen same-64 sparse-stamp morphology pilot
+        run: |
+          python tools/palomar/jpfm_2f_c1a_sparse_stamp_direct_morphology.py \
+            --c0m-result data/JANUS-PALOMAR-JPFM-2F-C0M-FULL-S0-HEADER-ONLY-ACQUISITION-MAP-RUN-001.json \
+            --c0m-map data/JANUS-PALOMAR-JPFM-2F-C0M-FULL-S0-HEADER-ONLY-ACQUISITION-MAP-RUN-001.csv.gz \
+            --b3s-result data/JANUS-PALOMAR-JPFM-2F-B3S-SHARD-AGGREGATE-RUN-001.json \
+            --b3s-sidecar data/JANUS-PALOMAR-JPFM-2F-B3S-SHARD-AGGREGATE-SIDECAR-RUN-001.csv.gz \
+            --out-json data/JANUS-PALOMAR-JPFM-2F-C1A-NAMED-PLATE-SPARSE-STAMP-DIRECT-MORPHOLOGY-RUN-001.json \
+            --out-sidecar-gz data/JANUS-PALOMAR-JPFM-2F-C1A-NAMED-PLATE-SPARSE-STAMP-DIRECT-MORPHOLOGY-SIDECAR-RUN-001.csv.gz
+
+      - name: Validate C1A artifact without forcing PASS
+        run: |
+          python - <<'PY'
+          import gzip, hashlib, io, json, pathlib, pandas as pd
+          jp=pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-C1A-NAMED-PLATE-SPARSE-STAMP-DIRECT-MORPHOLOGY-RUN-001.json')
+          cp=pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-C1A-NAMED-PLATE-SPARSE-STAMP-DIRECT-MORPHOLOGY-SIDECAR-RUN-001.csv.gz')
+          d=json.loads(jp.read_text())
+          allowed={
+            'PASS_NAMED_PLATE_SPARSE_STAMP_DIRECT_MORPHOLOGY_PILOT',
+            'FAIL_CLOSED_SPARSE_STAMP_TRANSPORT',
+            'FAIL_CLOSED_CENTRAL_SIGNAL_OR_LOCALIZATION',
+            'FAIL_CLOSED_DIRECT_MORPHOLOGY_COVERAGE'
+          }
+          assert d['status']=='EXECUTED' and d['outcome'] in allowed
+          assert d['sample']['rows']==64
+          assert d['transport']['stamp_size_px']==81
+          assert d['transport']['full_remote_plate_array_accessed'] is False
+          assert d['transport']['nearest_source_search_used'] is False
+          assert d['transport']['peak_recentering_used'] is False
+          assert d['transport']['plate_substitution_used'] is False
+          assert d['external_label_firewall']['external_label_reveal_authorized'] is False
+          assert d['explicit_non_equivalences']['stamp_moment_fwhm_proxy_px']=='NOT_SEXTRACTOR_FWHM_IMAGE'
+          assert d['explicit_non_equivalences']['profile_diff']=='NOT_MEASURED_BY_DIRECT_81PX_STAMP_PATH'
+          gz=cp.read_bytes(); raw=gzip.decompress(gz)
+          assert hashlib.sha256(gz).hexdigest()==d['sidecar']['gzip_sha256']
+          assert hashlib.sha256(raw).hexdigest()==d['sidecar']['csv_sha256']
+          df=pd.read_csv(io.BytesIO(raw)); assert len(df)==64 and df.src_id.nunique()==64
+          print('PASS_JPFM_2F_C1A_RESULT_ARTIFACT_GATE', d['outcome'])
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jpfm-2f-c1a-sparse-stamp-morphology-run-001
+          path: |
+            data/JANUS-PALOMAR-JPFM-2F-C1A-NAMED-PLATE-SPARSE-STAMP-DIRECT-MORPHOLOGY-RUN-001.json
+            data/JANUS-PALOMAR-JPFM-2F-C1A-NAMED-PLATE-SPARSE-STAMP-DIRECT-MORPHOLOGY-SIDECAR-RUN-001.csv.gz
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Commit validated C1A result
+        run: |
+          git config user.name 'janus-jpfm-ci'
+          git config user.email 'actions@users.noreply.github.com'
+          git add \
+            data/JANUS-PALOMAR-JPFM-2F-C1A-NAMED-PLATE-SPARSE-STAMP-DIRECT-MORPHOLOGY-RUN-001.json \
+            data/JANUS-PALOMAR-JPFM-2F-C1A-NAMED-PLATE-SPARSE-STAMP-DIRECT-MORPHOLOGY-SIDECAR-RUN-001.csv.gz
+          git diff --cached --quiet && exit 0
+          git commit -m 'Record JPFM-2F-C1A sparse-stamp morphology pilot [skip ci]'
+          git pull --rebase origin main
+          git push
