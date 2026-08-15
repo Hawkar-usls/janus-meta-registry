@@ -1,0 +1,52 @@
+name: Palomar JPFM-3B legacy event docs freeze
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'tools/palomar/jpfm_3b_legacy_event_docs_freezer.py'
+      - '.github/workflows/palomar-jpfm-3b-legacy-event-docs-freeze.yml'
+permissions:
+  contents: write
+jobs:
+  freeze-docs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install requests==2.32.4
+      - run: python -m py_compile tools/palomar/jpfm_3b_legacy_event_docs_freezer.py
+      - name: Freeze docs only
+        run: |
+          mkdir -p out
+          python tools/palomar/jpfm_3b_legacy_event_docs_freezer.py --out out/JANUS-PALOMAR-JPFM-3B-NOAA-LEGACY-EVENT-DOCUMENTATION-FREEZE-v1.0.json
+      - name: Validate outcome blindness
+        run: |
+          python - <<'PY'
+          import json,pathlib
+          d=json.loads(pathlib.Path('out/JANUS-PALOMAR-JPFM-3B-NOAA-LEGACY-EVENT-DOCUMENTATION-FREEZE-v1.0.json').read_text())
+          assert d['status']=='SOURCE_DOCUMENTATION_FROZEN__OUTCOME_BLIND'
+          assert [x['filename'] for x in d['documents']]==['f_event.fmt','f_event-group.fmt','flares.txt']
+          assert d['outcome_blindness']['association_computed'] is False
+          print('PASS_3B_LEGACY_DOC_FREEZE')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jpfm-3b-legacy-event-docs-v1
+          path: out/JANUS-PALOMAR-JPFM-3B-NOAA-LEGACY-EVENT-DOCUMENTATION-FREEZE-v1.0.json
+          retention-days: 30
+          if-no-files-found: error
+      - name: Commit compact documentation freeze
+        run: |
+          cp out/JANUS-PALOMAR-JPFM-3B-NOAA-LEGACY-EVENT-DOCUMENTATION-FREEZE-v1.0.json data/JANUS-PALOMAR-JPFM-3B-NOAA-LEGACY-EVENT-DOCUMENTATION-FREEZE-v1.0.json
+          git config user.name 'janus-jpfm-ci'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/JANUS-PALOMAR-JPFM-3B-NOAA-LEGACY-EVENT-DOCUMENTATION-FREEZE-v1.0.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Add JPFM-3B legacy NOAA event docs freeze [skip ci]'
+          git pull --rebase origin main
+          git push
