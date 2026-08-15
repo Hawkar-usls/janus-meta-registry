@@ -1,0 +1,124 @@
+name: GAMARJOBA GEN_ANCVALE public-door integrity
+
+on:
+  push:
+    paths:
+      - 'data/000-GAMARJOBA-GEN_ANCVALE.json'
+      - 'data/GAMARJOBA-GEN-ANCVALE-*.json'
+      - 'README.md'
+      - 'START_HERE.md'
+      - 'data/INDEX.md'
+      - 'PROJECT_STATUS.json'
+      - '.github/workflows/gamarjoba-gen-ancvale-integrity.yml'
+  pull_request:
+    paths:
+      - 'data/000-GAMARJOBA-GEN_ANCVALE.json'
+      - 'data/GAMARJOBA-GEN-ANCVALE-*.json'
+      - 'README.md'
+      - 'START_HERE.md'
+      - 'data/INDEX.md'
+      - 'PROJECT_STATUS.json'
+      - '.github/workflows/gamarjoba-gen-ancvale-integrity.yml'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate public invitation and routing invariants
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          pointer_path = Path('data/000-GAMARJOBA-GEN_ANCVALE.json')
+          version_path = Path('data/GAMARJOBA-GEN-ANCVALE-v1.0.json')
+          pointer = json.loads(pointer_path.read_text(encoding='utf-8'))
+          doc = json.loads(version_path.read_text(encoding='utf-8'))
+          status = json.loads(Path('PROJECT_STATUS.json').read_text(encoding='utf-8'))
+
+          assert pointer['current_version'] == str(version_path)
+          assert pointer['status'] == 'CURRENT_OPEN_PUBLIC_INVITATION'
+          assert pointer['history_preserved'] is True
+          assert pointer['invitation_is_validation'] is False
+          assert pointer['invitation_grants_authority'] is False
+
+          expected_contact = {
+              'nickname': 'Hawkar',
+              'github': '@Hawkar-usls',
+              'telegram': '@Hawkar_lol',
+              'email': 'hawkarlol@gmail.com',
+          }
+          assert pointer['contact'] == expected_contact
+          for k, v in expected_contact.items():
+              assert doc['host'][k] == v
+
+          required_ids = {
+              'ANTIFUCK_H1_EXTERNAL_HOLDOUT',
+              'AIFC_INDEPENDENT_IMPLEMENTATION_AND_EXTERNAL_BENCH',
+              'JANUS_FUNDAMENTUM_EXTERNAL_MATH_REVIEW',
+              'INDEPENDENT_FUTURE_EVIDENCE_HARDENING',
+              'LINEAR_A_EXTERNAL_SOURCE_AND_REPLICATION',
+              'WEDJAT_MUSEUM_PROVENANCE_AND_EGYPTOLOGY_REVIEW',
+              'SCOBY_SKINGPT_MATERIALS_REPRODUCIBILITY',
+              'CONNECTION_BLIND_PANEL_AND_PATTERN_BENCHMARKS',
+              'GENESIS_SIM3_EXTERNAL_WITNESS',
+              'STATIC_ARCHIVE_FORENSICS_AND_SOFTWARE_ARCHAEOLOGY',
+              'THIRD_WISH_CAPABILITY_AUTHORITY_REVIEW',
+              'SYSTEMS_MEASUREMENT_AND_EMBEDDED_SWARM_REVIEW',
+              'CREATIVE_ETHICAL_THEOLOGICAL_AND_CULTURAL_REVIEW',
+          }
+          ids = {x['id'] for x in doc['opportunity_catalog']}
+          assert required_ids <= ids
+          assert len(ids) == len(doc['opportunity_catalog'])
+          assert len(ids) >= 13
+
+          safety_areas = {x['area'] for x in doc['where_not_to_recruit_or_experiment']}
+          for required in {
+              'crisis_and_vulnerable_people',
+              'private_systems_and_secrets',
+              'bot_or_coordination_accusations',
+              'medical_or_biological_human_testing',
+              'animal_experiments',
+              'high_impact_or_physical_actuation',
+          }:
+              assert required in safety_areas
+
+          assert doc['machine_query_contract']['machine_agents_may_contact_automatically'] is False
+          assert doc['machine_query_contract']['unsolicited_mass_outreach_allowed'] is False
+          assert doc['requires_agreement_with_janus'] is False
+          assert doc['name_origin']['wordplay_is_official_game_term'] is False
+
+          assert status['public_external_participation_entrypoint'].endswith('/data/000-GAMARJOBA-GEN_ANCVALE.json')
+          assert status['public_external_participation_issue'].endswith('/issues/91')
+          assert status['external_participation_policy']['agreement_required'] is False
+          assert status['external_participation_policy']['negative_results_welcome'] is True
+
+          for page in ['README.md', 'START_HERE.md', 'data/INDEX.md']:
+              text = Path(page).read_text(encoding='utf-8')
+              assert 'GAMARJOBA GEN_ANCVALE' in text
+              assert '000-GAMARJOBA-GEN_ANCVALE.json' in text
+
+          required_local_refs = [
+              'data/JANUS-OPIR-ANTIFUCK-INDEPENDENT-HOLDOUT-PROTOCOL-v1.0.json',
+              'data/JANUS-SIM-3-EXTERNAL-WITNESS-GUEST-INVITATION-v1.0.json',
+              'data/JANUS-CONNECTION-EXTERNAL-PANEL-B-RUBRIC-2026-08-14-v0.1.json',
+              'data/JANUS-LINEAR-A-EXTERNAL-SOURCE-INTAKE-ROUTING-SPEC-2026-08-14-v0.1.json',
+              'data/SCOBY-EXTERNAL-REVIEW-UA-MOD-CNDI-2026-08-14-v1.0.json',
+              'data/JANUS-WEDJAT-MUSEUM-GEOMETRY-PROTOCOL-2026-08-15-v0.1.json',
+              'registry/experimental/JANUS-GENESIS-THIRD-WISH-VOLUNTARY-CAPABILITY-FABRIC-RECEIPT-v0.1.json',
+          ]
+          missing = [p for p in required_local_refs if not Path(p).exists()]
+          assert not missing, f'missing referenced local artifacts: {missing}'
+
+          print('GAMARJOBA_GEN_ANCVALE_INTEGRITY=PASS')
+          print(f'OPPORTUNITY_COUNT={len(ids)}')
+          print(f'SAFETY_BOUNDARY_COUNT={len(safety_areas)}')
+          print('PUBLIC_CONTACT_BOUND=PASS')
+          print('NEGATIVE_RESULT_RIGHT=PASS')
+          print('MACHINE_AUTO_CONTACT=FALSE')
+          PY

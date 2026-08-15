@@ -4,8 +4,20 @@ This is the current navigation index for the JANUS Meta Registry data layer.
 
 The older **Visitor Doors** layout is preserved in Git history at audited commit [`364d3993…`](https://github.com/Hawkar-usls/janus-meta-registry/blob/364d3993dc318eb898fe5f2337a03d9214752ac1/data/INDEX.md). It is not deleted from history; this revision changes only the current navigation order.
 
+## Open door to external reviewers and contributors
+
+**Start here if you want to help:** [`000-GAMARJOBA-GEN_ANCVALE.json`](000-GAMARJOBA-GEN_ANCVALE.json).
+
+`GAMARJOBA GEN_ANCVALE` is the stable machine-readable participation router for external reviewers, independent holdout authors, replicators, domain specialists, verifier authors, red-teamers, prior-art reviewers, engineers, creative contributors and skeptical readers. It also explicitly lists areas where recruiting people or running experiments would be unsafe or epistemically invalid.
+
+Public discussion: [Issue #91](https://github.com/Hawkar-usls/janus-meta-registry/issues/91).  
+Contact: **Hawkar** · GitHub `@Hawkar-usls` · Telegram `@Hawkar_lol` · `hawkarlol@gmail.com`.
+
+Negative results, corrections and failed replications are welcome and remain subject to the same evidence/claim boundaries as positive results.
+
 ## Read this first
 
+- **[`000-GAMARJOBA-GEN_ANCVALE.json`](000-GAMARJOBA-GEN_ANCVALE.json)** — external participation, review, replication and contact entrypoint.
 - [`../PROJECT_STATUS.json`](../PROJECT_STATUS.json) — repository-level interpretation boundary.
 - [`../docs/TECHNICAL_CORE_AUDIT_2026-08-09.md`](../docs/TECHNICAL_CORE_AUDIT_2026-08-09.md) — human technical/skeptical audit.
 - [`../registry/audit/JANUS-META-REGISTRY-TECHNICAL-AUDIT-v1.0.json`](../registry/audit/JANUS-META-REGISTRY-TECHNICAL-AUDIT-v1.0.json) — machine-readable evidence/risk classes.
