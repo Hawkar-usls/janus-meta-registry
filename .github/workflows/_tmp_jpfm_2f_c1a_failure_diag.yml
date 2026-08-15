@@ -1,0 +1,33 @@
+name: TEMP JPFM-2F-C1A failure diagnostic
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/_tmp_jpfm_2f_c1a_failure_diag.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Print only frozen C1A transport failures and sample census
+        run: |
+          python - <<'PY'
+          import csv, gzip, io
+          p='data/JANUS-PALOMAR-JPFM-2F-C1A-NAMED-PLATE-SPARSE-STAMP-DIRECT-MORPHOLOGY-SIDECAR-RUN-001.csv.gz'
+          rows=list(csv.DictReader(io.TextIOWrapper(gzip.open(p,'rb'), encoding='utf-8')))
+          bad=[r for r in rows if r.get('transport_status')!='EXACT_NAMED_PLATE_81PX_STAMP']
+          print('TOTAL_ROWS',len(rows),'TRANSPORT_FAIL_COUNT',len(bad))
+          for r in bad:
+              print('TRANSPORT_FAIL',{
+                  'src_id':r.get('src_id'),'plate_id':r.get('plate_id'),'tile_id':r.get('tile_id'),
+                  'structural_cluster':r.get('structural_cluster'),'sample_role':r.get('sample_role'),
+                  'frozen_fullplate_x0':r.get('frozen_fullplate_x0'),'frozen_fullplate_y0':r.get('frozen_fullplate_y0'),
+                  'slice_x0':r.get('slice_x0'),'slice_y0':r.get('slice_y0'),'transport_status':r.get('transport_status')
+              })
+          PY
