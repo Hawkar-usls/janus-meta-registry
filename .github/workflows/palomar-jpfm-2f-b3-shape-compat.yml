@@ -1,0 +1,120 @@
+name: Palomar JPFM-2F-B3 shape compatibility replay
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/palomar-jpfm-2f-b3-shape-compat.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  jpfm-2f-b3:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install frozen replay environment
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y source-extractor psfex
+          if ! command -v sex >/dev/null 2>&1; then
+            if command -v source-extractor >/dev/null 2>&1; then sudo ln -sf "$(command -v source-extractor)" /usr/local/bin/sex; else sudo ln -sf "$(command -v sextractor)" /usr/local/bin/sex; fi
+          fi
+          command -v sex && command -v psfex
+          python -m pip install --upgrade pip
+          python -m pip install \
+            numpy==2.2.6 pandas==2.3.1 scipy==1.16.1 requests==2.32.4 \
+            astropy==8.0.1 photutils==3.0.0 opencv-python-headless==5.0.0.93 \
+            'fsspec[http]==2026.6.0'
+          python -m pip freeze | sort | tee /tmp/jpfm-2f-b3-pip-freeze.txt
+
+      - name: Checkout exact upstream commit
+        run: |
+          git clone --filter=blob:none --no-checkout https://github.com/jannefi/poss1-plate-slice.git work/poss1-src
+          git -C work/poss1-src checkout 4005e200541b321ead3d6608f0162a14430ef1c2
+          test "$(git -C work/poss1-src rev-parse HEAD)" = "4005e200541b321ead3d6608f0162a14430ef1c2"
+
+      - name: Syntax, admission and firewall gates
+        run: |
+          python -m py_compile tools/palomar/jpfm_2f_b2_tile_lineage_replay.py tools/palomar/jpfm_2f_b3_shape_compat_replay.py
+          python - <<'PY'
+          import json, pathlib
+          d=json.loads(pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-B3-SHAPE-COMPATIBILITY-REPLAY-ADMISSION-v1.0.json').read_text())
+          assert d['status']=='PREREGISTERED_AFTER_B2_DEFECT_LOCALIZATION_BEFORE_B3_OUTCOME'
+          assert d['frozen_sample']['same_64_as_B1_and_B2'] is True
+          assert d['single_allowed_code_repair']['metric_formula_changed'] is False
+          assert d['operational_acceleration']['detection_workers']==10
+          assert d['external_label_firewall']['external_label_reveal_after_B3'] is False
+          print('PASS_JPFM_2F_B3_ADMISSION_GATE')
+          PY
+          if grep -Eiq 'kp\.gfz|aa\.usno|nuclear-explosions|bluebook|nuforc' tools/palomar/jpfm_2f_b3_shape_compat_replay.py; then
+            echo 'FAIL: external-label source present in B3 runner'; exit 1
+          fi
+          if grep -Eiq 'hdul\[0\]\.data|remote_hdu\.data' tools/palomar/jpfm_2f_b3_shape_compat_replay.py; then
+            echo 'FAIL: forbidden full remote plate access in B3 runner'; exit 1
+          fi
+          echo 'PASS_JPFM_2F_B3_FIREWALL_GATE'
+
+      - name: Execute same-64 B3 compatibility replay
+        run: |
+          mkdir -p work/b3 data
+          python tools/palomar/jpfm_2f_b3_shape_compat_replay.py \
+            --manifest data/JANUS-PALOMAR-JPFM-2F-A-BLIND-STRUCTURAL-CLUSTER-MANIFEST-RUN-001.csv.gz \
+            --upstream-root work/poss1-src \
+            --work-dir work/b3 \
+            --out-json data/JANUS-PALOMAR-JPFM-2F-B3-SHAPE-COMPATIBILITY-REPLAY-RUN-001.json \
+            --out-sidecar-gz data/JANUS-PALOMAR-JPFM-2F-B3-SHAPE-COMPATIBILITY-REPLAY-SIDECAR-RUN-001.csv.gz
+
+      - name: Validate B3 artifact without forcing PASS
+        run: |
+          python - <<'PY'
+          import gzip, hashlib, io, json, pathlib, pandas as pd
+          jp=pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-B3-SHAPE-COMPATIBILITY-REPLAY-RUN-001.json')
+          cp=pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-B3-SHAPE-COMPATIBILITY-REPLAY-SIDECAR-RUN-001.csv.gz')
+          d=json.loads(jp.read_text())
+          allowed={
+            'PASS_SHAPE_COMPATIBILITY_REPLAY__PIXEL_MORPHOLOGY_PILOT_ADMITTED',
+            'FAIL_CLOSED_TILE_OR_DETECTION_REPLAY','FAIL_CLOSED_OBJECT_LINEAGE',
+            'FAIL_CLOSED_RAW_MORPHOLOGY','FAIL_CLOSED_SHAPE_COMPATIBILITY_REPAIR'
+          }
+          assert d['status']=='EXECUTED' and d['outcome'] in allowed
+          assert d['sample']['rows']==64 and d['sample']['same_as_B1_B2'] is True
+          assert d['operational']['detection_workers']==10
+          assert d['operational']['full_remote_plate_array_accessed'] is False
+          assert d['compatibility_repair']['metric_formula_changed'] is False
+          assert d['external_label_firewall']['external_label_reveal_authorized'] is False
+          raw=gzip.decompress(cp.read_bytes())
+          assert hashlib.sha256(raw).hexdigest()==d['sidecar']['csv_sha256']
+          assert hashlib.sha256(cp.read_bytes()).hexdigest()==d['sidecar']['gzip_sha256']
+          df=pd.read_csv(io.BytesIO(raw)); assert len(df)==64 and df.src_id.nunique()==64
+          print('PASS_JPFM_2F_B3_RESULT_ARTIFACT_GATE',d['outcome'])
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jpfm-2f-b3-shape-compat-run-001
+          path: |
+            data/JANUS-PALOMAR-JPFM-2F-B3-SHAPE-COMPATIBILITY-REPLAY-RUN-001.json
+            data/JANUS-PALOMAR-JPFM-2F-B3-SHAPE-COMPATIBILITY-REPLAY-SIDECAR-RUN-001.csv.gz
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Commit only validated B3 result
+        run: |
+          git config user.name 'janus-jpfm-ci'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/JANUS-PALOMAR-JPFM-2F-B3-SHAPE-COMPATIBILITY-REPLAY-RUN-001.json \
+                  data/JANUS-PALOMAR-JPFM-2F-B3-SHAPE-COMPATIBILITY-REPLAY-SIDECAR-RUN-001.csv.gz
+          git diff --cached --quiet && exit 0
+          git commit -m 'Record JPFM-2F-B3 shape compatibility replay [skip ci]'
+          git pull --rebase origin main
+          git push
