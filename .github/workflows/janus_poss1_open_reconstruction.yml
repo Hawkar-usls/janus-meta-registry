@@ -7,6 +7,7 @@ on:
     paths:
       - '.github/workflows/janus_poss1_open_reconstruction.yml'
       - 'research/uap_poss1/janus_poss1_open_release_intake_v0_1.py'
+      - 'research/uap_poss1/janus_poss1_open_release_intake_v0_2.py'
       - 'research/uap_poss1/janus_poss1_h0_h1_v0_1.py'
       - 'research/uap_poss1/requirements-tested.txt'
       - 'registry/cosmology/JANUS-POSS1-OPEN-PUBLIC-RECONSTRUCTION-COHORT-v1.0.json'
@@ -35,12 +36,13 @@ jobs:
       - name: Compile runners
         run: |
           python -m py_compile research/uap_poss1/janus_poss1_open_release_intake_v0_1.py
+          python -m py_compile research/uap_poss1/janus_poss1_open_release_intake_v0_2.py
           python -m py_compile research/uap_poss1/janus_poss1_h0_h1_v0_1.py
 
       - name: Build public plate-day matrices
         run: |
           rm -rf work/uap_poss1_open
-          python research/uap_poss1/janus_poss1_open_release_intake_v0_1.py --out-dir work/uap_poss1_open
+          python research/uap_poss1/janus_poss1_open_release_intake_v0_2.py --out-dir work/uap_poss1_open
 
       - name: Fit strict calendar primary and window sensitivities
         run: |
