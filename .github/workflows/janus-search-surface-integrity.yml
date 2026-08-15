@@ -1,0 +1,140 @@
+name: "JANUS Search Surface integrity"
+
+on:
+  push:
+    paths:
+      - 'README.md'
+      - 'index.html'
+      - '404.html'
+      - 'assets/site.css'
+      - 'research/index.html'
+      - 'gamarjoba-gen-ancvale/index.html'
+      - 'antifuck/index.html'
+      - 'linear-a/index.html'
+      - 'wedjat/index.html'
+      - 'scoby-skingpt/index.html'
+      - 'aifc/index.html'
+      - 'fundamentum/index.html'
+      - 'robots.txt'
+      - 'sitemap.xml'
+      - 'llms.txt'
+      - 'data/JANUS-SEARCH-SURFACE-v1.0.json'
+      - '.github/workflows/janus-search-surface-integrity.yml'
+  pull_request:
+    paths:
+      - 'README.md'
+      - 'index.html'
+      - '404.html'
+      - 'assets/site.css'
+      - 'research/index.html'
+      - 'gamarjoba-gen-ancvale/index.html'
+      - 'antifuck/index.html'
+      - 'linear-a/index.html'
+      - 'wedjat/index.html'
+      - 'scoby-skingpt/index.html'
+      - 'aifc/index.html'
+      - 'fundamentum/index.html'
+      - 'robots.txt'
+      - 'sitemap.xml'
+      - 'llms.txt'
+      - 'data/JANUS-SEARCH-SURFACE-v1.0.json'
+      - '.github/workflows/janus-search-surface-integrity.yml'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate crawlability metadata sitemap and claim boundaries
+        run: |
+          python - <<'PY'
+          import json
+          import re
+          import xml.etree.ElementTree as ET
+          from pathlib import Path
+
+          base = 'https://hawkar-usls.github.io/janus-meta-registry/'
+          pages = {
+              'index.html': base,
+              'research/index.html': base + 'research/',
+              'gamarjoba-gen-ancvale/index.html': base + 'gamarjoba-gen-ancvale/',
+              'antifuck/index.html': base + 'antifuck/',
+              'linear-a/index.html': base + 'linear-a/',
+              'wedjat/index.html': base + 'wedjat/',
+              'scoby-skingpt/index.html': base + 'scoby-skingpt/',
+              'aifc/index.html': base + 'aifc/',
+              'fundamentum/index.html': base + 'fundamentum/',
+          }
+
+          titles = set()
+          descriptions = set()
+          for path, canonical in pages.items():
+              text = Path(path).read_text(encoding='utf-8')
+              title = re.search(r'<title>(.*?)</title>', text, re.I | re.S)
+              desc = re.search(r'<meta name="description" content="([^"]+)"', text, re.I)
+              canon = re.search(r'<link rel="canonical" href="([^"]+)"', text, re.I)
+              assert title and title.group(1).strip(), f'missing title: {path}'
+              assert desc and 70 <= len(desc.group(1)) <= 220, f'bad description: {path}'
+              assert canon and canon.group(1) == canonical, f'bad canonical: {path}'
+              assert 'application/ld+json' in text, f'missing JSON-LD: {path}'
+              assert 'property="og:title"' in text, f'missing OpenGraph title: {path}'
+              assert 'property="og:url"' in text, f'missing OpenGraph URL: {path}'
+              assert 'name="keywords"' not in text.lower(), f'meta keywords forbidden: {path}'
+              assert 'noindex' not in text.lower(), f'indexable page contains noindex: {path}'
+              assert 'github.com/Hawkar-usls/' in text, f'missing evidence/source link: {path}'
+              titles.add(title.group(1).strip())
+              descriptions.add(desc.group(1))
+
+          assert len(titles) == len(pages), 'titles must be unique'
+          assert len(descriptions) == len(pages), 'meta descriptions must be unique'
+
+          root = ET.parse('sitemap.xml').getroot()
+          ns = {'s': 'http://www.sitemaps.org/schemas/sitemap/0.9'}
+          locs = {n.text for n in root.findall('s:url/s:loc', ns)}
+          assert locs == set(pages.values()), f'sitemap mismatch: {locs ^ set(pages.values())}'
+
+          robots = Path('robots.txt').read_text(encoding='utf-8')
+          assert 'User-agent: *' in robots
+          assert 'Allow: /' in robots
+          assert f'Sitemap: {base}sitemap.xml' in robots
+
+          guide = Path('llms.txt').read_text(encoding='utf-8')
+          for required in ['JANUS Meta Registry', 'GAMARJOBA GEN_ANCVALE', 'JANUS ANTIFUCK', 'Linear A', 'P vs NP remains open']:
+              assert required in guide, f'llms.txt missing {required}'
+
+          readme = Path('README.md').read_text(encoding='utf-8')
+          assert base in readme, 'README must expose the Pages site'
+          assert 'data/JANUS-SEARCH-SURFACE-v1.0.json' in readme
+          assert 'navigation, not scientific authority' in readme
+
+          cfg = json.loads(Path('data/JANUS-SEARCH-SURFACE-v1.0.json').read_text(encoding='utf-8'))
+          assert cfg['base_url'] == base
+          assert cfg['pages_configuration_observed']['enabled'] is True
+          assert cfg['pages_configuration_observed']['https_enforced'] is True
+          assert cfg['authority_model']['html_is_scientific_authority'] is False
+          assert cfg['authority_model']['search_ranking_guaranteed'] is False
+          assert cfg['authority_model']['indexing_guaranteed'] is False
+          assert cfg['authority_model']['search_console_verification_completed'] is False
+          assert cfg['search_engine_features']['meta_keywords_used'] is False
+          assert cfg['search_engine_features']['keyword_stuffing_intended'] is False
+          assert cfg['search_strategy']['automated_backlink_generation_allowed'] is False
+          assert cfg['search_strategy']['paid_link_scheme_allowed'] is False
+          assert 'DISCOVERABILITY_INFRASTRUCTURE != GOOGLE_RANKING_GUARANTEE' in cfg['claim_ceiling']
+          assert Path('.nojekyll').exists()
+
+          page404 = Path('404.html').read_text(encoding='utf-8').lower()
+          assert 'noindex,follow' in page404
+
+          print('JANUS_SEARCH_SURFACE_INTEGRITY=PASS')
+          print(f'INDEXABLE_PAGE_COUNT={len(pages)}')
+          print(f'UNIQUE_TITLE_COUNT={len(titles)}')
+          print(f'SITEMAP_URL_COUNT={len(locs)}')
+          print('README_SITE_BINDING=PASS')
+          print('META_KEYWORDS=ABSENT')
+          print('RANKING_GUARANTEE=FALSE')
+          print('SEARCH_CONSOLE_VERIFIED=FALSE')
+          PY
