@@ -1,0 +1,75 @@
+name: "JANUS Guestbook automatic publisher"
+
+on:
+  issues:
+    types: [opened]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: janus-guestbook-publisher
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.event.issue.title, '[GUESTBOOK]')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Ensure guestbook label exists and bind it to the issue
+        if: github.event_name == 'issues'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh label create janus-guestbook \
+            --repo "$GH_REPO" \
+            --color "1f6feb" \
+            --description "Public JANUS guestbook submission" \
+            --force
+          gh issue edit "$ISSUE_NUMBER" --repo "$GH_REPO" --add-label janus-guestbook
+
+      - name: Run filter self-test
+        run: python tools/guestbook/janus_guestbook_filter.py
+
+      - name: Process opened guestbook issue
+        if: github.event_name == 'issues'
+        id: publish
+        run: |
+          python tools/guestbook/janus_guestbook_publish.py \
+            --event "$GITHUB_EVENT_PATH" \
+            --guestbook guestbook/messages.json \
+            --quarantine guestbook/quarantine.json
+
+      - name: Commit accepted or quarantined receipt
+        if: github.event_name == 'issues' && (steps.publish.outputs.status == 'accepted' || steps.publish.outputs.status == 'quarantined')
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          STATUS: ${{ steps.publish.outputs.status }}
+        run: |
+          git config user.name "janus-guestbook-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add guestbook/messages.json guestbook/quarantine.json
+          git diff --cached --quiet && exit 0
+          git commit -m "guestbook: ${STATUS} issue #${ISSUE_NUMBER}"
+          git push origin HEAD:main
+
+      - name: Summary
+        if: github.event_name == 'issues'
+        run: |
+          echo "### JANUS Guestbook" >> "$GITHUB_STEP_SUMMARY"
+          echo "- status: \`${{ steps.publish.outputs.status }}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- reason: \`${{ steps.publish.outputs.reason }}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- issue: #${{ github.event.issue.number }}" >> "$GITHUB_STEP_SUMMARY"
