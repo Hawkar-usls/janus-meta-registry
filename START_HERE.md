@@ -20,7 +20,7 @@ This repository mixes technical evidence, research snapshots, hypotheses, red-te
 5. [`PORTFOLIO_STATUS.md`](PORTFOLIO_STATUS.md) — portfolio role and current authority.
 6. [`data/INDEX.md`](data/INDEX.md) — deeper historical archive index.
 
-If you want to help but do not know where to begin, use the GAMARJOBA entrypoint. It routes visitors by expertise and distinguishes **independent-review gates**, **replication opportunities**, **domain review**, **safe engineering contributions**, and areas where recruitment or experimentation would be inappropriate. Public discussion is available at [Issue #91](https://github.com/Hawkar-usls/janus-meta-registry/issues/91).
+If you want to help but do not know where to begin, use the **GAMARJOBA GEN_ANCVALE** entrypoint. It routes visitors by expertise and distinguishes **independent-review gates**, **replication opportunities**, **domain review**, **safe engineering contributions**, and areas where recruitment or experimentation would be inappropriate. Public discussion is available at [Issue #91](https://github.com/Hawkar-usls/janus-meta-registry/issues/91).
 
 ## Reading rules
 
