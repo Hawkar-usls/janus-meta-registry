@@ -1,0 +1,100 @@
+name: "JANUS Guestbook integrity"
+
+on:
+  push:
+    paths:
+      - '.github/ISSUE_TEMPLATE/guestbook.yml'
+      - '.github/workflows/janus-guestbook-publish.yml'
+      - '.github/workflows/janus-guestbook-integrity.yml'
+      - 'tools/guestbook/**'
+      - 'guestbook/**'
+      - 'assets/guestbook.js'
+      - 'assets/site.css'
+      - 'index.html'
+      - 'data/JANUS-GUESTBOOK-RESPECT-FILTER-v1.0.json'
+  pull_request:
+    paths:
+      - '.github/ISSUE_TEMPLATE/guestbook.yml'
+      - '.github/workflows/janus-guestbook-publish.yml'
+      - '.github/workflows/janus-guestbook-integrity.yml'
+      - 'tools/guestbook/**'
+      - 'guestbook/**'
+      - 'assets/guestbook.js'
+      - 'assets/site.css'
+      - 'index.html'
+      - 'data/JANUS-GUESTBOOK-RESPECT-FILTER-v1.0.json'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Compile guestbook Python
+        run: python -m py_compile tools/guestbook/janus_guestbook_filter.py tools/guestbook/janus_guestbook_publish.py tools/guestbook/janus_guestbook_selftest.py
+
+      - name: Run deterministic and end-to-end canaries
+        run: python tools/guestbook/janus_guestbook_selftest.py
+
+      - name: Validate contracts and browser wiring
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          policy = json.loads(Path('data/JANUS-GUESTBOOK-RESPECT-FILTER-v1.0.json').read_text(encoding='utf-8'))
+          messages = json.loads(Path('guestbook/messages.json').read_text(encoding='utf-8'))
+          quarantine = json.loads(Path('guestbook/quarantine.json').read_text(encoding='utf-8'))
+          form = Path('.github/ISSUE_TEMPLATE/guestbook.yml').read_text(encoding='utf-8')
+          publisher = Path('.github/workflows/janus-guestbook-publish.yml').read_text(encoding='utf-8')
+          js = Path('assets/guestbook.js').read_text(encoding='utf-8')
+          html = Path('index.html').read_text(encoding='utf-8')
+          css = Path('assets/site.css').read_text(encoding='utf-8')
+
+          assert policy['submission_limit_per_github_login'] == 3
+          assert policy['publication_rule'] == 'JANUS_MENTION && PROFANITY_OR_DIRECT_INSULT => QUARANTINE_NOT_TICKER'
+          assert policy['quarantine_policy']['raw_abusive_message_copied_into_quarantine_json'] is False
+          assert policy['quarantine_policy']['display_quarantined_login_in_ticker'] is False
+          assert policy['scope_limits']['does_not_forbid_disagreement'] is True
+
+          assert messages['max_messages_per_github_login'] == 3
+          assert messages['message_max_characters'] == 100
+          assert quarantine['raw_abusive_message_stored'] is False
+
+          assert 'title: "[GUESTBOOK] "' in form
+          assert 'label: Message' in form
+          assert 'label: Public display' in form
+          assert 'maximum **3 guestbook submissions per GitHub account**' in form
+
+          assert 'issues:' in publisher and 'types: [opened]' in publisher
+          assert 'cancel-in-progress: false' in publisher
+          assert 'guestbook/messages.json' in publisher
+          assert 'guestbook/quarantine.json' in publisher
+          assert 'janus-guestbook' in publisher
+
+          assert 'const MAX_PER_LOGIN = 3' in js
+          assert 'const MAX_CHARS = 100' in js
+          assert 'acceptedByRespectRule' in js
+          assert 'GitHub API' in js
+          assert 'guestbook-system-warning' in js
+          assert 'textContent' in js
+
+          assert 'id="janus-guestbook"' in html
+          assert 'data-guestbook-form' in html
+          assert './assets/guestbook.js' in html
+          assert '100 characters · up to 3 submissions/account' in html
+          assert 'guestbook-track' in css
+          assert 'guestbook-system-warning' in css
+          assert '@keyframes janus-guestbook-marquee' in css
+
+          print('JANUS_GUESTBOOK_INTEGRITY=PASS')
+          print('PUBLICATION_MODE=LIVE_API_PLUS_JSON_CACHE')
+          print('MAX_MESSAGES_PER_LOGIN=3')
+          print('MANUAL_APPROVAL_REQUIRED=FALSE')
+          print('QUARANTINE_RENDERED_IN_TICKER=FALSE')
+          print('PUBLIC_SHAMING_MECHANISM=FALSE')
+          PY
