@@ -1,0 +1,36 @@
+name: JANUS Linear A canonical state v2.29
+on:
+  push:
+    paths: ["data/JANUS-LINEAR-A-RESEARCH-STATE-PROMOTION-REQUEST-2026-08-15-v2.29.json"]
+  workflow_dispatch:
+permissions: {contents: write}
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - run: python -m py_compile research/linear_a/janus_linear_a_canonical_state_v2_29.py
+      - name: Build and audit
+        run: python research/linear_a/janus_linear_a_canonical_state_v2_29.py --spec data/JANUS-LINEAR-A-RESEARCH-STATE-PROMOTION-SPEC-2026-08-15-v2.29.json --candidate-out data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-15-v2.29-CANDIDATE.json --canonical-out data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-15-v2.29.json --audit-out data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-15-v2.29.json
+      - name: Enforce ceiling
+        run: |
+          python - <<'PY'
+          import json
+          s=json.load(open('data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-15-v2.29.json'));a=json.load(open('data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-15-v2.29.json'))
+          assert a['status']=='CANONICALITY_AUDIT_PASS';g=s['global_claim_ceiling_v2_29'];assert g['C2_structure_dependent_candidate_count']==8 and g['universal_cross_region_survivor_count']==0;assert g['region_scoped_probable_function_established'] is False and g['decipherment_established'] is False
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-canonical-v2-29
+          path: |
+            data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-15-v2.29-CANDIDATE.json
+            data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-15-v2.29.json
+            data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-15-v2.29.json
+      - name: Persist
+        shell: bash
+        run: |
+          set -euo pipefail; git config user.name 'JANUS Evidence Bot'; git config user.email 'actions@users.noreply.github.com'; git add data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-15-v2.29-CANDIDATE.json data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-15-v2.29.json data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-15-v2.29.json; git commit -m 'Promote Linear A canonical research state v2.29' || true; for i in 1 2 3 4 5; do git push origin HEAD:main && exit 0 || git pull --rebase origin main; done; exit 1
