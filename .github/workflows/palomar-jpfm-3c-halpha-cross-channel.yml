@@ -1,0 +1,73 @@
+name: Palomar JPFM-3C H-alpha cross-channel
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'data/JANUS-PALOMAR-JPFM-3C-HALPHA-CROSS-CHANNEL-ADMISSION-v1.0.json'
+      - 'tools/palomar/jpfm_3c_halpha_cross_channel.py'
+      - '.github/workflows/palomar-jpfm-3c-halpha-cross-channel.yml'
+permissions:
+  contents: write
+jobs:
+  jpfm-3c:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Install frozen analysis environment
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install numpy==2.2.6 pandas==2.3.1 scipy==1.16.1 statsmodels==0.14.5 requests==2.32.4
+      - name: Syntax gate
+        run: |
+          python -m py_compile tools/palomar/jpfm_open_reconstruction_temporal.py
+          python -m py_compile tools/palomar/jpfm_schedule_confound_decomposition.py
+          python -m py_compile tools/palomar/jpfm_3c_halpha_cross_channel.py
+      - name: Verify preregistration and source-only parent
+        run: |
+          python - <<'PY'
+          import json,pathlib
+          a=json.loads(pathlib.Path('data/JANUS-PALOMAR-JPFM-3C-HALPHA-CROSS-CHANNEL-ADMISSION-v1.0.json').read_text())
+          s=json.loads(pathlib.Path('data/JANUS-PALOMAR-JPFM-3B-NOAA-EVENT-PATROL-PARSER-RUN-001.json').read_text())
+          assert a['status']=='PREREGISTERED_BEFORE_HALPHA_TO_BLUEBOOK_OR_POSS_OUTCOME_JOIN'
+          assert a['solar_opportunity_gate']['primary_minimum_coverage_minutes']==720
+          assert a['temporal_scope']['primary_start']=='1955-07-01'
+          assert s['status']=='SOURCE_ONLY_EVENT_DATE_AND_PATROL_COVERAGE_PARSED__NO_EXTERNAL_OUTCOME_JOIN'
+          assert s['outcome_blindness']['bluebook_access'] is False and s['outcome_blindness']['poss1_access'] is False
+          print('PASS_3C_ADMISSION_GATE')
+          PY
+      - name: Execute JPFM-3C
+        run: |
+          mkdir -p out
+          python tools/palomar/jpfm_3c_halpha_cross_channel.py --out out/JANUS-PALOMAR-JPFM-3C-HALPHA-CROSS-CHANNEL-RUN-001.json
+      - name: Validate claim ceiling
+        run: |
+          python - <<'PY'
+          import json,pathlib
+          d=json.loads(pathlib.Path('out/JANUS-PALOMAR-JPFM-3C-HALPHA-CROSS-CHANNEL-RUN-001.json').read_text())
+          assert d['status']=='EXECUTED'
+          assert d['primary_coverage_minutes']==720
+          assert d['aggregate_verdict']['code'] in {'HALPHA_SHARED_CROSS_CHANNEL_PATTERN_ADMITTED','NO_HALPHA_CROSS_CHANNEL_PATTERN_ADMITTED'}
+          assert d['current_authority_changed'] is False
+          assert 'NO_CAUSALITY' in d['claim_ceiling']
+          print('PASS_3C_RESULT_GATE')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jpfm-3c-halpha-cross-channel-run-001
+          path: out/JANUS-PALOMAR-JPFM-3C-HALPHA-CROSS-CHANNEL-RUN-001.json
+          retention-days: 30
+          if-no-files-found: error
+      - name: Commit validated result
+        run: |
+          cp out/JANUS-PALOMAR-JPFM-3C-HALPHA-CROSS-CHANNEL-RUN-001.json data/JANUS-PALOMAR-JPFM-3C-HALPHA-CROSS-CHANNEL-RUN-001.json
+          git config user.name 'janus-jpfm-ci'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/JANUS-PALOMAR-JPFM-3C-HALPHA-CROSS-CHANNEL-RUN-001.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Add JPFM-3C H-alpha cross-channel result [skip ci]'
+          git pull --rebase origin main
+          git push
