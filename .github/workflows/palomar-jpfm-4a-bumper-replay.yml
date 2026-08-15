@@ -1,0 +1,92 @@
+name: Palomar JPFM-4A Bumper replay verification
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'data/JANUS-PALOMAR-JPFM-4A-BUMPER-FINAL-CAPE-PHASE-MANIFEST-v1.0.json'
+      - 'data/JANUS-PALOMAR-JPFM-4A-BUMPER-FINAL-CAPE-CALIBRATION-RESULT-v1.0.json'
+      - 'tools/palomar/jpfm_4a_bumper_replay_verify.py'
+      - '.github/workflows/palomar-jpfm-4a-bumper-replay.yml'
+permissions:
+  actions: read
+  contents: write
+jobs:
+  replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Syntax and immutable-input gates
+        run: |
+          python -m py_compile tools/palomar/jpfm_4a_bumper_replay_verify.py
+          python - <<'PY'
+          import json, pathlib
+          m=json.loads(pathlib.Path('data/JANUS-PALOMAR-JPFM-4A-BUMPER-FINAL-CAPE-PHASE-MANIFEST-v1.0.json').read_text())
+          r=json.loads(pathlib.Path('data/JANUS-PALOMAR-JPFM-4A-BUMPER-FINAL-CAPE-CALIBRATION-RESULT-v1.0.json').read_text())
+          assert m['status']=='FINITE_ROCKET_PROGRAM_PHASE_FROZEN_BEFORE_BLUEBOOK_OR_POSS_JOIN'
+          assert m['outcome_blindness']['bluebook_dates_inspected_before_manifest_freeze'] is False
+          assert m['outcome_blindness']['poss1_dates_inspected_before_manifest_freeze'] is False
+          assert r['bindings']['frozen_manifest_commit']=='9161ec94df3d10b33ec537dfad7c8ce1f05ab076'
+          assert r['bindings']['current_authority_changed'] is False
+          print('PASS_BUMPER_IMMUTABLE_INPUT_GATE')
+          PY
+      - name: Download pinned Blue Book and POSS artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p inputs out
+          curl -L --fail --retry 3 \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/9243186827/zip" \
+            -o inputs/bluebook-index.zip
+          curl -L --fail --retry 3 \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/9242798656/zip" \
+            -o inputs/poss-open.zip
+          sha256sum inputs/bluebook-index.zip inputs/poss-open.zip
+      - name: Replay frozen Bumper calibration
+        run: |
+          python tools/palomar/jpfm_4a_bumper_replay_verify.py \
+            --bluebook-zip inputs/bluebook-index.zip \
+            --poss-zip inputs/poss-open.zip \
+            --out out/JANUS-PALOMAR-JPFM-4A-BUMPER-REPLAY-VERIFICATION-v1.0.json
+      - name: Validate replay receipt
+        run: |
+          python - <<'PY'
+          import json, pathlib
+          p=pathlib.Path('out/JANUS-PALOMAR-JPFM-4A-BUMPER-REPLAY-VERIFICATION-v1.0.json')
+          d=json.loads(p.read_text())
+          assert d['status']=='REPLAY_VERIFIED_AGAINST_PINNED_BLUEBOOK_AND_POSS_ARTIFACTS'
+          assert d['verification']['stored_result_replay_pass'] is True
+          assert d['verification']['semantic_checks_total']==d['verification']['semantic_checks_passed']
+          assert d['aggregate_replay']['bluebook_exact_day_case_rows']==0
+          assert d['aggregate_replay']['bluebook_plus_minus_1_case_rows']==2
+          assert d['aggregate_replay']['bluebook_plus_minus_1_starlike_rows']==0
+          assert d['aggregate_replay']['poss_exact_day_observed_dates']==0
+          assert d['aggregate_replay']['poss_plus_minus_1_same_or_post_event_observed_nights']==0
+          assert d['current_authority_changed'] is False
+          print('PASS_BUMPER_REPLAY_RESULT_GATE')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jpfm-4a-bumper-replay-verification-v1
+          path: out/JANUS-PALOMAR-JPFM-4A-BUMPER-REPLAY-VERIFICATION-v1.0.json
+          retention-days: 30
+          if-no-files-found: error
+      - name: Commit replay verification receipt
+        run: |
+          cp out/JANUS-PALOMAR-JPFM-4A-BUMPER-REPLAY-VERIFICATION-v1.0.json data/JANUS-PALOMAR-JPFM-4A-BUMPER-REPLAY-VERIFICATION-v1.0.json
+          git config user.name 'janus-jpfm-ci'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/JANUS-PALOMAR-JPFM-4A-BUMPER-REPLAY-VERIFICATION-v1.0.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Add JPFM-4A Bumper replay verification [skip ci]'
+          git pull --rebase origin main
+          git push
