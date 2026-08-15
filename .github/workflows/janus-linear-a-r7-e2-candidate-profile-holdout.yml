@@ -1,0 +1,83 @@
+name: JANUS Linear A R7-E2 candidate-profile holdout
+
+on:
+  pull_request:
+    paths:
+      - 'data/JANUS-LINEAR-A-R7-E2-CANDIDATE-PROFILE-HOLDOUT-SPEC-2026-08-15-v0.1.json'
+      - 'research/linear_a/janus_linear_a_r7_e2_candidate_profile_holdout_v0_1.py'
+      - 'research/linear_a/test_janus_linear_a_r7_e2_candidate_profile_holdout_v0_1.py'
+      - '.github/workflows/janus-linear-a-r7-e2-candidate-profile-holdout.yml'
+  push:
+    branches:
+      - 'research/r7-e2-candidate-profile-holdout'
+    paths:
+      - 'data/JANUS-LINEAR-A-R7-E2-CANDIDATE-PROFILE-HOLDOUT-SPEC-2026-08-15-v0.1.json'
+      - 'research/linear_a/janus_linear_a_r7_e2_candidate_profile_holdout_v0_1.py'
+      - 'research/linear_a/test_janus_linear_a_r7_e2_candidate_profile_holdout_v0_1.py'
+      - '.github/workflows/janus-linear-a-r7-e2-candidate-profile-holdout.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  preregistration-and-canaries:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install inherited parser dependency
+        run: python -m pip install "numpy>=2.0"
+      - name: Compile frozen gate and canaries
+        run: |
+          python -m py_compile \
+            research/linear_a/janus_linear_a_r7_e2_candidate_profile_holdout_v0_1.py \
+            research/linear_a/test_janus_linear_a_r7_e2_candidate_profile_holdout_v0_1.py
+      - name: Validate frozen R7-E2 preregistration
+        env:
+          PYTHONPATH: research/linear_a
+        run: |
+          python research/linear_a/janus_linear_a_r7_e2_candidate_profile_holdout_v0_1.py \
+            --spec data/JANUS-LINEAR-A-R7-E2-CANDIDATE-PROFILE-HOLDOUT-SPEC-2026-08-15-v0.1.json \
+            --validate-spec \
+            --out r7-e2-preregistration-validation.json
+          cat r7-e2-preregistration-validation.json
+      - name: Run object-weighted PASS FAIL underpowered and leakage canaries
+        env:
+          PYTHONPATH: research/linear_a
+        run: |
+          python research/linear_a/test_janus_linear_a_r7_e2_candidate_profile_holdout_v0_1.py -v
+      - name: Verify parent E1 preserved holdout unopened
+        run: |
+          python - <<'PY'
+          import json
+          c=json.load(open('data/JANUS-LINEAR-A-R7-E1-UNDERPOWERED-DISCOVERY-CERTIFICATE-2026-08-15-v0.1.json',encoding='utf-8'))
+          assert c['status']=='E1_DISCOVERY_PROFILE_NOT_FROZEN_RETAIN_ROW-OPENING-LIKE'
+          assert c['discovery_execution']['holdout_content_parsed'] is False
+          assert c['discovery_execution']['holdout_execution_performed'] is False
+          assert c['interpretation']['holdout_must_remain_unopened_under_e1_v0_1'] is True
+          print('R7_E2_PARENT_HOLDOUT_PURITY_VERIFIED')
+          PY
+      - name: Static claim and feature firewall canary
+        run: |
+          python - <<'PY'
+          import json
+          s=json.load(open('data/JANUS-LINEAR-A-R7-E2-CANDIDATE-PROFILE-HOLDOUT-SPEC-2026-08-15-v0.1.json',encoding='utf-8'))
+          assert s['training_derived_candidate_profile']['atoms']==[
+            'PREV_ROW_NUMERIC_COUNT=2PLUS',
+            'PREV_ROW_LEXICAL_COUNT=2PLUS'
+          ]
+          assert all(v is False for v in s['feature_firewall'].values())
+          assert all(v is True for v in s['anti_flexibility'].values())
+          assert s['decision']['pass_is_a_structural_context_refinement_not_a_translation'] is True
+          for k in ('specific_semantic_function_established','exact_word_meaning_established','translation_established','phonetic_value_established','language_family_established','new_anchor_established','universal_cross_region_function_established','external_replication_established','decipherment_established'):
+              assert s['claim_ceiling'][k] is False
+          print('R7_E2_STATIC_FIREWALL_PASS')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r7-e2-preregistration-validation
+          path: r7-e2-preregistration-validation.json
+          if-no-files-found: error
