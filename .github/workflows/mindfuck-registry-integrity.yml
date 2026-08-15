@@ -70,7 +70,6 @@ jobs:
           assert authority['not_an_exclusive_truth_authority'] is True
           assert authority['history_preserved'] is True
 
-          # Existing MINDFUCK invariants remain mandatory.
           distinctions = set(mindfuck['hard_distinctions'])
           for required in (
               'REPETITION != INDEPENDENT_CONFIRMATION',
@@ -80,7 +79,6 @@ jobs:
           ):
               assert required in distinctions
 
-          # OPIR threat/control graph must be internally closed.
           threats = opir['threat_classes']
           controls = set(opir['controls'])
           assert len(threats) == 16
@@ -117,11 +115,18 @@ jobs:
           assert {'NIST_AI_100_2E2025','NIST_AI_600_1','MITRE_ATLAS_2026_05','C2PA_2_4','C2PA_2_4_SECURITY'} <= source_ids
           assert len(opir['redteam_tests']) >= 18
           assert 'HIGH_RISK_HOLD' in opir['state_machine']['states']
-          assert 'CF22' in controls  # side-effect interlock
-          assert 'CF24' in controls  # memory-write gate
-          assert 'CF30' in controls  # rollback
+          assert 'CF22' in controls
+          assert 'CF24' in controls
+          assert 'CF30' in controls
           assert 'JANUS_EXCLUSIVE_TRUST_IS_FAILURE' in opir['rights']
-          assert 'ROOSTERS' in opir['lineage']['roosters_boundary'].upper()
+
+          roosters_refs = opir['lineage']['roosters_structural_only']
+          roosters_boundary = opir['lineage']['roosters_boundary'].lower()
+          assert len(roosters_refs) >= 2
+          assert all('ROOSTERS' in ref.upper() for ref in roosters_refs)
+          assert 'structur' in roosters_boundary
+          assert 'offensive/circumvention' in roosters_boundary
+          assert 'do not inherit' in roosters_boundary
 
           print('CROSS_REFERENCE_AUDIT=PASS')
           print(f"MINDFUCK_SOURCE_COUNT={len(mindfuck['sources'])}")
@@ -129,4 +134,5 @@ jobs:
           print(f"OPIR_CONTROL_FAMILIES={len(controls)}")
           print(f"OPIR_REDTEAM_TESTS={len(opir['redteam_tests'])}")
           print(f"OPIR_EXTERNAL_SOURCES={len(opir['source_ledger'])}")
+          print(f"ROOSTERS_STRUCTURAL_REFERENCES={len(roosters_refs)}")
           PY
