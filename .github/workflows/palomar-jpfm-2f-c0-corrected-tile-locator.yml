@@ -1,0 +1,118 @@
+name: Palomar JPFM-2F-C0 corrected-tile WCS locator
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/palomar-jpfm-2f-c0-corrected-tile-locator.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  jpfm-2f-c0:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install frozen locator environment
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -q \
+            numpy==2.2.6 pandas==2.3.1 scipy==1.16.1 requests==2.32.4 \
+            astropy==8.0.1 'fsspec[http]==2026.6.0'
+          git clone -q --filter=blob:none --no-checkout https://github.com/jannefi/poss1-plate-slice.git work/poss1-src
+          git -C work/poss1-src checkout -q 4005e200541b321ead3d6608f0162a14430ef1c2
+          test "$(git -C work/poss1-src rev-parse HEAD)" = "4005e200541b321ead3d6608f0162a14430ef1c2"
+
+      - name: Syntax, preregistration, parent and firewall gates
+        run: |
+          python -m py_compile \
+            tools/palomar/jpfm_2f_b2_tile_lineage_replay.py \
+            tools/palomar/jpfm_2f_c0_corrected_tile_wcs_locator.py
+          python - <<'PY'
+          import json, pathlib
+          a=json.loads(pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-C0-CORRECTED-TILE-WCS-LOCATOR-ADMISSION-v1.0.json').read_text())
+          assert a['status']=='PREREGISTERED_BEFORE_B3S_OUTCOME__EXECUTION_CONDITIONAL_ON_B3S_PASS'
+          assert a['predeclared_gates']['primary_accuracy'].startswith('At least 95%')
+          assert '<= 3.0 pixels' in a['predeclared_gates']['primary_accuracy']
+          assert '100%' in a['predeclared_gates']['catastrophic_tail'] and '<= 8.0 pixels' in a['predeclared_gates']['catastrophic_tail']
+          assert a['locator_under_test']['nearest_source_search_allowed'] is False
+          assert a['locator_under_test']['pixel_peak_recentering_allowed'] is False
+          assert a['external_label_firewall']['external_label_reveal_authorized'] is False
+          p=json.loads(pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-B3S-SHARD-AGGREGATE-RUN-001.json').read_text())
+          assert p['outcome']=='PASS_SHAPE_COMPATIBILITY_REPLAY__PIXEL_MORPHOLOGY_PILOT_ADMITTED'
+          assert p['external_label_firewall']['external_label_reveal_authorized'] is False
+          print('PASS_JPFM_2F_C0_ADMISSION_AND_PARENT_GATE')
+          PY
+          if grep -Eiq 'kp\.gfz|aa\.usno|nuclear-explosions|bluebook|nuforc' tools/palomar/jpfm_2f_c0_corrected_tile_wcs_locator.py; then
+            echo 'FAIL: external-label source present in C0 runner'; exit 1
+          fi
+          if grep -Eiq 'nearest|peak.*recent|recenter' tools/palomar/jpfm_2f_c0_corrected_tile_wcs_locator.py | grep -v -E 'nearest_source_search_used|pixel_peak_recentering_used|No source search|nearest-source|peak recentering'; then
+            echo 'FAIL: suspicious locator search/recentering source pattern'; exit 1
+          fi
+          echo 'PASS_JPFM_2F_C0_FIREWALL_GATE'
+
+      - name: Execute direct corrected-tile WCS locator validation
+        run: |
+          mkdir -p work/c0 data
+          python tools/palomar/jpfm_2f_c0_corrected_tile_wcs_locator.py \
+            --manifest data/JANUS-PALOMAR-JPFM-2F-A-BLIND-STRUCTURAL-CLUSTER-MANIFEST-RUN-001.csv.gz \
+            --parent-result data/JANUS-PALOMAR-JPFM-2F-B3S-SHARD-AGGREGATE-RUN-001.json \
+            --parent-sidecar data/JANUS-PALOMAR-JPFM-2F-B3S-SHARD-AGGREGATE-SIDECAR-RUN-001.csv.gz \
+            --upstream-root work/poss1-src \
+            --work-dir work/c0 \
+            --out-json data/JANUS-PALOMAR-JPFM-2F-C0-CORRECTED-TILE-WCS-LOCATOR-RUN-001.json \
+            --out-sidecar-gz data/JANUS-PALOMAR-JPFM-2F-C0-CORRECTED-TILE-WCS-LOCATOR-SIDECAR-RUN-001.csv.gz
+
+      - name: Validate C0 artifact without forcing PASS
+        run: |
+          python - <<'PY'
+          import gzip, hashlib, io, json, pathlib, pandas as pd
+          jp=pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-C0-CORRECTED-TILE-WCS-LOCATOR-RUN-001.json')
+          cp=pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-C0-CORRECTED-TILE-WCS-LOCATOR-SIDECAR-RUN-001.csv.gz')
+          d=json.loads(jp.read_text())
+          allowed={
+            'PASS_CORRECTED_TILE_WCS_DIRECT_PIXEL_LOCATOR',
+            'FAIL_CLOSED_TILE_RECONSTRUCTION','FAIL_CLOSED_TRUTH_LINEAGE','FAIL_CLOSED_PIXEL_LOCATOR_ACCURACY'
+          }
+          assert d['status']=='EXECUTED' and d['outcome'] in allowed
+          assert d['sample']['rows']==64 and d['sample']['distinct_tiles']==52
+          assert d['locator_contract']['nearest_source_search_used'] is False
+          assert d['locator_contract']['pixel_peak_recentering_used'] is False
+          assert d['locator_contract']['pass1_psfex_pass2_used_for_prediction'] is False
+          assert d['external_label_firewall']['external_label_reveal_authorized'] is False
+          gz=cp.read_bytes(); raw=gzip.decompress(gz)
+          assert hashlib.sha256(gz).hexdigest()==d['sidecar']['gzip_sha256']
+          assert hashlib.sha256(raw).hexdigest()==d['sidecar']['csv_sha256']
+          df=pd.read_csv(io.BytesIO(raw)); assert len(df)==64 and df.src_id.nunique()==64
+          print('PASS_JPFM_2F_C0_RESULT_ARTIFACT_GATE', d['outcome'])
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jpfm-2f-c0-corrected-tile-locator-run-001
+          path: |
+            data/JANUS-PALOMAR-JPFM-2F-C0-CORRECTED-TILE-WCS-LOCATOR-RUN-001.json
+            data/JANUS-PALOMAR-JPFM-2F-C0-CORRECTED-TILE-WCS-LOCATOR-SIDECAR-RUN-001.csv.gz
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Commit validated C0 result
+        run: |
+          git config user.name 'janus-jpfm-ci'
+          git config user.email 'actions@users.noreply.github.com'
+          git add \
+            data/JANUS-PALOMAR-JPFM-2F-C0-CORRECTED-TILE-WCS-LOCATOR-RUN-001.json \
+            data/JANUS-PALOMAR-JPFM-2F-C0-CORRECTED-TILE-WCS-LOCATOR-SIDECAR-RUN-001.csv.gz
+          git diff --cached --quiet && exit 0
+          git commit -m 'Record JPFM-2F-C0 corrected-tile WCS locator [skip ci]'
+          git pull --rebase origin main
+          git push
