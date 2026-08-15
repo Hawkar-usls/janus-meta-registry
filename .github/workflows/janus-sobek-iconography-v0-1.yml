@@ -1,0 +1,34 @@
+name: JANUS Sobek iconography v0.1
+
+on:
+  pull_request:
+    paths:
+      - 'data/JANUS-SOBEK-ICONOGRAPHIC-GRAMMAR-SOURCE-AUDIT-2026-08-16-v0.1.json'
+      - 'data/JANUS-SOBEK-MUSEUM-ICONOGRAPHY-PROTOCOL-2026-08-16-v0.1.json'
+      - '.github/workflows/janus-sobek-iconography-v0-1.yml'
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate JSON and claim firewall
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          a=Path('data/JANUS-SOBEK-ICONOGRAPHIC-GRAMMAR-SOURCE-AUDIT-2026-08-16-v0.1.json')
+          p=Path('data/JANUS-SOBEK-MUSEUM-ICONOGRAPHY-PROTOCOL-2026-08-16-v0.1.json')
+          A=json.loads(a.read_text())
+          P=json.loads(p.read_text())
+          assert A['status']=='SOURCE_GROUNDED_ICONOGRAPHIC_MODEL_CANDIDATE'
+          assert P['status']=='PREREGISTERED_NOT_YET_EXECUTED'
+          assert A['modern_bridge']['user_supplied_bottle_image']['corporate_intent']=='UNVERIFIED'
+          assert 'CROCODILE_DOES_NOT_ALWAYS_MEAN_SOBEK' in A['claim_firewall']
+          assert 'NO_DIRECT_SOBEK_WEDJAT_LINEAGE' in P['claim_firewall']
+          assert A['next_gate']['id']=='SOBEK_MUSEUM_ICONOGRAPHY_GENERALIZATION_R1'
+          print('SOBEK_V0_1_CANONICALITY_PASS')
+          PY
