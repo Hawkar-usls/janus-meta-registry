@@ -11,13 +11,16 @@ This repository mixes technical evidence, research snapshots, hypotheses, red-te
 
 **These layers are not epistemically equivalent.** Do not infer a current claim from a filename or from registry presence alone.
 
-## First five links
+## First six links
 
-1. [`PROJECT_STATUS.json`](PROJECT_STATUS.json) — machine-readable repository boundary.
-2. [`docs/TECHNICAL_CORE_AUDIT_2026-08-09.md`](docs/TECHNICAL_CORE_AUDIT_2026-08-09.md) — preferred skeptical/technical reading path.
-3. [`registry/audit/JANUS-META-REGISTRY-TECHNICAL-AUDIT-v1.0.json`](registry/audit/JANUS-META-REGISTRY-TECHNICAL-AUDIT-v1.0.json) — machine-readable audit/classification.
-4. [`PORTFOLIO_STATUS.md`](PORTFOLIO_STATUS.md) — portfolio role and current authority.
-5. [`data/INDEX.md`](data/INDEX.md) — deeper historical archive index.
+1. **[`data/000-GAMARJOBA-GEN_ANCVALE.json`](data/000-GAMARJOBA-GEN_ANCVALE.json)** — public machine-readable door for external reviewers, independent replicators, verifiers, domain experts and contributors.
+2. [`PROJECT_STATUS.json`](PROJECT_STATUS.json) — machine-readable repository boundary.
+3. [`docs/TECHNICAL_CORE_AUDIT_2026-08-09.md`](docs/TECHNICAL_CORE_AUDIT_2026-08-09.md) — preferred skeptical/technical reading path.
+4. [`registry/audit/JANUS-META-REGISTRY-TECHNICAL-AUDIT-v1.0.json`](registry/audit/JANUS-META-REGISTRY-TECHNICAL-AUDIT-v1.0.json) — machine-readable audit/classification.
+5. [`PORTFOLIO_STATUS.md`](PORTFOLIO_STATUS.md) — portfolio role and current authority.
+6. [`data/INDEX.md`](data/INDEX.md) — deeper historical archive index.
+
+If you want to help but do not know where to begin, use the GAMARJOBA entrypoint. It routes visitors by expertise and distinguishes **independent-review gates**, **replication opportunities**, **domain review**, **safe engineering contributions**, and areas where recruitment or experimentation would be inappropriate. Public discussion is available at [Issue #91](https://github.com/Hawkar-usls/janus-meta-registry/issues/91).
 
 ## Reading rules
 
