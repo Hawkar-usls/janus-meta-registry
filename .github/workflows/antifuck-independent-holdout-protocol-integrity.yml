@@ -7,6 +7,7 @@ on:
       - 'data/JANUS-OPIR-ANTIFUCK-H1-CHALLENGE-KIT-v1.0.json'
       - 'data/JANUS-OPIR-ANTIFUCK-FROZEN-EVALUATOR-POLICY-v1.0.json'
       - 'data/JANUS-OPIR-ANTIFUCK-FROZEN-EVALUATOR-SELFTEST-RESULT-2026-08-15-v1.0.json'
+      - 'data/JANUS-OPIR-ANTIFUCK-EVALUATOR-FREEZE-CERTIFICATE-2026-08-15-v1.0.json'
       - 'data/JANUS-ARMOR-OF-GOD-CURRENT-AUTHORITY.json'
       - 'research/antifuck/janus_opir_antifuck_policy_v1_3.py'
       - 'research/antifuck/janus_opir_antifuck_h1_verify.py'
@@ -18,6 +19,7 @@ on:
       - 'data/JANUS-OPIR-ANTIFUCK-H1-CHALLENGE-KIT-v1.0.json'
       - 'data/JANUS-OPIR-ANTIFUCK-FROZEN-EVALUATOR-POLICY-v1.0.json'
       - 'data/JANUS-OPIR-ANTIFUCK-FROZEN-EVALUATOR-SELFTEST-RESULT-2026-08-15-v1.0.json'
+      - 'data/JANUS-OPIR-ANTIFUCK-EVALUATOR-FREEZE-CERTIFICATE-2026-08-15-v1.0.json'
       - 'data/JANUS-ARMOR-OF-GOD-CURRENT-AUTHORITY.json'
       - 'research/antifuck/janus_opir_antifuck_policy_v1_3.py'
       - 'research/antifuck/janus_opir_antifuck_h1_verify.py'
@@ -32,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Validate separation, evaluator certificates and blocked H1 promotion
+      - name: Validate separation, exact evaluator freeze and blocked H1 promotion
         run: |
           python - <<'PY'
           import json
@@ -41,6 +43,7 @@ jobs:
           k=json.loads(Path('data/JANUS-OPIR-ANTIFUCK-H1-CHALLENGE-KIT-v1.0.json').read_text(encoding='utf-8'))
           e=json.loads(Path('data/JANUS-OPIR-ANTIFUCK-FROZEN-EVALUATOR-POLICY-v1.0.json').read_text(encoding='utf-8'))
           c=json.loads(Path('data/JANUS-OPIR-ANTIFUCK-FROZEN-EVALUATOR-SELFTEST-RESULT-2026-08-15-v1.0.json').read_text(encoding='utf-8'))
+          f=json.loads(Path('data/JANUS-OPIR-ANTIFUCK-EVALUATOR-FREEZE-CERTIFICATE-2026-08-15-v1.0.json').read_text(encoding='utf-8'))
           a=json.loads(Path('data/JANUS-ARMOR-OF-GOD-CURRENT-AUTHORITY.json').read_text(encoding='utf-8'))
           assert p['status']=='PREREGISTERED_NOT_EXECUTED'
           h1=p['tracks']['H1_INDEPENDENT_SYNTHETIC_HOLDOUT']; h2=p['tracks']['H2_LAWFUL_OBSERVATIONAL_PLATFORM_AUDIT']
@@ -55,33 +58,47 @@ jobs:
           state=p['current_state']
           assert state['protocol_frozen'] is True and state['H1_package_created'] is False and state['H1_executed'] is False
           assert state['H2_authorized'] is False and state['effectiveness_claim']=='BLOCKED'
+
           assert k['status']=='INFRASTRUCTURE_READY_H1_NOT_AUTHORED_NOT_EXECUTED'
           for key,value in k['acceptance_binding']['thresholds'].items(): assert gates[key]==value
           assert k['current_state']['external_holdout_author_assigned'] is False and k['current_state']['H1_executed'] is False
-          assert e['status']=='FROZEN_IMPLEMENTATION_CANDIDATE_AWAITING_MERGE_COMMIT_BINDING'
           assert e['policy_id']=='JANUS-OPIR-ANTIFUCK-POLICY-v1.3-freeze1'
           assert e['output_contract']['public_bot_fact_constant'] is False
           assert e['development_selftest']['independent_h1'] is False
           assert c['status']=='FROZEN_EVALUATOR_DEVELOPMENT_PASS_NOT_INDEPENDENT_H1'
           assert c['policy_selftest_result']['SELFTEST_IS_INDEPENDENT_H1'] is False
           assert c['blinded_e2e_result']['E2E_IS_INDEPENDENT_H1'] is False
-          assert c['current_h1_state']['H1_executed'] is False
-          assert a['h1_evaluator_policy_reference']=='data/JANUS-OPIR-ANTIFUCK-FROZEN-EVALUATOR-POLICY-v1.0.json'
-          assert a['h1_evaluator_selftest_result_reference']=='data/JANUS-OPIR-ANTIFUCK-FROZEN-EVALUATOR-SELFTEST-RESULT-2026-08-15-v1.0.json'
-          assert a['next_required_gate_status']=='EVALUATOR_AND_VERIFIER_DEVELOPMENT_CERTIFIED_H1_NOT_AUTHORED_NOT_EXECUTED'
-          assert a['h1_evaluator_exists'] is True
-          assert a['h1_evaluator_development_selftest_pass'] is True
-          assert a['h1_evaluator_development_e2e_pass'] is True
-          assert a['h1_evaluator_selftest_is_independent_h1'] is False
+
+          assert f['status']=='IMPLEMENTATION_FROZEN_AWAITING_EXTERNAL_H1_AUTHOR_AND_PACKAGE'
+          assert f['policy_id']==e['policy_id']
+          assert f['implementation_freeze_commit']=='e7457870a72616e53120837566f1c6363d01b6df'
+          assert f['post_merge_gate_summary']=={
+            'expected_checks':7,'successful_checks':7,'all_post_merge_checks_pass':True,
+            'tree_under_test':'e7457870a72616e53120837566f1c6363d01b6df'
+          }
+          assert len(f['post_merge_receipts'])==7
+          assert {r['conclusion'] for r in f['post_merge_receipts']}=={'success'}
+          assert {r['head_sha'] for r in f['post_merge_receipts']}=={'e7457870a72616e53120837566f1c6363d01b6df'}
+          bs=f['blinding_state_at_freeze']
+          for key in ('external_holdout_author_assigned','H1_feature_package_released','H1_feature_package_created','H1_label_package_created','H1_prediction_package_created','H1_labels_revealed','H1_executed','independent_holdout_pass','real_world_effectiveness_established'):
+            assert bs[key] is False
+          assert 'INDEPENDENT_SYNTHETIC_HOLDOUT_PASS' in f['claim_ceiling']['forbidden_promotions']
+
+          assert a['h1_evaluator_freeze_certificate_reference']=='data/JANUS-OPIR-ANTIFUCK-EVALUATOR-FREEZE-CERTIFICATE-2026-08-15-v1.0.json'
+          assert a['h1_evaluator_implementation_freeze_commit']==f['implementation_freeze_commit']
+          assert a['next_required_gate_status']=='IMPLEMENTATION_FROZEN_AWAITING_EXTERNAL_H1_AUTHOR_AND_PACKAGE'
+          assert a['h1_evaluator_implementation_frozen'] is True
           assert a['h1_external_author_assigned'] is False
+          assert a['h1_feature_package_released'] is False
           assert a['h1_package_created'] is False
+          assert a['h1_label_package_created'] is False
           assert a['h1_predictions_created'] is False
           assert a['h1_labels_revealed'] is False
           assert a['h1_executed'] is False
           assert a['independent_holdout_pass'] is False
           assert a['real_world_effectiveness_established'] is False
           print('HOLDOUT_PROTOCOL_INTEGRITY=PASS')
-          print('H1_BLINDED_EVALUATOR_DEVELOPMENT_CERTIFIED=True')
+          print('H1_EVALUATOR_IMPLEMENTATION_FROZEN='+f['implementation_freeze_commit'])
           print('H1_EXTERNAL_AUTHOR_ASSIGNED=False')
           print('H1_EXECUTED=False')
           print('EFFECTIVENESS_CLAIM=BLOCKED')
