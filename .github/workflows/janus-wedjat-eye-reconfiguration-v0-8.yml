@@ -1,0 +1,37 @@
+name: JANUS Wedjat eye reconfiguration v0.8
+
+on:
+  pull_request:
+    paths:
+      - 'research/wedjat/janus_wedjat_eye_reconfiguration_probe_v0_8.py'
+      - 'data/JANUS-WEDJAT-EYE-GLYPH-RECONFIGURATION-RESULT-2026-08-15-v0.8.json'
+      - '.github/workflows/janus-wedjat-eye-reconfiguration-v0-8.yml'
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Compile replay harness
+        run: python -m py_compile research/wedjat/janus_wedjat_eye_reconfiguration_probe_v0_8.py
+      - name: Verify frozen result and claim firewall
+        run: |
+          python - <<'PY'
+          import json
+          p='data/JANUS-WEDJAT-EYE-GLYPH-RECONFIGURATION-RESULT-2026-08-15-v0.8.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['status']=='LIMITED_EYE_FAMILY_RECONFIGURATION_NO_ROBUST_MULTI_TEXT_CODE'
+          A=d['test_A_shared_scale_one_eye_mode']
+          assert A['D010_rank_among_non_source_targets']==2
+          assert A['only_target_above_D010']['gardiner']=='D009'
+          C=d['test_C_disjoint_same_scale_multi_glyph_partition']
+          assert C['pair_gate_f1_ge_0_45']['survivors']==3
+          assert C['triple_gate_f1_ge_0_35']['survivors']==0
+          fw=set(d['claim_firewall'])
+          assert 'SYNTHETIC_GLYPH_STRING_IS_NOT_ATTESTED_EGYPTIAN_TEXT' in fw
+          assert 'NO_DECIPHERMENT_CLAIM' in fw
+          print('v0.8 frozen-result canaries PASS')
+          PY
