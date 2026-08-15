@@ -1,0 +1,67 @@
+name: Palomar JPFM-3B NOAA H-alpha source freeze
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'data/JANUS-PALOMAR-JPFM-3B-EVENT-MANIFEST-ACQUISITION-GATE-v1.0.json'
+      - 'tools/palomar/jpfm_halpha_source_freezer.py'
+      - '.github/workflows/palomar-jpfm-3b-halpha-source-freeze.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  freeze-halpha:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install acquisition dependency
+        run: python -m pip install requests==2.32.4
+      - name: Compile source freezer
+        run: python -m py_compile tools/palomar/jpfm_halpha_source_freezer.py
+      - name: Freeze NOAA H-alpha raw bytes
+        run: |
+          mkdir -p work/jpfm3b/halpha out
+          python tools/palomar/jpfm_halpha_source_freezer.py \
+            --raw-dir work/jpfm3b/halpha \
+            --manifest out/JANUS-PALOMAR-JPFM-3B-NOAA-HALPHA-SOURCE-FREEZE-v1.0.json
+      - name: Validate acquisition-only contract
+        run: |
+          python - <<'PY'
+          import json, pathlib
+          p=pathlib.Path('out/JANUS-PALOMAR-JPFM-3B-NOAA-HALPHA-SOURCE-FREEZE-v1.0.json')
+          d=json.loads(p.read_text())
+          assert d['status']=='SOURCE_BYTES_FROZEN__SCHEMA_AND_COVERAGE_NOT_YET_ADMITTED'
+          assert d['years']==list(range(1949,1958))
+          assert len(d['files'])==9
+          assert all(x['bytes']>10 and len(x['sha256'])==64 for x in d['files'])
+          assert d['outcome_blindness']['association_computed'] is False
+          assert 'SOURCE_BYTE_FREEZE_ONLY' in d['claim_ceiling']
+          print('PASS_JPFM_3B_HALPHA_SOURCE_FREEZE')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jpfm-3b-noaa-halpha-source-freeze
+          path: |
+            work/jpfm3b/halpha/*.txt
+            out/JANUS-PALOMAR-JPFM-3B-NOAA-HALPHA-SOURCE-FREEZE-v1.0.json
+          retention-days: 30
+          if-no-files-found: error
+      - name: Commit only compact source manifest
+        run: |
+          cp out/JANUS-PALOMAR-JPFM-3B-NOAA-HALPHA-SOURCE-FREEZE-v1.0.json \
+             data/JANUS-PALOMAR-JPFM-3B-NOAA-HALPHA-SOURCE-FREEZE-v1.0.json
+          git config user.name 'janus-jpfm-ci'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/JANUS-PALOMAR-JPFM-3B-NOAA-HALPHA-SOURCE-FREEZE-v1.0.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Add JPFM-3B NOAA H-alpha source freeze [skip ci]'
+          git pull --rebase origin main
+          git push
