@@ -1,0 +1,43 @@
+name: JANUS Wedjat eye codebook + ROI bridge v0.9-v0.10
+
+on:
+  pull_request:
+    paths:
+      - 'research/wedjat/janus_wedjat_subset_codebook_probe_v0_9.py'
+      - 'research/wedjat/janus_wedjat_real_eye_roi_bridge_probe_v0_10.py'
+      - 'data/JANUS-WEDJAT-SUBSET-CODEBOOK-RESULT-2026-08-15-v0.9.json'
+      - 'data/JANUS-WEDJAT-REAL-EYE-ROI-BRIDGE-PILOT-2026-08-15-v0.10.json'
+      - '.github/workflows/janus-wedjat-eye-codebook-roi-v0-9-v0-10.yml'
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Compile replay probes
+        run: |
+          python -m py_compile research/wedjat/janus_wedjat_subset_codebook_probe_v0_9.py
+          python -m py_compile research/wedjat/janus_wedjat_real_eye_roi_bridge_probe_v0_10.py
+      - name: Verify frozen result canaries and claim firewalls
+        run: |
+          python - <<'PY'
+          import json
+          a=json.load(open('data/JANUS-WEDJAT-SUBSET-CODEBOOK-RESULT-2026-08-15-v0.9.json'))
+          b=json.load(open('data/JANUS-WEDJAT-REAL-EYE-ROI-BRIDGE-PILOT-2026-08-15-v0.10.json'))
+          assert a['status']=='EXHAUSTIVE_SUBSET_CODEBOOK_LIMITED_AND_AMBIGUOUS'
+          assert a['method']['subsets']==63 and a['method']['set_partitions']==203
+          assert a['threshold_capacity']['0.45']['max_tokens']==1
+          assert a['threshold_capacity']['0.4']['max_tokens']==2
+          assert a['top1_target_frequency']['D009']==36
+          assert 'SYNTHETIC_PARTITION_IS_NOT_TEXT' in a['claim_firewall']
+          assert b['status'].startswith('EXPLORATORY_REAL_EYE_ROI_BRIDGE')
+          up=b['cross_object_aggregate']['UPPER_BAND']
+          assert up['eye_family_enrichment']['25']['eye_family_hits']==5
+          assert up['predeclared_eye_family']['D004']['median_object_rank']==27
+          assert up['predeclared_eye_family']['D005']['median_object_rank']==22
+          assert 'EXPLORATORY_ROI_IS_NOT_ANATOMICAL_GROUND_TRUTH' in b['claim_firewall']
+          assert b['statistical_warning']
+          PY
