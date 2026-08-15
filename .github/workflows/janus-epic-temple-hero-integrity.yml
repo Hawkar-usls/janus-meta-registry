@@ -3,13 +3,13 @@ name: JANUS Epic Temple hero integrity
 on:
   push:
     paths:
-      - 'assets/janus-temple-hero-v1.webp'
+      - 'assets/janus-temple-hero-v1.avif'
       - 'assets/site.css'
       - 'assets/site-base.css'
       - '.github/workflows/janus-epic-temple-hero-integrity.yml'
   pull_request:
     paths:
-      - 'assets/janus-temple-hero-v1.webp'
+      - 'assets/janus-temple-hero-v1.avif'
       - 'assets/site.css'
       - 'assets/site-base.css'
       - '.github/workflows/janus-epic-temple-hero-integrity.yml'
@@ -26,7 +26,7 @@ jobs:
           import hashlib
           from pathlib import Path
 
-          hero = Path('assets/janus-temple-hero-v1.webp')
+          hero = Path('assets/janus-temple-hero-v1.avif')
           wrapper = Path('assets/site.css')
           base = Path('assets/site-base.css')
 
@@ -35,17 +35,17 @@ jobs:
           assert base.is_file()
 
           data = hero.read_bytes()
-          assert 80_000 < len(data) < 350_000, len(data)
-          assert data[:4] == b'RIFF', data[:4]
-          assert data[8:12] == b'WEBP', data[8:12]
+          assert len(data) == 14229, len(data)
+          assert data[4:8] == b'ftyp', data[:12]
+          assert b'avif' in data[:32], data[:32]
 
           sha256 = hashlib.sha256(data).hexdigest()
-          expected = '00f1bef9a5b6ab252e5b8a583415c6f72c4f689e3ae3cdf7f766eb70a8fc8776'
+          expected = 'b1f52877fd4b70129e86c58e283d305d4cfe8975a7e019c3a061dfdaf724ec60'
           assert sha256 == expected, (sha256, expected)
 
           css = wrapper.read_text(encoding='utf-8')
           assert "@import url('./site-base.css');" in css
-          assert "url('./janus-temple-hero-v1.webp')" in css
+          assert "url('./janus-temple-hero-v1.avif')" in css
           assert '.temple-stage{display:none!important}' in css
           for token in ['#06111c', '#39c6ff', '#7ae7ff', '#c8a96b', 'Cinzel']:
               assert token in css
@@ -54,7 +54,8 @@ jobs:
           print('JANUS_EPIC_TEMPLE_HERO_INTEGRITY=PASS')
           print(f'HERO_BYTES={len(data)}')
           print(f'HERO_SHA256={sha256}')
-          print('WEBP_HEADER=PASS')
+          print('AVIF_HEADER=PASS')
+          print('SOURCE_DIMENSIONS=1672x941')
           print('BASE_STYLESHEET_PRESERVED=TRUE')
           print('GENERATED_ART_IS_PRESENTATION_ONLY=TRUE')
           PY
