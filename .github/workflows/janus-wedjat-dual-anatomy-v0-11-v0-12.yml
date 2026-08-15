@@ -1,0 +1,26 @@
+name: JANUS Wedjat dual anatomy v0.11-v0.12
+
+on:
+  pull_request:
+    paths:
+      - 'research/wedjat/janus_wedjat_dual_anatomical_proxy_probe_v0_11.py'
+      - 'research/wedjat/test_wedjat_dual_anatomical_proxy_v0_11.py'
+      - 'data/JANUS-WEDJAT-DUAL-ANATOMICAL-ANNOTATION-PILOT-2026-08-15-v0.11.json'
+      - 'data/JANUS-WEDJAT-BLIND-HUMAN-ANATOMICAL-ANNOTATION-PROTOCOL-2026-08-15-v0.12.json'
+      - '.github/workflows/janus-wedjat-dual-anatomy-v0-11-v0-12.yml'
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Compile research scripts
+        run: |
+          python -m py_compile research/wedjat/janus_wedjat_dual_anatomical_proxy_probe_v0_11.py
+          python -m py_compile research/wedjat/test_wedjat_dual_anatomical_proxy_v0_11.py
+      - name: Verify frozen result and claim firewall
+        run: python research/wedjat/test_wedjat_dual_anatomical_proxy_v0_11.py

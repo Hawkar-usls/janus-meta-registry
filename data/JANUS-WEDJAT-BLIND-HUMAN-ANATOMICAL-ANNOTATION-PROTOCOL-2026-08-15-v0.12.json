@@ -1,0 +1,106 @@
+{
+  "artifact_uuid": "JANUS-WEDJAT-BLIND-HUMAN-ANATOMICAL-ANNOTATION-PROTOCOL-2026-08-15-v0.12",
+  "version": "v0.12",
+  "timestamp_date": "2026-08-15",
+  "status": "PREREGISTERED_TWO_HUMAN_ANNOTATOR_GATE_NOT_YET_EXECUTED",
+  "parent": "data/JANUS-WEDJAT-DUAL-ANATOMICAL-ANNOTATION-PILOT-2026-08-15-v0.11.json",
+  "purpose": "Replace rectangular and computational proxy ROIs with genuinely independent human anatomical annotations before any confirmatory claim about multilayer Wedjat morphology.",
+  "source_basis": {
+    "MET_547767": "Museum description explicitly separates a human eye, horizontal cosmetic line, vertical falcon marking, and diagonal falcon line ending in a spiral.",
+    "MET_551474": "Museum description independently notes that the New Kingdom spiral sits directly under the cosmetic line and is lower in later examples.",
+    "MET_555588": "Museum description identifies Wedjat as a combination of human and falcon eye morphology."
+  },
+  "blind_packet": {
+    "minimum_annotators": 2,
+    "independence": "Annotators work separately and cannot view each other's masks, landmarks, notes, or confidence scores until both submissions are SHA-256 frozen.",
+    "hidden_from_annotators": [
+      "museum object ID",
+      "period/date",
+      "material unless visually unavoidable",
+      "D004-D016 glyph targets",
+      "fraction values 1/2 through 1/64",
+      "prior JANUS fit results",
+      "expected direction of the spiral chronology test"
+    ],
+    "visible_to_annotators": [
+      "an anonymized image ID",
+      "exact unmodified museum image pixels",
+      "anatomical annotation definitions only"
+    ],
+    "image_processing_before_annotation": "No crop, mirror, rotation, contrast tuning, denoise, or rescale except lossless UI display scaling. Original source dimensions and orientation remain authoritative.",
+    "unlock_rule": "Glyph matching, chronology metadata, and fraction labels stay inaccessible until both annotation packages are committed and hashed."
+  },
+  "components": [
+    {
+      "id": "A1_EYEBROW_UPPER_EYE",
+      "representation": "polyline plus optional narrow polygon mask",
+      "definition": "Visible eyebrow/upper-eye element running above or along the upper eye. Do not include suspension loops or external ornamental frame elements."
+    },
+    {
+      "id": "A2_HUMAN_EYE_CONTOUR",
+      "representation": "closed or near-closed contour polyline",
+      "definition": "Human-eye-shaped principal eye contour, excluding the pupil/iris and excluding lower falcon facial markings."
+    },
+    {
+      "id": "A3_PUPIL",
+      "representation": "closed polygon or ellipse landmarks",
+      "definition": "Central pupil/iris marking if visibly distinct. Do not infer a pupil from symmetry when no marking is visible."
+    },
+    {
+      "id": "A4_VERTICAL_FALCON_MARK",
+      "representation": "centerline polyline plus width estimate",
+      "definition": "Predominantly vertical falcon-derived marking below the pupil/eye region. Do not merge with the diagonal mark merely because the two touch."
+    },
+    {
+      "id": "A5_DIAGONAL_FALCON_MARK",
+      "representation": "centerline polyline plus width estimate",
+      "definition": "Diagonal lower facial marking extending away from the eye toward the curl/spiral region, excluding the spiral itself after the tangent transition."
+    },
+    {
+      "id": "A6_SPIRAL_CURL",
+      "representation": "centerline polyline",
+      "definition": "Curl/spiral terminal of the diagonal falcon marking. Begin at the first clear tangent-to-curvature transition and end at the visible terminal. If no spiral is separable, mark NOT_SEPARABLE rather than guessing."
+    }
+  ],
+  "visibility_states": ["VISIBLE", "PARTIAL", "DAMAGED", "OCCLUDED", "NOT_SEPARABLE", "ABSENT_OR_NOT_DEPICTED", "UNSURE"],
+  "coordinate_rule": "Store integer pixel coordinates in the exact original source image coordinate system; normalized coordinates may be derived later but never replace raw pixels.",
+  "agreement_gates": {
+    "pupil_mask_iou_min": 0.60,
+    "contour_mean_bidirectional_distance_over_eye_width_max": 0.08,
+    "eyebrow_mean_bidirectional_distance_over_eye_width_max": 0.08,
+    "vertical_mark_mean_bidirectional_distance_over_eye_width_max": 0.10,
+    "diagonal_mark_mean_bidirectional_distance_over_eye_width_max": 0.10,
+    "spiral_mean_bidirectional_distance_over_eye_width_max": 0.12,
+    "visibility_state_rule": "VISIBLE/PARTIAL agreement is required for primary scoring. Any ABSENT/NOT_SEPARABLE disagreement triggers adjudication.",
+    "failure_action": "A third independent annotator receives the same blind packet. Use median geometry only if the anatomical definition remains unchanged; otherwise mark ANATOMICAL_DISAGREEMENT and exclude that component/object from the primary test."
+  },
+  "post_freeze_scoring": {
+    "primary_unit": "museum object",
+    "no_mirroring_before_orientation_test": true,
+    "glyph_inventory": "full Egyptian Hieroglyphs Unicode block as a modern morphology reference only",
+    "predeclared_eye_family": ["D004", "D005", "D006", "D007", "D008", "D008A", "D009", "D010"],
+    "predeclared_part_family": ["D011", "D012", "D013", "D014", "D015", "D016"],
+    "tests": [
+      "For each anatomical component and annotator-consensus mask, rank all glyphs with one frozen similarity metric.",
+      "Test whether A1/A2 show cross-object enrichment of the predeclared eye family relative to all glyphs and a same-D-class control.",
+      "Treat D012-pupil and D013-eyebrow correspondences as modern annotation sanity checks, not proof of ancient fraction derivation.",
+      "Discover lower-mark candidate glyph families only on a training subset, freeze them, then evaluate a held-out period group.",
+      "Run leave-one-period-group-out summaries without retuning masks or thresholds."
+    ]
+  },
+  "promotion_rules": {
+    "UPPER_EYE_LAYER_REPLICATED": "Both independent annotators pass agreement and at least three period groups independently show eye-family enrichment in A1/A2 under the frozen scoring rule.",
+    "LOWER_FALCON_LAYER_CANDIDATE": "A4/A5/A6 pass agreement and a frozen lower-family signature discovered on training objects replicates in a held-out period group.",
+    "MULTILAYER_WEDJAT_GRAMMAR_CANDIDATE": "Upper-eye and lower-falcon layers both replicate under independent annotation and period holdout, with materially different glyph-family profiles.",
+    "HISTORICAL_FRACTION_MAPPING": "NOT_ESTABLISHED_BY_THIS_PROTOCOL",
+    "ANCIENT_TEXT_OR_HIDDEN_MESSAGE": "FORBIDDEN_FROM_THIS_PROTOCOL"
+  },
+  "claim_firewall": [
+    "TWO_COMPUTATIONAL_METHODS_DO_NOT_SATISFY_TWO_HUMAN_ANNOTATORS",
+    "MODERN_GLYPH_CLASSIFICATION_IS_NOT_ANCIENT_READING",
+    "D012_PUPIL_OR_D013_EYEBROW_SANITY_CHECK_IS_NOT_CSM_ORIGIN_PROOF",
+    "NO_MIRROR_NORMALIZATION_BEFORE_SIDE_ANALYSIS",
+    "NO_FRACTION_BINARY_ASCII_PYTHON_OR_HIDDEN_TEXT_PROMOTION"
+  ],
+  "next_gate": "Acquire/freeze the full eligible museum-image corpus, generate anonymized annotation packets, collect two genuinely independent human submissions, SHA-256 freeze them, and only then unlock glyph scoring."
+}
