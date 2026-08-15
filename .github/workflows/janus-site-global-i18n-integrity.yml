@@ -1,0 +1,95 @@
+name: JANUS site global i18n integrity
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - '404.html'
+      - 'research/index.html'
+      - 'antifuck/index.html'
+      - 'linear-a/index.html'
+      - 'wedjat/index.html'
+      - 'scoby-skingpt/index.html'
+      - 'aifc/index.html'
+      - 'fundamentum/index.html'
+      - 'gamarjoba-gen-ancvale/index.html'
+      - 'assets/i18n.js'
+      - 'assets/page-i18n.js'
+      - '.github/workflows/janus-site-global-i18n-integrity.yml'
+  pull_request:
+    paths:
+      - 'index.html'
+      - '404.html'
+      - 'research/index.html'
+      - 'antifuck/index.html'
+      - 'linear-a/index.html'
+      - 'wedjat/index.html'
+      - 'scoby-skingpt/index.html'
+      - 'aifc/index.html'
+      - 'fundamentum/index.html'
+      - 'gamarjoba-gen-ancvale/index.html'
+      - 'assets/i18n.js'
+      - 'assets/page-i18n.js'
+      - '.github/workflows/janus-site-global-i18n-integrity.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify-global-language-surface:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: JavaScript syntax
+        run: |
+          node --check assets/i18n.js
+          node --check assets/page-i18n.js
+      - name: Verify global EN UA ru contract
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          main = Path('index.html')
+          secondary = [
+              Path('404.html'),
+              Path('research/index.html'),
+              Path('antifuck/index.html'),
+              Path('linear-a/index.html'),
+              Path('wedjat/index.html'),
+              Path('scoby-skingpt/index.html'),
+              Path('aifc/index.html'),
+              Path('fundamentum/index.html'),
+              Path('gamarjoba-gen-ancvale/index.html'),
+          ]
+          all_pages = [main, *secondary]
+
+          for path in all_pages:
+              text = path.read_text(encoding='utf-8')
+              for token in ('data-lang="en"', 'data-lang="ua"', 'data-lang="ru"'):
+                  assert token in text, f'{path}: missing {token}'
+              assert 'class="ru"' not in text, f'{path}: legacy Russian-only appendix returned'
+
+          main_text = main.read_text(encoding='utf-8')
+          assert 'assets/i18n.js' in main_text, 'main page lost primary i18n engine'
+
+          for path in secondary:
+              text = path.read_text(encoding='utf-8')
+              assert 'page-i18n.js' in text, f'{path}: missing secondary-page i18n engine'
+              assert 'data-i18n-en=' in text, f'{path}: missing EN source bindings'
+              assert 'data-i18n-ua=' in text, f'{path}: missing UA bindings'
+              assert 'data-i18n-ru=' in text, f'{path}: missing RU bindings'
+
+          primary_js = Path('assets/i18n.js').read_text(encoding='utf-8')
+          page_js = Path('assets/page-i18n.js').read_text(encoding='utf-8')
+          key = 'janus-site-language-v1'
+          assert key in primary_js, 'primary engine storage key changed'
+          assert key in page_js, 'secondary engine storage key differs from primary engine'
+          assert "ua: 'uk'" in page_js, 'UA must set html lang to uk'
+
+          print(f'GLOBAL_I18N_PAGES={len(all_pages)}')
+          print('GLOBAL_I18N_LANGS=EN,UA,ru')
+          print('GLOBAL_I18N_STORAGE_KEY=janus-site-language-v1')
+          print('LEGACY_RU_ONLY_APPENDICES=0')
+          print('GLOBAL_I18N_INTEGRITY=PASS')
+          PY
