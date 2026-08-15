@@ -1,0 +1,68 @@
+name: JANUS Linear A canonical state v2.26
+
+on:
+  push:
+    paths:
+      - "data/JANUS-LINEAR-A-RESEARCH-STATE-PROMOTION-REQUEST-2026-08-15-v2.26.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m py_compile research/linear_a/janus_linear_a_canonical_state_v2_26.py
+      - name: Build and audit v2.26
+        shell: bash
+        run: |
+          set -euo pipefail
+          python research/linear_a/janus_linear_a_canonical_state_v2_26.py \
+            --spec data/JANUS-LINEAR-A-RESEARCH-STATE-PROMOTION-SPEC-2026-08-15-v2.26.json \
+            --candidate-out data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-15-v2.26-CANDIDATE.json \
+            --canonical-out data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-15-v2.26.json \
+            --audit-out data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-15-v2.26.json
+      - name: Enforce claim ceiling
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          s=json.load(open('data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-15-v2.26.json',encoding='utf-8'))
+          a=json.load(open('data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-15-v2.26.json',encoding='utf-8'))
+          assert s['version']=='v2.26' and s['status']=='CURRENT_CANONICAL_RESEARCH_STATE'
+          assert a['status']=='CANONICALITY_AUDIT_PASS' and a['all_checks_pass'] is True
+          g=s['global_claim_ceiling_v2_26']
+          assert g['anchored_formula_candidate_established'] is False
+          assert g['probable_function_established'] is False
+          assert g['translation_established'] is False
+          assert g['decipherment_established'] is False
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-canonical-v2-26
+          path: |
+            data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-15-v2.26-CANDIDATE.json
+            data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-15-v2.26.json
+            data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-15-v2.26.json
+          retention-days: 90
+      - name: Persist v2.26
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'JANUS Evidence Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-15-v2.26-CANDIDATE.json data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-15-v2.26.json data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-15-v2.26.json
+          git commit -m 'Promote Linear A canonical research state v2.26' || true
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then exit 0; fi
+            git pull --rebase origin main
+          done
+          exit 1
