@@ -39,12 +39,16 @@ jobs:
           python - <<'PY'
           import json,pathlib
           d=json.loads(pathlib.Path('out/JANUS-PALOMAR-JPFM-4A-HUMAN-MADE-SKY-SOURCE-FREEZE-v1.0.json').read_text())
-          assert d['status']=='PUBLIC_AUTHORITY_SOURCE_BYTES_FROZEN__NO_OUTCOME_JOIN'
+          assert d['status']=='PARTIAL_PUBLIC_AUTHORITY_SOURCE_FREEZE__NASA_BYTES_FROZEN__CIA_REMOTE_BYTES_FAIL_CLOSED__NO_OUTCOME_JOIN'
           assert d['outcome_blindness']['bluebook_access'] is False
           assert d['outcome_blindness']['poss1_access'] is False
           assert d['outcome_blindness']['association_computed'] is False
           assert all(d['authority_marker_gates']['nasa'].values())
-          assert all(d['authority_marker_gates']['cia'].values())
+          assert d['remote_freeze_disposition']['nasa']=='PASS_BYTE_AND_MARKER_FREEZE'
+          assert d['remote_freeze_disposition']['cia'] in {'PASS_FAIL_CLOSED_REMOTE_BLOCK_RECORD','PASS_BYTE_AND_MARKER_FREEZE'}
+          if d['remote_freeze_disposition']['cia']=='PASS_FAIL_CLOSED_REMOTE_BLOCK_RECORD':
+              assert d['remote_freeze_disposition']['cia_byte_hash_admitted'] is False
+              assert d['sources']['CIA_SAC_HISTORICAL_STUDY_62_VOL2']['sha256'] is None
           print('PASS_4A_SOURCE_FREEZE')
           PY
       - uses: actions/upload-artifact@v4
