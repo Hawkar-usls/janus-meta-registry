@@ -1,0 +1,139 @@
+name: JANUS Linear A R7-0 formula-slot completion v0.1
+
+on:
+  push:
+    paths:
+      - "data/JANUS-LINEAR-A-R7-0-EXECUTE-REQUEST-2026-08-15-v0.1.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  formula_slots:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout JANUS registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install inherited parser dependency
+        run: python -m pip install "numpy>=2.0"
+
+      - name: Verify frozen R7-0 inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile research/linear_a/janus_linear_a_r7_formula_slot_completion_v0_1.py
+          python - <<'PY'
+          import json
+          s=json.load(open('data/JANUS-LINEAR-A-R7-0-CROSS-FITTED-FORMULA-SLOT-COMPLETION-SPEC-2026-08-15-v0.1.json',encoding='utf-8'))
+          c=json.load(open('data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-15-v2.24.json',encoding='utf-8'))
+          assert c['version']=='v2.24' and c['status']=='CURRENT_CANONICAL_RESEARCH_STATE'
+          assert c['canonicality']['canonicality_audit_status']=='CANONICALITY_AUDIT_PASS'
+          assert s['parent_canonical_target']=='v2.24'
+          assert s['source']['frozen_commit']=='43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a'
+          assert s['unit']['boundary_frames_allowed'] is False
+          assert s['certainty']['none_reinterpreted_as_certain'] is False
+          assert s['certainty']['doubtful_reinterpreted_as_certain'] is False
+          assert s['cross_fitting']['candidate_selection_uses_train_only'] is True
+          assert s['train_candidate_gate']['manual_candidate_addition_forbidden'] is True
+          assert s['train_candidate_gate']['manual_candidate_removal_forbidden'] is True
+          assert s['heldout_candidate_gate']['FDR_q_max']==0.05
+          PY
+
+      - name: Fetch exact preservation-mirror corpus
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --quiet https://github.com/Hawkar-usls/lineara.xyz.git /tmp/lineara
+          git -C /tmp/lineara checkout --quiet 43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a
+          test "$(git -C /tmp/lineara rev-parse HEAD)" = "43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a"
+          test "$(find /tmp/lineara/items -maxdepth 1 -name '*.html' | wc -l)" -ge 300
+
+      - name: Execute cross-fitted formula-slot completion
+        env:
+          PYTHONPATH: research/linear_a
+        shell: bash
+        run: |
+          set -euo pipefail
+          python research/linear_a/janus_linear_a_r7_formula_slot_completion_v0_1.py \
+            --corpus /tmp/lineara \
+            --spec data/JANUS-LINEAR-A-R7-0-CROSS-FITTED-FORMULA-SLOT-COMPLETION-SPEC-2026-08-15-v0.1.json \
+            --parent-canonical data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-15-v2.24.json \
+            --out data/JANUS-LINEAR-A-R7-0-CROSS-FITTED-FORMULA-SLOT-COMPLETION-RESULT-2026-08-15-v0.1.json
+
+      - name: Enforce R7-0 evidence and claim ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          p='data/JANUS-LINEAR-A-R7-0-CROSS-FITTED-FORMULA-SLOT-COMPLETION-RESULT-2026-08-15-v0.1.json'
+          x=json.load(open(p,encoding='utf-8'))
+          assert x['status'] in {
+            'CROSS_FITTED_CONCRETE_FORMULA_SLOT_CANDIDATES_ADMITTED',
+            'CROSS_FITTED_CONCRETE_FORMULA_SLOT_CANDIDATES_NOT_ESTABLISHED'
+          }
+          assert x['source']['frozen_commit']=='43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a'
+          assert x['method']['folds']==5
+          assert x['method']['FDR_q_max']==0.05
+          l=x['leakage_firewall']
+          assert l['candidate_selection_used_heldout_documents'] is False
+          assert l['source_labels_used_for_selection_or_scoring'] is False
+          assert l['translations_used'] is False
+          assert l['external_dictionaries_used'] is False
+          assert l['Linear_B_supervision_used'] is False
+          assert l['Notti_readings_used'] is False
+          assert l['manual_candidate_addition_or_removal'] is False
+          assert l['R3B_blind_eligibility_affected'] is False
+          e=x['epistemic_gate']
+          assert e['probable_function_established'] is False
+          assert e['word_meaning_established'] is False
+          assert e['grammatical_label_established'] is False
+          assert e['translation_established'] is False
+          assert e['phonetic_value_established'] is False
+          assert e['new_anchor_established'] is False
+          assert e['decipherment_established'] is False
+          assert e['R3B_external_replication_established'] is False
+          admitted=x['admitted_formula_slot_candidates']
+          assert len(admitted)==x['admitted_formula_slot_candidate_count']
+          for r in admitted:
+            assert r['FORMULA_SLOT_CANDIDATE_ADMITTED'] is True
+            assert r['selected_fold_count']>=2
+            assert r['heldout_occurrences']>=5
+            assert r['heldout_document_count']>=3
+            assert r['heldout_precision']>=0.70
+            assert r['BH_q']<=0.05
+          print(json.dumps({'status':x['status'],'family':x['cross_fitted_candidate_family_size'],'admitted':x['admitted_formula_slot_candidate_count']},sort_keys=True))
+          PY
+
+      - name: Upload R7-0 result
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r7-formula-slot-v0-1
+          path: data/JANUS-LINEAR-A-R7-0-CROSS-FITTED-FORMULA-SLOT-COMPLETION-RESULT-2026-08-15-v0.1.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Persist R7-0 result
+        shell: bash
+        run: |
+          set -euo pipefail
+          RESULT=data/JANUS-LINEAR-A-R7-0-CROSS-FITTED-FORMULA-SLOT-COMPLETION-RESULT-2026-08-15-v0.1.json
+          git config user.name 'JANUS Evidence Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add "$RESULT"
+          git commit -m 'Register Linear A R7-0 formula-slot result v0.1' || true
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then exit 0; fi
+            git pull --rebase origin main
+          done
+          exit 1
