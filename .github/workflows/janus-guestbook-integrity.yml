@@ -10,6 +10,7 @@ on:
       - 'guestbook/**'
       - 'assets/guestbook.js'
       - 'assets/site.css'
+      - 'assets/site-base.css'
       - 'index.html'
       - 'data/JANUS-GUESTBOOK-RESPECT-FILTER-v1.0.json'
   pull_request:
@@ -21,6 +22,7 @@ on:
       - 'guestbook/**'
       - 'assets/guestbook.js'
       - 'assets/site.css'
+      - 'assets/site-base.css'
       - 'index.html'
       - 'data/JANUS-GUESTBOOK-RESPECT-FILTER-v1.0.json'
   workflow_dispatch:
@@ -53,7 +55,12 @@ jobs:
           publisher = Path('.github/workflows/janus-guestbook-publish.yml').read_text(encoding='utf-8')
           js = Path('assets/guestbook.js').read_text(encoding='utf-8')
           html = Path('index.html').read_text(encoding='utf-8')
-          css = Path('assets/site.css').read_text(encoding='utf-8')
+          css_parts = []
+          base_css = Path('assets/site-base.css')
+          if base_css.exists():
+              css_parts.append(base_css.read_text(encoding='utf-8'))
+          css_parts.append(Path('assets/site.css').read_text(encoding='utf-8'))
+          css = '\n'.join(css_parts)
 
           assert policy['submission_limit_per_github_login'] == 3
           assert policy['publication_rule'] == 'JANUS_MENTION && PROFANITY_OR_DIRECT_INSULT => QUARANTINE_NOT_TICKER'
@@ -97,4 +104,5 @@ jobs:
           print('MANUAL_APPROVAL_REQUIRED=FALSE')
           print('QUARANTINE_RENDERED_IN_TICKER=FALSE')
           print('PUBLIC_SHAMING_MECHANISM=FALSE')
+          print('LAYERED_SITE_CSS=SUPPORTED')
           PY

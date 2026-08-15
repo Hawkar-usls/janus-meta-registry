@@ -5,6 +5,7 @@ on:
     paths:
       - 'index.html'
       - 'assets/site.css'
+      - 'assets/site-base.css'
       - 'assets/i18n.js'
       - 'assets/guestbook.js'
       - '.github/workflows/janus-neon-antiquity-integrity.yml'
@@ -12,6 +13,7 @@ on:
     paths:
       - 'index.html'
       - 'assets/site.css'
+      - 'assets/site-base.css'
       - 'assets/i18n.js'
       - 'assets/guestbook.js'
       - '.github/workflows/janus-neon-antiquity-integrity.yml'
@@ -35,10 +37,17 @@ jobs:
           from pathlib import Path
 
           html = Path('index.html').read_text(encoding='utf-8')
-          css = Path('assets/site.css').read_text(encoding='utf-8')
+          css_parts = []
+          base_css = Path('assets/site-base.css')
+          if base_css.exists():
+              css_parts.append(base_css.read_text(encoding='utf-8'))
+          css_parts.append(Path('assets/site.css').read_text(encoding='utf-8'))
+          css = '\n'.join(css_parts)
           js = Path('assets/i18n.js').read_text(encoding='utf-8')
 
-          # Temple / duality visual contract.
+          # Temple / duality visual contract. The historical CSS temple DOM stays
+          # present as an architectural contract even when a generated hero image
+          # becomes the presentation layer.
           for marker in [
               'temple-stage', 'temple-pediment', 'temple-columns', 'twin-arches',
               'janus-arch-left', 'janus-arch-right', 'janus-axis', 'duality-field',
@@ -83,4 +92,5 @@ jobs:
           print('LANGUAGE_PREFERENCE_PERSISTED=TRUE')
           print('GUESTBOOK_WIRING_PRESERVED=TRUE')
           print('SEO_METADATA_PRESERVED=TRUE')
+          print('LAYERED_SITE_CSS=SUPPORTED')
           PY
