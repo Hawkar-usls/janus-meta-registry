@@ -1,0 +1,109 @@
+name: JANUS Linear A R7-E2 negative replication certificate
+
+on:
+  push:
+    branches:
+      - 'research/r7-e2-candidate-profile-holdout'
+    paths:
+      - 'data/JANUS-LINEAR-A-R7-E2-NEGATIVE-REPLICATION-CERTIFICATE-2026-08-15-v0.1.json'
+      - '.github/workflows/janus-linear-a-r7-e2-negative-certificate.yml'
+  pull_request:
+    paths:
+      - 'data/JANUS-LINEAR-A-R7-E2-NEGATIVE-REPLICATION-CERTIFICATE-2026-08-15-v0.1.json'
+      - '.github/workflows/janus-linear-a-r7-e2-negative-certificate.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-negative-replication:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify frozen E2 science lineage remains unchanged
+        run: |
+          set -euo pipefail
+          git diff --exit-code 752e60c579839f26716f78cd7cf13ff5bab2e930 HEAD -- \
+            data/JANUS-LINEAR-A-R7-E2-CANDIDATE-PROFILE-HOLDOUT-SPEC-2026-08-15-v0.1.json \
+            research/linear_a/janus_linear_a_r7_e2_candidate_profile_holdout_v0_1.py \
+            research/linear_a/test_janus_linear_a_r7_e2_candidate_profile_holdout_v0_1.py \
+            .github/workflows/janus-linear-a-r7-e2-candidate-profile-holdout.yml
+
+      - name: Verify result and receipt bindings
+        run: |
+          python - <<'PY'
+          import hashlib,json
+          cert_path='data/JANUS-LINEAR-A-R7-E2-NEGATIVE-REPLICATION-CERTIFICATE-2026-08-15-v0.1.json'
+          result_path='data/JANUS-LINEAR-A-R7-E2-CANDIDATE-PROFILE-HOLDOUT-RESULT-2026-08-15-v0.1.json'
+          receipt_path='data/JANUS-LINEAR-A-R7-E2-HOLDOUT-EXECUTION-RECEIPT-2026-08-15-v0.1.json'
+          c=json.load(open(cert_path,encoding='utf-8'))
+          r=json.load(open(result_path,encoding='utf-8'))
+          x=json.load(open(receipt_path,encoding='utf-8'))
+          raw=hashlib.sha256(open(result_path,'rb').read()).hexdigest()
+          canonical=hashlib.sha256(json.dumps(r,sort_keys=True,ensure_ascii=False,separators=(',',':')).encode()).hexdigest()
+          assert raw==x['result_raw_file_sha256']==c['provenance_hashes']['result_raw_file_sha256']
+          assert canonical==x['result_canonical_json_sha256']==c['provenance_hashes']['result_canonical_json_sha256']
+          assert x['github_trigger_sha']=='1ce9e006e4277fb9ff64ca83413b8329d7e6e30d'
+          assert x['science_freeze_commit_sha']=='752e60c579839f26716f78cd7cf13ff5bab2e930'
+          assert x['science_freeze_ci_run']==31879584299
+          assert x['frozen_corpus_commit']=='43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a'
+          assert x['result_status']==c['status']==r['status']=='E2_CANDIDATE_PROFILE_NOT_REPLICATED_RETAIN_ROW-OPENING-LIKE'
+          print('R7_E2_PROVENANCE_BINDING_PASS')
+          PY
+
+      - name: Verify exact support and failed replication gates
+        run: |
+          python - <<'PY'
+          import json,math
+          c=json.load(open('data/JANUS-LINEAR-A-R7-E2-NEGATIVE-REPLICATION-CERTIFICATE-2026-08-15-v0.1.json',encoding='utf-8'))
+          r=json.load(open('data/JANUS-LINEAR-A-R7-E2-CANDIDATE-PROFILE-HOLDOUT-RESULT-2026-08-15-v0.1.json',encoding='utf-8'))
+          assert r['candidate_atoms']==c['frozen_candidate_profile']['atoms']==[
+            'PREV_ROW_NUMERIC_COUNT=2PLUS','PREV_ROW_LEXICAL_COUNT=2PLUS'
+          ]
+          assert r['total_holdout_target_events']==c['support']['total_holdout_target_events']==14
+          assert r['eligible_target_events']==c['support']['eligible_target_events']==13
+          assert math.isclose(r['eligible_target_fraction'],13/14,rel_tol=0,abs_tol=1e-15)
+          assert r['eligible_target_documents']==c['support']['eligible_target_documents']==13
+          assert r['eligible_target_physical_objects']==c['support']['eligible_target_physical_objects']==12
+          assert r['pure_control_events']==c['support']['pure_control_events']==185
+          assert r['pure_control_physical_objects']==c['support']['pure_control_physical_objects']==57
+          assert r['support_pass'] is True and c['support']['support_pass'] is True
+          assert r['object_concentration_pass'] is True and c['support']['object_concentration_pass'] is True
+          assert math.isclose(r['maximum_single_target_object_event_fraction'],2/13,rel_tol=0,abs_tol=1e-15)
+          assert math.isclose(r['observed_object_weighted_profile_effect'],0.015020548557133926,rel_tol=0,abs_tol=1e-15)
+          assert r['effect_pass'] is False
+          assert r['signflip']=={'assignments':4096,'ge_observed':1896,'mode':'exact','p':0.462890625}
+          assert r['p_pass'] is False
+          assert r['leave_one_target_object_out_positive_fraction']==0.5
+          assert r['leave_one_object_out_pass'] is False
+          assert math.isclose(r['frozen_atom_object_weighted_effects']['PREV_ROW_NUMERIC_COUNT=2PLUS'],0.050012656719973785,rel_tol=0,abs_tol=1e-15)
+          assert math.isclose(r['frozen_atom_object_weighted_effects']['PREV_ROW_LEXICAL_COUNT=2PLUS'],-0.019971559605705957,rel_tol=0,abs_tol=1e-15)
+          assert r['frozen_atom_direction_pass'] is False
+          assert r['heldout_structural_context_refinement_established'] is False
+          assert r['admitted_context_refinement_label'] is None
+          print('R7_E2_NEGATIVE_REPLICATION_GATES_VERIFIED')
+          PY
+
+      - name: Verify consumed-holdout semantics and claim ceiling
+        run: |
+          python - <<'PY'
+          import json
+          c=json.load(open('data/JANUS-LINEAR-A-R7-E2-NEGATIVE-REPLICATION-CERTIFICATE-2026-08-15-v0.1.json',encoding='utf-8'))
+          r=json.load(open('data/JANUS-LINEAR-A-R7-E2-CANDIDATE-PROFILE-HOLDOUT-RESULT-2026-08-15-v0.1.json',encoding='utf-8'))
+          assert r['holdout_partition_opened_for_first_inferential_test'] is True
+          assert c['holdout_execution']['holdout_partition_is_now_consumed'] is True
+          assert c['holdout_execution']['holdout_may_not_be_described_as_untouched_for_future_hypotheses'] is True
+          assert c['decision']['heldout_structural_context_refinement_established'] is False
+          assert c['parent']['parent_role_revoked'] is False
+          for key in ('specific_semantic_function_established','exact_word_meaning_established','translation_established','phonetic_value_established','language_family_established','new_anchor_established','universal_cross_region_function_established','external_replication_established','decipherment_established'):
+              assert r[key] is False
+              assert c['scientific_state_after_e2'][key] is False
+          assert r['canonical_auto_promotion_performed'] is False
+          assert c['canonical_auto_promotion_performed'] is False
+          assert all(c['next_lane_constraints'].values())
+          print('R7_E2_CONSUMED_HOLDOUT_AND_CLAIM_CEILING_VERIFIED')
+          PY
