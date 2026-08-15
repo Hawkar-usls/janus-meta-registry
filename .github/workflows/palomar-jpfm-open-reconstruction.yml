@@ -17,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
@@ -33,6 +33,21 @@ jobs:
             statsmodels==0.14.5 \
             requests==2.32.4
           python -m pip freeze | sort | tee /tmp/jpfm-pip-freeze.txt
+
+      - name: Enforce preregistered physical calendar membership
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('tools/palomar/jpfm_open_reconstruction_temporal.py')
+          s = p.read_text(encoding='utf-8')
+          old = '"AIRDROP", "TOWER", "SURFACE", "BARGE", "BALLOON", "ROCKET", "ATMOSPH"'
+          new = '"AIRDROP", "TOWER", "SURFACE", "BARGE", "SHIP", "BALLOON", "ROCKET", "ATMOSPH"'
+          if old in s:
+              s = s.replace(old, new, 1)
+              p.write_text(s, encoding='utf-8')
+          assert '"SHIP"' in p.read_text(encoding='utf-8')
+          print('PASS_PREREG_PHYSICAL_ARM_INCLUDES_SHIP')
+          PY
 
       - name: Syntax gate
         run: python -m py_compile tools/palomar/jpfm_open_reconstruction_temporal.py
@@ -58,6 +73,9 @@ jobs:
           assert d['io_gate']['full_plate_image_arrays_downloaded'] is False
           assert d['paper_reported_124_arm']['status'] == 'NOT_EXECUTED_MEMBERSHIP_UNRESOLVED'
           assert 'NO_NUCLEAR_CAUSALITY_OR_ORIGIN_CLAIM' in d['claim_ceiling']
+          nm = d['bindings']['nuclear_meta']
+          assert 'SHIP' in nm['physical_allowed_types_frozen']
+          assert 'SHIP' not in nm['types_excluded_from_physical_arm']
           assert d['aggregate_verdict']['code'] in {
               'OPEN_TEMPORAL_ASSOCIATION_SURVIVES_FROZEN_CONTROLS',
               'OPEN_TEMPORAL_ASSOCIATION_NOT_ROBUST_ACROSS_FROZEN_CONTROLS'
@@ -72,13 +90,15 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-      - name: Commit only the validated result JSON
+      - name: Commit prereg parity fix and validated result
         run: |
           cp out/JANUS-PALOMAR-JPFM-2D-OPEN-TEMPORAL-ASSOCIATION-RUN-001.json \
              data/JANUS-PALOMAR-JPFM-2D-OPEN-TEMPORAL-ASSOCIATION-RUN-001.json
           git config user.name 'janus-jpfm-ci'
           git config user.email 'actions@users.noreply.github.com'
-          git add data/JANUS-PALOMAR-JPFM-2D-OPEN-TEMPORAL-ASSOCIATION-RUN-001.json
+          git add tools/palomar/jpfm_open_reconstruction_temporal.py \
+                  data/JANUS-PALOMAR-JPFM-2D-OPEN-TEMPORAL-ASSOCIATION-RUN-001.json
           git diff --cached --quiet && exit 0
-          git commit -m 'Add JPFM-2D public-only temporal association result [skip ci]'
+          git commit -m 'Finalize preregistered JPFM-2D public temporal run [skip ci]'
+          git pull --rebase origin main
           git push
