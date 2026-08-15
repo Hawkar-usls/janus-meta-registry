@@ -1,0 +1,40 @@
+name: JANUS Wedjat full-eye composition v0.6
+
+on:
+  pull_request:
+    paths:
+      - 'research/wedjat/janus_wedjat_full_eye_composition_probe_v0_6.py'
+      - 'data/JANUS-WEDJAT-FULL-EYE-COMPOSITION-CONTROL-RESULT-2026-08-15-v0.6.json'
+      - '.github/workflows/janus-wedjat-full-eye-composition-v0-6.yml'
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Compile replay script
+        run: python -m py_compile research/wedjat/janus_wedjat_full_eye_composition_probe_v0_6.py
+      - name: Verify frozen result and claim firewall
+        run: |
+          python - <<'PY'
+          import hashlib, json
+          sp='research/wedjat/janus_wedjat_full_eye_composition_probe_v0_6.py'
+          jp='data/JANUS-WEDJAT-FULL-EYE-COMPOSITION-CONTROL-RESULT-2026-08-15-v0.6.json'
+          d=json.load(open(jp, encoding='utf-8'))
+          assert d['status']=='MODERN_FULL_EYE_COMPOSITION_SIGNAL_WITH_NONEXACT_TILING'
+          assert d['execution_receipt']['script_sha256_exact_executed_and_repository_bytes']==hashlib.sha256(open(sp,'rb').read()).hexdigest()
+          assert d['target_set_result']['f1']==0.5306782825140013
+          assert d['full_block_control']['exceedances_ge_target']==0
+          assert d['gardiner_D_class_hard_control']['exceedances_ge_target']==18
+          assert d['gardiner_D_class_hard_control']['plus_one_empirical_p'] < 0.001
+          d015=next(x for x in d['leave_one_out'] if x['part']=='D015')
+          assert d015['delta_without_minus_full'] > 0
+          fw=set(d['claim_firewall'])
+          assert 'MODERN_SIGN_FAMILY_COHERENCE_IS_NOT_ANCIENT_GENEALOGY' in fw
+          assert 'NONEXACT_TILING_MUST_BE_REPORTED' in fw
+          print('v0.6 frozen-result canaries PASS')
+          PY
