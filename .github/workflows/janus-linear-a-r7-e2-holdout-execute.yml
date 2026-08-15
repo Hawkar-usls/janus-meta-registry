@@ -1,0 +1,133 @@
+name: JANUS Linear A R7-E2 frozen holdout execution
+
+on:
+  push:
+    branches:
+      - 'research/r7-e2-candidate-profile-holdout'
+    paths:
+      - 'data/JANUS-LINEAR-A-R7-E2-HOLDOUT-EXECUTE-REQUEST-2026-08-15-v0.1.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  frozen-holdout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install inherited parser dependency
+        run: python -m pip install "numpy>=2.0"
+      - name: Verify one-time holdout request and frozen science lineage
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" = 'research/r7-e2-candidate-profile-holdout'
+          python - <<'PY'
+          import json
+          r=json.load(open('data/JANUS-LINEAR-A-R7-E2-HOLDOUT-EXECUTE-REQUEST-2026-08-15-v0.1.json',encoding='utf-8'))
+          assert r['status']=='AUTHORIZE_FIRST_E2_HOLDOUT_INFERENTIAL_ACCESS'
+          assert r['science_freeze_commit_sha']=='752e60c579839f26716f78cd7cf13ff5bab2e930'
+          assert r['science_freeze_ci_run']==31879584299
+          assert r['science_freeze_ci_conclusion']=='success'
+          assert r['frozen_corpus_commit']=='43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a'
+          assert r['candidate_atoms']==['PREV_ROW_NUMERIC_COUNT=2PLUS','PREV_ROW_LEXICAL_COUNT=2PLUS']
+          assert r['feature_discovery_on_holdout_authorized'] is False
+          assert r['threshold_retuning_authorized'] is False
+          assert r['matching_relaxation_authorized'] is False
+          assert r['canonical_auto_promotion_authorized'] is False
+          PY
+          git diff --exit-code 752e60c579839f26716f78cd7cf13ff5bab2e930 HEAD -- \
+            data/JANUS-LINEAR-A-R7-E2-CANDIDATE-PROFILE-HOLDOUT-SPEC-2026-08-15-v0.1.json \
+            research/linear_a/janus_linear_a_r7_e2_candidate_profile_holdout_v0_1.py \
+            research/linear_a/test_janus_linear_a_r7_e2_candidate_profile_holdout_v0_1.py \
+            .github/workflows/janus-linear-a-r7-e2-candidate-profile-holdout.yml
+      - name: Verify holdout was never previously executed
+        run: |
+          set -euo pipefail
+          test ! -e data/JANUS-LINEAR-A-R7-E1-ANONYMOUS-ROLE-HOLDOUT-RESULT-2026-08-15-v0.1.json
+          test ! -e data/JANUS-LINEAR-A-R7-E1-HOLDOUT-EXECUTION-RECEIPT-2026-08-15-v0.1.json
+          test ! -e data/JANUS-LINEAR-A-R7-E2-CANDIDATE-PROFILE-HOLDOUT-RESULT-2026-08-15-v0.1.json
+          test ! -e data/JANUS-LINEAR-A-R7-E2-HOLDOUT-EXECUTION-RECEIPT-2026-08-15-v0.1.json
+          echo R7_E2_FIRST_HOLDOUT_ACCESS_CONFIRMED
+      - name: Re-run frozen preregistration and canaries before holdout access
+        env:
+          PYTHONPATH: research/linear_a
+        run: |
+          python research/linear_a/janus_linear_a_r7_e2_candidate_profile_holdout_v0_1.py \
+            --spec data/JANUS-LINEAR-A-R7-E2-CANDIDATE-PROFILE-HOLDOUT-SPEC-2026-08-15-v0.1.json \
+            --validate-spec --out /tmp/r7-e2-validation.json
+          python research/linear_a/test_janus_linear_a_r7_e2_candidate_profile_holdout_v0_1.py -v
+      - name: Fetch exact frozen Linear A corpus
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --quiet https://github.com/Hawkar-usls/lineara.xyz.git /tmp/lineara
+          git -C /tmp/lineara checkout --quiet 43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a
+          test "$(git -C /tmp/lineara rev-parse HEAD)" = '43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a'
+      - name: Open reserved holdout and execute frozen E2 test exactly once
+        env:
+          PYTHONPATH: research/linear_a
+        run: |
+          python research/linear_a/janus_linear_a_r7_e2_candidate_profile_holdout_v0_1.py \
+            --spec data/JANUS-LINEAR-A-R7-E2-CANDIDATE-PROFILE-HOLDOUT-SPEC-2026-08-15-v0.1.json \
+            --corpus /tmp/lineara \
+            --out data/JANUS-LINEAR-A-R7-E2-CANDIDATE-PROFILE-HOLDOUT-RESULT-2026-08-15-v0.1.json
+      - name: Enforce claim ceiling and write execution receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib,json,os
+          p='data/JANUS-LINEAR-A-R7-E2-CANDIDATE-PROFILE-HOLDOUT-RESULT-2026-08-15-v0.1.json'
+          r=json.load(open(p,encoding='utf-8'))
+          assert r['holdout_partition_opened_for_first_inferential_test'] is True
+          assert r['candidate_atoms']==['PREV_ROW_NUMERIC_COUNT=2PLUS','PREV_ROW_LEXICAL_COUNT=2PLUS']
+          assert r['canonical_auto_promotion_performed'] is False
+          for k in ('specific_semantic_function_established','exact_word_meaning_established','translation_established','phonetic_value_established','language_family_established','new_anchor_established','universal_cross_region_function_established','external_replication_established','decipherment_established'):
+              assert r[k] is False
+          raw=hashlib.sha256(open(p,'rb').read()).hexdigest()
+          canonical=hashlib.sha256(json.dumps(r,sort_keys=True,ensure_ascii=False,separators=(',',':')).encode()).hexdigest()
+          receipt={
+            'artifact_uuid':'JANUS-LINEAR-A-R7-E2-HOLDOUT-EXECUTION-RECEIPT-2026-08-15-v0.1',
+            'status':'FROZEN_E2_HOLDOUT_EXECUTION_COMPLETED',
+            'github_trigger_sha':os.environ['GITHUB_SHA'],
+            'science_freeze_commit_sha':'752e60c579839f26716f78cd7cf13ff5bab2e930',
+            'science_freeze_ci_run':31879584299,
+            'frozen_corpus_commit':'43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a',
+            'result_raw_file_sha256':raw,
+            'result_canonical_json_sha256':canonical,
+            'result_status':r['status'],
+            'heldout_structural_context_refinement_established':r['heldout_structural_context_refinement_established'],
+            'admitted_context_refinement_label':r['admitted_context_refinement_label'],
+            'canonical_auto_promotion_performed':False,
+          }
+          out='data/JANUS-LINEAR-A-R7-E2-HOLDOUT-EXECUTION-RECEIPT-2026-08-15-v0.1.json'
+          open(out,'w',encoding='utf-8').write(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n')
+          print(json.dumps(receipt,sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r7-e2-frozen-holdout
+          path: |
+            data/JANUS-LINEAR-A-R7-E2-CANDIDATE-PROFILE-HOLDOUT-RESULT-2026-08-15-v0.1.json
+            data/JANUS-LINEAR-A-R7-E2-HOLDOUT-EXECUTION-RECEIPT-2026-08-15-v0.1.json
+          if-no-files-found: error
+          retention-days: 90
+      - name: Persist exact E2 result on research branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'JANUS Evidence Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add \
+            data/JANUS-LINEAR-A-R7-E2-CANDIDATE-PROFILE-HOLDOUT-RESULT-2026-08-15-v0.1.json \
+            data/JANUS-LINEAR-A-R7-E2-HOLDOUT-EXECUTION-RECEIPT-2026-08-15-v0.1.json
+          git commit -m 'Register frozen Linear A R7-E2 KU-RO holdout result v0.1'
+          git push origin HEAD:research/r7-e2-candidate-profile-holdout
