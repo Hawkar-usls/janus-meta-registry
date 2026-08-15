@@ -1,0 +1,59 @@
+name: Palomar JPFM-4A GCAT official positive cross-validation
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'data/JANUS-PALOMAR-JPFM-4A-BUMPER-FINAL-CAPE-PHASE-MANIFEST-v1.0.json'
+      - 'data/JANUS-PALOMAR-JPFM-4A-US-BIOMEDICAL-ROCKET-POSITIVE-EVENT-MANIFEST-v1.0.json'
+      - 'tools/palomar/jpfm_4a_gcat_official_positive_crossvalidation.py'
+      - '.github/workflows/palomar-jpfm-4a-gcat-official-positive-crossvalidation.yml'
+permissions:
+  contents: write
+jobs:
+  crossvalidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: python -m pip install requests==2.32.4
+      - run: python -m py_compile tools/palomar/jpfm_4a_gcat_official_positive_crossvalidation.py
+      - name: Cross-validate frozen GCAT launch rows against pre-existing official events
+        run: |
+          mkdir -p out
+          python tools/palomar/jpfm_4a_gcat_official_positive_crossvalidation.py \
+            --out out/JANUS-PALOMAR-JPFM-4A-GCAT-OFFICIAL-POSITIVE-EVENT-CROSSVALIDATION-v1.0.json
+      - name: Validate fail-closed cross-validation receipt
+        run: |
+          python - <<'PY'
+          import json,pathlib
+          d=json.loads(pathlib.Path('out/JANUS-PALOMAR-JPFM-4A-GCAT-OFFICIAL-POSITIVE-EVENT-CROSSVALIDATION-v1.0.json').read_text())
+          assert d['status'] in {
+            'GCAT_INDEPENDENT_CURATED_DERIVATIVE_CROSSVALIDATED_AGAINST_PREEXISTING_OFFICIAL_POSITIVE_EVENTS',
+            'GCAT_CROSSVALIDATION_INCOMPLETE_FAIL_CLOSED'
+          }
+          assert d['validation']['controls_total']==6
+          assert d['outcome_blindness']['bluebook_access'] is False
+          assert d['outcome_blindness']['poss1_access'] is False
+          assert d['outcome_blindness']['association_computed'] is False
+          assert d['current_authority_changed'] is False
+          print('PASS_GCAT_CROSSVALIDATION_EXECUTION_GATE', d['validation'])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jpfm-4a-gcat-official-positive-crossvalidation-v1
+          path: out/JANUS-PALOMAR-JPFM-4A-GCAT-OFFICIAL-POSITIVE-EVENT-CROSSVALIDATION-v1.0.json
+          retention-days: 30
+          if-no-files-found: error
+      - name: Commit source-only cross-validation receipt
+        run: |
+          cp out/JANUS-PALOMAR-JPFM-4A-GCAT-OFFICIAL-POSITIVE-EVENT-CROSSVALIDATION-v1.0.json data/JANUS-PALOMAR-JPFM-4A-GCAT-OFFICIAL-POSITIVE-EVENT-CROSSVALIDATION-v1.0.json
+          git config user.name 'janus-jpfm-ci'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/JANUS-PALOMAR-JPFM-4A-GCAT-OFFICIAL-POSITIVE-EVENT-CROSSVALIDATION-v1.0.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Add JPFM-4A GCAT official positive cross-validation [skip ci]'
+          git pull --rebase origin main
+          git push
