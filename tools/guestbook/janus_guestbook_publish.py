@@ -1,14 +1,19 @@
 #!/usr/bin/env python3
-"""Convert one JANUS Guestbook issue event into a safe JSON entry.
+"""Convert one JANUS Guestbook issue event into cache or quarantine JSON.
 
-This script never executes visitor text. It parses fixed Issue Form headings,
-collapses visitor text to plain one-line strings, applies the JANUS respect
-filter, and appends only accepted entries to the guestbook JSON.
+The workflow is automatic and deterministic:
+- GitHub login is the displayed nickname;
+- maximum three processed guestbook submissions per login;
+- messages are at most 100 characters;
+- JANUS mention + profanity/direct insult is quarantined;
+- quarantined raw text is not copied into the website JSON;
+- accepted entries are appended to guestbook/messages.json.
 """
 
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -19,6 +24,8 @@ from janus_guestbook_filter import evaluate_message
 
 
 HEADING_RE = re.compile(r"^###\s+(.+?)\s*$", re.MULTILINE)
+MAX_MESSAGES_PER_LOGIN = 3
+MAX_MESSAGE_CHARACTERS = 100
 
 
 def parse_issue_form(body: str) -> dict[str, str]:
@@ -27,16 +34,25 @@ def parse_issue_form(body: str) -> dict[str, str]:
     for idx, match in enumerate(matches):
         start = match.end()
         end = matches[idx + 1].start() if idx + 1 < len(matches) else len(body)
-        value = body[start:end].strip()
-        fields[match.group(1).strip().lower()] = value
+        fields[match.group(1).strip().lower()] = body[start:end].strip()
     return fields
 
 
 def plain_one_line(text: str) -> str:
     text = re.sub(r"<!--.*?-->", "", text or "", flags=re.S)
     text = text.replace("\x00", "")
-    text = re.sub(r"\s+", " ", text).strip()
-    return text
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def load_json(path: Path, fallback: dict) -> dict:
+    if path.exists():
+        return json.loads(path.read_text(encoding="utf-8"))
+    return fallback
+
+
+def save_json(path: Path, obj: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(obj, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
 def write_output(name: str, value: str) -> None:
@@ -48,10 +64,54 @@ def write_output(name: str, value: str) -> None:
         print(f"{name}={value}")
 
 
+def append_quarantine(
+    quarantine: dict,
+    *,
+    issue_number: int,
+    issue_url: str,
+    author_login: str,
+    created_at: str,
+    reason: str,
+    message: str,
+) -> bool:
+    entries = quarantine.setdefault("entries", [])
+    if any(int(entry.get("issue_number", -1)) == issue_number for entry in entries):
+        return False
+    entries.append(
+        {
+            "issue_number": issue_number,
+            "issue_url": issue_url,
+            "author_login": author_login,
+            "created_at": created_at,
+            "reason": reason,
+            "message_sha256": hashlib.sha256(message.encode("utf-8")).hexdigest(),
+            "raw_message_stored": False,
+            "render_in_ticker": False,
+        }
+    )
+    quarantine["entry_count"] = len(entries)
+    quarantine["last_issue_number"] = issue_number
+    return True
+
+
+def processed_count(author_login: str, guestbook: dict, quarantine: dict) -> int:
+    login = author_login.casefold()
+    accepted = sum(
+        1 for entry in guestbook.get("entries", [])
+        if str(entry.get("author_login", "")).casefold() == login
+    )
+    rejected = sum(
+        1 for entry in quarantine.get("entries", [])
+        if str(entry.get("author_login", "")).casefold() == login
+    )
+    return accepted + rejected
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--event", required=True)
     parser.add_argument("--guestbook", required=True)
+    parser.add_argument("--quarantine", required=True)
     args = parser.parse_args()
 
     event = json.loads(Path(args.event).read_text(encoding="utf-8"))
@@ -69,67 +129,114 @@ def main() -> int:
         return 0
 
     fields = parse_issue_form(body)
-    display_name = plain_one_line(fields.get("display name", ""))
     message = plain_one_line(fields.get("message", ""))
 
-    if not display_name:
-        display_name = author_login
+    guestbook_path = Path(args.guestbook)
+    quarantine_path = Path(args.quarantine)
+    guestbook = load_json(
+        guestbook_path,
+        {
+            "schema": "janus.guestbook.public_messages.v1",
+            "status": "PUBLIC_AUTOMATIC_GUESTBOOK_CACHE",
+            "entries": [],
+        },
+    )
+    quarantine = load_json(
+        quarantine_path,
+        {
+            "schema": "janus.guestbook.quarantine.v1",
+            "status": "PUBLIC_AUDIT_LEDGER_NOT_RENDERED_IN_TICKER",
+            "entries": [],
+        },
+    )
 
-    if len(display_name) > 30:
-        write_output("status", "rejected")
-        write_output("reason", "DISPLAY_NAME_TOO_LONG")
+    known_issue_numbers = {
+        int(entry.get("issue_number", -1))
+        for collection in (guestbook.get("entries", []), quarantine.get("entries", []))
+        for entry in collection
+    }
+    if issue_number in known_issue_numbers:
+        write_output("status", "duplicate")
+        write_output("reason", "ISSUE_ALREADY_PROCESSED")
         return 0
 
     if not message:
-        write_output("status", "rejected")
+        append_quarantine(
+            quarantine,
+            issue_number=issue_number,
+            issue_url=issue_url,
+            author_login=author_login,
+            created_at=created_at,
+            reason="EMPTY_MESSAGE",
+            message=message,
+        )
+        save_json(quarantine_path, quarantine)
+        write_output("status", "quarantined")
         write_output("reason", "EMPTY_MESSAGE")
         return 0
 
-    if len(message) > 100:
-        write_output("status", "rejected")
+    if len(message) > MAX_MESSAGE_CHARACTERS:
+        append_quarantine(
+            quarantine,
+            issue_number=issue_number,
+            issue_url=issue_url,
+            author_login=author_login,
+            created_at=created_at,
+            reason="MESSAGE_TOO_LONG_MAX_100",
+            message=message,
+        )
+        save_json(quarantine_path, quarantine)
+        write_output("status", "quarantined")
         write_output("reason", "MESSAGE_TOO_LONG_MAX_100")
+        return 0
+
+    if processed_count(author_login, guestbook, quarantine) >= MAX_MESSAGES_PER_LOGIN:
+        append_quarantine(
+            quarantine,
+            issue_number=issue_number,
+            issue_url=issue_url,
+            author_login=author_login,
+            created_at=created_at,
+            reason="AUTHOR_MESSAGE_LIMIT_3",
+            message=message,
+        )
+        save_json(quarantine_path, quarantine)
+        write_output("status", "quarantined")
+        write_output("reason", "AUTHOR_MESSAGE_LIMIT_3")
         return 0
 
     result = evaluate_message(message)
     if not result.accepted:
-        write_output("status", "rejected")
+        append_quarantine(
+            quarantine,
+            issue_number=issue_number,
+            issue_url=issue_url,
+            author_login=author_login,
+            created_at=created_at,
+            reason=result.reason,
+            message=message,
+        )
+        save_json(quarantine_path, quarantine)
+        write_output("status", "quarantined")
         write_output("reason", result.reason)
         return 0
 
-    guestbook_path = Path(args.guestbook)
-    if guestbook_path.exists():
-        guestbook = json.loads(guestbook_path.read_text(encoding="utf-8"))
-    else:
-        guestbook = {
-            "schema": "janus.guestbook.public_messages.v1",
-            "status": "PUBLIC_AUTOMATIC_GUESTBOOK",
-            "entries": [],
-        }
-
     entries = guestbook.setdefault("entries", [])
-    if any(int(entry.get("issue_number", -1)) == issue_number for entry in entries):
-        write_output("status", "duplicate")
-        write_output("reason", "ISSUE_ALREADY_PUBLISHED")
-        return 0
-
     entries.append(
         {
             "issue_number": issue_number,
             "issue_url": issue_url,
             "author_login": author_login,
-            "display_name": display_name,
+            "display_name": f"@{author_login}",
             "message": message,
             "created_at": created_at,
             "publication_mode": "AUTOMATIC_AFTER_DETERMINISTIC_FILTER",
+            "render_in_ticker": True,
         }
     )
-
     guestbook["entry_count"] = len(entries)
     guestbook["last_issue_number"] = issue_number
-    guestbook_path.write_text(
-        json.dumps(guestbook, ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
-    )
+    save_json(guestbook_path, guestbook)
 
     write_output("status", "accepted")
     write_output("reason", result.reason)
