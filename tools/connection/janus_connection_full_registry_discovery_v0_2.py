@@ -185,19 +185,19 @@ def main():
             if len(shared[k])<20:shared[k].append((oidf[feat],feat))
     rows=[]
     for (i,j),rw in acc.items():
-        a,b=ds[i],ds[j]; os=cos(ov[i],on[i],ov[j],on[j]);
-        if os<.045:continue
+        a,b=ds[i],ds[j]; operator_similarity=cos(ov[i],on[i],ov[j],on[j]);
+        if operator_similarity<.045:continue
         cs=cos(cv[i],cn[i],cv[j],cn[j]); tj=jac(a["pointers"],b["pointers"]); fj=jac(a["file_topic"],b["file_topic"])
         ex=(i,j) in explicit; sr=bool(refsets[i]&refsets[j]); dep,flags=dep_factor(a,b,ex,sr,tj,fj)
         if dep<=0:continue
-        contrast=max(0,os-cs); hidden=max(0,1-min(1,cs/.58)); rarity=min(1,rw/24)
+        contrast=max(0,operator_similarity-cs); hidden=max(0,1-min(1,cs/.58)); rarity=min(1,rw/24)
         substantive_struct=min(tj,.67)
-        base=.47*os+.19*contrast+.12*hidden+.12*rarity+.10*substantive_struct
+        base=.47*operator_similarity+.19*contrast+.12*hidden+.12*rarity+.10*substantive_struct
         cross=a["domain_bucket"]!=b["domain_bucket"]
         score=base*dep*(1.10 if cross else .86)
         if score<.035:continue
         feats=[cfeat(x) for _,x in sorted(shared[(i,j)],reverse=True)[:12]]
-        rows.append({"score":round(score,8),"operator_similarity":round(os,8),"content_similarity":round(cs,8),"operator_minus_content":round(os-cs,8),"substantive_template_jaccard":round(tj,8),"filename_topic_jaccard":round(fj,8),"dependency_factor":round(dep,8),"dependency_flags":flags,"cross_domain":cross,"a":{"path":a["path"],"domain":a["domain_bucket"],"role":a["role"],"artifact_uuid":a["meta"].get("artifact_uuid")},"b":{"path":b["path"],"domain":b["domain_bucket"],"role":b["role"],"artifact_uuid":b["meta"].get("artifact_uuid")},"shared_substantive_operator_features":feats,"status":"MACHINE_CANDIDATE_NOT_VALIDATED"})
+        rows.append({"score":round(score,8),"operator_similarity":round(operator_similarity,8),"content_similarity":round(cs,8),"operator_minus_content":round(operator_similarity-cs,8),"substantive_template_jaccard":round(tj,8),"filename_topic_jaccard":round(fj,8),"dependency_factor":round(dep,8),"dependency_flags":flags,"cross_domain":cross,"a":{"path":a["path"],"domain":a["domain_bucket"],"role":a["role"],"artifact_uuid":a["meta"].get("artifact_uuid")},"b":{"path":b["path"],"domain":b["domain_bucket"],"role":b["role"],"artifact_uuid":b["meta"].get("artifact_uuid")},"shared_substantive_operator_features":feats,"status":"MACHINE_CANDIDATE_NOT_VALIDATED"})
     rows.sort(key=lambda r:(r["score"],r["operator_minus_content"],r["operator_similarity"]),reverse=True)
 
     # Higher-order substantive feature recurrences.
