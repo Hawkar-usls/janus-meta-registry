@@ -1,0 +1,112 @@
+name: Palomar JPFM-2F blind structural stratification
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/palomar-jpfm-2f-blind-structural.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  jpfm-2f-blind:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install frozen analysis environment
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install \
+            numpy==2.2.6 \
+            pandas==2.3.1 \
+            scipy==1.16.1 \
+            scikit-learn==1.7.1 \
+            requests==2.32.4
+          python -m pip freeze | sort | tee /tmp/jpfm-2f-pip-freeze.txt
+
+      - name: Syntax gate
+        run: python -m py_compile tools/palomar/jpfm_2f_blind_structural_strata.py
+
+      - name: Verify preregistration and external-label firewall
+        run: |
+          python - <<'PY'
+          import json, pathlib
+          p = pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-BLIND-STRUCTURAL-STRATIFICATION-ADMISSION-v1.0.json')
+          d = json.loads(p.read_text(encoding='utf-8'))
+          assert d['status'] == 'PREREGISTERED_BEFORE_JPFM_2F_CLUSTER_OUTCOME'
+          assert d['clustering_contract']['coarse_partition']['k'] == 16
+          assert d['clustering_contract']['coarse_partition']['random_seed'] == 20260815
+          assert d['external_label_firewall']['absolute_RA_Dec_as_cluster_features'] is False
+          print('PASS_JPFM_2F_ADMISSION_GATE')
+          PY
+          if grep -Eiq 'nuclear|blue[[:space:]]+book|nuforc|geomagnetic|lunar|moon' tools/palomar/jpfm_2f_blind_structural_strata.py; then
+            echo 'FAIL: external-label vocabulary present in blind runner'
+            exit 1
+          fi
+          echo 'PASS_EXTERNAL_LABEL_FIREWALL_SOURCE_SCAN'
+
+      - name: Execute blind structural stratification
+        run: |
+          python tools/palomar/jpfm_2f_blind_structural_strata.py \
+            --out-json data/JANUS-PALOMAR-JPFM-2F-A-BLIND-STRUCTURAL-STRATIFICATION-RUN-001.json \
+            --out-manifest-gz data/JANUS-PALOMAR-JPFM-2F-A-BLIND-STRUCTURAL-CLUSTER-MANIFEST-RUN-001.csv.gz
+
+      - name: Validate frozen blind result
+        run: |
+          python - <<'PY'
+          import gzip, hashlib, json, pathlib
+          jp = pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-A-BLIND-STRUCTURAL-STRATIFICATION-RUN-001.json')
+          mp = pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-A-BLIND-STRUCTURAL-CLUSTER-MANIFEST-RUN-001.csv.gz')
+          d = json.loads(jp.read_text(encoding='utf-8'))
+          assert d['status'] == 'EXECUTED_BLIND_STRUCTURAL_STRATIFICATION'
+          assert d['invariants']['rows'] == 122820
+          assert d['invariants']['tiles'] == 31458
+          assert d['invariants']['plates'] == 642
+          assert d['invariants']['src_id_unique'] is True
+          assert d['invariants']['model_matrix_finite'] is True
+          assert d['invariants']['full_plate_image_arrays_downloaded'] is False
+          assert d['blind_feature_contract']['date_or_external_labels_available_to_model'] is False
+          assert d['coarse_partition']['k'] == 16
+          assert len(d['coarse_partition']['cluster_sizes']) == 16
+          assert sum(d['coarse_partition']['cluster_sizes'].values()) == 122820
+          assert d['rare_structure']['tail_counts']['tail_0p1'] in (122, 123)
+          assert d['rare_structure']['tail_counts']['tail_0p5'] in (614, 615)
+          assert d['rare_structure']['tail_counts']['tail_1p0'] in (1228, 1229)
+          raw = gzip.decompress(mp.read_bytes())
+          assert hashlib.sha256(raw).hexdigest() == d['manifest']['csv_sha256']
+          assert hashlib.sha256(mp.read_bytes()).hexdigest() == d['manifest']['gzip_sha256']
+          assert raw.count(b'\n') == 122821
+          assert d['next_gate']['code'] == 'JPFM_2F_B_PIXEL_MORPHOLOGY_SIDECAR_REQUIRED'
+          print('PASS_JPFM_2F_BLIND_RESULT_GATE')
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jpfm-2f-blind-structural-run-001
+          path: |
+            data/JANUS-PALOMAR-JPFM-2F-A-BLIND-STRUCTURAL-STRATIFICATION-RUN-001.json
+            data/JANUS-PALOMAR-JPFM-2F-A-BLIND-STRUCTURAL-CLUSTER-MANIFEST-RUN-001.csv.gz
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Commit only validated blind freeze
+        run: |
+          git config user.name 'janus-jpfm-ci'
+          git config user.email 'actions@users.noreply.github.com'
+          git add \
+            data/JANUS-PALOMAR-JPFM-2F-A-BLIND-STRUCTURAL-STRATIFICATION-RUN-001.json \
+            data/JANUS-PALOMAR-JPFM-2F-A-BLIND-STRUCTURAL-CLUSTER-MANIFEST-RUN-001.csv.gz
+          git diff --cached --quiet && exit 0
+          git commit -m 'Freeze JPFM-2F blind structural strata [skip ci]'
+          git pull --rebase origin main
+          git push
