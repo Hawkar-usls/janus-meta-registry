@@ -1,0 +1,83 @@
+name: JANUS Linear A R7-F0 KU-RO downstream slot
+
+on:
+  pull_request:
+    paths:
+      - 'data/JANUS-LINEAR-A-R7-F0-KU-RO-DOWNSTREAM-SLOT-SPEC-2026-08-15-v0.1.json'
+      - 'research/linear_a/janus_linear_a_r7_f0_ku_ro_downstream_slot_v0_1.py'
+      - 'research/linear_a/test_janus_linear_a_r7_f0_ku_ro_downstream_slot_v0_1.py'
+      - '.github/workflows/janus-linear-a-r7-f0-ku-ro-downstream-slot.yml'
+  push:
+    branches:
+      - 'research/r7-f0-ku-ro-downstream-slot'
+    paths:
+      - 'data/JANUS-LINEAR-A-R7-F0-KU-RO-DOWNSTREAM-SLOT-SPEC-2026-08-15-v0.1.json'
+      - 'research/linear_a/janus_linear_a_r7_f0_ku_ro_downstream_slot_v0_1.py'
+      - 'research/linear_a/test_janus_linear_a_r7_f0_ku_ro_downstream_slot_v0_1.py'
+      - '.github/workflows/janus-linear-a-r7-f0-ku-ro-downstream-slot.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  preregistration-and-canaries:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install inherited parser dependency
+        run: python -m pip install "numpy>=2.0"
+      - name: Compile F0 engine and tests
+        run: |
+          python -m py_compile \
+            research/linear_a/janus_linear_a_r7_f0_ku_ro_downstream_slot_v0_1.py \
+            research/linear_a/test_janus_linear_a_r7_f0_ku_ro_downstream_slot_v0_1.py
+      - name: Validate frozen R7-F0 preregistration
+        env:
+          PYTHONPATH: research/linear_a
+        run: |
+          python research/linear_a/janus_linear_a_r7_f0_ku_ro_downstream_slot_v0_1.py \
+            --spec data/JANUS-LINEAR-A-R7-F0-KU-RO-DOWNSTREAM-SLOT-SPEC-2026-08-15-v0.1.json \
+            --validate-spec --out r7-f0-preregistration-validation.json
+          cat r7-f0-preregistration-validation.json
+      - name: Run LOPO, lexical-UNK, null-preservation, and Holm canaries
+        env:
+          PYTHONPATH: research/linear_a
+        run: |
+          python research/linear_a/test_janus_linear_a_r7_f0_ku_ro_downstream_slot_v0_1.py -v
+      - name: Verify negative lineage and consumed-holdout semantics
+        run: |
+          python - <<'PY'
+          import json
+          e2=json.load(open('data/JANUS-LINEAR-A-R7-E2-NEGATIVE-REPLICATION-CERTIFICATE-2026-08-15-v0.1.json',encoding='utf-8'))
+          r70=json.load(open('data/JANUS-LINEAR-A-R7-0-CROSS-FITTED-FORMULA-SLOT-COMPLETION-RESULT-2026-08-15-v0.1.json',encoding='utf-8'))
+          a0=json.load(open('data/JANUS-LINEAR-A-R7-A0-ANCHORED-FORMULA-FAMILY-RESULT-2026-08-15-v0.1.json',encoding='utf-8'))
+          assert e2['status']=='E2_CANDIDATE_PROFILE_NOT_REPLICATED_RETAIN_ROW-OPENING-LIKE'
+          assert e2['holdout_execution']['holdout_partition_is_now_consumed'] is True
+          assert r70['status']=='CROSS_FITTED_CONCRETE_FORMULA_SLOT_CANDIDATES_NOT_ESTABLISHED'
+          assert a0['status']=='CROSS_FITTED_ANCHORED_FORMULA_FAMILY_CANDIDATES_NOT_ESTABLISHED'
+          print('R7_F0_NEGATIVE_LINEAGE_VERIFIED')
+          PY
+      - name: Static anti-flexibility and claim-ceiling canary
+        run: |
+          python - <<'PY'
+          import json
+          s=json.load(open('data/JANUS-LINEAR-A-R7-F0-KU-RO-DOWNSTREAM-SLOT-SPEC-2026-08-15-v0.1.json',encoding='utf-8'))
+          assert list(s['channels'])==['NEXT_KIND','NEXT_LEX_OR_KIND','TWO_KIND']
+          assert s['source']['external_or_cold_replication_claim_allowed'] is False
+          assert s['structure_destroying_null']['permutations']==5000
+          assert s['structure_destroying_null']['recompute_full_LOPO_pipeline_each_permutation'] is True
+          assert all(s['anti_flexibility'].values())
+          assert s['decision']['pass_is_internal_cross_fitted_structure_not_external_replication'] is True
+          for k in ('specific_semantic_function_established','exact_word_meaning_established','translation_established','phonetic_value_established','language_family_established','new_anchor_established','universal_cross_region_function_established','external_replication_established','decipherment_established'):
+              assert s['claim_ceiling'][k] is False
+          print('R7_F0_STATIC_FIREWALL_PASS')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r7-f0-preregistration-validation
+          path: r7-f0-preregistration-validation.json
+          if-no-files-found: error
