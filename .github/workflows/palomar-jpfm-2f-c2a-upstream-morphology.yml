@@ -1,0 +1,193 @@
+name: Palomar JPFM-2F-C2A upstream morphology replay
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/palomar-jpfm-2f-c2a-upstream-morphology.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  shard:
+    name: c2a-shard-${{ matrix.shard }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 50
+    strategy:
+      fail-fast: false
+      max-parallel: 10
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install frozen replay environment
+        run: |
+          sudo apt-get update >/dev/null
+          sudo apt-get install -y source-extractor psfex >/dev/null
+          if ! command -v sex >/dev/null 2>&1; then
+            if command -v source-extractor >/dev/null 2>&1; then sudo ln -sf "$(command -v source-extractor)" /usr/local/bin/sex; else sudo ln -sf "$(command -v sextractor)" /usr/local/bin/sex; fi
+          fi
+          python -m pip install -q \
+            numpy==2.2.6 pandas==2.3.1 scipy==1.16.1 requests==2.32.4 \
+            astropy==8.0.1 photutils==3.0.0 opencv-python-headless==5.0.0.93 \
+            'fsspec[http]==2026.6.0'
+          git clone -q --filter=blob:none --no-checkout https://github.com/jannefi/poss1-plate-slice.git work/poss1-src
+          git -C work/poss1-src checkout -q 4005e200541b321ead3d6608f0162a14430ef1c2
+          test "$(git -C work/poss1-src rev-parse HEAD)" = "4005e200541b321ead3d6608f0162a14430ef1c2"
+
+      - name: Syntax, frozen-sample admission and external-label firewall
+        run: |
+          python -m py_compile \
+            tools/palomar/jpfm_2f_b2_tile_lineage_replay.py \
+            tools/palomar/jpfm_2f_b3_shape_compat_replay.py \
+            tools/palomar/jpfm_2f_c2a_upstream_morphology_shard.py \
+            tools/palomar/jpfm_2f_c2a_upstream_morphology_aggregate.py
+          python - <<'PY'
+          import json, pathlib
+          a=json.loads(pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-C2A-STRATIFIED-UPSTREAM-MORPHOLOGY-REPLAY-ADMISSION-v1.0.json').read_text())
+          s=json.loads(pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-C2A-STRATIFIED-UPSTREAM-MORPHOLOGY-SAMPLE-FREEZE-RUN-001.json').read_text())
+          assert a['status']=='PREREGISTERED_AFTER_EXACT_512_SAMPLE_FREEZE_BEFORE_C2A_PIXEL_OUTCOME'
+          assert a['frozen_sample_binding']['rows']==512
+          assert a['frozen_sample_binding']['manifest_csv_sha256']=='a3656b181648e5abf933859199b5712e945b932610fffdd6c810785cff341b21'
+          assert a['tile_local_reference_star_contract']['minimum_reference_stars']==20
+          assert a['tile_local_reference_star_contract']['reference_row_filters'][1]=='CLASS_STAR >= 0.8'
+          assert a['primary_blind_morphology_inference']['seed']==20260815
+          assert a['external_label_firewall']['external_label_reveal_authorized'] is False
+          assert s['status']=='FROZEN_BEFORE_C2A_PIXEL_REPLAY'
+          assert s['manifest']['csv_sha256']==a['frozen_sample_binding']['manifest_csv_sha256']
+          assert s['manifest']['gzip_sha256']==a['frozen_sample_binding']['manifest_gzip_sha256']
+          print('PASS_JPFM_2F_C2A_ADMISSION_SAMPLE_GATE')
+          PY
+          if grep -Eiq 'kp\.gfz|aa\.usno|nuclear-explosions|bluebook|nuforc' \
+             tools/palomar/jpfm_2f_c2a_upstream_morphology_shard.py \
+             tools/palomar/jpfm_2f_c2a_upstream_morphology_aggregate.py; then
+            echo 'FAIL: external-label source in C2A code'; exit 1
+          fi
+          echo 'PASS_JPFM_2F_C2A_EXTERNAL_LABEL_FIREWALL'
+
+      - name: Execute deterministic frozen tile shard
+        run: |
+          mkdir -p work/c2a-${{ matrix.shard }} work/out-${{ matrix.shard }}
+          python tools/palomar/jpfm_2f_c2a_upstream_morphology_shard.py \
+            --sample data/JANUS-PALOMAR-JPFM-2F-C2A-STRATIFIED-UPSTREAM-MORPHOLOGY-SAMPLE-FREEZE-RUN-001.csv.gz \
+            --upstream-root work/poss1-src \
+            --work-dir work/c2a-${{ matrix.shard }} \
+            --out-dir work/out-${{ matrix.shard }} \
+            --shard-index ${{ matrix.shard }} \
+            --shard-count 16
+
+      - name: Validate non-global shard receipt
+        run: |
+          SHARD='${{ matrix.shard }}' python - <<'PY'
+          import gzip, hashlib, io, json, os, pathlib, pandas as pd
+          i=int(os.environ['SHARD']); root=pathlib.Path(f'work/out-{i}')
+          rp=root/f'JANUS-PALOMAR-JPFM-2F-C2A-SHARD-{i:02d}-RECEIPT-RUN-001.json'
+          r=json.loads(rp.read_text())
+          assert r['status']=='EXECUTED_SHARD_RECEIPT__NO_GLOBAL_OUTCOME_OR_INFERENCE'
+          assert r['shard']['index']==i and r['shard']['count']==16
+          assert r['external_label_firewall']['external_label_reveal_authorized'] is False
+          assert r['execution']['full_remote_plate_array_accessed'] is False
+          sp=root/r['sidecar']['path']; gz=sp.read_bytes(); raw=gzip.decompress(gz)
+          assert hashlib.sha256(gz).hexdigest()==r['sidecar']['gzip_sha256']
+          assert hashlib.sha256(raw).hexdigest()==r['sidecar']['csv_sha256']
+          df=pd.read_csv(io.BytesIO(raw)); assert len(df)==r['sidecar']['rows'] and df.src_id.nunique()==len(df)
+          expected_tiles=23 if i<8 else 22
+          assert r['shard']['distinct_tiles']==expected_tiles
+          print('PASS_JPFM_2F_C2A_SHARD_ARTIFACT_GATE',i,'rows',len(df),'exact',r['execution']['exact_NUMBER_recovered'],'norm',r['execution']['local_normalized_primary_features_finite'])
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jpfm-2f-c2a-shard-${{ matrix.shard }}
+          path: work/out-${{ matrix.shard }}/
+          if-no-files-found: error
+          retention-days: 30
+
+  aggregate:
+    name: c2a-aggregate
+    needs: shard
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install aggregate environment
+        run: python -m pip install -q numpy==2.2.6 pandas==2.3.1
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: jpfm-2f-c2a-shard-*
+          path: work/shards
+          merge-multiple: true
+      - name: Aggregate exact 512 union and run preregistered blind inference
+        run: |
+          python tools/palomar/jpfm_2f_c2a_upstream_morphology_aggregate.py \
+            --sample data/JANUS-PALOMAR-JPFM-2F-C2A-STRATIFIED-UPSTREAM-MORPHOLOGY-SAMPLE-FREEZE-RUN-001.csv.gz \
+            --admission data/JANUS-PALOMAR-JPFM-2F-C2A-STRATIFIED-UPSTREAM-MORPHOLOGY-REPLAY-ADMISSION-v1.0.json \
+            --shards-dir work/shards \
+            --out-json data/JANUS-PALOMAR-JPFM-2F-C2A-STRATIFIED-UPSTREAM-MORPHOLOGY-REPLAY-RUN-001.json \
+            --out-sidecar-gz data/JANUS-PALOMAR-JPFM-2F-C2A-STRATIFIED-UPSTREAM-MORPHOLOGY-REPLAY-SIDECAR-RUN-001.csv.gz
+      - name: Validate aggregate artifact without forcing positive inference
+        run: |
+          python - <<'PY'
+          import gzip, hashlib, io, json, pathlib, pandas as pd
+          jp=pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-C2A-STRATIFIED-UPSTREAM-MORPHOLOGY-REPLAY-RUN-001.json')
+          cp=pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-C2A-STRATIFIED-UPSTREAM-MORPHOLOGY-REPLAY-SIDECAR-RUN-001.csv.gz')
+          d=json.loads(jp.read_text())
+          allowed={
+            'PASS_STRATIFIED_UPSTREAM_MORPHOLOGY_CORPUS_ADMITTED',
+            'FAIL_CLOSED_TILE_OR_DETECTION_REPLAY','FAIL_CLOSED_OBJECT_LINEAGE',
+            'FAIL_CLOSED_RAW_UPSTREAM_MORPHOLOGY','FAIL_CLOSED_SHAPE_REPLAY',
+            'FAIL_CLOSED_LOCAL_REFERENCE_NORMALIZATION'
+          }
+          assert d['status']=='EXECUTED_AND_SHARD_INTEGRITY_VERIFIED'
+          assert d['measurement_outcome'] in allowed
+          assert d['shard_integrity']['gate_pass'] is True
+          assert d['shard_integrity']['shard_count']==16
+          assert d['shard_integrity']['distinct_tiles_union']==360
+          assert d['shard_integrity']['source_rows_union']==512
+          assert d['shard_integrity']['source_ids_unique']==512
+          assert d['external_label_firewall']['external_label_reveal_authorized'] is False
+          gz=cp.read_bytes(); raw=gzip.decompress(gz)
+          assert hashlib.sha256(gz).hexdigest()==d['sidecar']['gzip_sha256']
+          assert hashlib.sha256(raw).hexdigest()==d['sidecar']['csv_sha256']
+          df=pd.read_csv(io.BytesIO(raw)); assert len(df)==512 and df.src_id.nunique()==512
+          inf=d['blind_morphology_inference']
+          assert inf['status'] in {'WITHHELD_MEASUREMENT_NOT_ADMITTED','WITHHELD_INSUFFICIENT_NORMALIZED_COVERAGE','WITHHELD_NONPOSITIVE_GLOBAL_MAD','EXECUTED_BLIND_MORPHOLOGY_ASSOCIATION_TEST'}
+          if inf['status']=='EXECUTED_BLIND_MORPHOLOGY_ASSOCIATION_TEST':
+            assert inf['permutations']==50000 and inf['seed']==20260815
+            assert len(inf['cluster_followups'])==16
+          print('PASS_JPFM_2F_C2A_AGGREGATE_ARTIFACT_GATE',d['measurement_outcome'],inf['status'],inf.get('global_permutation_p'))
+          PY
+      - name: Preserve compact shard receipts only
+        run: cp work/shards/JANUS-PALOMAR-JPFM-2F-C2A-SHARD-*-RECEIPT-RUN-001.json data/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jpfm-2f-c2a-aggregate-run-001
+          path: |
+            data/JANUS-PALOMAR-JPFM-2F-C2A-STRATIFIED-UPSTREAM-MORPHOLOGY-REPLAY-RUN-001.json
+            data/JANUS-PALOMAR-JPFM-2F-C2A-STRATIFIED-UPSTREAM-MORPHOLOGY-REPLAY-SIDECAR-RUN-001.csv.gz
+            data/JANUS-PALOMAR-JPFM-2F-C2A-SHARD-*-RECEIPT-RUN-001.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Commit validated aggregate and compact receipts only
+        run: |
+          git config user.name 'janus-jpfm-ci'
+          git config user.email 'actions@users.noreply.github.com'
+          git add \
+            data/JANUS-PALOMAR-JPFM-2F-C2A-STRATIFIED-UPSTREAM-MORPHOLOGY-REPLAY-RUN-001.json \
+            data/JANUS-PALOMAR-JPFM-2F-C2A-STRATIFIED-UPSTREAM-MORPHOLOGY-REPLAY-SIDECAR-RUN-001.csv.gz \
+            data/JANUS-PALOMAR-JPFM-2F-C2A-SHARD-*-RECEIPT-RUN-001.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Record JPFM-2F-C2A stratified upstream morphology replay [skip ci]'
+          git pull --rebase origin main
+          git push
