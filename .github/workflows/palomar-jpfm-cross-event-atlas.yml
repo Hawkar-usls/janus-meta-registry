@@ -1,0 +1,102 @@
+name: Palomar JPFM-3A cross-event atlas
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'data/JANUS-PALOMAR-JPFM-3A-CROSS-EVENT-ATLAS-ADMISSION-v1.0.json'
+      - 'data/JANUS-BLUEBOOK-STARLIKE-DAY-FREEZE-v1.0.json'
+      - 'tools/palomar/jpfm_cross_event_atlas.py'
+      - '.github/workflows/palomar-jpfm-cross-event-atlas.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  jpfm-3a:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install frozen analysis environment
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install \
+            numpy==2.2.6 \
+            pandas==2.3.1 \
+            scipy==1.16.1 \
+            statsmodels==0.14.5 \
+            requests==2.32.4
+          python -m pip freeze | sort | tee /tmp/jpfm-3a-pip-freeze.txt
+
+      - name: Syntax gate
+        run: |
+          python -m py_compile tools/palomar/jpfm_open_reconstruction_temporal.py
+          python -m py_compile tools/palomar/jpfm_schedule_confound_decomposition.py
+          python -m py_compile tools/palomar/jpfm_cross_event_atlas.py
+
+      - name: Verify frozen admission and STARLIKE input
+        run: |
+          python - <<'PY'
+          import json, pathlib
+          a=json.loads(pathlib.Path('data/JANUS-PALOMAR-JPFM-3A-CROSS-EVENT-ATLAS-ADMISSION-v1.0.json').read_text())
+          s=json.loads(pathlib.Path('data/JANUS-BLUEBOOK-STARLIKE-DAY-FREEZE-v1.0.json').read_text())
+          assert a['status']=='FROZEN_BEFORE_CROSS_EVENT_OUTCOME'
+          assert a['primary_cross_channel_test']['id']=='P1_BLUEBOOK_STARLIKE_TO_POSS_RATE'
+          assert a['epistemic_design']['no_event_family_may_be_added_to_v1_after_results_are_seen'] is True
+          assert s['status']=='FROZEN_INPUT__NUCLEAR_BLIND_NARRATIVE_SCREEN'
+          assert len(s['event_days'])==78
+          assert sum(x['count'] for x in s['event_days'])==82
+          print('PASS_JPFM_3A_ADMISSION_GATE')
+          PY
+
+      - name: Execute preregistered JPFM-3A
+        run: |
+          mkdir -p out
+          python tools/palomar/jpfm_cross_event_atlas.py \
+            --out out/JANUS-PALOMAR-JPFM-3A-CROSS-EVENT-ATLAS-RUN-001.json
+
+      - name: Validate result contract
+        run: |
+          python - <<'PY'
+          import json, pathlib
+          p=pathlib.Path('out/JANUS-PALOMAR-JPFM-3A-CROSS-EVENT-ATLAS-RUN-001.json')
+          d=json.loads(p.read_text())
+          assert d['status']=='EXECUTED'
+          assert d['cohort']['palomar_observed_nights']==312
+          assert d['cohort']['bluebook_starlike_days']==78
+          assert d['cohort']['bluebook_starlike_cases']==82
+          assert d['primary_cross_channel']['exact_day']['poss_rate']['status'] in {'OK','INSUFFICIENT_EVENT_VARIATION'}
+          for arm in ('D1_SOLAR_F107_HIGH','D2_SUNSPOT_HIGH','D3_GEOMAG_STORM','D5_MAJOR_METEOR_SHOWER_PROXY'):
+              assert arm in d['poss_discovery']
+              assert arm in d['bluebook_discovery']
+              assert arm in d['cross_layer_gate']
+          assert 'NO_SHARED_OBJECT_CAUSALITY' in d['claim_ceiling']
+          print('PASS_JPFM_3A_RESULT_GATE')
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jpfm-3a-cross-event-atlas-run-001
+          path: out/JANUS-PALOMAR-JPFM-3A-CROSS-EVENT-ATLAS-RUN-001.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Commit only validated JPFM-3A result
+        run: |
+          cp out/JANUS-PALOMAR-JPFM-3A-CROSS-EVENT-ATLAS-RUN-001.json \
+             data/JANUS-PALOMAR-JPFM-3A-CROSS-EVENT-ATLAS-RUN-001.json
+          git config user.name 'janus-jpfm-ci'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/JANUS-PALOMAR-JPFM-3A-CROSS-EVENT-ATLAS-RUN-001.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Add JPFM-3A cross-event atlas result [skip ci]'
+          git pull --rebase origin main
+          git push
