@@ -1,0 +1,67 @@
+name: Palomar JPFM-3B NOAA event patrol freeze
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'tools/palomar/jpfm_3b_event_patrol_source_freezer.py'
+      - '.github/workflows/palomar-jpfm-3b-event-patrol-freeze.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  freeze-event-patrol:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install acquisition dependency
+        run: python -m pip install requests==2.32.4
+      - name: Syntax gate
+        run: python -m py_compile tools/palomar/jpfm_3b_event_patrol_source_freezer.py
+      - name: Freeze NOAA event and patrol bytes
+        run: |
+          mkdir -p out
+          python tools/palomar/jpfm_3b_event_patrol_source_freezer.py \
+            --out out/JANUS-PALOMAR-JPFM-3B-NOAA-EVENT-PATROL-SOURCE-FREEZE-v1.0.json
+      - name: Validate acquisition-only contract
+        run: |
+          python - <<'PY'
+          import json, pathlib
+          p=pathlib.Path('out/JANUS-PALOMAR-JPFM-3B-NOAA-EVENT-PATROL-SOURCE-FREEZE-v1.0.json')
+          d=json.loads(p.read_text())
+          assert d['status']=='SOURCE_BYTES_FROZEN__EVENT_AND_PATROL_SCHEMA_NOT_YET_ADMITTED'
+          assert d['years']==[1955,1956,1957]
+          assert d['design_role']['training_validation_split_frozen_before_grouping_comparison']['training_year']==1955
+          assert d['design_role']['training_validation_split_frozen_before_grouping_comparison']['validation_years']==[1956,1957]
+          assert d['outcome_blindness']['bluebook_access'] is False
+          assert d['outcome_blindness']['poss1_access'] is False
+          assert d['outcome_blindness']['association_computed'] is False
+          for tree in ('event_archive','patrol_archive'):
+              assert len(d[tree]['years'])==3
+              assert all(y['data_file_count']>=1 for y in d[tree]['years'])
+          print('PASS_3B_EVENT_PATROL_FREEZE')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jpfm-3b-noaa-event-patrol-freeze-v1
+          path: out/JANUS-PALOMAR-JPFM-3B-NOAA-EVENT-PATROL-SOURCE-FREEZE-v1.0.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Commit compact source manifest
+        run: |
+          cp out/JANUS-PALOMAR-JPFM-3B-NOAA-EVENT-PATROL-SOURCE-FREEZE-v1.0.json \
+             data/JANUS-PALOMAR-JPFM-3B-NOAA-EVENT-PATROL-SOURCE-FREEZE-v1.0.json
+          git config user.name 'janus-jpfm-ci'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/JANUS-PALOMAR-JPFM-3B-NOAA-EVENT-PATROL-SOURCE-FREEZE-v1.0.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Add JPFM-3B NOAA event patrol source freeze [skip ci]'
+          git pull --rebase origin main
+          git push
