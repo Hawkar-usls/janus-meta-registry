@@ -5,6 +5,7 @@ The workflow is automatic and deterministic:
 - GitHub login is the displayed nickname;
 - maximum three processed guestbook submissions per login;
 - messages are at most 100 characters;
+- explicit public-display consent from the Issue Form is required;
 - JANUS mention + profanity/direct insult is quarantined;
 - quarantined raw text is not copied into the website JSON;
 - accepted entries are appended to guestbook/messages.json.
@@ -107,6 +108,32 @@ def processed_count(author_login: str, guestbook: dict, quarantine: dict) -> int
     return accepted + rejected
 
 
+def quarantine_and_exit(
+    quarantine_path: Path,
+    quarantine: dict,
+    *,
+    issue_number: int,
+    issue_url: str,
+    author_login: str,
+    created_at: str,
+    reason: str,
+    message: str,
+) -> int:
+    append_quarantine(
+        quarantine,
+        issue_number=issue_number,
+        issue_url=issue_url,
+        author_login=author_login,
+        created_at=created_at,
+        reason=reason,
+        message=message,
+    )
+    save_json(quarantine_path, quarantine)
+    write_output("status", "quarantined")
+    write_output("reason", reason)
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--event", required=True)
@@ -130,6 +157,8 @@ def main() -> int:
 
     fields = parse_issue_form(body)
     message = plain_one_line(fields.get("message", ""))
+    public_display = fields.get("public display", "")
+    consent = re.search(r"\[[xX]\]", public_display) is not None
 
     guestbook_path = Path(args.guestbook)
     quarantine_path = Path(args.quarantine)
@@ -160,8 +189,21 @@ def main() -> int:
         write_output("reason", "ISSUE_ALREADY_PROCESSED")
         return 0
 
+    if not consent:
+        return quarantine_and_exit(
+            quarantine_path,
+            quarantine,
+            issue_number=issue_number,
+            issue_url=issue_url,
+            author_login=author_login,
+            created_at=created_at,
+            reason="PUBLIC_DISPLAY_CONSENT_MISSING",
+            message=message,
+        )
+
     if not message:
-        append_quarantine(
+        return quarantine_and_exit(
+            quarantine_path,
             quarantine,
             issue_number=issue_number,
             issue_url=issue_url,
@@ -170,13 +212,10 @@ def main() -> int:
             reason="EMPTY_MESSAGE",
             message=message,
         )
-        save_json(quarantine_path, quarantine)
-        write_output("status", "quarantined")
-        write_output("reason", "EMPTY_MESSAGE")
-        return 0
 
     if len(message) > MAX_MESSAGE_CHARACTERS:
-        append_quarantine(
+        return quarantine_and_exit(
+            quarantine_path,
             quarantine,
             issue_number=issue_number,
             issue_url=issue_url,
@@ -185,13 +224,10 @@ def main() -> int:
             reason="MESSAGE_TOO_LONG_MAX_100",
             message=message,
         )
-        save_json(quarantine_path, quarantine)
-        write_output("status", "quarantined")
-        write_output("reason", "MESSAGE_TOO_LONG_MAX_100")
-        return 0
 
     if processed_count(author_login, guestbook, quarantine) >= MAX_MESSAGES_PER_LOGIN:
-        append_quarantine(
+        return quarantine_and_exit(
+            quarantine_path,
             quarantine,
             issue_number=issue_number,
             issue_url=issue_url,
@@ -200,14 +236,11 @@ def main() -> int:
             reason="AUTHOR_MESSAGE_LIMIT_3",
             message=message,
         )
-        save_json(quarantine_path, quarantine)
-        write_output("status", "quarantined")
-        write_output("reason", "AUTHOR_MESSAGE_LIMIT_3")
-        return 0
 
     result = evaluate_message(message)
     if not result.accepted:
-        append_quarantine(
+        return quarantine_and_exit(
+            quarantine_path,
             quarantine,
             issue_number=issue_number,
             issue_url=issue_url,
@@ -216,10 +249,6 @@ def main() -> int:
             reason=result.reason,
             message=message,
         )
-        save_json(quarantine_path, quarantine)
-        write_output("status", "quarantined")
-        write_output("reason", result.reason)
-        return 0
 
     entries = guestbook.setdefault("entries", [])
     entries.append(
