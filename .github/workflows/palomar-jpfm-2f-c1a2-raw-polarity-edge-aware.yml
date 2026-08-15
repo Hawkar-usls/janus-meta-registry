@@ -1,0 +1,124 @@
+name: Palomar JPFM-2F-C1A2 raw-polarity edge-aware morphology
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/palomar-jpfm-2f-c1a2-raw-polarity-edge-aware.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  jpfm-2f-c1a2:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install frozen corrective environment
+        run: |
+          python -m pip install -q \
+            numpy==2.2.6 pandas==2.3.1 scipy==1.16.1 \
+            astropy==8.0.1 opencv-python-headless==5.0.0.93 \
+            'fsspec[http]==2026.6.0'
+
+      - name: Syntax, corrective admission and firewall gates
+        run: |
+          python -m py_compile \
+            tools/palomar/jpfm_2f_c1a_sparse_stamp_direct_morphology.py \
+            tools/palomar/jpfm_2f_c1a2_raw_polarity_edge_aware.py
+          python - <<'PY'
+          import json, pathlib
+          a=json.loads(pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-C1A2-RAW-POLARITY-EDGE-AWARE-DIRECT-MORPHOLOGY-ADMISSION-v1.0.json').read_text())
+          assert a['status']=='PREREGISTERED_AFTER_C1A_CORRECTIVE_AUDIT_BEFORE_C1A2_OUTCOME'
+          assert a['frozen_sample']['same_64_as_C1A'] is True
+          assert a['frozen_sample']['rows_full_denominator']==64
+          assert a['repair_1_geometric_eligibility']['computed_before_pixel_access'] is True
+          assert a['repair_2_raw_positive_intensity']['new_signal']=='max(raw-outer_raw_median,0)'
+          assert a['repair_2_raw_positive_intensity']['contour_channel_changed'] is False
+          assert '>= 5.0' in a['predeclared_gates']['central_raw_signal']
+          assert a['external_label_firewall']['external_label_reveal_authorized'] is False
+          old=json.loads(pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-C1A-NAMED-PLATE-SPARSE-STAMP-DIRECT-MORPHOLOGY-RUN-001.json').read_text())
+          assert old['outcome']=='FAIL_CLOSED_SPARSE_STAMP_TRANSPORT'
+          audit=json.loads(pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-C1A-CORRECTIVE-AUDIT-v1.0.json').read_text())
+          assert audit['status']=='C1A_FAIL_PRESERVED__TWO_INDEPENDENT_FAILURE_MODES_LOCALIZED'
+          print('PASS_JPFM_2F_C1A2_CORRECTIVE_ADMISSION_GATE')
+          PY
+          if grep -Eiq 'kp\.gfz|aa\.usno|nuclear-explosions|bluebook|nuforc' tools/palomar/jpfm_2f_c1a2_raw_polarity_edge_aware.py; then
+            echo 'FAIL: external-label source present in C1A2 runner'; exit 1
+          fi
+          if grep -Eiq 'hdul\[[^]]+\]\.data|hdu\.data|remote_hdu\.data' tools/palomar/jpfm_2f_c1a2_raw_polarity_edge_aware.py; then
+            echo 'FAIL: forbidden full-array access pattern in C1A2 runner'; exit 1
+          fi
+          grep -q 'hdu.section' tools/palomar/jpfm_2f_c1a2_raw_polarity_edge_aware.py
+          echo 'PASS_JPFM_2F_C1A2_SPARSE_TRANSPORT_AND_FIREWALL_GATE'
+
+      - name: Execute frozen C1A2 corrective replay
+        run: |
+          python tools/palomar/jpfm_2f_c1a2_raw_polarity_edge_aware.py \
+            --c0m-result data/JANUS-PALOMAR-JPFM-2F-C0M-FULL-S0-HEADER-ONLY-ACQUISITION-MAP-RUN-001.json \
+            --c0m-map data/JANUS-PALOMAR-JPFM-2F-C0M-FULL-S0-HEADER-ONLY-ACQUISITION-MAP-RUN-001.csv.gz \
+            --b3s-result data/JANUS-PALOMAR-JPFM-2F-B3S-SHARD-AGGREGATE-RUN-001.json \
+            --b3s-sidecar data/JANUS-PALOMAR-JPFM-2F-B3S-SHARD-AGGREGATE-SIDECAR-RUN-001.csv.gz \
+            --c1a-result data/JANUS-PALOMAR-JPFM-2F-C1A-NAMED-PLATE-SPARSE-STAMP-DIRECT-MORPHOLOGY-RUN-001.json \
+            --c1a-sidecar data/JANUS-PALOMAR-JPFM-2F-C1A-NAMED-PLATE-SPARSE-STAMP-DIRECT-MORPHOLOGY-SIDECAR-RUN-001.csv.gz \
+            --out-json data/JANUS-PALOMAR-JPFM-2F-C1A2-RAW-POLARITY-EDGE-AWARE-DIRECT-MORPHOLOGY-RUN-001.json \
+            --out-sidecar-gz data/JANUS-PALOMAR-JPFM-2F-C1A2-RAW-POLARITY-EDGE-AWARE-DIRECT-MORPHOLOGY-SIDECAR-RUN-001.csv.gz
+
+      - name: Validate C1A2 artifact without forcing PASS
+        run: |
+          python - <<'PY'
+          import gzip, hashlib, io, json, pathlib, pandas as pd
+          jp=pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-C1A2-RAW-POLARITY-EDGE-AWARE-DIRECT-MORPHOLOGY-RUN-001.json')
+          cp=pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-C1A2-RAW-POLARITY-EDGE-AWARE-DIRECT-MORPHOLOGY-SIDECAR-RUN-001.csv.gz')
+          d=json.loads(jp.read_text())
+          allowed={
+            'PASS_RAW_POLARITY_EDGE_AWARE_DIRECT_MORPHOLOGY_PILOT',
+            'FAIL_CLOSED_DENOMINATOR_OR_ELIGIBILITY',
+            'FAIL_CLOSED_ELIGIBLE_SPARSE_TRANSPORT',
+            'FAIL_CLOSED_RAW_CENTRAL_SIGNAL_OR_LOCALIZATION',
+            'FAIL_CLOSED_RAW_DIRECT_MORPHOLOGY_COVERAGE'
+          }
+          assert d['status']=='EXECUTED' and d['outcome'] in allowed
+          assert d['denominator_and_eligibility']['full_rows']==64
+          assert d['denominator_and_eligibility']['full_src_ids_unique']==64
+          assert d['transport']['full_remote_plate_array_accessed'] is False
+          assert d['transport']['nearest_source_search_used'] is False
+          assert d['transport']['peak_recentering_used'] is False
+          assert d['transport']['plate_substitution_used'] is False
+          assert d['external_label_firewall']['external_label_reveal_authorized'] is False
+          gz=cp.read_bytes(); raw=gzip.decompress(gz)
+          assert hashlib.sha256(gz).hexdigest()==d['sidecar']['gzip_sha256']
+          assert hashlib.sha256(raw).hexdigest()==d['sidecar']['csv_sha256']
+          df=pd.read_csv(io.BytesIO(raw)); assert len(df)==64 and df.src_id.nunique()==64
+          assert (d['denominator_and_eligibility']['geometrically_eligible_81px'] + d['denominator_and_eligibility']['geometric_edge_ineligible_81px'])==64
+          print('PASS_JPFM_2F_C1A2_RESULT_ARTIFACT_GATE', d['outcome'])
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jpfm-2f-c1a2-raw-polarity-edge-aware-run-001
+          path: |
+            data/JANUS-PALOMAR-JPFM-2F-C1A2-RAW-POLARITY-EDGE-AWARE-DIRECT-MORPHOLOGY-RUN-001.json
+            data/JANUS-PALOMAR-JPFM-2F-C1A2-RAW-POLARITY-EDGE-AWARE-DIRECT-MORPHOLOGY-SIDECAR-RUN-001.csv.gz
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Commit validated C1A2 result
+        run: |
+          git config user.name 'janus-jpfm-ci'
+          git config user.email 'actions@users.noreply.github.com'
+          git add \
+            data/JANUS-PALOMAR-JPFM-2F-C1A2-RAW-POLARITY-EDGE-AWARE-DIRECT-MORPHOLOGY-RUN-001.json \
+            data/JANUS-PALOMAR-JPFM-2F-C1A2-RAW-POLARITY-EDGE-AWARE-DIRECT-MORPHOLOGY-SIDECAR-RUN-001.csv.gz
+          git diff --cached --quiet && exit 0
+          git commit -m 'Record JPFM-2F-C1A2 raw-polarity edge-aware replay [skip ci]'
+          git pull --rebase origin main
+          git push
