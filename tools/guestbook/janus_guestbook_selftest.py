@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -39,6 +40,8 @@ def event(number: int, login: str, message: str, consent: bool = True) -> dict:
 def run_case(root: Path, payload: dict) -> dict[str, str]:
     event_path = root / f"event-{payload['issue']['number']}.json"
     event_path.write_text(json.dumps(payload), encoding="utf-8")
+    env = os.environ.copy()
+    env.pop("GITHUB_OUTPUT", None)
     result = subprocess.run(
         [
             sys.executable,
@@ -53,6 +56,7 @@ def run_case(root: Path, payload: dict) -> dict[str, str]:
         check=True,
         capture_output=True,
         text=True,
+        env=env,
     )
     outputs: dict[str, str] = {}
     for line in result.stdout.splitlines():
