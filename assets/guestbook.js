@@ -89,21 +89,32 @@
       .trim();
   }
 
-  function safeIssueCandidate(issue) {
+  function issueSubmission(issue) {
     if (!issue || issue.pull_request) return null;
     if (!String(issue.title || '').startsWith('[GUESTBOOK]')) return null;
     const login = issue.user && issue.user.login ? String(issue.user.login) : '';
-    const message = oneLine(parseIssueForm(issue.body || '').message || '');
-    if (!login || !message || message.length > MAX_CHARS) return null;
+    if (!login) return null;
+    const fields = parseIssueForm(issue.body || '');
     return {
       issue_number: Number(issue.number),
       issue_url: String(issue.html_url || ''),
       author_login: login,
       display_name: `@${login}`,
-      message,
+      message: oneLine(fields.message || ''),
+      public_consent: /\[[xX]\]/.test(String(fields['public display'] || '')),
       created_at: String(issue.created_at || ''),
       render_in_ticker: true
     };
+  }
+
+  function liveSubmissionAccepted(entry) {
+    return Boolean(
+      entry &&
+      entry.public_consent &&
+      entry.message &&
+      entry.message.length <= MAX_CHARS &&
+      acceptedByRespectRule(entry.message)
+    );
   }
 
   async function fetchJson(url) {
@@ -120,9 +131,7 @@
       }
     } catch (_) {}
 
-    const response = await fetch(API, {
-      headers: { 'Accept': 'application/vnd.github+json' }
-    });
+    const response = await fetch(API, { headers: { 'Accept': 'application/vnd.github+json' } });
     if (!response.ok) throw new Error(`GitHub API: ${response.status}`);
     const issues = await response.json();
     try {
@@ -140,12 +149,17 @@
     ]);
 
     const counts = new Map();
-    const addCount = login => counts.set(login.toLowerCase(), (counts.get(login.toLowerCase()) || 0) + 1);
-    accepted.forEach(x => addCount(String(x.author_login || '')));
-    quarantined.forEach(x => addCount(String(x.author_login || '')));
+    const addCount = login => {
+      const key = String(login || '').toLowerCase();
+      if (!key) return;
+      counts.set(key, (counts.get(key) || 0) + 1);
+    };
+    accepted.forEach(x => addCount(x.author_login));
+    quarantined.forEach(x => addCount(x.author_login));
 
+    let liveQuarantineCount = 0;
     const live = (Array.isArray(issues) ? issues : [])
-      .map(safeIssueCandidate)
+      .map(issueSubmission)
       .filter(Boolean)
       .sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
 
@@ -153,14 +167,19 @@
       if (processed.has(entry.issue_number)) continue;
       const key = entry.author_login.toLowerCase();
       const count = counts.get(key) || 0;
+      processed.add(entry.issue_number);
+
       if (count >= MAX_PER_LOGIN) {
         counts.set(key, count + 1);
-        processed.add(entry.issue_number);
+        liveQuarantineCount += 1;
         continue;
       }
+
       counts.set(key, count + 1);
-      processed.add(entry.issue_number);
-      if (!acceptedByRespectRule(entry.message)) continue;
+      if (!liveSubmissionAccepted(entry)) {
+        liveQuarantineCount += 1;
+        continue;
+      }
       accepted.push(entry);
     }
 
@@ -168,19 +187,42 @@
     accepted
       .filter(x => x && x.render_in_ticker !== false && x.message && x.author_login)
       .forEach(entry => dedup.set(Number(entry.issue_number), entry));
-    return [...dedup.values()].sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+
+    return {
+      entries: [...dedup.values()].sort((a, b) => new Date(a.created_at) - new Date(b.created_at)),
+      quarantineCount: quarantined.length + liveQuarantineCount
+    };
   }
 
-  function createRun(entries) {
+  function createRun(entries, quarantineCount) {
     const run = document.createElement('div');
     run.className = 'guestbook-run';
-    entries.forEach((entry, index) => {
+
+    const display = [...entries];
+    if (quarantineCount > 0) {
+      const insertAt = Math.min(3, display.length);
+      display.splice(insertAt, 0, {
+        system_warning: true,
+        message: `House rule withheld ${quarantineCount} submission${quarantineCount === 1 ? '' : 's'} from the public ticker.`
+      });
+    }
+
+    display.forEach((entry, index) => {
       if (index) {
         const sep = document.createElement('span');
         sep.className = 'guestbook-separator';
         sep.textContent = '✦';
         run.appendChild(sep);
       }
+
+      if (entry.system_warning) {
+        const warning = document.createElement('span');
+        warning.className = 'guestbook-system-warning';
+        warning.textContent = entry.message;
+        run.appendChild(warning);
+        return;
+      }
+
       const item = document.createElement('a');
       item.className = 'guestbook-message';
       item.href = entry.issue_url || ISSUE_FORM_URL;
@@ -197,7 +239,7 @@
     return run;
   }
 
-  function render(entries) {
+  function render(entries, quarantineCount = 0) {
     const host = document.getElementById('janus-guestbook');
     if (!host) return;
     const track = host.querySelector('.guestbook-track');
@@ -205,7 +247,7 @@
     const count = host.querySelector('[data-guestbook-count]');
     if (count) count.textContent = String(entries.length);
 
-    if (!entries.length) {
+    if (!entries.length && quarantineCount === 0) {
       if (empty) empty.hidden = false;
       if (track) track.hidden = true;
       return;
@@ -213,16 +255,20 @@
 
     if (empty) empty.hidden = true;
     track.hidden = false;
-    track.replaceChildren(createRun(entries), createRun(entries));
-    const seconds = Math.max(14, entries.length * 5);
+    track.replaceChildren(
+      createRun(entries, quarantineCount),
+      createRun(entries, quarantineCount)
+    );
+    const visibleItems = entries.length + (quarantineCount > 0 ? 1 : 0);
+    const seconds = Math.max(14, visibleItems * 5);
     track.style.setProperty('--ticker-duration', `${seconds}s`);
   }
 
   async function boot() {
     const host = document.getElementById('janus-guestbook');
     if (!host) return;
-    const formLink = host.querySelector('[data-guestbook-form]');
-    if (formLink) formLink.href = ISSUE_FORM_URL;
+    const formLinks = host.querySelectorAll('[data-guestbook-form]');
+    formLinks.forEach(link => { link.href = ISSUE_FORM_URL; });
 
     let cache = { entries: [] };
     let quarantine = { entries: [] };
@@ -231,10 +277,11 @@
 
     try {
       const issues = await fetchLiveIssues();
-      render(mergeEntries(cache, quarantine, issues));
+      const merged = mergeEntries(cache, quarantine, issues);
+      render(merged.entries, merged.quarantineCount);
       host.dataset.live = 'true';
     } catch (_) {
-      render(Array.isArray(cache.entries) ? cache.entries : []);
+      render(Array.isArray(cache.entries) ? cache.entries : [], Array.isArray(quarantine.entries) ? quarantine.entries.length : 0);
       host.dataset.live = 'false';
     }
   }
