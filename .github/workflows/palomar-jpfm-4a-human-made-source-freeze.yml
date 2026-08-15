@@ -1,0 +1,65 @@
+name: Palomar JPFM-4A human-made source freeze
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'data/JANUS-PALOMAR-JPFM-4A-HUMAN-MADE-SKY-EVENT-ACQUISITION-GATE-v1.0.json'
+      - 'tools/palomar/jpfm_4a_human_made_source_freezer.py'
+      - '.github/workflows/palomar-jpfm-4a-human-made-source-freeze.yml'
+permissions:
+  contents: write
+jobs:
+  freeze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: python -m pip install requests==2.32.4
+      - run: python -m py_compile tools/palomar/jpfm_4a_human_made_source_freezer.py
+      - name: Verify acquisition gate
+        run: |
+          python - <<'PY'
+          import json,pathlib
+          d=json.loads(pathlib.Path('data/JANUS-PALOMAR-JPFM-4A-HUMAN-MADE-SKY-EVENT-ACQUISITION-GATE-v1.0.json').read_text())
+          assert d['status']=='PREREGISTERED_ACQUISITION_GATE__NO_BLUEBOOK_OR_POSS_JOIN'
+          assert d['arms']['SOUNDING_ROCKETS']['admission_tier_initial']=='POSITIVE_EVENT_ONLY'
+          assert d['arms']['HIGH_ALTITUDE_BALLOONS_GENETRIX_119L']['admission_tier_initial']=='OPERATIONAL_OPPORTUNITY_KNOWN__DAILY_COUNTS_PENDING'
+          assert d['current_authority_changed'] is False
+          print('PASS_4A_ACQUISITION_GATE')
+          PY
+      - name: Freeze public authority pages
+        run: |
+          mkdir -p out
+          python tools/palomar/jpfm_4a_human_made_source_freezer.py --out out/JANUS-PALOMAR-JPFM-4A-HUMAN-MADE-SKY-SOURCE-FREEZE-v1.0.json
+      - name: Validate source-only contract
+        run: |
+          python - <<'PY'
+          import json,pathlib
+          d=json.loads(pathlib.Path('out/JANUS-PALOMAR-JPFM-4A-HUMAN-MADE-SKY-SOURCE-FREEZE-v1.0.json').read_text())
+          assert d['status']=='PUBLIC_AUTHORITY_SOURCE_BYTES_FROZEN__NO_OUTCOME_JOIN'
+          assert d['outcome_blindness']['bluebook_access'] is False
+          assert d['outcome_blindness']['poss1_access'] is False
+          assert d['outcome_blindness']['association_computed'] is False
+          assert all(d['authority_marker_gates']['nasa'].values())
+          assert all(d['authority_marker_gates']['cia'].values())
+          print('PASS_4A_SOURCE_FREEZE')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jpfm-4a-human-made-source-freeze-v1
+          path: out/JANUS-PALOMAR-JPFM-4A-HUMAN-MADE-SKY-SOURCE-FREEZE-v1.0.json
+          retention-days: 30
+          if-no-files-found: error
+      - name: Commit compact freeze manifest
+        run: |
+          cp out/JANUS-PALOMAR-JPFM-4A-HUMAN-MADE-SKY-SOURCE-FREEZE-v1.0.json data/JANUS-PALOMAR-JPFM-4A-HUMAN-MADE-SKY-SOURCE-FREEZE-v1.0.json
+          git config user.name 'janus-jpfm-ci'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/JANUS-PALOMAR-JPFM-4A-HUMAN-MADE-SKY-SOURCE-FREEZE-v1.0.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Add JPFM-4A human-made source freeze [skip ci]'
+          git pull --rebase origin main
+          git push
