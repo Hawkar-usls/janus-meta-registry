@@ -1,0 +1,85 @@
+name: Palomar JPFM-3B NOAA H-alpha schema probe
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'tools/palomar/jpfm_3b_halpha_schema_probe.py'
+      - 'data/JANUS-PALOMAR-JPFM-3B-NOAA-HALPHA-SOURCE-FREEZE-v1.0.json'
+      - '.github/workflows/palomar-jpfm-3b-halpha-schema-probe.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  schema-probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install acquisition dependency
+        run: python -m pip install requests==2.32.4
+
+      - name: Syntax gate
+        run: python -m py_compile tools/palomar/jpfm_3b_halpha_schema_probe.py
+
+      - name: Verify source freeze is outcome-blind
+        run: |
+          python - <<'PY'
+          import json, pathlib
+          p=pathlib.Path('data/JANUS-PALOMAR-JPFM-3B-NOAA-HALPHA-SOURCE-FREEZE-v1.0.json')
+          d=json.loads(p.read_text())
+          assert d['status']=='SOURCE_BYTES_FROZEN__SCHEMA_AND_COVERAGE_NOT_YET_ADMITTED'
+          assert d['outcome_blindness']['bluebook_access'] is False
+          assert d['outcome_blindness']['poss1_access'] is False
+          assert d['outcome_blindness']['association_computed'] is False
+          assert len(d['files'])==9
+          print('PASS_3B_SOURCE_FREEZE_GATE')
+          PY
+
+      - name: Execute schema probe only
+        run: |
+          mkdir -p out
+          python tools/palomar/jpfm_3b_halpha_schema_probe.py \
+            --out out/JANUS-PALOMAR-JPFM-3B-NOAA-HALPHA-SCHEMA-PROBE-v1.0.json
+
+      - name: Validate no outcome access
+        run: |
+          python - <<'PY'
+          import json, pathlib
+          p=pathlib.Path('out/JANUS-PALOMAR-JPFM-3B-NOAA-HALPHA-SCHEMA-PROBE-v1.0.json')
+          d=json.loads(p.read_text())
+          assert d['status']=='OUTCOME_BLIND_SCHEMA_PROBE__NO_ASSOCIATION_COMPUTED'
+          assert d['outcome_blindness']['bluebook_access'] is False
+          assert d['outcome_blindness']['poss1_access'] is False
+          assert d['outcome_blindness']['nuclear_calendar_access'] is False
+          assert d['outcome_blindness']['association_computed'] is False
+          assert len(d['years'])==9
+          print('PASS_3B_SCHEMA_PROBE_CONTRACT')
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jpfm-3b-halpha-schema-probe-v1
+          path: out/JANUS-PALOMAR-JPFM-3B-NOAA-HALPHA-SCHEMA-PROBE-v1.0.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Commit compact schema probe
+        run: |
+          cp out/JANUS-PALOMAR-JPFM-3B-NOAA-HALPHA-SCHEMA-PROBE-v1.0.json \
+             data/JANUS-PALOMAR-JPFM-3B-NOAA-HALPHA-SCHEMA-PROBE-v1.0.json
+          git config user.name 'janus-jpfm-ci'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/JANUS-PALOMAR-JPFM-3B-NOAA-HALPHA-SCHEMA-PROBE-v1.0.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Add JPFM-3B H-alpha schema probe [skip ci]'
+          git pull --rebase origin main
+          git push
