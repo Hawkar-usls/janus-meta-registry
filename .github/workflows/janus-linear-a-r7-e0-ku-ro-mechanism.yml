@@ -1,0 +1,94 @@
+name: JANUS Linear A R7-E0 KU-RO mechanism gate
+
+on:
+  pull_request:
+    paths:
+      - 'data/JANUS-LINEAR-A-R7-E0-KU-RO-MECHANISM-SPEC-2026-08-15-v0.1.json'
+      - 'data/JANUS-LINEAR-A-R7-E0-KU-RO-MECHANISM-EXECUTION-SPEC-2026-08-15-v0.1.json'
+      - 'research/linear_a/janus_linear_a_r7_ku_ro_mechanism_v0_1.py'
+      - 'research/linear_a/janus_linear_a_r7_e0_ku_ro_evidence_v0_1.py'
+      - 'research/linear_a/test_janus_linear_a_r7_ku_ro_mechanism_v0_1.py'
+      - 'research/linear_a/test_janus_linear_a_r7_e0_ku_ro_evidence_v0_1.py'
+      - '.github/workflows/janus-linear-a-r7-e0-ku-ro-mechanism.yml'
+  push:
+    branches:
+      - 'research/r7-e0-ku-ro-mechanism'
+    paths:
+      - 'data/JANUS-LINEAR-A-R7-E0-KU-RO-MECHANISM-SPEC-2026-08-15-v0.1.json'
+      - 'data/JANUS-LINEAR-A-R7-E0-KU-RO-MECHANISM-EXECUTION-SPEC-2026-08-15-v0.1.json'
+      - 'research/linear_a/janus_linear_a_r7_ku_ro_mechanism_v0_1.py'
+      - 'research/linear_a/janus_linear_a_r7_e0_ku_ro_evidence_v0_1.py'
+      - 'research/linear_a/test_janus_linear_a_r7_ku_ro_mechanism_v0_1.py'
+      - 'research/linear_a/test_janus_linear_a_r7_e0_ku_ro_evidence_v0_1.py'
+      - '.github/workflows/janus-linear-a-r7-e0-ku-ro-mechanism.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  preregistration-and-canaries:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install inherited parser dependency
+        run: python -m pip install "numpy>=2.0"
+
+      - name: Compile gate, producer, and tests
+        run: |
+          python -m py_compile \
+            research/linear_a/janus_linear_a_r7_ku_ro_mechanism_v0_1.py \
+            research/linear_a/janus_linear_a_r7_e0_ku_ro_evidence_v0_1.py \
+            research/linear_a/test_janus_linear_a_r7_ku_ro_mechanism_v0_1.py \
+            research/linear_a/test_janus_linear_a_r7_e0_ku_ro_evidence_v0_1.py
+
+      - name: Validate frozen R7-E0 preregistration
+        run: |
+          python research/linear_a/janus_linear_a_r7_ku_ro_mechanism_v0_1.py \
+            --spec data/JANUS-LINEAR-A-R7-E0-KU-RO-MECHANISM-SPEC-2026-08-15-v0.1.json \
+            --validate-spec \
+            --output r7-e0-preregistration-validation.json
+          cat r7-e0-preregistration-validation.json
+
+      - name: Validate execution-spec anti-flexibility contract
+        env:
+          PYTHONPATH: research/linear_a
+        run: |
+          python - <<'PY'
+          import json
+          import janus_linear_a_r7_e0_ku_ro_evidence_v0_1 as e0
+          ex=json.load(open('data/JANUS-LINEAR-A-R7-E0-KU-RO-MECHANISM-EXECUTION-SPEC-2026-08-15-v0.1.json',encoding='utf-8'))
+          c3=json.load(open('data/JANUS-LINEAR-A-R7-C3-REGION-SCOPED-PROBABLE-FUNCTION-ADMISSION-RESULT-2026-08-15-v0.1.json',encoding='utf-8'))
+          e0.validate_execution_spec(ex,c3)
+          assert ex['mechanisms']['ARITHMETIC_SUMMARY']['operator_id']=='LOCAL_CONTIGUOUS_NUMERIC_PREFIX_EXACT_SUM_v1'
+          assert ex['mechanisms']['SECTION_BOUNDARY']['operator_id']=='NEIGHBOR_ROW_KIND_EDIT_DISCONTINUITY_v1'
+          anti=ex['anti_flexibility']
+          assert all(anti.values())
+          print('R7_E0_EXECUTION_SPEC_VALIDATED')
+          PY
+
+      - name: Run decision-lattice and leakage canaries
+        env:
+          PYTHONPATH: research/linear_a
+        run: |
+          python research/linear_a/test_janus_linear_a_r7_ku_ro_mechanism_v0_1.py -v
+
+      - name: Run execution-operator canaries
+        env:
+          PYTHONPATH: research/linear_a
+        run: |
+          python research/linear_a/test_janus_linear_a_r7_e0_ku_ro_evidence_v0_1.py -v
+
+      - name: Upload preregistration validation receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r7-e0-preregistration-validation
+          path: r7-e0-preregistration-validation.json
+          if-no-files-found: error
