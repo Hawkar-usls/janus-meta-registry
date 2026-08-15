@@ -1,0 +1,128 @@
+{
+  "schema_version": "1.0",
+  "spec_id": "JANUS-LINEAR-A-R7-E2-CANDIDATE-PROFILE-HOLDOUT-2026-08-15-v0.1",
+  "stage": "R7-E2",
+  "status": "PREREGISTERED_BEFORE_E2_HOLDOUT_ACCESS",
+  "created_date": "2026-08-15",
+  "parent": {
+    "e1_merge_commit_sha": "96dfca6972df19cc619a9bc9919ebdc5dabded46",
+    "canonical_version": "v2.30",
+    "target": "KU-RO",
+    "opaque_target_token": "6a2ea59b95fe1b610d20",
+    "region": "HT",
+    "retained_parent_role": "ROW-OPENING-LIKE",
+    "e1_status": "E1_DISCOVERY_PROFILE_NOT_FROZEN_RETAIN_ROW-OPENING-LIKE",
+    "e1_underpowered_certificate": "data/JANUS-LINEAR-A-R7-E1-UNDERPOWERED-DISCOVERY-CERTIFICATE-2026-08-15-v0.1.json"
+  },
+  "source": {
+    "repository": "Hawkar-usls/lineara.xyz",
+    "frozen_commit": "43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a"
+  },
+  "reserved_test_partition": {
+    "partition_definition_inherited_from": "R7-E1 v0.1",
+    "physical_object_hash_input": "JANUS-R7-E1-v0.1|<physical_object_id>",
+    "holdout_buckets": [3, 4],
+    "content_was_not_parsed_by_e1_discovery": true,
+    "e1_holdout_execution_was_not_performed": true,
+    "e2_is_the_first_authorized_inferential_access_to_this_partition": true
+  },
+  "training_derived_candidate_profile": {
+    "source": "E1 discovery-only candidate atoms; these were not admitted by E1 because its discovery support gate failed",
+    "manual_post_e1_atom_addition": false,
+    "manual_post_e1_atom_removal": false,
+    "atoms": [
+      "PREV_ROW_NUMERIC_COUNT=2PLUS",
+      "PREV_ROW_LEXICAL_COUNT=2PLUS"
+    ],
+    "profile_score": "mean of the two frozen binary atom indicators, yielding 0.0, 0.5, or 1.0",
+    "semantic_labels_not_used": true,
+    "numeric_magnitudes_not_used": true
+  },
+  "holdout_event_population": {
+    "region": "HT",
+    "predicate": "existing C0 ROW_FIRST_LEXICAL with match=true inside reserved E1 holdout physical objects",
+    "target": "frozen opaque KU-RO token",
+    "controls": "non-target ROW_FIRST_LEXICAL events from pure-control physical objects that contain no KU-RO target event in the holdout partition",
+    "target_bearing_physical_objects_are_never_used_as_control_objects": true
+  },
+  "matching": {
+    "stratum": [
+      "relative_row_position_third",
+      "document_row_count_bin"
+    ],
+    "relative_row_position_third": "early/middle/late exactly as R7-E1",
+    "document_row_count_bin": "1-4 / 5-9 / 10PLUS source rows",
+    "minimum_control_events_per_target": 20,
+    "minimum_control_physical_objects_per_target": 10,
+    "control_pool_weighting": "for each target event, first average profile score within each eligible control physical object, then average equally across control physical objects",
+    "target_event_is_ineligible_if_exact_stratum_support_floor_fails": true,
+    "adaptive_stratum_relaxation_forbidden": true,
+    "nearest_neighbor_fallback_forbidden": true
+  },
+  "primary_statistic": {
+    "target_event_difference": "target profile score minus object-weighted matched-control profile mean for its exact frozen stratum",
+    "target_object_difference": "mean target-event difference within each target-bearing physical object",
+    "observed_effect": "unweighted mean of target-object differences so every physical object has equal primary weight",
+    "null_test": "two-sided-symmetry-compatible one-sided sign-flip randomization of frozen target-object differences against effect <= 0; exact enumeration when target physical objects <=20, otherwise 100000 seeded random sign flips",
+    "random_seed_if_needed": 71201,
+    "p_value": "fraction of sign assignments with mean signed object difference >= observed, using exact enumeration including the observed assignment; random mode uses (1+ge)/(1+n)",
+    "alpha": 0.01
+  },
+  "support_and_robustness_gates": {
+    "minimum_total_holdout_target_events": 8,
+    "minimum_eligible_target_events": 8,
+    "minimum_eligible_target_fraction": 0.70,
+    "minimum_target_documents": 7,
+    "minimum_target_physical_objects": 7,
+    "minimum_primary_effect": 0.15,
+    "minimum_leave_one_target_object_out_positive_fraction": 0.85,
+    "maximum_single_target_object_event_fraction": 0.25,
+    "each_frozen_atom_must_have_positive_object_weighted_effect": true
+  },
+  "decision": {
+    "pass_status": "HELDOUT_DENSE_PREDECESSOR_PROFILE_REPLICATED",
+    "fail_status": "E2_CANDIDATE_PROFILE_NOT_REPLICATED_RETAIN_ROW-OPENING-LIKE",
+    "underpowered_status": "E2_HOLDOUT_UNDERPOWERED_RETAIN_ROW-OPENING-LIKE",
+    "pass_context_refinement_label": "AFTER-DENSE-MIXED-PREDECESSOR-ROW-LIKE",
+    "pass_claim": "In untouched HT physical objects, KU-RO row-opening events preferentially occur after structurally dense predecessor rows containing at least two numeric-like and at least two lexical items, relative to object-weighted matched row-first controls.",
+    "pass_is_a_structural_context_refinement_not_a_translation": true,
+    "failure_does_not_revoke_parent_C3_role": true
+  },
+  "anti_flexibility": {
+    "candidate_atoms_may_not_change_after_holdout_access": true,
+    "matching_strata_may_not_change_after_holdout_access": true,
+    "control_support_floors_may_not_change_after_holdout_access": true,
+    "effect_or_p_thresholds_may_not_change_after_holdout_access": true,
+    "target_objects_may_not_be_used_as_control_objects": true,
+    "failed_holdout_may_not_be_reinterpreted_as_pass": true,
+    "e1_same_document_threshold_may_not_be_retroactively_changed": true
+  },
+  "feature_firewall": {
+    "source_word_strings_as_features": false,
+    "translation_as_feature": false,
+    "phonetics_as_feature": false,
+    "language_family_as_feature": false,
+    "external_proposed_meaning_as_feature": false,
+    "numeric_magnitude_as_feature": false,
+    "exact_arithmetic_match_as_feature": false,
+    "e0_boundary_edit_distance_as_feature": false
+  },
+  "claim_ceiling": {
+    "parent_probable_region_scoped_structural_function_retained": true,
+    "heldout_structural_context_refinement_may_be_established": true,
+    "specific_semantic_function_established": false,
+    "exact_word_meaning_established": false,
+    "translation_established": false,
+    "phonetic_value_established": false,
+    "language_family_established": false,
+    "new_anchor_established": false,
+    "universal_cross_region_function_established": false,
+    "external_replication_established": false,
+    "decipherment_established": false
+  },
+  "promotion_policy": {
+    "e2_pass_does_not_auto_promote_canonical_state": true,
+    "separate_result_freeze_and_verification_required": true,
+    "semantic_or_functional_label_beyond_the_structural_context_refinement_requires_a_new_preregistered_lane": true
+  }
+}
