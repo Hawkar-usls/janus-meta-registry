@@ -1,0 +1,84 @@
+name: Palomar JPFM public-only temporal association
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'tools/palomar/jpfm_open_reconstruction_temporal.py'
+      - '.github/workflows/palomar-jpfm-open-reconstruction.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  jpfm-open-temporal:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install frozen analysis environment
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install \
+            numpy==2.2.6 \
+            pandas==2.3.1 \
+            scipy==1.16.1 \
+            statsmodels==0.14.5 \
+            requests==2.32.4
+          python -m pip freeze | sort | tee /tmp/jpfm-pip-freeze.txt
+
+      - name: Syntax gate
+        run: python -m py_compile tools/palomar/jpfm_open_reconstruction_temporal.py
+
+      - name: Execute public-only temporal association
+        run: |
+          mkdir -p out
+          python tools/palomar/jpfm_open_reconstruction_temporal.py \
+            --out out/JANUS-PALOMAR-JPFM-2D-OPEN-TEMPORAL-ASSOCIATION-RUN-001.json
+
+      - name: Validate result claim ceiling and release binding
+        run: |
+          python - <<'PY'
+          import json, pathlib
+          p = pathlib.Path('out/JANUS-PALOMAR-JPFM-2D-OPEN-TEMPORAL-ASSOCIATION-RUN-001.json')
+          d = json.loads(p.read_text(encoding='utf-8'))
+          assert d['status'] == 'EXECUTED'
+          assert d['bindings']['poss_commit'] == '4005e200541b321ead3d6608f0162a14430ef1c2'
+          assert d['cohort']['released_stage_S0_rows'] == 122820
+          assert d['cohort']['released_tile_manifest_rows'] == 31458
+          assert d['cohort']['released_footprint_plates'] == 642
+          assert d['cohort']['all_122820_release_rows_joined_to_plate'] is True
+          assert d['io_gate']['full_plate_image_arrays_downloaded'] is False
+          assert d['paper_reported_124_arm']['status'] == 'NOT_EXECUTED_MEMBERSHIP_UNRESOLVED'
+          assert 'NO_NUCLEAR_CAUSALITY_OR_ORIGIN_CLAIM' in d['claim_ceiling']
+          assert d['aggregate_verdict']['code'] in {
+              'OPEN_TEMPORAL_ASSOCIATION_SURVIVES_FROZEN_CONTROLS',
+              'OPEN_TEMPORAL_ASSOCIATION_NOT_ROBUST_ACROSS_FROZEN_CONTROLS'
+          }
+          print('PASS_JPFM_2D_RESULT_GATE')
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jpfm-2d-open-temporal-run-001
+          path: out/JANUS-PALOMAR-JPFM-2D-OPEN-TEMPORAL-ASSOCIATION-RUN-001.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Commit only the validated result JSON
+        run: |
+          cp out/JANUS-PALOMAR-JPFM-2D-OPEN-TEMPORAL-ASSOCIATION-RUN-001.json \
+             data/JANUS-PALOMAR-JPFM-2D-OPEN-TEMPORAL-ASSOCIATION-RUN-001.json
+          git config user.name 'janus-jpfm-ci'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/JANUS-PALOMAR-JPFM-2D-OPEN-TEMPORAL-ASSOCIATION-RUN-001.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Add JPFM-2D public-only temporal association result [skip ci]'
+          git push
