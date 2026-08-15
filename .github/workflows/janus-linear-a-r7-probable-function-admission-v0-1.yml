@@ -1,0 +1,130 @@
+name: JANUS Linear A R7-C3 probable structural function admission v0.1
+
+on:
+  push:
+    paths:
+      - "data/JANUS-LINEAR-A-R7-C3-EXECUTE-REQUEST-2026-08-15-v0.1.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  admit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Verify frozen C3 admission inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile research/linear_a/janus_linear_a_r7_probable_function_admission_v0_1.py
+          python - <<'PY'
+          import json
+          s=json.load(open('data/JANUS-LINEAR-A-R7-C3-REGION-SCOPED-PROBABLE-FUNCTION-ADMISSION-SPEC-2026-08-15-v0.1.json',encoding='utf-8'))
+          c=json.load(open('data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-15-v2.29.json',encoding='utf-8'))
+          c0=json.load(open('data/JANUS-LINEAR-A-R7-C0-POSITIONAL-TEMPLATE-ROLE-RESULT-2026-08-15-v0.1.json',encoding='utf-8'))
+          c1=json.load(open('data/JANUS-LINEAR-A-R7-C1-NESTED-REGION-TRANSFER-RESULT-2026-08-15-v0.1.json',encoding='utf-8'))
+          c2=json.load(open('data/JANUS-LINEAR-A-R7-C2-STRUCTURE-DESTROYING-NULL-RESULT-2026-08-15-v0.1.json',encoding='utf-8'))
+          d0=json.load(open('data/JANUS-LINEAR-A-R7-D0-REGION-SCOPED-OBJECT-STATUS-VALIDATION-RESULT-2026-08-15-v0.1.json',encoding='utf-8'))
+          assert c['version']=='v2.29' and c['status']=='CURRENT_CANONICAL_RESEARCH_STATE'
+          assert c['canonicality']['canonicality_audit_status']=='CANONICALITY_AUDIT_PASS'
+          assert s['parent_canonical_target']=='v2.29'
+          assert c0['admitted_candidate_count']==8
+          assert c1['frozen_candidate_count']==8 and c1['survivor_count']==0
+          assert c2['frozen_candidate_count']==8 and c2['survivor_count']==8
+          assert d0['frozen_candidate_count']==8
+          assert d0['C3_support_floor_eligible_count']==1
+          assert len(d0['C3_support_floor_eligible'])==1
+          x=d0['C3_support_floor_eligible'][0]
+          assert x['source_word_after_scoring']=='KU-RO'
+          assert x['role']=='ROW_FIRST_LEXICAL'
+          assert x['dominant_region']=='HT'
+          assert x['dominant_region_occurrences']>=20
+          assert x['dominant_region_physical_object_count']>=15
+          assert x['D0_OBJECT_BLOCK_PASS'] is True
+          assert x['STATUS_ROBUSTNESS_PASS'] is True
+          assert x['C3_SUPPORT_FLOOR_PASS'] is True
+          assert s['required_chain']['minimum_occurrences']==20
+          assert s['required_chain']['minimum_physical_objects']==15
+          assert s['required_chain']['universal_C1_survival_required'] is False
+          assert s['required_chain']['universal_C1_credit_if_absent'] is False
+          assert s['role_to_function_label']['ROW_FIRST_LEXICAL']=='ROW-OPENING-LIKE'
+          PY
+
+      - name: Execute deterministic C3 admission gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python research/linear_a/janus_linear_a_r7_probable_function_admission_v0_1.py \
+            --spec data/JANUS-LINEAR-A-R7-C3-REGION-SCOPED-PROBABLE-FUNCTION-ADMISSION-SPEC-2026-08-15-v0.1.json \
+            --parent-canonical data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-15-v2.29.json \
+            --c0 data/JANUS-LINEAR-A-R7-C0-POSITIONAL-TEMPLATE-ROLE-RESULT-2026-08-15-v0.1.json \
+            --c1 data/JANUS-LINEAR-A-R7-C1-NESTED-REGION-TRANSFER-RESULT-2026-08-15-v0.1.json \
+            --c2 data/JANUS-LINEAR-A-R7-C2-STRUCTURE-DESTROYING-NULL-RESULT-2026-08-15-v0.1.json \
+            --d0 data/JANUS-LINEAR-A-R7-D0-REGION-SCOPED-OBJECT-STATUS-VALIDATION-RESULT-2026-08-15-v0.1.json \
+            --out data/JANUS-LINEAR-A-R7-C3-REGION-SCOPED-PROBABLE-FUNCTION-ADMISSION-RESULT-2026-08-15-v0.1.json
+
+      - name: Enforce admitted claim and epistemic ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          x=json.load(open('data/JANUS-LINEAR-A-R7-C3-REGION-SCOPED-PROBABLE-FUNCTION-ADMISSION-RESULT-2026-08-15-v0.1.json',encoding='utf-8'))
+          assert x['status']=='REGION_SCOPED_PROBABLE_STRUCTURAL_FUNCTION_ADMITTED'
+          assert x['frozen_candidate_count']==8
+          assert x['candidate_family_changed'] is False
+          assert x['admitted_candidate_count']==1
+          assert len(x['admitted_candidates'])==1
+          a=x['admitted_candidates'][0]
+          assert a['source_word']=='KU-RO'
+          assert a['source_role']=='ROW_FIRST_LEXICAL'
+          assert a['probable_structural_function_label']=='ROW-OPENING-LIKE'
+          assert a['scope_region']=='HT'
+          assert a['scope']=='DOMINANT_REGION_ONLY'
+          assert a['probable_structural_function_admitted'] is True
+          assert a['cross_region_generalization_established'] is False
+          assert a['exact_word_meaning_established'] is False
+          assert a['translation_established'] is False
+          e=x['epistemic_gate']
+          assert e['probable_region_scoped_structural_function_established'] is True
+          assert e['universal_cross_region_function_established'] is False
+          assert e['exact_word_meaning_established'] is False
+          assert e['translation_established'] is False
+          assert e['phonetic_value_established'] is False
+          assert e['language_family_established'] is False
+          assert e['new_anchor_established'] is False
+          assert e['decipherment_established'] is False
+          assert e['R3B_external_replication_established'] is False
+          print(json.dumps({'status':x['status'],'admitted':a['source_word'],'function':a['probable_structural_function_label'],'scope':a['scope_region']},sort_keys=True))
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r7-c3-probable-function-v0-1
+          path: data/JANUS-LINEAR-A-R7-C3-REGION-SCOPED-PROBABLE-FUNCTION-ADMISSION-RESULT-2026-08-15-v0.1.json
+          retention-days: 90
+
+      - name: Persist C3 admission result
+        shell: bash
+        run: |
+          set -euo pipefail
+          RESULT=data/JANUS-LINEAR-A-R7-C3-REGION-SCOPED-PROBABLE-FUNCTION-ADMISSION-RESULT-2026-08-15-v0.1.json
+          git config user.name 'JANUS Evidence Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add "$RESULT"
+          git commit -m 'Register Linear A R7-C3 probable structural-function admission v0.1' || true
+          for i in 1 2 3 4 5; do
+            if git push origin HEAD:main; then exit 0; fi
+            git pull --rebase origin main
+          done
+          exit 1
