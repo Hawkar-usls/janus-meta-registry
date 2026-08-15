@@ -1,0 +1,92 @@
+name: ANTIFUCK evaluator freeze certificate integrity
+
+on:
+  pull_request:
+    paths:
+      - 'data/JANUS-OPIR-ANTIFUCK-EVALUATOR-FREEZE-CERTIFICATE-2026-08-15-v1.0.json'
+      - 'data/JANUS-OPIR-ANTIFUCK-FROZEN-EVALUATOR-POLICY-v1.0.json'
+      - 'data/JANUS-OPIR-ANTIFUCK-FROZEN-EVALUATOR-SELFTEST-RESULT-2026-08-15-v1.0.json'
+      - 'data/JANUS-ARMOR-OF-GOD-CURRENT-AUTHORITY.json'
+      - '.github/workflows/antifuck-evaluator-freeze-certificate-integrity.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'data/JANUS-OPIR-ANTIFUCK-EVALUATOR-FREEZE-CERTIFICATE-2026-08-15-v1.0.json'
+      - 'data/JANUS-OPIR-ANTIFUCK-FROZEN-EVALUATOR-POLICY-v1.0.json'
+      - 'data/JANUS-OPIR-ANTIFUCK-FROZEN-EVALUATOR-SELFTEST-RESULT-2026-08-15-v1.0.json'
+      - 'data/JANUS-ARMOR-OF-GOD-CURRENT-AUTHORITY.json'
+      - '.github/workflows/antifuck-evaluator-freeze-certificate-integrity.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate exact implementation freeze identity and seven merge-tree receipts
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          f=json.loads(Path('data/JANUS-OPIR-ANTIFUCK-EVALUATOR-FREEZE-CERTIFICATE-2026-08-15-v1.0.json').read_text(encoding='utf-8'))
+          p=json.loads(Path('data/JANUS-OPIR-ANTIFUCK-FROZEN-EVALUATOR-POLICY-v1.0.json').read_text(encoding='utf-8'))
+          d=json.loads(Path('data/JANUS-OPIR-ANTIFUCK-FROZEN-EVALUATOR-SELFTEST-RESULT-2026-08-15-v1.0.json').read_text(encoding='utf-8'))
+          a=json.loads(Path('data/JANUS-ARMOR-OF-GOD-CURRENT-AUTHORITY.json').read_text(encoding='utf-8'))
+          frozen='e7457870a72616e53120837566f1c6363d01b6df'
+          assert f['status']=='IMPLEMENTATION_FROZEN_AWAITING_EXTERNAL_H1_AUTHOR_AND_PACKAGE'
+          assert f['policy_id']=='JANUS-OPIR-ANTIFUCK-POLICY-v1.3-freeze1'
+          assert f['policy_id']==p['policy_id']==d['contract_result']['POLICY_ID']
+          assert f['implementation']=='research/antifuck/janus_opir_antifuck_policy_v1_3.py'
+          assert f['implementation_freeze_commit']==frozen
+          assert f['source_pull_request']==88
+          assert f['development_certificate']=='data/JANUS-OPIR-ANTIFUCK-FROZEN-EVALUATOR-SELFTEST-RESULT-2026-08-15-v1.0.json'
+          assert d['status']=='FROZEN_EVALUATOR_DEVELOPMENT_PASS_NOT_INDEPENDENT_H1'
+          assert d['policy_selftest_result']['SELFTEST_IS_INDEPENDENT_H1'] is False
+          assert d['blinded_e2e_result']['E2E_IS_INDEPENDENT_H1'] is False
+
+          expected={
+            ('MINDFUCK ARMOR OPIR calibration integrity',31886243110,95015846971),
+            ('ANTIFUCK H1 challenge toolchain integrity',31886243080,95015846917),
+            ('ANTIFUCK independent holdout protocol integrity',31886243086,95015846964),
+            ('ANTIFUCK frozen evaluator integrity',31886243088,95015846919),
+            ('Connection full-registry discovery v0.2',31886243095,95015846954),
+            ('Connection full-registry discovery',31886243093,95015846950),
+            ('Connection full-registry discovery v0.2.1',31886243065,95015846901),
+          }
+          actual={(r['workflow'],r['run_id'],r['job_id']) for r in f['post_merge_receipts']}
+          assert actual==expected
+          assert len(f['post_merge_receipts'])==7
+          assert all(r['head_sha']==frozen and r['conclusion']=='success' for r in f['post_merge_receipts'])
+          assert f['post_merge_gate_summary']=={
+            'expected_checks':7,'successful_checks':7,'all_post_merge_checks_pass':True,'tree_under_test':frozen
+          }
+          b=f['blinding_state_at_freeze']
+          assert set(b.values())=={False}
+          assert len(f['allowed_next_actions'])>=6
+          assert len(f['forbidden_next_actions'])>=5
+          for forbidden in ('INDEPENDENT_SYNTHETIC_HOLDOUT_PASS','CLINICALLY_VALIDATED','REAL_WORLD_EFFECTIVENESS_ESTABLISHED','BOT_DETECTOR_VALIDATED','ADAPTIVE_ADVERSARY_DETECTED'):
+            assert forbidden in f['claim_ceiling']['forbidden_promotions']
+
+          assert a['h1_evaluator_freeze_certificate_reference']=='data/JANUS-OPIR-ANTIFUCK-EVALUATOR-FREEZE-CERTIFICATE-2026-08-15-v1.0.json'
+          assert a['h1_evaluator_implementation_freeze_commit']==frozen
+          assert a['next_required_gate_status']=='IMPLEMENTATION_FROZEN_AWAITING_EXTERNAL_H1_AUTHOR_AND_PACKAGE'
+          assert a['h1_evaluator_implementation_frozen'] is True
+          assert a['h1_external_author_assigned'] is False
+          assert a['h1_feature_package_released'] is False
+          assert a['h1_package_created'] is False
+          assert a['h1_label_package_created'] is False
+          assert a['h1_predictions_created'] is False
+          assert a['h1_labels_revealed'] is False
+          assert a['h1_executed'] is False
+          assert a['independent_holdout_pass'] is False
+          assert a['real_world_effectiveness_established'] is False
+          print('EVALUATOR_FREEZE_CERTIFICATE=PASS')
+          print('IMPLEMENTATION_FREEZE_COMMIT='+frozen)
+          print('MERGE_TREE_RECEIPTS=7/7')
+          print('H1_EXECUTED=False')
+          print('INDEPENDENT_HOLDOUT_PASS=False')
+          PY
