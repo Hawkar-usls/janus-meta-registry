@@ -1,0 +1,143 @@
+{
+  "artifact_id": "JANUS-PALOMAR-JPFM-2F-BLIND-STRUCTURAL-STRATIFICATION-ADMISSION-v1.0",
+  "experiment_id": "JPFM-2F-A",
+  "schema_version": "1.0",
+  "date": "2026-08-15",
+  "status": "PREREGISTERED_BEFORE_JPFM_2F_CLUSTER_OUTCOME",
+  "purpose": "Freeze a morphology-first, label-blind structural/artifact stratification of the complete public POSS-I S0 cohort before any nuclear, Blue Book, UAP, geomagnetic or other temporal/environmental labels are joined. This stage asks what kinds of candidate geometry and plate-context exist, not when they occurred or what caused them.",
+  "parents": [
+    "data/JANUS-PALOMAR-JPFM-2E-SCHEDULE-CONFOUND-DECOMPOSITION-RUN-001.json",
+    "registry/cosmology/JANUS-BLUEBOOK-EXACT-DATE-MATCHED-CONTROL-RESULT-v1.0.json"
+  ],
+  "public_input_binding": {
+    "repository": "jannefi/poss1-plate-slice",
+    "commit": "4005e200541b321ead3d6608f0162a14430ef1c2",
+    "release": "results/s0-642-20260814",
+    "stage_S0_csv_sha256": "2ff92f2210acb387ef9ef4b88d561595d3883e9aab27065042627272b96590f0",
+    "tile_manifest_csv_sha256": "5dcb90dc5d98550e5a60246aced2b097922a267c69e81f27d45d16a288142a99",
+    "expected_rows": 122820,
+    "expected_tiles": 31458,
+    "expected_plates": 642
+  },
+  "external_label_firewall": {
+    "forbidden_during_feature_build_and_clustering": [
+      "observation date",
+      "nuclear-test date or distance-to-test",
+      "Blue Book or NUFORC case counts",
+      "STARLIKE_WITNESS / COMPACT_LIGHT / other human phenotype",
+      "UAP-report labels",
+      "Kp, Ap, solar or geomagnetic variables",
+      "lunar phase or illumination",
+      "any outcome derived from JPFM-2D or JPFM-2E temporal association"
+    ],
+    "absolute_RA_Dec_as_cluster_features": false,
+    "plate_id_numeric_encoding_as_cluster_feature": false,
+    "reason": "The cluster definition must not be able to learn the temporal or sky-location labels that will later be tested for enrichment. Absolute coordinates are retained only as identifiers for reproducibility and geometry calculations, never as clustering dimensions.",
+    "reveal_rule": "External labels may be joined only after the blind cluster manifest and its SHA-256 have been committed/frozen."
+  },
+  "blind_feature_contract": {
+    "source_level_geometry": [
+      "log10 same-plate nearest-neighbour separation in arcsec",
+      "same-plate neighbour counts within 30, 60, 120 and 300 arcsec",
+      "best local triplet collinearity q among the six nearest same-plate neighbours",
+      "span of the best local triplet",
+      "local six-neighbour PCA linearity ratio"
+    ],
+    "plate_tile_artifact_context": [
+      "candidate count on tile",
+      "candidate count on plate",
+      "tile-count z-score within its plate",
+      "plate-relative tangent-plane x and y offsets",
+      "plate-relative radial offset",
+      "plate-edge proxy based on a 6.5-degree Schmidt footprint",
+      "published per-plate WCS offset_arcsec",
+      "WCS divergence flag at >1.5 arcsec",
+      "repaired-tile flag from the frozen repair ledger"
+    ],
+    "explicit_non_features": [
+      "date",
+      "year/month/day",
+      "absolute RA",
+      "absolute Dec",
+      "galactic latitude",
+      "nuclear labels",
+      "human-report labels",
+      "geomagnetic variables",
+      "lunar variables"
+    ]
+  },
+  "clustering_contract": {
+    "preprocessing": "median/MAD robust scaling, with finite-value fail-closed checks and deterministic clipping at +/-8 robust sigma",
+    "coarse_partition": {
+      "algorithm": "MiniBatchKMeans",
+      "k": 16,
+      "random_seed": 20260815,
+      "batch_size": 8192,
+      "n_init": 20,
+      "selection_rule": "k is fixed before outcome; no silhouette- or label-driven tuning"
+    },
+    "rare_structure_score": {
+      "algorithm": "IsolationForest",
+      "random_seed": 20260815,
+      "n_estimators": 400,
+      "max_samples": 8192,
+      "contamination": "auto",
+      "frozen_tail_strata": [0.001, 0.005, 0.01]
+    },
+    "stability": {
+      "bootstrap_refits": 12,
+      "bootstrap_fraction": 0.7,
+      "metric": "adjusted Rand index between base assignment and bootstrap-refit predictions on all rows",
+      "minimum_reported_not_admission_threshold": true
+    }
+  },
+  "geometry_definitions": {
+    "triplet_q": "2*triangle_area/longest_side^2 in a local tangent plane; q approaches zero for collinear triples",
+    "triplet_search": "for each source, test all pairs among its six nearest neighbours on the same plate; do not search the full sky or use external labels",
+    "pca_linearity": "1 - lambda_minor/lambda_major for the source plus its six nearest same-plate neighbours in the local tangent plane; near 1 is line-like",
+    "plate_edge_proxy": "max(abs(x_deg),abs(y_deg))/3.25 using a tangent-plane approximation around the public plate centre; this is an artifact-context proxy, not a valid-pixel mask distance"
+  },
+  "required_outputs_before_label_reveal": [
+    "row-count and join invariants",
+    "blind feature summary and missingness ledger",
+    "16-cluster sizes and centroids in standardized feature space",
+    "IsolationForest tail membership counts",
+    "cluster stability distribution",
+    "compact src_id -> cluster/anomaly-tail manifest",
+    "SHA-256 of the manifest and canonical result payload"
+  ],
+  "jpfm_2f_b_pixel_morphology_gate": {
+    "status": "REQUIRED_AFTER_2F_A",
+    "reason": "The public S0 release contains only src_id,tile_id,object_id,ra,dec. It does not ship per-source FWHM, ELONGATION, SPREAD_MODEL/profile or contour metrics. JPFM must not pretend those measurements exist.",
+    "required_public_sidecar_features": [
+      "FWHM_IMAGE or local-PSF-normalized fwhm_ratio",
+      "ELONGATION",
+      "SPREAD_MODEL and/or spread_snr",
+      "profile_diff",
+      "circularity",
+      "shape_defect",
+      "circle_deviation",
+      "local PSF reference count / quality",
+      "pixel-morphology failure flag"
+    ],
+    "source_constraint": "Generate only from public POSS-I plate scans and public catalogues, without nuclear/human/environment labels. A sparse/ranged extraction is preferred over downloading the complete 258-700 GB image corpus.",
+    "promotion_rule": "No cluster may be called a morphology subtype until the pixel-morphology sidecar is joined and the blind clustering is repeated/frozen with those features. Until then all 2F-A groups are structural/artifact strata only."
+  },
+  "post_freeze_reveal_plan": {
+    "allowed_labels_after_manifest_freeze": [
+      "frozen nuclear calendar arms",
+      "Project Blue Book exact-date daily phenotypes",
+      "GFZ Kp/Ap",
+      "lunar/astronomical environment",
+      "JPFM-2E observation-opportunity variables"
+    ],
+    "primary_question": "Does any pre-existing blind structural or later pixel-morphology stratum show an external-label enrichment that survives multiple-stratum correction, plate blocking and leave-one-plate-out sensitivity?",
+    "minimum_specificity_controls": [
+      "plate-blocked permutation",
+      "leave-one-plate-out",
+      "Benjamini-Hochberg FDR across tested strata/endpoints",
+      "no relabelling or reclustering after external-label reveal"
+    ]
+  },
+  "claim_ceiling": "BLIND_STRUCTURAL_AND_ARTIFACT_STRATIFICATION_ONLY__PIXEL_MORPHOLOGY_PENDING__NO_TEMPORAL_CAUSAL_OR_ORIGIN_CLAIM"
+}
