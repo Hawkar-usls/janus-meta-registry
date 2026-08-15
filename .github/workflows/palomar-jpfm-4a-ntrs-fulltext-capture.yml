@@ -1,0 +1,57 @@
+name: Palomar JPFM-4A NTRS fulltext capture
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'tools/palomar/jpfm_4a_ntrs_fulltext_capture.py'
+      - '.github/workflows/palomar-jpfm-4a-ntrs-fulltext-capture.yml'
+permissions:
+  contents: write
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: python -m pip install requests==2.32.4
+      - run: python -m py_compile tools/palomar/jpfm_4a_ntrs_fulltext_capture.py
+      - name: Capture frozen official fulltext
+        run: |
+          mkdir -p out
+          python tools/palomar/jpfm_4a_ntrs_fulltext_capture.py \
+            --raw-out out/19720015241.txt \
+            --receipt-out out/JANUS-PALOMAR-JPFM-4A-NTRS-19720015241-FULLTEXT-CAPTURE-v1.0.json
+      - name: Validate source capture
+        run: |
+          python - <<'PY'
+          import json,pathlib,hashlib
+          p=pathlib.Path('out/19720015241.txt')
+          d=json.loads(pathlib.Path('out/JANUS-PALOMAR-JPFM-4A-NTRS-19720015241-FULLTEXT-CAPTURE-v1.0.json').read_text())
+          assert d['status']=='FROZEN_OFFICIAL_NTRS_FULLTEXT_CAPTURED_FOR_SOURCE_PARSER_DEVELOPMENT'
+          assert hashlib.sha256(p.read_bytes()).hexdigest()=='28f50ebccea5989f3f926f062068627e3c478d394ffda7cb17a877c9133a2302'
+          assert d['outcome_blindness']['bluebook_access'] is False
+          assert d['outcome_blindness']['poss1_access'] is False
+          assert d['current_authority_changed'] is False
+          print('PASS_NTRS_FULLTEXT_CAPTURE_GATE')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jpfm-4a-ntrs-19720015241-fulltext-capture-v1
+          path: |
+            out/19720015241.txt
+            out/JANUS-PALOMAR-JPFM-4A-NTRS-19720015241-FULLTEXT-CAPTURE-v1.0.json
+          retention-days: 30
+          if-no-files-found: error
+      - name: Commit source capture receipt only
+        run: |
+          cp out/JANUS-PALOMAR-JPFM-4A-NTRS-19720015241-FULLTEXT-CAPTURE-v1.0.json data/JANUS-PALOMAR-JPFM-4A-NTRS-19720015241-FULLTEXT-CAPTURE-v1.0.json
+          git config user.name 'janus-jpfm-ci'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/JANUS-PALOMAR-JPFM-4A-NTRS-19720015241-FULLTEXT-CAPTURE-v1.0.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Add JPFM-4A NTRS fulltext capture receipt [skip ci]'
+          git pull --rebase origin main
+          git push
