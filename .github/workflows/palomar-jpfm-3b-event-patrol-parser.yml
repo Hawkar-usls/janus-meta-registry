@@ -1,0 +1,55 @@
+name: Palomar JPFM-3B event patrol parser
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'tools/palomar/jpfm_3b_event_patrol_parser.py'
+      - 'data/JANUS-PALOMAR-JPFM-3B-NOAA-EVENT-PATROL-SOURCE-FREEZE-v1.0.json'
+      - '.github/workflows/palomar-jpfm-3b-event-patrol-parser.yml'
+permissions:
+  contents: write
+jobs:
+  parser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: python -m pip install requests==2.32.4
+      - run: python -m py_compile tools/palomar/jpfm_3b_event_patrol_parser.py
+      - name: Parse only frozen solar sources
+        run: |
+          mkdir -p out
+          python tools/palomar/jpfm_3b_event_patrol_parser.py --out out/JANUS-PALOMAR-JPFM-3B-NOAA-EVENT-PATROL-PARSER-RUN-001.json
+      - name: Validate source-only contract
+        run: |
+          python - <<'PY'
+          import json,pathlib
+          d=json.loads(pathlib.Path('out/JANUS-PALOMAR-JPFM-3B-NOAA-EVENT-PATROL-PARSER-RUN-001.json').read_text())
+          assert d['status']=='SOURCE_ONLY_EVENT_DATE_AND_PATROL_COVERAGE_PARSED__NO_EXTERNAL_OUTCOME_JOIN'
+          assert d['event_parser']['detailed_record_length']==88
+          assert d['patrol_parser']['official_data_code']=='13'
+          assert d['outcome_blindness']['bluebook_access'] is False
+          assert d['outcome_blindness']['poss1_access'] is False
+          assert d['outcome_blindness']['association_computed'] is False
+          assert len(d['study_days'])==849
+          print('PASS_3B_EVENT_PATROL_PARSER')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jpfm-3b-event-patrol-parser-v1
+          path: out/JANUS-PALOMAR-JPFM-3B-NOAA-EVENT-PATROL-PARSER-RUN-001.json
+          retention-days: 30
+          if-no-files-found: error
+      - name: Commit compact parser result
+        run: |
+          cp out/JANUS-PALOMAR-JPFM-3B-NOAA-EVENT-PATROL-PARSER-RUN-001.json data/JANUS-PALOMAR-JPFM-3B-NOAA-EVENT-PATROL-PARSER-RUN-001.json
+          git config user.name 'janus-jpfm-ci'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/JANUS-PALOMAR-JPFM-3B-NOAA-EVENT-PATROL-PARSER-RUN-001.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Add JPFM-3B event patrol parser result [skip ci]'
+          git pull --rebase origin main
+          git push
