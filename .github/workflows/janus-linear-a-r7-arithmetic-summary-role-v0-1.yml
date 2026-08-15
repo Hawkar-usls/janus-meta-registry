@@ -1,9 +1,9 @@
-name: JANUS Linear A R7-B0 arithmetic summary role v0.1
+name: JANUS Linear A R7-B0 arithmetic summary role v0.1.1
 
 on:
   push:
     paths:
-      - "data/JANUS-LINEAR-A-R7-B0-EXECUTE-REQUEST-2026-08-15-v0.1.json"
+      - "data/JANUS-LINEAR-A-R7-B0-EXECUTE-REQUEST-2026-08-15-v0.1.1.json"
   workflow_dispatch:
 
 permissions:
@@ -22,24 +22,35 @@ jobs:
           python-version: "3.12"
       - name: Install inherited parser dependency
         run: python -m pip install "numpy>=2.0"
-      - name: Verify frozen R7-B0 inputs
+      - name: Verify frozen R7-B0 recovery inputs
         shell: bash
         run: |
           set -euo pipefail
           python -m py_compile research/linear_a/janus_linear_a_r7_arithmetic_summary_role_v0_1.py
           python - <<'PY'
           import json
-          s=json.load(open('data/JANUS-LINEAR-A-R7-B0-ARITHMETIC-SUMMARY-ROLE-SPEC-2026-08-15-v0.1.json',encoding='utf-8'))
+          s=json.load(open('data/JANUS-LINEAR-A-R7-B0-ARITHMETIC-SUMMARY-ROLE-SPEC-2026-08-15-v0.1.1.json',encoding='utf-8'))
           c=json.load(open('data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-15-v2.26.json',encoding='utf-8'))
+          f=json.load(open('data/JANUS-LINEAR-A-R7-B0-PREEXECUTION-FAILURE-2026-08-15-v0.1.json',encoding='utf-8'))
           assert c['version']=='v2.26' and c['status']=='CURRENT_CANONICAL_RESEARCH_STATE'
           assert c['canonicality']['canonicality_audit_status']=='CANONICALITY_AUDIT_PASS'
+          assert f['classification']=='FAILED_BEFORE_SCIENTIFIC_EXECUTION' and f['scientific_execution_started'] is False
+          assert s['version']=='v0.1.1' and s['recovery_lineage']['scientific_parameters_changed'] is False
           assert s['parent_canonical_target']=='v2.26'
           assert s['source']['frozen_commit']=='43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a'
           assert s['status_policy']['none_or_doubtful_is_never_reinterpreted_as_certain'] is True
           assert s['numeric_arithmetic']['representation'].startswith('exact rational')
           assert s['cross_fitting']['candidate_selection_train_only'] is True
+          assert s['train_candidate_gate']['minimum_eligible_occurrences']==4
+          assert s['train_candidate_gate']['minimum_documents']==3
+          assert s['train_candidate_gate']['minimum_arithmetic_match_rate']==0.75
+          assert s['train_candidate_gate']['minimum_absolute_rate_lift_over_operator_background']==0.25
           assert s['train_candidate_gate']['manual_candidate_addition_forbidden'] is True
           assert s['train_candidate_gate']['manual_candidate_removal_forbidden'] is True
+          assert s['heldout_candidate_gate']['minimum_selected_folds']==2
+          assert s['heldout_candidate_gate']['minimum_heldout_occurrences']==4
+          assert s['heldout_candidate_gate']['minimum_heldout_documents']==3
+          assert s['heldout_candidate_gate']['minimum_heldout_match_rate']==0.75
           assert s['heldout_candidate_gate']['FDR_q_max']==0.05
           PY
       - name: Fetch exact preservation-mirror corpus
@@ -57,7 +68,7 @@ jobs:
           set -euo pipefail
           python research/linear_a/janus_linear_a_r7_arithmetic_summary_role_v0_1.py \
             --corpus /tmp/lineara \
-            --spec data/JANUS-LINEAR-A-R7-B0-ARITHMETIC-SUMMARY-ROLE-SPEC-2026-08-15-v0.1.json \
+            --spec data/JANUS-LINEAR-A-R7-B0-ARITHMETIC-SUMMARY-ROLE-SPEC-2026-08-15-v0.1.1.json \
             --parent-canonical data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-15-v2.26.json \
             --out data/JANUS-LINEAR-A-R7-B0-ARITHMETIC-SUMMARY-ROLE-RESULT-2026-08-15-v0.1.json
       - name: Enforce R7-B0 evidence and ceiling
@@ -90,7 +101,7 @@ jobs:
           PY
       - uses: actions/upload-artifact@v4
         with:
-          name: janus-linear-a-r7-b0-arithmetic-summary-v0-1
+          name: janus-linear-a-r7-b0-arithmetic-summary-v0-1-recovery
           path: data/JANUS-LINEAR-A-R7-B0-ARITHMETIC-SUMMARY-ROLE-RESULT-2026-08-15-v0.1.json
           retention-days: 90
       - name: Persist R7-B0 result
