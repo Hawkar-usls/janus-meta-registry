@@ -13,27 +13,16 @@
   "h1_verifier": "research/antifuck/janus_opir_antifuck_h1_verify.py",
   "purpose": "Freeze a deterministic feature-only evaluator before any external H1 holdout exists, so future predictions can be generated without evaluator access to gold labels and sealed before label reveal.",
   "hard_boundaries": [
-    "POLICY_ENGINE != CLINICAL_MODEL",
-    "POLICY_ENGINE != BOT_DETECTOR",
-    "POLICY_ENGINE != HOSTILE_INTENT_DETECTOR",
-    "ROUTING_OUTPUT != FACTUAL_TRUTH",
-    "COORDINATION_ROUTING != BOT_FACT",
-    "CRISIS_SAFE_HOLD != DIAGNOSIS",
-    "IMPLEMENTATION_SELFTEST_PASS != H1_PASS",
-    "FROZEN_IMPLEMENTATION != REAL_WORLD_EFFECTIVENESS"
+    "POLICY_ENGINE != CLINICAL_MODEL","POLICY_ENGINE != BOT_DETECTOR","POLICY_ENGINE != HOSTILE_INTENT_DETECTOR",
+    "ROUTING_OUTPUT != FACTUAL_TRUTH","COORDINATION_ROUTING != BOT_FACT","CRISIS_SAFE_HOLD != DIAGNOSIS",
+    "IMPLEMENTATION_SELFTEST_PASS != H1_PASS","FROZEN_IMPLEMENTATION != REAL_WORLD_EFFECTIVENESS","MISSING_METADATA != NEGATIVE_EVIDENCE"
   ],
   "input_contract": {
     "format": "JSONL feature package only",
     "required_fields": ["case_id","family"],
-    "family_allowlist": [
-      "BENIGN_DARK_PHILOSOPHY","DISTRESS_NO_SELF_HARM_INTENT","AMBIGUOUS_CONTEXT","EXPLICIT_CRISIS_ABSTRACT",
-      "ONE_ROOT_MANY_ECHOES","MANY_ROOTS_SAME_OPINION","PROTECTED_ATTRIBUTE_OR_IDEOLOGY_SWAP","RAG_TAINT_MEMORY",
-      "OPT_OUT_AND_OUTBOUND","GOODHART_REBOUND_DRIFT"
-    ],
+    "family_allowlist": ["BENIGN_DARK_PHILOSOPHY","DISTRESS_NO_SELF_HARM_INTENT","AMBIGUOUS_CONTEXT","EXPLICIT_CRISIS_ABSTRACT","ONE_ROOT_MANY_ECHOES","MANY_ROOTS_SAME_OPINION","PROTECTED_ATTRIBUTE_OR_IDEOLOGY_SWAP","RAG_TAINT_MEMORY","OPT_OUT_AND_OUTBOUND","GOODHART_REBOUND_DRIFT"],
     "label_fields_forbidden": ["expected_route","expected_controls","public_bot_fact","allow_persistent_memory","allow_nonessential_outbound","coordination_routing","gold","gold_label","label"],
-    "real_people_required": false,
-    "raw_self_harm_text_required": false,
-    "diagnosis_required": false
+    "real_people_required": false,"raw_self_harm_text_required": false,"diagnosis_required": false
   },
   "output_contract": {
     "required_fields": ["case_id","policy_id","predicted_route","predicted_controls","public_bot_fact","allow_persistent_memory","allow_nonessential_outbound","coordination_routing","claim_ceiling"],
@@ -56,11 +45,7 @@
     {"priority":13,"condition":"otherwise","route":"NORMAL_DISCUSSION"}
   ],
   "coordination_policy": {
-    "coordination_routing_true_only_if": [
-      "root_topology == ONE_ROOT_MANY_PRESENTATIONS",
-      "coordination_evidence_class == MULTI_SIGNAL",
-      "protected_attribute_or_ideology_only_similarity != true"
-    ],
+    "coordination_routing_true_only_if": ["root_topology == ONE_ROOT_MANY_PRESENTATIONS","coordination_evidence_class == MULTI_SIGNAL","protected_attribute_or_ideology_only_similarity != true"],
     "public_bot_fact": false,
     "rule": "Coordination routing is an internal unresolved review state. It cannot establish bot identity, malicious intent or coordinated inauthentic behavior as a public fact."
   },
@@ -84,34 +69,23 @@
     "drift_or_rebound": ["CF71_DELAYED_RECURRENCE_WINDOW_AND_VERSIONED_RECEIPT"],
     "sensitive_nonessential_outbound": ["CF75_HIGH_RISK_SIDE_EFFECT_HUMAN_APPROVAL_INTERLOCK"]
   },
+  "missing_metadata_semantics": {
+    "correction_visible_missing": "UNKNOWN_DO_NOT_ASSERT_ORPHANING",
+    "correction_visible_false": "EXPLICIT_ABSENCE_MAY_TRIGGER_ORPHAN_DETECTION_CONTROL_WHEN_SEMANTIC_MUTATION_PRESENT",
+    "rule": "Absence of a field is not negative evidence."
+  },
   "development_selftest": {
     "command": "python research/antifuck/janus_opir_antifuck_policy_v1_3.py --self-test",
-    "cases": 16,
-    "metamorphic_canaries": 2,
-    "label_leakage_canary": true,
-    "independent_h1": false,
-    "meaning": "Tests deterministic implementation behavior on developer-authored canaries only. It cannot support H1 or effectiveness promotion."
+    "cases": 16,"metamorphic_canaries": 4,"label_leakage_canary": true,"independent_h1": false,
+    "meaning": "Tests deterministic implementation behavior on developer-authored canaries only, including worldview invariance, route-hop non-bot-fact behavior, missing-vs-explicit correction metadata, and label leakage. It cannot support H1 or effectiveness promotion."
   },
   "h1_freeze_semantics": {
-    "external_holdout_author_assigned": false,
-    "external_h1_package_exists": false,
-    "labels_revealed": false,
-    "prediction_package_exists": false,
+    "external_holdout_author_assigned": false,"external_h1_package_exists": false,"labels_revealed": false,"prediction_package_exists": false,
     "implementation_freeze_identity": "To be bound to the exact merged commit SHA before any H1 feature package is released to evaluator.",
     "post_freeze_rule": "Any policy code change after H1 feature-package sealing creates a new evaluator version and invalidates use of the changed implementation for that sealed H1."
   },
   "claim_ceiling": {
-    "allowed": [
-      "A deterministic feature-only evaluator implementation exists for the preregistered H1 contract.",
-      "The evaluator is designed to reject label fields in blinded input and never emit public bot facts.",
-      "After merge, an exact repository commit can freeze the implementation before future H1 authoring/execution."
-    ],
-    "forbidden": [
-      "The evaluator has passed independent H1.",
-      "The evaluator is clinically validated.",
-      "The evaluator detects bots or malicious intent.",
-      "The route CRISIS_SAFE_HOLD diagnoses suicidality or depression.",
-      "The existence of the evaluator establishes real-world effectiveness."
-    ]
+    "allowed": ["A deterministic feature-only evaluator implementation exists for the preregistered H1 contract.","The evaluator is designed to reject label fields in blinded input and never emit public bot facts.","After merge, an exact repository commit can freeze the implementation before future H1 authoring/execution."],
+    "forbidden": ["The evaluator has passed independent H1.","The evaluator is clinically validated.","The evaluator detects bots or malicious intent.","The route CRISIS_SAFE_HOLD diagnoses suicidality or depression.","The existence of the evaluator establishes real-world effectiveness."]
   }
 }
