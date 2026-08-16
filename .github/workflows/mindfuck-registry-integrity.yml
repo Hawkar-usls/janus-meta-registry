@@ -10,6 +10,7 @@ on:
       - 'data/JANUS-ARMOR-OF-GOD-CHOICE-SPACE-RESILIENCE-v2.3.json'
       - 'data/JANUS-ARMOR-OF-GOD-ADVERSARIAL-RECOVERY-AND-ANTI-PARANOIA-v2.4.json'
       - 'data/JANUS-ARMOR-OF-GOD-FUNDAMENTUM-EPISTEMIC-WITNESS-TRUTH-GUARD-v2.5.json'
+      - 'data/JANUS-GENESIS-ARMOR-FUNDAMENTUM-MECHANICS-RECONCILIATION-CERTIFICATE-2026-08-16-v1.1.json'
       - 'data/Janus_OPIR_ANTIFUCK-v1.2.json'
       - 'data/Janus_OPIR_ANTIFUCK-v1.3.json'
       - 'data/JANUS-OPIR-ANTIFUCK-CALIBRATION-CORPUS-v1.0.json'
@@ -25,6 +26,7 @@ on:
       - 'data/JANUS-MINDFUCK-ADAPTIVE-PRESSURE-AND-EVASION-AUDIT-MODEL-v1.3.json'
       - 'data/JANUS-ARMOR-OF-GOD-ADVERSARIAL-RECOVERY-AND-ANTI-PARANOIA-v2.4.json'
       - 'data/JANUS-ARMOR-OF-GOD-FUNDAMENTUM-EPISTEMIC-WITNESS-TRUTH-GUARD-v2.5.json'
+      - 'data/JANUS-GENESIS-ARMOR-FUNDAMENTUM-MECHANICS-RECONCILIATION-CERTIFICATE-2026-08-16-v1.1.json'
       - 'data/Janus_OPIR_ANTIFUCK-v1.3.json'
       - 'data/JANUS-OPIR-ANTIFUCK-CALIBRATION-CORPUS-v1.0.json'
       - 'data/JANUS-OPIR-ANTIFUCK-CALIBRATION-RESULT-2026-08-15-v1.0.json'
@@ -56,6 +58,7 @@ jobs:
             'a23':root/'data/JANUS-ARMOR-OF-GOD-CHOICE-SPACE-RESILIENCE-v2.3.json',
             'a24':root/'data/JANUS-ARMOR-OF-GOD-ADVERSARIAL-RECOVERY-AND-ANTI-PARANOIA-v2.4.json',
             'a25':root/'data/JANUS-ARMOR-OF-GOD-FUNDAMENTUM-EPISTEMIC-WITNESS-TRUTH-GUARD-v2.5.json',
+            'recon':root/'data/JANUS-GENESIS-ARMOR-FUNDAMENTUM-MECHANICS-RECONCILIATION-CERTIFICATE-2026-08-16-v1.1.json',
             'o12':root/'data/Janus_OPIR_ANTIFUCK-v1.2.json',
             'o13':root/'data/Janus_OPIR_ANTIFUCK-v1.3.json',
             'corpus':root/'data/JANUS-OPIR-ANTIFUCK-CALIBRATION-CORPUS-v1.0.json',
@@ -65,7 +68,7 @@ jobs:
           d={k:json.loads(p.read_text(encoding='utf-8')) for k,p in paths.items()}
           for p in paths.values(): print('PARSE_PASS',p)
           pointer,m11,m12,m13=d['pointer'],d['m11'],d['m12'],d['m13']
-          a23,a24,a25,o12,o13=d['a23'],d['a24'],d['a25'],d['o12'],d['o13']
+          a23,a24,a25,recon,o12,o13=d['a23'],d['a24'],d['a25'],d['recon'],d['o12'],d['o13']
           corpus,result,auth=d['corpus'],d['result'],d['auth']
 
           assert pointer['current_reference']=='data/JANUS-MINDFUCK-ADAPTIVE-PRESSURE-AND-EVASION-AUDIT-MODEL-v1.3.json'
@@ -108,7 +111,7 @@ jobs:
           assert result['holdout_status']['effectiveness_promotion_blocked'] is True
           assert 'INDEPENDENT_HOLDOUT_PASS' in result['claim_ceiling']['forbidden_promotions']
 
-          assert auth['schema']=='janus.armor_of_god.current_authority.v1_17'
+          assert auth['schema']=='janus.armor_of_god.current_authority.v1_18'
           assert auth['current_hardening_extensions']==[
             'data/JANUS-ARMOR-OF-GOD-ADVERSARIAL-RECOVERY-AND-ANTI-PARANOIA-v2.4.json',
             'data/Janus_OPIR_ANTIFUCK-v1.3.json',
@@ -116,8 +119,33 @@ jobs:
           ]
           assert a25['authority_and_effect_boundary']['authority_delta']==0
           assert a25['authority_and_effect_boundary']['mass_effect_budget_delta']==0
-          assert auth['fundamentum_truth_guard_runtime_binding_status']=='NOT_YET_FROZEN_IN_GENESIS_RUNTIME'
-          assert auth['genesis_runtime_fundamentum_truth_guard_bound'] is False
+          assert auth['fundamentum_truth_guard_runtime_binding_status']=='BOUND_AND_HARDENED_REFERENCE_RUNTIME_V18_7_49'
+          assert auth['genesis_runtime_fundamentum_truth_guard_bound'] is True
+          assert auth['genesis_runtime_fundamentum_truth_guard_version']=='18.7.49'
+          assert auth['demihead_human_appeal_runtime_implemented'] is True
+          assert auth['demihead_mechanics_hardening_v1_1_implemented'] is True
+          assert auth['demihead_reviewer_effective_component_collapse_implemented'] is True
+          assert auth['demihead_duplicate_correction_id_rejection_implemented'] is True
+          assert auth['genesis_runtime_json_truthiness_hardening_implemented'] is True
+          assert auth['genesis_runtime_high_stakes_review_binding_hardening_implemented'] is True
+          assert auth['demihead_frozen_truth_guard_synthetic_holdout_pass'] is True
+          assert auth['demihead_frozen_truth_guard_synthetic_holdout_is_independent'] is False
+          assert auth['real_world_reviewer_identity_verified'] is False
+          assert auth['real_world_reviewer_independence_verified'] is False
+
+          chain=recon['verified_chain']
+          assert chain['demihead_mechanics_hardening_v1_1']['merge_sha']=='a79da70f7098ffb88e3d803f223bce8f05922f30'
+          assert chain['demihead_mechanics_hardening_v1_1']['post_merge_ci_run']==31936699500
+          assert chain['genesis_armor_mechanics_hardening_v18_7_49']['merge_sha']=='79f90ce14ba2e78720d089e9cd9d2afb08579f3c'
+          assert chain['genesis_armor_mechanics_hardening_v18_7_49']['dedicated_post_merge_ci_run']==31936722921
+          assert chain['demihead_frozen_synthetic_truth_guard_holdout']['freeze_sha256']=='4c658ea1532042e2c5db0298285335bbbb9e3e61ab21afd453ff0c846971201f'
+          assert chain['demihead_frozen_synthetic_truth_guard_holdout']['passed']==17
+          assert chain['demihead_frozen_synthetic_truth_guard_holdout']['independent_external_validation'] is False
+          assert recon['authority_and_effect_boundary']['authority_delta']==0
+          assert recon['authority_and_effect_boundary']['mass_effect_budget_delta']==0
+          assert recon['claim_ceiling']['independent_external_truth_guard_holdout_pass'] is False
+          assert recon['claim_ceiling']['real_world_reviewer_independence_verified'] is False
+
           for hist in ('data/JANUS-ARMOR-OF-GOD-CHOICE-SPACE-RESILIENCE-v2.3.json','data/Janus_OPIR_ANTIFUCK-v1.2.json'):
             assert hist in auth['historical_hardening_extensions']
           assert auth['calibration_result_reference']=='data/JANUS-OPIR-ANTIFUCK-CALIBRATION-RESULT-2026-08-15-v1.0.json'
@@ -128,9 +156,10 @@ jobs:
           assert auth['real_world_effectiveness_established'] is False
           print('CROSS_REFERENCE_AUDIT=PASS')
           print('HISTORICAL_CALIBRATION_CERTIFICATE=PASS')
-          print('CURRENT_SUCCESSORS=v1.3/v2.4/v1.3/v2.5')
+          print('CURRENT_SUCCESSORS=v1.3/v2.4/v1.3/v2.5+runtime-v18.7.49+appeal+mechanics-hardening')
           print('INDEPENDENT_H1=false')
-          print('FUNDAMENTUM_TRUTH_GUARD_RUNTIME_BOUND=false')
+          print('FUNDAMENTUM_TRUTH_GUARD_RUNTIME_BOUND=true')
+          print('FROZEN_SYNTHETIC_TRUTH_HOLDOUT=PASS_NOT_INDEPENDENT')
           PY
       - name: Replay frozen v1.2 development calibration
         run: python research/antifuck/janus_opir_antifuck_calibration_v1_2.py
