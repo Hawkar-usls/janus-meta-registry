@@ -58,7 +58,7 @@ def main():
         ],
         'tool_vs_device_boundary': {
             'ordinary_tools_or_materials_attested': ['copper knife', 'fish-trap/snare', 'gazelle milk', 'fingers/spit variant'],
-            'restorative_apparatus_observed': false if False else False,
+            'restorative_apparatus_observed': False,
             'interpretation': 'Explicit tools and treatment materials are attested, but no stable treatment chamber, energy system, instrumentation, construction specification or recurring regenerative apparatus is observed.'
         },
         'highest_admissible_claim': 'Across admitted Horus traditions, body-part loss/damage has multiple explicit causes and multiple restoration pathways. The strongest combined model is a cause-sensitive distributed mythic restoration grammar. Hands provide an especially rich chain from contamination-linked excision in one narrative variant to water retrieval and regrowth in CT158/BD113, but those stages must remain source-separated. No regenerative machine or capsule is established.',
