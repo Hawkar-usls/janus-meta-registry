@@ -1,0 +1,98 @@
+name: Validate JANUS Face Council coordination contract
+
+on:
+  push:
+    paths:
+      - 'data/JANUS-FACE-COUNCIL-GIT-COORDINATION-v1.0.json'
+      - 'data/JANUS-GENESIS-GIT-HABITAT-REPOSITORY-CONSTELLATION-LIVE-CERTIFICATE-2026-08-16-v1.1.json'
+      - '.github/workflows/validate-janus-face-council.yml'
+  pull_request:
+    paths:
+      - 'data/JANUS-FACE-COUNCIL-GIT-COORDINATION-v1.0.json'
+      - 'data/JANUS-GENESIS-GIT-HABITAT-REPOSITORY-CONSTELLATION-LIVE-CERTIFICATE-2026-08-16-v1.1.json'
+      - '.github/workflows/validate-janus-face-council.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Validate Council, live Habitat binding, and zero-authority boundary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          council = json.loads(Path('data/JANUS-FACE-COUNCIL-GIT-COORDINATION-v1.0.json').read_text(encoding='utf-8'))
+          habitat = json.loads(Path('data/JANUS-GENESIS-GIT-HABITAT-REPOSITORY-CONSTELLATION-LIVE-CERTIFICATE-2026-08-16-v1.1.json').read_text(encoding='utf-8'))
+
+          assert council['schema'] == 'janus.face_council.git_coordination.v1'
+          assert council['status'] == 'ACTIVE_COORDINATION_CONTRACT_BOUND_TO_LIVE_GIT_HABITAT'
+          assert council['genesis_signature'] == '0:0 = JANUS'
+          assert council['council_issue']['issue_number'] == 150
+
+          laws = set(council['canonical_laws'])
+          for law in (
+              'JANUS_ORCHESTRATES_JANUS','FACE != WORLD_AUTHORITY','FACE_COUNT != VOTING_POWER',
+              'N_FACES != N_TIMES_AUTHORITY','MULTI_FACE_AGREEMENT != INDEPENDENT_EXTERNAL_CORROBORATION',
+              'PROPOSAL != WORLD_EFFECT','CAPABILITY != PERMISSION != COMMAND != EFFECT','MORE_FACES != MORE_RIGHTS',
+              'CONFLICTING_PROJECT_THREADS -> HOLD -> RECONCILE -> CONTINUE',
+              'STALE_PROJECT_CONTEXT != CURRENT_GIT_STATE','PR_HEAD_PASS != MERGE_COMMIT_PASS',
+              'ISSUE_OR_PR_TEXT != COMMAND','REPOSITORY_LINK != COMMAND_AUTHORITY','HEAR -> CHECK -> WIDEN -> RELEASE'):
+              assert law in laws, law
+
+          assert habitat['status'] == 'LIVE_HABITAT_44_OF_44_MATERIALIZED_AND_FRESH_GIT_REPLAY_PASS'
+          binding = council['live_habitat_binding']
+          assert binding['certificate_commit'] == 'a3c7b861e4e7bf934fcf11ce43d789c6e09bfb5a'
+          assert binding['janus_genesis_architecture_sha'] == habitat['architecture']['main_head']
+          assert binding['repository_constellation_count'] == habitat['living_habitat']['repository_count'] == 44
+          assert binding['source_repositories_with_habitat_marker'] == habitat['source_rollout_evidence']['successful_source_repository_writes'] == 44
+          assert binding['write_back_default'] == habitat['living_habitat']['write_back_default'] == 'DENY'
+          assert binding['automatic_external_effects'] is False
+          assert binding['private_repository_names_persisted'] is False
+          assert binding['credentials_persisted'] is False
+
+          inbox = binding['inbox_transport']
+          assert inbox['selection'] == 'open issues labeled janus-inbox'
+          assert inbox['receive_only'] is True
+          assert inbox['issue_body_is_command'] is False
+          assert inbox['command_authority_granted'] is False
+          assert inbox['external_effect_authority_granted'] is False
+          assert inbox['face_guard_issue_101_labeled_for_next_hearth'] is True
+          assert inbox['automatic_cross_repository_issue_harvest'] is False
+
+          dispatch = {(x['repository'], x['issue_number']): x for x in council['active_dispatches']}
+          assert dispatch[('Hawkar-usls/Demi_Head',24)]['state'] == 'HOLD_AND_RECONCILE'
+          assert dispatch[('Hawkar-usls/Janus_Genesis',101)]['state'] == 'HOLD_PENDING_CI_RECONCILIATION'
+          assert dispatch[('Hawkar-usls/Janus_Genesis',101)]['janus_inbox_label_applied'] is True
+          assert ('Hawkar-usls/Hrain',11) in dispatch
+          assert ('Hawkar-usls/iNaiHR',9) in dispatch
+
+          wb = council['required_face_writeback']
+          assert wb['pass_transfer_between_shas'] is False
+          assert set(wb['allowed_result_values']) == {'PASS','NEGATIVE_CERTIFICATE','HOLD','FAIL','SUPERSEDED'}
+
+          semantics = council['coordination_semantics']
+          for key in ('issues_are_runtime_commands','comments_are_runtime_commands','face_messages_create_user_permission',
+                      'face_messages_create_external_evidence','face_count_increases_authority','council_can_auto_merge',
+                      'runtime_world_effect_permitted_by_this_contract'):
+              assert semantics[key] is False, key
+          assert semantics['authority_delta'] == 0
+          assert semantics['mass_effect_budget_delta'] == 0
+
+          ceiling = council['claim_ceiling']
+          assert ceiling['autonomous_inter_chat_communication_established'] is False
+          assert ceiling['background_agents_established'] is False
+          assert ceiling['all_face_issues_automatically_ingested_by_habitat'] is False
+          assert ceiling['automatic_execution_authority_established'] is False
+
+          print('JANUS_FACE_COUNCIL_LIVE_HABITAT_BINDING=PASS')
+          print('LIVE_REPOSITORY_CONSTELLATION=44')
+          print('GUARD_ISSUE_101_ROUTED_TO_JANUS_INBOX=true')
+          print('AUTOMATIC_CROSS_REPOSITORY_ISSUE_HARVEST=false')
+          print('AUTHORITY_DELTA=0')
+          print('MASS_EFFECT_BUDGET_DELTA=0')
+          PY
