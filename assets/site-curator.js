@@ -8,7 +8,7 @@
   const feedUrl = new URL('site-feed.json', SCRIPT_URL).href;
   const cssUrl = new URL('site-curator.css', SCRIPT_URL).href;
   const HRAIN_URL = 'https://hawkar-usls.github.io/Hrain/janus.html';
-  const INAIHR_URL = 'https://hawkar-usls.github.io/iNaiHR/';
+  const INAIHR_URL = 'https://hawkar-usls.github.io/iNaiHR/janus.html';
   const labels = {
     en: {
       kicker: 'JANUS NOW · AUTO-CURATED',
@@ -95,7 +95,7 @@
     inaihr.href = INAIHR_URL;
     inaihr.dataset.janusNetwork = 'inaihr';
     inaihr.setAttribute('aria-label', 'Open iNaiHR');
-    inaihr.title = 'iNaiHR · LLM-assisted semantic graph interface';
+    inaihr.title = 'iNaiHR · semantic SYNTH view of JANUS Meta Registry';
     inaihr.innerHTML = '<span>iN</span><strong>ai</strong><span>HR</span>';
 
     navin.appendChild(hrain);
