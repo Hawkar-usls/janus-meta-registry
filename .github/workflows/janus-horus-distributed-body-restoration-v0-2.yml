@@ -1,0 +1,35 @@
+name: JANUS Horus distributed body restoration v0.2
+
+on:
+  pull_request:
+    paths:
+      - 'data/JANUS-HORUS-DISTRIBUTED-BODY-RESTORATION-PRIMARY-WITNESS-LEDGER-2026-08-16-v0.2.json'
+      - 'data/JANUS-HORUS-DISTRIBUTED-BODY-RESTORATION-GRAMMAR-RESULT-2026-08-16-v0.2.json'
+      - 'data/JANUS-HORUS-RESTORATION-PROCEDURE-DEVICE-SIGNATURE-PILOT-2026-08-16-v0.1.json'
+      - 'research/horus/janus_horus_distributed_body_restoration_probe_v0_2.py'
+      - '.github/workflows/janus-horus-distributed-body-restoration-v0-2.yml'
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile probe
+        run: python -m py_compile research/horus/janus_horus_distributed_body_restoration_probe_v0_2.py
+      - name: Replay frozen restoration grammar
+        run: python research/horus/janus_horus_distributed_body_restoration_probe_v0_2.py
+      - name: Claim firewall
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          result = json.loads(Path('data/JANUS-HORUS-DISTRIBUTED-BODY-RESTORATION-GRAMMAR-RESULT-2026-08-16-v0.2.json').read_text())
+          device = json.loads(Path('data/JANUS-HORUS-RESTORATION-PROCEDURE-DEVICE-SIGNATURE-PILOT-2026-08-16-v0.1.json').read_text())
+          assert result['status'] == 'DISTRIBUTED_HORUS_BODY_RESTORATION_GRAMMAR_SUPPORTED_FOR_HANDS_AND_EYES_COMPLETE_BODY_NOT_ESTABLISHED'
+          assert device['pilot_summary']['device_signature_status'] == 'NOT_ESTABLISHED'
+          assert device['pilot_summary']['witnesses_with_any_apparatus_feature_A1_A6'] == 0
+          print('PASS: restoration grammar preserved without capsule/aircraft promotion')
+          PY
