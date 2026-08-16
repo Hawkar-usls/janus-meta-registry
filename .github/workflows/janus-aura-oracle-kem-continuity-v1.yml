@@ -1,0 +1,33 @@
+name: JANUS Aura Oracle Kem continuity v1
+
+on:
+  pull_request:
+    paths:
+      - 'data/JANUS-ARTIFACT-AURA-ORACLE-KEM-FIRST-SEARCH-CONTINUITY-2025-11-25-v1.0.json'
+      - '.github/workflows/janus-aura-oracle-kem-continuity-v1.yml'
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Validate repository provenance and claim firewall
+        run: |
+          python - <<'PY'
+          import json
+          p='data/JANUS-ARTIFACT-AURA-ORACLE-KEM-FIRST-SEARCH-CONTINUITY-2025-11-25-v1.0.json'
+          with open(p, encoding='utf-8') as f:
+              d=json.load(f)
+          assert d['external_repository_receipt']['repository_full_name']=='Hawkar-usls/aura-oracle-tg'
+          assert d['external_repository_receipt']['created_at']=='2025-11-25T02:13:51Z'
+          assert d['root_commit_receipt']['sha']=='a9903f1259ca6b4c0f1d80c2dd7a37b846f91073'
+          assert d['root_commit_receipt']['parents']==[]
+          assert d['initial_implementation_receipt']['observed_oracle_logic']['card_roles']==['Past','Obstacle','Advice','Outcome']
+          assert d['user_declared_personal_intent']['classification']=='USER_STATED_INTENT'
+          assert 'KEM_IDENTITY_IS_CREATIVE_PERSONAL_SYMBOLISM_NOT_EMPIRICALLY_VERIFIED' in d['claim_firewall']
+          assert 'ORACLE_OUTPUTS_ARE_NOT_EVIDENCE_OF_PROPHECY_OR_PRECOGNITION' in d['claim_firewall']
+          print('PASS: Aura Oracle chronology, continuity role, and claim ceiling validated.')
+          PY
