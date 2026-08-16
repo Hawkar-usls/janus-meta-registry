@@ -1,0 +1,103 @@
+name: JANUS Linear A R7-G0 terminal numeric payload v0.1
+
+on:
+  push:
+    paths:
+      - "data/JANUS-LINEAR-A-R7-G0-EXECUTE-REQUEST-2026-08-16-v0.1.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  g0:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install inherited parser dependency
+        run: python -m pip install "numpy>=2.0"
+      - name: Verify frozen G0 inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile research/linear_a/janus_linear_a_r7_g0_terminal_numeric_payload_v0_1.py
+          python - <<'PY'
+          import json
+          s=json.load(open('data/JANUS-LINEAR-A-R7-G0-TERMINAL-NUMERIC-PAYLOAD-PROFILE-SPEC-2026-08-16-v0.1.json',encoding='utf-8'))
+          c=json.load(open('data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-16-v2.31.json',encoding='utf-8'))
+          f=json.load(open('data/JANUS-LINEAR-A-R7-F1-TERMINAL-NUMERIC-SLOT-RESULT-2026-08-16-v0.1.json',encoding='utf-8'))
+          assert c['version']=='v2.31' and c['status']=='CURRENT_CANONICAL_RESEARCH_STATE'
+          assert c['canonicality']['canonicality_audit_status']=='CANONICALITY_AUDIT_PASS'
+          assert s['status']=='PREREGISTERED_BEFORE_NUMERIC_PAYLOAD_INSPECTION'
+          assert s['source']['numeric_payload_values_inspected_before_freeze'] is False
+          assert s['event_family']['required_TWO_KIND_signature']=='N|END'
+          assert s['primary_statistic']['transform']=='log2(exact_positive_numeric_value)'
+          assert s['object_blocked_null']['permutations']==10000 and s['object_blocked_null']['empirical_p_max']==0.01
+          assert f['status']=='INTERNAL_POST_F0_TERMINAL_NUMERIC_SLOT_REFINEMENT_ADMITTED'
+          assert f['candidate']['signature']=='N|END'
+          assert s['claim_ceiling']['TOTAL_or_SUMMARY_semantic_function_established'] is False
+          PY
+      - name: Fetch exact preservation-mirror corpus
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --quiet https://github.com/Hawkar-usls/lineara.xyz.git /tmp/lineara
+          git -C /tmp/lineara checkout --quiet 43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a
+          test "$(git -C /tmp/lineara rev-parse HEAD)" = "43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a"
+      - name: Execute blocked numeric payload profile test
+        env:
+          PYTHONPATH: research/linear_a
+        shell: bash
+        run: |
+          set -euo pipefail
+          python research/linear_a/janus_linear_a_r7_g0_terminal_numeric_payload_v0_1.py \
+            --corpus /tmp/lineara \
+            --spec data/JANUS-LINEAR-A-R7-G0-TERMINAL-NUMERIC-PAYLOAD-PROFILE-SPEC-2026-08-16-v0.1.json \
+            --canonical data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-16-v2.31.json \
+            --f1-result data/JANUS-LINEAR-A-R7-F1-TERMINAL-NUMERIC-SLOT-RESULT-2026-08-16-v0.1.json \
+            --out data/JANUS-LINEAR-A-R7-G0-TERMINAL-NUMERIC-PAYLOAD-PROFILE-RESULT-2026-08-16-v0.1.json
+      - name: Enforce G0 claim ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          x=json.load(open('data/JANUS-LINEAR-A-R7-G0-TERMINAL-NUMERIC-PAYLOAD-PROFILE-RESULT-2026-08-16-v0.1.json',encoding='utf-8'))
+          assert x['status'] in {'INTERNAL_TERMINAL_NUMERIC_PAYLOAD_DISTRIBUTION_DIFFERENCE_ESTABLISHED','TERMINAL_NUMERIC_PAYLOAD_DISTRIBUTION_DIFFERENCE_NOT_ESTABLISHED'}
+          e=x['epistemic_gate']
+          assert e['parent_probable_region_scoped_ROW_OPENING_LIKE_retained'] is True
+          assert e['F1_internal_terminal_numeric_slot_refinement_retained'] is True
+          assert e['TOTAL_or_SUMMARY_semantic_function_established'] is False
+          assert e['exact_word_meaning_established'] is False
+          assert e['translation_established'] is False
+          assert e['new_anchor_established'] is False
+          assert e['universal_cross_region_function_established'] is False
+          assert e['external_replication_established'] is False
+          assert e['decipherment_established'] is False
+          print(json.dumps({'status':x['status'],'support':x['support']['support_pass'],'energy':x['primary_test']['observed_energy_distance'],'p':x['primary_test']['empirical_p'],'admitted':x['admission']['numeric_payload_distribution_difference_established']},sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r7-g0-terminal-numeric-payload-v0-1
+          path: data/JANUS-LINEAR-A-R7-G0-TERMINAL-NUMERIC-PAYLOAD-PROFILE-RESULT-2026-08-16-v0.1.json
+          retention-days: 90
+      - name: Persist G0 result
+        shell: bash
+        run: |
+          set -euo pipefail
+          F=data/JANUS-LINEAR-A-R7-G0-TERMINAL-NUMERIC-PAYLOAD-PROFILE-RESULT-2026-08-16-v0.1.json
+          git config user.name 'JANUS Evidence Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add "$F"
+          git commit -m 'Register Linear A R7-G0 terminal numeric payload result' || true
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then exit 0; fi
+            git pull --rebase origin main
+          done
+          exit 1
