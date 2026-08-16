@@ -1,0 +1,64 @@
+name: JANUS Linear A R7-C0 freeze admitted family v0.1
+
+on:
+  push:
+    paths:
+      - "data/JANUS-LINEAR-A-R7-C0-FREEZE-REQUEST-2026-08-16-v0.1.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  freeze_family:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Freeze complete admitted family
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile research/linear_a/janus_linear_a_r7_c0_freeze_admitted_family_v0_1.py
+          python research/linear_a/janus_linear_a_r7_c0_freeze_admitted_family_v0_1.py \
+            --result data/JANUS-LINEAR-A-R7-C0-POSITIONAL-FUNCTIONAL-ROLE-RESULT-2026-08-16-v0.1.json \
+            --out data/JANUS-LINEAR-A-R7-C0-ADMITTED-CANDIDATE-FAMILY-FREEZE-2026-08-16-v0.1.json
+      - name: Enforce immutable family
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          x=json.load(open('data/JANUS-LINEAR-A-R7-C0-ADMITTED-CANDIDATE-FAMILY-FREEZE-2026-08-16-v0.1.json',encoding='utf-8'))
+          assert x['status']=='R7_C0_ADMITTED_FAMILY_FROZEN_43_OF_65'
+          assert x['frozen_candidate_count']==43 and len(x['candidate_family'])==43
+          assert x['downstream_constraints']['R7_C1_candidate_addition_forbidden'] is True
+          assert x['downstream_constraints']['R7_C1_candidate_removal_forbidden'] is True
+          assert x['downstream_constraints']['R7_C2_candidate_addition_forbidden'] is True
+          assert x['downstream_constraints']['R7_C2_candidate_removal_forbidden'] is True
+          assert x['epistemic_gate']['probable_function_established'] is False
+          print(json.dumps({'status':x['status'],'count':len(x['candidate_family'])},sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r7-c0-admitted-family-freeze-v0-1
+          path: data/JANUS-LINEAR-A-R7-C0-ADMITTED-CANDIDATE-FAMILY-FREEZE-2026-08-16-v0.1.json
+          retention-days: 90
+      - name: Persist family freeze
+        shell: bash
+        run: |
+          set -euo pipefail
+          F=data/JANUS-LINEAR-A-R7-C0-ADMITTED-CANDIDATE-FAMILY-FREEZE-2026-08-16-v0.1.json
+          git config user.name 'JANUS Evidence Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add "$F"
+          git commit -m 'Freeze Linear A R7-C0 admitted positional candidate family' || true
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then exit 0; fi
+            git pull --rebase origin main
+          done
+          exit 1
