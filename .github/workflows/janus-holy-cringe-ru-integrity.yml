@@ -1,0 +1,102 @@
+name: JANUS Holy Cringe ru presentation integrity
+
+on:
+  pull_request:
+    paths:
+      - 'assets/holy-cringe-ru.js'
+      - 'assets/i18n.js'
+      - 'assets/page-i18n.js'
+      - 'data/SIGNS.json'
+      - 'research/site/apply_holy_cringe_ru_v1.py'
+      - '.github/workflows/janus-holy-cringe-ru-integrity.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'assets/holy-cringe-ru.js'
+      - 'assets/i18n.js'
+      - 'assets/page-i18n.js'
+      - 'data/SIGNS.json'
+      - 'research/site/apply_holy_cringe_ru_v1.py'
+      - '.github/workflows/janus-holy-cringe-ru-integrity.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: janus-holy-cringe-ru-v1
+  cancel-in-progress: false
+
+jobs:
+  validate-or-apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Apply deterministic loader migration
+        run: python research/site/apply_holy_cringe_ru_v1.py
+      - name: Validate Holy Cringe boundaries
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          signs=json.loads(Path('data/SIGNS.json').read_text(encoding='utf-8'))
+          js=Path('assets/holy-cringe-ru.js').read_text(encoding='utf-8')
+          i18n=Path('assets/i18n.js').read_text(encoding='utf-8')
+          page=Path('assets/page-i18n.js').read_text(encoding='utf-8')
+          assert signs['language_trigger']=='ru'
+          for rule in [
+            'PARODY != SOURCE_AUTHORITY',
+            'FICTIONAL_CAMEO != REAL_PERSON_CLAIM',
+            'LANGUAGE_MODE != NATIONALITY_INFERENCE',
+            'STYLE_INSPIRATION != AUTHOR_IMPERSONATION',
+            'FOIL_HAT != SECURITY_CONTROL',
+            'SYNTH != REGISTRY_WRITE'
+          ]:
+            assert rule in signs['hard_boundaries'], rule
+          assert signs['fictional_cameo']['real_person_binding'] is False
+          assert signs['implementation']['source_mutation_authority'] is False
+          assert 'janus-site-language-v1' in js
+          assert 'СВЯТОЙ КРИНЖ' in js
+          assert 'не реальный человек' in js
+          assert 'MutationObserver' in js
+          assert 'holy-cringe-ru.js' in i18n
+          assert 'holy-cringe-ru.js' in page
+          forbidden=['/api/hrain/save','/api/hrain/event',"method:'DELETE'","method:'PUT'","method:'PATCH'"]
+          for token in forbidden:
+            assert token not in js, token
+          print('HOLY_CRINGE_RU=PASS')
+          print('FICTIONAL_CAMEO_BOUNDARY=PASS')
+          print('SOURCE_MUTATION=ABSENT')
+          PY
+          node --check assets/holy-cringe-ru.js
+      - name: Commit loader migration on main safely
+        if: github.event_name != 'pull_request'
+        run: |
+          if git diff --quiet -- assets/i18n.js assets/page-i18n.js; then
+            echo 'No loader migration diff.'
+          else
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add assets/i18n.js assets/page-i18n.js
+            git commit -m 'feat(site): activate Holy Cringe ru presentation layer'
+            git fetch origin main
+            git rebase origin/main
+            git push origin HEAD:main
+          fi
+      - name: Request Pages rebuild
+        if: github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          curl --fail-with-body -sS -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/pages/builds" >/tmp/pages.json
+          cat /tmp/pages.json
