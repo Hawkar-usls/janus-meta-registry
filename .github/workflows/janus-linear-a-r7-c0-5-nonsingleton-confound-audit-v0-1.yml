@@ -1,0 +1,94 @@
+name: JANUS Linear A R7-C0.5 nonsingleton confound audit v0.1
+
+on:
+  push:
+    paths:
+      - "data/JANUS-LINEAR-A-R7-C0-5-EXECUTE-REQUEST-2026-08-16-v0.1.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install inherited parser dependency
+        run: python -m pip install "numpy>=2.0"
+      - name: Verify frozen corrective inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile research/linear_a/janus_linear_a_r7_c0_5_nonsingleton_confound_audit_v0_1.py
+          python - <<'PY'
+          import json
+          s=json.load(open('data/JANUS-LINEAR-A-R7-C0-5-NONSINGLETON-BOUNDARY-CONFOUND-AUDIT-SPEC-2026-08-16-v0.1.json',encoding='utf-8'))
+          f=json.load(open('data/JANUS-LINEAR-A-R7-C0-ADMITTED-CANDIDATE-FAMILY-FREEZE-2026-08-16-v0.1.json',encoding='utf-8'))
+          assert f['status']=='R7_C0_ADMITTED_FAMILY_FROZEN_43_OF_65' and len(f['candidate_family'])==43
+          assert s['candidate_policy']['candidate_family_is_exactly_all_43_frozen_rows'] is True
+          assert s['candidate_policy']['candidate_addition_forbidden'] is True
+          assert s['candidate_policy']['candidate_removal_forbidden'] is True
+          assert s['survival_gate']['FDR_q_max']==0.05
+          assert s['credit']['independent_confirmation_credit'] is False
+          PY
+      - name: Fetch exact preservation-mirror corpus
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --quiet https://github.com/Hawkar-usls/lineara.xyz.git /tmp/lineara
+          git -C /tmp/lineara checkout --quiet 43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a
+          test "$(git -C /tmp/lineara rev-parse HEAD)" = "43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a"
+      - name: Execute nonsingleton corrective audit
+        env:
+          PYTHONPATH: research/linear_a
+        shell: bash
+        run: |
+          set -euo pipefail
+          python research/linear_a/janus_linear_a_r7_c0_5_nonsingleton_confound_audit_v0_1.py \
+            --corpus /tmp/lineara \
+            --spec data/JANUS-LINEAR-A-R7-C0-5-NONSINGLETON-BOUNDARY-CONFOUND-AUDIT-SPEC-2026-08-16-v0.1.json \
+            --freeze data/JANUS-LINEAR-A-R7-C0-ADMITTED-CANDIDATE-FAMILY-FREEZE-2026-08-16-v0.1.json \
+            --out data/JANUS-LINEAR-A-R7-C0-5-NONSINGLETON-BOUNDARY-CONFOUND-AUDIT-RESULT-2026-08-16-v0.1.json
+      - name: Enforce corrective ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          x=json.load(open('data/JANUS-LINEAR-A-R7-C0-5-NONSINGLETON-BOUNDARY-CONFOUND-AUDIT-RESULT-2026-08-16-v0.1.json',encoding='utf-8'))
+          assert x['status']=='R7_C0_5_NONSINGLETON_CONFOUND_AUDIT_COMPLETE'
+          assert x['candidate_count']==43 and len(x['candidate_results'])==43
+          assert x['credit']['blind_confirmation_credit'] is False
+          assert x['credit']['independent_confirmation_credit'] is False
+          assert x['epistemic_gate']['probable_function_established'] is False
+          assert x['epistemic_gate']['translation_established'] is False
+          assert x['epistemic_gate']['decipherment_established'] is False
+          assert x['survivor_count']==len(x['survivors'])
+          print(json.dumps({'status':x['status'],'survivors':x['survivor_count'],'roles':x['survivor_count_by_role'],'confound':x['confound_inventory']},sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r7-c0-5-nonsingleton-audit-v0-1
+          path: data/JANUS-LINEAR-A-R7-C0-5-NONSINGLETON-BOUNDARY-CONFOUND-AUDIT-RESULT-2026-08-16-v0.1.json
+          retention-days: 90
+      - name: Persist corrective result
+        shell: bash
+        run: |
+          set -euo pipefail
+          F=data/JANUS-LINEAR-A-R7-C0-5-NONSINGLETON-BOUNDARY-CONFOUND-AUDIT-RESULT-2026-08-16-v0.1.json
+          git config user.name 'JANUS Evidence Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add "$F"
+          git commit -m 'Register Linear A R7-C0.5 nonsingleton confound audit' || true
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then exit 0; fi
+            git pull --rebase origin main
+          done
+          exit 1
