@@ -7,6 +7,8 @@
 
   const feedUrl = new URL('site-feed.json', SCRIPT_URL).href;
   const cssUrl = new URL('site-curator.css', SCRIPT_URL).href;
+  const HRAIN_URL = 'https://hawkar-usls.github.io/Hrain/?registry=janus';
+  const INAIHR_URL = 'https://hawkar-usls.github.io/iNaiHR/';
   const labels = {
     en: {
       kicker: 'JANUS NOW · AUTO-CURATED',
@@ -75,6 +77,29 @@
     if (className) node.className = className;
     if (text !== undefined && text !== null) node.textContent = text;
     return node;
+  }
+
+  function ensureNetworkNav() {
+    const navin = document.querySelector('.nav .navin');
+    if (!navin || navin.querySelector('[data-janus-network]')) return;
+    navin.classList.add('janus-network-enabled');
+
+    const hrain = el('a', 'janus-network-hrain');
+    hrain.href = HRAIN_URL;
+    hrain.dataset.janusNetwork = 'hrain';
+    hrain.setAttribute('aria-label', 'Open HRaiN with JANUS Meta Registry');
+    hrain.title = 'HRaiN · live graph view of the JANUS Meta Registry';
+    hrain.innerHTML = '<span>HR</span><strong>ai</strong><span>N</span>';
+
+    const inaihr = el('a', 'janus-network-inaihr');
+    inaihr.href = INAIHR_URL;
+    inaihr.dataset.janusNetwork = 'inaihr';
+    inaihr.setAttribute('aria-label', 'Open iNaiHR');
+    inaihr.title = 'iNaiHR · LLM-assisted semantic graph interface';
+    inaihr.innerHTML = '<span>iN</span><strong>ai</strong><span>HR</span>';
+
+    navin.appendChild(hrain);
+    navin.appendChild(inaihr);
   }
 
   function formatDate(value, lang) {
@@ -189,6 +214,7 @@
 
   async function load() {
     ensureCss();
+    ensureNetworkNav();
     try {
       const response = await fetch(feedUrl, { cache: 'no-store', headers: { Accept: 'application/json' } });
       if (!response.ok) return;
