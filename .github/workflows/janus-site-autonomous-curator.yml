@@ -11,6 +11,7 @@ on:
       - 'assets/site-curator.css'
       - '.github/workflows/janus-site-autonomous-curator.yml'
       - '!assets/site-feed.json'
+      - '!assets/hrain-registry-index.json'
       - '!guestbook/**'
   pull_request:
     paths:
@@ -21,6 +22,7 @@ on:
       - 'assets/site-curator.css'
       - '.github/workflows/janus-site-autonomous-curator.yml'
       - '!assets/site-feed.json'
+      - '!assets/hrain-registry-index.json'
       - '!guestbook/**'
   workflow_dispatch:
 
@@ -45,19 +47,25 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Validate curator source and policy
+      - name: Validate curator, HRaiN export, and policy
         run: |
           python -m py_compile research/site/janus_site_curator.py
+          python -m py_compile research/site/janus_hrain_registry_export.py
           node --check assets/site-curator.js
           python -m json.tool data/JANUS-SITE-CURATOR-POLICY-v1.2.json >/dev/null
+          python -m json.tool data/JANUS-HRAIN-META-REGISTRY-BRIDGE-v1.0.json >/dev/null
           python research/site/janus_site_curator.py --output /tmp/janus-site-feed.json
+          python research/site/janus_hrain_registry_export.py --output /tmp/hrain-registry-index.json
           python -m json.tool /tmp/janus-site-feed.json >/dev/null
+          python -m json.tool /tmp/hrain-registry-index.json >/dev/null
           python - <<'PY'
           import json
           from pathlib import Path
 
           feed = json.loads(Path('/tmp/janus-site-feed.json').read_text(encoding='utf-8'))
+          hrain = json.loads(Path('/tmp/hrain-registry-index.json').read_text(encoding='utf-8'))
           policy = json.loads(Path('data/JANUS-SITE-CURATOR-POLICY-v1.2.json').read_text(encoding='utf-8'))
+          bridge = json.loads(Path('data/JANUS-HRAIN-META-REGISTRY-BRIDGE-v1.0.json').read_text(encoding='utf-8'))
 
           assert feed['schema'] == 'janus.site.activity_feed.v1_2'
           assert feed['policy'] == 'data/JANUS-SITE-CURATOR-POLICY-v1.2.json'
@@ -94,8 +102,25 @@ jobs:
           }
           assert len(spotlight_paths & demihead_pair) <= 1, 'DemiHead adjacent revisions both entered Spotlight'
           assert len(spotlight_paths & gamarjoba_pair) <= 1, 'GAMARJOBA adjacent revisions both entered Spotlight'
-
           assert 'NEWEST_LINEAGE_REPRESENTATIVE != BEST_SCIENTIFIC_RESULT' in feed['claim_ceiling']
+
+          assert hrain['schema'] == 'janus.hrain.registry_graph_index.v1_0'
+          assert hrain['objectCount'] == feed['candidate_count']
+          assert hrain['nodes'][0]['id'] == 'registry:janus-meta-registry'
+          assert hrain['nodes'][0]['readOnly'] is True
+          assert all(node.get('readOnly') is True for node in hrain['nodes'])
+          assert 'HRAIN_GRAPH != REGISTRY_AUTHORITY' in hrain['claimCeiling']
+          assert bridge['data_contract']['writes_back_to_registry'] is False
+          assert bridge['hrain_graph_contract']['read_only'] is True
+          assert bridge['network']['hrain'] == 'https://hawkar-usls.github.io/Hrain/janus.html'
+
+          js = Path('assets/site-curator.js').read_text(encoding='utf-8')
+          css = Path('assets/site-curator.css').read_text(encoding='utf-8')
+          assert 'https://hawkar-usls.github.io/Hrain/janus.html' in js
+          assert 'https://hawkar-usls.github.io/iNaiHR/' in js
+          assert 'janus-network-hrain' in js and 'janus-network-inaihr' in js
+          assert 'grid-template-areas' in css and 'janus-network-hrain' in css
+
           print('JANUS_CURATOR_DRY_RUN=PASS')
           print('JANUS_CURATOR_ROUTING_SCOPE=IDENTITY_ONLY')
           print('JANUS_CURATOR_CROSS_REFERENCE_CONTAMINATION=BLOCKED')
@@ -103,18 +128,22 @@ jobs:
           print('JANUS_CURATOR_LATEST_HISTORY_PRESERVED=PASS')
           print('JANUS_CURATOR_STATUS_VALENCE=IGNORED')
           print('JANUS_CURATOR_SOURCE_REWRITE=FORBIDDEN')
+          print('JANUS_HRAIN_BRIDGE_INDEX=PASS')
+          print('JANUS_NETWORK_NAV=PASS')
           PY
 
-      - name: Refresh generated feed on main
+      - name: Refresh generated feeds on main
         if: github.event_name != 'pull_request'
         id: refresh
         run: |
           git fetch origin main
           git reset --hard origin/main
           python research/site/janus_site_curator.py --output assets/site-feed.json
+          python research/site/janus_hrain_registry_export.py --output assets/hrain-registry-index.json
           python -m json.tool assets/site-feed.json >/dev/null
+          python -m json.tool assets/hrain-registry-index.json >/dev/null
 
-          if [ -z "$(git status --porcelain -- assets/site-feed.json)" ]; then
+          if [ -z "$(git status --porcelain -- assets/site-feed.json assets/hrain-registry-index.json)" ]; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "JANUS_CURATOR_FEED_CHANGE=NONE"
             exit 0
@@ -122,7 +151,7 @@ jobs:
 
           git config user.name "JANUS Site Curator"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add assets/site-feed.json
+          git add assets/site-feed.json assets/hrain-registry-index.json
           git commit -m "chore(site): JANUS curator refresh"
           git push origin HEAD:main
           echo "changed=true" >> "$GITHUB_OUTPUT"
