@@ -68,3 +68,15 @@
   script.async = true;
   document.head.appendChild(script);
 })();
+
+(() => {
+  'use strict';
+  const current = document.currentScript && document.currentScript.src;
+  if (!current || document.querySelector('script[data-janus-holy-cringe-loader]')) return;
+  const script = document.createElement('script');
+  script.src = new URL('holy-cringe-ru.js', current).href;
+  script.dataset.janusHolyCringeLoader = 'true';
+  script.async = true;
+  document.head.appendChild(script);
+})();
+
