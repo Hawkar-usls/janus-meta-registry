@@ -9,6 +9,7 @@ on:
       - 'data/JANUS-MINDFUCK-ADAPTIVE-PRESSURE-AND-EVASION-AUDIT-MODEL-v1.3.json'
       - 'data/JANUS-ARMOR-OF-GOD-CHOICE-SPACE-RESILIENCE-v2.3.json'
       - 'data/JANUS-ARMOR-OF-GOD-ADVERSARIAL-RECOVERY-AND-ANTI-PARANOIA-v2.4.json'
+      - 'data/JANUS-ARMOR-OF-GOD-FUNDAMENTUM-EPISTEMIC-WITNESS-TRUTH-GUARD-v2.5.json'
       - 'data/Janus_OPIR_ANTIFUCK-v1.2.json'
       - 'data/Janus_OPIR_ANTIFUCK-v1.3.json'
       - 'data/JANUS-OPIR-ANTIFUCK-CALIBRATION-CORPUS-v1.0.json'
@@ -23,6 +24,7 @@ on:
       - 'data/JANUS-MINDFUCK-ALGORITHMIC-AMPLIFICATION-AUDIT-MODEL-v1.2.json'
       - 'data/JANUS-MINDFUCK-ADAPTIVE-PRESSURE-AND-EVASION-AUDIT-MODEL-v1.3.json'
       - 'data/JANUS-ARMOR-OF-GOD-ADVERSARIAL-RECOVERY-AND-ANTI-PARANOIA-v2.4.json'
+      - 'data/JANUS-ARMOR-OF-GOD-FUNDAMENTUM-EPISTEMIC-WITNESS-TRUTH-GUARD-v2.5.json'
       - 'data/Janus_OPIR_ANTIFUCK-v1.3.json'
       - 'data/JANUS-OPIR-ANTIFUCK-CALIBRATION-CORPUS-v1.0.json'
       - 'data/JANUS-OPIR-ANTIFUCK-CALIBRATION-RESULT-2026-08-15-v1.0.json'
@@ -53,6 +55,7 @@ jobs:
             'm13':root/'data/JANUS-MINDFUCK-ADAPTIVE-PRESSURE-AND-EVASION-AUDIT-MODEL-v1.3.json',
             'a23':root/'data/JANUS-ARMOR-OF-GOD-CHOICE-SPACE-RESILIENCE-v2.3.json',
             'a24':root/'data/JANUS-ARMOR-OF-GOD-ADVERSARIAL-RECOVERY-AND-ANTI-PARANOIA-v2.4.json',
+            'a25':root/'data/JANUS-ARMOR-OF-GOD-FUNDAMENTUM-EPISTEMIC-WITNESS-TRUTH-GUARD-v2.5.json',
             'o12':root/'data/Janus_OPIR_ANTIFUCK-v1.2.json',
             'o13':root/'data/Janus_OPIR_ANTIFUCK-v1.3.json',
             'corpus':root/'data/JANUS-OPIR-ANTIFUCK-CALIBRATION-CORPUS-v1.0.json',
@@ -62,7 +65,7 @@ jobs:
           d={k:json.loads(p.read_text(encoding='utf-8')) for k,p in paths.items()}
           for p in paths.values(): print('PARSE_PASS',p)
           pointer,m11,m12,m13=d['pointer'],d['m11'],d['m12'],d['m13']
-          a23,a24,o12,o13=d['a23'],d['a24'],d['o12'],d['o13']
+          a23,a24,a25,o12,o13=d['a23'],d['a24'],d['a25'],d['o12'],d['o13']
           corpus,result,auth=d['corpus'],d['result'],d['auth']
 
           assert pointer['current_reference']=='data/JANUS-MINDFUCK-ADAPTIVE-PRESSURE-AND-EVASION-AUDIT-MODEL-v1.3.json'
@@ -105,21 +108,29 @@ jobs:
           assert result['holdout_status']['effectiveness_promotion_blocked'] is True
           assert 'INDEPENDENT_HOLDOUT_PASS' in result['claim_ceiling']['forbidden_promotions']
 
+          assert auth['schema']=='janus.armor_of_god.current_authority.v1_17'
           assert auth['current_hardening_extensions']==[
             'data/JANUS-ARMOR-OF-GOD-ADVERSARIAL-RECOVERY-AND-ANTI-PARANOIA-v2.4.json',
-            'data/Janus_OPIR_ANTIFUCK-v1.3.json'
+            'data/Janus_OPIR_ANTIFUCK-v1.3.json',
+            'data/JANUS-ARMOR-OF-GOD-FUNDAMENTUM-EPISTEMIC-WITNESS-TRUTH-GUARD-v2.5.json'
           ]
+          assert a25['authority_and_effect_boundary']['authority_delta']==0
+          assert a25['authority_and_effect_boundary']['mass_effect_budget_delta']==0
+          assert auth['fundamentum_truth_guard_runtime_binding_status']=='NOT_YET_FROZEN_IN_GENESIS_RUNTIME'
+          assert auth['genesis_runtime_fundamentum_truth_guard_bound'] is False
           for hist in ('data/JANUS-ARMOR-OF-GOD-CHOICE-SPACE-RESILIENCE-v2.3.json','data/Janus_OPIR_ANTIFUCK-v1.2.json'):
             assert hist in auth['historical_hardening_extensions']
           assert auth['calibration_result_reference']=='data/JANUS-OPIR-ANTIFUCK-CALIBRATION-RESULT-2026-08-15-v1.0.json'
           assert auth['synthetic_calibration_is_not_real_world_effectiveness'] is True
           assert auth['h1_executed'] is False
           assert auth['independent_holdout_pass'] is False
+          assert auth['fundamentum_truth_guard_independent_holdout_pass'] is False
           assert auth['real_world_effectiveness_established'] is False
           print('CROSS_REFERENCE_AUDIT=PASS')
           print('HISTORICAL_CALIBRATION_CERTIFICATE=PASS')
-          print('CURRENT_SUCCESSORS=v1.3/v2.4/v1.3')
+          print('CURRENT_SUCCESSORS=v1.3/v2.4/v1.3/v2.5')
           print('INDEPENDENT_H1=false')
+          print('FUNDAMENTUM_TRUTH_GUARD_RUNTIME_BOUND=false')
           PY
       - name: Replay frozen v1.2 development calibration
         run: python research/antifuck/janus_opir_antifuck_calibration_v1_2.py
