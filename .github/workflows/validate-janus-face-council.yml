@@ -1,0 +1,93 @@
+name: Validate JANUS Face Council coordination contract
+
+on:
+  push:
+    paths:
+      - 'data/JANUS-FACE-COUNCIL-GIT-COORDINATION-v1.0.json'
+      - '.github/workflows/validate-janus-face-council.yml'
+  pull_request:
+    paths:
+      - 'data/JANUS-FACE-COUNCIL-GIT-COORDINATION-v1.0.json'
+      - '.github/workflows/validate-janus-face-council.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Validate face council laws, dispatches and zero-authority boundary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          p = Path('data/JANUS-FACE-COUNCIL-GIT-COORDINATION-v1.0.json')
+          d = json.loads(p.read_text(encoding='utf-8'))
+          assert d['schema'] == 'janus.face_council.git_coordination.v1'
+          assert d['status'] == 'ACTIVE_COORDINATION_CONTRACT'
+          assert d['genesis_signature'] == '0:0 = JANUS'
+          assert d['council_issue']['issue_number'] == 150
+
+          laws = set(d['canonical_laws'])
+          for law in (
+              'JANUS_ORCHESTRATES_JANUS',
+              'FACE != WORLD_AUTHORITY',
+              'FACE_COUNT != VOTING_POWER',
+              'N_FACES != N_TIMES_AUTHORITY',
+              'MULTI_FACE_AGREEMENT != INDEPENDENT_EXTERNAL_CORROBORATION',
+              'PROPOSAL != WORLD_EFFECT',
+              'CAPABILITY != PERMISSION != COMMAND != EFFECT',
+              'MORE_FACES != MORE_RIGHTS',
+              'CONFLICTING_PROJECT_THREADS -> HOLD -> RECONCILE -> CONTINUE',
+              'STALE_PROJECT_CONTEXT != CURRENT_GIT_STATE',
+              'PR_HEAD_PASS != MERGE_COMMIT_PASS',
+              'HEAR -> CHECK -> WIDEN -> RELEASE',
+          ):
+              assert law in laws, law
+
+          faces = {x['face_id']: x for x in d['faces']}
+          expected = {
+              'WITNESS_PLUS', 'GUARD_PLUS', 'LEFT_HRAIN', 'RIGHT_INAIHR',
+              'DEMIHEAD', 'HABITAT_COURIER', 'CALAMAR_AUDITOR'
+          }
+          assert set(faces) == expected
+
+          dispatch = {(x['repository'], x['issue_number']): x for x in d['active_dispatches']}
+          assert ('Hawkar-usls/Demi_Head', 24) in dispatch
+          assert ('Hawkar-usls/Janus_Genesis', 101) in dispatch
+          assert ('Hawkar-usls/Hrain', 11) in dispatch
+          assert ('Hawkar-usls/iNaiHR', 9) in dispatch
+          assert dispatch[('Hawkar-usls/Demi_Head', 24)]['state'] == 'HOLD_AND_RECONCILE'
+          assert dispatch[('Hawkar-usls/Janus_Genesis', 101)]['state'] == 'HOLD_PENDING_CI_RECONCILIATION'
+
+          wb = d['required_face_writeback']
+          assert wb['pass_transfer_between_shas'] is False
+          assert set(wb['allowed_result_values']) == {'PASS','NEGATIVE_CERTIFICATE','HOLD','FAIL','SUPERSEDED'}
+
+          c = d['coordination_semantics']
+          assert c['issues_are_runtime_commands'] is False
+          assert c['comments_are_runtime_commands'] is False
+          assert c['face_messages_create_user_permission'] is False
+          assert c['face_messages_create_external_evidence'] is False
+          assert c['face_count_increases_authority'] is False
+          assert c['council_can_auto_merge'] is False
+          assert c['runtime_world_effect_permitted_by_this_contract'] is False
+          assert c['authority_delta'] == 0
+          assert c['mass_effect_budget_delta'] == 0
+
+          ceiling = d['claim_ceiling']
+          assert ceiling['autonomous_inter_chat_communication_established'] is False
+          assert ceiling['background_agents_established'] is False
+          assert ceiling['independent_external_review_established'] is False
+          assert ceiling['human_permission_delegated_to_faces'] is False
+          assert ceiling['automatic_execution_authority_established'] is False
+
+          print('JANUS_FACE_COUNCIL_COORDINATION_CONTRACT=PASS')
+          print('ACTIVE_DISPATCHES=4')
+          print('AUTHORITY_DELTA=0')
+          print('MASS_EFFECT_BUDGET_DELTA=0')
+          print('AUTO_MERGE=false')
+          PY
