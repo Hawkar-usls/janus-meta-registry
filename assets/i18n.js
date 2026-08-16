@@ -99,3 +99,14 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once: true });
   else boot();
 })();
+
+(() => {
+  'use strict';
+  const loader = document.currentScript && document.currentScript.src;
+  if (!loader || document.querySelector('script[data-janus-curator-loader]')) return;
+  const script = document.createElement('script');
+  script.src = new URL('site-curator.js', loader).href;
+  script.dataset.janusCuratorLoader = 'true';
+  script.async = true;
+  document.head.appendChild(script);
+})();
