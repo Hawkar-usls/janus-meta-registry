@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
-"""Build a deterministic activity/spotlight feed for JANUS GitHub Pages.
+"""Build the deterministic JANUS activity/spotlight feed.
 
-This script ranks repository activity, not scientific truth. It never edits source
-research objects and it deliberately ignores positive/negative result valence.
+The curator ranks repository activity and explicit actionability metadata. It does
+not rank scientific truth, positive outcome valence, ideology, or agreement with
+JANUS. Surface membership is identity-first: a document mentioning another
+research family does not become a member of that family.
 """
 
 from __future__ import annotations
@@ -19,7 +21,7 @@ from typing import Any
 from urllib.parse import quote
 
 ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_POLICY = ROOT / "data/JANUS-SITE-CURATOR-POLICY-v1.0.json"
+DEFAULT_POLICY = ROOT / "data/JANUS-SITE-CURATOR-POLICY-v1.1.json"
 DEFAULT_OUTPUT = ROOT / "assets/site-feed.json"
 REPOSITORY = "Hawkar-usls/janus-meta-registry"
 GITHUB_BLOB = f"https://github.com/{REPOSITORY}/blob/main/"
@@ -74,7 +76,11 @@ def markdown_metadata(text: str, fallback: str) -> tuple[str, str | None, str | 
         if line.startswith("# "):
             title = line[2:].strip()
             break
-    paragraphs = [p.strip() for p in re.split(r"\n\s*\n", text) if p.strip() and not p.lstrip().startswith("#")]
+    paragraphs = [
+        p.strip()
+        for p in re.split(r"\n\s*\n", text)
+        if p.strip() and not p.lstrip().startswith("#") and not p.lstrip().startswith("<div")
+    ]
     summary = paragraphs[0] if paragraphs else None
     return title, None, None, summary
 
@@ -97,12 +103,13 @@ def object_metadata(path: Path, text: str) -> tuple[str, str | None, str | None,
     return clean(fallback, 120) or fallback, None, None, None
 
 
-def classify_surface(path: str, content_upper: str, policy: dict[str, Any]) -> tuple[str, str | None]:
-    haystack = f"{path}\n{content_upper}".upper()
+def classify_surface(path: str, title: str, policy: dict[str, Any]) -> tuple[str, str | None]:
+    """Classify from object identity only; referenced topics inside content cannot route it."""
+    identity = f"{path}\n{title}".upper()
     for rule in policy["surface_rules"]:
-        if any(token.upper() in haystack for token in rule["match_any"]):
+        if any(token.upper() in identity for token in rule["match_any"]):
             return rule["surface"], rule.get("site_path")
-    return "other", None
+    return policy.get("routing", {}).get("unmatched_surface", "other"), None
 
 
 def recency_points(age_days: float, policy: dict[str, Any]) -> int:
@@ -112,24 +119,51 @@ def recency_points(age_days: float, policy: dict[str, Any]) -> int:
     return 0
 
 
-def rank_signals(path: str, content_upper: str, age_days: float, policy: dict[str, Any]) -> tuple[int, list[str]]:
-    haystack = f"{path}\n{content_upper}".upper()
+def rank_signals(
+    path: str,
+    title: str,
+    status: str | None,
+    gate: str | None,
+    age_days: float,
+    policy: dict[str, Any],
+) -> tuple[int, list[str]]:
+    """Score explicit identity/status/gate metadata, never broad body mentions."""
+    metadata = "\n".join([path, title, status or "", gate or ""]).upper()
     score = recency_points(age_days, policy)
     reasons = ["recent-activity"]
+    status_upper = (status or "").strip().upper()
+
     for signal_name, spec in policy["ranking"]["signals"].items():
-        if any(token.upper() in haystack for token in spec["tokens"]):
+        matched = any(token.upper() in metadata for token in spec.get("tokens", []))
+        if spec.get("gate_present") and gate:
+            matched = True
+        if status_upper and status_upper in {str(x).upper() for x in spec.get("status_exact", [])}:
+            matched = True
+        if matched:
             score += int(spec["points"])
             reasons.append(signal_name.replace("_", "-"))
     return score, reasons
 
 
+def spotlight_eligible(item: dict[str, Any], policy: dict[str, Any]) -> bool:
+    rules = policy.get("spotlight", {})
+    path = item["path"]
+    prefixes = tuple(rules.get("eligible_path_prefixes", []))
+    if prefixes and not path.startswith(prefixes):
+        return False
+    if path in set(rules.get("exclude_exact_paths", [])):
+        return False
+    if any(token in path for token in rules.get("exclude_path_contains", [])):
+        return False
+    return True
+
+
 def latest_paths(policy: dict[str, Any]) -> list[tuple[str, str, str]]:
     lookback = int(policy["inputs"]["lookback_commits"])
     roots = policy["inputs"]["public_paths"]
-    command = [
+    output = git(
         "log", "-n", str(lookback), "--date=iso-strict", "--format=@@%H%x09%cI", "--name-only", "--", *roots
-    ]
-    output = git(*command)
+    )
     seen: set[str] = set()
     result: list[tuple[str, str, str]] = []
     commit_sha = ""
@@ -161,7 +195,7 @@ def build_feed(policy: dict[str, Any]) -> dict[str, Any]:
     head_sha = git("rev-parse", "HEAD")
     head_time = git("show", "-s", "--format=%cI", "HEAD")
     now = parse_dt(head_time)
-    max_bytes = int(policy["inputs"]["maximum_file_bytes_for_content_signals"])
+    max_bytes = int(policy["inputs"]["maximum_file_bytes_for_metadata"])
     entries: list[dict[str, Any]] = []
 
     for rel, commit_sha, modified_at in latest_paths(policy):
@@ -172,9 +206,8 @@ def build_feed(policy: dict[str, Any]) -> dict[str, Any]:
         title, status, gate, summary = object_metadata(path, text)
         modified = parse_dt(modified_at)
         age_days = max(0.0, (now - modified).total_seconds() / 86400.0)
-        upper = text.upper()
-        surface, site_path = classify_surface(rel, upper, policy)
-        score, reasons = rank_signals(rel, upper, age_days, policy)
+        surface, site_path = classify_surface(rel, title, policy)
+        score, reasons = rank_signals(rel, title, status, gate, age_days, policy)
         item: dict[str, Any] = {
             "path": rel,
             "title": title,
@@ -196,20 +229,22 @@ def build_feed(policy: dict[str, Any]) -> dict[str, Any]:
             item["summary"] = summary
         entries.append(item)
 
-    entries.sort(key=lambda x: (x["modified_at"], x["path"]), reverse=True)
-    latest_count = int(policy["outputs"]["latest_updates_count"])
-    latest = entries[:latest_count]
+    # Latest is chronology, independent of curation score.
+    entries = sorted(entries, key=lambda x: x["path"])
+    entries = sorted(entries, key=lambda x: parse_dt(x["modified_at"]), reverse=True)
+    latest = entries[: int(policy["outputs"]["latest_updates_count"])]
 
-    scored = sorted(entries, key=lambda x: (-x["score"], x["modified_at"], x["path"]), reverse=False)
-    # Correct deterministic tie ordering: score desc, modified desc, path asc.
+    # Stable deterministic ordering: score desc, modified desc, path asc.
     scored = sorted(entries, key=lambda x: x["path"])
-    scored = sorted(scored, key=lambda x: x["modified_at"], reverse=True)
+    scored = sorted(scored, key=lambda x: parse_dt(x["modified_at"]), reverse=True)
     scored = sorted(scored, key=lambda x: x["score"], reverse=True)
 
     spotlight: list[dict[str, Any]] = []
     family_counts: defaultdict[str, int] = defaultdict(int)
     family_cap = int(policy["outputs"]["spotlight_family_cap"])
     for item in scored:
+        if not spotlight_eligible(item, policy):
+            continue
         if family_counts[item["surface"]] >= family_cap:
             continue
         spotlight.append(item)
@@ -224,37 +259,51 @@ def build_feed(policy: dict[str, Any]) -> dict[str, Any]:
         per_surface[surface] = [item for item in entries if item["surface"] == surface][:per_count]
 
     return {
-        "schema": "janus.site.activity_feed.v1_0",
+        "schema": "janus.site.activity_feed.v1_1",
         "status": "AUTO_GENERATED_PRESENTATION_INDEX",
         "generated_at": head_time,
         "source_commit": head_sha,
-        "policy": "data/JANUS-SITE-CURATOR-POLICY-v1.0.json",
+        "policy": "data/JANUS-SITE-CURATOR-POLICY-v1.1.json",
         "repository": REPOSITORY,
         "candidate_count": len(entries),
         "latest_updates": latest,
         "spotlight": spotlight,
         "surfaces": per_surface,
         "claim_ceiling": policy["claim_ceiling"],
-        "ranking_note": "Scores represent recent activity and explicit actionability signals only; they are not evidence-strength scores.",
+        "ranking_note": "Scores represent recent activity and explicit identity/status/gate actionability only; body cross-references do not route or score an object.",
     }
 
 
 def validate(feed: dict[str, Any], policy: dict[str, Any]) -> None:
-    assert feed["schema"] == "janus.site.activity_feed.v1_0"
+    assert feed["schema"] == "janus.site.activity_feed.v1_1"
     assert feed["status"] == "AUTO_GENERATED_PRESENTATION_INDEX"
     assert len(feed["latest_updates"]) <= int(policy["outputs"]["latest_updates_count"])
     assert len(feed["spotlight"]) <= int(policy["outputs"]["spotlight_count"])
     assert "FEATURED != SCIENTIFICALLY_TRUE" in feed["claim_ceiling"]
     assert "CURATION_SCORE != EVIDENCE_STRENGTH" in feed["claim_ceiling"]
+    assert "MENTION != SURFACE_MEMBERSHIP" in feed["claim_ceiling"]
+    assert policy["ranking"]["status_valence_used"] is False
     assert policy["ranking"]["positive_result_bonus"] == 0
     assert policy["ranking"]["negative_result_penalty"] == 0
     assert policy["ranking"]["null_result_penalty"] == 0
+    assert policy["routing"]["full_content_mentions_may_route"] is False
+    assert policy["ranking"]["full_content_mentions_may_score"] is False
     assert policy["autonomy_boundary"]["may_rewrite_scientific_source_objects"] is False
     assert policy["autonomy_boundary"]["may_raise_claim_ceiling"] is False
+
+    for canary in policy.get("routing_canaries", []):
+        observed, _ = classify_surface(canary["path"], canary["title"], policy)
+        assert observed == canary["expected_surface"], (
+            f"routing canary failed: {canary['path']} expected {canary['expected_surface']} got {observed}"
+        )
+
     for item in feed["latest_updates"] + feed["spotlight"]:
         assert item["github_url"].startswith("https://github.com/Hawkar-usls/janus-meta-registry/blob/main/")
         assert len(item["sha256"]) == 64
         assert isinstance(item["score"], int)
+
+    assert all(item["path"] != "data/INDEX.md" for item in feed["spotlight"])
+    assert all(item["path"] not in {"README.md", "PROJECT_STATUS.json"} for item in feed["spotlight"])
 
 
 def main() -> None:
@@ -278,6 +327,7 @@ def main() -> None:
     print(f"JANUS_SITE_CURATOR_CANDIDATES={feed['candidate_count']}")
     print(f"JANUS_SITE_CURATOR_LATEST={len(feed['latest_updates'])}")
     print(f"JANUS_SITE_CURATOR_SPOTLIGHT={len(feed['spotlight'])}")
+    print("JANUS_SITE_CURATOR_ROUTING_SCOPE=IDENTITY_ONLY")
     print("JANUS_SITE_CURATOR_POLICY_BOUNDARY=PASS")
     print("JANUS_SITE_CURATOR=PASS")
 
