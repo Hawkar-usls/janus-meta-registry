@@ -1,0 +1,84 @@
+name: HRaiN backend stateless AI and mutation firewall
+
+on:
+  push:
+    paths:
+      - 'server.py'
+      - 'data/JANUS-HRAIN-BACKEND-STATELESS-AI-MUTATION-FIREWALL-v1.0.json'
+      - '.github/workflows/hrain-backend-security-integrity.yml'
+  pull_request:
+    paths:
+      - 'server.py'
+      - 'data/JANUS-HRAIN-BACKEND-STATELESS-AI-MUTATION-FIREWALL-v1.0.json'
+      - '.github/workflows/hrain-backend-security-integrity.yml'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate stateless inference and protected persistent mutation
+        run: |
+          python -m py_compile server.py
+          python -m json.tool data/JANUS-HRAIN-BACKEND-STATELESS-AI-MUTATION-FIREWALL-v1.0.json >/dev/null
+          python - <<'PY'
+          import ast
+          import json
+          from pathlib import Path
+
+          source = Path('server.py').read_text(encoding='utf-8')
+          tree = ast.parse(source)
+          contract = json.loads(Path('data/JANUS-HRAIN-BACKEND-STATELESS-AI-MUTATION-FIREWALL-v1.0.json').read_text(encoding='utf-8'))
+
+          functions = {node.name: node for node in tree.body if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))}
+          required_functions = {
+              'handle_hrain_sync', '_call_ollama', 'require_mutation_authority',
+              'handle_save_state', 'handle_hrain_event', 'handle_device_data',
+              'handle_device_command_get', 'handle_device_command_post'
+          }
+          assert required_functions <= functions.keys(), sorted(required_functions - functions.keys())
+
+          sync = ast.get_source_segment(source, functions['handle_hrain_sync']) or ''
+          assert 'require_mutation_authority' not in sync, 'stateless AI should not need mutation authority'
+          assert 'open(' not in sync
+          assert 'json.dump' not in sync
+          assert 'HRAIN_STATE_FILE' not in sync
+          assert 'DEVICE_DATA_FILE' not in sync
+          assert 'DEVICE_COMMANDS_FILE' not in sync
+          assert 'persistent_write' in sync and 'registry_mutation' in sync
+
+          for name in [
+              'handle_save_state', 'handle_hrain_event', 'handle_device_data',
+              'handle_device_command_get', 'handle_device_command_post'
+          ]:
+              body = ast.get_source_segment(source, functions[name]) or ''
+              assert 'require_mutation_authority(request)' in body, name
+
+          assert 'web.post("/api/hrain/sync", handle_hrain_sync)' in source
+          assert 'web.options("/api/hrain/sync", handle_options)' in source
+          assert 'JANUS_MUTATION_TOKEN' in source
+          assert 'JANUS_OLLAMA_URL' in source
+          assert 'JANUS_OLLAMA_MODEL' in source
+          assert 'SYNC_MAX_PROMPT_CHARS' in source
+          assert 'SYNC_MAX_REQUESTS_PER_WINDOW' in source
+          assert 'https://hawkar-usls.github.io' in source
+          assert 'generativelanguage.googleapis.com' not in source
+          assert 'AIza' not in source
+
+          assert contract['stateless_ai']['persistent_write'] is False
+          assert contract['stateless_ai']['registry_mutation'] is False
+          assert contract['persistent_mutation']['anonymous_public_access'] is False
+          assert contract['persistent_mutation']['fail_closed_without_server_token'] is True
+          assert contract['deployment']['running_backend_updated_by_git_merge'] is False
+
+          print('HRAIN_BACKEND_SYNTAX=PASS')
+          print('HRAIN_SYNC_STATELESS=PASS')
+          print('HRAIN_SYNC_PUBLIC_SECRET=ABSENT')
+          print('HRAIN_PERSISTENT_MUTATION_AUTH=REQUIRED')
+          print('HRAIN_MUTATION_WITHOUT_TOKEN=FAIL_CLOSED')
+          print('HRAIN_BACKEND_FIREWALL=PASS')
+          PY
