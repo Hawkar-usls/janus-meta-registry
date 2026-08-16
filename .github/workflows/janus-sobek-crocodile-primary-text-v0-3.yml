@@ -1,0 +1,38 @@
+name: JANUS Sobek crocodile primary text v0.3
+
+on:
+  pull_request:
+    paths:
+      - 'data/JANUS-SOBEK-CROCODILE-RITUAL-PRIMARY-TEXT-LEDGER-2026-08-16-v0.3.json'
+      - 'data/JANUS-SOBEK-CROCODILE-RITUAL-OVERLAP-RESULT-2026-08-16-v0.3.json'
+      - 'research/sobek/janus_sobek_crocodile_ritual_overlap_probe_v0_3.py'
+      - '.github/workflows/janus-sobek-crocodile-primary-text-v0-3.yml'
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile probe
+        run: python -m py_compile research/sobek/janus_sobek_crocodile_ritual_overlap_probe_v0_3.py
+      - name: Replay frozen overlap counts
+        run: |
+          python research/sobek/janus_sobek_crocodile_ritual_overlap_probe_v0_3.py \
+            --ledger data/JANUS-SOBEK-CROCODILE-RITUAL-PRIMARY-TEXT-LEDGER-2026-08-16-v0.3.json \
+            --out /tmp/replayed.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          frozen=json.loads(Path('data/JANUS-SOBEK-CROCODILE-RITUAL-OVERLAP-RESULT-2026-08-16-v0.3.json').read_text())
+          replay=json.loads(Path('/tmp/replayed.json').read_text())
+          assert replay == frozen, 'replayed result differs from frozen result'
+          assert frozen['strict_full_passage_counts']['sobek_and_crocodile_repelling_same_witness'] == 0
+          assert frozen['bridge_map']['DIRECT_SOBEK_TO_CROCODILE_REPELLING'].startswith('NOT_OBSERVED')
+          assert 'ZERO_OBSERVED_INTERSECTION_IS_NOT_PROOF_OF_HISTORICAL_ABSENCE' in frozen['claim_firewall']
+          assert 'NO_SOBEK_COMMANDS_CROCODILES_CLAIM_WITHOUT_EXPLICIT_TEXT' in frozen['claim_firewall']
+          print('frozen result and claim firewall verified')
+          PY
