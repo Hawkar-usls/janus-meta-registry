@@ -1,0 +1,166 @@
+{
+  "artifact_id": "JANUS-MEMORY-POWER-INTEGRATION-STATE-2026-08-16-v1.0",
+  "status": "ACTIVE_RECONCILIATION_WITH_FULL_GREEN_CORE_ADAPTER",
+  "recorded_date": "2026-08-16",
+  "coordination": {
+    "project_sync_issue": "Hawkar-usls/Janus_Genesis#102",
+    "p0_roadmap_issue": "Hawkar-usls/Janus_Genesis#121",
+    "frozen_compatibility_base_sha": "42e3798fd6bc07338070874d5c7e1774a2b25313"
+  },
+  "components": {
+    "hippocampus_operational_journal": {
+      "source_pr": 139,
+      "source_sha": "938adb84975fa6a91cf6db89e9c95bf08c8fbdc9",
+      "dedicated_run": 31961456892,
+      "component_result": "PASS",
+      "compatibility_pr": 144,
+      "compatibility_merge_sha": "12a2bddbf98b3bbbcd3e9a4604fe6014bae553b3",
+      "compatibility_runs": {
+        "memory": 31961869995,
+        "armor": 31961869976,
+        "test": 31961870023
+      },
+      "compatibility_result": "PASS",
+      "role": "OPERATIONAL_THOUGHT_JOURNAL",
+      "table": "thoughts"
+    },
+    "storj_neighbor_cortex": {
+      "source_pr": 143,
+      "source_sha": "bb3c79fbae7f6f6af670562c2e0b868ca056fa89",
+      "source_dedicated_run": 31961827186,
+      "component_result": "PASS",
+      "compatibility_pr": 146,
+      "compatibility_merge_sha": "2b6124783e45a6a83fd39ab94e06092524b6a577",
+      "compatibility_runs": {
+        "cortex": 31961936219,
+        "armor": 31961936199,
+        "test": 31961936235
+      },
+      "compatibility_result": "PASS",
+      "role": "EPISODIC_SEARCH_STORE",
+      "table": "memories"
+    },
+    "power_v1": {
+      "source_pr": 142,
+      "source_sha": "64038ff04517573a51e67d57a9aed2f861f52855",
+      "dedicated_run": 31961715229,
+      "component_result": "PASS",
+      "compatibility_pr": 145,
+      "compatibility_merge_sha": "c858f0bd12ab433ba884ac0cff4ababe084edf17",
+      "compatibility_runs": {
+        "power": 31961878284,
+        "armor": 31961878269,
+        "test": 31961878265
+      },
+      "compatibility_result": "PASS"
+    },
+    "power_v1_1_additive_hardening": {
+      "source_pr": 148,
+      "source_sha": "719d54d9f5aceced3b8df48aacd527ac3155fab3",
+      "parent_v1_sha": "64038ff04517573a51e67d57a9aed2f861f52855",
+      "dedicated_run": 31962059169,
+      "component_result": "PASS",
+      "compatibility_pr": 149,
+      "compatibility_merge_sha": "c8e3ddba158934cefaadb0af1ad0d069f3ce61a9",
+      "compatibility_runs": {
+        "power_v1": 31962153002,
+        "power_v1_1": 31962152995,
+        "armor": 31962153009,
+        "test": 31962153025
+      },
+      "compatibility_result": "PASS",
+      "hardening": [
+        "cooperative deadline is classified as TIMEOUT",
+        "memory API source/tag shape selected by signature before invocation",
+        "internal TypeError is not used as API-discovery retry signal"
+      ]
+    }
+  },
+  "power_memory_runtime_adapter": {
+    "pr": 152,
+    "exact_head": "b1d0820eecba33dd04545f31f369f28d090c6d0f",
+    "synthetic_merge_sha": "426d25acdb04b3e9a1256e75670c5b2f5b42d802",
+    "integration_parent": "19d2809e698d397090a0b92d25403da1bbb27e0f",
+    "integration_parent_parents": [
+      "c8e3ddba158934cefaadb0af1ad0d069f3ce61a9",
+      "938adb84975fa6a91cf6db89e9c95bf08c8fbdc9"
+    ],
+    "runs": {
+      "memory": 31962559785,
+      "power_v1": 31962559808,
+      "power_v1_1": 31962559804,
+      "adapter": 31962559787,
+      "armor": 31962559793,
+      "test": 31962559848
+    },
+    "result": "FULL_COMPATIBILITY_PASS",
+    "lifecycle": [
+      "MEMORY_START",
+      "POWER_START",
+      "WORK",
+      "POWER_SHUTDOWN_CONFIRMED",
+      "MEMORY_FINAL_CLOSE_AND_FLUSH"
+    ],
+    "truth_boundaries": [
+      "COMPUTE_TERMINAL != TERMINAL_TELEMETRY_ATTEMPT_SETTLED",
+      "TERMINAL_TELEMETRY_ATTEMPT_SETTLED != TELEMETRY_PERSISTED",
+      "RAM_BUFFERED != PERSISTED",
+      "MEMORY_LOG_FAILURE != COMPUTE_FAILURE",
+      "UNCONFIRMED_POWER_STOP -> KEEP_MEMORY_OPEN"
+    ]
+  },
+  "preserved_negative_qa": {
+    "adapter_initial_red_head": "2bf826230c3342170a217a24bad6ac3ea045fc88",
+    "failure_class": "TEST_FIXTURE_INVALID_BEFORE_INTENDED_SCENARIO",
+    "details": "The adapter memory-pressure fixture used batch_size=2 with max_buffer_records=1, which correctly violated the Memory constructor invariant max_buffer_records >= batch_size.",
+    "repair_head": "b1d0820eecba33dd04545f31f369f28d090c6d0f",
+    "runtime_parent_mutation_required": false,
+    "history_preserved": true
+  },
+  "memory_role_reconciliation": {
+    "pr": 153,
+    "exact_head_at_artifact_creation": "dbb58edc287c7b2a9fa17cdd5f7d9e8e71597878",
+    "synthetic_merge_at_artifact_creation": "410149b92b9f4ac7c87e7b97e32fe08f6a3ff028",
+    "combined_parent": "950de94d95d18e0a7dd2ba25af1788b9e86c1d92",
+    "dedicated_role_map_run": 31962917823,
+    "dedicated_role_map_result": "PASS",
+    "other_component_and_armor_runs_at_artifact_creation": "PASS",
+    "full_python_matrix_at_artifact_creation": "IN_PROGRESS",
+    "routing": {
+      "power_telemetry_default": "OPERATIONAL_THOUGHT_JOURNAL_ONLY",
+      "dual_write_default": "DENY",
+      "power_to_cortex_default": false,
+      "journal_to_cortex_auto_mirror": false,
+      "cortex_to_journal_auto_mirror": false,
+      "selective_projection_adapter": "NOT_IMPLEMENTED"
+    }
+  },
+  "evidence_independence_firewall": [
+    "PROJECTION != SECOND_INDEPENDENT_MEMORY_ROOT",
+    "BOTH_BACKENDS_AGREE != INDEPENDENT_CORROBORATION",
+    "SAME_CONTENT_IN_TWO_TABLES != TWO_EVIDENCE_ROOTS",
+    "RECALL_RESULT != COMMAND",
+    "MEMORY_ROW != TRUTH"
+  ],
+  "claim_ceiling": {
+    "main_merge_performed": false,
+    "live_runtime_deployed": false,
+    "production_nas_validated": false,
+    "storj_latency_impact_measured": false,
+    "drive_wear_reduction_measured": false,
+    "zero_storj_interference": false,
+    "live_gpu_executor": false,
+    "live_cloud_executor": false,
+    "live_distributed_executor": false,
+    "live_minecraft_executor": false,
+    "quantum_hardware": false,
+    "quantum_speedup": false,
+    "selective_journal_to_cortex_projection": false,
+    "merge_permission": false
+  },
+  "source_writeback": false,
+  "source_delete": false,
+  "history_rewrite": false,
+  "authority_delta": 0,
+  "mass_effect_budget_delta": 0
+}
