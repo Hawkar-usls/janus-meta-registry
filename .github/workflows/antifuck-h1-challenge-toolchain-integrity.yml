@@ -7,6 +7,7 @@ on:
       - 'data/JANUS-MINDFUCK-ADAPTIVE-PRESSURE-AND-EVASION-AUDIT-MODEL-v1.3.json'
       - 'data/JANUS-ARMOR-OF-GOD-ADVERSARIAL-RECOVERY-AND-ANTI-PARANOIA-v2.4.json'
       - 'data/JANUS-ARMOR-OF-GOD-FUNDAMENTUM-EPISTEMIC-WITNESS-TRUTH-GUARD-v2.5.json'
+      - 'data/JANUS-GENESIS-ARMOR-FUNDAMENTUM-TRUTH-RUNTIME-HUMAN-APPEAL-AND-FROZEN-HOLDOUT-CERTIFICATE-2026-08-16-v1.0.json'
       - 'data/Janus_OPIR_ANTIFUCK-v1.3.json'
       - 'data/JANUS-OPIR-ANTIFUCK-H1-CHALLENGE-KIT-v1.0.json'
       - 'data/JANUS-OPIR-ANTIFUCK-H1-TOOLCHAIN-SELFTEST-RESULT-2026-08-15-v1.0.json'
@@ -21,6 +22,7 @@ on:
       - 'data/JANUS-MINDFUCK-ADAPTIVE-PRESSURE-AND-EVASION-AUDIT-MODEL-v1.3.json'
       - 'data/JANUS-ARMOR-OF-GOD-ADVERSARIAL-RECOVERY-AND-ANTI-PARANOIA-v2.4.json'
       - 'data/JANUS-ARMOR-OF-GOD-FUNDAMENTUM-EPISTEMIC-WITNESS-TRUTH-GUARD-v2.5.json'
+      - 'data/JANUS-GENESIS-ARMOR-FUNDAMENTUM-TRUTH-RUNTIME-HUMAN-APPEAL-AND-FROZEN-HOLDOUT-CERTIFICATE-2026-08-16-v1.0.json'
       - 'data/Janus_OPIR_ANTIFUCK-v1.3.json'
       - 'data/JANUS-OPIR-ANTIFUCK-H1-CHALLENGE-KIT-v1.0.json'
       - 'data/JANUS-OPIR-ANTIFUCK-H1-TOOLCHAIN-SELFTEST-RESULT-2026-08-15-v1.0.json'
@@ -50,6 +52,7 @@ jobs:
             'm13':root/'data/JANUS-MINDFUCK-ADAPTIVE-PRESSURE-AND-EVASION-AUDIT-MODEL-v1.3.json',
             'a24':root/'data/JANUS-ARMOR-OF-GOD-ADVERSARIAL-RECOVERY-AND-ANTI-PARANOIA-v2.4.json',
             'a25':root/'data/JANUS-ARMOR-OF-GOD-FUNDAMENTUM-EPISTEMIC-WITNESS-TRUTH-GUARD-v2.5.json',
+            'truth_cert':root/'data/JANUS-GENESIS-ARMOR-FUNDAMENTUM-TRUTH-RUNTIME-HUMAN-APPEAL-AND-FROZEN-HOLDOUT-CERTIFICATE-2026-08-16-v1.0.json',
             'o13':root/'data/Janus_OPIR_ANTIFUCK-v1.3.json',
             'kit':root/'data/JANUS-OPIR-ANTIFUCK-H1-CHALLENGE-KIT-v1.0.json',
             'cert':root/'data/JANUS-OPIR-ANTIFUCK-H1-TOOLCHAIN-SELFTEST-RESULT-2026-08-15-v1.0.json',
@@ -59,7 +62,9 @@ jobs:
           d={}
           for k,p in files.items():
             d[k]=json.loads(p.read_text(encoding='utf-8')); print('PARSE_PASS',p)
-          pointer,m,a,a25,o,kit,cert,h1,auth=d['pointer'],d['m13'],d['a24'],d['a25'],d['o13'],d['kit'],d['cert'],d['h1'],d['auth']
+          pointer,m,a,a25,truth_cert,o,kit,cert,h1,auth=(
+            d['pointer'],d['m13'],d['a24'],d['a25'],d['truth_cert'],d['o13'],d['kit'],d['cert'],d['h1'],d['auth']
+          )
 
           assert pointer['current_reference']=='data/JANUS-MINDFUCK-ADAPTIVE-PRESSURE-AND-EVASION-AUDIT-MODEL-v1.3.json'
           assert m['supersedes_reference']=='data/JANUS-MINDFUCK-ALGORITHMIC-AMPLIFICATION-AUDIT-MODEL-v1.2.json'
@@ -118,7 +123,7 @@ jobs:
           assert cert['current_h1_state']['H1_executed'] is False
           assert cert['current_h1_state']['independent_holdout_pass'] is False
 
-          assert auth['schema']=='janus.armor_of_god.current_authority.v1_17'
+          assert auth['schema']=='janus.armor_of_god.current_authority.v1_18'
           assert auth['current_hardening_extensions']==[
             'data/JANUS-ARMOR-OF-GOD-ADVERSARIAL-RECOVERY-AND-ANTI-PARANOIA-v2.4.json',
             'data/Janus_OPIR_ANTIFUCK-v1.3.json',
@@ -126,8 +131,15 @@ jobs:
           ]
           assert a25['authority_and_effect_boundary']['authority_delta']==0
           assert a25['authority_and_effect_boundary']['mass_effect_budget_delta']==0
-          assert auth['fundamentum_truth_guard_runtime_binding_status']=='NOT_YET_FROZEN_IN_GENESIS_RUNTIME'
-          assert auth['genesis_runtime_fundamentum_truth_guard_bound'] is False
+          assert auth['fundamentum_truth_guard_runtime_binding_status']=='BOUND_AND_VERIFIED_REFERENCE_RUNTIME_V18_7_48'
+          assert auth['genesis_runtime_fundamentum_truth_guard_bound'] is True
+          assert auth['genesis_runtime_fundamentum_truth_guard_version']=='18.7.48'
+          assert auth['demihead_human_appeal_runtime_implemented'] is True
+          assert auth['demihead_reviewer_disagreement_ledger_implemented'] is True
+          assert auth['demihead_frozen_truth_guard_synthetic_holdout_pass'] is True
+          assert auth['demihead_frozen_truth_guard_synthetic_holdout_is_independent'] is False
+          assert truth_cert['verified_chain']['demihead_frozen_synthetic_adversarial_holdout']['result']=='PASS'
+          assert truth_cert['verified_chain']['demihead_frozen_synthetic_adversarial_holdout']['independent_external_validation'] is False
           assert auth['h1_verifier_selftest_result_reference']=='data/JANUS-OPIR-ANTIFUCK-H1-TOOLCHAIN-SELFTEST-RESULT-2026-08-15-v1.0.json'
           assert auth['h1_toolchain_ready'] is True
           assert auth['h1_verifier_engineering_selftest_pass'] is True
@@ -149,7 +161,8 @@ jobs:
           print('ARMOR_RECOVERY_COUNTERFACTUALS=8')
           print('OPIR_NEW_THREATS=8')
           print('OPIR_NEW_CONTROLS=17')
-          print('FUNDAMENTUM_TRUTH_GUARD_RUNTIME_BOUND=false')
+          print('FUNDAMENTUM_TRUTH_GUARD_RUNTIME_BOUND=true')
+          print('FROZEN_TRUTH_HOLDOUT=PASS_SYNTHETIC_NOT_INDEPENDENT')
           PY
       - name: Replay H1 verifier engineering self-test and tamper canaries
         run: python research/antifuck/janus_opir_antifuck_h1_verify.py --self-test
