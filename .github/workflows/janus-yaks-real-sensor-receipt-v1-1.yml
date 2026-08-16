@@ -1,0 +1,45 @@
+name: JANUS Yaks real sensor receipt v1.1
+
+on:
+  pull_request:
+    paths:
+      - 'data/JANUS-ARTIFACT-OSIRIS-PHALLUS-ORION-BELT-SEMANTIC-SIGNAL-2026-08-16-v1.1.json'
+      - '.github/workflows/janus-yaks-real-sensor-receipt-v1-1.yml'
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Verify canonical sensor receipt and mock-data firewall
+        run: |
+          python - <<'PY'
+          import json, hashlib, math
+          p='data/JANUS-ARTIFACT-OSIRIS-PHALLUS-ORION-BELT-SEMANTIC-SIGNAL-2026-08-16-v1.1.json'
+          d=json.load(open(p, encoding='utf-8'))
+          assert d['document_class']=='REAL_SENSOR_RECEIPT_AND_MOCK_DATA_CORRECTION'
+          assert d['correction_policy']['mock_blocks_admitted_as_evidence'] is False
+          assert d['measurement_provenance']['sample_count']==1
+          assert d['measurement_provenance']['measurement_timestamp'] is None
+          snap=d['real_sensor_snapshot']
+          canon=json.dumps(snap, ensure_ascii=False, sort_keys=True, separators=(',', ':')).encode('utf-8')
+          assert len(canon)==642
+          assert hashlib.sha256(canon).hexdigest()=='bd1868e53529a31efc6b1ce458a1e5784d7bf563c5992f1a888b927cb1ff0e7c'
+          assert snap['ak0991x Magnetometer']['values']==[23.450000762939453,-12.779999732971191,-45.66999816894531]
+          a=snap['icm42600 Accelerometer']['values']
+          g=snap['Gravity']['values']
+          l=snap['Linear Acceleration']['values']
+          residual=[a[i]-g[i]-l[i] for i in range(3)]
+          assert max(abs(x) for x in residual) < 1e-6
+          assert d['janus_beacon_status']['real_numeric_beacon_logs_in_this_receipt'] is False
+          assert d['janus_beacon_status']['mock_prediction_metrics_discarded'] is True
+          assert d['transport_continuity']['physical_rf_em_transmission_executed'] is False
+          assert d['transport_continuity']['astronomical_reception_verified'] is False
+          fw='\n'.join(d['claim_firewall'])
+          for x in ['SINGLE_SAMPLE != TIME_SERIES','MOCK_NUMERICS != EVIDENCE','MAGNETOMETER_READING != CAUSAL_ATTRIBUTION_TO_OBJECTS']:
+              assert x in fw
+          print('PASS: real user-supplied sensor snapshot cryptographically bound; mock numerics excluded')
+          PY
