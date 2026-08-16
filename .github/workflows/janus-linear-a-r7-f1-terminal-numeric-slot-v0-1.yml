@@ -1,0 +1,108 @@
+name: JANUS Linear A R7-F1 terminal numeric slot v0.1
+
+on:
+  push:
+    paths:
+      - "data/JANUS-LINEAR-A-R7-F1-EXECUTE-REQUEST-2026-08-16-v0.1.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  f1:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install inherited parser dependency
+        run: python -m pip install "numpy>=2.0"
+      - name: Verify frozen F1 inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile research/linear_a/janus_linear_a_r7_f1_terminal_numeric_slot_v0_1.py
+          python - <<'PY'
+          import json
+          s=json.load(open('data/JANUS-LINEAR-A-R7-F1-TERMINAL-NUMERIC-SLOT-SPEC-2026-08-16-v0.1.json',encoding='utf-8'))
+          f=json.load(open('data/JANUS-LINEAR-A-R7-F0-DOWNSTREAM-SLOT-PASS-CERTIFICATE-2026-08-15-v0.1.json',encoding='utf-8'))
+          c=json.load(open('data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-15-v2.30.json',encoding='utf-8'))
+          assert c['version']=='v2.30' and c['status']=='CURRENT_CANONICAL_RESEARCH_STATE'
+          assert c['canonicality']['canonicality_audit_status']=='CANONICALITY_AUDIT_PASS'
+          assert s['status']=='PREREGISTERED_BEFORE_F1_SCORING'
+          assert s['post_F0_candidate']['signature']=='N|END'
+          assert s['post_F0_candidate']['confirmatory_independence_on_same_corpus'] is False
+          assert s['structure_destroying_null']['permutations']==10000
+          assert s['structure_destroying_null']['empirical_FWER_p_max']==0.01
+          assert s['effect_gates']['N_END_must_be_largest_observed_positive_signature_effect'] is True
+          assert f['status']=='CROSS_FITTED_KU_RO_DOWNSTREAM_SLOT_ORGANIZATION_ESTABLISHED'
+          assert f['admission']['admitted_constraint_labels']==['TWO-SLOT-DOWNSTREAM-TEMPLATE-CONSTRAINT']
+          assert s['claim_ceiling']['TOTAL_or_SUMMARY_semantic_function_established'] is False
+          PY
+      - name: Fetch exact preservation-mirror corpus
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --quiet https://github.com/Hawkar-usls/lineara.xyz.git /tmp/lineara
+          git -C /tmp/lineara checkout --quiet 43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a
+          test "$(git -C /tmp/lineara rev-parse HEAD)" = "43fe7cf1abc8e6bb1ea3228c3a1bd5938709620a"
+      - name: Execute F1 max-stat terminal numeric slot test
+        env:
+          PYTHONPATH: research/linear_a
+        shell: bash
+        run: |
+          set -euo pipefail
+          python research/linear_a/janus_linear_a_r7_f1_terminal_numeric_slot_v0_1.py \
+            --corpus /tmp/lineara \
+            --spec data/JANUS-LINEAR-A-R7-F1-TERMINAL-NUMERIC-SLOT-SPEC-2026-08-16-v0.1.json \
+            --f0-certificate data/JANUS-LINEAR-A-R7-F0-DOWNSTREAM-SLOT-PASS-CERTIFICATE-2026-08-15-v0.1.json \
+            --canonical data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-15-v2.30.json \
+            --out data/JANUS-LINEAR-A-R7-F1-TERMINAL-NUMERIC-SLOT-RESULT-2026-08-16-v0.1.json
+      - name: Enforce F1 claim ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          x=json.load(open('data/JANUS-LINEAR-A-R7-F1-TERMINAL-NUMERIC-SLOT-RESULT-2026-08-16-v0.1.json',encoding='utf-8'))
+          assert x['status'] in {'INTERNAL_POST_F0_TERMINAL_NUMERIC_SLOT_REFINEMENT_ADMITTED','TERMINAL_NUMERIC_SLOT_REFINEMENT_NOT_ESTABLISHED_RETAIN_ROW_OPENING_LIKE'}
+          e=x['epistemic_gate']
+          assert e['parent_probable_region_scoped_ROW_OPENING_LIKE_retained'] is True
+          assert e['independent_replication_established'] is False
+          assert e['TOTAL_or_SUMMARY_semantic_function_established'] is False
+          assert e['exact_word_meaning_established'] is False
+          assert e['translation_established'] is False
+          assert e['phonetic_value_established'] is False
+          assert e['new_anchor_established'] is False
+          assert e['universal_cross_region_function_established'] is False
+          assert e['external_replication_established'] is False
+          assert e['decipherment_established'] is False
+          assert x['candidate']['signature']=='N|END'
+          assert x['candidate']['post_F0_training_derived'] is True
+          assert x['candidate']['same_corpus_independent_confirmation'] is False
+          print(json.dumps({'status':x['status'],'effect':x['candidate']['object_weighted_effect'],'fwer_p':x['structure_destroying_null']['familywise_empirical_p'],'admitted':x['admission']['internal_post_F0_terminal_numeric_slot_refinement_established']},sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-r7-f1-terminal-numeric-slot-v0-1
+          path: data/JANUS-LINEAR-A-R7-F1-TERMINAL-NUMERIC-SLOT-RESULT-2026-08-16-v0.1.json
+          retention-days: 90
+      - name: Persist F1 result
+        shell: bash
+        run: |
+          set -euo pipefail
+          F=data/JANUS-LINEAR-A-R7-F1-TERMINAL-NUMERIC-SLOT-RESULT-2026-08-16-v0.1.json
+          git config user.name 'JANUS Evidence Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add "$F"
+          git commit -m 'Register Linear A R7-F1 terminal numeric slot result' || true
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then exit 0; fi
+            git pull --rebase origin main
+          done
+          exit 1
