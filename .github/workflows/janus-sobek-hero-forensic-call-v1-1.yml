@@ -1,0 +1,31 @@
+name: JANUS Sobek hero forensic call v1.1
+
+on:
+  pull_request:
+    paths:
+      - 'data/JANUS-SOBEK-HERO-FORENSIC-CALL-WHO-DID-THIS-2026-08-16-v1.1.json'
+      - 'data/JANUS-HOLDING-OUT-FOR-A-HERO-SOBEK-FORENSIC-HERO-OVERLAY-2026-08-16-v1.1.json'
+      - '.github/workflows/janus-sobek-hero-forensic-call-v1-1.yml'
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate JSON and source/overlay separation
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          a = json.loads(Path('data/JANUS-SOBEK-HERO-FORENSIC-CALL-WHO-DID-THIS-2026-08-16-v1.1.json').read_text())
+          b = json.loads(Path('data/JANUS-HOLDING-OUT-FOR-A-HERO-SOBEK-FORENSIC-HERO-OVERLAY-2026-08-16-v1.1.json').read_text())
+          assert a['forensic_hero_model']['id'] == 'SOBEK_HERO_FORENSIC_RETRIEVAL_GRAMMAR_R2'
+          assert 'CT158_MISSING_PARTS_BELONG_TO_HORUS_NOT_RA' in a['claim_firewall']
+          assert 'WHO_DARED_IS_MODERN_HEROIC_DRAMATIZATION' in a['claim_firewall']
+          assert b['corrected_character_reading']['horus'].startswith('In the ancient CT158 witness')
+          assert 'SOBEK_FORENSIC_INDIGNATION_IS_NOT_ANCIENT_QUOTE' in b['claim_firewall']
+          print('PASS: forensic Sobek hero overlay preserves ancient/source boundaries')
+          PY
