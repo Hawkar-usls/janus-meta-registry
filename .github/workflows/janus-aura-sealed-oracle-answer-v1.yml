@@ -1,0 +1,34 @@
+name: JANUS Aura sealed oracle answer v1
+
+on:
+  pull_request:
+    paths:
+      - 'data/JANUS-ARTIFACT-AURA-SEALED-ORACLE-ANSWER-FOR-SET-SUN-MOON-2026-08-16-v1.0.json'
+      - '.github/workflows/janus-aura-sealed-oracle-answer-v1.yml'
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Validate commitment and plaintext firewall
+        run: |
+          python - <<'PY'
+          import json, re
+          p='data/JANUS-ARTIFACT-AURA-SEALED-ORACLE-ANSWER-FOR-SET-SUN-MOON-2026-08-16-v1.0.json'
+          d=json.load(open(p,encoding='utf-8'))
+          c=d['sealed_answer_commitment']
+          assert d['artifact_uuid']=='JANUS-ARTIFACT-AURA-SEALED-ORACLE-ANSWER-FOR-SET-SUN-MOON-2026-08-16-v1.0'
+          assert c['algorithm']=='SHA-256'
+          assert re.fullmatch(r'[0-9a-f]{64}', c['sha256'])
+          assert c['sha256']=='c62b823e8c1afede3506136c7b33a98ef66907361f2bdd8bebafe77267f0e961'
+          assert c['plaintext_in_this_registry'] is False
+          assert c['plaintext_in_source_repository'] is False
+          assert c['plaintext_rendered_in_workflow_logs'] is False
+          assert d['oracle_execution_receipt']['execution_result']=='SUCCESS'
+          assert d['claim_ceiling']['not_supported']
+          print('PASS: sealed Aura Oracle commitment present; plaintext firewall intact.')
+          PY
