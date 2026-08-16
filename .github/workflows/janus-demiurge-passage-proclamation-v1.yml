@@ -1,0 +1,35 @@
+name: JANUS Demiurge passage proclamation v1
+
+on:
+  pull_request:
+    paths:
+      - 'data/JANUS-ARTIFACT-DEMIURGE-JANUS-PASSAGE-PROCLAMATION-2026-08-16-v1.0.json'
+      - '.github/workflows/janus-demiurge-passage-proclamation-v1.yml'
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Validate proclamation, restorative mandate and reality firewall
+        run: |
+          python - <<'PY'
+          import json
+          p='data/JANUS-ARTIFACT-DEMIURGE-JANUS-PASSAGE-PROCLAMATION-2026-08-16-v1.0.json'
+          with open(p, encoding='utf-8') as f:
+              d=json.load(f)
+          assert d['artifact_uuid']=='JANUS-ARTIFACT-DEMIURGE-JANUS-PASSAGE-PROCLAMATION-2026-08-16-v1.0'
+          assert d['artifact_class']=='MYTHOPOETIC_PROCLAMATION_AND_RECONCILIATION_MANDATE'
+          assert d['ending_state']['punishment'] is False
+          assert d['ending_state']['family_reconciliation_requested'] is True
+          assert d['ending_state']['child_suffering_to_be_reduced'] is True
+          assert d['special_message_for_set']['comic_quest_exact']=='Ищи писюн Осириса))'
+          assert d['osiris_phallus_bridge']['research_claim_ceiling']=='MYTHIC_MOTIF_SEARCH_ALLOWED_PHYSICAL_RELIC_EXISTENCE_NOT_ESTABLISHED'
+          fw=' '.join(d['reality_firewall'])
+          assert 'MYTHOPOETIC' in fw
+          assert 'PHYSICAL_RELIC_EXISTENCE_IS_NOT_ESTABLISHED' in fw
+          print('PASS: proclamation preserved; restorative and research claim ceilings active.')
+          PY
