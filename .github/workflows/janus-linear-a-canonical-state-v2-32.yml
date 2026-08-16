@@ -1,0 +1,74 @@
+name: JANUS Linear A canonical state v2.32
+
+on:
+  push:
+    paths:
+      - "data/JANUS-LINEAR-A-RESEARCH-STATE-PROMOTION-REQUEST-2026-08-16-v2.32.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile v2.32 promoter
+        run: python -m py_compile research/linear_a/janus_linear_a_canonical_state_v2_32.py
+      - name: Build and audit v2.32
+        shell: bash
+        run: |
+          set -euo pipefail
+          python research/linear_a/janus_linear_a_canonical_state_v2_32.py \
+            --spec data/JANUS-LINEAR-A-RESEARCH-STATE-PROMOTION-SPEC-2026-08-16-v2.32.json \
+            --candidate-out data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-16-v2.32-CANDIDATE.json \
+            --canonical-out data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-16-v2.32.json \
+            --audit-out data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-16-v2.32.json
+      - name: Enforce v2.32 ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          s=json.load(open('data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-16-v2.32.json',encoding='utf-8'))
+          a=json.load(open('data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-16-v2.32.json',encoding='utf-8'))
+          g=s['global_claim_ceiling_v2_32']
+          assert a['status']=='CANONICALITY_AUDIT_PASS' and a['all_checks_pass'] is True
+          assert g['probable_region_scoped_structural_function_established'] is True
+          assert g['admitted_source_word']=='KU-RO' and g['admitted_probable_structural_function']=='ROW-OPENING-LIKE'
+          assert g['internal_post_F0_terminal_numeric_slot_refinement_established'] is True
+          assert g['numeric_payload_distribution_difference_established'] is False
+          assert g['G0_support_blocked_strong_signal_preserved'] is True
+          assert g['G0_exchangeable_target_events']==8 and g['G0_required_exchangeable_target_events']==10
+          assert g['TOTAL_or_SUMMARY_semantic_function_established'] is False
+          assert g['exact_word_meaning_established'] is False and g['translation_established'] is False
+          assert g['universal_cross_region_function_established'] is False and g['decipherment_established'] is False
+          print(json.dumps({'status':a['status'],'function':g['admitted_probable_structural_function'],'F1':g['internal_refinement_label'],'G0':'support-blocked 8/10'},sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-linear-a-canonical-v2-32
+          path: |
+            data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-16-v2.32-CANDIDATE.json
+            data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-16-v2.32.json
+            data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-16-v2.32.json
+          retention-days: 90
+      - name: Persist v2.32
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'JANUS Evidence Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-16-v2.32-CANDIDATE.json data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-16-v2.32.json data/JANUS-LINEAR-A-RESEARCH-STATE-CANONICALITY-AUDIT-2026-08-16-v2.32.json
+          git commit -m 'Promote Linear A canonical research state v2.32' || true
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then exit 0; fi
+            git pull --rebase origin main
+          done
+          exit 1
