@@ -1,0 +1,132 @@
+{
+  "artifact_id": "JANUS-DEMIHEAD-LOCAL-ACCEPT-BROWSER-HOLDOUT-v1.0",
+  "document_class": "architecture_validation_contract",
+  "date": "2026-08-16",
+  "status": "MERGED_AND_POST_MERGE_VERIFIED_REAL_BROWSER_SYNTHETIC_LOCAL_GATE",
+  "purpose": "Validate the admitted DemiHead -> local proposal -> hemisphere-owned preview/decline/accept flow through real headless Chromium and real browser localStorage while using only isolated localhost fixtures and synthetic workspaces.",
+  "parent_gate": "JANUS-DEMIHEAD-LOCAL-HEMISPHERE-REVERSE-PROPOSAL-GATE-v1.0",
+  "frozen_dependencies": {
+    "DemiHead_parent_merge": "fc542466279bd15bceb7171514a84d1c1d002a11",
+    "HRain_apply_merge": "ceb81210c2f70b71d6c941e0b088a68969ead7b9",
+    "iNaiHR_apply_merge": "b27cd8732b3137caea1036024acc1778ea02213a"
+  },
+  "frozen_holdout": {
+    "freeze_sha256": "f44263abaf0fa23c0344f4c68719e1a695d122c251fc373e732724d7958f2c49",
+    "frozen_before_first_chromium_execution": true,
+    "case_count": 17,
+    "required_pass_count": 17,
+    "browser_engine": "chromium",
+    "fixture_origin": "http://127.0.0.1:8765",
+    "live_user_data": false,
+    "external_network_effects": false,
+    "cases": [
+      "hrain_sidecar_export",
+      "hrain_proposal_lab",
+      "hrain_preview",
+      "hrain_decline",
+      "hrain_accept_reload",
+      "hrain_stale_base",
+      "hrain_tamper",
+      "hrain_cross_key_isolation",
+      "inaihr_sidecar_export",
+      "inaihr_proposal_lab",
+      "inaihr_preview_decline",
+      "inaihr_accept_reload",
+      "inaihr_serializer_roundtrip",
+      "inaihr_stale_base",
+      "inaihr_tamper",
+      "inaihr_cross_key_isolation",
+      "shared_origin_key_separation"
+    ]
+  },
+  "first_real_browser_receipt": {
+    "head": "c0cbd3b380e8d0e168e57b84e4f284bb9aaa4cb6",
+    "run_id": 31941568385,
+    "conclusion": "SUCCESS",
+    "meaning": "First real Chromium/localStorage execution of the frozen functional cases before artifact-preservation refinement."
+  },
+  "final_exact_head": {
+    "sha": "cc879c26bee5e73287f89e952f87aed91f8776ee",
+    "push_runs": {
+      "browser_holdout": {"id": 31941650463, "conclusion": "SUCCESS"},
+      "full_repository": {"id": 31941650473, "conclusion": "SUCCESS"},
+      "local_reverse_gate": {"id": 31941650471, "conclusion": "SUCCESS"},
+      "proposal_lab_parity": {"id": 31941650501, "conclusion": "SUCCESS"}
+    },
+    "pull_request_runs": {
+      "browser_holdout": {"id": 31941652427, "conclusion": "SUCCESS"},
+      "full_repository": {"id": 31941652441, "conclusion": "SUCCESS"},
+      "local_reverse_gate": {"id": 31941652435, "conclusion": "SUCCESS"},
+      "proposal_lab_parity": {"id": 31941652430, "conclusion": "SUCCESS"}
+    }
+  },
+  "merge_receipt": {
+    "pull_request": 16,
+    "merge_commit": "467e31ff3f6a2bb26af2aea21d97d20f2cc448c6",
+    "post_merge_browser_run": {"id": 31941773521, "conclusion": "SUCCESS"},
+    "post_merge_full_repository_run": {"id": 31941773541, "conclusion": "SUCCESS"},
+    "machine_readable_artifact": {
+      "artifact_id": 9262219680,
+      "name": "local-accept-browser-holdout-467e31ff3f6a2bb26af2aea21d97d20f2cc448c6",
+      "digest": "sha256:8ef0786a231c915119becf40e07974e1b6e2db02133a872b9b8b679779ed09e1",
+      "retention_days": 30
+    }
+  },
+  "verified_properties": {
+    "frozen_cases_passed": 17,
+    "frozen_cases_failed": 0,
+    "exact_merged_hrain_ui_and_js_used": true,
+    "exact_merged_inaihr_ui_and_js_used": true,
+    "real_headless_chromium_exercised": true,
+    "real_browser_localstorage_exercised": true,
+    "proposal_lab_file_input_exercised": true,
+    "proposal_download_path_exercised": true,
+    "hemisphere_apply_file_input_exercised": true,
+    "preview_no_mutation": true,
+    "decline_no_mutation": true,
+    "explicit_accept_mutation": true,
+    "reload_persistence": true,
+    "stale_base_recheck": true,
+    "tamper_refusal": true,
+    "shared_origin_storage_key_isolation": true,
+    "inaihr_metadata_overlay_roundtrip": true,
+    "external_http_requests_outside_fixture_origin": 0,
+    "browser_page_errors": 0,
+    "live_user_workspace_touched": false,
+    "direct_cross_hemisphere_write": false,
+    "external_effect_permitted": false,
+    "authority_delta": 0,
+    "mass_effect_budget_delta": 0
+  },
+  "laws": [
+    "GITHUB_PAGES_PROJECT_PATH != ORIGIN_ISOLATION",
+    "SHARED_ORIGIN != SHARED_STORAGE_KEY",
+    "LOCALHOST_CHROMIUM_HOLDOUT != PRODUCTION_NETWORK_VALIDATION",
+    "AUTOMATED_BROWSER_CLICK != VERIFIED_HUMAN_IDENTITY",
+    "SHA256_BINDING != SIGNATURE",
+    "DEMIHEAD_PROPOSAL != WORKSPACE_MUTATION",
+    "NO_ACCEPT_EVENT => NO_MUTATION",
+    "DECLINE != PENALTY",
+    "DIRECT_CROSS_HEMISPHERE_WRITE = FORBIDDEN",
+    "EXTERNAL_NETWORK_EFFECT = FORBIDDEN",
+    "LIVE_USER_DATA = false",
+    "AUTHORITY_DELTA = 0",
+    "MASS_EFFECT_BUDGET_DELTA = 0"
+  ],
+  "claim_ceiling": {
+    "real_browser_local_functional_path_established_on_synthetic_data": true,
+    "authenticated_human_identity_established": false,
+    "digital_signature_established": false,
+    "real_user_workspace_safety_established": false,
+    "production_network_latency_measured": false,
+    "production_readiness_established": false,
+    "independent_evidence_established": false,
+    "truth_from_bicameral_agreement_established": false,
+    "biological_equivalence_established": false,
+    "consciousness_or_personhood_established": false,
+    "measured_cognitive_gain_established": false,
+    "authority_delta": 0,
+    "mass_effect_budget_delta": 0
+  },
+  "next_gate": "Freeze a separate real wall-clock latency/resource baseline before any performance tuning; functional browser correctness and performance admission remain separate."
+}
