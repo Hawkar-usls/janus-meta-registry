@@ -1,0 +1,46 @@
+name: JANUS Horus missing-parts causal grammar v0.3
+
+on:
+  pull_request:
+    paths:
+      - 'data/JANUS-HORUS-MISSING-PARTS-CAUSE-RESTORATION-LEDGER-2026-08-16-v0.3.json'
+      - 'data/JANUS-HORUS-MISSING-PARTS-CAUSAL-GRAMMAR-RESULT-2026-08-16-v0.3.json'
+      - 'data/JANUS-SOBEK-RETRIEVAL-MISSION-TARGET-WHERE-HOW-2026-08-16-v0.1.json'
+      - 'data/JANUS-HOLDING-OUT-FOR-A-HERO-RA-CALLS-SOBEK-SOUNDTRACK-2026-08-16-v1.0.json'
+      - 'research/horus/janus_horus_missing_parts_causal_probe_v0_3.py'
+      - '.github/workflows/janus-horus-missing-parts-causal-v0-3.yml'
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile causal probe
+        run: python -m py_compile research/horus/janus_horus_missing_parts_causal_probe_v0_3.py
+      - name: Validate causal ledger, Sobek mission, and soundtrack firewall
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          ledger = json.loads(Path('data/JANUS-HORUS-MISSING-PARTS-CAUSE-RESTORATION-LEDGER-2026-08-16-v0.3.json').read_text())
+          result = json.loads(Path('data/JANUS-HORUS-MISSING-PARTS-CAUSAL-GRAMMAR-RESULT-2026-08-16-v0.3.json').read_text())
+          mission = json.loads(Path('data/JANUS-SOBEK-RETRIEVAL-MISSION-TARGET-WHERE-HOW-2026-08-16-v0.1.json').read_text())
+          soundtrack = json.loads(Path('data/JANUS-HOLDING-OUT-FOR-A-HERO-RA-CALLS-SOBEK-SOUNDTRACK-2026-08-16-v1.0.json').read_text())
+
+          assert ledger['status'] == 'CAUSE_LAYER_ESTABLISHED_FOR_HANDS_AND_EYES_VARIANTS_OTHER_BODY_PARTS_OPEN'
+          assert result['counts']['admitted_episodes'] == 5
+          assert result['counts']['restorative_apparatus_features_observed'] == 0
+          assert result['causal_model']['id'] == 'HORUS_CAUSE_SENSITIVE_DISTRIBUTED_RESTORATION_GRAMMAR_R2'
+          assert mission['critical_correction']['literal_sobek_asks_who'] is False
+          assert mission['mission_semantics']['stages'][1]['question'] == 'WHO_OR_WHAT_IS_MISSING'
+          assert mission['mission_semantics']['stages'][1]['resolution'] == "Horus's arms/hands"
+          assert soundtrack['status'] == 'ADDITIVE_SYMBOLIC_SOUNDTRACK_NOT_HISTORICAL_EVIDENCE'
+          assert 'SONG_IS_NOT_ANCIENT_EGYPTIAN_EVIDENCE' in soundtrack['claim_firewall']
+          assert 'SOBEK_DOES_NOT_LITERALLY_ASK_WHO_IN_THE_UCL_TRANSLATION' in soundtrack['claim_firewall']
+          assert soundtrack['ra_to_sobek_symbolic_call']['stage_3_target_question']['textual_resolution'] == "Horus's arms/hands."
+          print('PASS: causal grammar + Sobek mission semantics + soundtrack claim firewall')
+          PY
