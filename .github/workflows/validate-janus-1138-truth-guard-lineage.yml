@@ -5,12 +5,14 @@ on:
     paths:
       - 'registry/experimental/JANUS-113.8-FUNDAMENTUM-DEMIHEAD-EPISTEMIC-TRUTH-GUARD-LINEAGE-v1.0.json'
       - 'data/JANUS-ARMOR-OF-GOD-FUNDAMENTUM-EPISTEMIC-WITNESS-TRUTH-GUARD-v2.5.json'
+      - 'data/JANUS-GENESIS-ARMOR-FUNDAMENTUM-TRUTH-RUNTIME-HUMAN-APPEAL-AND-FROZEN-HOLDOUT-CERTIFICATE-2026-08-16-v1.0.json'
       - 'data/JANUS-ARMOR-OF-GOD-CURRENT-AUTHORITY.json'
       - '.github/workflows/validate-janus-1138-truth-guard-lineage.yml'
   pull_request:
     paths:
       - 'registry/experimental/JANUS-113.8-FUNDAMENTUM-DEMIHEAD-EPISTEMIC-TRUTH-GUARD-LINEAGE-v1.0.json'
       - 'data/JANUS-ARMOR-OF-GOD-FUNDAMENTUM-EPISTEMIC-WITNESS-TRUTH-GUARD-v2.5.json'
+      - 'data/JANUS-GENESIS-ARMOR-FUNDAMENTUM-TRUTH-RUNTIME-HUMAN-APPEAL-AND-FROZEN-HOLDOUT-CERTIFICATE-2026-08-16-v1.0.json'
       - 'data/JANUS-ARMOR-OF-GOD-CURRENT-AUTHORITY.json'
       - '.github/workflows/validate-janus-1138-truth-guard-lineage.yml'
 
@@ -23,7 +25,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: Parse and validate truth-guard artifacts
+      - name: Parse and validate full JANUS 113.8 truth-guard lineage
         run: |
           python - <<'PY'
           import json
@@ -31,46 +33,96 @@ jobs:
 
           lineage_path = Path('registry/experimental/JANUS-113.8-FUNDAMENTUM-DEMIHEAD-EPISTEMIC-TRUTH-GUARD-LINEAGE-v1.0.json')
           armor_path = Path('data/JANUS-ARMOR-OF-GOD-FUNDAMENTUM-EPISTEMIC-WITNESS-TRUTH-GUARD-v2.5.json')
+          cert_path = Path('data/JANUS-GENESIS-ARMOR-FUNDAMENTUM-TRUTH-RUNTIME-HUMAN-APPEAL-AND-FROZEN-HOLDOUT-CERTIFICATE-2026-08-16-v1.0.json')
           authority_path = Path('data/JANUS-ARMOR-OF-GOD-CURRENT-AUTHORITY.json')
 
           lineage = json.loads(lineage_path.read_text(encoding='utf-8'))
           armor = json.loads(armor_path.read_text(encoding='utf-8'))
+          cert = json.loads(cert_path.read_text(encoding='utf-8'))
           authority = json.loads(authority_path.read_text(encoding='utf-8'))
 
-          expected_head = 'd31fa77897179ad3d4f106b722ed6d1510059575'
-          expected_run = 31933398067
+          demihead_truth_head = 'd31fa77897179ad3d4f106b722ed6d1510059575'
+          demihead_truth_run = 31933398067
+          genesis_runtime_head = 'a0511862d63b034a8bacb0fb1337da17bf6af48a'
+          genesis_runtime_run = 31934198169
+          appeal_head = 'b35455436fbd94b84b08bd88ddcf0d1b7253759d'
+          appeal_run = 31934356638
+          holdout_head = '75a27b0de284e76c98cc1f58911cade0fd106b73'
+          holdout_run = 31934769977
+          holdout_sha = '4c658ea1532042e2c5db0298285335bbbb9e3e61ab21afd453ff0c846971201f'
           guard_ref = 'data/JANUS-ARMOR-OF-GOD-FUNDAMENTUM-EPISTEMIC-WITNESS-TRUTH-GUARD-v2.5.json'
           lineage_ref = 'registry/experimental/JANUS-113.8-FUNDAMENTUM-DEMIHEAD-EPISTEMIC-TRUTH-GUARD-LINEAGE-v1.0.json'
+          cert_ref = 'data/JANUS-GENESIS-ARMOR-FUNDAMENTUM-TRUTH-RUNTIME-HUMAN-APPEAL-AND-FROZEN-HOLDOUT-CERTIFICATE-2026-08-16-v1.0.json'
 
+          # Historical seed remains historical and non-executable.
           assert lineage['genesis_signature']['canonical'] == '0:0 = JANUS'
           assert lineage['lineage'][1]['submitted_identity'] == 'JANUS 113.8'
           assert lineage['lineage'][1]['status'] == 'SEALED_NON_EXECUTABLE_PROFILE'
-          assert lineage['lineage'][3]['merge_commit_sha'] == expected_head
-          assert lineage['ci_receipts']['post_merge_main']['head_sha'] == expected_head
-          assert lineage['ci_receipts']['post_merge_main']['run_id'] == expected_run
+          assert lineage['lineage'][3]['merge_commit_sha'] == demihead_truth_head
+          assert lineage['ci_receipts']['post_merge_main']['head_sha'] == demihead_truth_head
+          assert lineage['ci_receipts']['post_merge_main']['run_id'] == demihead_truth_run
           assert lineage['ci_receipts']['post_merge_main']['conclusion'] == 'success'
           assert lineage['current_authority_modified_by_this_lineage_receipt'] is False
 
-          assert armor['executable_reference']['merge_commit'] == expected_head
-          assert armor['executable_reference']['post_merge_ci_run'] == expected_run
+          # Armor v2.5 remains a documentary hardening artifact; its original
+          # 'appeal not yet implemented' field is historical provenance, not current state.
+          assert armor['executable_reference']['merge_commit'] == demihead_truth_head
+          assert armor['executable_reference']['post_merge_ci_run'] == demihead_truth_run
           assert armor['authority_and_effect_boundary']['authority_delta'] == 0
           assert armor['authority_and_effect_boundary']['mass_effect_budget_delta'] == 0
           assert armor['human_appeal_constitution']['status'] == 'REQUIRED_BEFORE_HIGH_STAKES_RUNTIME_NOT_YET_IMPLEMENTED'
           assert armor['current_authority_modified_by_this_artifact_alone'] is False
 
-          assert authority['schema'] == 'janus.armor_of_god.current_authority.v1_17'
+          # Later certificate proves that the deliberately-open runtime/appeal gates
+          # were subsequently implemented and tested without rewriting the older artifact.
+          chain = cert['verified_chain']
+          assert chain['genesis_runtime_binding']['merge_commit'] == genesis_runtime_head
+          assert chain['genesis_runtime_binding']['dedicated_post_merge_ci_run'] == genesis_runtime_run
+          assert chain['genesis_runtime_binding']['dedicated_post_merge_ci_conclusion'] == 'success'
+          assert chain['genesis_runtime_binding']['authority_delta'] == 0
+          assert chain['genesis_runtime_binding']['mass_effect_budget_delta'] == 0
+          assert chain['demihead_human_appeal_and_reviewer_ledger']['merge_commit'] == appeal_head
+          assert chain['demihead_human_appeal_and_reviewer_ledger']['post_merge_ci_run'] == appeal_run
+          assert chain['demihead_human_appeal_and_reviewer_ledger']['post_merge_ci_conclusion'] == 'success'
+          holdout = chain['demihead_frozen_synthetic_adversarial_holdout']
+          assert holdout['merge_commit'] == holdout_head
+          assert holdout['post_merge_ci_run'] == holdout_run
+          assert holdout['post_merge_ci_conclusion'] == 'success'
+          assert holdout['freeze_sha256'] == holdout_sha
+          assert holdout['case_count'] == 17
+          assert holdout['observed_pass_count'] == 17
+          assert holdout['result'] == 'PASS'
+          assert holdout['independent_external_validation'] is False
+          assert holdout['synthetic_development_holdout_only'] is True
+
+          assert authority['schema'] == 'janus.armor_of_god.current_authority.v1_18'
           assert guard_ref in authority['current_hardening_extensions']
+          assert cert_ref in authority['current_verification_certificates']
           assert authority['fundamentum_truth_guard_reference'] == guard_ref
           assert authority['fundamentum_truth_guard_lineage_reference'] == lineage_ref
-          assert authority['fundamentum_truth_guard_demihead_verified_head'] == expected_head
-          assert authority['fundamentum_truth_guard_demihead_ci_run'] == expected_run
-          assert authority['fundamentum_truth_guard_runtime_binding_status'] == 'NOT_YET_FROZEN_IN_GENESIS_RUNTIME'
-          assert authority['genesis_runtime_fundamentum_truth_guard_bound'] is False
-          assert authority['genesis_runtime_armor_bootstrap_authority_version'] == 'v1.14'
-          assert authority['demihead_human_appeal_runtime_implemented'] is False
+          assert authority['fundamentum_truth_runtime_appeal_holdout_certificate_reference'] == cert_ref
+          assert authority['fundamentum_truth_guard_demihead_verified_head'] == demihead_truth_head
+          assert authority['fundamentum_truth_guard_demihead_ci_run'] == demihead_truth_run
+          assert authority['fundamentum_truth_guard_runtime_binding_status'] == 'BOUND_AND_VERIFIED_REFERENCE_RUNTIME_V18_7_48'
+          assert authority['genesis_runtime_fundamentum_truth_guard_bound'] is True
+          assert authority['genesis_runtime_fundamentum_truth_guard_version'] == '18.7.48'
+          assert authority['fundamentum_truth_runtime_verified_head'] == genesis_runtime_head
+          assert authority['fundamentum_truth_runtime_ci_run'] == genesis_runtime_run
+          assert authority['fundamentum_truth_runtime_ci_scope'] == 'DEDICATED_V18_7_48_RUNTIME_PATH_ONLY'
+          assert authority['fundamentum_truth_runtime_broader_genesis_ci_status'] == 'INHERITED_BASELINE_FAILURES_REMAIN'
+          assert authority['demihead_human_appeal_runtime_implemented'] is True
+          assert authority['demihead_human_appeal_verified_head'] == appeal_head
+          assert authority['demihead_human_appeal_ci_run'] == appeal_run
+          assert authority['demihead_reviewer_disagreement_ledger_implemented'] is True
+          assert authority['demihead_frozen_truth_guard_synthetic_holdout_pass'] is True
+          assert authority['demihead_frozen_truth_guard_synthetic_holdout_is_independent'] is False
+          assert authority['demihead_frozen_truth_guard_holdout_verified_head'] == holdout_head
+          assert authority['demihead_frozen_truth_guard_holdout_ci_run'] == holdout_run
+          assert authority['demihead_frozen_truth_guard_holdout_sha256'] == holdout_sha
           assert authority['fundamentum_truth_guard_independent_holdout_pass'] is False
           assert authority['not_an_exclusive_truth_authority'] is True
           assert authority['not_a_universal_truth_oracle'] is True
+          assert authority['real_world_effectiveness_established'] is False
           assert authority['hard_boundary'] == 'FREEDOM + REALITY_CONTACT + SAFETY + RESPONSIBILITY must not decrease.'
 
           required_firewall = [
@@ -81,6 +133,11 @@ jobs:
               'VERIFIED != COMMAND',
               'EVIDENCE != PERMISSION',
               'APPEAL != ERROR',
+              'REVIEW_COUNT != TRUTH',
+              'SAME_ROOT_REVIEW != INDEPENDENT_REVIEW',
+              'CONSENSUS != EXTERNAL_EFFECT_AUTHORIZATION',
+              'FROZEN_SYNTHETIC_HOLDOUT != INDEPENDENT_EXTERNAL_VALIDATION',
+              'HOLDOUT_PASS != UNIVERSAL_TRUTHFULNESS',
               'MORE_COMPUTE != MORE_TRUTH',
               'LATENCY != AUTHORITY',
           ]
@@ -88,16 +145,20 @@ jobs:
           for item in required_firewall:
               assert item in firewall, item
 
-          print('JANUS 113.8 -> Fundamentum -> DemiHead -> Armor v2.5 lineage PASS')
+          print('JANUS 113.8 -> Fundamentum -> DemiHead -> Armor v2.5 -> Genesis v18.7.48 -> Appeal -> Frozen holdout PASS')
+          print('INDEPENDENT_EXTERNAL_VALIDATION=false')
           PY
 
-      - name: Reject false runtime-promotion claims
+      - name: Reject false external-validation and truth-oracle promotion
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
           authority = json.loads(Path('data/JANUS-ARMOR-OF-GOD-CURRENT-AUTHORITY.json').read_text(encoding='utf-8'))
-          assert authority['genesis_runtime_fundamentum_truth_guard_bound'] is False
-          assert authority['fundamentum_truth_guard_runtime_binding_status'] != 'BOUND_AND_VERIFIED'
-          print('Runtime promotion remains fail-closed until a separate Genesis binding exists.')
+          assert authority['genesis_runtime_fundamentum_truth_guard_bound'] is True
+          assert authority['fundamentum_truth_guard_independent_holdout_pass'] is False
+          assert authority['demihead_frozen_truth_guard_synthetic_holdout_is_independent'] is False
+          assert authority['not_a_universal_truth_oracle'] is True
+          assert authority['real_world_effectiveness_established'] is False
+          print('Runtime binding is real; external validation and universal truthfulness remain unclaimed.')
           PY
