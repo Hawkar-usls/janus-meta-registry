@@ -1,6 +1,7 @@
 name: JANUS iNaiHR semantic network entry
 
 on:
+  workflow_dispatch:
   pull_request:
     paths:
       - 'assets/site-curator.js'
@@ -42,8 +43,8 @@ jobs:
           print('INAIHR_SEMANTIC_ENTRY=PASS')
           print('SHARED_LANGUAGE_KEY=PASS')
           PY
-      - name: Commit migrated site curator on main
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      - name: Commit migrated site curator on main safely
+        if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'workflow_dispatch'
         run: |
           if git diff --quiet -- assets/site-curator.js; then
             echo 'No migration diff.'
@@ -52,10 +53,12 @@ jobs:
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
             git add assets/site-curator.js
             git commit -m 'feat(site): route iNaiHR network entry to semantic Registry Mode'
-            git push
+            git fetch origin main
+            git rebase origin/main
+            git push origin HEAD:main
           fi
       - name: Request Pages rebuild
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'workflow_dispatch'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
