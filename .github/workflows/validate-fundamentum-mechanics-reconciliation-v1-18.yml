@@ -1,0 +1,140 @@
+name: Validate Fundamentum mechanics reconciliation v1.18
+
+on:
+  push:
+    paths:
+      - 'data/JANUS-GENESIS-ARMOR-FUNDAMENTUM-MECHANICS-RECONCILIATION-CERTIFICATE-2026-08-16-v1.1.json'
+      - 'data/JANUS-ARMOR-OF-GOD-CURRENT-AUTHORITY.json'
+      - '.github/workflows/validate-fundamentum-mechanics-reconciliation-v1-18.yml'
+  pull_request:
+    paths:
+      - 'data/JANUS-GENESIS-ARMOR-FUNDAMENTUM-MECHANICS-RECONCILIATION-CERTIFICATE-2026-08-16-v1.1.json'
+      - 'data/JANUS-ARMOR-OF-GOD-CURRENT-AUTHORITY.json'
+      - '.github/workflows/validate-fundamentum-mechanics-reconciliation-v1-18.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Validate exact implementation receipts and constitutional boundaries
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          cert = json.loads(Path('data/JANUS-GENESIS-ARMOR-FUNDAMENTUM-MECHANICS-RECONCILIATION-CERTIFICATE-2026-08-16-v1.1.json').read_text(encoding='utf-8'))
+          auth = json.loads(Path('data/JANUS-ARMOR-OF-GOD-CURRENT-AUTHORITY.json').read_text(encoding='utf-8'))
+
+          assert cert['schema'] == 'janus.armor_of_god.fundamentum_mechanics_reconciliation_certificate.v1_1'
+          assert cert['genesis_signature'] == '0:0 = JANUS'
+          assert cert['status'] == 'INTERNAL_REFERENCE_CHAIN_VERIFIED_WITH_CLAIM_CEILING'
+
+          chain = cert['verified_chain']
+          demi = chain['demihead_mechanics_hardening_v1_1']
+          genesis = chain['genesis_armor_mechanics_hardening_v18_7_49']
+          frozen = chain['demihead_frozen_synthetic_truth_guard_holdout']
+
+          assert demi['exact_tested_pr_head'] == 'dee3db646fead02dd4d67bff1a6051ca3ede9c59'
+          assert demi['merge_sha'] == 'a79da70f7098ffb88e3d803f223bce8f05922f30'
+          assert demi['post_merge_ci_run'] == 31936699500
+          assert demi['status'] == 'PASS'
+
+          assert genesis['exact_tested_pr_head'] == 'b3c77de42fdd23559dc20206c07b02ea6f7e1ad9'
+          assert genesis['merge_sha'] == '79f90ce14ba2e78720d089e9cd9d2afb08579f3c'
+          assert genesis['dedicated_post_merge_ci_run'] == 31936722921
+          assert genesis['status'] == 'PASS'
+
+          assert frozen['freeze_sha256'] == '4c658ea1532042e2c5db0298285335bbbb9e3e61ab21afd453ff0c846971201f'
+          assert frozen['cases'] == 17
+          assert frozen['passed'] == 17
+          assert frozen['status'] == 'PASS'
+          assert frozen['independent_external_validation'] is False
+
+          inherited = cert['inherited_baseline_evidence']
+          assert inherited['broader_genesis_repository_claimed_green'] is False
+          assert inherited['fractalgpt_failure_present_on_parent_before_v18_7_49']['parent_sha'] == 'a0511862d63b034a8bacb0fb1337da17bf6af48a'
+          assert inherited['fractalgpt_failure_present_on_parent_before_v18_7_49']['conclusion'] == 'failure'
+          assert inherited['fractalgpt_failure_present_after_v18_7_49']['merge_sha'] == '79f90ce14ba2e78720d089e9cd9d2afb08579f3c'
+          assert inherited['fractalgpt_failure_present_after_v18_7_49']['conclusion'] == 'failure'
+
+          boundary = cert['authority_and_effect_boundary']
+          assert boundary['authority_delta'] == 0
+          assert boundary['mass_effect_budget_delta'] == 0
+          assert boundary['new_capability_granted'] is False
+          assert boundary['provider_scope_expanded'] is False
+          assert boundary['review_creates_permission'] is False
+          assert boundary['verification_creates_permission'] is False
+          assert boundary['current_authority_version_target'] == 'v1.18'
+
+          ceiling = cert['claim_ceiling']
+          for key in (
+              'independent_external_truth_guard_holdout_pass',
+              'real_world_reviewer_identity_verified',
+              'real_world_reviewer_independence_verified',
+              'collusion_resistance_established',
+              'receipt_authenticity_independently_proven_by_runtime',
+              'complete_external_effect_routing_coverage_proven',
+              'os_level_unbypassability_proven',
+              'universal_truthfulness_proven',
+              'high_stakes_production_readiness_proven',
+              'real_world_effectiveness_established',
+          ):
+              assert ceiling[key] is False, key
+
+          assert auth['schema'] == 'janus.armor_of_god.current_authority.v1_18'
+          assert auth['current_hardening_extensions'] == [
+              'data/JANUS-ARMOR-OF-GOD-ADVERSARIAL-RECOVERY-AND-ANTI-PARANOIA-v2.4.json',
+              'data/Janus_OPIR_ANTIFUCK-v1.3.json',
+              'data/JANUS-ARMOR-OF-GOD-FUNDAMENTUM-EPISTEMIC-WITNESS-TRUTH-GUARD-v2.5.json',
+          ]
+          assert auth['current_verification_certificates'] == [
+              'data/JANUS-GENESIS-ARMOR-FUNDAMENTUM-MECHANICS-RECONCILIATION-CERTIFICATE-2026-08-16-v1.1.json'
+          ]
+          assert auth['fundamentum_truth_guard_runtime_binding_status'] == 'BOUND_AND_HARDENED_REFERENCE_RUNTIME_V18_7_49'
+          assert auth['genesis_runtime_fundamentum_truth_guard_bound'] is True
+          assert auth['genesis_runtime_fundamentum_truth_guard_version'] == '18.7.49'
+          assert auth['demihead_mechanics_hardening_v1_1_implemented'] is True
+          assert auth['demihead_reviewer_effective_component_collapse_implemented'] is True
+          assert auth['demihead_duplicate_correction_id_rejection_implemented'] is True
+          assert auth['genesis_runtime_json_truthiness_hardening_implemented'] is True
+          assert auth['genesis_runtime_high_stakes_review_binding_hardening_implemented'] is True
+
+          assert auth['candidate_hardening_references'] == ['data/JANUS-ARMOR-OF-GOD-PLUS-PLUS-RHYME-RECENTER-v1.0.json']
+          assert auth['armor_plus_plus_candidate_promoted'] is False
+          assert auth['fundamentum_truth_guard_independent_holdout_pass'] is False
+          assert auth['real_world_reviewer_identity_verified'] is False
+          assert auth['real_world_reviewer_independence_verified'] is False
+          assert auth['genesis_runtime_armor_complete_routing_coverage_proven'] is False
+          assert auth['genesis_runtime_armor_tamper_proof'] is False
+          assert auth['not_a_universal_truth_oracle'] is True
+          assert auth['real_world_effectiveness_established'] is False
+          assert auth['history_preserved'] is True
+
+          firewall = auth['fundamentum_epistemic_firewall']
+          for law in (
+              'VERIFIED != COMMAND',
+              'EVIDENCE != PERMISSION',
+              'DECLARED_ROOT_ID != PROVEN_INDEPENDENCE',
+              'SHARED_EVIDENCE_ROOT => SAME_EFFECTIVE_REVIEW_COMPONENT',
+              'STRUCTURAL_INDEPENDENCE != REAL_WORLD_IDENTITY_PROOF',
+              'DUPLICATE_CORRECTION_ID => INVALID_GRAPH',
+              'CONSENSUS != EXTERNAL_EFFECT_AUTHORIZATION',
+          ):
+              assert law in firewall, law
+
+          runtime_firewall = auth['genesis_runtime_armor_firewall']
+          assert 'STRING_FALSE != BOOLEAN_FALSE' in runtime_firewall
+          assert 'JSON_TRUTHINESS != HUMAN_PERMISSION' in runtime_firewall
+
+          print('FUNDAMENTUM_MECHANICS_RECONCILIATION_V1_18=PASS')
+          print('AUTHORITY_DELTA=0')
+          print('MASS_EFFECT_BUDGET_DELTA=0')
+          print('EXTERNAL_INDEPENDENT_VALIDATION=false')
+          print('REAL_WORLD_REVIEWER_INDEPENDENCE=false')
+          print('WHOLE_GENESIS_REPO_GREEN_CLAIM=false')
+          PY
