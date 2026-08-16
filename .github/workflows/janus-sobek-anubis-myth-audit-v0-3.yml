@@ -1,0 +1,21 @@
+name: JANUS Sobek-Anubis myth and iconography audit v0.3
+
+on:
+  pull_request:
+    paths:
+      - 'data/JANUS-SOBEK-ANUBIS-MYTH-ICONOGRAPHY-CONFOUND-AUDIT-2026-08-16-v0.3.json'
+      - 'research/sobek/SOBEK_ANUBIS_CONTROL_AND_MYTH_SOURCE_PROTOCOL_v0_3.md'
+      - 'research/sobek/verify_sobek_anubis_myth_audit_v0_3.py'
+      - '.github/workflows/janus-sobek-anubis-myth-audit-v0-3.yml'
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify claim ledger and confound controls
+        run: python research/sobek/verify_sobek_anubis_myth_audit_v0_3.py
