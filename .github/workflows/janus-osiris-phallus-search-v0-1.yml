@@ -1,0 +1,60 @@
+name: JANUS Osiris phallus evidence search v0.1
+
+on:
+  pull_request:
+    paths:
+      - 'data/JANUS-OSIRIS-PHALLUS-EVIDENCE-SEARCH-2026-08-16-v0.1.json'
+      - 'data/JANUS-KEM-THREE-KINGS-ALTERNATE-EGYPT-ARCHIVE-2026-08-16-v1.0.json'
+      - '.github/workflows/janus-osiris-phallus-search-v0-1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate research/fiction separation and claim ceiling
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          research_path = Path('data/JANUS-OSIRIS-PHALLUS-EVIDENCE-SEARCH-2026-08-16-v0.1.json')
+          fiction_path = Path('data/JANUS-KEM-THREE-KINGS-ALTERNATE-EGYPT-ARCHIVE-2026-08-16-v1.0.json')
+
+          research = json.loads(research_path.read_text(encoding='utf-8'))
+          fiction = json.loads(fiction_path.read_text(encoding='utf-8'))
+
+          assert research['status'].startswith('SOURCE_AUDIT_PASS')
+          assert research['current_gate_state']['LITERAL_BIOLOGICAL_PHALLUS_SURVIVES'] == 'NOT_ESTABLISHED'
+          assert research['current_gate_state']['DIRECT_BROOKLYN_PAPYRUS_RECEIPT'] == 'OPEN'
+          assert 'NO_ACTUAL_DIVINE_TISSUE_CLAIM' in research['claim_firewall']
+          assert 'NO_EQUATING_RITUAL_FINDING_WITH_ARCHAEOLOGICAL_LOCATION' in research['claim_firewall']
+          assert 'NO_KEM_FICTION_AS_HISTORICAL_EVIDENCE' in research['claim_firewall']
+
+          assert fiction['historicity'] == 'FICTION_AND_COUNTERFACTUAL_MODEL_NOT_ANCIENT_SOURCE'
+          assert 'KEM_IS_AN_ORIGINAL_FICTIONAL_CHARACTER' in fiction['claim_firewall']
+          assert fiction['research_bridge']['next_research_artifact'] == research['artifact_uuid']
+
+          sources = {x['source_id'] for x in research['source_ledger']}
+          required = {
+              'PLUTARCH_DE_ISIDE_18',
+              'MET_570256_FISH',
+              'UCL_BD42',
+              'UCL_KHOIAK',
+              'SPIESER_2022_PHALLUS_OSIRIS',
+              'BROOKLYN_47_218_84_MENDES_TRADITION',
+              'UCL_LE16_MENDES',
+              'BM_MENDESIAN_NOME'
+          }
+          missing = required - sources
+          assert not missing, f'missing required source nodes: {sorted(missing)}'
+
+          print('PASS: Osiris-phallus search ledger keeps creative archive separated and literal-relic claim blocked.')
+          PY
