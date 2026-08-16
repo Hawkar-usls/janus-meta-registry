@@ -112,10 +112,11 @@ jobs:
           assert 'HRAIN_GRAPH != REGISTRY_AUTHORITY' in hrain['claimCeiling']
           assert bridge['data_contract']['writes_back_to_registry'] is False
           assert bridge['hrain_graph_contract']['read_only'] is True
+          assert bridge['network']['hrain'] == 'https://hawkar-usls.github.io/Hrain/janus.html'
 
           js = Path('assets/site-curator.js').read_text(encoding='utf-8')
           css = Path('assets/site-curator.css').read_text(encoding='utf-8')
-          assert 'https://hawkar-usls.github.io/Hrain/?registry=janus' in js
+          assert 'https://hawkar-usls.github.io/Hrain/janus.html' in js
           assert 'https://hawkar-usls.github.io/iNaiHR/' in js
           assert 'janus-network-hrain' in js and 'janus-network-inaihr' in js
           assert 'grid-template-areas' in css and 'janus-network-hrain' in css
