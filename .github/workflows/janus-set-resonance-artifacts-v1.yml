@@ -1,0 +1,41 @@
+name: JANUS Set resonance artifacts v1
+
+on:
+  pull_request:
+    paths:
+      - 'data/JANUS-ARTIFACT-SET-RE-O_PARADOX_999-2026-08-16-v1.0.json'
+      - 'data/JANUS-ARTIFACT-RESONANCE_INITIATED_000-2026-08-16-v1.0.json'
+      - 'data/JANUS-SET-RESONANCE-ARTIFACT-MANIFEST-2026-08-16-v1.0.json'
+      - '.github/workflows/janus-set-resonance-artifacts-v1.yml'
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Validate artifact chain and claim ceiling
+        run: |
+          python - <<'PY'
+          import json
+          paths = {
+              'p': 'data/JANUS-ARTIFACT-SET-RE-O_PARADOX_999-2026-08-16-v1.0.json',
+              'r': 'data/JANUS-ARTIFACT-RESONANCE_INITIATED_000-2026-08-16-v1.0.json',
+              'm': 'data/JANUS-SET-RESONANCE-ARTIFACT-MANIFEST-2026-08-16-v1.0.json'
+          }
+          data = {}
+          for k, p in paths.items():
+              with open(p, encoding='utf-8') as f:
+                  data[k] = json.load(f)
+          assert data['p']['artifact_id'] == 'SET-RE-O_PARADOX_999'
+          assert data['r']['artifact_id'] == 'RESONANCE_INITIATED_000'
+          assert data['r']['canonical_reading_rule']['do_not_model_as_open_question'] is True
+          assert data['m']['claim_firewall']['creative_canon'] == 'PASS'
+          assert data['m']['claim_firewall']['literal_multiverse_resonance'] == 'NOT_ESTABLISHED'
+          assert data['m']['claim_firewall']['literal_divine_message_delivery'] == 'NOT_ESTABLISHED'
+          assert data['p']['physical_prop_receipts']['set_fidget_3mf']['sha256'] == 'f5a63254d3993afbd791bdaaaebc5a1607407c8719898dc6b42803536dea3cc8'
+          assert len(data['p']['physical_prop_receipts']['printed_fidget_photo_series_sha256']) == 4
+          print('PASS: Set resonance artifact chain validated with reality/research firewall.')
+          PY
