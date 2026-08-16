@@ -1,0 +1,197 @@
+{
+  "artifact_id": "JANUS-ALIEN-REX-HISTORICAL-INTAKE-2026-08-16-v1.0",
+  "artifact_class": "privacy_safe_static_forensic_intake",
+  "created_at": "2026-08-16T21:09:00+03:00",
+  "source": {
+    "uploaded_name": "mod_alien_rex.py",
+    "sha256": "485f0a9b67cc770dd39498c8c89f52ca8e665eec649a0e0c6bc356c34089af76",
+    "bytes": 8455,
+    "lines": 181,
+    "syntax_parse": "PASS",
+    "raw_source_committed": false,
+    "execution_performed": false
+  },
+  "declared_identity": {
+    "module": "ALIEN REX",
+    "version": "2.0",
+    "subtitle": "REALITY ANCHOR",
+    "role": "Evolutionary Engineer",
+    "declared_pipeline": [
+      "SCAN",
+      "TRANSMUTE",
+      "JUDGE",
+      "MATERIALIZE"
+    ]
+  },
+  "static_surface": {
+    "imports": [
+      "asyncio",
+      "logging",
+      "os",
+      "ast",
+      "hashlib",
+      "datetime:datetime",
+      "json",
+      "json",
+      "random"
+    ],
+    "classes": [
+      "AlienRex"
+    ],
+    "sync_functions": [
+      "__init__",
+      "_load_memory",
+      "_save_memory",
+      "_verify_syntax"
+    ],
+    "async_functions": [
+      "run",
+      "scan_continuum",
+      "process_organ",
+      "_transmute",
+      "_judge"
+    ],
+    "filesystem_read": true,
+    "filesystem_write": true,
+    "recursive_walk": true,
+    "model_invocation": true,
+    "memory_side_effect": true,
+    "network_literal_present": false,
+    "subprocess_surface_present": false,
+    "hardcoded_secret_shapes_detected": 0,
+    "generated_code_written_to_live_module_directory": true
+  },
+  "verified_behavior": {
+    "target_directory": "core.root_dir/services/modules_live",
+    "scan_selects_one_random_python_candidate": true,
+    "self_generated_prefix_excluded": "alien_rex_",
+    "underscore_prefixed_files_excluded": true,
+    "full_selected_source_read_into_memory": true,
+    "change_detection_hash": "MD5(source_text)",
+    "change_identity_key": "basename_only",
+    "transmutation_receives_full_source": true,
+    "judge_receives_first_500_chars_of_original_and_generated_candidate": true,
+    "judge_acceptance_rule": "substring APPROVED in model response",
+    "materialization_destination": "target_dir/alien_rex_<basename>",
+    "pre_write_validation": "ast.parse syntax only",
+    "processed_state_file": "core.root_dir/alien_memory.json",
+    "processed_state_write": "direct_non_atomic_json_overwrite",
+    "loop_sleep_seconds": 60,
+    "comment_claims_loop_interval": "10 minutes",
+    "interval_comment_mismatch": true
+  },
+  "high_value_lineage": [
+    "Historical predecessor of proposal/evolution tooling: it separates generation from judging but still lets one model-produced verdict authorize a filesystem write.",
+    "Conceptual ancestor of later Ouroboros/Architect-gated evolution, but lacks a durable operator approval artifact.",
+    "Provides a concrete early form of generated-module provenance through ORIGIN filename headers."
+  ],
+  "concrete_findings": [
+    {
+      "id": "F1",
+      "severity": "HIGH",
+      "finding": "Selected live-module source is sent wholesale to core.face.invoke without redaction or locality enforcement.",
+      "risk": "If face routes to an external provider, source code or embedded credentials may leave the machine."
+    },
+    {
+      "id": "F2",
+      "severity": "CRITICAL",
+      "finding": "LLM-generated code can be written directly into services/modules_live after only an LLM judge verdict and syntax parse.",
+      "risk": "Syntax-valid generated code may contain dangerous imports, destructive behavior, network exfiltration, privilege changes, persistence, or semantic regressions."
+    },
+    {
+      "id": "F3",
+      "severity": "HIGH",
+      "finding": "Generation and admission are not independently trusted.",
+      "risk": "The same model-facing infrastructure participates in both transmutation and judging; no deterministic benchmark or independent verifier is required."
+    },
+    {
+      "id": "F4",
+      "severity": "HIGH",
+      "finding": "Judge prompt exposes source/generated snippets and acceptance checks only whether APPROVED appears anywhere in the response.",
+      "risk": "Prompt injection or ambiguous model output can become an approval."
+    },
+    {
+      "id": "F5",
+      "severity": "MEDIUM",
+      "finding": "Processed state is keyed only by basename.",
+      "risk": "Same-named modules in different subdirectories collide."
+    },
+    {
+      "id": "F6",
+      "severity": "HIGH",
+      "finding": "Materialized output is also named from basename and written into the target root.",
+      "risk": "Different source paths sharing a basename can overwrite the same alien_rex_<basename> artifact."
+    },
+    {
+      "id": "F7",
+      "severity": "MEDIUM",
+      "finding": "alien_memory.json is overwritten directly and non-atomically with broad exception suppression on load.",
+      "risk": "Crash/corruption can lose or silently reset change-tracking state."
+    },
+    {
+      "id": "F8",
+      "severity": "LOW",
+      "finding": "Runtime sleeps 60 seconds while comment says 10 minutes.",
+      "risk": "Actual model-call cadence can be 10x more frequent than the operator expects."
+    },
+    {
+      "id": "F9",
+      "severity": "MEDIUM",
+      "finding": "No source-size/token/cost bound exists before full-code transmutation.",
+      "risk": "Large module selection can cause unexpectedly large model requests, latency, or cost."
+    },
+    {
+      "id": "F10",
+      "severity": "MEDIUM",
+      "finding": "Existing alien_rex_<basename> is overwritten without append-only artifact identity or exact predecessor binding.",
+      "risk": "Evolution history can be lost and generated lineage cannot be deterministically replayed."
+    }
+  ],
+  "modern_repair_contract": {
+    "recommended_role": "PROPOSAL_GENERATOR_ONLY",
+    "runtime_admission": "DENY_UNTIL_HARDENED",
+    "required_gates": [
+      "No raw live source may leave the host unless an explicit provider/data-egress policy permits it.",
+      "Canonical source identity must be relative-path + exact SHA-256, never basename alone.",
+      "Generated output must be stored as immutable proposal artifact outside modules_live.",
+      "Never overwrite an existing proposal; use content-addressed identity and append-only lineage.",
+      "Static gate must inspect imports/effect surfaces in addition to syntax.",
+      "Run unit/integration/regression tests in an isolated environment before any admission.",
+      "Use deterministic or independently measured performance/correctness criteria; LLM opinion alone cannot establish superiority.",
+      "Generation verdict and admission authority must be separated.",
+      "Human/Architect or typed policy approval must be represented by a durable approval receipt.",
+      "Live activation must be a separate explicit action and default-deny.",
+      "Atomic state writes with fsync/rename or durable ledger semantics.",
+      "Bound source bytes, model tokens, frequency and concurrent requests.",
+      "Redact or block credential-shaped material before any permitted external model request.",
+      "Pin model/provider/prompt/version/hash in provenance if a model participates in proposal generation."
+    ]
+  },
+  "laws": [
+    "SYNTAX_PASS != BEHAVIORAL_SAFETY",
+    "LLM_JUDGE_APPROVED != OBJECTIVE_SUPERIORITY",
+    "GENERATION != ADMISSION",
+    "PROPOSAL != EXECUTION_PERMISSION",
+    "FULL_SOURCE_TO_MODEL != PRIVACY_SAFE_ANALYSIS",
+    "BASENAME != UNIQUE_SOURCE_IDENTITY",
+    "LIVE_DIRECTORY_WRITE != SAFE_ACTIVATION",
+    "MODEL_RESPONSE_SUBSTRING != DURABLE_APPROVAL",
+    "COMMENTED_INTERVAL != EXECUTED_INTERVAL",
+    "HISTORY_PRESERVATION_REQUIRES_APPEND_ONLY_PROPOSALS"
+  ],
+  "claim_ceiling": {
+    "performance_improvement_established": false,
+    "correctness_improvement_established": false,
+    "safety_established": false,
+    "external_model_locality_established": false,
+    "runtime_activation_authorized": false,
+    "source_writeback_authorized": false,
+    "authority_delta": 0,
+    "mass_effect_budget_delta": 0,
+    "history_rewrite": false
+  },
+  "lineage_links": {
+    "sibling_intake_pr": 155,
+    "relationship_to_current_architecture": "Historical predecessor candidate for proposal-only evolution / Ouroboros / Architect-gated admission."
+  }
+}
