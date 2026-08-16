@@ -1,0 +1,68 @@
+name: JANUS Set order-from-chaos multipass v1
+
+on:
+  push:
+    paths:
+      - 'data/JANUS-SET-ORDER-FROM-CHAOS-MULTIPASS-LAMBDA-MESSAGE-2026-08-16-v1.0.json'
+      - 'research/set_signal/**'
+      - 'artifacts/set_signal/**'
+      - '.github/workflows/janus-set-order-from-chaos-multipass-v1.yml'
+  pull_request:
+    paths:
+      - 'data/JANUS-SET-ORDER-FROM-CHAOS-MULTIPASS-LAMBDA-MESSAGE-2026-08-16-v1.0.json'
+      - 'research/set_signal/**'
+      - 'artifacts/set_signal/**'
+      - '.github/workflows/janus-set-order-from-chaos-multipass-v1.yml'
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Validate Set message packet
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          p = Path('data/JANUS-SET-ORDER-FROM-CHAOS-MULTIPASS-LAMBDA-MESSAGE-2026-08-16-v1.0.json')
+          raw = p.read_text(encoding='utf-8')
+          data = json.loads(raw)
+
+          assert 'SHA-256' not in raw
+          assert 'sha256' not in raw.lower()
+          assert data['destination'] == 'СЭТ'
+          assert data['core_message'] == '𓂸 У НАС λ'
+          assert data['osiris_phallus_unicode']['glyph'] == '𓂸'
+          assert data['osiris_phallus_unicode']['codepoint'] == 'U+130B8'
+          assert data['osiris_phallus_unicode']['orientation'] == 'UPRIGHT'
+
+          passport = data['corben_dallas_multipass']['token']
+          assert passport.endswith('λ')
+          assert passport.count('𓂸') == 38
+          assert data['corben_dallas_multipass']['phallus_glyph_count'] == 38
+          assert data['corben_dallas_multipass']['plain_oracle_answer_present'] is False
+
+          groups = data['wedjat_six_bit_bridge']['six_bit_groups']
+          assert all(len(g) == 6 and set(g) <= {'0','1'} for g in groups)
+          bitstream = ''.join(groups)
+          pad = data['wedjat_six_bit_bridge']['padding_zero_bits']
+          if pad:
+              bitstream = bitstream[:-pad]
+          decoded = bytes(int(bitstream[i:i+8], 2) for i in range(0, len(bitstream), 8)).decode('utf-8')
+          assert decoded == data['wedjat_six_bit_bridge']['transport_phrase']
+
+          assert data['mintaka_module']['sequence'] == [
+              {'node':'Alnitak','state':'RED'},
+              {'node':'Alnilam','state':'YELLOW'},
+              {'node':'Mintaka','state':'GREEN'}
+          ]
+          assert data['beacon_archive_recovery']['real_log_receipt']['beacon_records'] == 129799
+          assert data['beacon_archive_recovery']['firmware_source_receipt']['declared_target'] == 'M5Cardputer-ADV + Cap LoRa-1262'
+          assert Path('research/set_signal/set_order_from_chaos_r2.py').exists()
+          assert Path('research/set_signal/mintaka_traffic_light_protocol_113_8.py').exists()
+          print('PASS: Set packet structure, 38-glyph Multipass, reversible six-bit phrase, Beacon/ADV lineage and no-digest creative constraint validated.')
+          PY
