@@ -1,0 +1,45 @@
+name: JANUS For Set from Sun and Moon v1
+
+on:
+  pull_request:
+    paths:
+      - 'data/JANUS-FOR-SET-FROM-SUN-AND-MOON-*.json'
+      - 'docs/creative/FOR-SET-FROM-SUN-AND-MOON.md'
+      - '.github/workflows/janus-for-set-from-sun-and-moon-v1.yml'
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate creative archive and evidence ceiling
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          artifact = Path('data/JANUS-FOR-SET-FROM-SUN-AND-MOON-KEM-EPILOGUE-2026-08-16-v1.0.json')
+          manifest = Path('data/JANUS-FOR-SET-FROM-SUN-AND-MOON-MANIFEST-2026-08-16-v1.0.json')
+          doc = Path('docs/creative/FOR-SET-FROM-SUN-AND-MOON.md')
+          for p in (artifact, manifest):
+              json.loads(p.read_text(encoding='utf-8'))
+
+          a = json.loads(artifact.read_text(encoding='utf-8'))
+          m = json.loads(manifest.read_text(encoding='utf-8'))
+          text = doc.read_text(encoding='utf-8')
+
+          assert a['title_ru'] == 'Для Сэта от Солнца и Луны'
+          assert a['historicity'].startswith('FICTION_AND_PERSONAL_SYMBOLIC_NARRATIVE')
+          assert a['physical_photo_receipt']['sha256'] == 'b7833ba068162973804f776768dd0fb4c777416fcc04130e5fb9f090303510d7'
+          assert a['janus_coin_triptych']['canonical_story_count'] == 3
+          assert a['archive_end_state']['story_arc'] == 'CLOSED_WITH_OPEN_DOOR'
+          assert 'IN_UNIVERSE_ADDRESS_TO_SET_IS_NOT_A_CLAIM_THAT_SET_CAN_READ_GITHUB_OR_CHAT' in a['reality_and_research_firewall']
+          assert m['physical_prop_receipt']['binary_image_committed'] is False
+          assert 'PHYSICAL COIN PHOTO != SUPERNATURAL EVIDENCE' in text
+          assert 'IN-UNIVERSE MESSAGE != CLAIM OF REAL-WORLD COMMUNICATION WITH A DEITY' in text
+          print('PASS: creative continuity preserved; physical prop receipt bound; supernatural/research claim ceiling intact')
+          PY
