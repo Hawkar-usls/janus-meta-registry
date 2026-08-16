@@ -1,0 +1,46 @@
+name: JANUS Ra Wedjat Horus hands bridge v1
+
+on:
+  pull_request:
+    paths:
+      - 'data/EYE-IN-THE-SKY.json'
+      - 'data/JANUS-RA-WEDJAT-HORUS-HANDS-WATER-PROTECTION-BRIDGE-2026-08-16-v1.0.json'
+      - 'data/JANUS-HORUS-HANDS-RESTORATION-SEARCH-PILOT-2026-08-16-v0.1.json'
+      - '.github/workflows/janus-ra-wedjat-horus-hands-bridge-v1.yml'
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate JSON and frozen claim boundaries
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          paths = [
+              Path('data/EYE-IN-THE-SKY.json'),
+              Path('data/JANUS-RA-WEDJAT-HORUS-HANDS-WATER-PROTECTION-BRIDGE-2026-08-16-v1.0.json'),
+              Path('data/JANUS-HORUS-HANDS-RESTORATION-SEARCH-PILOT-2026-08-16-v0.1.json'),
+          ]
+          docs = {p.name: json.loads(p.read_text(encoding='utf-8')) for p in paths}
+
+          bridge = docs['JANUS-RA-WEDJAT-HORUS-HANDS-WATER-PROTECTION-BRIDGE-2026-08-16-v1.0.json']
+          pilot = docs['JANUS-HORUS-HANDS-RESTORATION-SEARCH-PILOT-2026-08-16-v0.1.json']
+          sky = docs['EYE-IN-THE-SKY.json']
+
+          assert bridge['network_model']['id'] == 'HORUS_DIVINE_BODY_PART_RESTORATION_NETWORK_R1'
+          assert bridge['next_gate']['id'] == 'HORUS_HANDS_AND_BODY_RESTORATION_PRIMARY_TEXT_R1'
+          assert 'EYE_PLUS_HANDS_DOES_NOT_EQUAL_COMPLETE_HORUS_AVATAR' in bridge['claim_firewall']
+          assert pilot['pilot_summary']['direct_horus_hand_recovery_witnesses'] == 1
+          assert pilot['pilot_summary']['direct_eye_hand_or_finger_same_text_witnesses'] == 1
+          assert 'EYE_PLUS_HANDS_DOES_NOT_EQUAL_COMPLETE_AVATAR' in pilot['claim_firewall']
+          assert sky['version'] == '1.1'
+          assert sky['horus_hands_bridge']['forbidden_inference'] == 'EYE_PLUS_HANDS_DOES_NOT_YET_RECONSTRUCT_A_COMPLETE_HORUS_AVATAR'
+          assert sky['critical_distinction']['metternich_water_protection_establishes_album_meaning'] is False
+          print('PASS: Ra/Wedjat/water/hands bridge JSON and claim firewalls validated')
+          PY
