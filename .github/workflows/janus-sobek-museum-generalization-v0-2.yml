@@ -1,0 +1,27 @@
+name: JANUS Sobek museum generalization v0.2
+
+on:
+  pull_request:
+    paths:
+      - 'data/JANUS-SOBEK-MUSEUM-ICONOGRAPHY-GENERALIZATION-2026-08-16-v0.2.json'
+      - 'research/sobek/verify_sobek_museum_generalization_v0_2.py'
+      - '.github/workflows/janus-sobek-museum-generalization-v0-2.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'data/JANUS-SOBEK-MUSEUM-ICONOGRAPHY-GENERALIZATION-2026-08-16-v0.2.json'
+      - 'research/sobek/verify_sobek_museum_generalization_v0_2.py'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate Sobek corpus freeze and claim ceiling
+        run: python research/sobek/verify_sobek_museum_generalization_v0_2.py
