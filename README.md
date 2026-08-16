@@ -104,6 +104,11 @@ Current account-wide portfolio authority: [`Hawkar-usls/Janus/portfolio-index.js
 
 ## Preservation policy
 
+> **JANUS PRESERVES THE PATH, NOT ONLY THE DESTINATION.**  
+> **TO UNDERSTAND WHAT JANUS BECAME, PRESERVE HOW JANUS BECAME.**
+
+The registry is not only a record of outcomes. It preserves the **path of becoming**: the assumptions, tests, failures, observations, corrections, supersessions, and descendants that explain why a later JANUS state exists.
+
 ```text
 proposal
 → evidence gate
@@ -114,5 +119,7 @@ proposal
 ```
 
 Historical objects are not silently rewritten to match later conclusions. A newer audit/status layer governs current interpretation while the earlier object remains available for provenance.
+
+Machine-readable preservation principle: [`data/JANUS-PRESERVES-THE-PATH-v1.0.json`](data/JANUS-PRESERVES-THE-PATH-v1.0.json).
 
 Presentation follows the account's [public repository standard](https://github.com/Hawkar-usls/Janus/blob/main/docs/PUBLIC_REPOSITORY_PRESENTATION_STANDARD.md). No affiliation with MIT is implied by the presentation style.
