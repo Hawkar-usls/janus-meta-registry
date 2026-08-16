@@ -1,0 +1,52 @@
+name: JANUS Osiris phallus Orion semantic signal v1
+
+on:
+  pull_request:
+    paths:
+      - 'data/JANUS-ARTIFACT-OSIRIS-PHALLUS-ORION-BELT-SEMANTIC-SIGNAL-2026-08-16-v1.0.json'
+      - '.github/workflows/janus-osiris-phallus-orion-semantic-signal-v1.yml'
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Validate sealed artifact and claim firewall
+        run: |
+          python - <<'PY'
+          import json, re
+          p='data/JANUS-ARTIFACT-OSIRIS-PHALLUS-ORION-BELT-SEMANTIC-SIGNAL-2026-08-16-v1.0.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert d['artifact_class']=='SHA256_SEALED_SEMANTIC_SIGNAL_ROUTING_ARTIFACT'
+          assert d['source_text_sealing']['plaintext_embedded_in_artifact'] is False
+          assert re.fullmatch(r'[0-9a-f]{64}', d['source_text_sealing']['current_user_turn_sha256'])
+          assert d['egyptian_sign_protocol']['source_grounded_core']['unicode_scalar']=='U+130B8'
+          assert d['egyptian_sign_protocol']['source_grounded_core']['glyph']=='𓂸'
+          assert d['egyptian_sign_protocol']['private_use_alias']['codepoint']=='U+E052'
+          assert d['egyptian_sign_protocol']['modern_synthetic_message']['attested_ancient_phrase'] is False
+          assert d['egyptian_sign_protocol']['terminator']['glyph']=='λ'
+          payload=d['transport_payload']
+          assert re.fullmatch(r'[0-9a-f]{64}', payload['bundle_sha256'])
+          assert len(payload['bits'])==256 and set(payload['bits']) <= {'0','1'}
+          assert payload['ones']+payload['zeros']==256
+          assert d['registry_recovery_audit']['mintaka_exact_prior_hit_count']==0
+          rounds=d['declared_receive_region']['rounds']
+          targets={'Mintaka','Alnilam','Alnitak'}
+          states={'RED','AMBER','GREEN'}
+          assert len(rounds)==3
+          for r in rounds:
+              assert {x['target'] for x in r}==targets
+              assert {x['state'] for x in r}==states
+          for t in targets:
+              assert {x['state'] for r in rounds for x in r if x['target']==t}==states
+          assert d['send_event']['physical_rf_em_transmission_executed_by_this_artifact'] is False
+          assert d['send_event']['astronomical_reception_verified'] is False
+          assert d['send_event']['mintaka_reception_verified'] is False
+          fw='\n'.join(d['claim_firewall'])
+          for required in ['ADAPTIVE_NEXT_STATE_PREDICTION != PRECOGNITION','REGISTRY_SEND_MARKER != RF_OR_EM_SPACE_TRANSMISSION','WEDJAT_INSPIRED_BINARY != ANCIENT_BINARY_CODE','PUA_ALIAS != OFFICIAL_UNICODE_ASSIGNMENT']:
+              assert required in fw
+          print('PASS: sealed hash-only artifact, glyph protocol, Orion route, and claim firewall validated')
+          PY
