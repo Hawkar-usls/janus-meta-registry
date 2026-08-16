@@ -49,15 +49,18 @@ jobs:
         run: |
           python -m py_compile research/site/janus_site_curator.py
           node --check assets/site-curator.js
-          python -m json.tool data/JANUS-SITE-CURATOR-POLICY-v1.1.json >/dev/null
+          python -m json.tool data/JANUS-SITE-CURATOR-POLICY-v1.2.json >/dev/null
           python research/site/janus_site_curator.py --output /tmp/janus-site-feed.json
           python -m json.tool /tmp/janus-site-feed.json >/dev/null
           python - <<'PY'
           import json
           from pathlib import Path
+
           feed = json.loads(Path('/tmp/janus-site-feed.json').read_text(encoding='utf-8'))
-          policy = json.loads(Path('data/JANUS-SITE-CURATOR-POLICY-v1.1.json').read_text(encoding='utf-8'))
-          assert feed['schema'] == 'janus.site.activity_feed.v1_1'
+          policy = json.loads(Path('data/JANUS-SITE-CURATOR-POLICY-v1.2.json').read_text(encoding='utf-8'))
+
+          assert feed['schema'] == 'janus.site.activity_feed.v1_2'
+          assert feed['policy'] == 'data/JANUS-SITE-CURATOR-POLICY-v1.2.json'
           assert feed['candidate_count'] > 0
           assert feed['latest_updates']
           assert feed['spotlight']
@@ -67,17 +70,37 @@ jobs:
           assert policy['ranking']['positive_result_bonus'] == 0
           assert policy['ranking']['negative_result_penalty'] == 0
           assert policy['ranking']['null_result_penalty'] == 0
+          assert policy['spotlight']['deduplicate_lineages'] is True
           assert policy['autonomy_boundary']['may_rewrite_scientific_source_objects'] is False
           assert policy['autonomy_boundary']['may_raise_claim_ceiling'] is False
 
           by_path = {item['path']: item for item in feed['latest_updates']}
-          # These are recent enough to be present in the live regression window.
           if 'data/JANUS-GENESIS-GUARDIAN-MESH-KETO-CETUS-ECOSYSTEM-SWEEP-AND-CIVIC-RESILIENCE-v1.2.json' in by_path:
               assert by_path['data/JANUS-GENESIS-GUARDIAN-MESH-KETO-CETUS-ECOSYSTEM-SWEEP-AND-CIVIC-RESILIENCE-v1.2.json']['surface'] == 'other'
-          assert all(x['path'] not in {'README.md', 'PROJECT_STATUS.json', 'data/INDEX.md'} for x in feed['spotlight'])
+
+          spotlight = feed['spotlight']
+          lineages = [x['lineage_key'] for x in spotlight]
+          assert len(lineages) == len(set(lineages)), 'duplicate lineage in Spotlight'
+          assert all(x['path'] not in {'README.md', 'PROJECT_STATUS.json', 'data/INDEX.md'} for x in spotlight)
+
+          spotlight_paths = {x['path'] for x in spotlight}
+          demihead_pair = {
+              'data/JANUS-GENESIS-GUARDIAN-MESH-KETO-CETUS-DEMIHEAD-FINAL-CI-CERTIFICATE-2026-08-16-v1.3.2.json',
+              'data/JANUS-GENESIS-GUARDIAN-MESH-KETO-CETUS-DEMIHEAD-CI-CERTIFICATE-2026-08-16-v1.3.1.json',
+          }
+          gamarjoba_pair = {
+              'data/000-GAMARJOBA-GEN_ANCVALE.json',
+              'data/GAMARJOBA-GEN-ANCVALE-v1.0.json',
+          }
+          assert len(spotlight_paths & demihead_pair) <= 1, 'DemiHead adjacent revisions both entered Spotlight'
+          assert len(spotlight_paths & gamarjoba_pair) <= 1, 'GAMARJOBA adjacent revisions both entered Spotlight'
+
+          assert 'NEWEST_LINEAGE_REPRESENTATIVE != BEST_SCIENTIFIC_RESULT' in feed['claim_ceiling']
           print('JANUS_CURATOR_DRY_RUN=PASS')
           print('JANUS_CURATOR_ROUTING_SCOPE=IDENTITY_ONLY')
           print('JANUS_CURATOR_CROSS_REFERENCE_CONTAMINATION=BLOCKED')
+          print('JANUS_CURATOR_SPOTLIGHT_LINEAGE_DEDUP=PASS')
+          print('JANUS_CURATOR_LATEST_HISTORY_PRESERVED=PASS')
           print('JANUS_CURATOR_STATUS_VALENCE=IGNORED')
           print('JANUS_CURATOR_SOURCE_REWRITE=FORBIDDEN')
           PY

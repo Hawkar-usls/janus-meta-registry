@@ -5,6 +5,10 @@ The curator ranks repository activity and explicit actionability metadata. It do
 not rank scientific truth, positive outcome valence, ideology, or agreement with
 JANUS. Surface membership is identity-first: a document mentioning another
 research family does not become a member of that family.
+
+Latest preserves chronology. Spotlight additionally deduplicates versioned objects
+by deterministic lineage identity so adjacent revisions do not consume multiple
+featured slots.
 """
 
 from __future__ import annotations
@@ -21,7 +25,7 @@ from typing import Any
 from urllib.parse import quote
 
 ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_POLICY = ROOT / "data/JANUS-SITE-CURATOR-POLICY-v1.1.json"
+DEFAULT_POLICY = ROOT / "data/JANUS-SITE-CURATOR-POLICY-v1.2.json"
 DEFAULT_OUTPUT = ROOT / "assets/site-feed.json"
 REPOSITORY = "Hawkar-usls/janus-meta-registry"
 GITHUB_BLOB = f"https://github.com/{REPOSITORY}/blob/main/"
@@ -110,6 +114,33 @@ def classify_surface(path: str, title: str, policy: dict[str, Any]) -> tuple[str
         if any(token.upper() in identity for token in rule["match_any"]):
             return rule["surface"], rule.get("site_path")
     return policy.get("routing", {}).get("unmatched_surface", "other"), None
+
+
+def lineage_key(path: str, policy: dict[str, Any] | None = None) -> str:
+    """Return a stable presentation-lineage identity for adjacent file revisions.
+
+    The normalization deliberately uses the basename only. It strips mechanical
+    revision markers (leading numeric sort prefixes, ISO dates, version suffixes,
+    and policy-declared tokens such as FINAL) while retaining the substantive
+    research-line name. This key is a presentation dedup key, not scientific
+    equivalence or provenance identity.
+    """
+    rules = (policy or {}).get("spotlight", {}).get("lineage_normalization", {})
+    name = Path(path).stem.upper().replace("_", "-")
+
+    if rules.get("strip_leading_numeric_prefix", True):
+        name = re.sub(r"^\d{1,8}[-._ ]+", "", name)
+    if rules.get("strip_iso_dates", True):
+        name = re.sub(r"(?:^|[-._ ])20\d{2}[-._ ]\d{2}[-._ ]\d{2}(?=$|[-._ ])", "-", name)
+    if rules.get("strip_version_suffixes", True):
+        # Handles v1.0, v1.3.2, V2-4 and similar terminal revision markers.
+        name = re.sub(r"[-._ ]+V\d+(?:(?:\.|-|_)\d+)*(?=$|[-._ ])", "-", name)
+
+    strip_tokens = {str(token).upper() for token in rules.get("strip_tokens", ["FINAL"])}
+    tokens = [token for token in re.split(r"[^A-Z0-9]+", name) if token]
+    tokens = [token for token in tokens if token not in strip_tokens]
+    key = "-".join(tokens)
+    return key or "UNCLASSIFIED-LINEAGE"
 
 
 def recency_points(age_days: float, policy: dict[str, Any]) -> int:
@@ -212,6 +243,7 @@ def build_feed(policy: dict[str, Any]) -> dict[str, Any]:
             "path": rel,
             "title": title,
             "surface": surface,
+            "lineage_key": lineage_key(rel, policy),
             "modified_at": modified_at,
             "commit_sha": commit_sha,
             "sha256": digest,
@@ -229,7 +261,7 @@ def build_feed(policy: dict[str, Any]) -> dict[str, Any]:
             item["summary"] = summary
         entries.append(item)
 
-    # Latest is chronology, independent of curation score.
+    # Latest is chronology and intentionally retains adjacent lineage revisions.
     entries = sorted(entries, key=lambda x: x["path"])
     entries = sorted(entries, key=lambda x: parse_dt(x["modified_at"]), reverse=True)
     latest = entries[: int(policy["outputs"]["latest_updates_count"])]
@@ -242,13 +274,20 @@ def build_feed(policy: dict[str, Any]) -> dict[str, Any]:
     spotlight: list[dict[str, Any]] = []
     family_counts: defaultdict[str, int] = defaultdict(int)
     family_cap = int(policy["outputs"]["spotlight_family_cap"])
+    deduplicate = bool(policy.get("spotlight", {}).get("deduplicate_lineages", False))
+    seen_lineages: set[str] = set()
+
     for item in scored:
         if not spotlight_eligible(item, policy):
+            continue
+        if deduplicate and item["lineage_key"] in seen_lineages:
             continue
         if family_counts[item["surface"]] >= family_cap:
             continue
         spotlight.append(item)
         family_counts[item["surface"]] += 1
+        if deduplicate:
+            seen_lineages.add(item["lineage_key"])
         if len(spotlight) >= int(policy["outputs"]["spotlight_count"]):
             break
 
@@ -259,35 +298,37 @@ def build_feed(policy: dict[str, Any]) -> dict[str, Any]:
         per_surface[surface] = [item for item in entries if item["surface"] == surface][:per_count]
 
     return {
-        "schema": "janus.site.activity_feed.v1_1",
+        "schema": "janus.site.activity_feed.v1_2",
         "status": "AUTO_GENERATED_PRESENTATION_INDEX",
         "generated_at": head_time,
         "source_commit": head_sha,
-        "policy": "data/JANUS-SITE-CURATOR-POLICY-v1.1.json",
+        "policy": "data/JANUS-SITE-CURATOR-POLICY-v1.2.json",
         "repository": REPOSITORY,
         "candidate_count": len(entries),
         "latest_updates": latest,
         "spotlight": spotlight,
         "surfaces": per_surface,
         "claim_ceiling": policy["claim_ceiling"],
-        "ranking_note": "Scores represent recent activity and explicit identity/status/gate actionability only; body cross-references do not route or score an object.",
+        "ranking_note": "Latest preserves chronology. Spotlight ranks recent explicit activity/actionability and keeps one representative per normalized lineage; neither operation measures scientific truth or evidence strength.",
     }
 
 
 def validate(feed: dict[str, Any], policy: dict[str, Any]) -> None:
-    assert feed["schema"] == "janus.site.activity_feed.v1_1"
+    assert feed["schema"] == "janus.site.activity_feed.v1_2"
     assert feed["status"] == "AUTO_GENERATED_PRESENTATION_INDEX"
     assert len(feed["latest_updates"]) <= int(policy["outputs"]["latest_updates_count"])
     assert len(feed["spotlight"]) <= int(policy["outputs"]["spotlight_count"])
     assert "FEATURED != SCIENTIFICALLY_TRUE" in feed["claim_ceiling"]
     assert "CURATION_SCORE != EVIDENCE_STRENGTH" in feed["claim_ceiling"]
     assert "MENTION != SURFACE_MEMBERSHIP" in feed["claim_ceiling"]
+    assert "NEWEST_LINEAGE_REPRESENTATIVE != BEST_SCIENTIFIC_RESULT" in feed["claim_ceiling"]
     assert policy["ranking"]["status_valence_used"] is False
     assert policy["ranking"]["positive_result_bonus"] == 0
     assert policy["ranking"]["negative_result_penalty"] == 0
     assert policy["ranking"]["null_result_penalty"] == 0
     assert policy["routing"]["full_content_mentions_may_route"] is False
     assert policy["ranking"]["full_content_mentions_may_score"] is False
+    assert policy["spotlight"]["deduplicate_lineages"] is True
     assert policy["autonomy_boundary"]["may_rewrite_scientific_source_objects"] is False
     assert policy["autonomy_boundary"]["may_raise_claim_ceiling"] is False
 
@@ -297,11 +338,19 @@ def validate(feed: dict[str, Any], policy: dict[str, Any]) -> None:
             f"routing canary failed: {canary['path']} expected {canary['expected_surface']} got {observed}"
         )
 
+    for canary in policy.get("lineage_canaries", []):
+        keys = {lineage_key(path, policy) for path in canary["paths"]}
+        if canary.get("must_share_lineage"):
+            assert len(keys) == 1, f"lineage canary failed: {canary['paths']} -> {sorted(keys)}"
+
     for item in feed["latest_updates"] + feed["spotlight"]:
         assert item["github_url"].startswith("https://github.com/Hawkar-usls/janus-meta-registry/blob/main/")
         assert len(item["sha256"]) == 64
         assert isinstance(item["score"], int)
+        assert item["lineage_key"]
 
+    spotlight_lineages = [item["lineage_key"] for item in feed["spotlight"]]
+    assert len(spotlight_lineages) == len(set(spotlight_lineages)), "Spotlight contains duplicate lineage keys"
     assert all(item["path"] != "data/INDEX.md" for item in feed["spotlight"])
     assert all(item["path"] not in {"README.md", "PROJECT_STATUS.json"} for item in feed["spotlight"])
 
@@ -327,7 +376,9 @@ def main() -> None:
     print(f"JANUS_SITE_CURATOR_CANDIDATES={feed['candidate_count']}")
     print(f"JANUS_SITE_CURATOR_LATEST={len(feed['latest_updates'])}")
     print(f"JANUS_SITE_CURATOR_SPOTLIGHT={len(feed['spotlight'])}")
+    print(f"JANUS_SITE_CURATOR_SPOTLIGHT_LINEAGES={len({x['lineage_key'] for x in feed['spotlight']})}")
     print("JANUS_SITE_CURATOR_ROUTING_SCOPE=IDENTITY_ONLY")
+    print("JANUS_SITE_CURATOR_SPOTLIGHT_LINEAGE_DEDUP=PASS")
     print("JANUS_SITE_CURATOR_POLICY_BOUNDARY=PASS")
     print("JANUS_SITE_CURATOR=PASS")
 
