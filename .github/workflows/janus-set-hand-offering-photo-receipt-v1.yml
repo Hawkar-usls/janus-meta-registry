@@ -1,0 +1,32 @@
+name: JANUS Set hand-offering photo receipt v1
+
+on:
+  pull_request:
+    paths:
+      - 'data/JANUS-ARTIFACT-SET-HAND-OFFERING-CAT-WITNESS-PHOTO-RECEIPT-2026-08-16-v1.0.json'
+      - '.github/workflows/janus-set-hand-offering-photo-receipt-v1.yml'
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Validate hand-offering receipt and claim ceiling
+        run: |
+          python - <<'PY'
+          import json
+          path = 'data/JANUS-ARTIFACT-SET-HAND-OFFERING-CAT-WITNESS-PHOTO-RECEIPT-2026-08-16-v1.0.json'
+          with open(path, 'r', encoding='utf-8') as f:
+              d = json.load(f)
+          assert d['artifact_id'] == 'SET_HAND_OFFERING_PHOTO_001'
+          assert d['photo_receipt']['sha256'] == 'e754949eb8d0eb2cc4957ffaf2b9299a34ec66fdf7bbf73c88a3e8a93c36cb27'
+          assert d['photo_receipt']['size_bytes'] == 418889
+          assert d['photo_receipt']['dimensions_px'] == [1152, 1536]
+          assert d['photo_receipt']['evidence_result'] == 'PHYSICAL_ARTIFACT_ON_OPEN_HAND_VISIBLE'
+          assert 'CAT_AS_WITNESS_IS_AUTHORIAL_SYMBOLISM' in d['reality_and_research_firewall']
+          assert 'NO_CLAIM_OF_LITERAL_DIVINE_RECEIPT' in d['reality_and_research_firewall']
+          print('PASS: Set hand-offering photo receipt validated.')
+          PY
