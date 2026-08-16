@@ -1,0 +1,67 @@
+name: JANUS iNaiHR semantic network entry
+
+on:
+  pull_request:
+    paths:
+      - 'assets/site-curator.js'
+      - 'research/site/apply_inaihr_semantic_entry_v3.py'
+      - '.github/workflows/inaihr-semantic-entry-v3.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'assets/site-curator.js'
+      - 'research/site/apply_inaihr_semantic_entry_v3.py'
+      - '.github/workflows/inaihr-semantic-entry-v3.yml'
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: janus-inaihr-semantic-entry-v3
+  cancel-in-progress: false
+
+jobs:
+  validate-or-apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply deterministic migration in workspace
+        run: python research/site/apply_inaihr_semantic_entry_v3.py
+      - name: Validate semantic network entry
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          s=Path('assets/site-curator.js').read_text(encoding='utf-8')
+          assert "const INAIHR_URL = 'https://hawkar-usls.github.io/iNaiHR/janus.html';" in s
+          assert "janus-site-language-v1" in s
+          assert "semantic SYNTH view of JANUS Meta Registry" in s
+          assert "https://hawkar-usls.github.io/Hrain/janus.html" in s
+          print('INAIHR_SEMANTIC_ENTRY=PASS')
+          print('SHARED_LANGUAGE_KEY=PASS')
+          PY
+      - name: Commit migrated site curator on main
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          if git diff --quiet -- assets/site-curator.js; then
+            echo 'No migration diff.'
+          else
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add assets/site-curator.js
+            git commit -m 'feat(site): route iNaiHR network entry to semantic Registry Mode'
+            git push
+          fi
+      - name: Request Pages rebuild
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          curl --fail-with-body -sS -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/pages/builds" >/tmp/pages.json
+          cat /tmp/pages.json
