@@ -1,0 +1,66 @@
+{
+  "artifact_id": "JANUS-DEMIHEAD-BICAMERAL-TRANSPORT-HOLDOUT-v1.0",
+  "document_class": "architecture_validation_contract",
+  "date": "2026-08-16",
+  "status": "MERGED_AND_POST_MERGE_VERIFIED_REFERENCE_GATE",
+  "purpose": "Validate request-bound read-only transport between HRain LEFT_HRAIN, iNaiHR RIGHT_INAIHR and DemiHead before admitting any reverse mutation path.",
+  "gap_repaired": {
+    "name": "REQUEST_SESSION_FRESHNESS_BINDING_MISSING",
+    "repair": "Both hemisphere sidecars require and exactly echo request_id; DemiHead accepts only the active request id.",
+    "law": "REQUEST_ID_ECHO != AUTHENTICATION"
+  },
+  "frozen_dependencies": {
+    "DemiHead_base": "5f6fb1fa40558659beba25837f0b059dfdccdcda",
+    "HRain_request_bound_merge": "c1c4e61e18e1adf15ed1d43da51129b262119985",
+    "iNaiHR_request_bound_merge": "a79cc9affa733bf3d2d6b0ed4815fccf938f3292"
+  },
+  "holdout": {
+    "freeze_sha256": "d33077fbd0d244bf0ae6d678894bdc9a8eddcf0d779ce11b85e39eeff6143883",
+    "frozen_before_first_execution": true,
+    "case_count": 18,
+    "cases_passed": 18,
+    "cases_failed": 0,
+    "timeout_ms_in_synthetic_timeline": 2000,
+    "quantile_method": "nearest_rank",
+    "accepted_synthetic_event_count": 32,
+    "synthetic_event_quantiles_ms": {"p50": 27, "p95": 41, "p99": 43},
+    "latency_semantics": "FROZEN_SYNTHETIC_EVENT_TRACE_NOT_WALL_CLOCK"
+  },
+  "DemiHead_receipt": {
+    "pr": 14,
+    "tested_head": "30a56c4c00238fd729bb4968028b3c2e23e05f10",
+    "push_run": 31939961443,
+    "pull_request_run": 31940022210,
+    "merge": "e713133a3eda7941a0d96804e80e3495482bcb76",
+    "post_merge_run": 31940057297,
+    "all_conclusions": "SUCCESS"
+  },
+  "verified_properties": {
+    "freeze_hash_checked_by_python_and_node": true,
+    "exact_frozen_sidecars_executed_in_ci": true,
+    "stale_reply_rejected": true,
+    "late_reply_rejected": true,
+    "duplicate_reply_rejected": true,
+    "wrong_origin_rejected": true,
+    "wrong_frame_rejected": true,
+    "invalid_packet_refused": true,
+    "provenance_preserved": true,
+    "single_hemisphere_degrades_to_hold": true,
+    "direct_cross_hemisphere_mutation": false,
+    "automatic_graph_merge": false,
+    "external_effect_permitted": false,
+    "authority_delta": 0,
+    "mass_effect_budget_delta": 0
+  },
+  "claim_ceiling": {
+    "real_browser_network_latency_measured": false,
+    "production_readiness_established": false,
+    "request_id_is_authentication": false,
+    "independent_evidence_roots_established": false,
+    "truth_from_agreement_established": false,
+    "biological_equivalence_established": false,
+    "consciousness_or_personhood_established": false,
+    "authority_delta": 0,
+    "mass_effect_budget_delta": 0
+  }
+}
