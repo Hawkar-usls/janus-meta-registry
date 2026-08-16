@@ -1,0 +1,20 @@
+{
+  "artifact_id": "JANUS-DEMIHEAD-BICAMERAL-TRANSPORT-HOLDOUT-v1.0",
+  "document_class": "architecture_validation_contract",
+  "date": "2026-08-16",
+  "status": "MERGED_AND_POST_MERGE_VERIFIED_REFERENCE_GATE",
+  "purpose": "Validate request-bound, read-only transport between HRain LEFT_HRAIN, iNaiHR RIGHT_INAIHR and DemiHead before any reverse-channel mutation proposal is introduced.",
+  "architecture_metaphor": {"left":"Hawkar-usls/Hrain :: LEFT_HRAIN :: STRUCTURAL_CONTEXT","right":"Hawkar-usls/iNaiHR :: RIGHT_INAIHR :: ASSOCIATIVE_CONTEXT","center":"Hawkar-usls/Demi_Head :: request binder / packet validator / comparison arbiter / HOLD controller","neuroscience_claim":false},
+  "gap_found_before_holdout": {"name":"REQUEST_SESSION_FRESHNESS_BINDING_MISSING","description":"Original v1 checked origin and iframe source but did not bind replies to a request cycle.","repair":"Both sidecars require and exactly echo request_id; DemiHead accepts only the active request id.","law":"REQUEST_ID_ECHO != AUTHENTICATION"},
+  "frozen_dependencies": {"DemiHead_base":"5f6fb1fa40558659beba25837f0b059dfdccdcda","HRain_request_bound_merge":"c1c4e61e18e1adf15ed1d43da51129b262119985","iNaiHR_request_bound_merge":"a79cc9affa733bf3d2d6b0ed4815fccf938f3292"},
+  "hemisphere_request_binding_receipts": {
+    "HRain":{"pr":8,"tested_head":"94a0b79daab7fb4fcc04265edc686b6280f60425","pr_run":31939531352,"merge":"c1c4e61e18e1adf15ed1d43da51129b262119985","post_merge_run":31939592397,"conclusion":"SUCCESS"},
+    "iNaiHR":{"pr":6,"tested_head":"09342d3fecca1265ced261fe277f2748c64256bc","pr_run":31939541052,"merge":"a79cc9affa733bf3d2d6b0ed4815fccf938f3292","post_merge_run":31939601044,"conclusion":"SUCCESS"}
+  },
+  "holdout": {"freeze_sha256":"d33077fbd0d244bf0ae6d678894bdc9a8eddcf0d779ce11b85e39eeff6143883","frozen_before_first_execution":true,"case_count":18,"timeout_ms_in_synthetic_timeline":2000,"quantile_method":"nearest_rank","latency_semantics":"FROZEN_SYNTHETIC_EVENT_TRACE_NOT_WALL_CLOCK","accepted_synthetic_event_count":32,"synthetic_event_quantiles_ms":{"p50":27,"p95":41,"p99":43}},
+  "DemiHead_receipt": {"pr":14,"tested_head":"30a56c4c00238fd729bb4968028b3c2e23e05f10","push_run":31939961443,"push_conclusion":"SUCCESS","pull_request_run":31940022210,"pull_request_conclusion":"SUCCESS","merge":"e713133a3eda7941a0d96804e80e3495482bcb76","post_merge_run":31940057297,"post_merge_conclusion":"SUCCESS"},
+  "verified_properties": {"freeze_hash_checked_by_python_and_node":true,"frozen_sidecar_code_checked_out_at_exact_commits":true,"request_id_exact_echo":true,"stale_reply_rejected":true,"late_reply_rejected":true,"duplicate_reply_rejected":true,"wrong_origin_rejected":true,"wrong_frame_rejected":true,"invalid_packet_refused":true,"provenance_preserved":true,"single_hemisphere_degrades_to_hold":true,"direct_cross_hemisphere_mutation":false,"automatic_graph_merge":false,"external_effect_permitted":false,"authority_delta":0,"mass_effect_budget_delta":0},
+  "laws": ["HEMISPHERE_METAPHOR != NEUROSCIENCE_CLAIM","BOTH_HEMISPHERES_AGREE != TRUTH","HEMISPHERE_COUNT != AUTHORITY","SOFTWARE_SURFACE_COUNT != INDEPENDENT_EVIDENCE_ROOT_COUNT","ASSOCIATION != EVIDENCE","STRUCTURE != COMMAND","REQUEST_ID_ECHO != AUTHENTICATION","FROZEN_SYNTHETIC_EVENT_TRACE != REAL_BROWSER_NETWORK_LATENCY","PACKET_TRANSFER = READ_ONLY","DIRECT_CROSS_HEMISPHERE_MUTATION = FORBIDDEN","EXTERNAL_EFFECT_PERMITTED = false","AUTHORITY_DELTA = 0","MASS_EFFECT_BUDGET_DELTA = 0"],
+  "claim_ceiling": {"real_browser_network_latency_measured":false,"production_readiness_established":false,"request_id_is_authentication":false,"independent_evidence_roots_established":false,"truth_from_agreement_established":false,"biological_equivalence_established":false,"consciousness_or_personhood_established":false,"measured_cognitive_gain_established":false,"authority_delta":0,"mass_effect_budget_delta":0},
+  "next_gate": "NON_MUTATING_PROPOSAL -> explicit HUMAN_ACCEPT event -> hemisphere-owned LOCAL_MUTATION, with proposal-hash binding and no direct DemiHead write path."
+}
