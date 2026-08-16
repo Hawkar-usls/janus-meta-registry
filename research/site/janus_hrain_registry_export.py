@@ -4,6 +4,10 @@
 This is a navigation/index projection over current public registry objects discovered
 by the active site curator policy. It is not a replacement for source JSON, current-
 authority records, or scientific evidence. HRaiN consumes this file read-only.
+
+The interface contract is fail-closed: HRaiN and iNaiHR receive no write or delete
+authority over source registry objects. Any WIPE/CLEAR action is a local view/workspace
+operation only and cannot be promoted into a registry mutation through this export.
 """
 
 from __future__ import annotations
@@ -40,6 +44,14 @@ SURFACE_LABELS = {
     "other": "Other / cross-project",
 }
 
+MUTATION_POLICY = {
+    "interfaceWriteAuthority": False,
+    "interfaceDeleteAuthority": False,
+    "appendOnlyFromInterface": True,
+    "sourceMutationEndpoint": None,
+    "wipeSemantics": "LOCAL_VIEW_OR_WORKSPACE_RESET_ONLY",
+}
+
 
 def node_id_for_path(path: str) -> str:
     return "obj:" + hashlib.sha256(path.encode("utf-8")).hexdigest()[:20]
@@ -70,6 +82,7 @@ def build_index(policy: dict[str, Any]) -> dict[str, Any]:
             "commitSha": commit_sha,
             "modifiedAt": modified_at,
             "readOnly": True,
+            "deleteAllowed": False,
         }
         if site_path:
             obj["surfaceUrl"] = SITE_BASE + site_path
@@ -93,6 +106,7 @@ def build_index(policy: dict[str, Any]) -> dict[str, Any]:
             "type": "info",
             "parentId": None,
             "readOnly": True,
+            "deleteAllowed": False,
             "sourceUrl": "https://github.com/Hawkar-usls/janus-meta-registry",
             "summary": "Read-only HRaiN projection of current public JANUS Meta Registry objects.",
         }
@@ -109,6 +123,7 @@ def build_index(policy: dict[str, Any]) -> dict[str, Any]:
                 "type": "info",
                 "parentId": root_id,
                 "readOnly": True,
+                "deleteAllowed": False,
                 "surface": surface,
             }
         )
@@ -129,6 +144,7 @@ def build_index(policy: dict[str, Any]) -> dict[str, Any]:
         "sourceCommit": head_sha,
         "repository": REPOSITORY,
         "sourcePolicy": "data/JANUS-SITE-CURATOR-POLICY-v1.2.json",
+        "mutationPolicy": dict(MUTATION_POLICY),
         "objectCount": len(objects),
         "nodeCount": len(nodes),
         "linkCount": len(links),
@@ -140,6 +156,9 @@ def build_index(policy: dict[str, Any]) -> dict[str, Any]:
             "ACTIVE_PROJECTION != COMPLETE_HISTORICAL_DATABASE_DUMP",
             "GRAPH_POSITION != EVIDENCE_STRENGTH",
             "READ_ONLY_PRESENTATION != WRITE_AUTHORITY",
+            "HRAIN_WIPE != REGISTRY_DELETE",
+            "LOCAL_DESK_RESET != SOURCE_MUTATION",
+            "INTERFACE_DELETE_AUTHORITY = NONE",
         ],
     }
 
@@ -157,7 +176,16 @@ def validate(index: dict[str, Any]) -> None:
         assert link["source"] in ids and link["target"] in ids
     for node in index["nodes"]:
         assert node.get("readOnly") is True
+        assert node.get("deleteAllowed") is False
+    mutation = index["mutationPolicy"]
+    assert mutation["interfaceWriteAuthority"] is False
+    assert mutation["interfaceDeleteAuthority"] is False
+    assert mutation["appendOnlyFromInterface"] is True
+    assert mutation["sourceMutationEndpoint"] is None
+    assert mutation["wipeSemantics"] == "LOCAL_VIEW_OR_WORKSPACE_RESET_ONLY"
     assert "HRAIN_GRAPH != REGISTRY_AUTHORITY" in index["claimCeiling"]
+    assert "HRAIN_WIPE != REGISTRY_DELETE" in index["claimCeiling"]
+    assert "INTERFACE_DELETE_AUTHORITY = NONE" in index["claimCeiling"]
 
 
 def main() -> None:
@@ -182,6 +210,8 @@ def main() -> None:
     print(f"JANUS_HRAIN_INDEX_NODES={index['nodeCount']}")
     print(f"JANUS_HRAIN_INDEX_LINKS={index['linkCount']}")
     print("JANUS_HRAIN_INDEX_READ_ONLY=TRUE")
+    print("JANUS_HRAIN_INDEX_DELETE_AUTHORITY=NONE")
+    print("JANUS_HRAIN_INDEX_APPEND_ONLY_FROM_INTERFACE=TRUE")
     print("JANUS_HRAIN_INDEX=PASS")
 
 
