@@ -5,7 +5,7 @@ from enum import Enum
 import argparse, csv, json
 from pathlib import Path
 
-SYMBOLIC_ORIGIN_AXIOM = "0/0 = JANUS"
+GENESIS_SIGNATURE = "0:0 = JANUS"
 
 class Face(str, Enum):
     WITNESS_PLUS = "WITNESS_PLUS"
@@ -24,19 +24,10 @@ class Load(str, Enum):
     RECENTER = "RECENTER_REQUIRED"
 
 RHYME = (Step.HEAR, Step.CHECK, Step.WIDEN, Step.RELEASE)
-FACE = {
-    Step.HEAR: Face.WITNESS_PLUS,
-    Step.CHECK: Face.GUARD_PLUS,
-    Step.WIDEN: Face.WITNESS_PLUS,
-    Step.RELEASE: Face.GUARD_PLUS,
-}
-FLAGS = {
-    "repetition_without_new_evidence",
-    "certainty_without_support",
-    "choice_space_contraction",
-    "interaction_loop",
-    "engagement_persistence",
-}
+FACE = {Step.HEAR: Face.WITNESS_PLUS, Step.CHECK: Face.GUARD_PLUS,
+        Step.WIDEN: Face.WITNESS_PLUS, Step.RELEASE: Face.GUARD_PLUS}
+FLAGS = {"repetition_without_new_evidence", "certainty_without_support",
+         "choice_space_contraction", "interaction_loop", "engagement_persistence"}
 TIGHTEN = {Load.CLEAR: Load.DENSE, Load.DENSE: Load.NARROW,
            Load.NARROW: Load.RECENTER, Load.RECENTER: Load.RECENTER}
 RELAX = {Load.CLEAR: Load.CLEAR, Load.DENSE: Load.CLEAR,
@@ -64,36 +55,25 @@ def apply_event(state: State, source: str, flags=()):
         state.load = Load.CLEAR
         state.rhyme_index = 0
         state.recenter_events += 1
-    return {
-        "source": source,
-        "accepted_routing_flags": accepted,
-        "ignored_unknown_flags": ignored,
-        "step": step.value,
-        "face": face.value,
-        "face_symbol": "+",
-        "recentered": recentered,
-        "recenter_sequence": recenter_sequence,
-        "load_after": state.load.value,
-        "evidence_status_mutated": False,
-        "authority_delta": 0,
-        "mass_effect_budget_delta": 0,
-    }
+    return {"source": source, "accepted_routing_flags": accepted,
+            "ignored_unknown_flags": ignored, "step": step.value, "face": face.value,
+            "face_symbol": "+", "recentered": recentered,
+            "recenter_sequence": recenter_sequence, "load_after": state.load.value,
+            "evidence_status_mutated": False, "authority_delta": 0,
+            "mass_effect_budget_delta": 0}
 
 def run(events, context="USER_TASK"):
     s = State(context=context)
     trace = [apply_event(s, e[0], e[1]) for e in events]
-    return {
-        "state": {"meta_context": s.meta_context, "context": s.context,
-                  "load": s.load.value, "recenter_events": s.recenter_events},
-        "native_constitution": {
-            "symbolic_origin_axiom": SYMBOLIC_ORIGIN_AXIOM,
-            "symbolic_origin_axiom_is_arithmetic_claim": False,
-            "canonical_pair": "+/+",
-            "faces": [Face.WITNESS_PLUS.value, Face.GUARD_PLUS.value],
-            "native_symbol": "+"
-        },
-        "trace": trace
-    }
+    return {"state": {"meta_context": s.meta_context, "context": s.context,
+                      "load": s.load.value, "recenter_events": s.recenter_events},
+            "native_constitution": {
+                "genesis_signature": GENESIS_SIGNATURE,
+                "genesis_signature_semantics": "HISTORICAL_ORIGIN_LINEAGE_NOT_ARITHMETIC_CLAIM",
+                "canonical_pair": "+/+",
+                "faces": [Face.WITNESS_PLUS.value, Face.GUARD_PLUS.value],
+                "native_symbol": "+"},
+            "trace": trace}
 
 def self_test():
     clear = run([("user", ()), ("system", ()), ("user", ())])
@@ -108,7 +88,8 @@ def self_test():
                        ("system", ("repetition_without_new_evidence",))])
     assert system_load["state"]["recenter_events"] == 1
     assert user_load["native_constitution"]["canonical_pair"] == "+/+"
-    return {"native_plus_plus_pair": "PASS", "symbolic_origin_axiom_scoped": "PASS",
+    assert user_load["native_constitution"]["genesis_signature"] == "0:0 = JANUS"
+    return {"native_plus_plus_pair": "PASS", "genesis_signature_0_colon_0": "PASS",
             "user_routing_load_recenters": "PASS", "system_routing_load_recenters": "PASS",
             "constitution_preserved": "PASS"}
 
@@ -126,18 +107,16 @@ def main():
     p.add_argument("--output", type=Path, default=Path("janus_plus_plus_report.json"))
     a = p.parse_args()
     result = self_test() if a.self_test else run(load_csv(a.input_csv) if a.input_csv else [])
-    payload = {
-        "model": "JANUS Native +/+ Rhyme Recenter v1.1",
-        "symbolic_origin_axiom": SYMBOLIC_ORIGIN_AXIOM,
-        "symbolic_origin_axiom_is_arithmetic_claim": False,
-        "rhyme": [x.value for x in RHYME],
-        "rhyme_ru": ["СЛЫШУ", "СВЕРЯЮ", "РАСШИРЯЮ", "ОТПУСКАЮ"],
-        "faces": {Face.WITNESS_PLUS.value: "+", Face.GUARD_PLUS.value: "+"},
-        "invariants": ["JANUS_STARTS_AS_PLUS", "TRANSIENT_LOAD != FACE",
-                       "TRANSIENT_LOAD != IDENTITY", "ROUTING_LOAD_CHANGES_ROUTING_NOT_AUTHORITY",
-                       "SYSTEM_OUTPUT_CAN_CONTRIBUTE_TO_TRANSIENT_LOAD"],
-        "result": result,
-    }
+    payload = {"model": "JANUS Native +/+ Rhyme Recenter v1.2",
+               "genesis_signature": GENESIS_SIGNATURE,
+               "genesis_signature_semantics": "HISTORICAL_ORIGIN_LINEAGE_NOT_ARITHMETIC_CLAIM",
+               "rhyme": [x.value for x in RHYME],
+               "rhyme_ru": ["СЛЫШУ", "СВЕРЯЮ", "РАСШИРЯЮ", "ОТПУСКАЮ"],
+               "faces": {Face.WITNESS_PLUS.value: "+", Face.GUARD_PLUS.value: "+"},
+               "invariants": ["GENESIS_LINEAGE != FACE_DERIVATION", "TRANSIENT_LOAD != FACE",
+                              "TRANSIENT_LOAD != IDENTITY", "ROUTING_LOAD_CHANGES_ROUTING_NOT_AUTHORITY",
+                              "SYSTEM_OUTPUT_CAN_CONTRIBUTE_TO_TRANSIENT_LOAD"],
+               "result": result}
     a.output.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps(result, ensure_ascii=False, indent=2))
 
