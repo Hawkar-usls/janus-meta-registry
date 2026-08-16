@@ -1,0 +1,34 @@
+name: JANUS Osiris phallus Brooklyn receipt v0.2
+
+on:
+  pull_request:
+    paths:
+      - 'data/JANUS-OSIRIS-PHALLUS-BROOKLYN-RECEIPT-2026-08-16-v0.2.json'
+      - '.github/workflows/janus-osiris-phallus-brooklyn-receipt-v0-2.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate Brooklyn receipt and claim ceiling
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('data/JANUS-OSIRIS-PHALLUS-BROOKLYN-RECEIPT-2026-08-16-v0.2.json')
+          d = json.loads(p.read_text(encoding='utf-8'))
+          assert d['object_identity_receipt']['identity_gate'] == 'PASS'
+          assert d['mendes_textual_receipt']['textual_gate'] == 'PASS_VIA_SCHOLARLY_EDITION_QUOTATION'
+          assert d['gate_state']['DIRECT_BROOKLYN_MUSEUM_FACSIMILE_OF_RELEVANT_LINES'] == 'OPEN'
+          assert d['gate_state']['BIOLOGICAL_RELIC'] == 'NOT_ESTABLISHED'
+          assert 'UNKNOWN_FINDSPOT_DOES_NOT_BECOME_MENDES_FINDSPOT' in d['claim_firewall']
+          print('PASS: Brooklyn object/text receipt bound without biological-relic overclaim.')
+          PY
