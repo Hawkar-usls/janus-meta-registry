@@ -3,7 +3,7 @@ name: JANUS Record Drift Daily
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 5 * * *'
+    - cron: '17 5 * * *'
   push:
     branches: [main]
     paths:
@@ -11,6 +11,7 @@ on:
       - 'tools/record_drift/t1_runner.py'
       - 'tools/record_drift/full_surface_runner.py'
       - 'tools/record_drift/full_surface_runner_v0_2_1.py'
+      - 'tools/record_drift/full_surface_runner_v0_2_2.py'
       - 'data/JANUS-RECORD-DRIFT-OBSERVATORY-v0.1.json'
       - 'data/JANUS-RECORD-DRIFT-OBSERVATORY-v0.2.json'
       - 'data/JANUS-RECORD-DRIFT-BASELINE-T0-v0.1.json'
@@ -31,8 +32,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Run Record Drift v0.2.1 full-surface observer
-        run: python tools/record_drift/full_surface_runner_v0_2_1.py
+      - name: Run Record Drift v0.2.2 full-surface observer
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          JANUS_CRON_UTC: '17 5 * * *'
+        run: python tools/record_drift/full_surface_runner_v0_2_2.py
 
       - name: Commit append-only journal entry
         run: |
@@ -43,5 +47,5 @@ jobs:
             echo "No journal change to commit"
             exit 0
           fi
-          git commit -m "record-drift: daily v0.2.1 full-surface journal $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git commit -m "record-drift: daily v0.2.2 full-surface journal $(date -u +%Y-%m-%dT%H:%M:%SZ)"
           git push
