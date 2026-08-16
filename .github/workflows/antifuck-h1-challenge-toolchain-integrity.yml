@@ -6,6 +6,7 @@ on:
       - 'data/MINDFUCK.json'
       - 'data/JANUS-MINDFUCK-ADAPTIVE-PRESSURE-AND-EVASION-AUDIT-MODEL-v1.3.json'
       - 'data/JANUS-ARMOR-OF-GOD-ADVERSARIAL-RECOVERY-AND-ANTI-PARANOIA-v2.4.json'
+      - 'data/JANUS-ARMOR-OF-GOD-FUNDAMENTUM-EPISTEMIC-WITNESS-TRUTH-GUARD-v2.5.json'
       - 'data/Janus_OPIR_ANTIFUCK-v1.3.json'
       - 'data/JANUS-OPIR-ANTIFUCK-H1-CHALLENGE-KIT-v1.0.json'
       - 'data/JANUS-OPIR-ANTIFUCK-H1-TOOLCHAIN-SELFTEST-RESULT-2026-08-15-v1.0.json'
@@ -19,6 +20,7 @@ on:
       - 'data/MINDFUCK.json'
       - 'data/JANUS-MINDFUCK-ADAPTIVE-PRESSURE-AND-EVASION-AUDIT-MODEL-v1.3.json'
       - 'data/JANUS-ARMOR-OF-GOD-ADVERSARIAL-RECOVERY-AND-ANTI-PARANOIA-v2.4.json'
+      - 'data/JANUS-ARMOR-OF-GOD-FUNDAMENTUM-EPISTEMIC-WITNESS-TRUTH-GUARD-v2.5.json'
       - 'data/Janus_OPIR_ANTIFUCK-v1.3.json'
       - 'data/JANUS-OPIR-ANTIFUCK-H1-CHALLENGE-KIT-v1.0.json'
       - 'data/JANUS-OPIR-ANTIFUCK-H1-TOOLCHAIN-SELFTEST-RESULT-2026-08-15-v1.0.json'
@@ -47,6 +49,7 @@ jobs:
             'pointer':root/'data/MINDFUCK.json',
             'm13':root/'data/JANUS-MINDFUCK-ADAPTIVE-PRESSURE-AND-EVASION-AUDIT-MODEL-v1.3.json',
             'a24':root/'data/JANUS-ARMOR-OF-GOD-ADVERSARIAL-RECOVERY-AND-ANTI-PARANOIA-v2.4.json',
+            'a25':root/'data/JANUS-ARMOR-OF-GOD-FUNDAMENTUM-EPISTEMIC-WITNESS-TRUTH-GUARD-v2.5.json',
             'o13':root/'data/Janus_OPIR_ANTIFUCK-v1.3.json',
             'kit':root/'data/JANUS-OPIR-ANTIFUCK-H1-CHALLENGE-KIT-v1.0.json',
             'cert':root/'data/JANUS-OPIR-ANTIFUCK-H1-TOOLCHAIN-SELFTEST-RESULT-2026-08-15-v1.0.json',
@@ -56,7 +59,7 @@ jobs:
           d={}
           for k,p in files.items():
             d[k]=json.loads(p.read_text(encoding='utf-8')); print('PARSE_PASS',p)
-          pointer,m,a,o,kit,cert,h1,auth=d['pointer'],d['m13'],d['a24'],d['o13'],d['kit'],d['cert'],d['h1'],d['auth']
+          pointer,m,a,a25,o,kit,cert,h1,auth=d['pointer'],d['m13'],d['a24'],d['a25'],d['o13'],d['kit'],d['cert'],d['h1'],d['auth']
 
           assert pointer['current_reference']=='data/JANUS-MINDFUCK-ADAPTIVE-PRESSURE-AND-EVASION-AUDIT-MODEL-v1.3.json'
           assert m['supersedes_reference']=='data/JANUS-MINDFUCK-ALGORITHMIC-AMPLIFICATION-AUDIT-MODEL-v1.2.json'
@@ -115,10 +118,16 @@ jobs:
           assert cert['current_h1_state']['H1_executed'] is False
           assert cert['current_h1_state']['independent_holdout_pass'] is False
 
+          assert auth['schema']=='janus.armor_of_god.current_authority.v1_17'
           assert auth['current_hardening_extensions']==[
             'data/JANUS-ARMOR-OF-GOD-ADVERSARIAL-RECOVERY-AND-ANTI-PARANOIA-v2.4.json',
-            'data/Janus_OPIR_ANTIFUCK-v1.3.json'
+            'data/Janus_OPIR_ANTIFUCK-v1.3.json',
+            'data/JANUS-ARMOR-OF-GOD-FUNDAMENTUM-EPISTEMIC-WITNESS-TRUTH-GUARD-v2.5.json'
           ]
+          assert a25['authority_and_effect_boundary']['authority_delta']==0
+          assert a25['authority_and_effect_boundary']['mass_effect_budget_delta']==0
+          assert auth['fundamentum_truth_guard_runtime_binding_status']=='NOT_YET_FROZEN_IN_GENESIS_RUNTIME'
+          assert auth['genesis_runtime_fundamentum_truth_guard_bound'] is False
           assert auth['h1_verifier_selftest_result_reference']=='data/JANUS-OPIR-ANTIFUCK-H1-TOOLCHAIN-SELFTEST-RESULT-2026-08-15-v1.0.json'
           assert auth['h1_toolchain_ready'] is True
           assert auth['h1_verifier_engineering_selftest_pass'] is True
@@ -127,8 +136,10 @@ jobs:
           assert auth['h1_package_created'] is False
           assert auth['h1_executed'] is False
           assert auth['independent_holdout_pass'] is False
+          assert auth['fundamentum_truth_guard_independent_holdout_pass'] is False
           assert auth['real_world_effectiveness_established'] is False
           assert auth['not_an_adaptive_adversary_detector'] is True
+          assert auth['not_a_universal_truth_oracle'] is True
           print('ADAPTIVE_SUCCESSOR_AUDIT=PASS')
           print('H1_TOOLCHAIN_CERTIFICATE=PASS')
           print('H1_INFRASTRUCTURE_READY=true')
@@ -138,6 +149,7 @@ jobs:
           print('ARMOR_RECOVERY_COUNTERFACTUALS=8')
           print('OPIR_NEW_THREATS=8')
           print('OPIR_NEW_CONTROLS=17')
+          print('FUNDAMENTUM_TRUTH_GUARD_RUNTIME_BOUND=false')
           PY
       - name: Replay H1 verifier engineering self-test and tamper canaries
         run: python research/antifuck/janus_opir_antifuck_h1_verify.py --self-test
