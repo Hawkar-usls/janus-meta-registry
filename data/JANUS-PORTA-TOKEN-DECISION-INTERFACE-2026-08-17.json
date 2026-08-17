@@ -1,0 +1,179 @@
+{
+  "schema_version": "1.0",
+  "record_id": "JANUS-PORTA-TOKEN-DECISION-INTERFACE-2026-08-17",
+  "document_class": "Physical_Token_Interface_And_Portal_Control_Concept",
+  "registry": "Hawkar-usls/janus-meta-registry",
+  "created_local": "2026-08-17T15:06:00+03:00",
+  "status": "CANONICAL_CONCEPT_REGISTERED",
+  "canonical_name": "JANUS PORTA TOKEN",
+  "short_name": "PORTA_TOKEN",
+  "parent_architecture": "JANUS GATE — CROSSROADS OCULUS PORTAL",
+  "concept_formula": "TOKEN -> DECISION -> OCULUS -> LIGHT -> THRESHOLD_STATE",
+  "origin": {
+    "observation": "A physical Janus coin already exists as a small printable artifact with two semantically distinct faces: Janus and the Gate/INITIUM-REDITUS side.",
+    "cultural_inspiration": "The user explicitly connected the tactile coin ritual to the recurring coin-manipulation motif associated with Connor RK800 in Detroit: Become Human.",
+    "design_transformation": "The reference is not copied as a game prop. The Janus coin is reinterpreted as a functional physical token for the Janus Gate system."
+  },
+  "semantic_roles": {
+    "janus_face": {
+      "role": "identity_and_duality",
+      "meaning": "Two-faced Janus represents bidirectionality, before/after, entry/return and the ability to read a threshold in both directions."
+    },
+    "gate_face": {
+      "role": "command_surface",
+      "meaning": "The gate imagery represents explicit passage-state selection rather than decorative reverse-side art."
+    },
+    "coin_as_object": {
+      "role": "portable_key",
+      "meaning": "A small durable physical object carries intent into the larger architectural system without requiring the token itself to contain complex electronics."
+    }
+  },
+  "canonical_commands": {
+    "INITIUM": {
+      "meaning": "ENTER / OPEN / BEGIN",
+      "target_state": "PORTAL_OPEN_SEQUENCE"
+    },
+    "REDITUS": {
+      "meaning": "RETURN / CLOSE / RESET",
+      "target_state": "PORTAL_RETURN_SEQUENCE"
+    }
+  },
+  "technical_interface": {
+    "baseline_architecture": "PASSIVE_TOKEN_ACTIVE_GATE",
+    "token": {
+      "electronics_required": false,
+      "recommended_embedded_element": "small permanent magnet or equivalent passive identifier",
+      "optional_future_identifiers": [
+        "magnetic polarity/orientation",
+        "NFC tag",
+        "RFID tag",
+        "machine-readable optical mark"
+      ],
+      "design_priority": "Keep the coin mechanically simple, printable, durable and useful even if the gate electronics are later replaced."
+    },
+    "reader": {
+      "location": "pedestal, threshold stone or dedicated token recess near the approach to the Arch",
+      "recommended_sensors": [
+        "Hall sensor",
+        "dual Hall sensors for orientation discrimination",
+        "magnetometer where field-vector reading is useful",
+        "optional NFC/RFID reader for future identity extensions"
+      ],
+      "controller": "ESP32-class controller or equivalent finite-state controller"
+    },
+    "orientation_detection": {
+      "goal": "Determine token presence and which semantic side/state the user intentionally presents.",
+      "preferred_v1": "Use magnet polarity and/or asymmetric magnet placement so the reader can distinguish INITIUM from REDITUS without electronics inside the coin.",
+      "fallback": "If orientation discrimination is unreliable, use two separate token positions or a mechanical flip/rotate gesture rather than guessing."
+    }
+  },
+  "control_flow": [
+    "TOKEN_PRESENT",
+    "READ_TOKEN_VALIDITY",
+    "READ_ORIENTATION",
+    "MAP_TO_INITIUM_OR_REDITUS",
+    "COMMAND_OCULUS_STATE_MACHINE",
+    "RUN_BLUE_THRESHOLD_LIGHT_SEQUENCE",
+    "SET_GATE_STATE",
+    "LOG_EVENT"
+  ],
+  "portal_integration": {
+    "oculus": {
+      "role": "mechanical/visual execution layer",
+      "response_to_INITIUM": "wake, synchronize and progress toward OPEN",
+      "response_to_REDITUS": "reverse or reset sequence and progress toward REST/CLOSED"
+    },
+    "blue_threshold_light": {
+      "role": "visible state field",
+      "response_to_INITIUM": "light propagates from Oculus through roof cavities, arches and floor/threshold",
+      "response_to_REDITUS": "light contracts or retreats toward Oculus before returning to dormant state"
+    },
+    "crossroads": {
+      "role": "choice space",
+      "interaction": "The token determines intent; passage sensors determine the actual path taken through the crossroads."
+    }
+  },
+  "state_machine_example": {
+    "states": [
+      "DORMANT",
+      "TOKEN_DETECTED",
+      "DECISION_VALIDATED",
+      "OCULUS_SYNC",
+      "OPEN",
+      "PASSAGE",
+      "RETURN",
+      "REST"
+    ],
+    "INITIUM_path": "DORMANT -> TOKEN_DETECTED -> DECISION_VALIDATED -> OCULUS_SYNC -> OPEN -> PASSAGE",
+    "REDITUS_path": "OPEN/PASSAGE -> TOKEN_DETECTED -> DECISION_VALIDATED -> RETURN -> REST"
+  },
+  "ritual_interface": {
+    "name": "COIN_RITUAL",
+    "description": "The tactile act of handling, rotating or optionally tossing the token becomes a human-facing ritual layer on top of deterministic gate control.",
+    "rk800_style_reference": "The repeated coin-handling gesture serves as cultural inspiration for precision, calm repetition and machine-like ritual.",
+    "safety_rule": "Coin toss randomness must never control a safety-critical function, physical lock, high-energy mechanism or hazardous actuator.",
+    "safe_uses_of_random_toss": [
+      "choose between two cosmetic light animations",
+      "select an ambient sound variation",
+      "trigger a non-critical symbolic INITIUM/REDITUS visualization only after explicit user confirmation",
+      "serve as an optional game/ritual mode disconnected from access control"
+    ]
+  },
+  "event_logging": {
+    "canonical_event_type": "JANUS_PORTA_TOKEN_EVENT",
+    "example": {
+      "timestamp": "ISO-8601",
+      "token_valid": true,
+      "orientation": "INITIUM",
+      "entry_direction": "WEST",
+      "exit_direction": "EAST",
+      "oculus_direction": "CLOCKWISE",
+      "gate_state": "OPEN",
+      "passage_complete": true
+    },
+    "privacy_principle": "Log only the minimum state and passage metadata needed for system behavior; do not require personal identity for the portal interaction."
+  },
+  "physical_design_principles": [
+    "Keep the token coin-sized and pocketable.",
+    "Preserve the Janus face and Gate face as visually readable even without electronics.",
+    "Avoid exposed screws or electronics on the coin if a passive magnetic solution is sufficient.",
+    "Use a replaceable/accessible reader module in the gate rather than making the printed token disposable.",
+    "Do not depend on coin-toss randomness for deterministic portal-state control.",
+    "Design the token recess so the coin cannot fall into the architecture or become trapped.",
+    "Provide manual override and fail-safe return to REST if the reader fails."
+  ],
+  "engineering_boundary": {
+    "literal_spacetime_portal_claim": false,
+    "system_claim": "This is a real, buildable human-machine interface for an interactive architectural installation. The term portal refers to the Janus Gate installation and its symbolic/experiential state machine.",
+    "high_energy_flywheel_required": false,
+    "recommended_oculus_behavior": "slow, low-energy, enclosed or manually driven motion"
+  },
+  "related_assets": [
+    {
+      "filename": "JANUS_Coin(4).3mf",
+      "relation": "physical_token_source",
+      "sha256": "69487a52f9b512cb7bfeade0727ecc54e2ca95907b9690bd296d6bc86b7e1346"
+    },
+    {
+      "path": "data/JANUS-GATE-CROSSROADS-OCULUS-PORTAL-CONCEPT-2026-08-17.json",
+      "relation": "parent_portal_architecture"
+    },
+    {
+      "path": "data/JANUS-PHYSICAL-ARCH-OCULUS-ASSET-MANIFEST-2026-08-17.json",
+      "relation": "physical_asset_provenance"
+    }
+  ],
+  "next_gate": {
+    "gate_id": "PORTA_TOKEN_READER_V1",
+    "status": "OPEN",
+    "requirements": [
+      "Measure the final printed token diameter and thickness.",
+      "Choose passive identifier method for v1.",
+      "Prototype two-orientation detection on a desk before embedding it into the Arch.",
+      "Verify at least 100 repeated placements with no false INITIUM/REDITUS classification.",
+      "Define fail-safe behavior for absent, invalid or ambiguous token states.",
+      "Only after validation connect the reader to the Oculus/light state machine."
+    ]
+  },
+  "canonical_summary": "JANUS PORTA TOKEN turns the existing two-sided Janus coin into a portable physical decision key for the JANUS GATE. The token expresses intent, the gate reads it, the Oculus executes the state transition, blue threshold light exposes the resulting state, and passage sensors record only the completed threshold event. The cultural coin-handling reference remains a ritual/interface inspiration; deterministic engineering remains separate from chance."
+}
