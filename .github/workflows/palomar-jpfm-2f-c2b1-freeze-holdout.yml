@@ -1,0 +1,81 @@
+name: Palomar JPFM-2F-C2B1 freeze engineering holdout
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/palomar-jpfm-2f-c2b1-freeze-holdout.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  freeze:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -q numpy==2.2.6 pandas==2.3.1
+      - name: Admission and firewall gate
+        run: |
+          python -m py_compile tools/palomar/jpfm_2f_c2b1_freeze_engineering_holdout.py
+          python - <<'PY'
+          import json, pathlib
+          a=json.loads(pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-C2B1-SPATIAL-REFERENCE-SUPPORT-REPAIR-ADMISSION-v1.0.json').read_text())
+          assert a['status']=='PREREGISTERED_AFTER_C2B0_DIAGNOSTIC_BEFORE_C2B1_HOLDOUT_FREEZE_OR_PIXEL_REPLAY'
+          assert a['engineering_holdout']['rows']==128
+          assert a['engineering_holdout']['must_exclude_all_C2A_src_ids'] is True
+          assert a['engineering_holdout']['must_exclude_all_C2A_tile_ids'] is True
+          assert a['reference_star_contract']['minimum_reference_stars']==20
+          assert a['reference_star_contract']['minimum_may_be_lowered'] is False
+          assert a['reference_star_contract']['quality_filters_may_be_relaxed'] is False
+          assert a['external_label_firewall']['external_label_reveal_authorized'] is False
+          print('PASS_JPFM_2F_C2B1_HOLDOUT_ADMISSION')
+          PY
+      - name: Freeze independent 128-source engineering holdout
+        run: |
+          python tools/palomar/jpfm_2f_c2b1_freeze_engineering_holdout.py \
+            --admission data/JANUS-PALOMAR-JPFM-2F-C2B1-SPATIAL-REFERENCE-SUPPORT-REPAIR-ADMISSION-v1.0.json \
+            --c0m-map data/JANUS-PALOMAR-JPFM-2F-C0M-FULL-S0-HEADER-ONLY-ACQUISITION-MAP-RUN-001.csv.gz \
+            --c2a-sample data/JANUS-PALOMAR-JPFM-2F-C2A-STRATIFIED-UPSTREAM-MORPHOLOGY-SAMPLE-FREEZE-RUN-001.csv.gz \
+            --out-json data/JANUS-PALOMAR-JPFM-2F-C2B1-ENGINEERING-HOLDOUT-FREEZE-RUN-001.json \
+            --out-gz data/JANUS-PALOMAR-JPFM-2F-C2B1-ENGINEERING-HOLDOUT-FREEZE-RUN-001.csv.gz
+      - name: Validate frozen holdout
+        run: |
+          python - <<'PY'
+          import gzip, hashlib, io, json, pathlib, pandas as pd
+          jp=pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-C2B1-ENGINEERING-HOLDOUT-FREEZE-RUN-001.json')
+          gp=pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-C2B1-ENGINEERING-HOLDOUT-FREEZE-RUN-001.csv.gz')
+          d=json.loads(jp.read_text()); assert d['status']=='FROZEN_BEFORE_C2B1_PIXEL_REPLAY'
+          s=d['selection']; assert s['rows']==128 and s['source_overlap_with_C2A']==0 and s['tile_overlap_with_C2A']==0
+          assert s['pixel_or_morphology_features_used'] is False and s['external_labels_used'] is False
+          gz=gp.read_bytes(); raw=gzip.decompress(gz)
+          assert hashlib.sha256(gz).hexdigest()==d['manifest']['gzip_sha256']
+          assert hashlib.sha256(raw).hexdigest()==d['manifest']['csv_sha256']
+          df=pd.read_csv(io.BytesIO(raw)); assert len(df)==128 and df.src_id.nunique()==128
+          assert set(df.groupby(['structural_cluster','sample_role']).size())=={4}
+          print('PASS_JPFM_2F_C2B1_HOLDOUT_FREEZE',s)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jpfm-2f-c2b1-engineering-holdout-freeze
+          path: |
+            data/JANUS-PALOMAR-JPFM-2F-C2B1-ENGINEERING-HOLDOUT-FREEZE-RUN-001.json
+            data/JANUS-PALOMAR-JPFM-2F-C2B1-ENGINEERING-HOLDOUT-FREEZE-RUN-001.csv.gz
+          retention-days: 30
+          if-no-files-found: error
+      - name: Commit frozen holdout
+        run: |
+          git config user.name 'janus-jpfm-ci'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/JANUS-PALOMAR-JPFM-2F-C2B1-ENGINEERING-HOLDOUT-FREEZE-RUN-001.json data/JANUS-PALOMAR-JPFM-2F-C2B1-ENGINEERING-HOLDOUT-FREEZE-RUN-001.csv.gz
+          git diff --cached --quiet && exit 0
+          git commit -m 'Freeze JPFM-2F-C2B1 independent engineering holdout [skip ci]'
+          git pull --rebase origin main
+          git push
