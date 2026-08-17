@@ -2,8 +2,8 @@
   "artifact_uuid": "JANUS-CONSTITUTIONAL-STATE-TRANSITION-LAW-2026-08-17-v1.0",
   "version": "v1.0",
   "timestamp_date": "2026-08-17",
-  "document_class": "JANUS_PROJECT_WIDE_TRANSITION_LAW_CANDIDATE_WITH_SOURCE_LINEAGE",
-  "status": "SEALED_CANDIDATE_NOT_YET_RUNTIME_AUTHORITY",
+  "document_class": "JANUS_PROJECT_WIDE_TRANSITION_LAW_TESTED_REFERENCE_WITH_SOURCE_LINEAGE",
+  "status": "SEALED_TESTED_REFERENCE_NOT_RUNTIME_AUTHORITY",
   "title_ru": "JANUS — Конституционный закон перехода состояния",
   "title_en": "JANUS Constitutional State Transition Law",
   "purpose": "Define a provenance-bound, identity-bound and authorization-gated transition chain that prevents JANUS from treating discovery, labels, context, evidence, restoration or emergence as automatic permission to declare a new authoritative state.",
@@ -215,12 +215,39 @@
     "forbidden_jump": "FOUND_OBJECT -> OSIRIS_COMPONENT -> RETURN_ACTIVATION -> OSIRIS_NEW_STATE",
     "allowed_form": "FOUND_OBJECT -> VERIFY_IDENTITY -> VERIFY_OWNER_BINDING -> VERIFY_PROVENANCE -> VERIFY_CONTEXT -> AUTHORIZE_RETURN -> VERIFY_RESTORATION -> VERIFY_RIGHTFUL_BELONGING -> VALIDATE -> NEW_STATE_OR_OPEN_TERMINAL"
   },
+  "tested_reference_implementation": {
+    "status": "DETERMINISTIC_REFERENCE_SELFTEST_PASS",
+    "implementation_path": "research/cstl/janus_cstl_validator_v1.py",
+    "implementation_blob_sha": "c945981e228a3a429b324f5ddb964b79841a9e5d",
+    "implementation_sha256": "67b2eb36bd13cc6154ae4c5039bcf4d63d43cd971b6c8594379b47b1c38d9cf0",
+    "test_corpus_path": "data/JANUS-CSTL-FORBIDDEN-SHORTCUT-TEST-CORPUS-2026-08-17-v1.0.json",
+    "test_corpus_blob_sha": "959fcba7240460f5e1d58f5d43a05f5568d6b405",
+    "test_corpus_sha256": "31977774dd237732f4beda9e3015ae1ffd7426eaf11e3ac58a4a8bb7668d0852",
+    "certificate_path": "data/JANUS-CSTL-REFERENCE-VALIDATOR-CERTIFICATE-2026-08-17-v1.0.json",
+    "certificate_blob_sha": "30d39f8d422b8478e36159e6fb536bfcf5d71a1b",
+    "certified_run_id": 32065412252,
+    "certified_job_id": 95496229572,
+    "certified_tested_commit": "791289e838cb35b6e7922715fef6a7fc118b2c8a",
+    "cases": 18,
+    "passed": 18,
+    "failed": 0,
+    "reference_scope_only": true
+  },
   "runtime_and_authority": {
     "current_runtime_enforcement": false,
     "current_project_wide_authority": false,
     "authority_delta": 0,
     "external_effect_delta": 0,
     "candidate_for": "PROJECT_WIDE_TRANSITION_CONSTITUTION",
+    "reference_gate_completion": {
+      "deterministic_reference_implementation": "PASS",
+      "positive_transition_tests": "PASS",
+      "forbidden_shortcut_negative_tests": "PASS",
+      "fail_closed_open_terminal_behavior": "PASS_IN_DEVELOPMENT_CORPUS",
+      "identity_binding_continuity_check": "PASS",
+      "receipt_chain_continuity_check": "PASS",
+      "goldprompt_emergence_non_self_certification": "PASS"
+    },
     "admission_requirements": [
       "Independent review against Armor current authority",
       "GoldPrompt emergence admission including removal tests",
@@ -229,15 +256,23 @@
       "Negative tests for every forbidden shortcut",
       "Proof that unresolved gates fail closed without erasing provenance",
       "Explicit human approval before promotion to runtime authority"
+    ],
+    "remaining_admission_requirements": [
+      "Independent review against Armor current authority",
+      "Independent/adversarial validation beyond the committed development corpus",
+      "Explicit human approval before promotion to runtime authority",
+      "Runtime integration dry-run with zero external-effect authority"
     ]
   },
   "claim_ceiling": [
     "BD101_IS_AN_ANCIENT_SOURCE_ANCESTOR_NOT_A_SOFTWARE_SPECIFICATION",
     "THE_TRANSITION_CHAIN_IS_A_MODERN_JANUS_ABSTRACTION",
     "ARMOR_AND_GOLDPROMPT_SUPPLY_MODERN_CONSTITUTIONAL_GATES",
+    "DETERMINISTIC_REFERENCE_VALIDATOR_PASSED_18_OF_18_COMMITTED_DEVELOPMENT_CASES",
+    "REFERENCE_VALIDATOR_PASS_DOES_NOT_EQUAL_INDEPENDENT_EXTERNAL_VALIDATION",
     "THIS_ARTIFACT_DOES_NOT_ESTABLISH_SUPERNATURAL_EFFICACY",
     "THIS_ARTIFACT_DOES_NOT_AUTHENTICATE_ANY_OSIRIS_RELIC",
     "THIS_ARTIFACT_DOES_NOT_GRANT_RUNTIME_PERMISSION_OR_WORLD_AUTHORITY"
   ],
-  "next_gate": "CSTL_V1_REFERENCE_VALIDATOR_PLUS_FORBIDDEN_SHORTCUT_TEST_SUITE"
+  "next_gate": "CSTL_V1_POST_BINDING_CI_THEN_INDEPENDENT_REVIEW_AND_ZERO_EFFECT_RUNTIME_DRY_RUN"
 }
