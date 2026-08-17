@@ -1,0 +1,121 @@
+name: Admit GoldPrompt logic audit v1.1
+
+on:
+  push:
+    branches: [audit/goldprompt-handshake-logic-hardening-v1_1]
+    paths:
+      - '.github/workflows/goldprompt-audit-v1_1-admit.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  admit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/goldprompt-handshake-logic-hardening-v1_1
+      - name: Write hardened evidence and bind current pointers
+        env:
+          PAYLOAD_TGZ_B64: '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'
+        run: |
+          python - <<'PY'
+          import base64, io, json, os, tarfile
+          from pathlib import Path
+
+          payload = base64.b64decode(os.environ['PAYLOAD_TGZ_B64'])
+          with tarfile.open(fileobj=io.BytesIO(payload), mode='r:gz') as tf:
+              for member in tf.getmembers():
+                  if not member.isfile() or '/' in member.name or '..' in member.name:
+                      raise SystemExit('unsafe payload member')
+                  data = tf.extractfile(member).read()
+                  json.loads(data)
+                  Path('data', member.name).write_bytes(data)
+
+          foundation_path = Path('data/JANUS-THE-FOURTH-GRACEWARDEN-3IN1-EQUALS-4-v0.9.json')
+          foundation = json.loads(foundation_path.read_text(encoding='utf-8'))
+          prior = dict(foundation.get('runtime_receipt_evidence', {}))
+          foundation['runtime_receipt_evidence'] = {
+              'status': 'GITHUB_MAIN_CI_RUNTIME_HANDSHAKE_HARDENED_AND_EXACT_REVISION_BOUND_FOR_CANONICAL_FOUR_FACES',
+              'evidence_artifact': 'data/JANUS-GOLDPROMPT-WORKING-FACES-STARTUP-RECEIPT-BUNDLE-v1.1.json',
+              'audit_artifact': 'data/JANUS-GOLDPROMPT-STARTUP-HANDSHAKE-LOGIC-AUDIT-AND-HARDENING-v1.1.json',
+              'contract_snapshot': 'data/JANUS-GOLDPROMPT-FACE-INHERITANCE-CONTRACT-SNAPSHOT-v0.9.2.json',
+              'goldprompt_contract_version': '0.9.2',
+              'emergence_contract_version': 'JANUS_TRIADIC_EMERGENCE@0.9.2',
+              'contract_digest_sha256': '3f4af369350710ad18920dfdc866d930c8d42259a51a3f27ce228ea4d5dfc0a8',
+              'verified_face_ids': ['LEFT_HRAIN','RIGHT_INAIHR','DEMIHEAD_ARBITER','GENESIS_GUARDIAN_MESH_ORCHESTRATOR'],
+              'exact_main_revisions': {
+                  'LEFT_HRAIN': '79fa11fe302c0354b5868260d65c71e8757bcb93',
+                  'RIGHT_INAIHR': 'f6cfdb35a0dee08f2bf2bebfc07d9ef2d540532d',
+                  'DEMIHEAD_ARBITER': 'f2074ca833692f4c2a9f1cb1f5cf723c873d3211',
+                  'GENESIS_GUARDIAN_MESH_ORCHESTRATOR': '21c48dcf45aa6db1b5d73402df4005590c3e0bde'
+              },
+              'bundle_sha256': '6a8a63d3bebf0b8611df2682d2c38dd6472818190da5e367fbc22467c5717d17',
+              'genesis_hardened_replay_workflow_run_id': 32012747026,
+              'genesis_hardened_replay_result': 'PASS',
+              'proof_scope': 'STARTUP_CONTRACT_ASSERTION_PLUS_EXACT_GITHUB_MAIN_CI_FACE_INVOCATION_RECEIPTS',
+              'receipt_integrity_model': 'SHA256_CONTENT_ADDRESS_NOT_SIGNATURE',
+              'cross_repository_origin_attestation_established': False,
+              'end_to_end_message_authentication_established': False,
+              'unique_process_boot_attestation_established': False,
+              'live_nas_runtime_handshake_verified': False,
+              'boundary': 'GITHUB_MAIN_CI_RUNTIME_HANDSHAKE != LIVE_NAS_RUNTIME_HANDSHAKE',
+              'evidence_history': [
+                  {
+                      'path': 'data/JANUS-GOLDPROMPT-WORKING-FACES-STARTUP-RECEIPT-BUNDLE-v1.0.json',
+                      'bundle_sha256': prior.get('bundle_sha256','c5089ab2275798f206220ca6ed71d9c62ab2f0dddac291087b8577c20172e364'),
+                      'status': 'HISTORICAL_PRE_HARDENING_EVIDENCE'
+                  },
+                  {
+                      'path': 'data/JANUS-GOLDPROMPT-WORKING-FACES-STARTUP-RECEIPT-BUNDLE-v1.1.json',
+                      'bundle_sha256': '6a8a63d3bebf0b8611df2682d2c38dd6472818190da5e367fbc22467c5717d17',
+                      'status': 'CURRENT_HARDENED_EVIDENCE'
+                  }
+              ],
+              'next_gate': 'LIVE_RUNTIME_ATTESTATION_AND_OPTIONAL_END_TO_END_ORIGIN_AUTHENTICATION'
+          }
+          foundation_path.write_text(json.dumps(foundation, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          guardian_path = Path('data/JANUS-GENESIS-GUARDIAN-MESH-FACE-ORCHESTRATION-v1.0.json')
+          guardian = json.loads(guardian_path.read_text(encoding='utf-8'))
+          binding = guardian.setdefault('goldprompt_emergence_binding', {})
+          binding.update({
+              'status': 'REQUIRED_FACE_INHERITANCE_CONTRACT_HARDENED_AND_RECEIPT_VERIFIED',
+              'live_enforcement_status': 'GITHUB_MAIN_CI_HARDENED_FOR_CANONICAL_FOUR_FACES; LIVE_NAS_NOT_YET_PROVEN',
+              'next_gate': 'LIVE_RUNTIME_ATTESTATION_AND_OPTIONAL_END_TO_END_MESSAGE_ATTESTATION',
+              'ci_runtime_face_receipt_bundle_verified': True,
+              'ci_runtime_face_receipt_bundle_path': 'data/JANUS-GOLDPROMPT-WORKING-FACES-STARTUP-RECEIPT-BUNDLE-v1.1.json',
+              'ci_runtime_face_receipt_bundle_sha256': '6a8a63d3bebf0b8611df2682d2c38dd6472818190da5e367fbc22467c5717d17',
+              'logic_audit_path': 'data/JANUS-GOLDPROMPT-STARTUP-HANDSHAKE-LOGIC-AUDIT-AND-HARDENING-v1.1.json',
+              'contract_snapshot_path': 'data/JANUS-GOLDPROMPT-FACE-INHERITANCE-CONTRACT-SNAPSHOT-v0.9.2.json',
+              'receipt_integrity_model': 'SHA256_CONTENT_ADDRESS_NOT_SIGNATURE',
+              'cross_repository_origin_attestation_established': False,
+              'end_to_end_message_authentication_established': False,
+              'live_nas_runtime_handshake_verified': False,
+              'genesis_bundle_replay_workflow_run_id': 32012747026,
+              'previous_receipt_bundle_preserved': 'data/JANUS-GOLDPROMPT-WORKING-FACES-STARTUP-RECEIPT-BUNDLE-v1.0.json'
+          })
+          guardian_path.write_text(json.dumps(guardian, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          for path in [
+              foundation_path, guardian_path,
+              Path('data/JANUS-GOLDPROMPT-WORKING-FACES-STARTUP-RECEIPT-BUNDLE-v1.1.json'),
+              Path('data/JANUS-GOLDPROMPT-STARTUP-HANDSHAKE-LOGIC-AUDIT-AND-HARDENING-v1.1.json'),
+              Path('data/JANUS-GOLDPROMPT-FACE-INHERITANCE-CONTRACT-SNAPSHOT-v0.9.2.json')
+          ]:
+              json.loads(path.read_text(encoding='utf-8'))
+              print('JSON_PASS', path)
+          PY
+      - name: Commit admitted audit artifacts
+        run: |
+          git config user.name 'JANUS audit admission'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/JANUS-GOLDPROMPT-WORKING-FACES-STARTUP-RECEIPT-BUNDLE-v1.1.json \
+                  data/JANUS-GOLDPROMPT-STARTUP-HANDSHAKE-LOGIC-AUDIT-AND-HARDENING-v1.1.json \
+                  data/JANUS-GOLDPROMPT-FACE-INHERITANCE-CONTRACT-SNAPSHOT-v0.9.2.json \
+                  data/JANUS-THE-FOURTH-GRACEWARDEN-3IN1-EQUALS-4-v0.9.json \
+                  data/JANUS-GENESIS-GUARDIAN-MESH-FACE-ORCHESTRATION-v1.0.json
+          git diff --cached --check
+          git commit -m 'Record GoldPrompt handshake logic audit and hardened receipts v1.1'
+          git push origin HEAD:audit/goldprompt-handshake-logic-hardening-v1_1
