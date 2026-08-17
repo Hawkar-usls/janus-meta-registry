@@ -1,0 +1,164 @@
+name: Palomar JPFM-2F-C2B1 spatial reference support engineering replay
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/palomar-jpfm-2f-c2b1-spatial-reference.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  shard:
+    name: c2b1-shard-${{ matrix.shard }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      max-parallel: 10
+      matrix:
+        shard: [0,1,2,3,4,5,6,7,8,9]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install pinned replay environment
+        run: |
+          sudo apt-get update >/dev/null
+          sudo apt-get install -y source-extractor psfex >/dev/null
+          if ! command -v sex >/dev/null 2>&1; then
+            if command -v source-extractor >/dev/null 2>&1; then sudo ln -sf "$(command -v source-extractor)" /usr/local/bin/sex; else sudo ln -sf "$(command -v sextractor)" /usr/local/bin/sex; fi
+          fi
+          python -m pip install -q \
+            numpy==2.2.6 pandas==2.3.1 scipy==1.16.1 requests==2.32.4 \
+            astropy==8.0.1 photutils==3.0.0 opencv-python-headless==5.0.0.93 \
+            'fsspec[http]==2026.6.0'
+          git clone -q --filter=blob:none --no-checkout https://github.com/jannefi/poss1-plate-slice.git work/poss1-src
+          git -C work/poss1-src checkout -q 4005e200541b321ead3d6608f0162a14430ef1c2
+          test "$(git -C work/poss1-src rev-parse HEAD)" = "4005e200541b321ead3d6608f0162a14430ef1c2"
+      - name: Syntax, admission, holdout and external-label firewall
+        run: |
+          python -m py_compile \
+            tools/palomar/jpfm_2f_b2_tile_lineage_replay.py \
+            tools/palomar/jpfm_2f_b3_shape_compat_replay.py \
+            tools/palomar/jpfm_2f_c2b1_spatial_reference_shard.py \
+            tools/palomar/jpfm_2f_c2b1_spatial_reference_aggregate.py
+          python - <<'PY'
+          import json, pathlib
+          a=json.loads(pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-C2B1-SPATIAL-REFERENCE-SUPPORT-REPAIR-ADMISSION-v1.0.json').read_text())
+          d=json.loads(pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-C2B1-SPATIAL-REFERENCE-SUPPORT-DEDUP-ADDENDUM-v1.0.json').read_text())
+          h=json.loads(pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-C2B1-ENGINEERING-HOLDOUT-FREEZE-RUN-001.json').read_text())
+          assert a['reference_star_contract']['minimum_reference_stars']==20
+          assert a['reference_star_contract']['minimum_may_be_lowered'] is False
+          assert a['reference_star_contract']['quality_filters_may_be_relaxed'] is False
+          assert a['inference_boundary']['C2B1_morphology_association_test_authorized'] is False
+          assert d['dedup_contract']['duplicate_link_radius_arcsec']==2.0
+          assert h['status']=='FROZEN_BEFORE_C2B1_PIXEL_REPLAY'
+          assert h['selection']['rows']==128 and h['selection']['source_overlap_with_C2A']==0 and h['selection']['tile_overlap_with_C2A']==0
+          assert a['external_label_firewall']['external_label_reveal_authorized'] is False
+          print('PASS_JPFM_2F_C2B1_ADMISSION_HOLDOUT_GATE')
+          PY
+          if grep -Eiq 'bluebook|nuforc|nuclear-explosions|kp\.gfz|aa\.usno|DATE-OBS|lunar' \
+             tools/palomar/jpfm_2f_c2b1_spatial_reference_shard.py \
+             tools/palomar/jpfm_2f_c2b1_spatial_reference_aggregate.py; then
+            echo 'FAIL: external-label surface in C2B1 code'; exit 1
+          fi
+          echo 'PASS_JPFM_2F_C2B1_EXTERNAL_LABEL_FIREWALL'
+      - name: Execute frozen adaptive plate shard
+        run: |
+          mkdir -p work/c2b1-${{ matrix.shard }} work/out-${{ matrix.shard }}
+          python tools/palomar/jpfm_2f_c2b1_spatial_reference_shard.py \
+            --holdout data/JANUS-PALOMAR-JPFM-2F-C2B1-ENGINEERING-HOLDOUT-FREEZE-RUN-001.csv.gz \
+            --admission data/JANUS-PALOMAR-JPFM-2F-C2B1-SPATIAL-REFERENCE-SUPPORT-REPAIR-ADMISSION-v1.0.json \
+            --dedup-addendum data/JANUS-PALOMAR-JPFM-2F-C2B1-SPATIAL-REFERENCE-SUPPORT-DEDUP-ADDENDUM-v1.0.json \
+            --upstream-root work/poss1-src \
+            --work-dir work/c2b1-${{ matrix.shard }} \
+            --out-dir work/out-${{ matrix.shard }} \
+            --shard-index ${{ matrix.shard }} \
+            --shard-count 10
+      - name: Validate non-global shard receipt
+        run: |
+          SHARD='${{ matrix.shard }}' python - <<'PY'
+          import gzip,hashlib,io,json,os,pathlib,pandas as pd
+          i=int(os.environ['SHARD']); root=pathlib.Path(f'work/out-{i}')
+          rp=root/f'JANUS-PALOMAR-JPFM-2F-C2B1-SHARD-{i:02d}-RECEIPT-RUN-001.json'; r=json.loads(rp.read_text())
+          assert r['status']=='EXECUTED_SHARD_RECEIPT__NO_GLOBAL_OUTCOME_OR_MORPHOLOGY_INFERENCE'
+          assert r['shard']['index']==i and r['shard']['count']==10 and len(r['shard']['assigned_plates'])==9
+          assert r['external_label_firewall']['external_label_reveal_authorized'] is False
+          assert r['execution']['full_remote_plate_array_accessed'] is False
+          sp=root/r['sidecar']['path']; gz=sp.read_bytes(); raw=gzip.decompress(gz)
+          assert hashlib.sha256(gz).hexdigest()==r['sidecar']['gzip_sha256']; assert hashlib.sha256(raw).hexdigest()==r['sidecar']['csv_sha256']
+          df=pd.read_csv(io.BytesIO(raw)); assert len(df)==r['sidecar']['rows'] and df.src_id.nunique()==len(df)
+          print('PASS_JPFM_2F_C2B1_SHARD_GATE',i,'rows',len(df),'exact',r['execution']['exact_NUMBER_recovered'],'norm',r['execution']['reference_normalization_pass'])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jpfm-2f-c2b1-shard-${{ matrix.shard }}
+          path: work/out-${{ matrix.shard }}/
+          retention-days: 30
+          if-no-files-found: error
+
+  aggregate:
+    name: c2b1-aggregate
+    needs: shard
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -q numpy==2.2.6 pandas==2.3.1
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: jpfm-2f-c2b1-shard-*
+          path: work/c2b1-shards
+          merge-multiple: true
+      - name: Aggregate exact 128-source engineering holdout
+        run: |
+          python tools/palomar/jpfm_2f_c2b1_spatial_reference_aggregate.py \
+            --holdout data/JANUS-PALOMAR-JPFM-2F-C2B1-ENGINEERING-HOLDOUT-FREEZE-RUN-001.csv.gz \
+            --shards-dir work/c2b1-shards \
+            --out-json data/JANUS-PALOMAR-JPFM-2F-C2B1-SPATIAL-REFERENCE-SUPPORT-ENGINEERING-RUN-001.json \
+            --out-sidecar-gz data/JANUS-PALOMAR-JPFM-2F-C2B1-SPATIAL-REFERENCE-SUPPORT-ENGINEERING-SIDECAR-RUN-001.csv.gz
+      - name: Validate engineering result without morphology inference
+        run: |
+          python - <<'PY'
+          import gzip,hashlib,io,json,pathlib,pandas as pd
+          jp=pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-C2B1-SPATIAL-REFERENCE-SUPPORT-ENGINEERING-RUN-001.json')
+          sp=pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-C2B1-SPATIAL-REFERENCE-SUPPORT-ENGINEERING-SIDECAR-RUN-001.csv.gz')
+          d=json.loads(jp.read_text()); allowed={'PASS_SPATIAL_REFERENCE_SUPPORT_ENGINEERING_GATE','FAIL_CLOSED_TARGET_TILE_OR_OBJECT_REPLAY','FAIL_CLOSED_SKY_CONSISTENCY','FAIL_CLOSED_RAW_UPSTREAM_MORPHOLOGY','FAIL_CLOSED_SHAPE_REPLAY','FAIL_CLOSED_SPATIAL_REFERENCE_SUPPORT_REPAIR'}
+          assert d['status']=='EXECUTED_AND_SHARD_INTEGRITY_VERIFIED' and d['engineering_outcome'] in allowed
+          assert d['shard_integrity']['source_rows_union']==128 and d['shard_integrity']['source_ids_unique']==128 and d['shard_integrity']['plates_union']==90
+          assert d['engineering_gates']['reference_normalization']['minimum_reference_stars']==20
+          assert d['morphology_association_inference']['executed'] is False and d['morphology_association_inference']['status']=='FORBIDDEN_IN_C2B1_ENGINEERING_REPLAY'
+          assert d['external_label_firewall']['external_label_reveal_authorized'] is False
+          gz=sp.read_bytes(); raw=gzip.decompress(gz); assert hashlib.sha256(gz).hexdigest()==d['sidecar']['gzip_sha256']; assert hashlib.sha256(raw).hexdigest()==d['sidecar']['csv_sha256']
+          df=pd.read_csv(io.BytesIO(raw)); assert len(df)==128 and df.src_id.nunique()==128
+          print('PASS_JPFM_2F_C2B1_AGGREGATE_GATE',d['engineering_outcome'],d['engineering_gates']['reference_normalization'])
+          PY
+      - name: Preserve compact shard receipts only
+        run: cp work/c2b1-shards/JANUS-PALOMAR-JPFM-2F-C2B1-SHARD-*-RECEIPT-RUN-001.json data/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jpfm-2f-c2b1-aggregate-run-001
+          path: |
+            data/JANUS-PALOMAR-JPFM-2F-C2B1-SPATIAL-REFERENCE-SUPPORT-ENGINEERING-RUN-001.json
+            data/JANUS-PALOMAR-JPFM-2F-C2B1-SPATIAL-REFERENCE-SUPPORT-ENGINEERING-SIDECAR-RUN-001.csv.gz
+            data/JANUS-PALOMAR-JPFM-2F-C2B1-SHARD-*-RECEIPT-RUN-001.json
+          retention-days: 30
+          if-no-files-found: error
+      - name: Commit validated engineering result and compact receipts
+        run: |
+          git config user.name 'janus-jpfm-ci'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/JANUS-PALOMAR-JPFM-2F-C2B1-SPATIAL-REFERENCE-SUPPORT-ENGINEERING-RUN-001.json data/JANUS-PALOMAR-JPFM-2F-C2B1-SPATIAL-REFERENCE-SUPPORT-ENGINEERING-SIDECAR-RUN-001.csv.gz data/JANUS-PALOMAR-JPFM-2F-C2B1-SHARD-*-RECEIPT-RUN-001.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Record JPFM-2F-C2B1 spatial reference-support engineering replay [skip ci]'
+          git pull --rebase origin main
+          git push
