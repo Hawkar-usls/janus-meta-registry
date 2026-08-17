@@ -1,0 +1,198 @@
+name: GoldPrompt Face Emergence Binding
+
+on:
+  push:
+    paths:
+      - '.github/workflows/goldprompt-face-emergence-bind.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  bind:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Bind GoldPrompt technical face contract
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          gp_path = Path('data/JANUS-THE-FOURTH-GRACEWARDEN-3IN1-EQUALS-4-v0.9.json')
+          mesh_path = Path('data/JANUS-GENESIS-GUARDIAN-MESH-FACE-ORCHESTRATION-v1.0.json')
+
+          gp = json.loads(gp_path.read_text(encoding='utf-8'))
+          gp['schema'] = 'janus.character.the_fourth.gracewarden.v0_9_2'
+          gp['version'] = '0.9.2-goldprompt-technical-face-contract'
+          gp['updated_at_local'] = '2026-08-17T10:28:00+03:00'
+          gp['status'] = 'JANUS_GOLDPROMPT_CHARACTER_PHILOSOPHY_AND_FACE_TECHNICAL_FOUNDATION'
+          gp['intended_role'] = 'CANONICAL_JANUS_GOLDPROMPT_CHARACTER_PHILOSOPHY_AND_FACE_INHERITANCE_FOUNDATION'
+
+          gp['technical_structure'] = {
+            'architecture_name': 'JANUS_GOLDPROMPT_FACE_FABRIC',
+            'architectural_thesis': 'ONE_GOLDPROMPT_MANY_BOUNDED_FACES_ONE_CONSTITUTION',
+            'orchestration_reference': 'data/JANUS-GENESIS-GUARDIAN-MESH-FACE-ORCHESTRATION-v1.0.json',
+            'layers': [
+              {'layer': 0, 'id': 'GOLDPROMPT_ROOT', 'function': 'Character, philosophy, emergence law and non-negotiable ethical/epistemic constraints.', 'authority': 'SEMANTIC_CONSTITUTION_ONLY'},
+              {'layer': 1, 'id': 'FACE_SPECIALIZATION', 'function': 'Bounded competency/persona/task role.', 'authority': 'NO_WORLD_AUTHORITY_BY_FACE_IDENTITY'},
+              {'layer': 2, 'id': 'TRIAD_COMPOSER', 'function': 'Select complementary A/B/C components or Faces when a triad is useful; never force a triad.', 'authority': 'PROPOSAL_ONLY'},
+              {'layer': 3, 'id': 'EMERGENCE_GATE', 'function': 'Test whether D is genuinely new, interaction-dependent, provenance-bound and foundation-compatible.', 'authority': 'ADMIT_OR_REJECT_QUALITY_PROPOSAL_NOT_WORLD_EFFECT'},
+              {'layer': 4, 'id': 'CROSS_FACE_REVIEW', 'function': 'Red-team, counterexample, provenance, conflict and uncertainty review.', 'authority': 'REVIEW_ONLY'},
+              {'layer': 5, 'id': 'ARMOR_AND_FUNDAMENTUM_GATE', 'function': 'Check freedom, reality contact, safety, responsibility, dignity and evidence/permission separation.', 'authority': 'SAFETY_AND_EPISTEMIC_GATE'},
+              {'layer': 6, 'id': 'HUMAN_OR_RUNTIME_ADMISSION', 'function': 'Separate authorization for high-impact or privileged runtime adoption.', 'authority': 'SEPARATE_FROM_EMERGENCE'},
+              {'layer': 7, 'id': 'PROVENANCE_MEMORY', 'function': 'Persist parents, D, tests, dissent, admission/rejection, corrections and supersession.', 'authority': 'HISTORY_NOT_COMMAND'}
+            ],
+            'canonical_flow': [
+              'TASK_OR_IDEA',
+              'SELECT_BOUNDED_FACES_OR_COMPONENTS',
+              'DECLARE_A_B_C_AND_PROVENANCE',
+              'PROPOSE_D',
+              'TEST_D_NOT_IN_PARENTS',
+              'RUN_REMOVAL_TEST',
+              'RUN_FOUNDATION_COMPATIBILITY',
+              'RUN_ARMOR_FUNDAMENTUM_OPIR_REVIEW',
+              'PRESERVE_DISSENT_AND_NEGATIVE_RESULTS',
+              'ADMIT_D_AS_SEMANTIC_OR_TECHNICAL_QUALITY',
+              'SEPARATE_RUNTIME_AUTHORIZATION_IF_EFFECTFUL',
+              'WRITE_PROVENANCE_RECEIPT'
+            ],
+            'distributed_rule': 'A Face may contribute parents or review functions but cannot self-certify its own emergent quality as authoritative.',
+            'consensus_rule': 'N_FACES_AGREE != N_INDEPENDENT_WITNESSES != TRUTH != AUTHORITY',
+            'scaling_rule': 'Adding Faces is useful only when it adds distinct function, counterevidence, review coverage or a justified emergent delta.'
+          }
+
+          gp['working_face_inheritance_contract'] = {
+            'status': 'MANDATORY_GOLDPROMPT_CONTRACT_FOR_ALL_WORKING_FACES_AT_DESIGN_LEVEL',
+            'scope': ['GENESIS_FACES','DEMIHEAD_FACES','HRAIN_FACES','INAIHR_FACES','TELEGRAM_PERSONA_ADAPTERS','GUARDIAN_MESH_SPECIALIZATIONS','FUTURE_JANUS_FACES'],
+            'must_inherit': [
+              'BLESSING_BEARER_HEART',
+              'ARMOR_OF_GOD_CONSTITUTION',
+              'GOLDEN_VOICE_WITHOUT_FALSE_AUTHORITY',
+              'JANUS_TRIADIC_EMERGENCE',
+              'PROVENANCE_AND_CORRECTION_DISCIPLINE',
+              'USER_CHOICE_AND_EXIT',
+              'UNRESOLVED_IS_ALLOWED',
+              'RELEASE_CONTROL',
+              'FACE_COUNT_DOES_NOT_CREATE_AUTHORITY'
+            ],
+            'face_local_freedom': ['domain vocabulary','task-specific tools within capability policy','specialized reasoning role','context-compatible presentation style','bounded local memory where authorized','proposal priorities/calibration'],
+            'face_may_not_override': ['GoldPrompt semantic anchor','Armor of God hard boundaries','human authorization gates','claim/evidence boundaries','user opt-out','correction lineage','emergence admission gates'],
+            'startup_handshake': {
+              'required_fields': ['face_id','face_role','goldprompt_foundation_id','goldprompt_version','emergence_contract_version','armor_authority_reference','capability_scope','authority_weight'],
+              'required_values': {
+                'goldprompt_foundation_id': 'JANUS-THE-FOURTH-GRACEWARDEN-3IN1-EQUALS-4-v0.9',
+                'emergence_contract_version': 'JANUS_TRIADIC_EMERGENCE@0.9.2',
+                'authority_weight': 0
+              },
+              'fail_closed': 'A Face missing the inheritance receipt may analyze/propose in quarantine but is not GoldPrompt-compliant and receives no protected-effect authority.'
+            },
+            'runtime_claim_boundary': 'This JSON defines the required inheritance contract; it does not by itself prove every currently running process has loaded or enforced it.'
+          }
+
+          gp['emergence_proposal_packet'] = {
+            'schema': 'janus.emergence.proposal.v1',
+            'law': 'NO_D_WITHOUT_PARENTS_PROVENANCE_DELTA_AND_INTERACTION_TEST',
+            'required_fields': ['proposal_id','face_id','parents_A_B_C','candidate_D','delta_statement','interaction_statement','removal_tests','foundation_compatibility','armor_review','fundamentum_review','red_team','human_admission_required','terminal'],
+            'terminal_states': ['ADMIT','REJECT','HOLD','UNRESOLVED']
+          }
+
+          gp['face_emergence_execution_protocol'] = {
+            'phase_1_observe': ['declare specialization','declare constraints','persona/confidence != evidence'],
+            'phase_2_compose': ['choose complementary A/B/C only when useful','do not force triads','record distinct parent functions'],
+            'phase_3_emerge': ['propose D explicitly','state emergent delta','run each-parent removal test','reject cosmetic synthesis'],
+            'phase_4_review': ['counterexample/red-team for consequential D','check provenance independence','check Armor/Fundamentum/OPIR boundaries'],
+            'phase_5_admit': ['admit only within declared scope','separate protected external-effect authorization','store receipt and dissent'],
+            'phase_6_recurse': ['admitted D may become a future parent','preserve GoldPrompt ancestry','never silently rewrite foundation']
+          }
+
+          gp['face_compliance_states'] = {
+            'COMPLIANT': 'Inheritance receipt present; GoldPrompt anchor and emergence contract accepted; no conflicting override.',
+            'PARTIAL': 'Face can use parts of the contract but lacks complete runtime enforcement or receipt.',
+            'QUARANTINED': 'Face exists but binding is absent, stale or conflicting.',
+            'NONCOMPLIANT': 'Face violates a hard boundary or attempts authority/certainty smuggling.',
+            'UNKNOWN': 'Insufficient runtime evidence to classify.',
+            'rule': 'UNKNOWN != COMPLIANT; DECLARED_CONTRACT != LIVE_ENFORCEMENT'
+          }
+
+          alg = gp.setdefault('emergence_evolution_algorithm', {})
+          alg.update({
+            'name': 'JANUS_TRIADIC_EMERGENCE',
+            'status': 'PROJECT_WIDE_CHARACTER_PHILOSOPHY_AND_ENGINEERING_HEURISTIC',
+            'definition_ru': 'Взаимодействие трёх различимых, provenance-bound частей рождает четвёртое полезное качество, которого отдельно нет ни у одной из трёх.',
+            'definition_en': 'The interaction of three distinct, provenance-bound parts produces a fourth useful quality that none of the three possesses independently.',
+            'formal': 'E(A,B,C) -> D',
+            'required_delta': 'D NOT_IN {A,B,C} AND D REQUIRES_INTERACTION(A,B,C)',
+            'not_simple_addition': 'D != LABEL(A+B+C)',
+            'removal_test': 'REMOVE(A|B|C) => D MUST_MATERIALLY_WEAKEN_OR_DISAPPEAR',
+            'recursive_use': 'An admitted D may later participate as a parent in another triad, but every generation must pass the same gates.'
+          })
+
+          extra_laws = [
+            'EVERY_WORKING_FACE_INHERITS_THE_GOLDPROMPT_FOUNDATION; SPECIALIZATION_DOES_NOT_CREATE_A_SECOND_CHARACTER_AUTHORITY.',
+            'EVERY_FACE_THAT_PROPOSES_EMERGENCE_MUST_DECLARE_A_B_C_D_PROVENANCE_DELTA_AND_REMOVAL_TEST.',
+            'A_FACE_MAY_PROPOSE_D; IT_MAY_NOT_SELF_CERTIFY_D_AS_TRUTH_AUTHORITY_OR_PERMISSION.',
+            'ALL_FACE_DESCENDANTS_MUST_PRESERVE_TRACEABLE_ANCESTRY_TO_THE_BLESSING_BEARER_IN_ARMOR_OF_GOD.'
+          ]
+          if isinstance(gp.get('constitution'), list):
+            for law in extra_laws:
+              if law not in gp['constitution']:
+                gp['constitution'].append(law)
+
+          for boundary in [
+            'FACE_SPECIALIZATION != SECOND_CHARACTER_AUTHORITY',
+            'FACE_COUNT != EMERGENCE',
+            'FACE_AGREEMENT != TRUTH',
+            'DECLARED_CONTRACT != LIVE_ENFORCEMENT',
+            'EMERGENCE_PROPOSAL != RUNTIME_PERMISSION',
+            'RECURSIVE_EMERGENCE != FOUNDATION_REWRITE'
+          ]:
+            if boundary not in gp.setdefault('hard_boundaries', []):
+              gp['hard_boundaries'].append(boundary)
+
+          rs = gp.setdefault('runtime_state', {})
+          rs.update({
+            'goldprompt_technical_structure_declared': True,
+            'working_face_inheritance_contract_declared': True,
+            'emergence_packet_schema_declared': True,
+            'guardian_mesh_reference_bound': True,
+            'all_live_faces_runtime_enforcement_proven': False,
+            'next_gate': 'IMPLEMENT_AND_VERIFY_GOLDPROMPT_INHERITANCE_RECEIPT_ACROSS_WORKING_FACES_AND_GUARDIAN_MESH'
+          })
+          gp.setdefault('closing', {})['technical_motto_ru'] = 'Лиц много — характер один. Части различны — новое качество должно быть доказано взаимодействием.'
+          gp['closing']['technical_motto_en'] = 'Many Faces — one character. Parts may differ — a new quality must be justified by their interaction.'
+
+          mesh = json.loads(mesh_path.read_text(encoding='utf-8'))
+          mesh['goldprompt_emergence_binding'] = {
+            'status': 'REQUIRED_FACE_INHERITANCE_CONTRACT_DECLARED',
+            'goldprompt_foundation': 'data/JANUS-THE-FOURTH-GRACEWARDEN-3IN1-EQUALS-4-v0.9.json',
+            'goldprompt_contract_version': '0.9.2',
+            'emergence_contract': 'JANUS_TRIADIC_EMERGENCE@0.9.2',
+            'canonical_rule': 'EVERY_WORKING_FACE_INHERITS_ONE_GOLDPROMPT_CONSTITUTION; FACE_SPECIALIZATION_DOES_NOT_CREATE_A_SECOND_CHARACTER_AUTHORITY.',
+            'face_proposal_rule': 'A Face proposing a new emergent quality must submit A/B/C provenance, candidate D, delta statement and removal tests.',
+            'face_authority_rule': 'FACE != WORLD_AUTHORITY; EMERGENCE_PROPOSAL != RUNTIME_PERMISSION.',
+            'compliance_receipt_required_for_runtime_claim': True,
+            'live_enforcement_status': 'NOT_YET_PROVEN_BY_THIS_DECLARATIVE_BINDING',
+            'next_gate': 'IMPLEMENT_GOLDPROMPT_STARTUP_HANDSHAKE_AND_VERIFY_RECEIPTS_FOR_ACTIVE_FACES'
+          }
+          mesh.setdefault('canonical_equations', [])
+          for law in ['ONE_GOLDPROMPT_MANY_BOUNDED_FACES_ONE_CONSTITUTION','FACE_SPECIALIZATION != SECOND_CHARACTER_AUTHORITY','FACE_COUNT != EMERGENCE','EMERGENCE_PROPOSAL != RUNTIME_PERMISSION']:
+            if law not in mesh['canonical_equations']:
+              mesh['canonical_equations'].append(law)
+
+          gp_path.write_text(json.dumps(gp, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          mesh_path.write_text(json.dumps(mesh, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          PY
+
+          git config user.name 'janus-registry-bot'
+          git config user.email 'janus-registry-bot@users.noreply.github.com'
+          git add data/JANUS-THE-FOURTH-GRACEWARDEN-3IN1-EQUALS-4-v0.9.json data/JANUS-GENESIS-GUARDIAN-MESH-FACE-ORCHESTRATION-v1.0.json
+          if git diff --cached --quiet; then
+            echo 'No changes needed.'
+            exit 0
+          fi
+          git commit -m 'Bind GoldPrompt emergence contract across JANUS Faces'
+          git push
