@@ -62,12 +62,16 @@ jobs:
             data=Path(path).read_bytes()
             return hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()
 
+          def sha256(path):
+            return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
           ancestor=law['immutable_ancestor_policy']['bd101_ancestor']
           assert git_blob_sha(ancestor['path'])==ancestor['blob_sha']
           for parent in law['constitutional_parents']:
             assert git_blob_sha(parent['path'])==parent['blob_sha']
 
-          corpus=json.loads(Path('data/JANUS-CSTL-FORBIDDEN-SHORTCUT-TEST-CORPUS-2026-08-17-v1.0.json').read_text(encoding='utf-8'))
+          corpus_path='data/JANUS-CSTL-FORBIDDEN-SHORTCUT-TEST-CORPUS-2026-08-17-v1.0.json'
+          corpus=json.loads(Path(corpus_path).read_text(encoding='utf-8'))
           assert corpus['corpus_id']=='JANUS-CSTL-FORBIDDEN-SHORTCUT-TEST-CORPUS-v1.0'
           assert len(corpus['cases'])==18
           ids={c['id'] for c in corpus['cases']}
@@ -81,6 +85,36 @@ jobs:
             'EMERGENT_STATE_WITH_DELTA_AND_REMOVAL_TEST'
           ):
             assert required in ids
+
+          if law['status']=='SEALED_TESTED_REFERENCE_NOT_RUNTIME_AUTHORITY':
+            tested=law['tested_reference_implementation']
+            cert_path=tested['certificate_path']
+            assert git_blob_sha(cert_path)==tested['certificate_blob_sha']
+            assert git_blob_sha(tested['implementation_path'])==tested['implementation_blob_sha']
+            assert git_blob_sha(tested['test_corpus_path'])==tested['test_corpus_blob_sha']
+            assert sha256(tested['implementation_path'])==tested['implementation_sha256']
+            assert sha256(tested['test_corpus_path'])==tested['test_corpus_sha256']
+            assert tested['cases']==18 and tested['passed']==18 and tested['failed']==0
+            assert tested['reference_scope_only'] is True
+
+            cert=json.loads(Path(cert_path).read_text(encoding='utf-8'))
+            assert cert['status']=='REFERENCE_VALIDATOR_SELFTEST_PASS_NOT_RUNTIME_AUTHORITY'
+            assert cert['implementation']['blob_sha']==tested['implementation_blob_sha']
+            assert cert['implementation']['sha256']==tested['implementation_sha256']
+            assert cert['test_corpus']['blob_sha']==tested['test_corpus_blob_sha']
+            assert cert['test_corpus']['sha256']==tested['test_corpus_sha256']
+            assert cert['test_corpus']['cases']==18
+            assert cert['test_corpus']['passed']==18
+            assert cert['test_corpus']['failed']==0
+            assert cert['ci_receipt']['run_id']==tested['certified_run_id']
+            assert cert['ci_receipt']['job_id']==tested['certified_job_id']
+            assert cert['ci_receipt']['tested_commit']==tested['certified_tested_commit']
+            assert cert['ci_receipt']['conclusion']=='success'
+            assert cert['authority_boundary']['runtime_authority_granted'] is False
+            assert cert['authority_boundary']['project_wide_authority_granted'] is False
+            assert cert['authority_boundary']['external_effect_authority_granted'] is False
+            print('CSTL_CERTIFICATE_BINDING=PASS')
+
           print('CSTL_LINEAGE_INTEGRITY=PASS')
           print('CSTL_CASES=18')
           PY
@@ -96,11 +130,12 @@ jobs:
         shell: bash
         run: |
           python - <<'PY'
-          import hashlib, json, os, subprocess
+          import hashlib, json, os
           from pathlib import Path
           validator=Path('research/cstl/janus_cstl_validator_v1.py').read_bytes()
           corpus=Path('data/JANUS-CSTL-FORBIDDEN-SHORTCUT-TEST-CORPUS-2026-08-17-v1.0.json').read_bytes()
           law=Path('data/JANUS-CONSTITUTIONAL-STATE-TRANSITION-LAW-2026-08-17-v1.0.json').read_bytes()
+          certificate=Path('data/JANUS-CSTL-REFERENCE-VALIDATOR-CERTIFICATE-2026-08-17-v1.0.json').read_bytes()
           receipt={
             'receipt_class':'CSTL_DETERMINISTIC_REFERENCE_VALIDATOR_CI_RECEIPT',
             'commit_sha':os.environ['GITHUB_SHA'],
@@ -109,6 +144,7 @@ jobs:
             'validator_sha256':hashlib.sha256(validator).hexdigest(),
             'corpus_sha256':hashlib.sha256(corpus).hexdigest(),
             'law_sha256':hashlib.sha256(law).hexdigest(),
+            'certificate_sha256':hashlib.sha256(certificate).hexdigest(),
             'cases':18,
             'result':'PASS',
             'runtime_authority_granted':False,
