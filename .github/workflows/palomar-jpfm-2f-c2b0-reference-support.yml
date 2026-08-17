@@ -1,0 +1,97 @@
+name: Palomar JPFM-2F-C2B0 reference support decomposition
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/palomar-jpfm-2f-c2b0-reference-support.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  decompose:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install frozen diagnostic environment
+        run: |
+          python -m pip install -q numpy==2.2.6 pandas==2.3.1 scipy==1.16.1 statsmodels==0.14.5 astropy==8.0.1
+      - name: Syntax, parent binding and external-label firewall
+        run: |
+          python -m py_compile tools/palomar/jpfm_2f_c2b0_reference_support_decomposition.py
+          python - <<'PY'
+          import json, pathlib
+          p=pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-C2B0-REFERENCE-SUPPORT-DECOMPOSITION-ADMISSION-v1.0.json')
+          a=json.loads(p.read_text())
+          assert a['status']=='PREREGISTERED_AFTER_C2A_NEGATIVE_CERTIFICATE_BEFORE_C2B0_DECOMPOSITION_OUTCOME'
+          assert a['frozen_reference_contract']['minimum_reference_stars']==20
+          assert a['frozen_reference_contract']['reference_filters_unchanged']==[
+            'FLAGS == 0','CLASS_STAR >= 0.8','SNR_WIN >= 20','finite FWHM_IMAGE/ELONGATION/SPREAD_MODEL','target NUMBER excluded']
+          assert a['repair_boundary_after_diagnostic']['C2B1_may_lower_minimum_reference_stars'] is False
+          assert a['repair_boundary_after_diagnostic']['future_inference_requires_new_nonoverlapping_holdout'] is True
+          assert a['external_label_firewall']['external_label_reveal_authorized'] is False
+          print('PASS_JPFM_2F_C2B0_ADMISSION_GATE')
+          PY
+          if grep -Eiq 'requests|https?://|DATE-OBS|bluebook|nuforc|kp\.gfz|aa\.usno' tools/palomar/jpfm_2f_c2b0_reference_support_decomposition.py; then
+            echo 'FAIL: network or external-label source surface in C2B0 runner'; exit 1
+          fi
+          echo 'PASS_JPFM_2F_C2B0_EXTERNAL_LABEL_FIREWALL'
+      - name: Execute frozen C2B0 support decomposition
+        run: |
+          python tools/palomar/jpfm_2f_c2b0_reference_support_decomposition.py \
+            --admission data/JANUS-PALOMAR-JPFM-2F-C2B0-REFERENCE-SUPPORT-DECOMPOSITION-ADMISSION-v1.0.json \
+            --c2a-result data/JANUS-PALOMAR-JPFM-2F-C2A-STRATIFIED-UPSTREAM-MORPHOLOGY-REPLAY-RUN-001.json \
+            --c2a-sidecar data/JANUS-PALOMAR-JPFM-2F-C2A-STRATIFIED-UPSTREAM-MORPHOLOGY-REPLAY-SIDECAR-RUN-001.csv.gz \
+            --c0m-result data/JANUS-PALOMAR-JPFM-2F-C0M-FULL-S0-HEADER-ONLY-ACQUISITION-MAP-RUN-001.json \
+            --c0m-map data/JANUS-PALOMAR-JPFM-2F-C0M-FULL-S0-HEADER-ONLY-ACQUISITION-MAP-RUN-001.csv.gz \
+            --out-json data/JANUS-PALOMAR-JPFM-2F-C2B0-REFERENCE-SUPPORT-DECOMPOSITION-RUN-001.json \
+            --out-sidecar-gz data/JANUS-PALOMAR-JPFM-2F-C2B0-REFERENCE-SUPPORT-DECOMPOSITION-SIDECAR-RUN-001.csv.gz
+      - name: Validate fail-closed diagnostic artifact
+        run: |
+          python - <<'PY'
+          import gzip, hashlib, io, json, pathlib, pandas as pd
+          jp=pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-C2B0-REFERENCE-SUPPORT-DECOMPOSITION-RUN-001.json')
+          sp=pathlib.Path('data/JANUS-PALOMAR-JPFM-2F-C2B0-REFERENCE-SUPPORT-DECOMPOSITION-SIDECAR-RUN-001.csv.gz')
+          d=json.loads(jp.read_text())
+          assert d['status']=='EXECUTED_DIAGNOSTIC_ONLY'
+          assert d['outcome']=='C2A_REFERENCE_SUPPORT_VARIATION_DECOMPOSED__C2A_REMAINS_NEGATIVE_CERTIFICATE'
+          assert d['reference_contract']['minimum_reference_stars']==20
+          assert d['reference_contract']['unchanged'] is True
+          assert d['reference_contract']['rows']==512
+          assert d['reference_contract']['eligible_rows']==104
+          assert d['external_label_firewall']['external_label_reveal_authorized'] is False
+          assert d['next_gate'].startswith('PREREGISTER_C2B1_REFERENCE_SUPPORT_REPAIR')
+          gz=sp.read_bytes(); raw=gzip.decompress(gz)
+          assert hashlib.sha256(gz).hexdigest()==d['sidecar']['gzip_sha256']
+          assert hashlib.sha256(raw).hexdigest()==d['sidecar']['csv_sha256']
+          df=pd.read_csv(io.BytesIO(raw)); assert len(df)==512 and df.src_id.nunique()==512
+          assert int(df.reference_eligible20.sum())==104
+          print('PASS_JPFM_2F_C2B0_RESULT_GATE', d['diagnostic_group_ranking_by_delta_deviance'][:3])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jpfm-2f-c2b0-reference-support-run-001
+          path: |
+            data/JANUS-PALOMAR-JPFM-2F-C2B0-REFERENCE-SUPPORT-DECOMPOSITION-RUN-001.json
+            data/JANUS-PALOMAR-JPFM-2F-C2B0-REFERENCE-SUPPORT-DECOMPOSITION-SIDECAR-RUN-001.csv.gz
+          if-no-files-found: error
+          retention-days: 30
+      - name: Commit validated diagnostic result
+        run: |
+          git config user.name 'janus-jpfm-ci'
+          git config user.email 'actions@users.noreply.github.com'
+          git add \
+            data/JANUS-PALOMAR-JPFM-2F-C2B0-REFERENCE-SUPPORT-DECOMPOSITION-RUN-001.json \
+            data/JANUS-PALOMAR-JPFM-2F-C2B0-REFERENCE-SUPPORT-DECOMPOSITION-SIDECAR-RUN-001.csv.gz
+          git diff --cached --quiet && exit 0
+          git commit -m 'Record JPFM-2F-C2B0 reference-support decomposition [skip ci]'
+          git pull --rebase origin main
+          git push
