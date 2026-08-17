@@ -1,0 +1,127 @@
+name: CSTL constitutional state transition integrity
+
+on:
+  pull_request:
+    paths:
+      - 'data/JANUS-CONSTITUTIONAL-STATE-TRANSITION-LAW-2026-08-17-v1.0.json'
+      - 'data/JANUS-CSTL-FORBIDDEN-SHORTCUT-TEST-CORPUS-2026-08-17-v1.0.json'
+      - 'data/JANUS-CSTL-REFERENCE-VALIDATOR-CERTIFICATE-2026-08-17-v1.0.json'
+      - 'research/cstl/janus_cstl_validator_v1.py'
+      - '.github/workflows/cstl-constitutional-state-transition-integrity.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'data/JANUS-CONSTITUTIONAL-STATE-TRANSITION-LAW-2026-08-17-v1.0.json'
+      - 'data/JANUS-CSTL-FORBIDDEN-SHORTCUT-TEST-CORPUS-2026-08-17-v1.0.json'
+      - 'data/JANUS-CSTL-REFERENCE-VALIDATOR-CERTIFICATE-2026-08-17-v1.0.json'
+      - 'research/cstl/janus_cstl_validator_v1.py'
+      - '.github/workflows/cstl-constitutional-state-transition-integrity.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify CSTL constitutional lineage and immutable ancestor bindings
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+
+          law_path=Path('data/JANUS-CONSTITUTIONAL-STATE-TRANSITION-LAW-2026-08-17-v1.0.json')
+          law=json.loads(law_path.read_text(encoding='utf-8'))
+          assert law['artifact_uuid']=='JANUS-CONSTITUTIONAL-STATE-TRANSITION-LAW-2026-08-17-v1.0'
+          assert law['status'] in {
+            'SEALED_CANDIDATE_NOT_YET_RUNTIME_AUTHORITY',
+            'SEALED_TESTED_REFERENCE_NOT_RUNTIME_AUTHORITY'
+          }
+          assert law['central_law']=='NO_AUTHORITATIVE_STATE_TRANSITION_WITHOUT_VERIFIED_IDENTITY_BINDING_CONTINUITY'
+          assert law['expanded_law']=='STATE_IS_THE_RESULT_OF_A_VERIFIABLE_CHAIN_NOT_THE_PREMISE_OF_THE_CHAIN'
+          assert law['canonical_chain']==[
+            'KNOWLEDGE','EMBODIMENT','VERIFIED_IDENTITY_BINDING','CONTEXT','AUTHORIZATION',
+            'TRANSITION','RESTORATION','RIGHTFUL_BELONGING','POST_RESTORATION_VALIDATION','NEW_STATE'
+          ]
+          for invariant in (
+            'FOUND != RESTORED','CONTEXT != PERMISSION','AUTHORIZATION != EXECUTION',
+            'EVIDENCE != PERMISSION','EMERGENT_QUALITY != AUTOMATIC_AUTHORITY',
+            'TARGET_BINDING != CONSENT','RESTORATION != IDENTITY_PROOF'
+          ):
+            assert invariant in law['transition_invariants']
+          assert law['runtime_and_authority']['current_runtime_enforcement'] is False
+          assert law['runtime_and_authority']['current_project_wide_authority'] is False
+          assert law['runtime_and_authority']['authority_delta']==0
+          assert law['runtime_and_authority']['external_effect_delta']==0
+
+          def git_blob_sha(path):
+            data=Path(path).read_bytes()
+            return hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()
+
+          ancestor=law['immutable_ancestor_policy']['bd101_ancestor']
+          assert git_blob_sha(ancestor['path'])==ancestor['blob_sha']
+          for parent in law['constitutional_parents']:
+            assert git_blob_sha(parent['path'])==parent['blob_sha']
+
+          corpus=json.loads(Path('data/JANUS-CSTL-FORBIDDEN-SHORTCUT-TEST-CORPUS-2026-08-17-v1.0.json').read_text(encoding='utf-8'))
+          assert corpus['corpus_id']=='JANUS-CSTL-FORBIDDEN-SHORTCUT-TEST-CORPUS-v1.0'
+          assert len(corpus['cases'])==18
+          ids={c['id'] for c in corpus['cases']}
+          for required in (
+            'FORBID_FOUND_TO_FINAL_STATE',
+            'FORBID_EVIDENCE_TO_TRANSITION_WITHOUT_AUTHORIZATION',
+            'IDENTITY_BINDING_CONTINUITY_BREAK',
+            'PROVENANCE_RECEIPT_CHAIN_BREAK',
+            'HIGH_IMPACT_REQUIRES_HUMAN_AUTHORIZATION',
+            'EMERGENT_STATE_CANNOT_SELF_CERTIFY',
+            'EMERGENT_STATE_WITH_DELTA_AND_REMOVAL_TEST'
+          ):
+            assert required in ids
+          print('CSTL_LINEAGE_INTEGRITY=PASS')
+          print('CSTL_CASES=18')
+          PY
+
+      - name: Replay deterministic CSTL positive and forbidden-shortcut suite
+        run: |
+          python research/cstl/janus_cstl_validator_v1.py \
+            --self-test data/JANUS-CSTL-FORBIDDEN-SHORTCUT-TEST-CORPUS-2026-08-17-v1.0.json \
+            | tee cstl-selftest.log
+          grep -q 'CSTL_SELFTEST=PASS CASES=18' cstl-selftest.log
+
+      - name: Build deterministic CSTL CI receipt
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib, json, os, subprocess
+          from pathlib import Path
+          validator=Path('research/cstl/janus_cstl_validator_v1.py').read_bytes()
+          corpus=Path('data/JANUS-CSTL-FORBIDDEN-SHORTCUT-TEST-CORPUS-2026-08-17-v1.0.json').read_bytes()
+          law=Path('data/JANUS-CONSTITUTIONAL-STATE-TRANSITION-LAW-2026-08-17-v1.0.json').read_bytes()
+          receipt={
+            'receipt_class':'CSTL_DETERMINISTIC_REFERENCE_VALIDATOR_CI_RECEIPT',
+            'commit_sha':os.environ['GITHUB_SHA'],
+            'workflow':'CSTL constitutional state transition integrity',
+            'run_id':int(os.environ['GITHUB_RUN_ID']),
+            'validator_sha256':hashlib.sha256(validator).hexdigest(),
+            'corpus_sha256':hashlib.sha256(corpus).hexdigest(),
+            'law_sha256':hashlib.sha256(law).hexdigest(),
+            'cases':18,
+            'result':'PASS',
+            'runtime_authority_granted':False,
+            'external_effect_authority_granted':False
+          }
+          Path('cstl-ci-receipt.json').write_text(json.dumps(receipt,indent=2,sort_keys=True)+'\n',encoding='utf-8')
+          print(json.dumps(receipt,sort_keys=True))
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cstl-reference-validator-receipt
+          path: |
+            cstl-ci-receipt.json
+            cstl-selftest.log
+          if-no-files-found: error
