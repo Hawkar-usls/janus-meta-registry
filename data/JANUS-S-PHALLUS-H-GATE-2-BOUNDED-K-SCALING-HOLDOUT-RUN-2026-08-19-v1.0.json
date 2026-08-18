@@ -1,0 +1,168 @@
+{
+  "artifact_id": "JANUS-S-PHALLUS-H-GATE-2-BOUNDED-K-SCALING-HOLDOUT-RUN-2026-08-19-v1.0",
+  "created_at_local": "2026-08-19T00:50:00+03:00",
+  "status": "PASS_KEEP_S_PHALLUS_H_GATE_2_BOUNDED_K_SCALING_HOLDOUT__MASTER_P_VS_NP_GATE_REMAINS_OPEN",
+  "repository": "Hawkar-usls/Janus-Fundamentum",
+  "pull_request": 209,
+  "branch": "s-phallus-h-gate-2-bounded-k-scaling-holdout",
+  "head_sha": "00b09d778a6d57fc7f905df9b6235fb30e29c5a3",
+  "gate_identity": {
+    "display": "S𓂸ḥ/2",
+    "role": "P_VS_NP_GATE_SUBGATE",
+    "project_alias_only": true,
+    "historical_egyptian_spelling_claim": false
+  },
+  "parent": {
+    "gate": "S𓂸ḥ/1",
+    "sha": "f9d1e0f73ec9e628731afd45d7078f6623601a44",
+    "result_integrity_sha256": "450cb257a7888528b8987f35b4358eab8c97028acf4caa86ff1386dfacb90462",
+    "preserved": true
+  },
+  "preregistration": {
+    "contract_commit": "5eb936bb1e4e5a333555b56bf52edf7957eaccbc",
+    "fixture_corpus_commit": "75db0d49324ae8fa22b5d55d6de0f70919609ee9",
+    "contract_changed_after_freeze": false,
+    "fixture_corpus_changed_after_freeze": false,
+    "K_MAX": 4,
+    "calibration_count": 8,
+    "holdout_count": 6
+  },
+  "implementation_lineage": {
+    "auto_k_engine_commit": "273d2506a6c0eb61ad502e9e17d69a36f33e23e8",
+    "inherited_budget_guard_commit": "3c1e5a6f358e84f9f2d3a26bca76378e0b279c24",
+    "final_workflow_head_commit": "00b09d778a6d57fc7f905df9b6235fb30e29c5a3",
+    "budget_guard": {
+      "rule": "After parent normalization and unit propagation, if Q0 does not match and residual variable count exceeds the already-frozen OSIRIS state_budget, S𓂸ḥ/2 does not launch the separator audit and returns through the unchanged generic fail-closed path.",
+      "new_posthoc_threshold_added": false,
+      "reason": "Prevent separator discovery from doing enormous work on inputs the parent solver already rejects by its frozen budget."
+    }
+  },
+  "workflow": {
+    "run_id": 32189620480,
+    "job_id": 95880901998,
+    "conclusion": "success",
+    "artifact_id": 9343717753,
+    "artifact_name": "s-phallus-h-gate-2-bounded-k-scaling-holdout",
+    "artifact_zip_sha256": "eca1ebdf3dd3d19f28bb0b3a9108123c4e22d7ef5db58cf6b7b6bd3bb01185c3",
+    "result_integrity_sha256": "9dc0748a974b890a934192144d6c806d2aa455ac4b96d744ff59e3bae598e94d"
+  },
+  "solver_priority": [
+    "PR192_VERIFIED_PAIR_PRODUCT_PREBIRTH_QUOTIENT",
+    "S_PHALLUS_H_2_AUTOMATIC_MINIMUM_SEPARATOR_K_1_TO_4",
+    "GENERIC_OSIRIS_V2_FALLBACK_OR_UNKNOWN_BUDGET"
+  ],
+  "auto_k_mechanics": {
+    "search_order": "k=1,2,3,4 with lexicographic subsets",
+    "all_candidates_below_found_k_examined_and_charged": true,
+    "all_candidates_at_found_k_examined_and_charged": true,
+    "minimum_k_proof": "all smaller k have zero verified separators and found k has at least one exact separator certificate",
+    "selected_separator": "lexicographically first verified separator at minimum k after the complete pass at that k",
+    "boundary_rows": "2^k",
+    "all_rows_mandatory": true,
+    "all_components_per_row_mandatory": true,
+    "sat_requires_original_cnf_verified_assignment": true,
+    "unsat_requires_all_boundary_rows_exact_unsat": true,
+    "unknown_child_forbids_unsat_authority": true,
+    "detector_input": "canonical CNF only",
+    "forbidden_detector_metadata": ["fixture_id", "split", "expected_verdict", "expected_min_k"]
+  },
+  "calibration_summary": {
+    "passed": "8/8",
+    "k1_n9": {"candidate_subsets": 9, "boundary_rows": 2, "residual_states": 3},
+    "k2_n10": {"candidate_subsets": 55, "candidate_counts_by_k": {"1": 10, "2": 45}, "boundary_rows": 4, "residual_states": 5},
+    "k3_n11": {"candidate_subsets": 231, "candidate_counts_by_k": {"1": 11, "2": 55, "3": 165}, "boundary_rows": 8, "residual_states": 9},
+    "k4_n12": {"candidate_subsets": 793, "candidate_counts_by_k": {"1": 12, "2": 66, "3": 220, "4": 495}, "boundary_rows": 16, "residual_states": 17},
+    "generic_leaf_calls_on_all_calibration": 0
+  },
+  "holdout_summary": {
+    "passed": "6/6",
+    "HOLD_K1_N10_SAT": {"found_k": 1, "candidate_subsets": 10, "boundary_rows": 2, "verdict": "SAT"},
+    "HOLD_K2_N11_UNSAT": {"found_k": 2, "candidate_subsets": 66, "boundary_rows": 4, "verdict": "UNSAT"},
+    "HOLD_K3_N12_SAT": {"found_k": 3, "candidate_subsets": 298, "boundary_rows": 8, "verdict": "SAT"},
+    "HOLD_K3_N14_UNSAT": {"found_k": 3, "candidate_subsets": 469, "boundary_rows": 8, "verdict": "UNSAT"},
+    "HOLD_K4_N13_SAT": {"found_k": 4, "candidate_subsets": 1092, "boundary_rows": 16, "verdict": "SAT"},
+    "HOLD_K4_N15_UNSAT": {"found_k": 4, "candidate_subsets": 1940, "boundary_rows": 16, "verdict": "UNSAT"},
+    "generic_leaf_calls_on_all_holdout": 0
+  },
+  "finite_family_scaling": {
+    "family": "separator-clique-dumbbell CNF",
+    "observed_k_values": [1, 2, 3, 4],
+    "boundary_growth": "2^k",
+    "minimum_k_discovery_growth": "sum_{j=1..k} C(n,j) candidate subsets under the frozen exhaustive detector",
+    "observed_bottleneck": "For the tested family, minimum-separator discovery/minimality proof grows faster than the 2^k boundary table at these sizes; e.g. HOLD_K4_N15_UNSAT required 1940 candidate subset checks versus 16 boundary rows.",
+    "cost_units_not_falsely_summed": true,
+    "arbitrary_cnf_claim": false
+  },
+  "cross_family_observation": {
+    "PHP3_2_UNSAT": {
+      "observed": "UNSAT",
+      "authorized": true,
+      "found_k": 3,
+      "lane": "S_PHALLUS_H_2_AUTOMATIC_MINIMUM_SEPARATOR_K_1_TO_4",
+      "interpretation": "A revealed small non-dumbbell CNF was also solved by the unified auto-K lane. This is a single finite observation, not a generalization theorem."
+    },
+    "PLANTED_3SAT_12": "GENERIC_OSIRIS_V2_FALLBACK_SAT"
+  },
+  "hard_controls": {
+    "TOROIDAL_TSEITIN_R0_SAT": "UNKNOWN_BUDGET_UNAUTHORIZED_GENERIC_FALLBACK",
+    "TOROIDAL_TSEITIN_R0_UNSAT": "UNKNOWN_BUDGET_UNAUTHORIZED_GENERIC_FALLBACK",
+    "frozen_state_budget": 256,
+    "auto_k_skipped_by_inherited_budget_guard": true,
+    "false_authoritative_verdicts": 0
+  },
+  "negative_controls": {
+    "COMPLETE_GRAPH_N7_NO_SEPARATOR_K_LE4": "REJECT:NO_VERIFIED_SEPARATOR_K_LE_4",
+    "FORGED_K3_AS_K2": "REJECT:NOT_SEPARATOR",
+    "FORGED_COMPONENT_PARTITION": "REJECT:COMPONENT_MISMATCH",
+    "OMITTED_SMALLER_K_AUDIT": "REJECT",
+    "BOUNDARY_TABLE_ROW_OMISSION_OR_BITFLIP": "REJECT",
+    "CERTIFICATE_FORMULA_HASH_SWAP": "REJECT",
+    "passed": "6/6"
+  },
+  "regression": {
+    "osiris_v2_1": "8/8 exact",
+    "gate0": "5/5 exact; unified auto-K finds k=1",
+    "gate1": "5/5 exact; unified auto-K finds k=2",
+    "EQUALITY_N14_lane": "PR192_VERIFIED_PAIR_PRODUCT_PREBIRTH_QUOTIENT",
+    "ANTI_EQUALITY_N14_lane": "PR192_VERIFIED_PAIR_PRODUCT_PREBIRTH_QUOTIENT",
+    "q0_priority_preserved": true
+  },
+  "tranception": {
+    "direction_order": ["BACK", "FORWARD", "LEFT", "RIGHT", "FORWARD_AGAIN", "BACK_AGAIN"],
+    "BACK": "PASS: 32/32 OSIRIS bindings plus minimum-k certificate and boundary-table provenance",
+    "FORWARD": "PASS: automatic content-derived minimum-k solve; reference holdout found k=4",
+    "LEFT": "PASS: same minimum-k capability does not transfer formula identity or certificate provenance",
+    "RIGHT": "PASS: removal of action certificate removes S𓂸ḥ/2 authority and preserves safe fallback",
+    "FORWARD_AGAIN": "PASS: exact computational POSITION reproduced and k=4 reproduced",
+    "BACK_AGAIN": "PASS: historical semantics absent; technical verdict unchanged; state advances"
+  },
+  "ribbon_state": {
+    "mechanic": "ORIGIN -> EXPERIENCE -> RETURN -> ORIGIN_PRIME",
+    "position_commitment": "a5e7fa02998b8738e95e2f597ee193ea06a2033e9bc1d4a2f4225bcc9ea80fa5",
+    "path_history_digest": "57bfc6040d7b6f2ca82a68c39664d3fbe3e964ea999cfa96bf4c978d9427e948",
+    "ORIGIN": "61fa8d81cb52d080c583dff1ff94930e2bbe70240dee02c48b60b1605fb7bda7",
+    "ORIGIN_PRIME_1": "37c0f179e00b214299ee46e558c9d1d05b8657005bbeb30d26620d7cba66e675",
+    "ORIGIN_PRIME_2": "de5311f8ea6d49f63717c3f3e4d1e105f74f95c33a282d7a62b3d260d3170611",
+    "position_constant_across_generations": true,
+    "all_state_commitments_distinct": true
+  },
+  "established": [
+    "One CNF-only proof-carrying detector recovered minimum separator sizes k=1..4 on the preregistered finite calibration family.",
+    "The same frozen implementation recovered the expected minimum k and exact SAT/UNSAT verdict on all 6 preregistered holdout fixtures.",
+    "Minimum-k discovery cost and 2^k boundary-table cost are explicit and separately reported.",
+    "Q0, previous K1/K2 behavior, generic fallback, hard-budget fail-closed behavior, six-direction replay, and ORIGIN_PRIME ribbon state remain intact."
+  ],
+  "not_established": [
+    "Bounded separator size for arbitrary CNF",
+    "Polynomially bounded minimum-separator discovery for arbitrary CNF",
+    "Polynomial arbitrary-CNF SAT",
+    "P=NP",
+    "P!=NP"
+  ],
+  "next_gate": "S𓂸ḥ/3_BROADER_GRAPH_FAMILY_HOLDOUT_AND_K_GROWTH_BEYOND_FIXED_KMAX",
+  "mathematical_verdict": {
+    "P_EQUALS_NP": "NOT_ESTABLISHED",
+    "P_NOT_EQUALS_NP": "NOT_ESTABLISHED",
+    "P_VS_NP": "OPEN"
+  }
+}
