@@ -58,6 +58,72 @@
     "oil_recovery_in_same_instruction": "NOT_YET_FOUND",
     "ancient_scoby_identity": "NOT_DEMONSTRATED"
   },
+  "janus_tranception": {
+    "schema": "JANUS-FORWARD-REVERSE-SEMANTIC-PASS-v1.0",
+    "mode": "BIDIRECTIONAL_REQUIRED",
+    "invariant": "Every JANUS research artifact must carry a forward semantic walk and a reverse semantic walk over the same claimed edges. A reverse pass may falsify, weaken or block a forward interpretation; it must never be used to manufacture missing evidence.",
+    "forward_pass": {
+      "direction": "FORWARD",
+      "modern_chain": [
+        "TEXTILE_OR_PAD",
+        "OIL_OR_LIQUID_CONTACT",
+        "MOISTEN_OR_UPTAKE",
+        "RETRIEVE",
+        "WRING_OR_PRESS",
+        "RECOVER_OIL"
+      ],
+      "evidence_chain_found": [
+        "CLOTH",
+        "MOISTEN_WITH_OIL_OR_FAT",
+        "PLACE_OR_APPLY"
+      ],
+      "support": "Edwin Smith provides the same-text CLOTH + MOISTEN + OIL/FAT core; sꜥrq and nwdi̯ support wringing/pressing and oil-pressing only in separate contexts.",
+      "break_edge": "OIL_BEARING_CLOTH -> WRING_OR_PRESS -> RECOVER_OIL_IN_SAME_LOCAL_PROCEDURE",
+      "status": "PARTIAL_PASS"
+    },
+    "reverse_pass": {
+      "direction": "REVERSE",
+      "start_node": "RECOVER_OIL",
+      "reverse_chain": [
+        "RECOVER_OIL",
+        "REQUIRES_WRING_OR_PRESS",
+        "REQUIRES_LIQUID_OR_OIL_BEARING_MATERIAL",
+        "REQUIRES_PRIOR_OIL_CONTACT_OR_UPTAKE",
+        "REQUIRES_TEXTILE_OR_WRAPPING_SUBSTRATE"
+      ],
+      "edge_audit": [
+        {
+          "edge": "RECOVER_OIL -> WRING_OR_PRESS",
+          "support": "nwdi̯ = press out oil",
+          "status": "ATTESTED_SEPARATE_CONTEXT_ONLY"
+        },
+        {
+          "edge": "WRING_OR_PRESS -> LIQUID_BEARING_TEXTILE",
+          "support": "sꜥrq = wring out laundry/cloth",
+          "status": "ATTESTED_SEPARATE_CONTEXT_ONLY"
+        },
+        {
+          "edge": "LIQUID_BEARING_TEXTILE -> PRIOR_OIL_CONTACT",
+          "support": "Edwin Smith ḥbs + jwḥ + mrḥ.t",
+          "status": "SAME_TEXT_PASS"
+        },
+        {
+          "edge": "PRIOR_OIL_CONTACT -> TEXTILE_SUBSTRATE",
+          "support": "Edwin Smith cloth swabs/plugs moistened with oil/fat",
+          "status": "SAME_TEXT_PASS"
+        }
+      ],
+      "status": "REVERSE_BLOCKED_AT_CONTEXT_JOIN",
+      "reason": "The reverse walk reaches all required semantic node classes, but the press/recovery operators are not yet joined to the oil-moistened cloth in the same local ancient procedure."
+    },
+    "mirror_check": {
+      "forward_reverse_same_edges": false,
+      "mirror_disagreement": "Forward and reverse both reach TEXTILE, OIL and PRESS node classes, but they do not close the same-text edge between OIL-BEARING TEXTILE and WRING/PRESS/RECOVERY.",
+      "mirror_status": "ASYMMETRIC_PARTIAL_PASS",
+      "semantic_status": "UNCONFIRMED"
+    },
+    "promotion_gate": "Promote to FULL_PROCESS_PARALLEL_CANDIDATE only when the forward and reverse walks close the same critical edges within one local procedure or an independently justified tightly connected procedure without importing missing steps from unrelated contexts."
+  },
   "reverse_pattern_result": {
     "modern_core": "SORPTIVE_TEXTILE_LIKE_MATERIAL + OIL_CONTACT + LIQUID_UPTAKE -> RETRIEVE -> WRING/PRESS -> RECOVER_OIL",
     "ancient_same_text_core_now_attested": "CLOTH + MOISTEN_WITH_OIL/FAT + PLACE/APPLY",
