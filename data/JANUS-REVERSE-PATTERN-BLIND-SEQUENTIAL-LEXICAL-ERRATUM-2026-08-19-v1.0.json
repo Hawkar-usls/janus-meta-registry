@@ -1,0 +1,62 @@
+{
+  "schema": "janus.reverse_pattern.blind_sequential_lexical_erratum.v1.0",
+  "artifact_uuid": "JANUS-REVERSE-PATTERN-BLIND-SEQUENTIAL-LEXICAL-ERRATUM-2026-08-19-V1.0",
+  "created_at_local": "2026-08-19T16:54:00+03:00",
+  "status": "ATTEMPT_1_RETAINED_AS_NONCANONICAL_LEXICAL_FALSE_POSITIVE_DIAGNOSTIC",
+  "repository": "Hawkar-usls/janus-meta-registry",
+  "protocol": "data/JANUS-REVERSE-PATTERN-BLIND-SEQUENTIAL-PROTOCOL-2026-08-19-v1.0.json",
+  "attempt_1": {
+    "workflow_run_id": 32260501166,
+    "job_id": 96092347984,
+    "snapshot_commit": "a8a142cf30b1f4bf275c8904da49b10c9f73d248",
+    "executor": "tools/reverse_pattern/janus_reverse_pattern_blind_sequential_v1_0.py",
+    "workflow_conclusion": "success",
+    "json_seen": 1942,
+    "json_valid": 1927,
+    "json_invalid": 15,
+    "pattern_status_counts": {
+      "BACKFORTH_CANDIDATE": 36,
+      "MIRROR_CANDIDATE": 77,
+      "NO_PATTERN": 1709,
+      "OBSERVATION": 112,
+      "REPEAT_CANDIDATE": 8
+    },
+    "repeat_gate_signature_count": 2,
+    "promotion_candidate_count": 0,
+    "output_sha256": "415ed19a61fc408787d3d7abf0a7cb5e6596bebc8d99a6612c9dd5557d7988da"
+  },
+  "diagnostic": {
+    "finding": "43 of the 77 phase-2 MIRROR_CANDIDATE receipts obtained MIRROR_OR_SYMMETRY evidence solely from the generic lexical token `two`; this is not sufficiently specific to mirror/symmetry/bidirectionality.",
+    "classification": "DETECTOR_LEXICAL_FALSE_POSITIVE_RISK",
+    "affected_gate": "MIRROR_OR_SYMMETRY",
+    "semantic_results_promoted_by_attempt_1": 0,
+    "pattern_promotion_candidates_from_attempt_1": 0
+  },
+  "correction": {
+    "canonical_executor_candidate": "tools/reverse_pattern/janus_reverse_pattern_blind_sequential_v1_1.py",
+    "removed_positive_tokens": ["two", "ways"],
+    "retained_specific_tokens": ["mirror", "mirrored", "symmetry", "symmetric", "bidirectional", "bidir", "twoway", "twoways"],
+    "repeat_threshold_changed": false,
+    "mirror_gate_logic_changed": false,
+    "backforth_gate_logic_changed": false,
+    "queue_logic_changed": false,
+    "status_ladder_changed": false,
+    "semantic_claim_ceiling_changed": false,
+    "negative_preservation_changed": false,
+    "new_regression_control": "Generic TWO_PATHS / TWO_WAYS_AVAILABLE with reverse+forward must not open mirror_gate; explicit BIDIRECTIONAL/MIRROR still must open it."
+  },
+  "integrity_rule": {
+    "attempt_1_deleted_or_rewritten": false,
+    "attempt_1_used_as_canonical_final_result": false,
+    "reason": "A successful workflow can still reveal an overbroad detector. Preserve its receipt, narrow the detector without relaxing promotion gates, and rerun canonically."
+  },
+  "claim_ceiling": {
+    "attempt_1_is_diagnostic_only": true,
+    "canonical_structural_result_pending_v1_1_rerun": true,
+    "semantic_match_confirmed": false,
+    "identity_confirmed": false,
+    "causal_relation_confirmed": false,
+    "external_replication": false,
+    "scientific_law": false
+  }
+}
