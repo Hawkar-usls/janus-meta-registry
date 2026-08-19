@@ -1,0 +1,112 @@
+name: JANUS Reverse Pattern Blind Sequential
+
+on:
+  pull_request:
+    paths:
+      - 'data/JANUS-REVERSE-PATTERN-BLIND-SEQUENTIAL-PROTOCOL-2026-08-19-v1.0.json'
+      - 'data/JANUS-REVERSE-PATTERN-BLIND-SEQUENTIAL-LEXICAL-ERRATUM-2026-08-19-v1.0.json'
+      - 'tools/reverse_pattern/**'
+      - '.github/workflows/janus-reverse-pattern-blind-sequential.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'data/JANUS-REVERSE-PATTERN-BLIND-SEQUENTIAL-PROTOCOL-2026-08-19-v1.0.json'
+      - 'data/JANUS-REVERSE-PATTERN-BLIND-SEQUENTIAL-LEXICAL-ERRATUM-2026-08-19-v1.0.json'
+      - 'tools/reverse_pattern/**'
+      - '.github/workflows/janus-reverse-pattern-blind-sequential.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  blind-sequential-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact snapshot
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Self-test lexical-hardened detector
+        run: |
+          python tools/reverse_pattern/janus_reverse_pattern_blind_sequential_v1_1.py --self-test
+
+      - name: Canonical blind sequential run A
+        run: |
+          mkdir -p out
+          python tools/reverse_pattern/janus_reverse_pattern_blind_sequential_v1_1.py \
+            --repo-root . \
+            --out out/JANUS-REVERSE-PATTERN-BLIND-SEQUENTIAL-RESULT-A.json \
+            | tee out/run-a.log
+
+      - name: Deterministic rerun B
+        run: |
+          python tools/reverse_pattern/janus_reverse_pattern_blind_sequential_v1_1.py \
+            --repo-root . \
+            --out out/JANUS-REVERSE-PATTERN-BLIND-SEQUENTIAL-RESULT-B.json \
+            | tee out/run-b.log
+          cmp out/JANUS-REVERSE-PATTERN-BLIND-SEQUENTIAL-RESULT-A.json \
+              out/JANUS-REVERSE-PATTERN-BLIND-SEQUENTIAL-RESULT-B.json
+
+      - name: Validate fail-closed claim ceiling
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('out/JANUS-REVERSE-PATTERN-BLIND-SEQUENTIAL-RESULT-A.json')
+          d = json.loads(p.read_text(encoding='utf-8'))
+          assert d['status'] == 'CANONICAL_STRUCTURAL_RUN_COMPLETE'
+          assert d['executor_version'] == '1.1'
+          c = d['claim_ceiling']
+          assert c['structural_internal_pattern_test'] is True
+          assert c['semantic_match_confirmed'] is False
+          assert c['identity_confirmed'] is False
+          assert c['causal_relation_confirmed'] is False
+          assert c['external_replication'] is False
+          assert c['scientific_law'] is False
+          for r in d['receipts']:
+              assert r['independent_check']['semantic_status'] == 'UNCONFIRMED'
+              assert r['phase2']['semantic_status'].startswith('UNCONFIRMED_')
+          print(json.dumps(d['summary'], ensure_ascii=False, sort_keys=True))
+          PY
+
+      - name: Write audit summary
+        run: |
+          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          from pathlib import Path
+          d = json.loads(Path('out/JANUS-REVERSE-PATTERN-BLIND-SEQUENTIAL-RESULT-A.json').read_text(encoding='utf-8'))
+          s = d['summary']
+          print('## JANUS reverse-pattern blind sequential v1.1')
+          print('')
+          print(f"- snapshot: `{d['snapshot_commit']}`")
+          print(f"- JSON seen: **{s['json_seen']}**; valid: **{s['json_valid']}**; invalid: **{s['json_invalid']}**")
+          print(f"- repeat-gate signatures: **{s['repeat_gate_signature_count']}**")
+          print(f"- promotion candidates: **{s['promotion_candidate_count']}**")
+          print(f"- structural statuses: `{json.dumps(s['structural_status_counts'], sort_keys=True)}`")
+          print(f"- pattern statuses: `{json.dumps(s['pattern_status_counts'], sort_keys=True)}`")
+          print('')
+          print('Semantic status remains **UNCONFIRMED** by construction; this workflow measures internal structural recurrence only.')
+          if d['promotion_candidates']:
+              print('')
+              print('### Promotion candidates')
+              for x in d['promotion_candidates'][:20]:
+                  print(f"- `{x['blind_alias']}` — `{x['source_path']}` — signature `{x['pattern_signature']}`")
+          PY
+
+      - name: Upload canonical receipts
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-reverse-pattern-blind-sequential
+          path: |
+            out/JANUS-REVERSE-PATTERN-BLIND-SEQUENTIAL-RESULT-A.json
+            out/run-a.log
+          if-no-files-found: error
+          retention-days: 30
