@@ -1,0 +1,123 @@
+{
+  "schema": "janus.reverse_pattern.blind_sequential_protocol.v1.0",
+  "artifact_uuid": "JANUS-REVERSE-PATTERN-BLIND-SEQUENTIAL-PROTOCOL-2026-08-19-V1.0",
+  "created_at_local": "2026-08-19T16:43:00+03:00",
+  "status": "FROZEN_BEFORE_CANONICAL_RUN",
+  "repository": "Hawkar-usls/janus-meta-registry",
+  "snapshot_base_commit": "da82d428fedb7e6389615bb1e78cfaa5ebebce70",
+  "purpose": "Run a suspect-blind Janus-style reverse-pattern test over repository JSON records as a strict JSON -> independent check -> frozen status -> next JSON pipeline, followed only afterwards by a separate recurrence/gate aggregation pass.",
+  "lineage": {
+    "hidden_pattern_rubric": "data/JANUS-CONNECTION-HIDDEN-PATTERN-HELDOUT-CLASSIFICATION-RUBRIC-2026-08-14-v0.1.json",
+    "hidden_pattern_state": "data/JANUS-CONNECTION-FULL-CORPUS-HIDDEN-PATTERNS-2026-08-14-v1.2.json",
+    "reverse_lineage_audit": "data/JANUS-FULL-REVERSE-LINEAGE-AUDIT-2026-08-18-v1.0.json",
+    "six_direction_reference": "data/JANUS-CORRECTED-SIX-DIRECTION-REVERSE-RUN-2026-08-18-v1.0.json",
+    "relationship": "EXTENDS_WITH_A_SUSPECT_BLIND_SEQUENTIAL_RECORD_PASS_WITHOUT_MUTATING_PARENT_RESULTS"
+  },
+  "blindness_contract": {
+    "suspect_or_target_list_allowed": false,
+    "filename_used_as_support": false,
+    "title_used_as_support": false,
+    "connection_labels_used_as_support": false,
+    "shared_authoring_style_used_as_support": false,
+    "long_narrative_prose_used_as_support": false,
+    "semantic_similarity_alone_used_as_support": false,
+    "direct_parent_child_lineage_used_as_independent_support": false,
+    "source_path_revealed_in_receipt_only_after_independent_decision": true,
+    "classification_input": "PARSED_SOURCE_BODY_STRUCTURE_KEYS_BOOLEAN_NUMERIC_FIELDS_SHORT_ENUM_LIKE_VALUES_AND_EXPLICIT_DIRECTION_ARRAYS",
+    "unknown_or_insufficient_evidence_defaults_to": "NOT_APPLICABLE_OR_OBSERVATION",
+    "negative_results_must_be_retained": true,
+    "no_post_hoc_threshold_relaxation": true,
+    "no_post_hoc_record_reordering_to_IMPROVE_PATTERN": true
+  },
+  "queue_contract": {
+    "scope": "ALL_JSON_IN_CHECKOUT_EXCEPT_GIT_AND_EPHEMERAL_OUTPUT_DIRECTORIES",
+    "ordering": "DESCENDING_SHA256(snapshot_commit + NUL + raw_file_sha256), WITH_PATH_HASH_ONLY_AS_EXACT_DUPLICATE_TIE_BREAKER",
+    "reason": "The queue is deterministic but independent of names, people, topics, suspected identities, and expected outcomes.",
+    "one_record_at_a_time": true,
+    "cross_record_information_available_during_independent_check": false,
+    "individual_receipt_frozen_before_next_record": true
+  },
+  "phase_1_independent_record_check": {
+    "operator_families": [
+      "REVERSE_OR_INVERSE",
+      "FORWARD_OR_REPLAY",
+      "RETURN_ROLLBACK_RECOVERY_REASSEMBLY",
+      "MIRROR_OR_SYMMETRY",
+      "REPEAT_OR_AGAIN",
+      "DIRECTIONAL_BACK_FORWARD_LEFT_RIGHT",
+      "EXACTNESS_OR_WITNESS",
+      "GATE_OR_ADMISSION_STATE",
+      "PROVENANCE_IDENTITY_ANCHOR_PARENT",
+      "NEGATIVE_RESULT_PRESERVATION"
+    ],
+    "status_ladder": [
+      "INVALID_JSON",
+      "NOT_APPLICABLE_NO_REVERSE_STRUCTURE",
+      "OBSERVATION_REVERSE_SIGNAL_ONLY",
+      "REVERSE_CANDIDATE",
+      "MIRROR_CANDIDATE",
+      "BACKFORTH_CANDIDATE",
+      "STRONG_REVERSE_STRUCTURE"
+    ],
+    "semantic_status_during_phase_1": "UNCONFIRMED",
+    "rule": "No record may be promoted by another record during phase 1. A record can only receive a structural status supported by its own source body."
+  },
+  "phase_2_frozen_receipt_aggregation": {
+    "starts_only_after_all_phase_1_receipts_frozen": true,
+    "repeat_signature": "EXACT_SET_OF_DETECTED_OPERATOR_FAMILIES_PLUS_DIRECTION_PROFILE_AND_STRUCTURAL_STATUS",
+    "repeat_gate": {
+      "minimum_records": 3,
+      "minimum_top_level_source_buckets": 2,
+      "maximum_fraction_from_one_bucket": 0.5,
+      "exact_duplicate_raw_files_count_as_one_support": true
+    },
+    "mirror_gate": "Requires an independent-record MIRROR_OR_SYMMETRY witness together with paired reverse/forward or bidirectional directional evidence.",
+    "backforth_gate": "Requires explicit BACK/FORWARD recurrence in a direction array, BACK_AGAIN/FORWARD_AGAIN, or an exact forward/inverse-return replay pairing.",
+    "promotion_rule": "PATTERN_PROMOTION_CANDIDATE requires repeat_gate AND (mirror_gate OR backforth_gate). Structural promotion never confirms semantic identity, causality, prophecy, agency, or external-world linkage.",
+    "semantic_status_after_phase_2": "UNCONFIRMED_UNLESS_SEPARATE_SOURCE_GROUNDED_SEMANTIC_TEST_IS_RUN"
+  },
+  "phase_3_status_contract": {
+    "allowed_pattern_status": [
+      "NO_PATTERN",
+      "OBSERVATION",
+      "REPEAT_CANDIDATE",
+      "MIRROR_CANDIDATE",
+      "BACKFORTH_CANDIDATE",
+      "PATTERN_PROMOTION_CANDIDATE"
+    ],
+    "forbidden_auto_promotions": [
+      "SEMANTIC_MATCH_CONFIRMED",
+      "IDENTITY_CONFIRMED",
+      "CAUSAL_RELATION_CONFIRMED",
+      "EXTERNAL_REPLICATION_CONFIRMED",
+      "SCIENTIFIC_LAW_CONFIRMED"
+    ]
+  },
+  "negative_preservation": {
+    "INVALID_JSON": "Retain as a corpus receipt; do not infer structured operators from malformed content.",
+    "NOT_APPLICABLE": "Retain in denominator and corpus ledger where applicable.",
+    "OBSERVATION": "Do not rewrite as candidate because a later record looks similar.",
+    "REJECT_FAIL_BLOCKED_OPEN": "These source states remain explicit evidence states and are not overwritten by later PASS records.",
+    "duplicate_or_lineage_related_support": "Must not be counted as independent recurrence merely because wording or schema repeats."
+  },
+  "executor": "tools/reverse_pattern/janus_reverse_pattern_blind_sequential_v1_0.py",
+  "workflow": ".github/workflows/janus-reverse-pattern-blind-sequential.yml",
+  "canonical_outputs": {
+    "result": "out/JANUS-REVERSE-PATTERN-BLIND-SEQUENTIAL-RESULT.json",
+    "receipts": "embedded in result.receipts",
+    "ci_artifact": "janus-reverse-pattern-blind-sequential"
+  },
+  "claim_ceiling": {
+    "suspect_blind_queue": true,
+    "independent_record_first_pass": true,
+    "deterministic_structural_detector": true,
+    "negative_results_preserved": true,
+    "cross_record_recurrence_delayed_until_receipts_frozen": true,
+    "semantic_confirmation": false,
+    "external_replication": false,
+    "causal_law": false,
+    "scientific_novelty": false,
+    "human_blindness_empirically_measured": false
+  },
+  "next_gate": "Run the frozen executor on the exact branch snapshot. Review only promotion candidates after the full receipt ledger is complete; any semantic interpretation must be a separate source-grounded test with its own preregistration."
+}
