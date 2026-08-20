@@ -1,0 +1,76 @@
+{
+  "artifact_id": "JANUS-ECHO-COUSTEAU-JACQUES-YVES-BLIND-REFERENCE-CALIBRATION-RUN-001-2026-08-20-v1.0",
+  "research_branch": {
+    "display_name": "Janus-Echo-Кусто",
+    "slug": "janus-echo-cousteau",
+    "honoree": "Jacques-Yves Cousteau"
+  },
+  "source": {
+    "repository": "Hawkar-usls/Janus-Cosmos",
+    "branch": "janus-echo-cousteau",
+    "path": "data/cousteau/JANUS-ECHO-COUSTEAU-JACQUES-YVES-BLIND-REFERENCE-CALIBRATION-RUN-001-2026-08-20-v1.0.json",
+    "runner": "workspace/janus_echo_cousteau_blind_reference_v1.py",
+    "prereg": "data/cousteau/JANUS-ECHO-COUSTEAU-BLIND-REFERENCE-LIBRARY-V1-PREREG-2026-08-20.json"
+  },
+  "run_class": "SYNTHETIC_BLIND_HOLDOUT_CALIBRATION__NOT_PHYSICAL_HYDROPHONE_DATA",
+  "seed": 1962,
+  "design": {
+    "train": 1440,
+    "holdout": 960,
+    "classes": ["HOLLOW_PYRAMID", "BOX", "CONE", "SOLID_PYRAMID", "IRREGULAR_ROCK", "LAYERED_SEDIMENT"],
+    "states": ["DRY_AIR", "SEALED_SUBMERGED", "FULLY_FLOODED", "PARTIAL_25", "PARTIAL_50", "PARTIAL_75", "PARTIALLY_BURIED", "FULLY_BURIED"],
+    "absolute_119_or_520_hz_used_as_classifier_feature": false,
+    "scale_L_exposed_to_first_stage": false
+  },
+  "metrics": {
+    "geometry_class_accuracy": 0.9979166666666667,
+    "geometry_class_macro_f1": 0.9979165852832793,
+    "flood_state_accuracy": 0.6416666666666667,
+    "flood_state_macro_f1": 0.6421380499397246,
+    "joint_class_state_accuracy": 0.640625,
+    "median_scale_absolute_percentage_error": 0.05782098828657037,
+    "mean_scale_absolute_percentage_error": 0.20474625065874505,
+    "forward_replay_threshold_rmse_train_p95": 0.3559504477222817,
+    "forward_replay_pass_rate_all": 0.9552083333333333,
+    "forward_replay_pass_rate_correct_joint": 0.9642276422764228,
+    "forward_replay_pass_rate_wrong_joint": 0.9391304347826087,
+    "label_permutation_accuracy_mean_20": 0.16552083333333334,
+    "label_permutation_accuracy_sd_20": 0.027597090287947226,
+    "label_permutation_accuracy_range_20": [0.11458333333333333, 0.23541666666666666]
+  },
+  "gates": {
+    "geometry_class": true,
+    "flood_state": false,
+    "joint_class_state": false,
+    "scale": true,
+    "forward_replay_specificity": false
+  },
+  "most_important_state_confusions": {
+    "DRY_AIR_to_SEALED_SUBMERGED": 39,
+    "SEALED_SUBMERGED_to_DRY_AIR": 34,
+    "PARTIAL_25_to_PARTIAL_75": 50,
+    "PARTIAL_50_to_PARTIAL_75": 36,
+    "PARTIAL_75_to_PARTIAL_50": 35,
+    "PARTIALLY_BURIED_to_FULLY_BURIED": 16,
+    "FULLY_BURIED_to_PARTIALLY_BURIED": 8
+  },
+  "result_interpretation": {
+    "geometry": "PASS_SYNTHETIC_TEMPLATE_SEPARABILITY_ONLY",
+    "state": "FAIL_STATE_IDENTIFIABILITY",
+    "joint": "FAIL_JOINT_IDENTIFIABILITY",
+    "scale": "PASS_SYNTHETIC",
+    "forward_replay": "FAIL_SPECIFICITY__WRONG_MODELS_TOO_OFTEN_REPLAY",
+    "permutation_control": "PASS_NEAR_CHANCE"
+  },
+  "status": "CALIBRATION_NEGATIVE_SPECIFICITY_CERTIFICATE__GEOMETRY_SYNTHETIC_PASS__STATE_AND_REPLAY_FAIL",
+  "expedition_meaning": "The software can separate the declared synthetic geometry templates, but it cannot yet reliably infer hydrologic/burial state, and the current forward-replay closure is far too permissive because 93.9% of wrong joint models also pass. This file is therefore a failure-mode calibration baseline, not a detector.",
+  "next_gate": "MEASURED_TANK_LIBRARY_V1_WITH_CALIBRATED_PROJECTOR_HYDROPHONES_AND_BLIND_HOLDOUT",
+  "scientific_firewall": [
+    "SYNTHETIC_IDENTIFIABILITY != REAL_WORLD_IDENTIFIABILITY",
+    "HIGH_CLASS_ACCURACY != UNDERWATER_PYRAMID_DETECTION",
+    "FAILED_STATE_GATE_MUST_BE_PRESERVED",
+    "FAILED_REPLAY_SPECIFICITY_MUST_BE_PRESERVED",
+    "NO_RECENTERING",
+    "NO_TARGET_DETECTED"
+  ]
+}
