@@ -1,0 +1,187 @@
+{
+  "artifact_uuid": "JANUS-SCOBY-OIL-BOOM-PRELIMINARY-ECONOMIC-GATE-1851-2026-08-20-v1.0",
+  "version": "v1.0",
+  "created_local": "2026-08-20T18:51:00+03:00",
+  "repository": "Hawkar-usls/janus-meta-registry",
+  "branch": "audit/goldprompt-handshake-logic-hardening-v1_1",
+  "status": "PRELIMINARY_ECONOMIC_GATE_ANALYTICALLY_CLOSED_EMPIRICALLY_OPEN",
+  "mirror_to": "Hawkar-usls/SCOBY-D0/JANUS_SCOBY_OIL_BOOM_PRELIMINARY_ECONOMIC_GATE_1851_v1.0.json",
+  "parent_artifacts": [
+    "data/JANUS-SCOBY-MARINE-DYNAMIC-SALTWATER-BOOM-GATE-0018-2026-08-20-v1.0.json",
+    "Hawkar-usls/SCOBY-D0/JANUS_SCOBY_OIL_SPILL_SORBENT_SPONGE_2258_v1.1.json"
+  ],
+  "research_question": "Can a retrievable bacterial-cellulose/SCOBY marine sorbent compete economically with current polypropylene oil-only pads/booms when judged by recovered oil rather than headline absorption capacity?",
+  "core_formulae": {
+    "dry_BC_kg_per_kg_recovered_oil": "1 / (q_oil_g_g * press_recovery_fraction)",
+    "BC_material_cost_per_kg_recovered_oil": "BC_cost_USD_per_kg / (q_oil_g_g * press_recovery_fraction)",
+    "total_cost_per_kg_recovered_oil": "BC_material_cost + drying + hydrophobic_treatment + sleeve + labor + energy + retrieval + waste_handling, all normalized by measured recovered oil",
+    "break_even_BC_cost_USD_per_kg": "commercial_benchmark_USD_per_kg_oil * q_oil_g_g * press_recovery_fraction"
+  },
+  "frozen_model_assumptions": {
+    "press_recovery_fraction": 0.60,
+    "oil_density_for_nominal_commercial_capacity_conversion_kg_L": 0.85,
+    "note": "0.60 is the current internal M1 press-recovery gate, not a measured SCOBY result. Oil density is a scenario assumption used only to normalize commercial litre/gallon capacity to approximate kg."
+  },
+  "commercial_reference_points": [
+    {
+      "product": "New Pig PIG Oil-Only Absorbent Mat Pad MAT403",
+      "price_USD_per_pack": 164.90,
+      "pack_pads": 100,
+      "nominal_capacity_L": 83.27,
+      "approx_nominal_oil_mass_kg_at_0_85kg_L": 70.78,
+      "approx_cost_USD_per_nominal_kg_absorbed_oil": 2.33,
+      "comparison_rule": "Nominal absorption-capacity benchmark only; not a measured recovered-oil cost."
+    },
+    {
+      "product": "New Pig oil-only absorbent boom via VWR, 3 in x 10 ft",
+      "case_price_USD": 230.13,
+      "booms_per_case": 8,
+      "price_USD_per_boom": 28.77,
+      "boom_length_m": 3.048,
+      "nominal_capacity_L_per_boom": 7.57,
+      "approx_nominal_oil_mass_kg_per_boom": 6.44,
+      "approx_nominal_oil_mass_kg_per_m": 2.11,
+      "approx_price_USD_per_m": 9.44,
+      "approx_cost_USD_per_nominal_kg_absorbed_oil": 4.47,
+      "comparison_rule": "Nominal boom capacity benchmark only; BC model is deliberately stricter because it includes a 60% recovered-oil fraction."
+    }
+  ],
+  "BC_cost_scenarios_from_literature": [
+    {
+      "scenario": "VERY_OPTIMISTIC_LARGE_SCALE_TEA",
+      "BC_cost_USD_per_kg": 1.89,
+      "source_note": "2026 simplified techno-economic analysis of BC as a bioplastic reported MPSP about 1.89 USD/kg under its modeled assumptions.",
+      "use": "LOW_BOUND_SCENARIO_ONLY"
+    },
+    {
+      "scenario": "MOLASSES_LARGE_SCALE_TEA_SCENARIO",
+      "BC_cost_USD_per_kg": 14.80,
+      "source_note": "A 2025 review cites a large-scale SuperPro model in which beet molasses reduced BC production cost to about 14.8 USD/kg.",
+      "use": "CENTRAL_INDUSTRIAL_SCENARIO"
+    },
+    {
+      "scenario": "HIGH_COST_TEA_SCENARIO",
+      "BC_cost_USD_per_kg": 63.80,
+      "source_note": "A 2025 co-culture review cites a techno-economic assessment around 63.8 USD/kg dry BC.",
+      "use": "CONSERVATIVE_HIGH_COST_SCENARIO"
+    }
+  ],
+  "economics_by_q_at_60_percent_recovery": [
+    {
+      "q_oil_g_g": 10,
+      "dry_BC_g_per_kg_recovered_oil": 166.67,
+      "BC_material_cost_USD_per_kg_recovered_oil": {
+        "at_1_89_USD_kg": 0.315,
+        "at_14_8_USD_kg": 2.467,
+        "at_63_8_USD_kg": 10.633
+      }
+    },
+    {
+      "q_oil_g_g": 20,
+      "dry_BC_g_per_kg_recovered_oil": 83.33,
+      "BC_material_cost_USD_per_kg_recovered_oil": {
+        "at_1_89_USD_kg": 0.158,
+        "at_14_8_USD_kg": 1.233,
+        "at_63_8_USD_kg": 5.317
+      }
+    },
+    {
+      "q_oil_g_g": 40,
+      "dry_BC_g_per_kg_recovered_oil": 41.67,
+      "BC_material_cost_USD_per_kg_recovered_oil": {
+        "at_1_89_USD_kg": 0.079,
+        "at_14_8_USD_kg": 0.617,
+        "at_63_8_USD_kg": 2.658
+      }
+    },
+    {
+      "q_oil_g_g": 80,
+      "dry_BC_g_per_kg_recovered_oil": 20.83,
+      "BC_material_cost_USD_per_kg_recovered_oil": {
+        "at_1_89_USD_kg": 0.039,
+        "at_14_8_USD_kg": 0.308,
+        "at_63_8_USD_kg": 1.329
+      }
+    }
+  ],
+  "break_even_against_MAT403_2_33_USD_per_nominal_kg": {
+    "at_press_recovery_fraction_0_60": [
+      {"BC_cost_USD_per_kg": 1.89, "minimum_q_g_g_before_other_costs": 1.35},
+      {"BC_cost_USD_per_kg": 14.80, "minimum_q_g_g_before_other_costs": 10.59},
+      {"BC_cost_USD_per_kg": 63.80, "minimum_q_g_g_before_other_costs": 45.64}
+    ],
+    "interpretation": "At approximately 14.8 USD/kg dry BC, the existing technical M1 threshold of 10 g/g is only borderline economic before drying, sleeve, labor and treatment. A practical low-cost target should therefore be closer to >=20 g/g unless BC is obtained as a very low-cost byproduct."
+  },
+  "one_meter_boom_reference_capacity_match": {
+    "commercial_reference_nominal_oil_kg_per_m": 2.11,
+    "commercial_reference_price_USD_per_m": 9.44,
+    "BC_dry_mass_and_material_cost_needed_to_recover_2_11kg_oil_per_m_at_60_percent_recovery": [
+      {"q_g_g": 10, "dry_BC_g_per_m": 351.88, "BC_cost_USD_per_m_at_14_8_USD_kg": 5.21, "BC_cost_USD_per_m_at_63_8_USD_kg": 22.45},
+      {"q_g_g": 20, "dry_BC_g_per_m": 175.94, "BC_cost_USD_per_m_at_14_8_USD_kg": 2.60, "BC_cost_USD_per_m_at_63_8_USD_kg": 11.23},
+      {"q_g_g": 40, "dry_BC_g_per_m": 87.97, "BC_cost_USD_per_m_at_14_8_USD_kg": 1.30, "BC_cost_USD_per_m_at_63_8_USD_kg": 5.61},
+      {"q_g_g": 80, "dry_BC_g_per_m": 43.99, "BC_cost_USD_per_m_at_14_8_USD_kg": 0.65, "BC_cost_USD_per_m_at_63_8_USD_kg": 2.81}
+    ],
+    "interpretation": "At the central 14.8 USD/kg scenario, q around 20-40 g/g leaves roughly 6.8-8.1 USD/m of the reference boom price for sleeve, drying/treatment and manufacturing while targeting about 2.11 kg recovered oil per meter. At 63.8 USD/kg BC, q must be much higher to leave room for non-BC costs."
+  },
+  "production_yield_context": {
+    "waste_substrate_example_dry_BC_yield_g_L": 5.36,
+    "source_note": "A 2025 study using vinegar residue medium reported 5.36 g/L BC, compared with 1.13 g/L on Hestrin-Schramm control.",
+    "culture_volume_L_per_kg_recovered_oil_at_60_percent_recovery": [
+      {"q_g_g": 10, "volume_L": 31.09},
+      {"q_g_g": 20, "volume_L": 15.55},
+      {"q_g_g": 40, "volume_L": 7.77},
+      {"q_g_g": 80, "volume_L": 3.89}
+    ],
+    "boundary": "This is not a kombucha-factory production forecast. Yield depends strongly on strain, medium, reactor, time and purification."
+  },
+  "business_model_comparison": {
+    "GROW_TO_SORB": {
+      "description": "Grow BC specifically for oil-spill sorbents.",
+      "preliminary_verdict": "ECONOMICALLY_UNCERTAIN",
+      "reason": "Fermentation infrastructure, labor, purification and pore-preserving drying can dominate cost; published BC production-cost estimates span more than an order of magnitude."
+    },
+    "WASTE_TO_BOOM": {
+      "description": "Collect kombucha/KBC pellicle that is already a low-value coproduct or residue, then wash, structurally process, contain in a retrievable sleeve and use once.",
+      "preliminary_verdict": "MOST_PROMISING_LOW_COST_ROUTE",
+      "reason": "A 2025 KBC review explicitly describes kombucha pellicle as a coproduct often lacking economic value, which can remove much of the fermentation-feedstock burden if collection and quality control are workable."
+    }
+  },
+  "economic_promotion_gates": {
+    "E0_TECHNICAL": "Keep M1_G1 >=10 g/g as a technical viability floor, not an economic win criterion.",
+    "E1_LOW_COST_TARGET": "Prefer >=20 g/g surrogate-oil uptake with >=60% contained press recovery in marine conditions, unless measured dry-BC delivered cost is below approximately 10-15 USD/kg.",
+    "E2_STRONG_TARGET": ">=40 g/g with >=60% recovery is economically attractive even under substantially higher BC-cost scenarios, before non-BC costs.",
+    "E3_PER_METER": "Pilot 1 m cartridge should target <=9.44 USD/m total manufacturing cost while recovering about 2.1 kg oil-equivalent per meter under the frozen test protocol, or demonstrate a superior cost-per-recovered-kg metric.",
+    "E4_REAL_METRIC": "Promotion requires measured TOTAL_COST_PER_KG_RECOVERED_OIL below the selected commercial reference after including drying, treatment, sleeve, labor, energy, retrieval and spent-sorbent handling.",
+    "E5_REPLICATE": "Economic PASS requires at least two independent BC batches and one commercial control tested under the same liquid, drain and recovery protocol."
+  },
+  "janus_tranception": {
+    "schema": "JANUS-FORWARD-REVERSE-SEMANTIC-PASS-v1.0",
+    "mode": "BIDIRECTIONAL_REQUIRED",
+    "forward": "BC_SOURCE_COST -> PROCESSING_COST -> q_OIL -> MARINE_RETENTION -> RETRIEVAL -> PRESS_RECOVERY -> RECOVERED_OIL_KG -> COST_PER_RECOVERED_KG -> COMMERCIAL_COMPARISON",
+    "reverse": "COMMERCIAL_PRICE_CEILING -> ALLOWABLE_COST_PER_RECOVERED_KG -> REQUIRED_q_TIMES_RECOVERY -> MAX_ALLOWABLE_BC_COST_AND_PROCESS_OVERHEAD -> REQUIRED_PROCESS_ROUTE -> BC_SOURCE",
+    "mirror_status": "ECONOMIC_LOGIC_LOOP_CLOSED_EMPIRICAL_VALUES_OPEN",
+    "empirical_closure": false,
+    "promotion_rule": "No ECONOMIC_PASS until the same measured M1/M2 batch supplies q, recovery, retrieval, process cost and commercial-control comparison."
+  },
+  "preliminary_verdict": {
+    "answer": "CONDITIONALLY_PROMISING",
+    "plain_language": "The concept can plausibly be cheaper than polypropylene sorbents if SCOBY/KBC is sourced as a low-cost byproduct and marine q_oil lands around 20-40 g/g or better with >=60% recoverable oil. It is unlikely to be cheap if BC is grown as an expensive specialty material and only reaches ~10 g/g.",
+    "highest_value_next_measurements": [
+      "actual dry BC cost per kg for each D0-D3 route",
+      "marine q_oil g/g",
+      "marine water uptake",
+      "single-press recovered-oil fraction",
+      "retrieval/fragment loss",
+      "actual sleeve plus manufacturing cost per meter"
+    ]
+  },
+  "sources": [
+    {"authority":"PMC/Foods 2025","url":"https://pmc.ncbi.nlm.nih.gov/articles/PMC11898560/","role":"KBC pellicle as low-value coproduct/residue and need for economic viability analysis"},
+    {"authority":"International Journal of Biological Macromolecules 2025","url":"https://www.sciencedirect.com/science/article/pii/S0141813025036438","role":"waste-substrate BC yields including 5.36 g/L vinegar-residue medium"},
+    {"authority":"PMC 2026","url":"https://pmc.ncbi.nlm.nih.gov/articles/PMC13181089/","role":"simplified TEA MPSP about 1.89 USD/kg BC"},
+    {"authority":"Microorganisms 2025 review","url":"https://www.mdpi.com/2673-8007/5/3/92","role":"published BC production-cost scenarios including ~14.8 and ~63.8 USD/kg"},
+    {"authority":"Fisher Scientific/New Pig","url":"https://www.fishersci.com/shop/products/pig-oil-only-absorbent-mat-pad/19041532","role":"MAT403 current US pack price and 83.27 L nominal capacity"},
+    {"authority":"VWR/New Pig","url":"https://www.vwr.com/pr/en/product/11064952/pig-oil-only-absorbent-booms-new-pig","role":"3 in x 10 ft boom price/capacity benchmark"}
+  ],
+  "next_action": "Complete the 50x50 GREEN/BLACK x D0-D3 screen and record both performance and real consumable/energy cost. Feed the winner values directly into this model; if q>=20 g/g and recovered fraction>=0.60 at delivered dry-BC cost <=15 USD/kg, advance immediately to 100x100 M1A with a commercial pad control."
+}
