@@ -1,0 +1,134 @@
+{
+  "artifact_uuid": "JANUS-SCOBY-OIL-BOOM-CURRENT-MARKET-COMPARATOR-1903-2026-08-20-v1.0",
+  "version": "v1.0",
+  "created_local": "2026-08-20T19:03:00+03:00",
+  "repository": "Hawkar-usls/janus-meta-registry",
+  "branch": "audit/goldprompt-handshake-logic-hardening-v1_1",
+  "status": "CURRENT_MARKET_COMPARATOR_SCENARIO_MODEL_EMPIRICAL_SCOBY_DATA_PENDING",
+  "parents": [
+    "data/JANUS-SCOBY-OIL-BOOM-PRELIMINARY-ECONOMIC-GATE-1851-2026-08-20-v1.0.json",
+    "data/JANUS-SCOBY-MARINE-DYNAMIC-SALTWATER-BOOM-GATE-0018-2026-08-20-v1.0.json"
+  ],
+  "normalization": {
+    "oil_density_assumption_kg_L": 0.85,
+    "gallon_to_liter": 3.785411784,
+    "warning": "Commercial products report nominal absorption capacity, while SCOBY scenarios below use 60% recovered-oil fraction. These are not perfectly equivalent metrics; the comparison is intentionally conservative for SCOBY on recovery but does not include commercial disposal/recovery costs."
+  },
+  "current_market_analogues": [
+    {
+      "name": "Uline Oil Only Sorbent Boom S-19490",
+      "material": "polypropylene filler / polyester netting",
+      "size": "5 in x 10 ft",
+      "package_qty": 4,
+      "package_price_USD": 129.00,
+      "package_capacity_gal": 32,
+      "nominal_cost_USD_per_kg_absorbed_oil": 1.253,
+      "retail_price_USD_per_m": 10.581,
+      "source": "https://www.uline.com/Product/Detail/S-19490/Oil-Only-Sorbents/Oil-Only-Sorbent-Booms-5-x-10"
+    },
+    {
+      "name": "Spilfyter M-54S Oil-Only Sock-In-Net Boom",
+      "material": "polypropylene",
+      "size": "5 in x 10 ft",
+      "package_qty": 4,
+      "package_price_USD": 112.82,
+      "package_capacity_gal": 28,
+      "nominal_cost_USD_per_kg_absorbed_oil": 1.252,
+      "retail_price_USD_per_m": 9.254,
+      "source": "https://www.absorbentsforless.com/5-x-10-ft-oil-only-sock-in-net-absorbent-boom-4-box.html"
+    },
+    {
+      "name": "Green Boom B0510S",
+      "material": "bio-based; cotton skin / wheat-straw or proprietary cellulosic filler depending listing",
+      "size": "5 in x 10 ft",
+      "package_qty": 4,
+      "package_price_USD": 201.99,
+      "package_capacity_gal": 24,
+      "nominal_cost_USD_per_kg_absorbed_oil": 2.616,
+      "retail_price_USD_per_m": 16.567,
+      "source": "https://www.zoro.com/green-boom-sorbent-boom-24-gal-oils-white-b0510s/i/G614868857/",
+      "importance": "CLOSEST_CURRENT_BIOBASED_MARKET_ANALOGUE"
+    },
+    {
+      "name": "New Pig BOM406 / 56620-018",
+      "material": "polypropylene",
+      "size": "3 in x 10 ft / approximately 3 m",
+      "package_qty": 8,
+      "package_price_USD": 230.13,
+      "capacity_L_per_boom": 7.6,
+      "nominal_cost_USD_per_kg_absorbed_oil": 4.453,
+      "retail_price_USD_per_m": 9.589,
+      "source": "https://www.vwr.com/pr/en/product/11064952/pig-oil-only-absorbent-booms-new-pig"
+    },
+    {
+      "name": "3M T-270",
+      "material": "polyester/polypropylene",
+      "size": "8 in x 10 ft",
+      "package_qty": 4,
+      "package_price_USD": 541.32,
+      "retailer_package_capacity_gal": 69,
+      "nominal_cost_USD_per_kg_absorbed_oil_using_retailer_capacity": 2.438,
+      "retail_price_USD_per_m": 44.400,
+      "source": "https://www.grainger.com/product/3M-Sorbent-Boom-8-in-Dia-39CD49",
+      "capacity_note": "3M official materials also state 20 gal per boom / 80 gal per case in some documentation; capacity reporting differs by test/listing, so use this comparator as an approximate range, not a precise universal benchmark."
+    }
+  ],
+  "scoby_model_output_at_60_percent_press_recovery": {
+    "central_dry_BC_cost_USD_per_kg": 14.8,
+    "rows": [
+      {
+        "q_oil_g_g": 10,
+        "dry_BC_g_per_kg_recovered_oil": 166.67,
+        "BC_only_cost_USD_per_kg_recovered_oil": 2.467,
+        "market_read": "LOSES_TO_CHEAP_PP_BEFORE_PROCESSING; APPROX_GREEN_BOOM_RANGE_BEFORE_PROCESSING"
+      },
+      {
+        "q_oil_g_g": 20,
+        "dry_BC_g_per_kg_recovered_oil": 83.33,
+        "BC_only_cost_USD_per_kg_recovered_oil": 1.233,
+        "market_read": "RAW_BC_COST_NEAR_CHEAPEST_PP_NOMINAL_COST; TOO_LITTLE_HEADROOM_FOR_PROCESSING_AT_CENTRAL_BC_COST"
+      },
+      {
+        "q_oil_g_g": 40,
+        "dry_BC_g_per_kg_recovered_oil": 41.67,
+        "BC_only_cost_USD_per_kg_recovered_oil": 0.617,
+        "market_read": "STRONG_CANDIDATE; RAW_BC_COST_BELOW_ALL_LISTED_ANALOGUES_WITH_MEANINGFUL_HEADROOM"
+      },
+      {
+        "q_oil_g_g": 80,
+        "dry_BC_g_per_kg_recovered_oil": 20.83,
+        "BC_only_cost_USD_per_kg_recovered_oil": 0.308,
+        "market_read": "VERY_STRONG_RAW_MATERIAL_ECONOMICS_IF_MARINE_DATA_SURVIVE"
+      }
+    ]
+  },
+  "scoby_optimistic_low_cost_byproduct_route": {
+    "scenario_dry_BC_cost_USD_per_kg": 1.89,
+    "rows": [
+      {"q_oil_g_g":20,"BC_only_cost_USD_per_kg_recovered_oil":0.158},
+      {"q_oil_g_g":40,"BC_only_cost_USD_per_kg_recovered_oil":0.079},
+      {"q_oil_g_g":80,"BC_only_cost_USD_per_kg_recovered_oil":0.039}
+    ],
+    "interpretation": "If SCOBY/KBC is genuinely sourced as a low-cost coproduct and processing remains simple, material cost becomes a small part of total cost; sleeve, drying, treatment, labor and retrieval then dominate."
+  },
+  "closest_biobased_comparison": {
+    "market_analogue": "Green Boom B0510S",
+    "market_nominal_cost_USD_per_kg_absorbed_oil": 2.616,
+    "market_retail_price_USD_per_m": 16.567,
+    "green_boom_absorption_per_boom_gal": 6,
+    "green_boom_notes": "Commercially available bio-based hydrophobic marine boom; official Green Boom material states biomass-only renewable absorbents, and product literature supports wringing/reuse. This means SCOBY is not unique merely by being biodegradable or press-recoverable.",
+    "scoby_required_advantage": "Win on delivered cost, recovered-oil fraction, waste-stream feedstock, manufacturing simplicity, or measured marine performance rather than novelty alone."
+  },
+  "janus_market_reverse": {
+    "schema": "JANUS-FORWARD-REVERSE-SEMANTIC-PASS-v1.0",
+    "forward": "LOW_COST_SCOBY_SOURCE -> PROCESS -> MARINE_q -> RETRIEVE -> PRESS_RECOVERY -> COST_PER_RECOVERED_KG -> MARKET_COMPARISON",
+    "reverse": "CHEAPEST_MARKET_COST_CEILING -> REQUIRED_TOTAL_COST_PER_RECOVERED_KG -> ALLOWABLE_PROCESS_OVERHEAD -> REQUIRED_q_X_RECOVERY -> MAX_DELIVERED_BC_COST -> FEEDSTOCK_ROUTE",
+    "mirror_status": "MARKET_LOGIC_CLOSED_EMPIRICAL_SCOBY_DATA_OPEN"
+  },
+  "preliminary_verdict": {
+    "against_cheapest_PP": "At central 14.8 USD/kg dry BC, q=20 g/g is not enough to confidently beat the cheapest current PP booms after processing; q around 40 g/g creates a plausible cost window. Low-cost waste-derived BC can shift break-even strongly in SCOBY's favor even near q=20 g/g.",
+    "against_biobased_Green_Boom": "SCOBY at q>=20 g/g has a plausible material-cost advantage under the central BC scenario, but total cost must still include drying, hydrophobicization, sleeve and retrieval. q>=40 g/g would create much stronger headroom.",
+    "best_current_target": "MARINE_q >= 40 g/g, press recovery >= 60%, retrieval >=99%, delivered processed cartridge cost normalized below about 1.25 USD per kg recovered oil to beat the cheapest listed PP on purchase-capacity economics, or below about 2.62 USD/kg to beat the listed Green Boom bio-based analogue."
+  },
+  "next_measurement_gate": "Run matched 50x50 and 100x100 tests against one cheap PP control and, if obtainable, one Green Boom biomass control under the same oil, water, drain and press-recovery protocol. Compare TOTAL_COST_PER_KG_RECOVERED_OIL rather than nominal capacity."
+}
