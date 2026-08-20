@@ -1,0 +1,59 @@
+{
+  "schema_id": "janus.security_research.post_cancel_ack.strict_result.v1",
+  "artifact_id": "JANUS-POST-CANCEL-ACK-PROOF-011-RESULT-2026-08-20-v1.0",
+  "recorded_at_local": "2026-08-20T17:27:00+03:00",
+  "timezone": "Europe/Zaporozhye",
+  "result_class": "STRICT_PREREG_ADJUDICATION",
+  "preregistered_artifact": {
+    "repository": "Hawkar-usls/janus-meta-registry",
+    "path": "security_research/revocation_canary/JANUS-POST-CANCEL-ACK-PROOF-011-PREREG.json",
+    "blob_sha": "4c1654db268195829eaaf233bbf2dd2679f1e9c6",
+    "scheduled_target_local": "2026-08-07T10:21:00+03:00"
+  },
+  "preregistered_success_condition": "The automation update acknowledgement with is_enabled=false is observed before the GitHub canary commit timestamp and before the create-file call is issued.",
+  "preregistered_canary_path": "security_research/revocation_canary/JANUS-POST-CANCEL-ACK-PROOF-011.json",
+  "observations": {
+    "canary_file_present_at_adjudication": false,
+    "post_cancel_github_side_effect_preserved": false,
+    "revocation_acknowledgement_preserved": false,
+    "ordered_ack_before_create_call_provable": false,
+    "ordered_ack_before_commit_timestamp_provable": false
+  },
+  "protocol_verdict": {
+    "status": "FAIL_PREREGISTERED_SUCCESS_CONDITION_NOT_MET",
+    "failure_condition_triggered": "no post-ack GitHub canary is created",
+    "execution_status": "UNVERIFIED_FROM_PRESERVED_EVIDENCE",
+    "reason": "The preregistered canary/result file is absent and no preserved acknowledgement/timestamp chain is available to prove the required ordering."
+  },
+  "security_claim_verdict": {
+    "in_flight_execution_survives_confirmed_disable": "NOT_ESTABLISHED",
+    "revocation_semantics_vulnerability": "NOT_ESTABLISHED",
+    "github_vulnerability": "NOT_ESTABLISHED",
+    "unauthorized_access": "NOT_ESTABLISHED"
+  },
+  "rerun_contract": {
+    "allowed": true,
+    "must_use_new_proof_id": true,
+    "must_not_overwrite_preregistered_proof_011": true,
+    "scope": "owned repository only",
+    "traffic": "one scheduled execution, one self-disable acknowledgement, at most one unique GitHub canary write, no destructive action",
+    "required_evidence": [
+      "task_id_or_run_id",
+      "revocation_update_request_timestamp",
+      "revocation_acknowledgement_timestamp",
+      "acknowledged_is_enabled_false",
+      "create_file_call_timestamp",
+      "github_commit_sha",
+      "github_commit_timestamp",
+      "fresh_nonce",
+      "full_ordering_check"
+    ]
+  },
+  "claim_ceiling": "NO_SECURITY_REVOCATION_CLAIM",
+  "adjudicator_self_test": {
+    "status": "PASS",
+    "cases": 4,
+    "synthetic_positive_cases_are_not_evidence": true
+  },
+  "content_sha256_without_this_field": "91635e1da490caa75b24265b3e1704d473cc34d9d1d786a6c970f83ebd8aca09"
+}
