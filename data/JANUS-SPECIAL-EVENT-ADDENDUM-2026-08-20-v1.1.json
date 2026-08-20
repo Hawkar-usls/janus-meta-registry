@@ -1,0 +1,126 @@
+{
+  "schema_id": "janus.special_event_ledger.addendum.v1",
+  "record_id": "JANUS-SPECIAL-EVENT-ADDENDUM-2026-08-20-v1.1",
+  "extends_record": "JANUS-SPECIAL-EVENT-LEDGER-2026-08-20-v1.0",
+  "extends_path": "data/JANUS-SPECIAL-EVENT-LEDGER-2026-08-20-v1.0.json",
+  "registry_base_main": "3e9fa5fbbbf7c6f9ee23274b0913dd4ceee0fd05",
+  "history_rewritten": false,
+  "events": [
+    {
+      "event_id": "JSE-2026-08-20-013",
+      "event_time": "2026-08-20T20:45:20Z",
+      "event_type": "SPECIAL_EVENT_LEDGER_MERGED",
+      "subject": "Meta-registry #170 special-event persistence becomes canonical",
+      "evidence": {
+        "repository": "Hawkar-usls/janus-meta-registry",
+        "pull_request": 170,
+        "merge_commit": "a27405777ff5de995f87b23376cf03c1d9effd47",
+        "ledger_path": "data/JANUS-SPECIAL-EVENT-LEDGER-2026-08-20-v1.0.json",
+        "ledger_sha256": "1ec3451b87f77301b7df34a8eba5f4fe01ce71254a3223a5f8c54f8075ed173d"
+      },
+      "state_before": "Special launch-gate history was recoverable primarily from distributed PR/issue history and conversation summaries.",
+      "state_after": "Versioned special-event history, content-hash witness, and CURRENT discovery pointer are merged into meta-registry.",
+      "meaning": "Special events are now first-class machine-readable research memory rather than ephemeral narrative state.",
+      "claim_ceiling": [
+        "REGISTRY_RECORD != EXECUTION_PERMISSION",
+        "HISTORICAL_RECORD != CURRENT_PASS"
+      ],
+      "status": "MERGED_CANONICAL_MEMORY"
+    },
+    {
+      "event_id": "JSE-2026-08-20-014",
+      "event_time": "2026-08-20T20:50:28Z",
+      "event_type": "CANONICAL_LIVE_PROBE_HARDENING_MERGED",
+      "subject": "Genesis #185 exact :8008 socket-owner and privacy hardening",
+      "evidence": {
+        "repository": "Hawkar-usls/Janus_Genesis",
+        "pull_request": 185,
+        "exact_head": "d66c6b506d28bfffb457961cc41604e3802cf209",
+        "predecessor": "#187@482a1e32a5537d8ba657cce742be1aa245dc37fb",
+        "main_after_merge": "396c2bbc519d14c5286f2938b0486c07e4ad4567"
+      },
+      "state_before": "Canonical #187 QNAP probe reconciled target-port ownership primarily at network-namespace level and could expose a full receipt on stdout.",
+      "state_after": "Canonical probe requires LISTEN inode -> actual owner PID -> PID namespace -> Docker attribution, uses lexical process-root source identity, discovers receiver child source inside the proven container PID namespace, and keeps public stdout redacted.",
+      "falsification_guard": "janus_nas_brain and janus_nas_api sharing one network namespace cannot make janus_nas_brain the owner unless the actual listener PID is bound to it.",
+      "validation": {
+        "discovered_exact_head_workflows": 10,
+        "all_success": true,
+        "included": [
+          "JANUS Live NAS Handoff Probe v1",
+          "JANUS Armor routing v18.7.50",
+          "JANUS Handoff Reliability v1 Preregistration",
+          "Genesis Tests",
+          "test matrix 3.11/3.12/3.13"
+        ]
+      },
+      "meaning": "The live-receiver identity tooling is materially stronger and canonical on current main, but still requires execution on the actual QNAP.",
+      "claim_ceiling": [
+        "TOOLING_HARDENED != LIVE_NAS_WITNESS",
+        "IDENTITY_BINDING != HR1_HR10_PASS",
+        "ISSUE_164_PASS=FALSE",
+        "UNREDACTED_RECEIPT_SCOPE=LOCAL_ONLY"
+      ],
+      "status": "MERGED_TOOLING_HARDENING"
+    },
+    {
+      "event_id": "JSE-2026-08-20-015",
+      "event_time": "2026-08-20T20:52:48Z",
+      "event_type": "REPEATABLE_REAL_MODEL_FIRST_BREAK",
+      "subject": "Genesis #186 resident real MODEL.CALL rejects incomplete selected branch",
+      "evidence": {
+        "repository": "Hawkar-usls/Janus_Genesis",
+        "pull_request": 186,
+        "current_main_base": "396c2bbc519d14c5286f2938b0486c07e4ad4567",
+        "reconciled_head": "f7b9db824b70e8dad53fe900f0580af0be4813eb",
+        "workflow_run": 32416348468,
+        "artifact_id": 9424068197,
+        "artifact_zip_sha256": "03d387219e909e58eaa396fda6bd8784cec033245bf6fc58f392552604b26d1a",
+        "ollama_version": "0.30.8",
+        "model": "qwen2.5:0.5b-instruct-q4_K_M",
+        "model_digest_prefix": "a8b0c5157701",
+        "failure_code": "VALID_MODEL_CHOICE_REQUIRED_FOR_THIS_RUN:TITLE_REQUIRED",
+        "rejection_code": "TITLE_REQUIRED"
+      },
+      "state_before": "An earlier pre-reconciliation real-model run had already first-broken at TITLE_REQUIRED; a branch-complete conditional oneOf transport schema was added as a candidate fix.",
+      "state_after": "The same TITLE_REQUIRED first-break reproduced after exact current-main reconciliation, proving that the conditional oneOf transport grammar did not solve the empirical model-output shape defect.",
+      "artifact_observations": {
+        "raw_model_output_stored": false,
+        "raw_model_output_logged": false,
+        "resident_choice_external_effect_executed": false,
+        "fallback_choice_recorded": "REST_FALLBACK",
+        "fallback_counted_as_valid_choice": false,
+        "habitat_health": "HEALTHY",
+        "continuity_status": "CHAINED"
+      },
+      "meaning": "Transport and pinned model are alive; the blocker is now localized to reliable structured-output shape before the unchanged resident semantic admission gate.",
+      "next_admissible_gate": "Replace reliance on fragile conditional JSON-schema enforcement with a simpler transport shape that cannot fabricate selected-branch content, then require a new exact-head real-model run.",
+      "claim_ceiling": [
+        "REAL_LOCAL_MODEL_VALID_CHOICE=FALSE_ON_THIS_HEAD",
+        "PARSER_RELAXATION=FORBIDDEN",
+        "AUTOMATIC_RETRY_PERMISSION=FALSE",
+        "MODEL_OUTPUT != AUTHORITY",
+        "REMOTE_HOME_PROMOTION=FALSE"
+      ],
+      "status": "FALSIFIED_REPEATABLE_FIRST_BREAK"
+    }
+  ],
+  "open_followup": {
+    "genesis_pr_186": {
+      "current_candidate_head_at_addendum_creation": "1b5b288e5df9c036e3a3547dd85fac87a11911c0",
+      "candidate_change": "Simple fixed all-keys transport envelope plus schema grounding and deterministic no-invention projection into the unchanged resident parser.",
+      "semantic_status": "PENDING_FRESH_REAL_MODEL_VALIDATION",
+      "pass_inherited_from_prior_head": false
+    },
+    "genesis_issue_164": {
+      "actual_qnap_live_identity_receipt": "PENDING",
+      "live_hr1_hr10": "HOLD"
+    }
+  },
+  "safety": {
+    "SOURCE_WRITEBACK_DEFAULT": "DENY",
+    "DESTRUCTIVE_ACTION": "FORBIDDEN",
+    "AUTHORITY_DELTA": 0,
+    "MASS_EFFECT_BUDGET_DELTA": 0,
+    "REGISTRY_RECORD_IS_NOT_EXECUTION_PERMISSION": true
+  }
+}
