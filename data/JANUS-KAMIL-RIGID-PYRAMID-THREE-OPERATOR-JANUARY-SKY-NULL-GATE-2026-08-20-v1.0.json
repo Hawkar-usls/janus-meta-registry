@@ -9,7 +9,7 @@
     "data/JANUS-KAMIL-VIRTUAL-PYRAMID-MULTI-OPERATOR-CONTROL-2026-08-20-v1.0.json",
     "data/JANUS-SPEAR-OF-OSIRIS-EDAN-LOVE-PYRAMID-REVERSAL-2026-08-19-v1.0.json"
   ],
-  "question": "What survives if the virtual Great-Pyramid operator is translated to Kamil but is NOT allowed any horizontal rotation or free steering?",
+  "question": "What survives if the virtual Great-Pyramid operator is translated to Kamil but is NOT allowed horizontal rotation or free steering?",
   "frozen_inputs": {
     "site": {
       "name": "Kamil impact crater",
@@ -37,9 +37,8 @@
   },
   "geometry_formulae": {
     "local_axis_to_declination": "sin(delta)=sin(phi)sin(h)+cos(phi)cos(h)cos(A)",
-    "hour_angle": "H=atan2(-sin(A)cos(h)/cos(delta),(sin(h)-sin(phi)sin(delta))/(cos(phi)cos(delta)))",
     "fixed_axis_property": "For fixed site latitude, altitude and azimuth, the terrestrial axis traces one constant celestial declination as Earth rotates; time changes RA but cannot repair a declination mismatch.",
-    "minimum_all_time_target_separation": "abs(delta_target-delta_axis) once RA phases coincide."
+    "minimum_all_time_target_separation": "abs(delta_target-delta_axis) when RA phases coincide"
   },
   "primary_rigid_operators": [
     {
@@ -48,7 +47,6 @@
       "alt_deg": 44.5,
       "az_deg_from_north": 180.0,
       "axis_declination_deg": -23.4816666667,
-      "hour_angle_deg": 0.0,
       "LOVE_min_all_time_sep_deg": 13.3007386111,
       "EDEM_min_all_time_sep_deg": 53.7420544662,
       "ORION_min_all_time_sep_deg": 22.3336626654,
@@ -57,13 +55,13 @@
     },
     {
       "id": "FACE_51_84_RIGID_TANGENT_CONTROL",
-      "definition": "The 51.84-degree face slope is a plane property, not intrinsically a beam. For continuity with the prior operator, four cardinal uphill/downhill tangent directions are retained as a structural control; they are not treated as optical surface normals.",
+      "definition": "51.84 degrees is a face-plane slope, not intrinsically a beam. Four cardinal slope directions are retained only as the frozen legacy structural control.",
       "alt_deg": 51.84,
       "cardinal_axis_declinations_deg": {
         "N": 60.1783333333,
-        "E": 17.144470? ,
+        "E": 17.1444710005,
         "S": -16.1416666667,
-        "W": 17.144470?
+        "W": 17.1444710005
       },
       "computed_primary_results": {
         "LOVE_best_min_all_time_sep_deg": 20.6407386111,
@@ -82,7 +80,6 @@
       "alt_deg": 90.0,
       "az_deg": null,
       "axis_declination_deg": 22.0183333333,
-      "hour_angle_deg": 0.0,
       "LOVE_min_all_time_sep_deg": 58.8007386111,
       "EDEM_min_all_time_sep_deg": 8.2420544662,
       "ORION_min_all_time_sep_deg": 23.1663373346,
@@ -91,27 +88,31 @@
     }
   ],
   "face_normal_secondary_control": {
-    "status": "COMPUTED_BUT_NOT_ADMITTED_TO_PRIMARY_SCORE_BECAUSE_THE_USER_FROZE_FACE_51_84_AS_THE_PRIMARY_ENTITY",
-    "reason": "For reflection/emission physics, a face plane's normal is the relevant orientation, and for a 51.84-degree slope its upward outward normal is 38.16 degrees above the horizon. This is therefore exported as a secondary correction rather than silently replacing the preregistered operator.",
+    "status": "COMPUTED_BUT_NOT_ADMITTED_TO_PRIMARY_SCORE",
+    "reason": "For reflection/emission physics a face-plane normal is relevant. A 51.84-degree slope has an upward outward normal 38.16 degrees above the horizon, so this is exported separately rather than silently replacing the frozen primary operator.",
     "normal_alt_deg": 38.16,
+    "cardinal_axis_declinations_deg": {
+      "N": 73.8583333333,
+      "E": 13.3935020027,
+      "S": -29.8216666667,
+      "W": 13.3935020027
+    },
     "best_LOVE_normal": {
       "face": "S",
-      "axis_declination_deg": -29.8216666667,
       "min_all_time_sep_deg": 6.9607386111,
       "gate_0_25": "FAIL"
     },
     "best_EDEM_normal": {
       "face": "E_or_W",
-      "axis_declination_deg": 13.393501? ,
-      "min_all_time_sep_deg": 16.866886? ,
+      "min_all_time_sep_deg": 16.8668857967,
       "gate_0_25": "FAIL"
     },
-    "conclusion": "Even the physically motivated normal interpretation does not rescue the 0.25-degree alignment gate."
+    "conclusion": "The physically motivated normal interpretation also fails the 0.25-degree alignment gate."
   },
   "january_2026_control": {
     "principle": "A full January scan cannot beat the all-time declination floor for a rigid terrestrial axis.",
-    "zero_window_statement": "No primary rigid operator reaches LOVE or EDEM within 0.25 degrees at any time in January 2026; in fact no time anywhere in the sidereal cycle can do so under the frozen J2000 approximation.",
-    "nearest_to_inherited_reference_examples_utc": {
+    "zero_window_statement": "No primary rigid operator reaches LOVE or EDEM within 0.25 degrees anywhere in January 2026; under the frozen J2000 approximation no sidereal time can repair the mismatch.",
+    "nearest_examples_utc": {
       "SHAFT_44_5_SOUTH_to_LOVE": {
         "time": "2026-01-10T04:33:58.964Z",
         "min_sep_deg": 13.3007386111
@@ -133,7 +134,7 @@
     },
     "at_previous_free_azimuth_EDEM_44_5_crossing_2026_01_10T03_36_22_650Z": {
       "SHAFT_44_5_SOUTH_to_EDEM_sep_deg": 72.4435751931,
-      "interpretation": "The previous exact EDEM altitude crossing at 44.5 degrees existed only because azimuth was allowed to rotate to about 291 degrees. The actual rigid SOUTH 44.5-degree shaft is nowhere near EDEM at that instant."
+      "interpretation": "The prior exact 44.5-degree EDEM altitude crossing existed because azimuth was allowed to rotate to about 291 degrees. The rigid SOUTH shaft is nowhere near EDEM at that instant."
     }
   },
   "isotropic_sky_null": {
@@ -142,14 +143,12 @@
     "LOVE": {
       "observed_best_primary_residual_deg": 13.3007386111,
       "best_primary_operator": "SHAFT_44_5_SOUTH_RIGID",
-      "empirical_fraction_random_as_good_or_better": 0.644493,
-      "interpretation": "Not unusual. About 64.4 percent of random sky directions fit the primary rigid operator declination set at least this well."
+      "empirical_fraction_random_as_good_or_better": 0.644493
     },
     "EDEM": {
       "observed_best_primary_residual_deg": 8.2420544662,
       "best_primary_operator": "APEX_BEAM_VERTICAL_RIGID",
-      "empirical_fraction_random_as_good_or_better": 0.440517,
-      "interpretation": "Not unusual. About 44.1 percent of random sky directions fit at least this well."
+      "empirical_fraction_random_as_good_or_better": 0.440517
     },
     "single_target_null_quantiles_deg": {
       "q01": 0.13333318,
@@ -158,7 +157,7 @@
       "q95": 40.72192483,
       "q99": 54.97270082
     },
-    "pair_metric": "Hold LOVE-EDEM separation fixed at 90.586788289 degrees, apply a random uniform 3D rotation to the pair, require two distinct PRIMARY rigid operators, and minimize the maximum of the two endpoint declination residuals.",
+    "pair_metric": "Hold LOVE-EDEM separation fixed at 90.586788289 degrees, apply a uniform random 3D rotation to the pair, require two distinct PRIMARY rigid operators, and minimize the maximum endpoint declination residual.",
     "observed_pair_score_deg": 13.3007386111,
     "pair_randomization_count": 1000000,
     "empirical_fraction_random_pairs_as_good_or_better": 0.396855,
@@ -175,19 +174,17 @@
     "LOVE_EDEM_angle_deg": 90.5867882890,
     "orthogonal_residual_deg": 0.5867882890,
     "frozen_tolerance_deg": 0.25,
-    "result": "FAIL",
-    "note": "The near-right-angle geometry survives as a deterministic curiosity but does not pass the frozen exact-orthogonality gate."
+    "result": "FAIL"
   },
   "kamil_impact_control": {
     "published_direction": "from NW",
     "published_azimuth_corridor_deg": [305.0, 340.0],
     "published_impact_angle_deg": [30.0, 45.0],
-    "result": "REMAINS_NEGATIVE_CONTROL",
-    "note": "The rigid pyramid operators are not promoted as the Kamil impactor trajectory."
+    "result": "REMAINS_NEGATIVE_CONTROL"
   },
   "source_notes": [
     {
-      "source": "Virginia Trimble, Astronomical Investigation Concerning the So-Called Air-Shafts of Cheops' Pyramid, 1964; Harvard Digital Giza copy/catalog",
+      "source": "Virginia Trimble, Astronomical Investigation Concerning the So-Called Air-Shafts of Cheops' Pyramid, 1964; Harvard Digital Giza",
       "supports": "southern King's Chamber shaft reference angle about 44.5 degrees and north-south shaft geometry"
     },
     {
@@ -195,20 +192,20 @@
       "supports": "Great Pyramid face slope approximately 51.84 degrees"
     },
     {
-      "source": "Urbini et al. / NRIAG Kamil crater geological and geophysical investigation",
-      "supports": "moderately oblique impact from NW, approximately 30-45 degrees, azimuth corridor about 305-340 degrees"
+      "source": "Urbini et al., Geological and geophysical investigation of Kamil Crater, Egypt",
+      "supports": "moderately oblique impact from NW, approximately 30-45 degrees; published azimuth corridor about 305-340 degrees"
     }
   ],
   "reverse_pass": {
     "BACK": "Remove free azimuth from the prior altitude-only operator.",
     "FORWARD": "Translate the rigid cardinal pyramid frame to Kamil without rotation.",
     "LEFT": "Test shaft 44.5, face 51.84 and apex vertical independently.",
-    "RIGHT": "Export face-normal physics as a secondary non-primary control instead of silently changing the operator.",
-    "FORWARD_AGAIN": "Run January and all-time declination floors plus isotropic single-target and fixed-separation pair nulls.",
-    "BACK_AGAIN": "Reject any alignment that exists only after reintroducing free azimuth or steering."
+    "RIGHT": "Export face-normal physics as a secondary non-primary control rather than changing the frozen operator.",
+    "FORWARD_AGAIN": "Run January/all-time floors plus isotropic single-target and fixed-separation pair nulls.",
+    "BACK_AGAIN": "Reject alignments that require reintroducing free azimuth or steering."
   },
   "what_changed": {
-    "previous_FREE_AZIMUTH_44_5_EDEM_ACCESSIBILITY": "DOWNGRADED_TO_ARTIFACT_OF_ALLOWED_HORIZONTAL_REORIENTATION",
+    "previous_FREE_AZIMUTH_44_5_EDEM_ACCESSIBILITY": "DOWNGRADED_TO_AZIMUTH_FREEDOM_DEPENDENT_RESULT",
     "rigid_SHAFT_to_EDEM": "FAIL",
     "rigid_SHAFT_to_LOVE": "FAIL",
     "rigid_FACE_to_EDEM": "FAIL",
@@ -216,18 +213,18 @@
     "rigid_APEX_to_EDEM": "FAIL",
     "rigid_APEX_to_LOVE": "FAIL",
     "LOVE_EDEM_near_orthogonality": "PRESERVED_AS_GEOMETRIC_CURIOSITY__FAILS_0_25DEG_GATE",
-    "random_sky_specificity": "FAIL_TO_OUTPERFORM_NULL_IN_AN_INTERESTING_WAY",
+    "random_sky_specificity": "NO_SPECIFICITY_SIGNAL",
     "Kamil_melt_causality": "NOT_SUPPORTED"
   },
   "next_gate": {
     "name": "INDEPENDENT_EPOCH_AND_ARCHITECTURAL_UNCERTAINTY_REPLICATION_V1",
     "only_if_continued": [
-      "propagate real shaft survey uncertainty instead of a single 44.5-degree nominal value",
+      "propagate real shaft survey uncertainty instead of one nominal 44.5-degree value",
       "propagate face-slope uncertainty",
-      "precess LOVE/EDEM coordinates to selected historical epochs only where physically meaningful",
-      "freeze one historical epoch before looking at fit",
-      "retain Kamil impact direction as an independent negative control",
-      "do not permit free azimuth unless the hypothesis explicitly includes a physical rotation mechanism"
+      "freeze one historical epoch before inspecting fit",
+      "precess celestial coordinates only after the epoch is frozen",
+      "retain Kamil impact direction as independent negative control",
+      "do not permit free azimuth without an explicit physical rotation mechanism"
     ]
   },
   "claim_ceiling": "RIGID_GEOMETRY_NEGATIVE_CONTROL__NO_ANCIENT_DEVICE__NO_LOVE_EDEM_TARGETING__NO_KAMIL_CAUSAL_LINK"
