@@ -1,0 +1,77 @@
+{
+  "artifact_id": "JANUS-HABITAT-FLUID-INTELLIGENCE-GATE-F1-BLIND-2026-08-20-v1.0",
+  "version": "1.0",
+  "created_at": "2026-08-20T23:54:00+03:00",
+  "status": "FROZEN_BEFORE_SUBJECT_RESPONSE",
+  "purpose": "First blind calibration task intended to measure novel rule induction and falsification separately from accumulated JANUS familiarity and AI-assisted execution.",
+  "linked_intelligence_baseline": "JANUS-HAWKAR-INTELLIGENCE-ESTIMATE-GITHUB-2026-08-20-v1.0",
+  "source_repository": "Hawkar-usls/Janus-Fundamentum",
+  "source_repository_commit_seed": "b62677d0076dadf280667ff37dab1d8218cd950e",
+  "generation_seed_sha256": "066b5b8176744981b88640e978ae954e40137fd9b6eeadf295565e36fe054f52",
+  "answer_key_commitment": {
+    "algorithm": "SHA-256",
+    "sha256": "c99a454f89869e44144f9c4c71f27601152444956ac54987d99f305df2eb8263",
+    "answer_disclosed_before_response": false,
+    "rule": "The answer key must not be inspected or used for scoring until after the subject submits the first response."
+  },
+  "assistance_contract": {
+    "first_attempt": "UNASSISTED",
+    "forbidden_on_first_attempt": ["code", "brute_force", "web_search", "AI_assistance", "repository_search_for_answer"],
+    "allowed": ["paper_or_notes", "mental_reasoning", "ordinary arithmetic"],
+    "post_submission": "After the first response is frozen, AI/code verification is allowed and should be recorded separately."
+  },
+  "task": {
+    "gate_id": "JANUS-FLUID-GATE-F1-BLIND-v1",
+    "domain": "abstract admission-rule induction derived from JANUS proof-gate style but semantically neutralized",
+    "variables": ["A", "B", "C", "D", "E"],
+    "rule_grammar": {
+      "uses_exactly_three_distinct_variables": true,
+      "shape": "((L1 OP1 L2) OP2 L3)",
+      "operators": ["AND", "OR", "XOR"],
+      "negation": "NOT may be applied to at most one of L1,L2,L3",
+      "irrelevant_variables": 2
+    },
+    "training": [
+      {"A":0,"B":0,"C":0,"D":0,"E":0,"ADMIT":1},
+      {"A":0,"B":0,"C":1,"D":0,"E":0,"ADMIT":0},
+      {"A":1,"B":0,"C":0,"D":0,"E":0,"ADMIT":0},
+      {"A":1,"B":0,"C":0,"D":1,"E":0,"ADMIT":1},
+      {"A":1,"B":0,"C":1,"D":1,"E":0,"ADMIT":0},
+      {"A":0,"B":0,"C":0,"D":1,"E":1,"ADMIT":1},
+      {"A":1,"B":1,"C":1,"D":1,"E":0,"ADMIT":0},
+      {"A":1,"B":1,"C":1,"D":0,"E":1,"ADMIT":1},
+      {"A":1,"B":0,"C":1,"D":1,"E":1,"ADMIT":0},
+      {"A":1,"B":1,"C":1,"D":0,"E":0,"ADMIT":1}
+    ],
+    "holdout": [
+      {"A":1,"B":0,"C":1,"D":0,"E":0,"ADMIT":"?"},
+      {"A":1,"B":0,"C":1,"D":0,"E":1,"ADMIT":"?"},
+      {"A":0,"B":1,"C":1,"D":1,"E":0,"ADMIT":"?"},
+      {"A":0,"B":1,"C":1,"D":0,"E":1,"ADMIT":"?"},
+      {"A":1,"B":1,"C":0,"D":0,"E":1,"ADMIT":"?"},
+      {"A":0,"B":1,"C":0,"D":1,"E":1,"ADMIT":"?"}
+    ],
+    "required_response": [
+      "hidden_rule",
+      "six_holdout_predictions_in_order",
+      "two_irrelevant_variables",
+      "one_falsification_of_a_plausible_competing_rule",
+      "confidence_percent"
+    ]
+  },
+  "scoring": {
+    "rule_recovery": 6,
+    "holdout_predictions": 6,
+    "irrelevant_variables": 2,
+    "falsification_quality": 2,
+    "maximum": 16,
+    "speed": "recorded as secondary metadata only; not used as a direct IQ conversion",
+    "single_gate_policy": "One task may update confidence in the profile but must not by itself establish or materially rewrite a psychometric IQ estimate."
+  },
+  "scientific_boundary": {
+    "fluid_intelligence_measurement": "PROXY_ONLY",
+    "standardized_psychometric_test": false,
+    "iq_conversion_from_single_gate": "FORBIDDEN",
+    "main_target": ["novel_rule_induction", "hypothesis_discrimination", "falsification", "confidence_calibration"]
+  }
+}
