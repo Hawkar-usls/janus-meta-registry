@@ -1,0 +1,86 @@
+{
+  "artifact_uuid": "JANUS-SCOBY-MARINE-ACIDIFICATION-LEACHATE-GATE-1912-2026-08-20-v1.0",
+  "version": "v1.0",
+  "created_local": "2026-08-20T19:12:00+03:00",
+  "repository": "Hawkar-usls/janus-meta-registry",
+  "branch": "audit/goldprompt-handshake-logic-hardening-v1_1",
+  "status": "ENVIRONMENTAL_GATE_PREREGISTERED_EMPIRICAL_DATA_PENDING",
+  "parents": [
+    "data/JANUS-SCOBY-MARINE-DYNAMIC-SALTWATER-BOOM-GATE-0018-2026-08-20-v1.0.json",
+    "data/JANUS-SCOBY-OIL-BOOM-CURRENT-MARKET-COMPARATOR-1903-2026-08-20-v1.0.json"
+  ],
+  "research_question": "Could a SCOBY/bacterial-cellulose marine oil sorbent acidify seawater or create other local water-quality stress during deployment?",
+  "preliminary_answer": "PURIFIED_NEUTRAL_RETRIEVABLE_BC_IS_NOT_EXPECTED_TO_ACIDIFY_THE_SEA_MATERIALLY; RAW_LIVE_SCOBY_OR_POORLY_WASHED_BC_IS_BLOCKED because residual acetic acid, sugars, microorganisms and dissolved organic matter could cause local pH change and oxygen demand.",
+  "scientific_basis": {
+    "neutralization": "Published kombucha-BC preparation protocols routinely remove culture-medium residues and microbial biomass and wash until the rinse reaches neutral pH.",
+    "seawater_buffering": "Seawater has substantial carbonate/bicarbonate alkalinity; typical oceanic total alkalinity is roughly 2000-2500 umol/kg. This buffers acid additions but does not justify releasing acidic material.",
+    "biodegradation": "Cellulose can biodegrade in seawater over weeks to months; microbial mineralization consumes oxygen and produces CO2. Therefore loose fragments or intentionally abandoned material could create local oxygen/pH stress even if the polymer itself is not acidic.",
+    "regulatory_context": "EPA recognizes cellulose fibers as a natural organic sorbent class, but field use remains subject to response oversight and product composition."
+  },
+  "blocked_materials": [
+    "RAW_WET_LIVE_SCOBY_DIRECT_FROM_FERMENTATION",
+    "BC_WITH_ACIDIC_RINSE_OR_UNKNOWN_RESIDUAL_ACETATE",
+    "BC_WITH_MEASURABLE_FREE_SUGAR_OR_FERMENTATION_BROTH_RESIDUE",
+    "UNCHARACTERIZED_HYDROPHOBIC_COATING_WITH_UNKNOWN_LEACHABLES",
+    "LOOSE_BC_PARTICLES_OR_FRAGMENTS_FOR_OPEN_WATER_RELEASE"
+  ],
+  "required_product_state": [
+    "PURIFIED_OR_THOROUGHLY_WASHED_BACTERIAL_CELLULOSE",
+    "FINAL_RINSE_NEAR_NEUTRAL",
+    "DRIED_OR_CONDITIONED_WITH_RECORDED_PROCESS_HISTORY",
+    "LOW_LEACHABLE_ORGANIC_LOAD",
+    "RETRIEVABLE_PAD_OR_MESH_CONTAINED_CARTRIDGE",
+    "NO_INTENTIONAL_ENVIRONMENTAL_ABANDONMENT"
+  ],
+  "M0_leachate_test": {
+    "medium": "ARTIFICIAL_SEAWATER_35_PLUS_MINUS_2_PSU",
+    "controls": ["SEAWATER_BLANK", "COMMERCIAL_PP_SORBENT_CONTROL_IF_AVAILABLE"],
+    "sample_states": ["LEAD_D0_D3_BC_BRANCHES", "ANY_HYDROPHOBICALLY_TREATED_VARIANT"],
+    "timepoints": ["T0", "1_HOUR", "24_HOUR", "7_DAY_SCREEN"],
+    "measurements": [
+      "pH",
+      "TOTAL_ALKALINITY_IF_AVAILABLE",
+      "DISSOLVED_OXYGEN",
+      "TOC_OR_COD",
+      "ACETATE_OR_TOTAL_ORGANIC_ACIDS_IF_ANALYTICALLY_AVAILABLE",
+      "VISIBLE_COLOR_OR_ODOR_CHANGE",
+      "MATERIAL_MASS_LOSS_AND_FRAGMENTATION",
+      "COATING_LEACHABLE_SCREEN_IF_PRESENT"
+    ]
+  },
+  "internal_promotion_gates_not_regulatory": {
+    "A1_pH": "Absolute sample-minus-blank pH shift after 24 h <= 0.10 pH unit under the frozen test conditions.",
+    "A2_DO": "Dissolved-oxygen loss attributable to the sorbent <=10% relative to matched blank over 24 h.",
+    "A3_rinse": "Final production rinse is near-neutral and stable before drying/conditioning.",
+    "A4_organics": "No large unexplained increase in TOC/COD or acetate relative to blank; report analytical detection limits and absolute values.",
+    "A5_fragments": "No visible fragment escape from the contained pad/cartridge and >=99% dry-equivalent sorbent retrieval.",
+    "A6_treatment": "Any hydrophobic treatment must pass the same leachate test independently; untreated BC passing does not automatically clear a coating.",
+    "A7_repeat": "Pass reproduced in at least two independent BC batches."
+  },
+  "janus_tranception": {
+    "schema": "JANUS-FORWARD-REVERSE-SEMANTIC-PASS-v1.0",
+    "mode": "BIDIRECTIONAL_REQUIRED",
+    "forward": "FERMENTED_SCOBY -> PURIFY/WASH -> NEUTRAL_RINSE -> DRY/ENGINEER -> MARINE_CONTACT -> RETRIEVE -> NO_MATERIAL_PH_SHIFT_OR_OXYGEN_STRESS",
+    "reverse": "NO_MARINE_PH_OR_OXYGEN_STRESS -> REQUIRES_LOW_ACID_AND_ORGANIC_LEACHATE -> REQUIRES_NEUTRAL_WASHED_BC -> REQUIRES_REMOVAL_OF_BROTH/MICROBIAL_RESIDUES -> REQUIRES_CONTROLLED_SCOBY_PROCESSING",
+    "mirror_status": "ENVIRONMENTAL_LOGIC_CLOSED_EMPIRICAL_LEACHATE_DATA_OPEN"
+  },
+  "design_verdict": {
+    "raw_scoby": "NO_GO_FOR_MARINE_DEPLOYMENT",
+    "purified_neutral_retrievable_bc": "PLAUSIBLE_AND_ENVIRONMENTALLY_TESTABLE",
+    "main_risks": [
+      "residual acetic acid and fermentation broth",
+      "biodegradation-driven oxygen demand if material is lost",
+      "fragment release",
+      "hydrophobic-coating leachables"
+    ],
+    "collaboration_position_for_green_boom": "Present the concept as a recoverable purified bacterial-cellulose insert with a preregistered pH/leachate/DO gate, not as raw kombucha SCOBY."
+  },
+  "sources": [
+    {"authority":"Springer 2023","url":"https://link.springer.com/article/10.1186/s43014-023-00188-3","role":"BC purification and washing until neutral pH"},
+    {"authority":"PMC 2024","url":"https://pmc.ncbi.nlm.nih.gov/articles/PMC11535285/","role":"Kombucha BC purification, NaOH treatment and washing to neutral pH"},
+    {"authority":"NOAA/NCEI","url":"https://www.ncei.noaa.gov/access/ocean-carbon-acidification-data-system/oceans/Handbook_2007/Guide_all_in_one.pdf","role":"Typical oceanic total alkalinity and seawater buffering context"},
+    {"authority":"Water Research 2026","url":"https://www.sciencedirect.com/science/article/pii/S0043135426012121","role":"Marine biodegradation measured through oxygen consumption and CO2 production"},
+    {"authority":"US EPA 2026","url":"https://www.epa.gov/emergency-response/national-oil-and-hazardous-substances-pollution-contingency-plan-sorbent-product","role":"Cellulose fibers recognized as natural organic sorbent materials and recovery context"}
+  ],
+  "next_action": "Before contacting Green Boom, describe the material as purified neutral bacterial cellulose and propose a joint 24 h artificial-seawater leachate/pH/DO comparison against their biomass boom and a PP control."
+}
