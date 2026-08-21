@@ -1,0 +1,82 @@
+{
+  "artifact_id": "JANUS-ECHO-COUSTEAU-EA-TPHASE-BLIND-CLUSTER-RUN-007-2026-08-21-v1.6",
+  "created_local": "2026-08-21T16:31:00+03:00",
+  "research_branch": "Janus-Echo-Кусто",
+  "canonical_source": {
+    "repository": "Hawkar-usls/Janus-Cosmos",
+    "branch": "janus-echo-cousteau",
+    "result_path": "data/cousteau/JANUS-ECHO-COUSTEAU-EA-TPHASE-BLIND-CLUSTER-RUN-007-2026-08-21-v1.6.json",
+    "status_path": "data/cousteau/JANUS-ECHO-COUSTEAU-EA-TPHASE-BLIND-CLUSTER-RUN-007-2026-08-21-v1.6-STATUS.json",
+    "execution_commit": "ad120fb7e3e57d4cc55a8586195333892857f9c0"
+  },
+  "source_dataset": {
+    "doi": "10.26022/IEDA/330497",
+    "dataset": "EA_Hydroacoustics",
+    "data_set_uid": 30497,
+    "file_uid": "2504732",
+    "transport": "MGDS_Download.tar -> EA_CTBTO_catalog_all.dat.gz -> ASCII",
+    "archive_sha256": "e102dca19128786dd043375fa9a82fd5ec18a326c7be7021c477be6cd3a521c9",
+    "gzip_member_sha256": "06ae7ee8c49b32566757d0760d6d6695e03c7a394948b2cd5759836a96410b5d",
+    "ascii_catalog_sha256": "4eea7ca55456a271df79ad165d76dc6c77ad3752705b46ad031468bb00232558",
+    "license": "CC BY-NC-SA 3.0",
+    "raw_committed": false
+  },
+  "exact_parser": {
+    "schema": "SOURCE_TIME__N_HYDROPHONES__LAT__LON__LAT_ERR__LON_ERR__TIME_ERR__MAGNITUDE",
+    "authoritative_rows": 5943,
+    "paper_reported_events": 6843,
+    "difference": 900,
+    "count_reconciliation_status": "OPEN_MISMATCH_REQUIRES_SOURCE_RECONCILIATION",
+    "n_hydrophones_distribution": {
+      "4": 1830,
+      "5": 1644,
+      "6": 2228,
+      "7": 238,
+      "8": 3
+    },
+    "three_hydrophone_rows_in_download": 0,
+    "rule": "DO_NOT_SYNTHESIZE_MISSING_ROWS__CLUSTER_ONLY_AUTHORITATIVE_DOWNLOADED_ROWS"
+  },
+  "blind_contract": {
+    "anchor_hidden_during_clustering": true,
+    "clustering_parameters_frozen_before_anchor_reveal": true,
+    "dbscan_grid_changed": false,
+    "blind_freeze_sha256": "5b63e4d631329b9c9d9517c55113974f80293c39c2561942b797db3bd00f7f5b"
+  },
+  "post_reveal": {
+    "frozen_anchor": [-3.865418, 3.854924],
+    "nearest_catalog_event_km": 477.597,
+    "nearest_blind_cluster_center_km": 1675.4,
+    "anchor_inside_any_blind_cluster_p95_radius": false,
+    "anchor_inside_any_blind_cluster_max_radius": false,
+    "diagnostic_rectangular_null_fraction_range": [0.7343, 0.80445],
+    "diagnostic_null_formal_p_value": false,
+    "verdict": "NO_BLIND_CLUSTER_P95_OVERLAP_WITH_FROZEN_ANCHOR"
+  },
+  "scientific_interpretation": {
+    "spatial_cluster_result": "NEGATIVE",
+    "meaning": "The frozen anchor is not unusually close to or inside a blind event cluster under the preregistered DBSCAN grid and diagnostic rectangular null.",
+    "does_not_mean": "No event, structure, or acoustic phenomenon can exist near the anchor.",
+    "tectonic_mid_atlantic_ridge_control_required": true,
+    "target_identity": "UNCONFIRMED",
+    "target_evidence_delta": "NOT_INCREASED"
+  },
+  "next_gates": [
+    "COUSTEAU_EA_TPHASE_6843_VS_5943_COUNT_RECONCILIATION_V1",
+    "COUSTEAU_EA_TPHASE_EVENT_ERROR_AWARE_DISTANCE_GATE_V1",
+    "COUSTEAU_5D_CONTROL_OUTPERFORMANCE_MATRIX_V1"
+  ],
+  "hard_rules": [
+    "AUTHORITATIVE_ROWS_OUTRANK_EXPECTED_COUNT",
+    "DO_NOT_SYNTHESIZE_MISSING_900_ROWS",
+    "BLIND_CLUSTER_BEFORE_ANCHOR_REVEAL",
+    "NO_PARAMETER_RETUNING_AFTER_REVEAL",
+    "BLIND_NEGATIVE_STAYS_NEGATIVE",
+    "DIAGNOSTIC_RECTANGULAR_NULL_IS_NOT_FORMAL_P_VALUE",
+    "TECTONIC_CONTROL_PRECEDES_TARGET_INTERPRETATION",
+    "DISTANCE_IS_NOT_CAUSATION",
+    "NO_RECENTERING",
+    "NO_UNDERWATER_PYRAMID_DETECTED_YET"
+  ],
+  "status": "RECEIPT_FROZEN__AUTHORITATIVE_5943_ROW_BLIND_CLUSTER_SUCCESS__SPATIAL_NEGATIVE__COUNT_RECONCILIATION_OPEN"
+}
