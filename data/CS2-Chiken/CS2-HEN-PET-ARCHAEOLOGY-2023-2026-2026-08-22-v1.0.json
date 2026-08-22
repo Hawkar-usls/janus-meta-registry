@@ -1,0 +1,129 @@
+{
+  "schema": "JANUS_CS2_HEN_PET_ARCHAEOLOGY",
+  "version": "1.0",
+  "date": "2026-08-22",
+  "status": "PRIMARY_EVIDENCE_CHAIN_STRENGTHENED",
+  "question": "What was missed when the Henrietta investigation is read backwards from current CS2 assets, schemas and UI into the initial CS2 beta?",
+  "claim_ceiling": "LONG_RUNNING_HEN_PET_PIPELINE_STRONGLY_SUPPORTED__HENRIETTA_LITERAL_IDENTITY_UNCONFIRMED",
+  "primary_findings": [
+    {
+      "id": "PET_HEN_1_CONTINUITY",
+      "date_start": "2023-03-22",
+      "date_end": "2026-08-22",
+      "finding": "The initial CS2 packaged manifest already contained generated econ inventory images named pet_hen_1, and the current packaged manifest still contains the same pet_hen_1 family.",
+      "variants": [
+        "hen_catalan_black",
+        "hen_catalan_black_white_head",
+        "hen_catalan_tan",
+        "hen_catalan_white",
+        "hen_catalan_white_tan_head"
+      ],
+      "render_suffix_note": "heavy/medium/light and large are inventory image rendering variants; they are not evidence of biological growth stages.",
+      "authority": "PRIMARY_PACKAGED_MANIFEST",
+      "implication": "A literal PET+HEN asset family existed from the initial CS2 beta era, replacing the weaker earlier reliance on secondary reports of an unknown Pets category."
+    },
+    {
+      "id": "PET_SLOT_UI_2024_02_08",
+      "date": "2024-02-08",
+      "finding": "Historical Panorama iteminfo.js explicitly treated default loadout slot 'pet' as an equippable non-weapon slot and recognized item definition names containing 'pet_' for inventory-image rendering.",
+      "authority": "PRIMARY_HISTORICAL_PANORAMA_SOURCE",
+      "implication": "pet_hen_1 was backed by explicit pet-slot and pet-item UI architecture before the Henrietta poster appeared."
+    },
+    {
+      "id": "PETINDEX_2024_05_23",
+      "date": "2024-05-23",
+      "finding": "CEconItemPreviewDataBlock gained optional uint32 petindex = 19.",
+      "authority": "PRIMARY_HISTORICAL_PROTO_DIFF",
+      "implication": "Pet identity became an explicit field in the CS2 economy preview transport months before the Train Henrietta poster."
+    },
+    {
+      "id": "CHICK_INTERACTION_AND_LIFECYCLE",
+      "date_window": "2024-10_to_2026-08",
+      "finding": "Current CS2 ships Chicken.Chick.Interact, six chicken_chick audio files and a substantial chick animation set including idle, react, walk, run, squat, fall, land and swim variants. The initial 2023 packaged manifest did not contain the searched chick animation/audio names.",
+      "authority": "PRIMARY_CURRENT_PACKAGED_MANIFEST_PLUS_CURRENT_SOUNDEVENTS",
+      "implication": "The chicken system now has explicit juvenile/chick presentation and interaction support. This makes an egg-to-chick-to-adult concept technically more plausible, but does not prove an implemented growth pipeline."
+    },
+    {
+      "id": "CHICKEN_PREVIEW_MODEL_FLAG",
+      "date": "2026-current",
+      "finding": "Current client C_Chicken contains m_bIsPreviewModel plus C_AttributeContainer and m_bAttributesInitialized; server CChicken contains IHasAttributes, CAttributeContainer, leader and follow timers.",
+      "authority": "PRIMARY_SCHEMA_DUMP",
+      "implication": "The ordinary chicken class has a dedicated client preview-mode path and attribute machinery. This is architecturally compatible with pet/econ presentation but does not prove that every preview chicken is a pet."
+    },
+    {
+      "id": "CHICKEN_SEEDED_VARIATION",
+      "date": "2026-current",
+      "finding": "chicken_metadata defines weighted material groups and material parameters with a Seed Generation Value.",
+      "authority": "PRIMARY_MODEL_GAMEDATA",
+      "implication": "Chicken appearance can be generated from model metadata, fitting the existence of multiple Catalan visual variants. Direct mapping to pet_hen_1 remains to be demonstrated."
+    },
+    {
+      "id": "UPGRADE_LEVEL_2025_07_02",
+      "date": "2025-07-02",
+      "finding": "CEconItemPreviewDataBlock gained style, variations and upgrade_level while petindex already existed.",
+      "authority": "PRIMARY_HISTORICAL_PROTO_DIFF",
+      "implication": "The preview transport can carry an upgrade level, but the field is generic and must not be treated as proof of pet growth stages."
+    }
+  ],
+  "negative_and_corrective_findings": [
+    {
+      "lead": "game/bin/win64/tools/pet_strings.txt",
+      "status": "FALSE_POSITIVE",
+      "reason": "PET in that filename refers to Particle Editor Tool, not companion pets."
+    },
+    {
+      "lead": "CMsgApplyEggEssence",
+      "status": "NON_SPECIFIC_SHARED_ECON_PRIMITIVE",
+      "reason": "It lives in generic base_gcmessages.proto and has no demonstrated CS2 chicken-pet callsite."
+    },
+    {
+      "lead": "vanity_pet_info.ts",
+      "status": "SOURCE_BREADCRUMB_ONLY",
+      "reason": "mainmenu.js references it, but no functional implementation/callsite was established in tracked emitted source."
+    },
+    {
+      "lead": "m_currentPetId",
+      "status": "PROVISIONED_BUT_UNUSED_IN_CURRENT_EMITTED_LOADOUT_GRID",
+      "reason": "The current loadout_grid.js declares the structure, but exact-file search found only the declaration."
+    },
+    {
+      "lead": "id-pet-sticker-item-list",
+      "status": "PET_RELATED_UI_SELECTION_PATH_ONLY",
+      "reason": "Do not infer literal stickers applied to pets without additional evidence."
+    },
+    {
+      "lead": "MVP chicken",
+      "status": "CONFIRMED_GENERIC_PRESENTATION_CHICKEN_NOT_HENRIETTA",
+      "reason": "Runtime video confirmed a visible generic chicken/rooster in the MVP presentation path; no Henrietta-specific identity marker was present."
+    }
+  ],
+  "reverse_chronology": [
+    "2023-03-22: pet_hen_1 econ image family already packaged in initial CS2 beta manifest",
+    "2024-02-08: Panorama UI explicitly recognizes pet slot and pet_ item-definition names",
+    "2024-05-23: CEconItemPreviewDataBlock gains petindex",
+    "2024-10: Chicken.Chick.Interact and Chicken.Interact development breadcrumbs appear before Train return",
+    "2024-11: Train returns with missing named hen Henrietta poster",
+    "2025-07-02: preview block gains style, variations and generic upgrade_level",
+    "2025-2026: pet placement/nameable/XP-shop egg ownership infrastructure becomes explicit",
+    "2026-current: pet_hen_1 images persist; chick sounds/animations are packaged; C_Chicken has preview mode; egg_pristine remains referenced by tooling/FGD but absent from current runtime manifest"
+  ],
+  "strongest_model": {
+    "claim": "Henrietta is most plausibly the diegetic narrative face or breadcrumb of a long-running hen PET system that predates the Train poster, rather than a currently hidden physical chicken on de_train.",
+    "authority": "HIGH_CONFIDENCE_INFERENCE_NOT_VALVE_CONFIRMED"
+  },
+  "literal_identity_gate": {
+    "status": "OPEN",
+    "required": [
+      "Henrietta string in pet item/localization/schema/model metadata, or",
+      "official Valve statement directly linking Train Henrietta poster to the pet_hen item/system, or",
+      "reproducible unique runtime pet object whose identity maps to Henrietta"
+    ]
+  },
+  "next_targets": [
+    "Extract and visually compare the five pet_hen_1 inventory renders against the Train Henrietta poster.",
+    "Find the item-schema definition/defindex backing pet_hen_1 and inspect its attributes, default slot, rarity, capabilities and localization tokens.",
+    "Trace introduction/history of C_Chicken.m_bIsPreviewModel.",
+    "Trace exact relationship between chick animations/sounds and the adult chicken model/metadata.",
+    "Search localization and item schema for Henrietta, hen, chicken egg and pet_hen identifiers."
+  ]
+}
