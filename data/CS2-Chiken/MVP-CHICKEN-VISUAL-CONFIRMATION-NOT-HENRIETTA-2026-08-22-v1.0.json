@@ -1,0 +1,40 @@
+{
+  "id": "MVP-CHICKEN-VISUAL-CONFIRMATION-NOT-HENRIETTA-2026-08-22-v1.0",
+  "date": "2026-08-22",
+  "branch": "CS2-Chiken",
+  "scope": "CS2 chicken / Henrietta investigation",
+  "runtime_scene": "ui/match_mvp style preview scene reached from de_train_vanity investigation",
+  "evidence": {
+    "client_entity": {
+      "class": "info_map_preview_particle_system",
+      "targetname": "mvp_chicken",
+      "example_entindex": 16926,
+      "fixed_origin": [34, 136, -8],
+      "owner": null,
+      "render_bounds": [[34,136,-8],[34,136,-8]],
+      "interpretation": "zero-volume client-side presentation anchor, not a physical chicken entity"
+    },
+    "visual_capture": {
+      "source": "user-supplied CS2 video and screenshot",
+      "video_filename": "Counter-strike 2 2026.08.22 - 23.07.09.01.mp4",
+      "duration_seconds": 20.583356,
+      "visible_window_approx_seconds": "~10.7-11.5",
+      "observation": "a chicken/rooster-like model visibly runs across the illuminated MVP preview area",
+      "appearance": "generic rooster/chicken silhouette with prominent tail/comb; visually consistent with an ordinary chicken presentation asset rather than the distinctive Henrietta poster subject",
+      "confidence": "high for chicken visual; low-to-medium for sex classification from silhouette alone"
+    }
+  },
+  "classification": {
+    "MVP_CHICKEN_VISIBLE": true,
+    "MVP_CHICKEN_IS_PHYSICAL_SERVER_CHICKEN": false,
+    "HENRIETTA_FOUND": false,
+    "HENRIETTA_LINK_CONFIRMED": false,
+    "status": "GENERIC_MVP_CHICKEN_VISUAL_CONFIRMED__HENRIETTA_NEGATIVE"
+  },
+  "reasoning": [
+    "The visible bird is generated/presented through the mvp_chicken presentation path, while no cs_pet_placement, pet, egg, or ordinary chicken entity was present in the relevant vanity baseline.",
+    "The mvp_chicken anchor remains fixed while the player/camera moves, so it is not the player or camera itself.",
+    "The visual bird lacks a unique Henrietta-specific identifier. Therefore it cannot pass the HENRIETTA_FOUND gate."
+  ],
+  "next_gate": "Treat mvp_chicken as generic presentation-layer chicken and deprioritize it. Continue Henrietta search through pet/economy/vanity-pet architecture or unique poster-linked assets only."
+}
