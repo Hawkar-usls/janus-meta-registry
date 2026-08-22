@@ -1,0 +1,27 @@
+{
+  "schema": "JANUS_CS2_HENRIETTA_ASSET_SWEEP",
+  "version": "1.0",
+  "status": "NEGATIVE_FILENAME_SWEEP__PHYSICAL_OBJECT_STILL_UNRESOLVED",
+  "map": "de_train",
+  "updated_at_local": "2026-08-22T20:42:00+03:00",
+  "question": "Is Henrietta exposed in current Train resources under an obvious bird/chicken/pet filename?",
+  "evidence": {
+    "current_train_vpk": "SteamDB build 24537688, last public update 2026-08-03; game/csgo/maps/de_train.vpk contains de_train.vmap_c and maps/de_train/entities/default_ents.vents_c plus compiled world/entity models.",
+    "filename_search_terms": ["henrietta", "chicken", "pigeon", "pet", "bird"],
+    "filename_search_result": "NO_MATCHES in the visible de_train VPK file listing",
+    "gamewide_chicken_model": "models/chicken/chicken.vmdl is present in CS2 game data / FGD context, so a map-authored prop could still reference a generic global model without Train-local filename clues."
+  },
+  "interpretation": [
+    "No obvious Train-local asset named Henrietta/chicken/pigeon/pet/bird was found.",
+    "This weakens the simple hypothesis of a uniquely named hidden Henrietta asset.",
+    "It does NOT rule out a prop_static/prop_dynamic or baked aggregate that references a generic bird/chicken model, nor a purely visual texture baked into world geometry.",
+    "Runtime DM chicken entities are a separate system and must be suppressed during Henrietta search."
+  ],
+  "next_gates": [
+    "Set sv_minimum_desired_chicken_count 0 and verify ent_find chicken = 0 before visual search.",
+    "Sweep T Spawn board backside/void first, then Alley -> Dumpster/Pigeons -> Ivy rooftops.",
+    "For any suspicious physical bird/prop, aim at it and use cl_dumpentity plus ent_text / ent_find_index where possible to capture classname/model/position.",
+    "Do not classify generic DM chicken as Henrietta without a unique map-authored relation."
+  ],
+  "claim_ceiling": "NO_PHYSICAL_HENRIETTA_CONFIRMED"
+}
