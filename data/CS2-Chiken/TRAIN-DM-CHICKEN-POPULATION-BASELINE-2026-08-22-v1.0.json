@@ -1,0 +1,27 @@
+{
+  "schema": "JANUS_CS2_CHICKEN_RUNTIME_EXPERIMENT",
+  "version": "1.0",
+  "id": "TRAIN-DM-CHICKEN-POPULATION-BASELINE-2026-08-22",
+  "status": "CONFIRMED_BASELINE",
+  "map": "de_train",
+  "mode_context": "local Deathmatch research session",
+  "experiment": {
+    "step_1": "sv_minimum_desired_chicken_count 0",
+    "step_2": "ent_fire chicken kill",
+    "step_3": "ent_find chicken -> 0 matches",
+    "step_4": "sv_minimum_desired_chicken_count 10",
+    "step_5": "ent_find chicken -> 10 matches"
+  },
+  "observed_entindexes": [303,304,305,306,307,299,300,276,292,278],
+  "findings": [
+    "Raising sv_minimum_desired_chicken_count from 0 to 10 is sufficient to create a ten-chicken runtime population without any player death event.",
+    "Entity indices are not monotonically increasing and include recycled older slots; entindex must not be used as a simple birth-order clock.",
+    "The population manager is directly responsive to the minimum desired chicken count variable in this runtime context."
+  ],
+  "claim_updates": {
+    "PLAYER_DEATH_REQUIRED_FOR_CHICKEN_SPAWN": "FALSIFIED_AS_NECESSARY_CONDITION",
+    "SV_MINIMUM_DESIRED_CHICKEN_COUNT_CAN_TRIGGER_RUNTIME_CREATION": "CONFIRMED",
+    "ENTINDEX_MONOTONIC_BIRTH_ORDER": "REJECTED"
+  },
+  "next_gate": "Kill exactly one chicken and sample ent_find chicken immediately, then after 5s, 15s, and 30s without any player death or round restart."
+}
