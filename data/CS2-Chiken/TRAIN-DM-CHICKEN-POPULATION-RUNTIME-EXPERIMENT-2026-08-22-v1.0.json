@@ -1,0 +1,47 @@
+{
+  "schema": "JANUS_CS2_CHICKEN_RUNTIME_EXPERIMENT",
+  "version": "1.0",
+  "id": "TRAIN-DM-CHICKEN-POPULATION-RUNTIME-EXPERIMENT-2026-08-22",
+  "status": "CONFIRMED_RUNTIME_OBSERVATION",
+  "found_by": "Hawkar",
+  "map": "de_train",
+  "mode": "local listen server with gamemode_deathmatch cfg executed",
+  "observations": {
+    "initial_population": {
+      "count": 10,
+      "entindices": [172,173,174,175,176,177,178,179,180,181]
+    },
+    "manual_kill_sequence_without_observed_replacement": [
+      {"remaining_count": 4, "entindices": [177,178,179,181]},
+      {"remaining_count": 3, "entindices": [177,179,181]},
+      {"remaining_count": 2, "entindices": [179,181]},
+      {"remaining_count": 2, "entindices": [179,181]},
+      {"remaining_count": 0, "entindices": []}
+    ],
+    "population_cvar_change": {
+      "command": "sv_minimum_desired_chicken_count 20",
+      "first_check_after_change": {"count": 1, "entindices": [274]},
+      "later_check": {
+        "count": 20,
+        "entindices": [274,275,276,278,280,281,288,289,290,291,292,293,294,295,296,297,298,299,300,301]
+      }
+    }
+  },
+  "conclusions": {
+    "player_death_required_for_chicken_spawn": "FALSIFIED_AS_NECESSARY_CONDITION",
+    "reason": "After population reached 0, changing sv_minimum_desired_chicken_count to 20 produced new chicken entities without any player death being required between the command and the observed growth to 20.",
+    "continuous_auto_refill_at_existing_threshold": "NOT_OBSERVED_IN_THIS_RUN",
+    "important_nuance": "While the target remained at its prior value, killed chickens were not observed to refill during the sampled checks. This means the cvar is not demonstrated here to cause immediate continuous refill after every chicken death; spawning may be event/timer/cvar-change driven.",
+    "runtime_spawn_confirmed": true,
+    "runtime_spawn_evidence": "Fresh entindices 274..301 appeared after the population target was raised, replacing the original 172..181 population.",
+    "henrietta_relation": "NONE_DEMONSTRATED"
+  },
+  "next_tests": [
+    "Repeat with sv_minimum_desired_chicken_count fixed at 10 and record wall-clock time after killing exactly one chicken.",
+    "Compare no-player-death vs forced player-death conditions while target remains 10.",
+    "Toggle target 10->11 without killing a player and measure spawn latency.",
+    "Set target 0 and confirm whether existing chickens are removed or merely no longer replenished.",
+    "Record spawn coordinates for each fresh entindex to test whether spawn zones correlate with player positions/deaths."
+  ],
+  "claim_ceiling": "SPAWN_POPULATION_MANAGER_CONFIRMED; EXACT_SCHEDULER_TRIGGER_UNRESOLVED"
+}
