@@ -1,0 +1,56 @@
+{
+  "schema": "JANUS_CS2_CHICKEN_EVIDENCE_V1",
+  "id": "CS2-EGG-PRISTINE-RUNTIME-MANIFEST-NEGATIVE-2026-08-22-v1.0",
+  "date": "2026-08-22",
+  "branch": "CS2-Chiken",
+  "map": "de_train",
+  "experiment": {
+    "setup": [
+      "sv_cheats 1",
+      "sv_minimum_desired_chicken_count 0",
+      "ent_fire chicken kill",
+      "ent_find chicken -> 0 matches",
+      "ent_create cs_pet_placement"
+    ],
+    "pet_placement_result": {
+      "status": "RUNTIME_CLASS_LIVE_AND_REPLICATED",
+      "server_entity": "cs_pet_placement",
+      "client_visible": true,
+      "observed_entindex": 157,
+      "note": "Entindex is session-local and may be reused; do not treat as stable identity."
+    },
+    "egg_model_command": "prop_dynamic_create pets/egg_pristine.vmdl",
+    "resolved_resource_path": "models/pets/egg_pristine.vmdl",
+    "resource_system_result": "RESOURCE_TYPE_MODEL requested but is not in the system",
+    "runtime_result": "MODEL_NOT_RESIDENT_OR_NOT_AVAILABLE_IN_CURRENT_MANIFEST"
+  },
+  "evidence_interpretation": {
+    "confirmed": [
+      "The correct runtime path was tested without the prior accidental models/models prefix.",
+      "cs_pet_placement can be instantiated and is visible to both server and client entity search.",
+      "models/pets/egg_pristine.vmdl is not available to ResourceSystem as a resident model in this current runtime test."
+    ],
+    "not_proven": [
+      "The egg model never existed.",
+      "The egg resource is absent from all Valve development/source/tool builds.",
+      "Henrietta is absent from the broader pet system.",
+      "cs_pet_placement itself spawns or owns an egg."
+    ],
+    "hypothesis_updates": {
+      "hidden_pickup_egg_on_train": "STRONGLY_WEAKENED",
+      "weapon_egg": "REJECTED_BY_UNKNOWN_ENTITY_SUBCLASS_TEST",
+      "pet_infrastructure_present_but_partially_unexposed_or_stripped": "STRENGTHENED",
+      "egg_reference_is_editor_preview_or_nonresident_runtime_asset": "STRENGTHENED"
+    }
+  },
+  "next_gate": {
+    "priority": "HIGH",
+    "steps": [
+      "Inspect cs_pet_placement with cl_dumpentity <entindex>.",
+      "Trace all references to models/pets/egg_pristine.vmdl in FGD and animation preview tooling.",
+      "Search inventory/pet definitions and pet lifecycle logic rather than continuing physical Train sweep."
+    ]
+  },
+  "authority": "RUNTIME_OBSERVATION_PLUS_PUBLIC_CODE_REFERENCE",
+  "verdict": "NEGATIVE_MODEL_RESIDENCY_GATE_PASS"
+}
