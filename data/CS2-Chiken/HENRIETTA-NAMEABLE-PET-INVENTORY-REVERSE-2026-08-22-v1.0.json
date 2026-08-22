@@ -1,0 +1,67 @@
+{
+  "schema": "JANUS_CS2_HENRIETTA_NAMEABLE_PET_REVERSE",
+  "version": "1.0",
+  "status": "PRIMARY_CODE_EVIDENCE_WITH_OPEN_IDENTITY_LINK",
+  "date": "2026-08-22",
+  "branch": "CS2-Chiken",
+  "research_unit": "Hawkar Pet Search Unit",
+  "question": "Is the Henrietta trail better explained by a named individual pet/chicken economy item than by a hidden Train chicken or weapon pickup?",
+  "primary_findings": {
+    "pet_inventory_slot": {
+      "status": "CONFIRMED",
+      "source": "panorama/scripts/common/iteminfo.js",
+      "evidence": "InventoryAPI.GetDefaultSlot(id) explicitly recognizes subSlot == pet inside IsEquippalbleButNotAWeapon; item model/image logic separately recognizes definition name pet.",
+      "interpretation": "Pet is modeled as an equippable inventory category distinct from weapons."
+    },
+    "pet_nameable_ui": {
+      "status": "CONFIRMED",
+      "source": "panorama/scripts/popups/popup_capability_nameable.js",
+      "evidence": "The generic naming UI explicitly special-cases defName == pet while using InventoryAPI.HasCustomName and a text-entry naming flow.",
+      "interpretation": "CS2 UI contains direct support/plumbing for individually named pet items; exact final naming rules remain unresolved."
+    },
+    "pet_sticker_ui_hook": {
+      "status": "CONFIRMED_HOOK_UNRESOLVED_SEMANTICS",
+      "source": "panorama/scripts/itemtile.js",
+      "evidence": "Item activation has a dedicated id-pet-sticker-item-list ancestor path.",
+      "interpretation": "There is an unfinished/special pet customization selection flow. This does not by itself prove stickers are visibly applied to chickens."
+    },
+    "loadout_scaffolding": {
+      "status": "CONFIRMED_INCOMPLETE",
+      "source": "panorama/scripts/loadout_grid.js",
+      "evidence": "m_currentPetId exists for t/ct/noteam but is not otherwise used in the current emitted file; pet is also absent from the normal generic row-slot array.",
+      "interpretation": "Pet loadout integration appears scaffolded/incomplete in the current client UI."
+    },
+    "egg_representation": {
+      "status": "CONFIRMED",
+      "source": "scripts/tools/anim_preview_archetypes.vdata and csgo.fgd",
+      "evidence": "WorldModel_EGG and ViewModel_EGG use models/pets/egg_pristine.vmdl; viewmodel attaches to attachHand_R; cs_pet_placement uses the egg model as its Hammer studio visualization and is described as a location where to place pet.",
+      "interpretation": "Egg can be represented in world/first-person contexts, but this is not proof of a weapon_egg classname or hidden Train pickup."
+    },
+    "ownership_gate": {
+      "status": "CONFIRMED",
+      "source": "panorama/scripts/xpshop.js",
+      "evidence": "InventoryAPI.GetPetItemID is checked and #chicken_egg_cannot_bid_own is used for a gated shop/bidding path.",
+      "interpretation": "Chicken egg and pet ownership are directly linked in current UI code."
+    }
+  },
+  "henrietta_reverse": {
+    "physical_hidden_train_chicken": "WEAKENED",
+    "egg_as_normal_weapon_pickup": "NOT_SUPPORTED",
+    "named_individual_pet_chicken_teaser": "STRONGLY_SUPPORTED_AS_WORKING_HYPOTHESIS",
+    "direct_henrietta_item_identity": "UNCONFIRMED",
+    "reason": "The Train poster presents an individually named missing chicken while the current game contains explicit pet inventory, pet naming, pet ownership, egg, placement and unfinished loadout/customization plumbing. No primary current-code string directly binds the name Henrietta to a pet item."
+  },
+  "next_search_targets": [
+    "pet item schema definition and attributes",
+    "historical commit that introduced pet-nameable special case",
+    "vanity_pet_info implementation/resources",
+    "pet sticker UI layouts/resources",
+    "egg acquisition/hatch/age-stage strings and schemas",
+    "maps or vanity scenes containing cs_pet_placement"
+  ],
+  "authority": {
+    "primary_code": "EVIDENCE",
+    "dataminer_reports": "CORROBORATION_ONLY",
+    "henrietta_identity_inference": "HYPOTHESIS_NOT_VERDICT"
+  }
+}
