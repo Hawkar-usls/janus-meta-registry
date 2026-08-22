@@ -1,0 +1,60 @@
+{
+  "schema": "JANUS_CS2_CHICKEN_CURRENT_STATE",
+  "version": "1.0",
+  "status": "ACTIVE_HUNT",
+  "branch": "CS2-Chiken",
+  "research_unit": "Hawkar Pet Search Unit",
+  "core_facts": {
+    "cs2_entity": "chicken",
+    "server_class": "CChicken",
+    "deathmatch_minimum_desired_chicken_count": 10,
+    "pet_population_field": "CMapInfo::m_iPetPopulation",
+    "interaction_events": ["Chicken.Interact", "Chicken.Chick.Interact"],
+    "follow_state_fields": ["m_leader", "m_flActiveFollowStartTime", "m_followMinuteTimer"],
+    "activity_states": ["Idle", "Squat", "Walk", "Run", "Glide", "Land", "Panic"]
+  },
+  "confirmed_environmental_markers": [
+    "Ancient: bird/chicken mural between large cats",
+    "Ancient: small red chicken silhouette",
+    "Anubis: repeated bird/chicken frieze and red chicken silhouette",
+    "Train: missing chicken posters at T Spawn; Henrietta named in one poster",
+    "Train: Respect the Pigeons graffiti",
+    "Train: red stylized bird glyph in Alley",
+    "Inferno: Valve-added chicken coop at T Spawn",
+    "Nuke: Stop letting chickens in the facility reference",
+    "Overpass: documented chicken calendar/Riptide reference",
+    "Italy: historical original chicken location"
+  ],
+  "train_line": {
+    "confirmed_history": "Valve release notes for 2014-12-11 explicitly say Train fixed a bug where players could ride pigeons.",
+    "route_context": ["T Spawn", "Alley", "Pigeons", "Ivy", "A-side roofs"],
+    "current_clues": [
+      "Henrietta missing-chicken poster at T Spawn",
+      "Respect the Pigeons graffiti",
+      "red bird glyph high on wall in Alley",
+      "Pigeons callout between Alley and Ivy",
+      "community reports of pigeons on Train roofs"
+    ],
+    "henrietta_location_status": "NOT_FOUND",
+    "hypothesis": "Henrietta may be an easter-egg narrative tied to Train's historical pigeon corridor, but no direct physical Henrietta spawn has been confirmed."
+  },
+  "open_hypotheses": {
+    "player_death_directly_spawns_chicken": "UNPROVEN",
+    "chicken_art_marks_spawn_points": "UNPROVEN",
+    "train_red_bird_glyph_is_directional_to_henrietta": "OPEN",
+    "henrietta_is_pigeon": "LOWER_CONFIDENCE_THAN_CHICKEN; poster text explicitly says chicken"
+  },
+  "next_checks": [
+    "Search Pigeons and Ivy for repeated red bird glyphs.",
+    "Inspect Train roofs for pigeons and unique chicken assets.",
+    "Track real chicken respawn timing against player deaths in Deathmatch.",
+    "Continue animal-marker atlas across official CS2 maps."
+  ],
+  "primary_sources": [
+    "https://blog.counter-strike.net/2014/12/11061/",
+    "https://github.com/SteamTracking/GameTracking-CS2/blob/master/game/csgo/cfg/gamemode_deathmatch.cfg",
+    "https://github.com/SteamTracking/GameTracking-CS2/blob/master/DumpSource2/schemas/server/CChicken.h",
+    "https://github.com/SteamTracking/GameTracking-CS2/blob/master/DumpSource2/schemas/server/CMapInfo.h"
+  ],
+  "archive": "data/CS2-Chiken/archive/CS2-Chiken-all-jsons-2026-08-22.tar.xz"
+}
