@@ -1,0 +1,140 @@
+{
+  "schema": "JANUS_CS2_HENRIETTA_PET_SYSTEM_REVERSE",
+  "version": "1.0",
+  "date": "2026-08-22",
+  "status": "MAJOR_HYPOTHESIS_SHIFT",
+  "claim_ceiling": "HENRIETTA_PET_TEASER_STRONGLY_SUPPORTED_AS_INFERENCE__LITERAL_IDENTITY_UNCONFIRMED",
+  "question": "What has the chicken/Henrietta investigation been missing when read backwards from current CS2 code to earlier map and cosmetic clues?",
+  "reverse_chronology": [
+    {
+      "stage": "CURRENT_2026",
+      "evidence": [
+        "GameTracking-CS2 csgo.fgd defines cs_pet_placement using models/pets/egg_pristine.vmdl and describes it as a location on the map where to place pet.",
+        "Current client/server schema dumps contain C_CSPetPlacement and CCSPetPlacement classes.",
+        "Current xpshop.js calls InventoryAPI.GetPetItemID() and contains the localization key #chicken_egg_cannot_bid_own in a pet-ownership bidding gate.",
+        "Current model game data defines chicken_metadata with weighted material groups and material parameters using Seed Generation Value.",
+        "Current animation preview data defines WorldModel_EGG and ViewModel_EGG for models/pets/egg_pristine.vmdl, including right-hand attachment for the viewmodel."
+      ],
+      "authority": "PRIMARY_CURRENT_GAME_TRACKING"
+    },
+    {
+      "stage": "2025",
+      "evidence": [
+        "Dataminer reports exposed egg_pristine, chicken-in-hands animations and pet-related work before the present code path became this explicit."
+      ],
+      "authority": "SECONDARY_DATAMINER_REPORTS_WITH_CURRENT_PRIMARY_CORROBORATION"
+    },
+    {
+      "stage": "2024-11",
+      "evidence": [
+        "Train returned with the missing-chicken poster naming Henrietta.",
+        "Contemporary dataminer interpretation treated the Henrietta poster as a pet-system teaser."
+      ],
+      "authority": "POSTER_PRIMARY_VISUAL__TEASER_LINK_SECONDARY_INTERPRETATION"
+    },
+    {
+      "stage": "2024-10",
+      "evidence": [
+        "The Armory introduced weapon charms before the Henrietta poster appeared.",
+        "Charm | Chicken Lil' already existed in the Missing Link Charm Collection before Train's Henrietta poster."
+      ],
+      "authority": "OFFICIAL_UPDATE_PLUS_STEAM_ITEM_RECORD"
+    },
+    {
+      "stage": "2024-05",
+      "evidence": [
+        "Chicken animation work and reported first-person-compatible inspect animations predated the Train poster."
+      ],
+      "authority": "OFFICIAL_ANIMATION_UPDATE_PLUS_COMMUNITY_DATAMINE"
+    },
+    {
+      "stage": "2023-03",
+      "evidence": [
+        "CS2 beta datamining already contained an unknown cosmetic category called Pets, with speculation around chickens/companions."
+      ],
+      "authority": "SECONDARY_DATAMINER_REPORT"
+    }
+  ],
+  "corrections": [
+    {
+      "previous_candidate": "Chicken Lil' might be Henrietta",
+      "new_status": "WEAKENED_STRONGLY",
+      "reason": "Chicken Lil' predates the Henrietta poster and is a stylized weapon charm rather than the crested collared chicken shown on the poster."
+    },
+    {
+      "previous_candidate": "Henrietta is a literal hidden physical chicken somewhere on de_train",
+      "new_status": "LOWER_PRIORITY",
+      "reason": "Targeted noclip sweep found no physical Henrietta; ent_find henrietta/pigeon/pet returned zero; generic DM chickens were shown to be runtime population entities; no Henrietta-specific asset-name hit was found."
+    }
+  ],
+  "missing_abstraction": {
+    "finding": "The investigation was treating MISSING CHICKEN primarily as a map-location riddle. Reverse chronology instead points to a long-running unreleased/integrating PET CHICKEN SYSTEM.",
+    "strongest_model": "Henrietta is likely a diegetic narrative breadcrumb/mascot for the chicken-pet category, not necessarily an object placed on Train and not the already-released Chicken Lil' charm.",
+    "semantic_support": [
+      "poster emphasizes alive and unharmed",
+      "poster depicts a collared owned chicken",
+      "current code has pet ownership state via GetPetItemID",
+      "current code has an egg model, pet placement entity and chicken-specific egg ownership gate",
+      "current chicken model data supports generated visual variation via seed-based material parameters"
+    ],
+    "semantic_support_authority": "MIXED_PRIMARY_PLUS_INFERENCE"
+  },
+  "hypothesis_ranking": [
+    {
+      "id": "H3",
+      "hypothesis": "Henrietta poster foreshadows the chicken pet system/category",
+      "rank": 1,
+      "status": "STRONGEST_INFERENCE"
+    },
+    {
+      "id": "H4",
+      "hypothesis": "Henrietta is a literal identity/name that will be used for a future pet instance",
+      "rank": 2,
+      "status": "OPEN"
+    },
+    {
+      "id": "H2",
+      "hypothesis": "Henrietta points mainly to Train pigeon/bird-lore corridor",
+      "rank": 3,
+      "status": "OPEN_BUT_WEAK"
+    },
+    {
+      "id": "H1",
+      "hypothesis": "A uniquely hidden physical Henrietta object currently exists on gameplay de_train",
+      "rank": 4,
+      "status": "WEAKENED_BY_NEGATIVE_SEARCH"
+    },
+    {
+      "id": "H5",
+      "hypothesis": "Charm | Chicken Lil' is Henrietta",
+      "rank": 5,
+      "status": "NOT_SUPPORTED"
+    }
+  ],
+  "next_search_target": {
+    "stop_priority": "broad_noclip_train_search",
+    "start_priority": "pet_asset_and_inventory_pipeline",
+    "targets": [
+      "vanity_pet_info.ts / generated equivalents",
+      "InventoryAPI.GetPetItemID call sites",
+      "CCSPetPlacement / C_CSPetPlacement",
+      "models/pets/egg_pristine.vmdl",
+      "WorldModel_EGG / ViewModel_EGG animation paths",
+      "#chicken_egg_* localization strings",
+      "chicken_metadata material groups and seed generation",
+      "pet lifecycle/inspect/place/hold code",
+      "any direct Henrietta string outside de_train assets"
+    ]
+  },
+  "falsification": {
+    "pet_teaser_model_weakened_if": [
+      "a unique current Train map-authored Henrietta entity/object is found with reproducible identity",
+      "Valve documents the poster as unrelated environmental art",
+      "future pet implementation resolves to a non-chicken system with no chicken/egg path"
+    ],
+    "literal_henrietta_identity_confirmed_if": [
+      "Henrietta appears in pet inventory/localization/schema/model metadata",
+      "an official Valve source directly links the Train poster to the pet item or chicken identity"
+    ]
+  }
+}
