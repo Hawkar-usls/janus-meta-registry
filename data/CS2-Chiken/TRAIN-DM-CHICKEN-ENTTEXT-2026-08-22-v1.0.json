@@ -1,0 +1,40 @@
+{
+  "schema": "JANUS_CS2_CHICKEN_RUNTIME_EVIDENCE",
+  "version": "1.0",
+  "id": "TRAIN-DM-CHICKEN-ENTTEXT-2026-08-22",
+  "status": "CONFIRMED_RUNTIME_OBSERVATION",
+  "found_by": "Hawkar",
+  "map": "de_train",
+  "mode": "local Deathmatch",
+  "observed_at": "2026-08-22T20:26:00+03:00",
+  "commands": [
+    "ent_find chicken",
+    "ent_text chicken"
+  ],
+  "entity_count": 10,
+  "entity_indices": [172,173,174,175,176,177,178,179,180,181],
+  "screenshot_readable_fields": {
+    "classname": "chicken",
+    "targetname": "",
+    "hammer_id": null,
+    "model": "models/chicken/chicken.vmdl",
+    "health": 1,
+    "mass_kg": 5.0,
+    "blocks_los": false,
+    "animgraph": "animation/graphs/chicken.vnmgraph"
+  },
+  "interpretation": {
+    "strong_evidence": "The 10 chickens are active runtime chicken entities and exactly match the official Deathmatch minimum desired chicken count of 10.",
+    "hammer_id_note": "Hammer ID null is consistent with runtime-spawned entities and supports, but by itself does not prove, that these are not ten hand-authored Train map entities.",
+    "sequential_entindex_note": "The contiguous entindex range 172-181 is consistent with a batch/runtime creation event at mode startup.",
+    "henrietta_status": "NOT_IDENTIFIED; all visible entities are generic classname chicken with no Henrietta targetname."
+  },
+  "next_tests": [
+    "Use ent_bbox chicken to make all 10 movement boxes easier to locate.",
+    "Kill exactly one chicken and immediately repeat ent_find chicken; record whether count drops to 9 and which entindex disappears.",
+    "Wait without any player death and repeat ent_find chicken; if a new entindex appears, this proves replacement does not require player_death.",
+    "Set sv_minimum_desired_chicken_count 20 and repeat ent_find chicken; test whether population rises toward 20 without player deaths.",
+    "Run ent_find_index on one old and one replacement entity to compare runtime properties."
+  ],
+  "claim_ceiling": "DEATHMATCH_POPULATION_RUNTIME_CONFIRMED__PLAYER_DEATH_TRIGGER_NOT_YET_TESTED"
+}
