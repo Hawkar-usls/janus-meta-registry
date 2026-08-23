@@ -10,7 +10,8 @@
     "do_not_promote": [
       "Gabe Newell is Henrietta's owner",
       "Henrietta equals pet_hen_1",
-      "egg -> chick -> hen lifecycle"
+      "egg -> chick -> hen lifecycle",
+      "m_leader is a new CS2 pet mechanic"
     ]
   },
   "confirmed_cs2": {
@@ -33,12 +34,17 @@
       "nameable_path": "popup_capability_nameable and pet-specific nameable handling exist",
       "placement": "cs_pet_placement exists as a map placement marker class",
       "inventory": "GetPetItemID / pet slot / petindex form a separate econ-pet architecture"
+    },
+    "legacy_chicken_ownership_correction": {
+      "status": "CONFIRMED_PREEXISTING_MECHANIC",
+      "fact": "CS:GO already allowed a player to press USE on a chicken and make it follow them; m_leader was used for this behavior by 2016.",
+      "implication": "m_leader cannot be used as evidence that the new CS2 pet architecture introduced ownership. The new evidence must instead come from econ identity, pet slot, naming, placement, preview and map-level pet population."
     }
   },
   "user_hypothesis": {
     "statement": "Henrietta must have an owner; candidate proposed by user: Gabe Newell",
     "status": "UNCONFIRMED_HYPOTHESIS",
-    "reason_to_keep": "Valve frequently uses Gabe Newell as an in-universe/easter-egg figure, but no direct Henrietta-owner evidence has been found yet."
+    "reason_to_keep": "Gabe Newell is frequently used as a Valve easter-egg figure, but no direct Henrietta-owner evidence has been found yet."
   },
   "new_high_interest_cultural_bridge": {
     "work": "The Hoboken Chicken Emergency",
@@ -50,7 +56,8 @@
       "Henrietta is treated as a pet/companion rather than an ordinary ambient chicken.",
       "Henrietta is explicitly associated with a leash and collar in the book.",
       "Henrietta escapes and becomes the subject of a town-wide search/capture effort.",
-      "The story is explicitly built around Thanksgiving and acquiring a bird for Thanksgiving dinner."
+      "The story is explicitly built around Thanksgiving and acquiring a bird for Thanksgiving dinner.",
+      "CS2's Henrietta poster also depicts a collar and asks for capture alive and unharmed."
     ],
     "temporal_resonance": "CS2 Train with the missing Henrietta poster shipped in mid-November 2024, shortly before U.S. Thanksgiving.",
     "gabe_name_coincidence": {
@@ -59,23 +66,29 @@
       "status": "COINCIDENCE_OR_POSSIBLE_WORDPLAY_UNPROVEN"
     },
     "assessment": "HIGH_INTEREST_UNCONFIRMED_REFERENCE_CANDIDATE",
-    "why_it_matters": "The combined match is substantially stronger than the name alone: Henrietta + chicken + collar/leash + escape/search + November/Thanksgiving context."
+    "why_it_matters": "The combined match is substantially stronger than the name alone: Henrietta + chicken + collar/leash + escape/search + capture semantics + November/Thanksgiving context."
+  },
+  "negative_internal_string_sweep": {
+    "repository": "SteamTracking/GameTracking-CS2",
+    "queries": ["hoboken", "pinkwater", "bobowicz"],
+    "result": "NO_CURRENT_CODE_SEARCH_HITS",
+    "interpretation": "Does not falsify an art/lore reference because texture source metadata and authored map assets may not expose those words in tracked text."
   },
   "current_model": {
-    "ambient_chicken_system": "separate and already sufficient for ordinary roaming chickens",
-    "pet_system": "architecturally distinct; appears designed for owner/econ/name/placement/preview semantics",
-    "henrietta_interpretation": "more likely a narrative breadcrumb for an owned/named chicken-pet concept than a simple hidden ambient NPC",
+    "ambient_chicken_system": "already sufficient for ordinary roaming chickens and even legacy follow/ownership behavior",
+    "pet_system": "architecturally distinct because it adds econ identity, pet slot, petindex, custom naming, placement, preview and map-level population concepts",
+    "henrietta_interpretation": "more likely a narrative breadcrumb for a persistent/customizable named chicken-pet concept than a simple hidden ambient NPC",
     "big_secret_status": "NO_CONFIRMED_SECRET; MULTI-LAYER_EASTER_EGG_OR_PET_TEASER_IS_PLAUSIBLE"
   },
   "priority_gates": [
     {
-      "id": "HOBOKEN_INTERNAL_STRING_GATE",
-      "search": ["hoboken", "pinkwater", "bobowicz", "arthur", "mazzocchi", "thanksgiving", "266"],
+      "id": "HOBOKEN_INTERNAL_OR_ART_GATE",
+      "search": ["hoboken", "pinkwater", "bobowicz", "arthur", "mazzocchi", "thanksgiving", "266", "poster texture provenance"],
       "pass": "Any Valve/Train asset, metadata, texture, localization, source-control, or developer reference directly links the poster to The Hoboken Chicken Emergency."
     },
     {
       "id": "HENRIETTA_OWNER_GATE",
-      "search": ["owner", "leader", "pet owner", "xuid", "Gabe", "Gaben", "Newell"],
+      "search": ["owner", "pet owner", "xuid", "Gabe", "Gaben", "Newell"],
       "pass": "A direct asset/code/lore bridge identifies Henrietta's owner."
     },
     {
@@ -85,7 +98,7 @@
     },
     {
       "id": "PET_CALLSITE_GATE",
-      "search": ["m_iPetPopulation consumers", "GetPetItemID callsites", "cs_pet_placement spawning", "C_Chicken preview/owner binding"],
+      "search": ["m_iPetPopulation consumers", "GetPetItemID callsites", "cs_pet_placement spawning", "C_Chicken preview/econ binding"],
       "pass": "A real callsite connects equipped pet inventory to map pet placement/chicken entity."
     }
   ],
