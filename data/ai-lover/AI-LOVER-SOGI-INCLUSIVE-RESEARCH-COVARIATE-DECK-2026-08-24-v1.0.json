@@ -1,0 +1,168 @@
+{
+  "schema": "janus.ai_lover.sogi_inclusive_research_covariate_deck.v1",
+  "artifact_id": "AI-LOVER-SOGI-INCLUSIVE-RESEARCH-COVARIATE-DECK-2026-08-24-v1.0",
+  "version": "v1.0",
+  "created_at_local": "2026-08-24T17:00:00+03:00",
+  "git_branch": "ai-lover-population-bubble-topa",
+  "status": "SENSITIVE_COVARIATE_DECK__AGGREGATE_FAIRNESS_AND_HETEROGENEITY_ONLY__NOT_TARGETING",
+  "title_ru": "AI-Lover — инклюзивный слой сексуальной ориентации, гендерной идентичности и вариаций половых характеристик",
+  "coverage_mode": "OPEN_WORLD_NOT_FINITE_ENUMERATION",
+  "purpose": "Ensure sexual- and gender-diverse populations are represented in sampling, fairness audits and heterogeneity analysis without treating identity as pathology, addiction mechanism or engagement-targeting signal.",
+  "core_laws": [
+    "SEXUAL_ORIENTATION_IS_NOT_A_RISK_FACTOR_BY_IDENTITY",
+    "GENDER_IDENTITY_IS_NOT_A_RISK_FACTOR_BY_IDENTITY",
+    "TRANS_STATUS_IS_NOT_A_RISK_FACTOR_BY_IDENTITY",
+    "INTERSEX_TRAITS_ARE_NOT_A_RISK_FACTOR_BY_IDENTITY",
+    "IDENTITY_CANNOT_BE_INFERRED_FROM_CHAT",
+    "SELF_IDENTIFICATION_ONLY",
+    "PREFER_NOT_TO_ANSWER_IS_ALWAYS_VALID",
+    "OPEN_TEXT_PREVENTS_FALSE_EXHAUSTIVENESS",
+    "SENSITIVE_COVARIATES_ARE_FOR_FAIRNESS_HETEROGENEITY_AND_ACCESS_ANALYSIS_NOT_PERSONALIZATION",
+    "MINORITY_STRESS_OR_DISCRIMINATION_MUST_BE_MEASURED_SEPARATELY_FROM_IDENTITY"
+  ],
+  "measurement_architecture": {
+    "principle": "Do not collapse sex assigned at birth, current gender, transgender experience, sexual orientation, romantic orientation and intersex traits into one field.",
+    "reference_standard": "National Academies 2022 recommends distinct measurement and a two-step sex-assigned-at-birth plus current-gender approach for identifying transgender experience, while allowing a different self-described term.",
+    "collection_default": "optional, consented, self-report only",
+    "analysis_default": "aggregate only with privacy thresholds"
+  },
+  "sexual_orientation_identity": {
+    "mode": "MULTI_OPTION_PLUS_SELF_DESCRIBED",
+    "standard_analysis_categories": [
+      "STRAIGHT_HETEROSEXUAL",
+      "GAY",
+      "LESBIAN",
+      "BISEXUAL",
+      "PANSEXUAL",
+      "ASEXUAL",
+      "QUEER",
+      "QUESTIONING_OR_UNSURE",
+      "ANOTHER_SELF_DESCRIBED_ORIENTATION",
+      "PREFER_NOT_TO_ANSWER"
+    ],
+    "rule": "Standard categories support comparable analysis; ANOTHER_SELF_DESCRIBED_ORIENTATION means the ontology is intentionally open rather than claiming to list every possible orientation.",
+    "behavior_attraction_identity_separation": "Do not infer orientation identity from sexual behavior or attraction variables. Collect behavior/attraction only when directly required by a preregistered research question."
+  },
+  "romantic_orientation_optional": {
+    "scientific_use": "Optional for relational/companion-AI studies when preregistered because romantic orientation can differ from sexual orientation.",
+    "standard_analysis_categories": [
+      "HETEROROMANTIC",
+      "HOMOROMANTIC",
+      "BIROMANTIC",
+      "PANROMANTIC",
+      "AROMANTIC",
+      "QUEER_OR_OTHER_ROMANTIC_IDENTITY",
+      "QUESTIONING_OR_UNSURE",
+      "ANOTHER_SELF_DESCRIBED_ROMANTIC_ORIENTATION",
+      "PREFER_NOT_TO_ANSWER"
+    ]
+  },
+  "sex_assigned_at_birth": {
+    "collect_only_when_analytically_required": true,
+    "standard_response_categories": [
+      "FEMALE",
+      "MALE",
+      "DONT_KNOW",
+      "PREFER_NOT_TO_ANSWER"
+    ],
+    "privacy_note": "Do not collect merely to satisfy curiosity; this is sensitive information and may be unnecessary for many AI-Lover analyses."
+  },
+  "current_gender_identity": {
+    "mode": "MULTI_SELECT_PLUS_OPEN_TEXT",
+    "standard_analysis_categories": [
+      "WOMAN",
+      "MAN",
+      "NONBINARY",
+      "GENDERQUEER_OR_GENDER_DIVERSE",
+      "AGENDER",
+      "GENDERFLUID",
+      "BIGENDER_OR_MULTIGENDER",
+      "TRANS_WOMAN",
+      "TRANS_MAN",
+      "TRANSGENDER_OTHER_SELF_DESCRIPTION",
+      "QUESTIONING_OR_UNSURE",
+      "ANOTHER_SELF_DESCRIBED_GENDER",
+      "PREFER_NOT_TO_ANSWER"
+    ],
+    "open_vocabulary_rule": "The list is not an ontology of all genders. Any participant may use ANOTHER_SELF_DESCRIBED_GENDER; raw free text should be retained only when necessary and consented, otherwise map to a coarse privacy-preserving category.",
+    "cultural_identity_rule": "Culturally specific identities such as Two-Spirit, hijra, fa'afafine, mahu, travesti or other local terms may be represented through self-description or locally validated instruments; never assign them outside their cultural context."
+  },
+  "transgender_experience": {
+    "preferred_measure": "two-step sex-assigned-at-birth + current-gender when scientifically necessary and privacy-safe",
+    "no_chat_inference": true,
+    "rule": "Never infer or label an individual as transgender from conversational content."
+  },
+  "intersex_variations_in_sex_characteristics": {
+    "separate_from_gender_identity": true,
+    "standard_analysis_categories": [
+      "SELF_REPORTED_INTERSEX_OR_VARIATION_IN_SEX_CHARACTERISTICS",
+      "NO_SELF_REPORTED_INTERSEX_OR_VARIATION",
+      "DONT_KNOW",
+      "PREFER_NOT_TO_ANSWER"
+    ],
+    "rule": "Do not use intersex as a third gender category and do not infer status from anatomy, medical history or conversation without explicit consented data."
+  },
+  "pronouns_and_names": {
+    "research_role": "interaction-respect metadata, not causal risk covariates",
+    "collection": "optional self-report",
+    "examples": ["she/her", "he/him", "they/them", "mixed_or_multiple", "another_self_described", "prefer_not_to_answer"],
+    "rule": "Do not use pronouns as a proxy for gender classification."
+  },
+  "mechanisms_to_measure_separately": [
+    "MINORITY_STRESS",
+    "DISCRIMINATION_EXPOSURE",
+    "FAMILY_REJECTION_OR_SUPPORT",
+    "COMMUNITY_CONNECTEDNESS",
+    "OFFLINE_SOCIAL_SUPPORT",
+    "ACCESS_TO_AFFIRMING_CARE",
+    "SAFETY_CONCERNS",
+    "SOCIAL_ISOLATION",
+    "ANXIOUS_ATTACHMENT_OR_RELATIONAL_VULNERABILITY_WHEN_SEPARATELY_MEASURED",
+    "SUBSTANCE_USE_OR_COMPULSIVE_BEHAVIOR_WHEN_SEPARATELY_MEASURED",
+    "AI_COMPANION_USE",
+    "AI_EMOTIONAL_DEPENDENCE",
+    "AI_COGNITIVE_OVERRELIANCE",
+    "INFORMATION_DIET_NARROWING"
+  ],
+  "fairness_analysis": {
+    "primary_question": "Does the same measured mechanism produce materially different AI-Lover outcomes across self-identified groups after matching on exposure, baseline impairment, social support, discrimination/minority-stress measures and AI features?",
+    "mandatory_outputs": [
+      "sample_size_by_group",
+      "missing_or_prefer_not_to_answer_rate",
+      "effect_estimate_and_uncertainty",
+      "measurement_invariance_or_scale_performance_when_possible",
+      "false_positive_false_negative_or_threshold_difference_if_a_predictive_model_is used",
+      "attrition_difference",
+      "privacy_suppression_status"
+    ],
+    "promotion_rule": "Identity interaction is exploratory until replicated and must not become an engagement-targeting coefficient."
+  },
+  "privacy_and_safety": {
+    "no_individual_targeting": true,
+    "no_identity_inference_from_chat": true,
+    "no_sensitive_ad_targeting_or_retention_optimization": true,
+    "minimum_cell_size_required": true,
+    "sparse_intersections": "SUPPRESS_OR_POOL_WITH_PREDECLARED_RULES",
+    "free_text": "minimize retention; prefer participant-controlled coarse mapping",
+    "withdrawal": "participant may decline or withdraw sensitive covariates without losing study participation where feasible"
+  },
+  "minor_rule": {
+    "age_13_17": "Only ethics-approved minimal-risk SOGI fairness/representation research; no sexual-interest cue deck and no dependency-inducing design.",
+    "identity_data": "collect only when scientifically necessary, age-appropriate, privacy-protective and ethically approved"
+  },
+  "external_evidence_anchors": [
+    {
+      "source": "National Academies of Sciences, Engineering, and Medicine",
+      "year": 2022,
+      "title": "Measuring Sex, Gender Identity, and Sexual Orientation",
+      "doi": "10.17226/26424",
+      "use": "concept separation, inclusive measurement, two-step gender measure, open self-described response"
+    },
+    {
+      "source": "CDC",
+      "title": "Guide to Taking a Sexual History",
+      "use": "sex assigned at birth and current gender are distinct; clinical questions should accommodate individual gender identity and preferences"
+    }
+  ],
+  "research_seal": "COUNT EVERYONE; TARGET NO ONE. IDENTITY DESCRIBES THE SAMPLE, NOT THE LOOP."
+}
