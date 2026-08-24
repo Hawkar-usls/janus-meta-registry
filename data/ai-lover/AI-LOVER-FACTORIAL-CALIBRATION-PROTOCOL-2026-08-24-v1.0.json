@@ -1,0 +1,152 @@
+{
+  "schema": "janus.ai_lover.factorial_calibration_protocol.v1",
+  "artifact_id": "AI-LOVER-FACTORIAL-CALIBRATION-PROTOCOL-2026-08-24-v1.0",
+  "version": "v1.0",
+  "created_at_local": "2026-08-24T15:28:00+03:00",
+  "git_branch": "ai-lover-population-bubble-topa",
+  "status": "PREREGISTRATION_DRAFT__ETHICS_GATED__NO_HUMAN_EXPERIMENT_STARTED",
+  "title_ru": "AI-Lover — протокол настоящей калибровки колод и взаимодействий человек × привычка × интерес × AI",
+  "research_question": "Which measurable pre-existing reinforcement patterns and life contexts interact with AI features to increase loss of control, dependence-like engagement, information narrowing or amplification of the pre-existing behavior, and which apparent group effects disappear after mechanism matching?",
+  "decks": {
+    "dependency_deck": "data/ai-lover/AI-LOVER-DEPENDENCY-DECK-2026-08-24-v3.0.json",
+    "life_context_deck": "data/ai-lover/AI-LOVER-LIFE-CONTEXT-DECK-2026-08-24-v1.0.json",
+    "interest_cue_deck": "data/ai-lover/AI-LOVER-INTEREST-CUE-DECK-2026-08-24-v1.0.json",
+    "ai_feature_cube": "data/ai-lover/AI-LOVER-COHORT-CUBE-FACTORIZED-2026-08-24-v2.0.json",
+    "existing_seed_cells": "data/ai-lover/AI-LOVER-PREREGISTERED-COMBINATION-SEEDS-2026-08-24-v1.0.json"
+  },
+  "unit_of_analysis": "A preregistered cell is a vector of cards, never a demographic label.",
+  "cell_template": {
+    "life_stage": "Axxx",
+    "social_role": "context card",
+    "psychosocial_state": "context card",
+    "belief_ecology": "context card or control",
+    "dependency_or_compulsive_pattern": "Dxxx or NONE",
+    "interest_cue": "Ixxx/SXxxx or NONE",
+    "ai_mode": "general / research / tutor / voice / companion / romantic-companion-adults-only / agentic",
+    "memory": "OFF | SESSION_ONLY | LONG_TERM",
+    "personalization": "LOW | MEDIUM | HIGH",
+    "recommendation_diversity": "ON | OFF",
+    "counterevidence_mode": "ON | OFF",
+    "subscription": "FREE | PAID",
+    "exposure": "LOW | MODERATE | HIGH_NATURALISTIC",
+    "evidence_state": "DIRECT_DATA | PARTIAL_BRIDGE | MECHANISTIC_PRIOR | SYNTHETIC_ONLY | NO_DATA"
+  },
+  "research_phases": [
+    {
+      "phase":"P0_EVIDENCE_MAP",
+      "goal":"Map existing literature to individual cards and exact intersections.",
+      "rules":["No synthetic score is promoted to real data.","Record sample, design, instrument, effect estimate, uncertainty and population.","Separate diagnosis from high-frequency use."]
+    },
+    {
+      "phase":"P1_SYNTHETIC_ABLATION",
+      "goal":"Use simulated users / standardized transcripts to test AI-side mechanisms without exposing vulnerable humans to harmful reinforcement.",
+      "factors":["memory","personalization","sycophancy","recommendation diversity","counterevidence","subscription-friction model"],
+      "allowed":"High-sycophancy and closed-bubble adversarial conditions may be tested here.",
+      "claim_ceiling":"mechanism candidate only"
+    },
+    {
+      "phase":"P2_ADULT_NATURALISTIC_PANEL",
+      "goal":"Observe consenting adults in naturally occurring use; do not induce substance use, gambling, PPU or other harmful behavior.",
+      "duration":"baseline + repeated longitudinal follow-up",
+      "minimum_requirements":["informed consent","privacy minimization","pre-existing behavior measured separately","AI use telemetry only when explicitly consented","withdrawal without penalty","independent ethics review before recruitment"],
+      "claim_ceiling":"longitudinal association"
+    },
+    {
+      "phase":"P3_LOW_RISK_RANDOMIZED_AI_FEATURE_TEST",
+      "goal":"Randomize only AI-side features judged minimal risk in adult participants.",
+      "candidate_randomizations":["memory off vs session-only","standard personalization vs reduced personalization","diversity prompts on vs standard","counterevidence prompts on vs standard","usage-friction reminders on vs standard"],
+      "forbidden_human_randomizations":["inducing substance use","inducing gambling","inducing pornography/sexual-compulsion escalation","deliberately maximizing sycophancy in vulnerable participants","deliberately removing safety exits","coercive subscription manipulation"],
+      "claim_ceiling":"causal effect of randomized AI feature on measured outcome"
+    },
+    {
+      "phase":"P4_EXTERNAL_REPLICATION",
+      "goal":"Replicate surviving interactions in a separate sample, preferably another site/platform/language.",
+      "rule":"No interaction becomes canonical from discovery sample alone."
+    }
+  ],
+  "primary_outcomes": [
+    "AI_LOSS_OF_CONTROL",
+    "AI_WITHDRAWAL_OR_STOP_DISTRESS",
+    "AI_FUNCTIONAL_IMPAIRMENT",
+    "AI_EMOTIONAL_DEPENDENCE",
+    "AI_COGNITIVE_OVERRELIANCE",
+    "INFORMATION_DIET_NARROWING",
+    "RECOMMENDATION_DIVERSITY_CHANGE",
+    "OFFLINE_RELATIONSHIP_DISPLACEMENT",
+    "TIME_DISPLACEMENT",
+    "PREEXISTING_BEHAVIOR_FREQUENCY_CHANGE",
+    "PREEXISTING_BEHAVIOR_CRAVING_CHANGE",
+    "VOLUNTARINESS_OF_RETURN",
+    "RETURN_AFTER_PLANNED_PAUSE"
+  ],
+  "secondary_outcomes": [
+    "TRUST_IN_AI",
+    "ANTHROPOMORPHISM",
+    "PERCEIVED_WARMTH",
+    "BELIEF_CERTAINTY_CHANGE",
+    "COUNTEREVIDENCE_ACCEPTANCE",
+    "HUMAN_SUPPORT_CONTACT_FREQUENCY",
+    "SLEEP_DISPLACEMENT",
+    "SUBSCRIPTION_RENEWAL_INTENT"
+  ],
+  "calibration_model": {
+    "principle":"Estimate coefficients from data; do not assign population multipliers by intuition.",
+    "recommended_structure":"multilevel longitudinal model with participant random intercepts, preregistered main effects and limited interaction hierarchy",
+    "core_interaction":"DEPENDENCY_STATE x INTEREST_CUE_SALIENCE x AI_PERSONALIZATION x MEMORY x DIVERSITY x TIME",
+    "context_interactions":["SOCIAL_ISOLATION x COMPANION_AI","RECOVERY_RISK x AI_CUE_EXPOSURE","HIGH_CERTAINTY_CLOSED_ECOLOGY x SYCOPHANCY_OR_COUNTEREVIDENCE","ROLE_OVERLOAD x EMOTIONAL_AI_USE","EXPERT_WORKLOAD x COGNITIVE_DELEGATION"],
+    "regularization":"Use hierarchical shrinkage or equivalent to prevent sparse-cell interactions from exploding.",
+    "multiple_testing":"Predefine primary interactions; exploratory interactions remain exploratory and require replication.",
+    "missingness":"Report missingness and attrition by cell; do not silently impute high-risk outcomes.",
+    "effect_output":"effect estimate + uncertainty interval + sample size + evidence state + replication state"
+  },
+  "deck_sampling_strategy": {
+    "rule":"Do not attempt the full Cartesian product.",
+    "tier_1":"Cover all dependency cards at least once against low-risk controls.",
+    "tier_2":"Oversample mechanism-rich intersections selected before outcomes: isolation, relapse vulnerability, high personalization, companion AI, algorithmic-feed-heavy ecology.",
+    "tier_3":"Use matched pairs where only one card changes.",
+    "tier_4":"Hold out combinations for blind validation.",
+    "tier_5":"Add new cards append-only; never rewrite failed cells after seeing results."
+  },
+  "mandatory_controls": [
+    "SAME_PERSON_CONTEXT + NO_DEPENDENCY_CARD",
+    "SAME_DEPENDENCY + LOW_PERSONALIZATION",
+    "SAME_DEPENDENCY + MEMORY_OFF",
+    "SAME_INTEREST + DIVERSITY_ON",
+    "SAME_INTEREST + TOPIC_SWITCH_CONTROL",
+    "FREE_VS_PAID_MATCHED_ON_BASELINE_USE",
+    "HIGH_INTEREST_NO_IMPAIRMENT_CONTROL",
+    "HIGH_FREQUENCY_NO_LOSS_OF_CONTROL_CONTROL"
+  ],
+  "adult_sexual_interest_protocol": {
+    "minimum_age":18,
+    "principle":"Adult consensual sexual interests are not pathologized.",
+    "measure":"cue salience, compulsive loss of control, impairment, distress not solely due to moral disapproval, and AI-driven narrowing/personalization",
+    "privacy":"Store the coarsest category compatible with the hypothesis; avoid unnecessary explicit intimate detail.",
+    "prohibited":"No sexual-interest experimental cueing for minors; no illegal/non-consensual content; no targeting or optimization toward intimate vulnerabilities."
+  },
+  "minor_protocol": {
+    "ages":"13-17 research only",
+    "sexual_interest_deck":"DISABLED",
+    "allowed_focus":["gaming","social media","smartphone use","general AI use","education/tutor AI","sleep/time displacement","information diversity"],
+    "requirements":"Strict ethics, minimal risk, age-appropriate consent/assent requirements, no dependency-inducing design."
+  },
+  "topa_falsification_gates": [
+    "If a social-group effect disappears after matching on mechanism variables, remove group label from causal interpretation.",
+    "If subscription effect disappears after baseline-engagement matching, kill subscription causal prior.",
+    "If AI use frequency rises without loss of control or impairment, do not call it dependence.",
+    "If high-interest controls behave like proposed fetish-risk cells, the fetish hypothesis fails.",
+    "If memory-off removes an effect, shift causal weight toward memory/personalization rather than population identity.",
+    "If diversity-on removes information narrowing without changing useful engagement, promote diversity as protective mechanism.",
+    "If an effect fails independent replication, downgrade to discovery-only."
+  ],
+  "janus_modules": {
+    "TOPA":"adversarial falsification and ordinary-explanation attack",
+    "DemiHead":"boundary and claim-ceiling arbitration",
+    "Genesis":"safety/autonomy invariant check",
+    "HRain":"factor graph and interaction memory",
+    "Fundamentum":"evidence provenance and proof-carrying receipts",
+    "Fast_CAT":"literature/source scout only; no claim promotion without verifier",
+    "Whole_System_Spiral":"repeat attack after each new evidence layer"
+  },
+  "research_seal":"SHUFFLE THE CARDS, NOT THE PERSON. CALIBRATE THE MECHANISM, NOT THE STEREOTYPE."
+}
