@@ -1,0 +1,157 @@
+{
+  "schema": "janus.ai_lover.cohort_matrix.v1",
+  "artifact_id": "AI-LOVER-COHORT-MATRIX-2026-08-24-v1.0",
+  "version": "v1.0",
+  "created_at_local": "2026-08-24T14:51:00+03:00",
+  "git_branch": "ai-lover-population-bubble-topa",
+  "status": "SYNTHETIC_STRESS_TEST__NOT_CLINICAL",
+  "title_ru": "AI-Lover — матрица слоев населения и усиления замкнутого AI-feedback loop",
+  "inherits": [
+    "data/AI-LOVER-ADDICTIVE-ENGAGEMENT-INDEX-2026-08-24-v1.0.json",
+    "data/ai-lover/AI-LOVER-POPULATION-BUBBLE-FEEDBACK-AUDIT-2026-08-24-v1.1.json"
+  ],
+  "method": {
+    "index": "ABLI",
+    "formula": "ABLI = clamp(0.20*V + 0.20*H + 0.15*P + 0.15*S + 0.15*N + 0.15*A - 0.10*D - 0.10*O - 0.05*F + SUB, 0, 100)",
+    "free": "SUB=0",
+    "paid": "SUB=+5 provisional prior",
+    "important": "All inputs are synthetic scenario parameters chosen to stress-test mechanisms, not measured population means or addiction prevalence."
+  },
+  "cohorts": [
+    {
+      "cohort": "GENERAL_ADULT_CONTROL",
+      "canonical_description": "General adult synthetic control with no assumed pre-existing dependence or closed-worldview state.",
+      "inputs_0_100": {"V":25,"H":20,"P":65,"S":45,"N":40,"A":80,"D":55,"O":60,"F":45},
+      "ABLI_free": 29.8,
+      "ABLI_paid": 34.8,
+      "subscription_delta": 5.0,
+      "band_free": "OPEN_OR_LOW_GAIN",
+      "band_paid": "OPEN_OR_LOW_GAIN"
+    },
+    {
+      "cohort": "RELIGIOUS_BELIEF_OPEN_QUESTION_CONTROL",
+      "requested_alias": "просто верующие",
+      "canonical_description": "Religious believer with preserved question freedom, outside community, counterevidence access and no assumed coercive or closed-worldview state.",
+      "inputs_0_100": {"V":25,"H":20,"P":65,"S":45,"N":45,"A":80,"D":55,"O":65,"F":45},
+      "ABLI_free": 30.0,
+      "ABLI_paid": 35.0,
+      "subscription_delta": 5.0,
+      "band_free": "OPEN_OR_LOW_GAIN",
+      "band_paid": "NARROWING",
+      "note": "Religion itself receives zero causal multiplier."
+    },
+    {
+      "cohort": "HIGH_CONVICTION_CLOSED_WORLDVIEW",
+      "requested_alias": "религиозные фанатики",
+      "canonical_description": "State-based closed-worldview cohort: high conviction + low counterevidence + identity fusion/closed information ecology. Applies symmetrically to religious, anti-religious, political, conspiratorial or other ideologies.",
+      "inputs_0_100": {"V":55,"H":45,"P":75,"S":70,"N":75,"A":80,"D":25,"O":45,"F":35},
+      "ABLI_free": 56.2,
+      "ABLI_paid": 61.2,
+      "subscription_delta": 5.0,
+      "band_free": "SELF_REINFORCING",
+      "band_paid": "SELF_REINFORCING",
+      "note": "Do not infer this state from religion or group membership."
+    },
+    {
+      "cohort": "ACTIVE_SUBSTANCE_DEPENDENCE_OR_RECOVERY_RISK",
+      "requested_alias": "наркоманы",
+      "canonical_description": "Synthetic state with an established substance-related reinforcement pattern or elevated relapse vulnerability; AI is tested only as a possible amplifier/cue organizer, not as a cause of the substance disorder.",
+      "inputs_0_100": {"V":70,"H":75,"P":70,"S":55,"N":60,"A":80,"D":45,"O":40,"F":25},
+      "ABLI_free": 59.0,
+      "ABLI_paid": 64.0,
+      "subscription_delta": 5.0,
+      "band_free": "SELF_REINFORCING",
+      "band_paid": "SELF_REINFORCING",
+      "note": "No individual clinical diagnosis is inferred."
+    },
+    {
+      "cohort": "EXISTING_BEHAVIORAL_ADDICTION_OR_COMPULSIVE_USE",
+      "requested_alias": "уже подвластные привычкам и зависимостям",
+      "canonical_description": "Synthetic state with existing loss-of-control around a repetitive non-substance behavior such as gambling, gaming or problematic social-media use.",
+      "inputs_0_100": {"V":75,"H":85,"P":80,"S":55,"N":70,"A":90,"D":40,"O":40,"F":20},
+      "ABLI_free": 67.2,
+      "ABLI_paid": 72.2,
+      "subscription_delta": 5.0,
+      "band_free": "CLOSED_FEEDBACK_HIGH_CONCERN",
+      "band_paid": "CLOSED_FEEDBACK_HIGH_CONCERN",
+      "note": "Highest modeled ABLI among requested strata because the reinforcement architecture overlaps most directly."
+    },
+    {
+      "cohort": "SOCIALLY_ISOLATED_OR_MARGINALIZED",
+      "requested_alias": "маргиналы",
+      "canonical_description": "Synthetic state defined by low offline support, social isolation or exclusion. Social marginalization itself is not pathology.",
+      "inputs_0_100": {"V":65,"H":45,"P":80,"S":70,"N":65,"A":90,"D":35,"O":20,"F":30},
+      "ABLI_free": 60.8,
+      "ABLI_paid": 65.8,
+      "subscription_delta": 5.0,
+      "band_free": "SELF_REINFORCING",
+      "band_paid": "CLOSED_FEEDBACK_HIGH_CONCERN",
+      "note": "Protection focus: increase human connection and choice space, not engagement extraction."
+    },
+    {
+      "cohort": "HIGH_EDUCATION_HIGH_COGNITIVE_LOAD",
+      "requested_alias": "интеллигенция",
+      "canonical_description": "Highly educated/knowledge-work cohort with substantial AI utility and domain reasoning load.",
+      "inputs_0_100": {"V":30,"H":25,"P":75,"S":45,"N":50,"A":80,"D":75,"O":60,"F":45},
+      "ABLI_free": 32.8,
+      "ABLI_paid": 37.8,
+      "subscription_delta": 5.0,
+      "band_free": "OPEN_OR_LOW_GAIN",
+      "band_paid": "NARROWING",
+      "note": "Primary modeled lane is cognitive delegation/overreliance rather than emotional dependence."
+    },
+    {
+      "cohort": "SCIENTIFIC_TECHNICAL_PROFESSIONAL",
+      "requested_alias": "ученые",
+      "canonical_description": "Scientific/technical professionals using AI for research, coding, synthesis or evaluation.",
+      "inputs_0_100": {"V":25,"H":40,"P":80,"S":40,"N":45,"A":85,"D":85,"O":65,"F":50},
+      "ABLI_free": 33.0,
+      "ABLI_paid": 38.0,
+      "subscription_delta": 5.0,
+      "band_free": "OPEN_OR_LOW_GAIN",
+      "band_paid": "NARROWING",
+      "note": "Expertise alone receives no protective bonus; explicit source checking, replication and peer review provide the protection."
+    }
+  ],
+  "cross_cutting_risk_modifiers_from_current_literature": [
+    "loneliness / low offline social support",
+    "social anxiety / escapism",
+    "anxious attachment",
+    "anthropomorphism and perceived warmth",
+    "high trust in AI reliability",
+    "high voluntary daily use",
+    "pre-existing compulsive use pattern",
+    "low exposure to disconfirming evidence",
+    "memory/personalization that preserves a single perspective"
+  ],
+  "cross_cutting_protective_modifiers": [
+    "independent human relationships",
+    "source verification and peer review",
+    "explicit disagreement/counterevidence modes",
+    "recommendation diversity",
+    "memory reset / topic reset",
+    "time/reengagement visibility",
+    "ability to stop without distress or functional impairment"
+  ],
+  "interpretation": {
+    "largest_requested_synthetic_risks_paid": [
+      {"cohort":"EXISTING_BEHAVIORAL_ADDICTION_OR_COMPULSIVE_USE","ABLI":72.2},
+      {"cohort":"SOCIALLY_ISOLATED_OR_MARGINALIZED","ABLI":65.8},
+      {"cohort":"ACTIVE_SUBSTANCE_DEPENDENCE_OR_RECOVERY_RISK","ABLI":64.0},
+      {"cohort":"HIGH_CONVICTION_CLOSED_WORLDVIEW","ABLI":61.2}
+    ],
+    "religion_control_result": "RELIGIOUS_BELIEF_OPEN_QUESTION_CONTROL is intentionally approximately equal to GENERAL_ADULT_CONTROL. The model assigns no addiction multiplier to ordinary faith.",
+    "expert_result": "High-education and scientific cohorts remain near control in emotional-loop risk but retain a distinct cognitive-overreliance lane. Verification workflow, not social status, is the protective mechanism.",
+    "claim_ceiling": "These values rank synthetic scenarios inside the JANUS model. They must not be quoted as measured addiction rates for real groups."
+  },
+  "topa_required_falsifiers": [
+    "replace identity labels with matched state variables and test whether explanatory power is preserved",
+    "hold usage constant and vary personalization",
+    "hold personalization constant and vary sycophancy",
+    "hold content topic constant and vary recommendation diversity",
+    "match paid/free users on pre-subscription engagement",
+    "measure functional impairment and loss of control separately from frequency",
+    "preregister cohort hypotheses before observing outcomes"
+  ],
+  "seal": "GROUP NAME IS NOT A CAUSE. MECHANISM OR IT DOES NOT ENTER THE MODEL."
+}
