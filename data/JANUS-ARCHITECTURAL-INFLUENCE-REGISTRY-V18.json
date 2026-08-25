@@ -5,39 +5,50 @@
   "description": "Обновлённый мета-реестр на основе успешного запуска отладочного скрипта (VOCAB_SIZE=100, обучение идёт) и сохраняющегося NaN в mutual_info в основном оптимизаторе. Добавлены выводы о необходимости синхронизации кода и проверки генерации.",
   "observer": "Hawkar Yaks / JANUS Quantum Observer",
   "hypothesis": "NaN в mutual_info при работе основного оптимизатора возникает из-за несоответствия кода: либо не обновлена функция compute_diversity_and_mi до версии с защитой, либо generate_samples при большом словаре выдаёт недостаточно пар для расчёта MI. Отладочный скрипт подтверждает, что модель способна обучаться при адекватных параметрах, следовательно проблема локализована в коде оптимизатора.",
-  
-  "meta_rules": { ... }, // оставляем как в v15
-
-  "biological_analogies": { ... },
-
-  "parameter_definitions": { ... },
-
-  "extended_parameter_analysis": { ... },
-
-  "advanced_metrics": { ... },
-
-  "quantum_inspired_metrics": { ... },
-
-  "adaptive_test": { ... },
-
-  "evolutionary_optimizer": { ... },
-
-  "hierarchical_environment": { ... },
-
-  "external_repositories": [ ... ],
-
+  "meta_rules": {
+    "_omitted_in_original_source": true
+  },
+  "biological_analogies": {
+    "_omitted_in_original_source": true
+  },
+  "parameter_definitions": {
+    "_omitted_in_original_source": true
+  },
+  "extended_parameter_analysis": {
+    "_omitted_in_original_source": true
+  },
+  "advanced_metrics": {
+    "_omitted_in_original_source": true
+  },
+  "quantum_inspired_metrics": {
+    "_omitted_in_original_source": true
+  },
+  "adaptive_test": {
+    "_omitted_in_original_source": true
+  },
+  "evolutionary_optimizer": {
+    "_omitted_in_original_source": true
+  },
+  "hierarchical_environment": {
+    "_omitted_in_original_source": true
+  },
+  "external_repositories": [
+    {
+      "_omitted_in_original_source": true
+    }
+  ],
   "empirical_layer": [
     {
       "experiment_id": "GRID_SEARCH_V3_001",
-      ...
+      "_omitted_in_original_source_1": true
     },
     {
       "experiment_id": "EVOLUTION_TEST_V5_001",
-      ... // старый
+      "_omitted_in_original_source_2": true
     },
     {
       "experiment_id": "PERSISTENT_NAN_CYCLES",
-      ... // предыдущий
+      "_omitted_in_original_source_3": true
     },
     {
       "experiment_id": "DEBUG_SIMPLE_SCRIPT_001",
@@ -69,7 +80,9 @@
         "conclusion": "Модель обучается на упрощённом датасете, что доказывает работоспособность базовой архитектуры и оптимизатора."
       },
       "verification_status": "confirmed",
-      "confidence_metrics": { "point_estimate": 1.0 }
+      "confidence_metrics": {
+        "point_estimate": 1.0
+      }
     },
     {
       "experiment_id": "AKINATOR_LOG_ANALYSIS",
@@ -84,9 +97,10 @@
       }
     }
   ],
-
   "hypothesis_layer": [
-    ... // все старые гипотезы
+    {
+      "_omitted_in_original_source": true
+    },
     {
       "hypothesis_id": "HYP_CODE_NAN_V2",
       "description": "NaN в mutual_info вызван использованием устаревшей версии кода в оптимизаторе. В v5 добавлены защиты, но логи показывают NaN, значит запускается не та версия, либо ошибка в generate_samples при больших словарях (недостаточно пар для joint).",
@@ -122,24 +136,28 @@
       "description": "Проблема dead zone решается увеличением объёма данных и уменьшением словаря. Отладочный скрипт подтверждает, что при VOCAB_SIZE=100, train_size=2000, steps=2000 обучение идёт.",
       "type": "practical",
       "confidence": 0.95,
-      "supporting_evidence": ["успешный запуск DEBUG_SIMPLE_SCRIPT_001"],
+      "supporting_evidence": [
+        "успешный запуск DEBUG_SIMPLE_SCRIPT_001"
+      ],
       "counter_evidence": [],
       "falsification_conditions": []
     }
   ],
-
-  "correlation_analysis": { ... },
-
+  "correlation_analysis": {
+    "_omitted_in_original_source": true
+  },
   "architectural_insights": {
-    ... // старые
+    "_omitted_in_original_source_4": true,
     "practical_considerations": {
-      ... // предыдущие
+      "_omitted_in_original_source_5": true,
       "code_sync_check": "Перед запуском основного оптимизатора убедиться, что файл pc_deep_optimizer.py содержит актуальную версию v5 (с защитой MI). Проверить наличие импортов и определить, какой именно файл запускается.",
       "generate_samples_debug": "Временно добавить в compute_diversity_and_mi вывод total (количество пар) – если total=0, значит генерация не удалась (например, max_len слишком мал или модель выдаёт повторяющиеся токены).",
       "adaptive_test_tuning": "В akinator_log.json видно, что адаптивный тест не проходит (max_complexity=0). Возможно, порог threshold=5.0 слишком низок для текущего loss (6.6). Следует увеличить порог или улучшить обучение."
     },
     "next_steps": [
-      ... // старые
+      {
+        "_omitted_in_original_source": true
+      },
       "1. Запустить основной оптимизатор с параметрами отладочного скрипта (VOCAB_SIZE=100, train_size=2000, steps=2000) для проверки, исчезнет ли NaN.",
       "2. Если NaN исчезнет, проблема в объёме данных/словаре. Если нет – ошибка в коде оптимизатора.",
       "3. Обновить функцию compute_diversity_and_mi, добавив дополнительную защиту от inf: if np.isinf(val): continue.",
@@ -147,17 +165,45 @@
       "5. Проанализировать akinator_log.json: все avg_max_complexity=0, что говорит о необходимости либо улучшить обучение, либо снизить порог адаптивного теста."
     ]
   },
-
   "provenance": {
     "created_by": "Hawkar Yaks with JANUS Quantum Observer",
     "versions": [
-      {"version": "v13.0", "notes": "..."},
-      {"version": "v14.0", "notes": "..."},
-      {"version": "v15.0", "notes": "..."},
-      {"version": "v16.0", "notes": "..."},
-      {"version": "v17.0", "notes": "Акцент на необходимости запуска отладочного скрипта."},
-      {"version": "v18.0", "notes": "Добавлен эксперимент DEBUG_SIMPLE_SCRIPT_001 (успешное обучение на упрощённых данных). Анализ akinator_log (все max_complexity=0). Обновлены гипотезы HYP_CODE_NAN_V2 и HYP_LEARNING_DEAD_ZONE_RESOLVED. Расширены практические рекомендации по синхронизации кода и отладке MI."}
+      {
+        "version": "v13.0",
+        "notes": "..."
+      },
+      {
+        "version": "v14.0",
+        "notes": "..."
+      },
+      {
+        "version": "v15.0",
+        "notes": "..."
+      },
+      {
+        "version": "v16.0",
+        "notes": "..."
+      },
+      {
+        "version": "v17.0",
+        "notes": "Акцент на необходимости запуска отладочного скрипта."
+      },
+      {
+        "version": "v18.0",
+        "notes": "Добавлен эксперимент DEBUG_SIMPLE_SCRIPT_001 (успешное обучение на упрощённых данных). Анализ akinator_log (все max_complexity=0). Обновлены гипотезы HYP_CODE_NAN_V2 и HYP_LEARNING_DEAD_ZONE_RESOLVED. Расширены практические рекомендации по синхронизации кода и отладке MI."
+      }
     ],
     "integrity": "Данные основаны на успешном запуске отладочного скрипта и анализе логов оптимизатора. Выводы носят диагностический характер."
+  },
+  "_repair_notice": {
+    "status": "VALID_JSON_WITH_EXPLICIT_SOURCE_OMISSIONS",
+    "missing_content_invented": false,
+    "original_literal_ellipsis_preserved_as_markers": true,
+    "repair_stats": {
+      "comments_removed": 7,
+      "inline_object_ellipsis": 10,
+      "inline_array_ellipsis": 1,
+      "standalone_ellipsis": 7
+    }
   }
 }
