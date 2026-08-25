@@ -1,0 +1,98 @@
+name: Repair Quarantined JSON
+
+on:
+  push:
+    paths:
+      - '.github/workflows/repair-quarantined-json.yml'
+      - 'tools/repair_quarantined_json.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: janus-meta-registry-quarantine-repair
+  cancel-in-progress: false
+
+jobs:
+  repair:
+    if: github.actor == 'Hawkar-usls' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Repair quarantined JSON without inventing missing data
+        id: repair
+        continue-on-error: true
+        run: |
+          python tools/repair_quarantined_json.py --root . --report data/JANUS-QUARANTINE-REPAIR-2026-08-25.json
+
+      - name: Validate all 14 formerly quarantined targets
+        id: validate
+        continue-on-error: true
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from tools.repair_quarantined_json import TARGETS
+
+          bad=[]
+          for rel in TARGETS:
+              p=Path(rel)
+              try:
+                  json.loads(p.read_text(encoding='utf-8-sig'))
+              except Exception as exc:
+                  bad.append({'path':rel,'error':str(exc)})
+          print(json.dumps({'targets':len(TARGETS),'valid':len(TARGETS)-len(bad),'invalid':bad},ensure_ascii=False,indent=2))
+          if bad:
+              raise SystemExit(2)
+          PY
+
+      - name: Persist repaired files and repair receipt
+        if: always()
+        run: |
+          git config user.name 'janus-registry-repair-bot'
+          git config user.email 'janus-registry-repair-bot@users.noreply.github.com'
+          git add \
+            data/JANUS-ARCHITECTURAL-INFLUENCE-REGISTRY-V18.json \
+            data/JANUS-ARCHITECTURE-V26.4.json \
+            data/JANUS-CINEMA-SOUL-SIGNAL-REGISTRY-v24.1.json \
+            data/JANUS-DOGMA-DIVINE-KEVIN-SMITH-CROSS-REFERENCES-v1.2.json \
+            data/JANUS-FERMI-META-IRONY-PROTOCOL-v1.0.json \
+            data/JANUS-LINEAR-A-R7-B0-ARITHMETIC-SUMMARY-ROLE-SPEC-2026-08-15-v0.1.json \
+            data/JANUS-MULTIVERSE-ROSEWINE-SPIDER-DEADGIRL-v1.0.json \
+            data/JANUS_META_REGISTRY_v21.4_FINAL.json \
+            data/janus-ai-integration-v5.9.json \
+            data/janus-meta-registry-v9.5-academic.json \
+            data/janus-registry-v5.2.json \
+            data/janus_pathfinder_registry.json \
+            data/proofs/stochastic_light_interface_model.json \
+            data/semantic_field_registry_v12.json \
+            data/JANUS-QUARANTINE-REPAIR-2026-08-25.json
+          if git diff --cached --quiet; then
+            echo 'No repair changes to commit.'
+            exit 0
+          fi
+          git commit -m 'Repair 14 quarantined JSON artifacts without inventing data'
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Enforce repair result
+        if: always()
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('data/JANUS-QUARANTINE-REPAIR-2026-08-25.json').read_text(encoding='utf-8'))
+          if r.get('repair_run_status') != 'PASS_ALL_TARGETS_VALID_JSON':
+              unresolved=[x for x in r.get('results',[]) if x.get('status') != 'REPAIRED_VALID_JSON']
+              raise SystemExit('QUARANTINE_REPAIR_INCOMPLETE: '+json.dumps(unresolved,ensure_ascii=False))
+          print('PASS_ALL_TARGETS_VALID_JSON')
+          PY
