@@ -5,7 +5,6 @@
   "description": "Расширенная архитектура распределённой сети Януса, включающая платиновый протокол (MK II), аппаратную энтропию (TRNG/PUF), методы физически-информированного анализа (PINN), интеграцию с облачным ассистентом Qwen и слой динамического вмешательства (ArtMoney Layer).",
   "observer": "Hawkar Yaks / JANUS Quantum Observer",
   "node_type": "architecture_milestone",
-
   "nodes": [
     {
       "name": "PC Titan",
@@ -76,7 +75,7 @@
         "temperature": 19.1,
         "humidity": 45.2,
         "pressure": 1013.25,
-        "shock": 1.60,
+        "shock": 1.6,
         "gyro": 0.12,
         "last_intent": "🟢",
         "screen_brightness": 128,
@@ -112,13 +111,12 @@
         "/api/device/data",
         "/api/device/command/{device_id}",
         "/api/device/command",
-        "/api/artmoney/set_param",    // новый эндпоинт для изменения параметров Titan
+        "/api/artmoney/set_param",
         "/ws"
       ],
       "last_state": "Перед отключением была загружена страница HRAIN, установлены WebSocket-соединения. Панель ArtMoney в разработке."
     }
   ],
-
   "communication_protocols": {
     "device_to_server": {
       "method": "HTTP POST",
@@ -149,7 +147,9 @@
     "server_to_device": {
       "method": "HTTP GET",
       "endpoint": "/api/device/command/{device_id}",
-      "response": { "command": "any JSON object" }
+      "response": {
+        "command": "any JSON object"
+      }
     },
     "server_to_titan_artmoney": {
       "method": "HTTP POST",
@@ -162,7 +162,10 @@
     },
     "server_to_client_browser": {
       "method": "WebSocket",
-      "messages": { "type": "UPDATE", "data": "graph_state" }
+      "messages": {
+        "type": "UPDATE",
+        "data": "graph_state"
+      }
     },
     "device_to_device_lora": {
       "description": "Передача коротких JSON-пакетов между устройствами через LoRa для широковещательного оповещения о состоянии и намерениях.",
@@ -188,7 +191,6 @@
       }
     }
   },
-
   "artmoney_layer": {
     "description": "Слой динамического вмешательства, вдохновлённый принципами ArtMoney – ручная подстройка параметров эволюции и устройств в реальном времени для преодоления застоев и экспериментов с системой.",
     "components": {
@@ -218,7 +220,6 @@
     },
     "status": "in_development"
   },
-
   "methodology_insights": {
     "hardware_entropy_sources": [
       {
@@ -272,7 +273,6 @@
       "развитие ArtMoney Layer: создание веб-панели для ручного управления эволюцией"
     ]
   },
-
   "achievements": [
     "Запущен и стабильно работает микро-коллайдер на Android, достигнут первый рекорд (loss 5.5269).",
     "M5Cardputer прошит и функционирует как физический маяк с чтением датчиков и звуковой индикацией.",
@@ -287,7 +287,6 @@
     "Добавлен магнитометр на Android как источник дополнительных данных.",
     "Разработана концепция ArtMoney Layer для ручного и автоматического вмешательства в эволюцию."
   ],
-
   "pending_tasks": [
     "Уточнить IP-адрес ПК в локальной сети и исправить в Android-скрипте.",
     "Реализовать полноценное чтение давления QMP6988 на M5Cardputer.",
@@ -301,7 +300,6 @@
     "Реализовать веб-панель ArtMoney в HRAIN для ручного изменения параметров Titan и отправки команд.",
     "Написать модуль автоматических «читерских» мутаций при застое."
   ],
-
   "next_steps": [
     "1. После подачи электричества перезапустить сервер и ядро Titan.",
     "2. Исправить IP в Android-скрипте и проверить отправку данных.",
@@ -314,7 +312,6 @@
     "9. Реализовать эндпоинт /api/artmoney/set_param и базовую панель управления в HRAIN.",
     "10. Провести первый эксперимент с ручным вмешательством для вывода Titan из застоя (MI=0)."
   ],
-
   "provenance": {
     "created_by": "Hawkar Yaks and JANUS",
     "date": "2026-02-26",
