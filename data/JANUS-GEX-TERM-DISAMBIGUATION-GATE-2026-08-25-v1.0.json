@@ -1,0 +1,43 @@
+{
+  "artifact_id": "JANUS-GEX-TERM-DISAMBIGUATION-GATE-2026-08-25-v1.0",
+  "status": "CANONICAL_NAMESPACE_GUARD",
+  "purpose": "Prevent the shared token GEX/Gex from creating false lineage edges between unrelated JANUS branches.",
+  "namespaces": {
+    "GEX_GAMMA_EXPOSURE": {
+      "domain": "JGPT training/runtime control",
+      "definition": "gradient-volatility proxy derived from grad_norm relative to grad_norm_ema",
+      "canonical_formula": "(grad_norm - grad_norm_ema) / (grad_norm_ema + 1e-8)",
+      "observed_runtime_action": "positive threshold reduces lr_scale; negative threshold slightly increases lr_scale; lr_scale is clamped",
+      "related_metric": "mixing_free_energy",
+      "authority": "training-control heuristic only"
+    },
+    "GEX_GAME_CHARACTER": {
+      "domain": "cultural memory / Hall of Honor",
+      "canonical_node": "registry/hall_of_honor/GEX-THE-GREEN-CHANNEL-v1.2.json",
+      "identity": "Gex the Gecko / THE GREEN CHANNEL",
+      "authority": "game/cultural/personal-memory provenance only",
+      "automatic_bridge_to_training_gex": false
+    },
+    "CORE_GEX": {
+      "status": "NOT_FOUND_IN_HIGH_COVERAGE_PASS",
+      "literal_variants_checked": ["Core Gex", "CoreGex", "core_gex", "Core GEX"],
+      "rule": "Do not create this node by concatenating nearby Core and GEX mentions."
+    }
+  },
+  "historical_training_note": {
+    "status": "SEMANTIC_SIGN_INCONSISTENCY_RESOLVED_BY_IMPLEMENTATION",
+    "description": "An early explanatory passage contains conflicting prose about the sign of GEX. The implemented code consistently treats rising grad_norm relative to EMA as positive GEX and responds by lowering lr_scale.",
+    "provenance_rule": "Preserve the early contradiction rather than silently normalizing the historical text."
+  },
+  "routing_rule": [
+    "TOKEN_MATCH != IDENTITY_MATCH",
+    "Require source-level context before routing GEX to a namespace.",
+    "A cultural analogy may be stored as SYMBOLIC_RELATION only and must not inherit runtime authority.",
+    "A training heuristic must not inherit biographical/game claims from the Hall of Honor node."
+  ],
+  "cross_links": [
+    "registry/hall_of_honor/GEX-THE-GREEN-CHANNEL-v1.2.json",
+    "Hawkar-usls/Janus-Demiurge::audits/JANUS_SPIRAL_ARCHAEOLOGY_PASS2_AIENGINE_GEX_TRIUMVIRATE_YAKSA_JGPT_HOLOGPT_2026-08-25.json"
+  ],
+  "canonical_rule": "SAME_TOKEN_GEX_DOES_NOT_MEAN_SAME_NODE"
+}
