@@ -1,0 +1,91 @@
+{
+  "journal_id": "JANUS-PV11GOFRE-RUN-JOURNAL-20260825T013907Z",
+  "timestamp_local": "2026-08-25T04:39:07+03:00",
+  "timestamp_utc": "2026-08-25T01:39:07Z",
+  "project": "Pv11Gofre",
+  "operation": "Derive an evidence-disciplined Pv11 recovery-state engine from OdontoForge, run the public-only fixture, and preserve the result.",
+  "parent_operator": "TRANSIENT_STATE_GROWTH_EXIT_REGENERATION",
+  "artifacts": [
+    {
+      "repository": "Hawkar-usls/janus-lapis",
+      "path": "tools/Pv11Gofre.py",
+      "commit_sha": "8ecda103f73baa00521c10a49be5922ec6be0d32",
+      "github_blob_sha": "5e4ee78b4fc257c35d869d1abc24347353cdcd38",
+      "reconstructed_committed_source_sha256": "7d373054d3089297c883219b305abd5ae0d1f6cf4e4c6576680e14d3447f7e27"
+    },
+    {
+      "repository": "Hawkar-usls/janus-lapis",
+      "path": "data/resolution_gate/PV11GOFRE_REPAIR_FIRST_EXIT_GATE_2026-08-25.json",
+      "commit_sha": "1adca0ba8c557b97d4ef05e311e7da5a81fe353f",
+      "github_blob_sha": "2a08c6c6f239c3524d2134d55987e8574990e656"
+    },
+    {
+      "repository": "Hawkar-usls/janus-lapis",
+      "path": "reports/2026-08-25/PV11GOFRE_PUBLIC_FIXTURE_RUN_v0.1.json",
+      "commit_sha": "ee1b86805ce26a6e0c962957e84659f9aaeed180",
+      "github_blob_sha": "bb75b5d3f32903dc6fdfb27c9d1837df8ef50e8e"
+    }
+  ],
+  "execution": {
+    "commands": [
+      "python Pv11Gofre.py selftest",
+      "python Pv11Gofre.py run --out pv11gofre_report.json"
+    ],
+    "selftest": "PASS",
+    "runtime_report_sha256": "caca6fbbb735169f2962998f0a5954989f9ba7a0790d29a0ab8e33624a16ac9a",
+    "fixture_sha256": "ed3dbf29df68c862907d5655b995e7aaa3f7711583dbb7155d8c809734025969",
+    "result": {
+      "gate_status": "REPAIR_FIRST_PRECURSOR_SUPPORTED_CELL_CYCLE_GATE_OPEN",
+      "earliest_repair_evidence_h": 3.0,
+      "latest_repair_evidence_h": 24.0,
+      "first_direct_s_phase_h": null,
+      "repair_first_precursor_supported": true,
+      "causal_cell_cycle_release_proven": false,
+      "public_only": true
+    }
+  },
+  "odonto_to_pv11_mapping": [
+    "ENTER_TRANSIENT_STATE -> REHYDRATE_ENTER_RECOVERY",
+    "GROW_OR_ACCUMULATE_STRUCTURE -> ACCUMULATE_REPAIR_AND_RECOVERY_ACTIVITY",
+    "TEST_LOCAL_CONSISTENCY_OR_VIABILITY -> TEST_GENOME_INTEGRITY_AND_CELL_CYCLE_COMPETENCE",
+    "CRYSTALLIZE_IF_VERIFIED -> CRYSTALLIZE_STABLE_RECOVERED_STATE_IF_SUPPORTED",
+    "EXIT_IF_TERMINAL -> RELEASE_CELL_CYCLE_ONLY_IF_DIRECTLY_MEASURED",
+    "REGENERATE_OR_REPLACE_IF_FAILED -> REPAIR_OR_REPLACE_FAILED_STATE",
+    "PRESERVE_LINEAGE_AND_COST -> PRESERVE_TIMEPOINT_REPLICATE_PROVENANCE"
+  ],
+  "public_evidence_anchors": [
+    {
+      "id": "Yamada2018_SciRep",
+      "doi": "10.1038/s41598-018-36124-6",
+      "role": "R3 RAD16-like Pv.07646 signal and R24 XPA-like/CCNH-like repair evidence"
+    },
+    {
+      "id": "Yamada2020_DRA008948",
+      "doi": "10.1371/journal.pone.0230218",
+      "accession": "DRA008948",
+      "role": "T0/T12/T24/T36/T48/R0/R3/R12/R24/R72 biological-triplicate RNA-seq time course"
+    },
+    {
+      "id": "Mazin2018_PNAS",
+      "doi": "10.1073/pnas.1719493115",
+      "role": "day-scale Pv11 post-rehydration population proliferation assay; not a first-S-phase clock"
+    }
+  ],
+  "epistemic_boundaries": [
+    "The engine is a hypothesis/test harness, not proof of a molecular regeneration mechanism.",
+    "Population growth is not substituted for direct first-S-phase timing.",
+    "Unpublished observations remain excluded from the public fixture until explicit permission exists.",
+    "A repair-first temporal ordering does not by itself prove that repair causally gates cell-cycle release."
+  ],
+  "next_gate": {
+    "name": "DRA008948_MATRIX_TRAJECTORY",
+    "requires": [
+      "exact run-to-condition manifest",
+      "raw or author-derived expression matrix with SHA-256 and provenance",
+      "frozen DNA_REPAIR / REPLICATION_LICENSING / S_PHASE / G1_S / G2_M / MITOSIS module trajectories",
+      "direct public first-S-phase measurement for ordering",
+      "prospective perturbation for causal promotion"
+    ]
+  },
+  "status": "RECORDED_AND_OPEN_FOR_DATA_IMPORT"
+}
