@@ -11,12 +11,25 @@
       "related_metric": "mixing_free_energy",
       "authority": "training-control heuristic only"
     },
+    "GEX_BLOCK_HUNTER_KENSHI": {
+      "domain": "janus_slime_tachyon_theta_pool / Kenshi dynamic-world routing",
+      "identity": "Gex block-candidate hunter / extreme-tail router plus a named GEX faction in the virtual world",
+      "cli_definition": "--gex enables Gex block-candidate hunter / extreme-tail router",
+      "state_root": "gex_block_hunter",
+      "gex_pressure_alias": "KenshiDynamicWorldSwarmCore reads gex_block_hunter.last_policy.extreme_z_pressure as gex_pressure",
+      "extreme_z_pressure_formula": "clamp(0.36*clamp(best_z/40)+0.25*clamp(recent_zmax/36)+0.16*clamp(tail_zmax/34)+0.10*q_pressure+0.08*clamp(canonical_hits/4)+0.05*(1-reject_drag),0,1)",
+      "block_pressure_formula": "clamp(0.45*clamp((best_z-28)/20)+0.25*clamp((recent_zmax-27)/18)+0.15*clamp((tail_zmax-26)/16)+0.10*clamp(exact_submits/2)+0.05*q_pressure,0,1)",
+      "kenshi_roles": "GEX is one faction among SLIME, RAMANUJAN, GEX, ARTMONEY, DIRAC, GIMLET and NOMADS; faction_pressure is the sum of current virtual-agent scores by faction",
+      "runtime_effect": "high gex_pressure increases HUNTER role bonus; Gex policy can influence routing modes/guards in this experimental search harness",
+      "automatic_bridge_to_gamma_exposure": false,
+      "authority": "experimental search-routing telemetry only; no SHA-256 prediction or break authority"
+    },
     "GEX_GAME_CHARACTER": {
       "domain": "cultural memory / Hall of Honor",
       "canonical_node": "registry/hall_of_honor/GEX-THE-GREEN-CHANNEL-v1.2.json",
       "identity": "Gex the Gecko / THE GREEN CHANNEL",
       "authority": "game/cultural/personal-memory provenance only",
-      "automatic_bridge_to_training_gex": false
+      "automatic_bridge_to_training_or_block_hunter_gex": false
     },
     "CORE_GEX": {
       "status": "NOT_FOUND_IN_HIGH_COVERAGE_PASS",
@@ -26,18 +39,20 @@
   },
   "historical_training_note": {
     "status": "SEMANTIC_SIGN_INCONSISTENCY_RESOLVED_BY_IMPLEMENTATION",
-    "description": "An early explanatory passage contains conflicting prose about the sign of GEX. The implemented code consistently treats rising grad_norm relative to EMA as positive GEX and responds by lowering lr_scale.",
+    "description": "An early explanatory passage contains conflicting prose about the sign of Gamma Exposure. The implemented JGPT code consistently treats rising grad_norm relative to EMA as positive GEX and responds by lowering lr_scale.",
     "provenance_rule": "Preserve the early contradiction rather than silently normalizing the historical text."
   },
   "routing_rule": [
     "TOKEN_MATCH != IDENTITY_MATCH",
     "Require source-level context before routing GEX to a namespace.",
+    "Gamma Exposure, Gex block-hunter/Kenshi faction and Gex the Gecko are three distinct recovered nodes unless a source explicitly creates a bridge.",
     "A cultural analogy may be stored as SYMBOLIC_RELATION only and must not inherit runtime authority.",
-    "A training heuristic must not inherit biographical/game claims from the Hall of Honor node."
+    "A training heuristic must not inherit search-routing authority, and vice versa."
   ],
   "cross_links": [
     "registry/hall_of_honor/GEX-THE-GREEN-CHANNEL-v1.2.json",
-    "Hawkar-usls/Janus-Demiurge::audits/JANUS_SPIRAL_ARCHAEOLOGY_PASS2_AIENGINE_GEX_TRIUMVIRATE_YAKSA_JGPT_HOLOGPT_2026-08-25.json"
+    "Hawkar-usls/Janus-Demiurge::audits/JANUS_SPIRAL_ARCHAEOLOGY_PASS2_AIENGINE_GEX_TRIUMVIRATE_YAKSA_JGPT_HOLOGPT_2026-08-25.json",
+    "Library::janus_slime_tachyon_theta_pool_v2_10_37.py"
   ],
   "canonical_rule": "SAME_TOKEN_GEX_DOES_NOT_MEAN_SAME_NODE"
 }
