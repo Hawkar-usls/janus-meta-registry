@@ -1,0 +1,252 @@
+{
+  "schema": "JANUS.TOCH.P_VS_NP_PREDECESSORS.v0.1",
+  "name": "TOCH",
+  "meaning": "torch/fakel: predecessors who did not settle P vs NP but left reusable light",
+  "created_utc": "2026-08-27",
+  "status": "RESEARCH_INTAKE_NOT_A_PROOF",
+  "P_VS_NP": "OPEN",
+  "epistemic_rules": [
+    "REPUTATION_IS_NOT_PROOF",
+    "FAILED_CLAIM_MAY_CONTAIN_VALID_LEMMA",
+    "ANALOGY_IS_NOT_TRANSFER",
+    "FINITE_TEST_IS_NOT_ASYMPTOTIC_THEOREM",
+    "SHORT_CERTIFICATE_IS_NOT_CHEAP_DISCOVERY",
+    "COMPACT_REPRESENTATION_IS_NOT_EXACT_REPRESENTATION",
+    "EVERY_SURVIVING_SEED_MUST_BE_REFORMULATED_AS_EXACT_MATHEMATICS",
+    "SCIENTIFIC_RIGOR_LABELS_DESCRIBE_WORK_PROPERTIES_NOT_PERSONALITY"
+  ],
+  "comparison_axes": {
+    "A1": "explicit computational model",
+    "A2": "asymptotic resource accounting",
+    "A3": "search-versus-verification distinction",
+    "A4": "exact representation or invariant preservation",
+    "A5": "polynomial discovery/construction cost",
+    "A6": "independent verification/certificate",
+    "A7": "adversarial or falsifiable structure",
+    "A8": "local-to-global/quotient/structure reduction",
+    "score_scale": "0 absent, 1 partial/implicit, 2 explicit/central; no total score is treated as truth"
+  },
+  "canonical_predecessors": [
+    {
+      "id": "TOCH-NASH-1955",
+      "person": "John F. Nash Jr.",
+      "year": 1955,
+      "source_kind": "declassified primary correspondence",
+      "source": "NSA John Nash Letters; letter received 17 February 1955 and related correspondence",
+      "exact_historical_content": "Nash models a finite-key binary enciphering process, distinguishes brute-force search over 2^r keys from shortcut attacks, observes that simple ciphers can permit low-degree polynomial shortcuts, and conjectures that sufficiently complex key interactions can make mean key-recovery computation grow exponentially with key length.",
+      "what_it_is_not": "Not a P vs NP formulation, not an NP-completeness argument, and not a proof of exponential lower bounds.",
+      "rigor_signal": {
+        "formal_object": "explicit finite-key process/function and key-length parameter",
+        "asymptotic_claim": true,
+        "adversary_model": "enemy knows system except key",
+        "falsifiability": "a substantially faster general key-recovery method would attack the conjecture",
+        "external_scrutiny": "NSA evaluated the proposed cipher and rejected that concrete system for official security requirements",
+        "classification": "STRONG_SCIENTIFIC_PRECURSOR"
+      },
+      "similarity_to_current_janus": {
+        "A1": 1,
+        "A2": 2,
+        "A3": 1,
+        "A4": 0,
+        "A5": 1,
+        "A6": 0,
+        "A7": 2,
+        "A8": 1,
+        "closest_current_nodes": [
+          "resource-ledger discipline",
+          "adversarial cost rather than raw state count",
+          "hidden-shortcut search",
+          "interaction structure as possible source of difficulty"
+        ]
+      },
+      "surviving_seed": {
+        "name": "INTERACTION_VS_SHORTCUT_COMPLEXITY_SEED",
+        "formalization": "For a representation family R_n, distinguish naive state-space cardinality from the minimum exact algorithmic cost after all structure-preserving shortcuts. Measure interaction structure that survives quotienting instead of equating 2^n candidates with 2^n necessary work.",
+        "topa_status": "KEEP_AS_ADVERSARIAL_RESEARCH_SEED"
+      },
+      "tranception_reverse_pass": "Reverse Nash's cryptographic question: rather than asking when interactions force exponential attack cost, ask what exact coordinate change makes those interactions collapse while preserving the decision predicate. This maps naturally to JANUS representation discovery, but carries no theorem by itself."
+    },
+    {
+      "id": "TOCH-GODEL-1956",
+      "person": "Kurt Gödel",
+      "year": 1956,
+      "source_kind": "primary correspondence / published collected works",
+      "source": "Letter to John von Neumann, 20 March 1956",
+      "exact_historical_content": "Gödel asks for the optimal worst-case number of steps needed to decide whether a formula has a proof bounded by length n, explicitly wondering whether the growth could be linear or quadratic rather than exhaustive-search-like.",
+      "what_it_is_not": "The letter predates the formal P/NP vocabulary and does not provide a polynomial algorithm.",
+      "rigor_signal": {
+        "formal_object": "Turing machine, formula F, proof-length bound n, worst-case runtime function",
+        "asymptotic_claim": true,
+        "falsifiability": "explicit growth-rate question",
+        "classification": "VERY_STRONG_COMPLEXITY_PRECURSOR"
+      },
+      "similarity_to_current_janus": {"A1":2,"A2":2,"A3":2,"A4":0,"A5":2,"A6":2,"A7":1,"A8":0,"closest_current_nodes":["certificate discovery debt","proof search vs proof verification","global polynomial bound"]},
+      "surviving_seed": {
+        "name": "CERTIFICATE_DISCOVERY_COST_IS_FIRST_CLASS",
+        "formalization": "A short or polynomially verifiable proof object is insufficient; require a uniform polynomial-time constructor/finder under one fixed exponent.",
+        "topa_status": "ADMITTED_AS_CORE_JANUS_GUARDRAIL"
+      },
+      "tranception_reverse_pass": "Instead of starting with a proof system and asking how fast to search it, JANUS may search for the proof language/representation itself, but the language-selection cost must also be polynomial."
+    },
+    {
+      "id": "TOCH-VONNEUMANN-1949",
+      "person": "John von Neumann",
+      "year": 1949,
+      "source_kind": "historical correspondence summarized in complexity-history literature",
+      "exact_historical_content": "Raised explicit questions about the complexity of decision procedures, including Tarski-style algebraic decision methods, before complexity theory became a separate field.",
+      "what_it_is_not": "Not a P vs NP claim.",
+      "rigor_signal": {"classification":"COMPLEXITY_PREHISTORY"},
+      "similarity_to_current_janus": {"A1":1,"A2":1,"A3":0,"A4":0,"A5":0,"A6":0,"A7":1,"A8":0},
+      "surviving_seed": {"name":"DECIDABLE_DOES_NOT_MEAN_FEASIBLE","topa_status":"ADMITTED_FOUNDATIONAL_DISTINCTION"}
+    },
+    {
+      "id": "TOCH-RABIN-1960",
+      "person": "Michael O. Rabin",
+      "year": 1960,
+      "source_kind": "technical report",
+      "source": "Degree of Difficulty of Computing a Function and a Partial Ordering of Recursive Sets",
+      "exact_historical_content": "Develops an early formal program for measuring and comparing computational difficulty rather than merely computability.",
+      "what_it_is_not": "Not P vs NP and not a SAT algorithm.",
+      "rigor_signal": {"formal_model":true,"classification":"FOUNDATIONAL_COMPLEXITY_WORK"},
+      "similarity_to_current_janus": {"A1":2,"A2":2,"A3":0,"A4":0,"A5":1,"A6":0,"A7":1,"A8":1},
+      "surviving_seed": {"name":"ORDER_TRANSFORMATIONS_BY_TRUE_RESOURCE_COST","formalization":"Every JANUS representation change must carry a machine-model-independent resource ledger, not only a smaller syntactic state.","topa_status":"ADMITTED_GUARDRAIL"}
+    },
+    {
+      "id": "TOCH-COBHAM-1965",
+      "person": "Alan Cobham",
+      "year": 1965,
+      "source_kind": "conference paper",
+      "source": "The Intrinsic Computational Difficulty of Functions",
+      "exact_historical_content": "Helps establish polynomial time as a robust machine-independent notion of feasible computation.",
+      "rigor_signal": {"classification":"FOUNDATIONAL_COMPLEXITY_WORK"},
+      "similarity_to_current_janus": {"A1":2,"A2":2,"A3":0,"A4":0,"A5":2,"A6":0,"A7":0,"A8":0},
+      "surviving_seed": {"name":"ONE_FIXED_POLYNOMIAL_BOUND","topa_status":"ADMITTED_CORE_REQUIREMENT"}
+    },
+    {
+      "id": "TOCH-EDMONDS-1965",
+      "person": "Jack Edmonds",
+      "year": 1965,
+      "source_kind": "peer-reviewed research paper",
+      "source": "Paths, Trees, and Flowers",
+      "exact_historical_content": "Gives a polynomial algorithm for maximum matching and explicitly contrasts exponential finite algorithms with algebraic/polynomial growth. Blossom contraction demonstrates that an exponentially large naive search space can collapse through an exact structural transformation.",
+      "what_it_is_not": "Does not imply all combinatorial search problems have such a contraction.",
+      "rigor_signal": {"algorithm_proved":true,"asymptotic_cost_explicit":true,"classification":"VERY_STRONG_ALGORITHMIC_PRECURSOR"},
+      "similarity_to_current_janus": {"A1":2,"A2":2,"A3":1,"A4":2,"A5":2,"A6":1,"A7":1,"A8":2,"closest_current_nodes":["exact quotient/contraction","component/direct-sum intuition","representation change before search"]},
+      "surviving_seed": {"name":"EXACT_CONTRACTION_BEATS_ENUMERATION","formalization":"Search for polynomially discoverable congruence classes whose contraction preserves the target predicate and supports exact lifted witnesses.","topa_status":"HIGH_VALUE_ACTIVE_SEED"},
+      "tranception_reverse_pass": "Treat every apparent exponential state family as a challenge to discover a blossom-like exact quotient; if no quotient exists, produce the obstruction rather than branching deeper."
+    },
+    {
+      "id": "TOCH-COOK-1971",
+      "person": "Stephen A. Cook",
+      "year": 1971,
+      "source_kind": "peer-reviewed conference paper",
+      "source": "The Complexity of Theorem-Proving Procedures",
+      "exact_historical_content": "Establishes SAT as NP-complete, creating the universal reduction boundary for a constructive P=NP route.",
+      "rigor_signal": {"classification":"CANONICAL_FOUNDATION"},
+      "similarity_to_current_janus": {"A1":2,"A2":2,"A3":2,"A4":1,"A5":2,"A6":2,"A7":1,"A8":2},
+      "surviving_seed": {"name":"ONE_UNIVERSAL_SAT_KEY_IS_ENOUGH","topa_status":"ADMITTED_FOUNDATION"}
+    },
+    {
+      "id": "TOCH-LEVIN-1973",
+      "person": "Leonid A. Levin",
+      "year": 1973,
+      "source_kind": "peer-reviewed research note",
+      "source": "Universal search problems",
+      "exact_historical_content": "Formulates universal search relations with polynomially bounded witnesses and polynomial-time checking, emphasizing search rather than only decision.",
+      "rigor_signal": {"classification":"CANONICAL_FOUNDATION"},
+      "similarity_to_current_janus": {"A1":2,"A2":2,"A3":2,"A4":1,"A5":2,"A6":2,"A7":0,"A8":1},
+      "surviving_seed": {"name":"SEARCH_RELATION_NOT_JUST_DECISION_BIT","formalization":"Every admitted SAT outcome should preserve a witness relation or independently replayable UNSAT certificate.","topa_status":"ADMITTED_CORE_REQUIREMENT"}
+    },
+    {
+      "id": "TOCH-KARP-1972",
+      "person": "Richard M. Karp",
+      "year": 1972,
+      "source_kind": "peer-reviewed conference chapter",
+      "source": "Reducibility Among Combinatorial Problems",
+      "exact_historical_content": "Builds a network of polynomial reductions among NP-complete problems.",
+      "rigor_signal": {"classification":"CANONICAL_FOUNDATION"},
+      "similarity_to_current_janus": {"A1":2,"A2":2,"A3":1,"A4":2,"A5":2,"A6":1,"A7":1,"A8":2},
+      "surviving_seed": {"name":"REDUCTION_MUST_CARRY_SIZE_AND_WITNESS_MAP","topa_status":"ADMITTED_CORE_GUARDRAIL"}
+    },
+    {
+      "id": "TOCH-BGS-1975",
+      "people": ["Theodore Baker","John Gill","Robert Solovay"],
+      "year": 1975,
+      "source_kind": "peer-reviewed research paper",
+      "source": "Relativizations of the P=?NP Question",
+      "exact_historical_content": "Constructs oracle worlds with opposite P/NP outcomes, proving that relativizing proof techniques alone cannot settle the unrelativized question.",
+      "rigor_signal": {"classification":"CANONICAL_BARRIER"},
+      "similarity_to_current_janus": {"A1":2,"A2":1,"A3":0,"A4":1,"A5":0,"A6":2,"A7":2,"A8":1},
+      "surviving_seed": {"name":"RELATIVIZATION_ADVERSARY_GATE","topa_status":"ADMITTED_TOPA_BARRIER"}
+    },
+    {
+      "id": "TOCH-SCHAEFER-1978",
+      "person": "Thomas J. Schaefer",
+      "year": 1978,
+      "source_kind": "peer-reviewed research paper",
+      "source": "The Complexity of Satisfiability Problems",
+      "exact_historical_content": "Classifies fixed Boolean constraint languages into tractable and NP-complete cases, showing that the algebra/relations of a problem determine tractability in a precise restricted setting.",
+      "what_it_is_not": "Does not provide a polynomial decomposition of arbitrary mixed CNFs into tractable languages.",
+      "rigor_signal": {"classification":"VERY_STRONG_ALGEBRAIC_PRECURSOR"},
+      "similarity_to_current_janus": {"A1":2,"A2":2,"A3":1,"A4":2,"A5":1,"A6":2,"A7":2,"A8":2,"closest_current_nodes":["autonomous algebra discovery","finite affine lane","relation-product counting lane","Schaefer negative control"]},
+      "surviving_seed": {"name":"DISCOVER_THE_RIGHT_ALGEBRA_OF_THE_INSTANCE","formalization":"Search for exact preserved operations/relations but charge extensionalization and language-selection cost; mixed-language ambiguity fails closed.","topa_status":"ACTIVE_JANUS_CORE_SEED"}
+    },
+    {
+      "id": "TOCH-SWART-YANNAKAKIS-1986-1991",
+      "people": ["Ted Swart","Mihalis Yannakakis"],
+      "year": "1986-1991",
+      "source_kind": "claimed P=NP route plus peer-reviewed barrier result",
+      "exact_historical_content": "Swart pursued polynomial-size LP formulations for Hamiltonian-cycle/TSP-style structure and inferred P=NP. Yannakakis proved exponential lower bounds for symmetric LP formulations of matching and TSP, closing that symmetric formulation route.",
+      "what_it_is_not": "Yannakakis does not rule out all extended formulations or settle P vs NP.",
+      "rigor_signal": {"classification":"HIGH_VALUE_FAILED_ROUTE_WITH_PRECISE_BARRIER"},
+      "similarity_to_current_janus": {"A1":2,"A2":2,"A3":1,"A4":2,"A5":2,"A6":2,"A7":2,"A8":2,"closest_current_nodes":["Stage4 exact representation","factorized resolution product","hidden representation-size debt"]},
+      "surviving_seed": {"name":"COMPACT_REPRESENTATION_REQUIRES_EXTENSION_COMPLEXITY_AUDIT","formalization":"Any lifted representation B must prove exact projection/equivalence, polynomial construction, polynomial bit complexity, and polynomial downstream manipulation; symmetry restrictions must be explicit.","topa_status":"HIGH_VALUE_ADVERSARIAL_GATE"},
+      "tranception_reverse_pass": "When a compact representation fails under a symmetry/barrier theorem, search for the precise non-symmetric information that a successful exact representation would need, then charge the cost of discovering that information."
+    },
+    {
+      "id": "TOCH-NASH-CROSSWORK",
+      "person": "John F. Nash Jr.",
+      "year": "1950-1956",
+      "source_kind": "cross-work Tranception synthesis",
+      "works": ["Equilibrium Points in n-Person Games","Non-Cooperative Games","Real Algebraic Manifolds","isometric embedding work","NSA cryptography correspondence"],
+      "safe_cross_domain_observations": [
+        "Equilibrium work turns a solution concept into a fixed-point condition; this is a useful adversarial/fixed-point metaphor but not a SAT algorithm.",
+        "Embedding work demonstrates exact structure-preserving lifting into a larger representation; this is conceptually close to extension-variable thinking but carries no computational-complexity bound for CNF-SAT.",
+        "Cryptography correspondence explicitly treats computational difficulty as the security resource and distinguishes brute force from structural shortcuts."
+      ],
+      "surviving_seed": {"name":"LIFT_WITH_INVARIANT__THEN_ATTACK_FIXED_POINTS","formalization":"Allow higher-dimensional/lifted representations only when an exact invariant and polynomial construction/manipulation ledger are supplied; treat stable/fixed states as objects for adversarial verification, not as evidence of tractability.","topa_status":"ANALOGICAL_SEED_ONLY_UNTIL_FORMALIZED"}
+    }
+  ],
+  "historical_claim_archive": {
+    "source": "Gerhard J. Woeginger P-versus-NP page / maintained mirror",
+    "known_scope": "116 listed attempts/milestones through 2016; includes 61 P=NP claims, 49 P!=NP claims, and other outcomes in commonly cited summaries",
+    "ingestion_policy": "Each claim becomes a claim object plus an algebraic archetype and strongest known attack. No claim is admitted by count, credentials, or rhetoric.",
+    "first_priority_claims": [
+      "Ted Swart LP formulations",
+      "Narendra S. Chaudhari clause-level representation",
+      "Vladimir Romanov compact triplet structures",
+      "Angela Weiss KE-tableau macros",
+      "Matt Groff finite-field linear algebra",
+      "Dmitriy Nuriyev colored-hypergraph dynamic programming",
+      "Sergey V. Yakhontov accepting-path LP"
+    ]
+  },
+  "demi_head_candidate_gates": [
+    "INTERACTION_VS_SHORTCUT_GATE",
+    "CERTIFICATE_DISCOVERY_GATE",
+    "EXACT_CONTRACTION_CONGRUENCE_GATE",
+    "REDUCTION_SIZE_WITNESS_GATE",
+    "RELATIVIZATION_GATE",
+    "SCHAEFER_MIXED_LANGUAGE_GATE",
+    "EXTENDED_FORMULATION_SIZE_GATE"
+  ],
+  "next_spiral": [
+    "full Nash letter transcription-by-paraphrase and machine-readable page anchors",
+    "Gödel -> proof search -> Cook/Reckhow bridge",
+    "Edmonds blossom contraction -> exact quotient grammar",
+    "Swart/Yannakakis -> extension complexity adversary",
+    "Woeginger equal-claim corpus -> archetype clustering",
+    "Tranception reverse pass across all surviving seeds",
+    "Demi_Head implementation only after exact gate contracts are frozen"
+  ]
+}
