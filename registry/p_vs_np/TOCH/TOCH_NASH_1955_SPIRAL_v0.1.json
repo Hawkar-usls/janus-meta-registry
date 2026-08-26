@@ -1,0 +1,80 @@
+{
+  "schema": "JANUS.TOCH.NASH_SPIRAL.v0.1",
+  "person": "John F. Nash Jr.",
+  "date_context": "1955 correspondence; related submissions in 1950 and 1954",
+  "primary_source": {
+    "publisher": "US National Security Agency",
+    "artifact": "John Nash Letters",
+    "pages_of_interest_zero_indexed": [1,2,3,4,5,6,16,17],
+    "provenance_status": "PRIMARY_DECLASSIFIED_SOURCE"
+  },
+  "forward_pass": {
+    "problem": "How should one define practical cryptographic security when brute force is finite but enormous?",
+    "model": "finite key of r bits; adversary knows the method but not the key; ciphertext leaks information about the key; direct exhaustive procedure considers 2^r keys",
+    "observation": "simple or weakly interacting cipher structures may admit shortcuts whose computation grows only as a low-degree polynomial in r",
+    "conjectural_step": "sufficiently complex interaction among key-controlled instructions may cause mean key-recovery computation to grow exponentially with key length",
+    "consequence_envisioned": "computationally unbreakable practical ciphers despite theoretical finite breakability"
+  },
+  "topa_attack": {
+    "passes": [
+      "explicit adversary model",
+      "explicit asymptotic parameter r",
+      "distinguishes state-space size from shortcut attack cost",
+      "concrete cipher proposal submitted for external technical review"
+    ],
+    "fails_or_open": [
+      "no lower-bound proof for all attacks",
+      "no standard complexity class framework",
+      "no reduction from a universal search problem",
+      "no proof that interaction complexity implies exponential algorithmic lower bounds",
+      "NSA rejection of the proposed concrete cipher prevents promoting the machine design itself as successful cryptography"
+    ],
+    "verdict": "PRECURSOR_WITH_VALID_COMPLEXITY_INTUITION__NO_PNP_RESULT"
+  },
+  "spiral_comparison_to_janus": {
+    "same_question_shape": [
+      "naive exponential candidate space does not imply exponential necessary work",
+      "the key object is the best exact shortcut, not brute-force cardinality",
+      "interaction structure may control whether shortcuts exist",
+      "asymptotic growth matters more than small-instance timing"
+    ],
+    "where_janus_is_stricter": [
+      "JANUS requires an exact decision/certificate semantics",
+      "JANUS charges representation discovery and verification",
+      "JANUS fails closed to OPEN",
+      "JANUS demands one fixed polynomial exponent for a universal P=NP claim",
+      "JANUS separates finite evidence from universal theorem"
+    ],
+    "where_nash_was_ahead_of_his_time": [
+      "computational security as a primary security notion",
+      "explicit contrast between exhaustive 2^r search and structural polynomial shortcuts",
+      "recognition that complexity depends on interaction structure, not only number of keys"
+    ]
+  },
+  "tranception": {
+    "reverse_question": "Given an interacting finite-key system that appears exponentially hard, what exact invariant/quotient/coordinate change would collapse the interaction without losing key distinguishability?",
+    "janus_translation": "Given an OPEN CNF residual, search for a polynomially discoverable exact representation in which the apparent interaction product is not materialized.",
+    "new_gate_seed": {
+      "name": "NASH_SHORTCUT_COMPLETENESS_GATE",
+      "obligation": "Before claiming a combinatorial state explosion is necessary, enumerate the admitted exact shortcut grammar and either produce a shortcut or a proof-carrying obstruction showing why that grammar cannot collapse the state.",
+      "warning": "Failure to find a shortcut is not an exponential lower bound."
+    }
+  },
+  "cross_work_pass": {
+    "non_cooperative_games": "Fixed-point/equilibrium structure suggests an adversarial stable-state viewpoint; relevance is methodological only until a reduction is proved.",
+    "isometric_embedding": "Exact structure-preserving lifting is conceptually analogous to extension representations; no CNF complexity transfer is assumed.",
+    "real_algebraic_manifolds": "Shows Nash repeatedly converted qualitative/geometric objects into algebraic representations; useful as a representation-design pattern, not as complexity evidence."
+  },
+  "scientific_rigor_signal": {
+    "policy": "judge work properties, never diagnose or label the person",
+    "signals": [
+      "explicit mathematical model",
+      "quantitative asymptotic conjecture",
+      "distinction between brute force and shortcut algorithms",
+      "submission to hostile/independent expert evaluation",
+      "concrete proposal vulnerable to rejection"
+    ],
+    "classification": "HIGH"
+  },
+  "P_VS_NP": "OPEN"
+}
