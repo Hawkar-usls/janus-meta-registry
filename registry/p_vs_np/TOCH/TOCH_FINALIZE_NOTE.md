@@ -1,0 +1,1 @@
+Initial TOCH batch is intentionally incomplete. It establishes provenance, comparison axes, TOPA/Tranception discipline, and DemiHead import gates. Further predecessor ingestion must be additive. `P_VS_NP = OPEN`.
