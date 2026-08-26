@@ -1,0 +1,135 @@
+{
+  "schema_id": "janus.adv_elite.build_journal.v1",
+  "project": "ADV_Elite / restored Beacon with AI",
+  "created_at": "2026-08-27T01:34:00+03:00",
+  "purpose": "Persistent engineering notebook and checkpoint index for the ADV_Elite Beacon reconstruction so architectural decisions, source lineage, failures, tests and corrections are not lost across long contexts.",
+  "canonical_lineage_registry": "registry/ADV-ELITE-BEACON-LINEAGE-RESTORATION-2026-08-27-v1.0.json",
+  "documentation_policy": {
+    "append_every_material_step": true,
+    "preserve_failures": true,
+    "preserve_negative_results": true,
+    "preserve_rejected_hypotheses": true,
+    "questions_one_at_a_time": true,
+    "no_unvalidated_metric_promoted_to_truth": true,
+    "required_checkpoint_fields": [
+      "timestamp",
+      "decision_or_change",
+      "why",
+      "source_or_evidence",
+      "code_affected",
+      "test",
+      "result",
+      "failure",
+      "rollback",
+      "next_gate"
+    ]
+  },
+  "current_checkpoint": {
+    "phase": "P0_FORENSIC_FREEZE",
+    "status": "Q01_RESOLVED__Q02_NEXT",
+    "implementation_started": false,
+    "next_question": "Q02_M2R_SEMANTICS"
+  },
+  "frozen_mission": {
+    "decision_id": "Q01",
+    "answer": "A+B+C",
+    "roles": [
+      "A_AUTONOMOUS_ROOM_BRAIN",
+      "B_PORTABLE_PERSONAL_TERMINAL",
+      "C_SMART_HOME_ORGAN"
+    ],
+    "canonical_summary_ru": "ADV_Elite — автономный и переносной узел JANUS, одновременно являющийся частью умного дома. Он общается со swarm двусторонне, учится на реальных метриках физических датчиков и логах swarm, строит прогноз следующего состояния окружения и должен со временем уменьшать ошибку прогноза.",
+    "core_goal": "SELF_LEARNING_PREDICTIVE_ENVIRONMENT_AND_SWARM_MODEL",
+    "engineering_metaphor": "ORDER_CHAOS_BY_PREDICTION",
+    "strict_interpretation": "Упорядочивание хаоса означает снижение проверяемой ошибки предсказания на будущих реальных данных; метафора не является физическим или научным утверждением сама по себе.",
+    "room_brain": {
+      "autonomous_without_nas_pc": true,
+      "inputs": ["ENV", "IMU", "BlindEye", "EchoMic/TD", "swarm telemetry", "radio/network health", "local history"],
+      "outputs": ["forecasts", "anomaly events", "Witness records", "BrainWave/UI", "swarm messages"]
+    },
+    "portable_terminal": {
+      "portable": true,
+      "offline_first": true,
+      "learns_new_contexts": true,
+      "must_not_assume_home_baseline": true
+    },
+    "smart_home_organ": {
+      "participates_in_home_swarm": true,
+      "home_context_profile": true,
+      "bidirectional_swarm_learning": true,
+      "future_automation": "ONLY_AFTER_SEPARATE_POLICY_AND_SAFETY_GATES"
+    }
+  },
+  "predictive_ai_contract": {
+    "status": "MISSION_LEVEL_FROZEN__DETAILS_PENDING_Q02_PLUS",
+    "learning_sources": [
+      "real ENV sensor readings",
+      "real IMU state",
+      "real BlindEye telemetry",
+      "real EchoMic/TD telemetry",
+      "real swarm node telemetry",
+      "packet timing/RSSI/loss/staleness",
+      "mining/worker health metrics",
+      "historical Witness/replay sessions"
+    ],
+    "principle": "PREDICT_FUTURE_STATE_FROM_PAST_AND_CURRENT_REAL_METRICS",
+    "minimum_evaluation": {
+      "train_on_past_test_on_future": true,
+      "rolling_holdout": true,
+      "naive_baselines_required": ["last_value", "moving_average"],
+      "candidate_must_beat_baseline": true,
+      "track_error_over_time": true,
+      "no_claim_from_training_loss_only": true
+    },
+    "success_definition_ru": "Улучшение считается реальным только если на отложенных будущих наблюдениях ошибка модели устойчиво ниже заранее зафиксированного baseline и преимущество повторяется на нескольких сессиях.",
+    "failure_is_valid_result": true
+  },
+  "accepted_architecture_donor": {
+    "source": "raw TacticalAI Python prototype supplied by user",
+    "classification": "ARCHITECTURE_DONOR_ONLY",
+    "accepted_patterns": [
+      "decoupled queues between acquisition/inference/communication",
+      "Sensor Fusion Bus",
+      "local student vs heavy teacher model",
+      "experience buffer",
+      "periodic distillation",
+      "communication worker"
+    ],
+    "excluded_from_adv_elite": [
+      "ballistic solution path",
+      "weapon/shot recommendation path"
+    ],
+    "target_sensor_fusion_flow": [
+      "validate source/schema/seq/age",
+      "timestamp",
+      "normalize",
+      "update per-modality cache",
+      "assemble coherent multimodal frame",
+      "extract features",
+      "local inference",
+      "Tachyon forecast",
+      "disagreement/anomaly",
+      "memory/Witness",
+      "swarm/UI/BrainWave outputs"
+    ]
+  },
+  "entries": [
+    {
+      "seq": 1,
+      "timestamp": "2026-08-27T01:34:00+03:00",
+      "decision_or_change": "Q01_RESOLVED_MISSION_FROZEN",
+      "why": "User defined ADV_Elite as A+B+C and clarified the central goal as a self-learning predictive AI that exchanges data with the swarm and learns from real sensor and swarm logs.",
+      "source_or_evidence": [
+        "user Q01 answer A+B+C",
+        "recovered Beacon lineage",
+        "raw TacticalAI architecture donor"
+      ],
+      "code_affected": "none yet; architecture freeze only",
+      "test": "not applicable before implementation",
+      "result": "mission and evaluation contract frozen",
+      "failure": null,
+      "rollback": "decision remains editable only by explicit user revision",
+      "next_gate": "Q02_M2R_SEMANTICS"
+    }
+  ]
+}
