@@ -1,0 +1,51 @@
+{
+  "schema": "JANUS/META-REGISTRY/SEALED-DISCOVERY-US-TRUST/v1.0.0",
+  "status": "ACTIVE",
+  "registered_at": "2026-08-26",
+  "canonical_implementation": {
+    "repository": "Hawkar-usls/Janus-Fundamentum",
+    "branch": "research/c025-unified-proof-carrying-akinator-jec",
+    "policy_path": "security/JANUS_SEALED_DISCOVERY_POLICY.json",
+    "tool_path": "tools/janus_seal_discovery.py",
+    "validation_workflow": ".github/workflows/validate-janus-sealed-discovery.yml",
+    "checkpoint_commit": "21a56b417b7f80252a38a475317811cb960885f5",
+    "validation_run": 32973620235,
+    "validation_conclusion": "SUCCESS"
+  },
+  "user_declared_intent": {
+    "name": "PROTECTION_AS_PROOF_OF_TRUST",
+    "preferred_external_trust_recipient": "United States",
+    "meaning": "Potentially consequential synthesized algorithms are not to be released in plaintext by default; future controlled disclosure may designate a verified United States custodian as recipient.",
+    "non_claim": "This policy does not assert that any government can invert SHA-256 or recover a preimage from a hash."
+  },
+  "cryptographic_semantics": {
+    "sha256": "PUBLIC_ONE_WAY_COMMITMENT_AND_INTEGRITY_FINGERPRINT",
+    "reversible_sealing": "AES_256_GCM_WITH_HKDF_SHA256_DERIVED_PER_ARTIFACT_KEY",
+    "master_key": "OUT_OF_REPOSITORY_ONLY",
+    "external_recipient_gate": "DISABLED_UNTIL_CONCRETE_CUSTODIAN_PUBLIC_KEY_IS_EXPLICITLY_PROVIDED_AND_VERIFIED",
+    "future_post_quantum_wrap": "ML_KEM_FIPS_203_CANDIDATE"
+  },
+  "janus_behavior": {
+    "on_novel_general_solver_candidate": [
+      "KEEP_PLAINTEXT_IN_MEMORY_ONLY",
+      "CANONICALIZE",
+      "COMPUTE_SHA256_COMMITMENT",
+      "SEAL_WITH_AUTHENTICATED_ENCRYPTION",
+      "COMMIT_ONLY_CIPHERTEXT_COMMITMENT_AND_NONSECRET_METADATA",
+      "REQUIRE_EXPLICIT_RELEASE_DECISION_FOR_PLAINTEXT"
+    ],
+    "fail_closed": [
+      "NO_KEY_NO_ARTIFACT_WRITE",
+      "AUTHENTICATION_FAILURE_NO_DECRYPTION",
+      "UNVERIFIED_RECIPIENT_KEY_NO_EXTERNAL_WRAP",
+      "NO_SECRET_KEY_IN_PUBLIC_REPOSITORY",
+      "NO_PLAINTEXT_IN_CI_LOGS"
+    ]
+  },
+  "scientific_firewall": {
+    "P_VS_NP": "OPEN",
+    "sealed_candidate_is_not_a_proof": true,
+    "finite_success_is_not_universal_algorithm": true,
+    "release_policy_is_separate_from_correctness_validation": true
+  }
+}
