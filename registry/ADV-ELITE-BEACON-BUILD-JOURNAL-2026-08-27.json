@@ -2,18 +2,31 @@
   "schema": "JANUS/adv-elite-build-journal/v1.0.0",
   "schema_id": "janus.adv_elite.build_journal.v1",
   "registry_id": "ADV-ELITE-BEACON-BUILD-JOURNAL-2026-08-27",
-  "status": "ACTIVE_ENGINEERING__Q10_RESOLVED__Q11_NEXT",
+  "status": "ACTIVE_ENGINEERING__Q11_RESOLVED__Q12_NEXT",
   "project": "ADV_Elite / restored Beacon with AI",
   "purpose": "Persistent engineering ledger so architecture, corrections, negative results, implementation decisions and validation gates survive long context windows.",
-  "documentation_policy": {"questions_one_at_a_time":true,"append_every_material_decision":true,"preserve_failures":true,"preserve_negative_results":true,"preserve_rejected_hypotheses":true,"no_unvalidated_metric_promoted_to_truth":true,"detailed_decisions_live_in_checkpoint_records":true},
-  "canonical_sources": {
-    "lineage":"registry/ADV-ELITE-BEACON-LINEAGE-RESTORATION-2026-08-27-v1.0.json",
-    "current":".janus/ADV_ELITE_CURRENT.json",
-    "universal_event_schema":"registry/JANUS-UNIVERSAL-EVENT-RECORD-SCHEMA-v1.0.0.json",
-    "registry_gateway":"registry/JANUS-REGISTRY-GATEWAY-CONTRACT-v1.0.0.json",
-    "hrain_bridge":"registry/JANUS-HRAIN-TELEMETRY-BRIDGE-CONTRACT-v1.0.0.json"
+  "documentation_policy": {
+    "questions_one_at_a_time": true,
+    "append_every_material_decision": true,
+    "preserve_failures": true,
+    "preserve_negative_results": true,
+    "preserve_rejected_hypotheses": true,
+    "no_unvalidated_metric_promoted_to_truth": true,
+    "detailed_decisions_live_in_checkpoint_records": true
   },
-  "current_checkpoint": {"phase":"P0_FORENSIC_FREEZE","status":"Q10_RESOLVED__Q11_NEXT","implementation_started":false,"next_question":"Q11_ANOMALY_STATISTICS"},
+  "canonical_sources": {
+    "lineage": "registry/ADV-ELITE-BEACON-LINEAGE-RESTORATION-2026-08-27-v1.0.json",
+    "current": ".janus/ADV_ELITE_CURRENT.json",
+    "universal_event_schema": "registry/JANUS-UNIVERSAL-EVENT-RECORD-SCHEMA-v1.0.0.json",
+    "registry_gateway": "registry/JANUS-REGISTRY-GATEWAY-CONTRACT-v1.0.0.json",
+    "hrain_bridge": "registry/JANUS-HRAIN-TELEMETRY-BRIDGE-CONTRACT-v1.0.0.json"
+  },
+  "current_checkpoint": {
+    "phase": "P0_FORENSIC_FREEZE",
+    "status": "Q11_RESOLVED__Q12_NEXT",
+    "implementation_started": false,
+    "next_question": "Q12_ANOMALY_RESPONSE_LEVELS"
+  },
   "entries": [
     {"seq":1,"decision_id":"Q01","decision":"ADV_Elite is simultaneously autonomous room brain, portable personal terminal and smart-home organ.","gate":"RESOLVED"},
     {"seq":2,"decision_id":"Q02","decision":"M2R is a physics-informed forward World Model / future-state generator; adaptive temporal resolution is subordinate.","gate":"RESOLVED"},
@@ -22,10 +35,32 @@
     {"seq":5,"decision_id":"Q05","decision":"JANUS is distributed swarm cognition; ADV_Elite is one autonomous predictive Beacon/Tachyon/M2R organ, not the sole brain.","checkpoint":"registry/ADV-ELITE-Q05-DISTRIBUTED-SWARM-2026-08-27.json","gate":"RESOLVED"},
     {"seq":6,"decision_id":"Q06","decision":"Every device is an independent solo-capable compute/learning node; swarm connectivity is optional and increases shared data/experience; Habitat is optional heavy compute/archive.","checkpoint":"registry/ADV-ELITE-Q06-AUTONOMOUS-SWARM-LEARNING-2026-08-27.json","gate":"RESOLVED"},
     {"seq":7,"decision_id":"Q07","decision":"A+B memory: continuous Witness + semantic important memory; storage-less nodes offload to capable peers; ordinary old data may be forgotten after value extraction and retention/provenance gates.","checkpoint":"registry/ADV-ELITE-Q07-MEMORY-POLICY-2026-08-27.json","gate":"RESOLVED"},
-    {"seq":8,"decision_id":"Q08","decision":"Nodes write canonical JANUS-compatible JSON records directly; runtime storage is JSONL/NDJSON; sealed history is JSON chunk+manifest with per-node/session hash chain.","checkpoint":"registry/ADV-ELITE-Q08-JSON-WITNESS-2026-08-27.json","gate":"RESOLVED"},
+    {"seq":8,"decision_id":"Q08","decision":"Nodes write canonical JANUS-compatible JSON event records directly; runtime storage is JSONL/NDJSON; sealed history is JSON chunk+manifest with per-node/session hash chain.","checkpoint":"registry/ADV-ELITE-Q08-JSON-WITNESS-2026-08-27.json","gate":"RESOLVED"},
     {"seq":9,"decision_id":"Q09","decision":"ADV_Elite selects KEEP_INTERESTING / ANOMALY / DROP and authors canonical JSON; trusted gateway authenticates/verifies and publishes to GitHub; no GitHub credential on ESP32.","gateway":"registry/JANUS-REGISTRY-GATEWAY-CONTRACT-v1.0.0.json","checkpoint":"registry/ADV-ELITE-Q09-GITHUB-UPLINK-2026-08-27.json","gate":"RESOLVED"},
-    {"seq":10,"decision_id":"Q10","decision":"Legacy HRAIN/Titan uplink becomes a single nonblocking Outbox. Canonical flow: ADV -> Outbox -> Registry Gateway -> GitHub JSON -> HRain read-only graph.","reason":"Current HRain/GitHub Pages is a browser/static read plane, not an authenticated ingest server.","bridge":"registry/JANUS-HRAIN-TELEMETRY-BRIDGE-CONTRACT-v1.0.0.json","checkpoint":"registry/ADV-ELITE-Q10-HRAIN-OUTBOX-2026-08-27.json","gate":"RESOLVED"}
+    {"seq":10,"decision_id":"Q10","decision":"Legacy HRAIN/Titan uplink becomes a single nonblocking Outbox. Canonical flow: ADV -> Outbox -> Registry Gateway -> GitHub JSON -> HRain read-only graph.","bridge":"registry/JANUS-HRAIN-TELEMETRY-BRIDGE-CONTRACT-v1.0.0.json","checkpoint":"registry/ADV-ELITE-Q10-HRAIN-OUTBOX-2026-08-27.json","gate":"RESOLVED"},
+    {
+      "seq": 11,
+      "decision_id": "Q11",
+      "decision": "Anomaly layer is always on. Ensemble uses Z + robust-Z/MAD + prediction error + swarm disagreement + derivatives/context. Onboard LED physically signals anomaly; L toggles only LED output; [/] control display and LED brightness together.",
+      "correction": "Legacy Beacon gated anomaly evaluation behind loveExperimentActive; this is frozen as a restorative bugfix and removed from the target architecture.",
+      "lineage": "Beacon_A1 preserved anomalyLatched/white anomaly LED/L toggle/[ ] brightness; ADV Elite v0.20 already couples screen and LED brightness in applyBrightness().",
+      "checkpoint": "registry/ADV-ELITE-Q11-ALWAYS-ON-ANOMALY-LED-2026-08-27.json",
+      "gate": "RESOLVED"
+    }
   ],
-  "frozen_truth_rules": ["SENSOR_TRUTH != PREDICTION_OR_SIMULATION","UNKNOWN stays UNKNOWN","prediction never overwrites real observation","future data is not available before its timestamp","peer provenance and staleness remain explicit","training loss alone is not evidence of improved future prediction","future holdout/baselines are required","failed predictions and negative experiments are preserved","hash integrity is not truth","GitHub publication is not evidence of anomaly causation","metaphor is not physical evidence"],
-  "next": "Q11_ANOMALY_STATISTICS"
+  "frozen_truth_rules": [
+    "SENSOR_TRUTH != PREDICTION_OR_SIMULATION",
+    "UNKNOWN stays UNKNOWN",
+    "prediction never overwrites real observation",
+    "future data is not available before its timestamp",
+    "peer provenance and staleness remain explicit",
+    "training loss alone is not evidence of improved future prediction",
+    "future holdout/baselines are required",
+    "failed predictions and negative experiments are preserved",
+    "hash integrity is not truth",
+    "GitHub publication is not evidence of anomaly causation",
+    "LED anomaly indication is detector state, not proof of extraordinary physical cause",
+    "metaphor is not physical evidence"
+  ],
+  "next": "Q12_ANOMALY_RESPONSE_LEVELS"
 }
