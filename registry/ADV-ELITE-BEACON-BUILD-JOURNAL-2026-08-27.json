@@ -2,6 +2,7 @@
   "schema_id": "janus.adv_elite.build_journal.v1",
   "project": "ADV_Elite / restored Beacon with AI",
   "created_at": "2026-08-27T01:34:00+03:00",
+  "updated_at": "2026-08-27T07:20:00+03:00",
   "purpose": "Persistent engineering notebook and checkpoint index for the ADV_Elite Beacon reconstruction so architectural decisions, source lineage, failures, tests and corrections are not lost across long contexts.",
   "canonical_lineage_registry": "registry/ADV-ELITE-BEACON-LINEAGE-RESTORATION-2026-08-27-v1.0.json",
   "documentation_policy": {
@@ -11,107 +12,74 @@
     "preserve_rejected_hypotheses": true,
     "questions_one_at_a_time": true,
     "no_unvalidated_metric_promoted_to_truth": true,
-    "required_checkpoint_fields": [
-      "timestamp",
-      "decision_or_change",
-      "why",
-      "source_or_evidence",
-      "code_affected",
-      "test",
-      "result",
-      "failure",
-      "rollback",
-      "next_gate"
-    ]
+    "required_checkpoint_fields": ["timestamp","decision_or_change","why","source_or_evidence","code_affected","test","result","failure","rollback","next_gate"]
   },
   "current_checkpoint": {
     "phase": "P0_FORENSIC_FREEZE",
-    "status": "Q01_RESOLVED__Q02_NEXT",
+    "status": "Q02_RESOLVED__Q03_NEXT",
     "implementation_started": false,
-    "next_question": "Q02_M2R_SEMANTICS"
+    "next_question": "Q03_TACHYON_1488"
   },
   "frozen_mission": {
     "decision_id": "Q01",
     "answer": "A+B+C",
-    "roles": [
-      "A_AUTONOMOUS_ROOM_BRAIN",
-      "B_PORTABLE_PERSONAL_TERMINAL",
-      "C_SMART_HOME_ORGAN"
-    ],
+    "roles": ["A_AUTONOMOUS_ROOM_BRAIN","B_PORTABLE_PERSONAL_TERMINAL","C_SMART_HOME_ORGAN"],
     "canonical_summary_ru": "ADV_Elite — автономный и переносной узел JANUS, одновременно являющийся частью умного дома. Он общается со swarm двусторонне, учится на реальных метриках физических датчиков и логах swarm, строит прогноз следующего состояния окружения и должен со временем уменьшать ошибку прогноза.",
     "core_goal": "SELF_LEARNING_PREDICTIVE_ENVIRONMENT_AND_SWARM_MODEL",
     "engineering_metaphor": "ORDER_CHAOS_BY_PREDICTION",
-    "strict_interpretation": "Упорядочивание хаоса означает снижение проверяемой ошибки предсказания на будущих реальных данных; метафора не является физическим или научным утверждением сама по себе.",
-    "room_brain": {
-      "autonomous_without_nas_pc": true,
-      "inputs": ["ENV", "IMU", "BlindEye", "EchoMic/TD", "swarm telemetry", "radio/network health", "local history"],
-      "outputs": ["forecasts", "anomaly events", "Witness records", "BrainWave/UI", "swarm messages"]
-    },
-    "portable_terminal": {
-      "portable": true,
-      "offline_first": true,
-      "learns_new_contexts": true,
-      "must_not_assume_home_baseline": true
-    },
-    "smart_home_organ": {
-      "participates_in_home_swarm": true,
-      "home_context_profile": true,
-      "bidirectional_swarm_learning": true,
-      "future_automation": "ONLY_AFTER_SEPARATE_POLICY_AND_SAFETY_GATES"
-    }
+    "strict_interpretation": "Упорядочивание хаоса означает снижение проверяемой ошибки предсказания на будущих реальных данных; метафора не является физическим или научным утверждением сама по себе."
   },
   "predictive_ai_contract": {
-    "status": "MISSION_LEVEL_FROZEN__DETAILS_PENDING_Q02_PLUS",
-    "learning_sources": [
-      "real ENV sensor readings",
-      "real IMU state",
-      "real BlindEye telemetry",
-      "real EchoMic/TD telemetry",
-      "real swarm node telemetry",
-      "packet timing/RSSI/loss/staleness",
-      "mining/worker health metrics",
-      "historical Witness/replay sessions"
-    ],
     "principle": "PREDICT_FUTURE_STATE_FROM_PAST_AND_CURRENT_REAL_METRICS",
     "minimum_evaluation": {
       "train_on_past_test_on_future": true,
       "rolling_holdout": true,
-      "naive_baselines_required": ["last_value", "moving_average"],
+      "naive_baselines_required": ["last_value","moving_average"],
       "candidate_must_beat_baseline": true,
       "track_error_over_time": true,
       "no_claim_from_training_loss_only": true
     },
-    "success_definition_ru": "Улучшение считается реальным только если на отложенных будущих наблюдениях ошибка модели устойчиво ниже заранее зафиксированного baseline и преимущество повторяется на нескольких сессиях.",
     "failure_is_valid_result": true
+  },
+  "m2r_definition": {
+    "decision_id": "Q02",
+    "status": "FROZEN",
+    "resolved_at": "2026-08-27T07:20:00+03:00",
+    "canonical_name": "M2R_WORLD_MODEL_KERNEL",
+    "canonical_role": "PHYSICS_INFORMED_FORWARD_SIMULATOR_AND_FUTURE_STATE_GENERATOR",
+    "origin": "Calculator-style mathematical kernel repurposed as a generic forward simulator/world model, not as a weapon-control path.",
+    "janus_tachyon_semantics": {
+      "tachyon": "JANUS architecture/persona metaphor for a system that tries to stay ahead of observed state by forecasting future states.",
+      "atomic_clock": "Authoritative disciplined time axis aligning observation, prediction horizon, realized future, replay, and prediction error.",
+      "epistemic_guard": "No literal faster-than-light behavior or physical time-dilation claim follows from the Tachyon metaphor."
+    },
+    "world_model_contract": {
+      "input": ["real current and historical sensor state","swarm telemetry and logs","known deterministic or empirical physical relations","measurement uncertainty","context profile"],
+      "process": ["estimate current state","generate multiple plausible future scenarios","propagate uncertainty","score or weight scenarios","emit a future-state distribution"],
+      "output": ["future-state candidates","expected trajectory","uncertainty/confidence","prediction horizon","divergence drivers","simulation provenance"],
+      "feedback": ["wait for matching real future timestamp","compare forecast with observation","measure calibrated error","update learned residual/model weights","persist prediction and outcome in Witness"]
+    },
+    "relationship_to_ai": {
+      "m2r": "physics/model-based proposal generator",
+      "predictive_ai": "learned residual model, fusion layer, scenario scorer and pattern learner",
+      "tachyon": "temporal prediction/memory layer using the authoritative time axis",
+      "witness": "records what was predicted, when, from which inputs/model version, and what actually happened"
+    },
+    "compute_strategy": {
+      "edge": "bounded ensembles or reduced-order simulation on ESP32-class hardware",
+      "habitat": "heavier Monte Carlo/replay/calibration/model fitting on NAS/PC",
+      "note": "Future-cloud size is profiled and budgeted; no unverified throughput number is treated as fact."
+    },
+    "adaptive_temporal_resolution": {
+      "status": "SUBFUNCTION_NOT_PRIMARY_DEFINITION",
+      "role": "Sampling density and horizon may adapt to uncertainty/error, but this is subordinate to M2R's world-model role."
+    }
   },
   "accepted_architecture_donor": {
     "source": "raw TacticalAI Python prototype supplied by user",
     "classification": "ARCHITECTURE_DONOR_ONLY",
-    "accepted_patterns": [
-      "decoupled queues between acquisition/inference/communication",
-      "Sensor Fusion Bus",
-      "local student vs heavy teacher model",
-      "experience buffer",
-      "periodic distillation",
-      "communication worker"
-    ],
-    "excluded_from_adv_elite": [
-      "ballistic solution path",
-      "weapon/shot recommendation path"
-    ],
-    "target_sensor_fusion_flow": [
-      "validate source/schema/seq/age",
-      "timestamp",
-      "normalize",
-      "update per-modality cache",
-      "assemble coherent multimodal frame",
-      "extract features",
-      "local inference",
-      "Tachyon forecast",
-      "disagreement/anomaly",
-      "memory/Witness",
-      "swarm/UI/BrainWave outputs"
-    ]
+    "accepted_patterns": ["decoupled queues between acquisition/inference/communication","Sensor Fusion Bus","local student vs heavy teacher model","experience buffer","periodic distillation","communication worker"],
+    "excluded_from_adv_elite": ["ballistic solution path","weapon/shot recommendation path"]
   },
   "entries": [
     {
@@ -119,17 +87,26 @@
       "timestamp": "2026-08-27T01:34:00+03:00",
       "decision_or_change": "Q01_RESOLVED_MISSION_FROZEN",
       "why": "User defined ADV_Elite as A+B+C and clarified the central goal as a self-learning predictive AI that exchanges data with the swarm and learns from real sensor and swarm logs.",
-      "source_or_evidence": [
-        "user Q01 answer A+B+C",
-        "recovered Beacon lineage",
-        "raw TacticalAI architecture donor"
-      ],
+      "source_or_evidence": ["user Q01 answer A+B+C","recovered Beacon lineage","raw TacticalAI architecture donor"],
       "code_affected": "none yet; architecture freeze only",
       "test": "not applicable before implementation",
       "result": "mission and evaluation contract frozen",
       "failure": null,
       "rollback": "decision remains editable only by explicit user revision",
       "next_gate": "Q02_M2R_SEMANTICS"
+    },
+    {
+      "seq": 2,
+      "timestamp": "2026-08-27T07:20:00+03:00",
+      "decision_or_change": "Q02_RESOLVED_M2R_WORLD_MODEL_SEMANTICS_CORRECTED",
+      "why": "User clarified M2R as a generic forward world-model kernel derived from calculator-style physics, while Tachyon uses a strict time reference to distinguish now, forecast, and realized future.",
+      "source_or_evidence": ["user Q02 clarification","existing Beacon/Tachyon lineage"],
+      "code_affected": "architecture only; implementation not started",
+      "test": "future implementation must compare forecast distributions with time-aligned real observations",
+      "result": "M2R frozen as world-model kernel; adaptive temporal resolution demoted to subfunction",
+      "failure": "previous Q02 framing was too narrow",
+      "rollback": "explicit user revision only",
+      "next_gate": "Q03_TACHYON_1488"
     }
   ]
 }
