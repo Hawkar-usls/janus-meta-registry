@@ -16,9 +16,9 @@
   },
   "current_checkpoint": {
     "phase": "P0_FORENSIC_FREEZE",
-    "status": "Q02_RESOLVED__Q03_NEXT",
+    "status": "Q03_RESOLVED__Q04_NEXT",
     "implementation_started": false,
-    "next_question": "Q03_TACHYON_1488"
+    "next_question": "Q04_FORECAST_VECTOR"
   },
   "frozen_mission": {
     "decision_id": "Q01",
@@ -75,6 +75,39 @@
       "role": "Sampling density and horizon may adapt to uncertainty/error, but this is subordinate to M2R's world-model role."
     }
   },
+  "tachyon_1488_definition": {
+    "decision_id": "Q03",
+    "status": "FROZEN",
+    "canonical_code": "1488",
+    "canonical_role": "M2R_ACTIVE_WORLD_MODEL_SIMULATION_GATE",
+    "user_intent": "Entering 1488 activates M2R so JANUS begins forecasting the future and producing simulations specifically to improve future prediction.",
+    "baseline_outside_1488": {
+      "tachyon_temporal_history": "MAY_REMAIN_PASSIVE",
+      "sensor_and_swarm_ingestion": "CONTINUES",
+      "witness_baseline_logging": "CONTINUES",
+      "heavy_future_cloud_simulation": "OFF"
+    },
+    "active_after_1488": [
+      "build synchronized current-state estimate",
+      "run bounded multi-scenario future simulation",
+      "produce predictions for one or more horizons",
+      "propagate uncertainty",
+      "rank/weight candidate futures",
+      "timestamp forecast against authoritative time axis",
+      "preserve forecast/model/input provenance",
+      "compare predicted state with later real observations",
+      "calculate residual/prediction error",
+      "feed errors into learning/calibration",
+      "increase simulation/Witness detail while active"
+    ],
+    "engineering_guardrails": {
+      "simulation_must_not_block_sensor_ingestion": true,
+      "simulation_must_not_block_esp_now_rx": true,
+      "simulation_must_not_corrupt_witness": true,
+      "scenario_budget_is_profiled_not_magical": true,
+      "tachyon_name_is_not_physical_ftl_evidence": true
+    }
+  },
   "accepted_architecture_donor": {
     "source": "raw TacticalAI Python prototype supplied by user",
     "classification": "ARCHITECTURE_DONOR_ONLY",
@@ -107,6 +140,19 @@
       "failure": "previous Q02 framing was too narrow",
       "rollback": "explicit user revision only",
       "next_gate": "Q03_TACHYON_1488"
+    },
+    {
+      "seq": 3,
+      "timestamp": "2026-08-27T07:20:00+03:00",
+      "decision_or_change": "Q03_RESOLVED_1488_ACTIVATES_M2R_ACTIVE_SIMULATION",
+      "why": "User clarified the original control semantics: 1488 should switch on M2R so JANUS actively simulates future states and uses those simulations to improve forecasting.",
+      "source_or_evidence": ["user Q03 answer","historical Tachyon code 1488 lineage"],
+      "code_affected": "future Tachyon/M2R mode gate; implementation not started",
+      "test": "When implemented, entering 1488 must deterministically toggle M2R active mode; forecast records must carry horizon/time/model/input provenance and later be scored against the corresponding real observations.",
+      "result": "Q03 frozen: 1488 = M2R active future-simulation gate",
+      "failure": null,
+      "rollback": "explicit user revision only",
+      "next_gate": "Q04_FORECAST_VECTOR"
     }
   ]
 }
