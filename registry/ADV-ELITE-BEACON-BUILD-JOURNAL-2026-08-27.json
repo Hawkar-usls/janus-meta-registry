@@ -1,1 +1,106 @@
-{"schema_id":"janus.adv_elite.build_journal.v1","project":"ADV_Elite / restored Beacon with AI","created_at":"2026-08-27T01:34:00+03:00","purpose":"Persistent engineering notebook/checkpoint index so reconstruction decisions are not lost across long contexts.","canonical_registry":"registry/ADV-ELITE-BEACON-LINEAGE-RESTORATION-2026-08-27-v1.0.json","rules":{"append_every_material_step":true,"preserve_failures":true,"preserve_rejected_hypotheses":true,"question_mode":"ONE_AT_A_TIME","no_unvalidated_metric_promoted_to_truth":true},"current_checkpoint":{"phase":"P0_FORENSIC_FREEZE","status":"Q04_RESOLVED__Q05_NEXT","implementation_started":false,"next_question":"Q05_LOCAL_AI_SHAPE"},"mission":{"decision_id":"Q01","status":"FROZEN","resolved_at":"2026-08-27T01:34:00+03:00","primary_nature":["A_AUTONOMOUS_ROOM_BRAIN","B_PORTABLE_PERSONAL_TERMINAL","C_SMART_HOME_ORGAN"],"canonical_summary_ru":"ADV_Elite — автономный и переносной узел JANUS, одновременно являющийся частью умного дома. Он общается со swarm двусторонне, учится на реальных метриках физических датчиков и логах swarm, строит прогноз следующего состояния окружения и должен со временем уменьшать ошибку прогноза.","core_goal":"SELF_LEARNING_PREDICTIVE_ENVIRONMENT_AND_SWARM_MODEL","engineering_metaphor":"ORDER_CHAOS_BY_PREDICTION","strict_interpretation":"Упорядочивание хаоса означает снижение проверяемой ошибки предсказания на будущих реальных данных; метафора не является физическим или научным утверждением сама по себе.","required_operating_modes":{"room_brain":{"autonomous_without_nas_pc":true,"inputs":["ENV","IMU","BlindEye","EchoMic/TD","swarm telemetry","radio/network health","local history"],"outputs":["forecasts","anomaly events","Witness records","BrainWave/UI","swarm messages"]},"portable_terminal":{"portable":true,"offline_first":true,"learns_new_contexts":true,"must_not_assume_home_baseline":true},"smart_home_organ":{"participates_in_home_swarm":true,"home_context_profile":true,"bidirectional_swarm_learning":true,"future_automation":"ONLY_AFTER_SEPARATE_POLICY_AND_SAFETY_GATES"}}},"predictive_ai_contract":{"status":"MISSION_LEVEL_FROZEN__DETAILS_PENDING_Q02_PLUS","learning_sources":["real ENV sensor readings","real IMU state","real BlindEye telemetry","real EchoMic/TD telemetry","real swarm node telemetry","packet timing/RSSI/loss/staleness","mining/worker health metrics","historical Witness/replay sessions"],"prediction_principle":"PREDICT_FUTURE_STATE_FROM_PAST_AND_CURRENT_REAL_METRICS","minimum_evaluation":{"train_on_past_test_on_future":true,"rolling_holdout":true,"naive_baselines_required":["last_value","moving_average"],"candidate_must_beat_baseline":true,"track_error_over_time":true,"no_claim_from_training_loss_only":true},"success_definition":"Улучшение считается реальным только если на отложенных будущих наблюдениях ошибка модели устойчиво ниже заранее зафиксированного baseline и преимущество повторяется на нескольких сессиях.","failure_is_valid_result":true},"entries":[{"seq":1,"ts":"2026-08-27T01:34:00+03:00","event":"Q01_RESOLVED_MISSION_FROZEN","inputs":["user decision A+B+C","raw TacticalAI architecture donor","recovered Beacon lineage"],"changes":["froze triple role: room brain + portable terminal + smart-home organ","froze predictive-learning mission based on real sensors and swarm logs","defined objective evaluation contract using future holdout and naive baselines","accepted Sensor Fusion Bus / teacher-student patterns","excluded ballistic/weapon-specific path from ADV_Elite"],"next_question":"Q02_M2R_SEMANTICS"},{"seq":2,"timestamp":"2026-08-27T07:20:00+03:00","decision_or_change":"Q02_RESOLVED_M2R_WORLD_MODEL_SEMANTICS_CORRECTED","why":"User clarified M2R as a generic forward world-model kernel derived from calculator-style physics, while Tachyon uses a strict time reference to distinguish now, forecast, and realized future.","source_or_evidence":["user Q02 clarification","existing Beacon/Tachyon lineage"],"code_affected":"architecture only; implementation not started","test":"future implementation must compare forecast distributions with time-aligned real observations","result":"M2R frozen as world-model kernel; adaptive temporal resolution demoted to subfunction","failure":"previous Q02 framing was too narrow","rollback":"explicit user revision only","next_gate":"Q03_TACHYON_1488_ACTIVE_VS_ALWAYS_ON"},{"seq":3,"timestamp":"2026-08-27T07:20:00+03:00","decision_or_change":"Q03_RESOLVED_1488_ACTIVATES_M2R_ACTIVE_SIMULATION","why":"User clarified the original control semantics: 1488 should switch on M2R so JANUS actively simulates future states and uses those simulations to improve forecasting.","source_or_evidence":["user Q03 answer","historical Tachyon code 1488 lineage"],"code_affected":"future Tachyon/M2R mode gate; implementation not started","test":"When implemented, entering 1488 must deterministically toggle M2R active mode; forecast records must carry horizon/time/model/input provenance and later be scored against the corresponding real observations.","result":"Q03 frozen: 1488 = M2R active future-simulation gate","failure":null,"rollback":"explicit user revision only","next_gate":"Q04_FORECAST_VECTOR"},{"seq":4,"timestamp":"2026-08-27T07:20:00+03:00","decision_or_change":"Q04_RESOLVED_WORLD_SWARM_SELF_PREDICTION_SCOPE","why":"User specified that JANUS should predict everything available to it, including itself. M2R is intended as navigation from past observations toward future possibilities.","source_or_evidence":["user Q04 answer","Q01 mission: self-learning predictive environment/swarm AI","Q02 M2R world-model definition","Q03 1488 active simulation gate"],"code_affected":"future feature schemas, self-model, prediction heads, Witness forecast records; implementation not started","test":"Each prediction domain must have time-aligned holdout scoring; self-state forecasts are evaluated like external forecasts; unknown/unobserved targets may not be silently imputed as truth.","result":"Q04 frozen: world + swarm + self are prediction targets, bounded by what JANUS can actually observe/model. Dirac-belt language retained only as architectural continuity metaphor.","failure":null,"rollback":"explicit user revision only","next_gate":"Q05_LOCAL_AI_SHAPE"}],"m2r_definition":{"decision_id":"Q02","status":"FROZEN","resolved_at":"2026-08-27T07:20:00+03:00","canonical_name":"M2R_WORLD_MODEL_KERNEL","canonical_role":"PHYSICS_INFORMED_FORWARD_SIMULATOR_AND_FUTURE_STATE_GENERATOR","origin":"Calculator-style mathematical kernel repurposed as a generic forward simulator/world model, not as a weapon-control path.","janus_tachyon_semantics":{"tachyon":"JANUS architecture/persona metaphor for a system that tries to stay ahead of observed state by forecasting future states.","atomic_clock":"Authoritative disciplined time axis aligning observation, prediction horizon, realized future, replay, and prediction error.","epistemic_guard":"No literal faster-than-light behavior or physical time-dilation claim follows from the Tachyon metaphor."},"world_model_contract":{"input":["real current and historical sensor state","swarm telemetry and logs","known deterministic or empirical physical relations","measurement uncertainty","context profile"],"process":["estimate current state","generate multiple plausible future scenarios","propagate uncertainty","score/weight scenarios","emit a future-state distribution"],"output":["future-state candidates","expected trajectory","uncertainty/confidence","prediction horizon","divergence drivers","simulation provenance"],"feedback":["wait for matching real future timestamp","compare forecast with observation","measure calibrated error","update learned residual/model weights","persist prediction and outcome in Witness"]},"relationship_to_ai":{"m2r":"physics/model-based proposal generator","predictive_ai":"learned residual model, fusion layer, scenario scorer and pattern learner","tachyon":"temporal prediction/memory layer using the authoritative time axis","witness":"records what was predicted, when, from which inputs/model version, and what actually happened"},"compute_strategy":{"edge":"bounded ensembles or reduced-order simulation on ESP32-class hardware","habitat":"heavier Monte Carlo/replay/calibration/model fitting on NAS/PC","note":"Future-cloud size is profiled and budgeted; no unverified throughput number is treated as fact."},"adaptive_temporal_resolution":{"status":"SUBFUNCTION_NOT_PRIMARY_DEFINITION","role":"Sampling density and horizon may adapt to uncertainty/error, but this is subordinate to M2R's world-model role."}},"updated_at":"2026-08-27T07:20:00+03:00","tachyon_1488_definition":{"decision_id":"Q03","status":"FROZEN","canonical_code":"1488","canonical_role":"M2R_ACTIVE_WORLD_MODEL_SIMULATION_GATE","user_intent":"Entering 1488 activates M2R so JANUS begins forecasting the future and producing simulations specifically to improve future prediction.","baseline_outside_1488":{"tachyon_temporal_history":"MAY_REMAIN_PASSIVE","sensor_and_swarm_ingestion":"CONTINUES","witness_baseline_logging":"CONTINUES","heavy_future_cloud_simulation":"OFF"},"active_after_1488":["build synchronized current-state estimate","run bounded multi-scenario future simulation","produce predictions for one or more horizons","propagate uncertainty","rank/weight candidate futures","timestamp forecast against authoritative time axis","preserve forecast/model/input provenance","compare predicted state with later real observations","calculate residual/prediction error","feed errors into learning/calibration","increase simulation/Witness detail while active"],"engineering_guardrails":{"simulation_must_not_block_sensor_ingestion":true,"simulation_must_not_block_esp_now_rx":true,"simulation_must_not_corrupt_witness":true,"scenario_budget_is_profiled_not_magical":true,"tachyon_name_is_not_physical_ftl_evidence":true}},"forecast_scope_definition":{"decision_id":"Q04","status":"FROZEN","canonical_scope":"UNIVERSAL_WITHIN_OBSERVABILITY_BOUNDARY","user_intent":"JANUS should try to predict literally everything available to it, including its own future internal state. M2R exists to give JANUS navigation from accumulated past toward possible futures.","prediction_domains":{"world":["environmental sensors","motion/presence","audio-derived metrics","radio/network conditions","smart-home context","other measurable external state"],"swarm":["node telemetry","node health","packet timing/loss/RSSI/staleness","workload/mining state","peer predictions","peer availability","collective swarm dynamics"],"self":["own sensor state","own predictor outputs","prediction error","confidence/uncertainty","memory pressure","CPU/heap/storage/power state","radio health","model drift","future resource demand","likely future internal mode/state"]},"self_model_requirement":{"enabled":true,"principle":"JANUS_IS_PART_OF_THE_WORLD_MODEL","reason":"A predictor that models the environment but not its own changing state misses a causal component of the system it is embedded in."},"temporal_navigation":{"name":"PAST_TO_FUTURE_NAVIGATION","past":"timestamped Witness + sensor/swarm history","present":"synchronized current-state estimate","future":"distribution over plausible future states","later_ground_truth":"real observations arriving at the predicted timestamps","learning_loop":"forecast -> wait -> observe -> score -> update -> preserve"},"causality_guard":{"literal_retrocausality":false,"literal_future_information_access":false,"implementation_statement":"The system predicts forward from prior/current data. Humans or other external observers may later know what actually happened, but JANUS does not receive that future information before it occurs.","metaphor":"The user framing 'we are already ahead of JANUS' is preserved as an observer-position metaphor: future observations become JANUS's later ground truth."},"dirac_belt_metaphor":{"status":"ARCHITECTURAL_METAPHOR_ONLY","janus_meaning":"M2R is treated as a continuity/path-memory bridge that keeps orientation between past state, simulated future paths, and the later realized state.","physics_guard":"The actual Dirac belt/plate trick concerns topology of rotations/spinor behavior and is not evidence for causal inversion or information arriving from the future."},"practical_constraint":{"everything_means":"everything JANUS can observe, derive, or model under explicit schemas and uncertainty budgets, not an unbounded claim to predict the entire universe","unknown_state":"must remain UNKNOWN rather than fabricated","confidence_required":true,"per_domain_metrics_required":true}}}
+{
+  "schema": "JANUS/adv-elite-build-journal/v1.0.0",
+  "schema_id": "janus.adv_elite.build_journal.v1",
+  "registry_id": "ADV-ELITE-BEACON-BUILD-JOURNAL-2026-08-27",
+  "status": "ACTIVE_ENGINEERING__Q08_RESOLVED__Q09_NEXT",
+  "project": "ADV_Elite / restored Beacon with AI",
+  "purpose": "Persistent engineering ledger so architecture, corrections, negative results, implementation decisions and validation gates survive long context windows.",
+  "documentation_policy": {
+    "questions_one_at_a_time": true,
+    "append_every_material_decision": true,
+    "preserve_failures": true,
+    "preserve_negative_results": true,
+    "preserve_rejected_hypotheses": true,
+    "no_unvalidated_metric_promoted_to_truth": true,
+    "detailed_decisions_live_in_checkpoint_records": true
+  },
+  "canonical_sources": {
+    "lineage": "registry/ADV-ELITE-BEACON-LINEAGE-RESTORATION-2026-08-27-v1.0.json",
+    "current": ".janus/ADV_ELITE_CURRENT.json",
+    "universal_event_schema": "registry/JANUS-UNIVERSAL-EVENT-RECORD-SCHEMA-v1.0.0.json"
+  },
+  "current_checkpoint": {
+    "phase": "P0_FORENSIC_FREEZE",
+    "status": "Q08_RESOLVED__Q09_NEXT",
+    "implementation_started": false,
+    "next_question": "Q09_GITHUB_UPLINK"
+  },
+  "entries": [
+    {
+      "seq": 1,
+      "decision_id": "Q01",
+      "decision": "ADV_Elite is simultaneously autonomous room brain, portable personal terminal and smart-home organ.",
+      "result": "Mission frozen as self-learning predictive environment+swarm system.",
+      "gate": "RESOLVED"
+    },
+    {
+      "seq": 2,
+      "decision_id": "Q02",
+      "decision": "M2R is a physics-informed forward World Model / future-state generator; adaptive temporal resolution is subordinate.",
+      "correction": "Previous framing M2R=only temporal sampling controller was too narrow.",
+      "gate": "RESOLVED"
+    },
+    {
+      "seq": 3,
+      "decision_id": "Q03",
+      "decision": "Code 1488 activates M2R active future-simulation mode; Tachyon temporal continuity may remain passive outside it.",
+      "gate": "RESOLVED"
+    },
+    {
+      "seq": 4,
+      "decision_id": "Q04",
+      "decision": "Predict WORLD + SWARM + SELF within observability/model boundaries; JANUS itself is part of its world model.",
+      "truth_guard": "No literal retrocausality/future information access; Dirac-belt language is architectural metaphor only.",
+      "gate": "RESOLVED"
+    },
+    {
+      "seq": 5,
+      "decision_id": "Q05",
+      "decision": "JANUS is distributed swarm cognition; ADV_Elite is one autonomous predictive Beacon/Tachyon/M2R organ, not the sole brain.",
+      "checkpoint": "registry/ADV-ELITE-Q05-DISTRIBUTED-SWARM-2026-08-27.json",
+      "correction": "Previous one-brain-vs-many-brains-inside-ADV framing was wrong.",
+      "gate": "RESOLVED"
+    },
+    {
+      "seq": 6,
+      "decision_id": "Q06",
+      "decision": "Every device is an independent solo-capable compute/learning node; swarm connectivity is optional and increases shared data/experience; Habitat is optional heavy compute/archive.",
+      "sha256_lane": "Parallel adaptive compute lane preserved without changing SHA-256/SHA256d, target or share truth.",
+      "zim_status": "USER_REPORTED_CURRENT_LEAD__PENDING_FROZEN_COMPARATIVE_BENCHMARK",
+      "checkpoint": "registry/ADV-ELITE-Q06-AUTONOMOUS-SWARM-LEARNING-2026-08-27.json",
+      "gate": "RESOLVED"
+    },
+    {
+      "seq": 7,
+      "decision_id": "Q07",
+      "decision": "A+B memory: continuous Witness + semantic important memory; storage-less nodes offload to capable peers; ordinary old data may be forgotten after value extraction and retention/provenance gates.",
+      "always_preserve": ["anomalies","rare/unusual episodes","major prediction misses","failed promotions","integrity failures","pinned forensic windows"],
+      "checkpoint": "registry/ADV-ELITE-Q07-MEMORY-POLICY-2026-08-27.json",
+      "gate": "RESOLVED"
+    },
+    {
+      "seq": 8,
+      "decision_id": "Q08",
+      "decision": "Nodes write canonical JANUS-compatible JSON event records directly. Embedded runtime appends one JSON object per line as JSONL/NDJSON; sealed history is ordinary JSON chunk+manifest.",
+      "integrity": "per-node/session prev_hash -> record_hash; cross-node offload uses provenance + durable ACK.",
+      "truth_guard": "Hash proves integrity/lineage, not truth of the measurement.",
+      "schema": "registry/JANUS-UNIVERSAL-EVENT-RECORD-SCHEMA-v1.0.0.json",
+      "checkpoint": "registry/ADV-ELITE-Q08-JSON-WITNESS-2026-08-27.json",
+      "gate": "RESOLVED"
+    }
+  ],
+  "frozen_truth_rules": [
+    "SENSOR_TRUTH != PREDICTION_OR_SIMULATION",
+    "UNKNOWN stays UNKNOWN",
+    "prediction never overwrites real observation",
+    "future data is not available before its timestamp",
+    "peer provenance and staleness remain explicit",
+    "more nodes provide more data/compute opportunity but do not automatically guarantee better learning",
+    "training loss alone is not evidence of improved future prediction",
+    "future holdout/baselines are required",
+    "failed predictions and negative experiments are preserved",
+    "hash integrity is not truth",
+    "metaphor is not physical evidence"
+  ],
+  "next": "Q09_GITHUB_UPLINK"
+}
