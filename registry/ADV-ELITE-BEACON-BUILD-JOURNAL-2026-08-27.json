@@ -2,7 +2,7 @@
   "schema": "JANUS/adv-elite-build-journal/v1.0.0",
   "schema_id": "janus.adv_elite.build_journal.v1",
   "registry_id": "ADV-ELITE-BEACON-BUILD-JOURNAL-2026-08-27",
-  "status": "ACTIVE_ENGINEERING__Q11_RESOLVED__Q12_NEXT",
+  "status": "ACTIVE_ENGINEERING__Q11_RESOLVED__LINEAGE_BRIDGE_ADDED__Q12_PENDING",
   "project": "ADV_Elite / restored Beacon with AI",
   "purpose": "Persistent engineering ledger so architecture, corrections, negative results, implementation decisions and validation gates survive long context windows.",
   "documentation_policy": {
@@ -19,11 +19,13 @@
     "current": ".janus/ADV_ELITE_CURRENT.json",
     "universal_event_schema": "registry/JANUS-UNIVERSAL-EVENT-RECORD-SCHEMA-v1.0.0.json",
     "registry_gateway": "registry/JANUS-REGISTRY-GATEWAY-CONTRACT-v1.0.0.json",
-    "hrain_bridge": "registry/JANUS-HRAIN-TELEMETRY-BRIDGE-CONTRACT-v1.0.0.json"
+    "hrain_bridge": "registry/JANUS-HRAIN-TELEMETRY-BRIDGE-CONTRACT-v1.0.0.json",
+    "tachyon_physarum_archival_lineage": "data/JANUS-TACHYON-THERMAL-REVERSE-PHYSARUM-DIALOGUE-LINEAGE-2026-08-27-v1.0.json",
+    "tachyon_physarum_adv_bridge": "registry/JANUS-ADV-ELITE-TACHYON-PHYSARUM-LINEAGE-BRIDGE-2026-08-27.json"
   },
   "current_checkpoint": {
     "phase": "P0_FORENSIC_FREEZE",
-    "status": "Q11_RESOLVED__Q12_NEXT",
+    "status": "Q11_RESOLVED__LINEAGE_BRIDGE_ADDED__Q12_PENDING",
     "implementation_started": false,
     "next_question": "Q12_ANOMALY_RESPONSE_LEVELS"
   },
@@ -38,15 +40,8 @@
     {"seq":8,"decision_id":"Q08","decision":"Nodes write canonical JANUS-compatible JSON event records directly; runtime storage is JSONL/NDJSON; sealed history is JSON chunk+manifest with per-node/session hash chain.","checkpoint":"registry/ADV-ELITE-Q08-JSON-WITNESS-2026-08-27.json","gate":"RESOLVED"},
     {"seq":9,"decision_id":"Q09","decision":"ADV_Elite selects KEEP_INTERESTING / ANOMALY / DROP and authors canonical JSON; trusted gateway authenticates/verifies and publishes to GitHub; no GitHub credential on ESP32.","gateway":"registry/JANUS-REGISTRY-GATEWAY-CONTRACT-v1.0.0.json","checkpoint":"registry/ADV-ELITE-Q09-GITHUB-UPLINK-2026-08-27.json","gate":"RESOLVED"},
     {"seq":10,"decision_id":"Q10","decision":"Legacy HRAIN/Titan uplink becomes a single nonblocking Outbox. Canonical flow: ADV -> Outbox -> Registry Gateway -> GitHub JSON -> HRain read-only graph.","bridge":"registry/JANUS-HRAIN-TELEMETRY-BRIDGE-CONTRACT-v1.0.0.json","checkpoint":"registry/ADV-ELITE-Q10-HRAIN-OUTBOX-2026-08-27.json","gate":"RESOLVED"},
-    {
-      "seq": 11,
-      "decision_id": "Q11",
-      "decision": "Anomaly layer is always on. Ensemble uses Z + robust-Z/MAD + prediction error + swarm disagreement + derivatives/context. Onboard LED physically signals anomaly; L toggles only LED output; [/] control display and LED brightness together.",
-      "correction": "Legacy Beacon gated anomaly evaluation behind loveExperimentActive; this is frozen as a restorative bugfix and removed from the target architecture.",
-      "lineage": "Beacon_A1 preserved anomalyLatched/white anomaly LED/L toggle/[ ] brightness; ADV Elite v0.20 already couples screen and LED brightness in applyBrightness().",
-      "checkpoint": "registry/ADV-ELITE-Q11-ALWAYS-ON-ANOMALY-LED-2026-08-27.json",
-      "gate": "RESOLVED"
-    }
+    {"seq":11,"decision_id":"Q11","decision":"Anomaly layer is always on. Ensemble uses Z + robust-Z/MAD + prediction error + swarm disagreement + derivatives/context. Onboard LED signals anomaly; L toggles only LED output; [/] control display and LED brightness together.","correction":"Legacy Beacon gated anomaly evaluation behind loveExperimentActive; removed as restorative bugfix.","checkpoint":"registry/ADV-ELITE-Q11-ALWAYS-ON-ANOMALY-LED-2026-08-27.json","gate":"RESOLVED"},
+    {"seq":12,"event":"LINEAGE_INGEST_TACHYON_THERMAL_REVERSE_PHYSARUM","source":"data/JANUS-TACHYON-THERMAL-REVERSE-PHYSARUM-DIALOGUE-LINEAGE-2026-08-27-v1.0.json","bridge":"registry/JANUS-ADV-ELITE-TACHYON-PHYSARUM-LINEAGE-BRIDGE-2026-08-27.json","result":"1488/common-memory/raw-telemetry+hash/HRain lineages mapped to current ADV; Keymaker/Physarum/resource contraction/Morse retained as candidates; historical efficiency M2R renamed if reused so it cannot redefine current World Model M2R.","gate":"ARCHIVAL_LINEAGE_MAPPED__NO_RUNTIME_PROMOTION","next_question":"Q12_ANOMALY_RESPONSE_LEVELS"}
   ],
   "frozen_truth_rules": [
     "SENSOR_TRUTH != PREDICTION_OR_SIMULATION",
@@ -60,6 +55,7 @@
     "hash integrity is not truth",
     "GitHub publication is not evidence of anomaly causation",
     "LED anomaly indication is detector state, not proof of extraordinary physical cause",
+    "archive != current claim",
     "metaphor is not physical evidence"
   ],
   "next": "Q12_ANOMALY_RESPONSE_LEVELS"
