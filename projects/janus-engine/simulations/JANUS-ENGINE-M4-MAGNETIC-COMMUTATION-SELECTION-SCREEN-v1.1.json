@@ -1,0 +1,65 @@
+{
+  "artifact_uuid": "JANUS-ENGINE-M4-MAGNETIC-COMMUTATION-SELECTION-SCREEN-v1.1",
+  "timestamp": "2026-08-30T02:37:00+03:00",
+  "version": "v1.1",
+  "title": "JANUS Engine — AFPM versus micro-EPM startup/commutation screen",
+  "observer": "Hawkar / JANUS",
+  "node_type": "energy_and_architecture_screen",
+  "git_branch": "research/janus-engine",
+  "parent": "projects/janus-engine/research/TOPA-SPIDER-AXLE-MAGNETIC-DRIVE-RUN-004-v1.1.json",
+  "supersedes": "projects/janus-engine/simulations/JANUS-ENGINE-M4-MAGNETIC-COMMUTATION-SELECTION-SCREEN-v1.0.json",
+  "status": "AFPM_BASELINE_EPM_AB_TEST_WARRANTED",
+  "closed_cycle_rule": "Selective cancellation of a negative PM torque sector is an active motor function. Any apparent positive PM work retained over a cycle must be charged against electrical switching/coil energy; no magnetic energy multiplication is admitted.",
+  "micro_EPM_switching_power_screen": {
+    "formula": "P_switch_avg = E_switch * N_events_per_rev * RPM / 60",
+    "event_energy_anchors_J": {
+      "microfluidic_EPM": 0.0058,
+      "round_screen": 0.010,
+      "soft_robot_EPM": 0.047
+    },
+    "cases_8_events_per_rev": [
+      {"RPM":60,"P_W_at_5p8mJ":0.0464,"P_W_at_10mJ":0.080,"P_W_at_47mJ":0.376},
+      {"RPM":120,"P_W_at_5p8mJ":0.0928,"P_W_at_10mJ":0.160,"P_W_at_47mJ":0.752},
+      {"RPM":300,"P_W_at_5p8mJ":0.232,"P_W_at_10mJ":0.400,"P_W_at_47mJ":1.880},
+      {"RPM":600,"P_W_at_5p8mJ":0.464,"P_W_at_10mJ":0.800,"P_W_at_47mJ":3.760}
+    ],
+    "cases_16_events_per_rev": [
+      {"RPM":60,"P_W_at_5p8mJ":0.0928,"P_W_at_10mJ":0.160,"P_W_at_47mJ":0.752},
+      {"RPM":120,"P_W_at_5p8mJ":0.1856,"P_W_at_10mJ":0.320,"P_W_at_47mJ":1.504},
+      {"RPM":300,"P_W_at_5p8mJ":0.464,"P_W_at_10mJ":0.800,"P_W_at_47mJ":3.760},
+      {"RPM":600,"P_W_at_5p8mJ":0.928,"P_W_at_10mJ":1.600,"P_W_at_47mJ":7.520}
+    ],
+    "interpretation": "Milli-joule EPM switching is not automatically excluded by the JANUS auxiliary budget. At 300-600 RPM, an 8-event-per-rev scheme built around roughly 6-10 mJ switching events would consume only about 0.23-0.8 W average in switching itself. However, this says nothing yet about whether such a small EPM can deliver enough torque across the real gap; magnetic force/torque and switching reliability are the decisive missing measurements."
+  },
+  "AFPM_torque_screen": {
+    "formula": "tau=P/omega",
+    "cases": [
+      {"RPM":300,"tau_Nm_at_5W":0.1592,"at_10W":0.3183,"at_20W":0.6366,"at_35W":1.1141},
+      {"RPM":600,"tau_Nm_at_5W":0.0796,"at_10W":0.1592,"at_20W":0.3183,"at_35W":0.5570}
+    ],
+    "interpretation": "The current low-tens-of-watts JANUS scale corresponds to sub-Nm shaft torque at 300-600 RPM, making a small coreless AFPM starter-generator a credible baseline pending measured Axle breakaway and running torque."
+  },
+  "A_B_test": {
+    "A_coreless_AFPM": {
+      "measure": ["breakaway torque", "no-current drag", "Wh to reach target RPM", "Wh through startup hold", "motor efficiency", "generator efficiency", "inverter idle watts", "thermal rise"],
+      "pass_logic": "lowest total startup Wh and lowest steady hold watts while retaining regeneration"
+    },
+    "B_micro_EPM_gated_assist": {
+      "measure": ["E_switch per event", "field on/off ratio", "positive assist torque", "residual braking torque when OFF", "events/rev", "average switch watts", "hysteresis and heating", "switch lifetime"],
+      "pass_logic": "must reduce total battery Wh versus AFPM-only control by more than all EPM switching/driver losses and complexity penalty"
+    }
+  },
+  "selection_rule": "Start with coreless AFPM as baseline hardware/control. Add micro-EPM gated magnetic assist only if bench A/B data proves lower integrated battery energy from S0_OFF through S5_SELF_DRIVE_HOLD without increasing steady-state parasitics or reliability risk.",
+  "battery_role": {
+    "startup": "provides controlled torque and all transient auxiliaries",
+    "transition": "absorbs/returns short power deviations while gill/PEMFC states settle",
+    "steady": "surplus first restores reserve SOC",
+    "proof_rule": "external charger off and SOC_end >= SOC_start over stabilized hold"
+  },
+  "verdict": {
+    "baseline": "CORELESS_SLOTLESS_AFPM_STARTER_GENERATOR",
+    "promising_optional_branch": "MICROPULSE_EPM_GATED_ASSIST",
+    "reason": "The AFPM architecture already gives low-cogging startup and regeneration with one mature bidirectional machine; micro-EPM switching is sufficiently low-energy at small scale to deserve a bench comparison, but not enough evidence exists yet to replace AFPM as the baseline."
+  },
+  "next_gate": "R0M1A_CORELESS_AFPM_VS_MICROPULSE_EPM_BENCH_A_B"
+}
