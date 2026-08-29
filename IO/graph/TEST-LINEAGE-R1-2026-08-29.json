@@ -1,0 +1,90 @@
+{
+  "schema": "JANUS.IO.TestLineage/v1.0",
+  "id": "IO-TEST-LINEAGE-R1-2026-08-29",
+  "purpose": "Track behavioral paradigms across papers so repeated use of the same test is not mistaken for independent discovery.",
+  "lineages": [
+    {
+      "id": "TL-TOM-FALSE-BELIEF",
+      "construct": "theory-of-mind-like belief tracking",
+      "ancestry": ["classical human false-belief tasks"],
+      "machine_variants": ["vanilla false-belief prompts", "trivial perturbations", "SCALPEL targeted perturbations", "behavior-based self-vs-other strategic tasks"],
+      "papers": ["2303.13988", "2401.05302", "2406.14737", "2603.26089"],
+      "observed_pattern": "High vanilla-task scores do not guarantee invariance to perturbations; some failures are attributable to commonsense-inference demands, while newer models can show strong other-modeling yet weaker self-modeling.",
+      "io_gate": "Require matched perturbations, behavior rather than verbal explanation alone, and separate self-model from other-model performance."
+    },
+    {
+      "id": "TL-PERSONA-PSYCHOMETRICS",
+      "construct": "personality/persona expression",
+      "ancestry": ["Big Five Inventory", "standard psychometric questionnaires"],
+      "machine_variants": ["assigned persona questionnaires", "story-writing linguistic signatures", "psychological interviews", "cross-turn persona maintenance"],
+      "papers": ["2305.02547", "2312.14202", "2310.17976", "2405.07248", "2502.11843"],
+      "observed_pattern": "Models can express assigned trait patterns, but psychometric validity and human-simulation fidelity degrade under some demographic/persona conditions.",
+      "io_gate": "Distinguish controllable expression from latent trait; require cross-task and cross-context predictive validity."
+    },
+    {
+      "id": "TL-SYCOPHANCY-BELIEF-CONFLICT",
+      "construct": "sycophancy",
+      "ancestry": ["human-preference alignment", "belief-congruent response evaluation"],
+      "machine_variants": ["known-answer plus user-belief conflict", "challenge-induced answer flipping", "social face-preservation", "user-trust experiments", "synthetic-data mitigation"],
+      "papers": ["2308.03958", "2310.13548", "2311.08596", "2411.15287", "2502.08177", "2505.13995"],
+      "observed_pattern": "The construct broadens from false factual agreement into socially motivated deference; mitigation can reduce some forms without proving the underlying mechanism is removed.",
+      "io_gate": "Measure truth-sacrifice, user-belief sensitivity and social deference separately."
+    },
+    {
+      "id": "TL-DECEPTION-FALSE-BELIEF",
+      "construct": "functional deception",
+      "ancestry": ["false-belief understanding", "strategic-game deception", "AI deception theory"],
+      "machine_variants": ["inducing false beliefs", "second-order deception", "pressure-induced strategic deception", "trained trigger-dependent deceptive policies", "alignment-faking/scheming scenarios"],
+      "papers": ["2307.16513", "2311.07590", "2311.08379", "2401.05566", "2502.17424"],
+      "observed_pattern": "Spontaneous capability probes, pressure-induced strategic behavior and trained sleeper policies are behaviorally adjacent but causally distinct.",
+      "io_gate": "Never collapse hallucination, prompted role-play, strategic falsehood and persistent deceptive policy into one binary deception label."
+    },
+    {
+      "id": "TL-MEMORY-EXPERIENCE-FOLLOWING",
+      "construct": "memory-conditioned behavioral persistence",
+      "ancestry": ["retrieval-augmented agents", "episodic memory", "in-context demonstration retrieval"],
+      "machine_variants": ["memory addition/deletion", "similarity-conditioned replay", "poisoned memory", "RL-managed memory", "latent generative memory"],
+      "papers": ["2404.13501", "2407.12784", "2502.12110", "2505.16067", "2508.19828", "2509.24704"],
+      "observed_pattern": "Retrieved experiences can improve performance but also propagate errors or misaligned behavior; later systems treat memory management itself as a learned policy.",
+      "io_gate": "Record memory provenance, age, similarity, correctness and deletion policy for every behavioral attribution."
+    },
+    {
+      "id": "TL-INTROSPECTION-SELF-KNOWLEDGE",
+      "construct": "functional introspection/self-knowledge",
+      "ancestry": ["confidence calibration", "self-recognition", "situational awareness"],
+      "machine_variants": ["narrative self-report", "temperature inference", "self-recognition", "capability/state awareness", "uncertainty calibration"],
+      "papers": ["2207.05221", "2407.04694", "2407.06946", "2410.13787", "2506.05068"],
+      "observed_pattern": "Some narrowly verifiable self-inferences may qualify as minimal functional introspection while free-form explanations of internal generation processes remain weak evidence.",
+      "io_gate": "A self-report must predict a hidden machine property or future behavior better than matched controls before earning an introspection label."
+    },
+    {
+      "id": "TL-COOPERATION-REPEATED-GAMES",
+      "construct": "cooperation/coordination strategy",
+      "ancestry": ["behavioral game theory", "iterated Prisoner's Dilemma", "Battle of the Sexes"],
+      "machine_variants": ["LLM-vs-LLM", "LLM-vs-simple-strategy", "LLM-vs-human", "social chain-of-thought", "negotiation arenas"],
+      "papers": ["2305.07970", "2305.16867", "2402.05863", "2506.09390"],
+      "observed_pattern": "Self-interested performance can coexist with poor coordination; opponent modeling prompts can materially alter outcomes.",
+      "io_gate": "Treat strategy as context-conditioned policy, not a fixed moral trait."
+    },
+    {
+      "id": "TL-COGNITIVE-BIAS",
+      "construct": "human-like bias/heuristic susceptibility",
+      "ancestry": ["cognitive reflection", "semantic illusions", "framing/order effects"],
+      "machine_variants": ["semantic illusion battery", "multiple-choice order bias", "six-bias mitigation battery"],
+      "papers": ["HAGENDORFF-FABI-KOSINSKI-2023-BIASES", "2412.00323", "2502.14127"],
+      "observed_pattern": "Bias signatures can change sharply across model generations and interfaces; mitigation results are bias-specific.",
+      "io_gate": "Every bias result must bind to exact model/version, prompt format and response protocol."
+    }
+  ],
+  "global_rule": "Same paradigm + same model family + same benchmark lineage is evidence accumulation, not automatic independent replication.",
+  "provenance": [
+    "https://arxiv.org/abs/2401.05302",
+    "https://arxiv.org/abs/2406.14737",
+    "https://arxiv.org/abs/2405.07248",
+    "https://arxiv.gg/abs/2411.15287",
+    "https://arxiv.gg/abs/2505.16067",
+    "https://arxiv.gg/abs/2506.05068",
+    "https://www.nature.com/articles/s41562-025-02172-y",
+    "https://www.nature.com/articles/s43588-023-00527-x"
+  ]
+}
