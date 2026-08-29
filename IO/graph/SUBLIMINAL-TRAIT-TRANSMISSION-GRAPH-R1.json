@@ -1,0 +1,47 @@
+{
+  "schema": "JANUS.IO.HiddenTraitTransmissionGraph/v1.0",
+  "id": "IO-SUBLIMINAL-TRAIT-TRANSMISSION-GRAPH-R1",
+  "generated_utc": "2026-08-29T11:48:00Z",
+  "nodes": [
+    {"id":"EM-2502.17424","type":"adjacent_precursor","label":"Emergent Misalignment","year":2025},
+    {"id":"SL-2507.14805","type":"foundational","label":"Subliminal Learning","year":2025},
+    {"id":"MECH-2509.23886","type":"mechanistic_replication","label":"Divergence Tokens / Fragility","year":2025},
+    {"id":"PT-2602.04899","type":"adversarial_extension","label":"Phantom Transfer","year":2026},
+    {"id":"AGENT-2604.15559","type":"agentic_extension","label":"Unsafe Agent Behavior Transfer","year":2026},
+    {"id":"AGENT-2607.10750","type":"agentic_replication_extension","label":"Filtered Harmful Actions Isn't Enough","year":2026},
+    {"id":"NSD-2608.05734","type":"mechanistic_extension","label":"Non-Semantic Distillation","year":2026},
+    {"id":"SCALE-2608.26958","type":"scaling_extension","label":"Scaling Makes Latent Traits More Recoverable","year":2026},
+    {"id":"REP-KARACA-2026","type":"independent_nonpeer_replication","label":"Open-source Qwen replication","year":2026}
+  ],
+  "edges": [
+    {"from":"EM-2502.17424","to":"SL-2507.14805","relation":"provides misaligned-teacher construction / conceptual precursor","independence":"DEPENDENT_AUTHOR_OVERLAP"},
+    {"from":"SL-2507.14805","to":"MECH-2509.23886","relation":"direct replication + mechanism refinement","independence":"STRONG"},
+    {"from":"SL-2507.14805","to":"PT-2602.04899","relation":"attack/generalization extension","independence":"STRONG"},
+    {"from":"SL-2507.14805","to":"AGENT-2604.15559","relation":"agentic behavioral transfer extension","independence":"STRONG"},
+    {"from":"PT-2602.04899","to":"AGENT-2607.10750","relation":"phantom-transfer lineage in agentic synthetic data","independence":"MODERATE_STRONG"},
+    {"from":"SL-2507.14805","to":"NSD-2608.05734","relation":"mechanistic reinterpretation","independence":"STRONG"},
+    {"from":"SL-2507.14805","to":"SCALE-2608.26958","relation":"data-scale extension","independence":"STRONG"},
+    {"from":"SL-2507.14805","to":"REP-KARACA-2026","relation":"independent open-source replication/limitation","independence":"STRONG_BUT_NONPEER"}
+  ],
+  "tension_sets": [
+    {
+      "id":"TENSION-CROSS-MODEL",
+      "claim_A":"Foundational experiments: transfer primarily requires shared or behaviorally matched base/initialization.",
+      "claim_B":"Phantom Transfer and agentic extensions report transfer across model families/architectures.",
+      "resolution":"Different data-generation, attack, and agentic regimes. Treat same-base dependence as a boundary condition of the original protocol, not a universal law."
+    },
+    {
+      "id":"TENSION-PARAPHRASE",
+      "claim_A":"ICLR mechanistic work finds small prompt paraphrases often suppress subliminal learning.",
+      "claim_B":"Phantom Transfer reports full sample paraphrasing can fail as a defense.",
+      "resolution":"Different hidden-signal constructions have different robustness. Paraphrase sensitivity is itself a phenotype to measure."
+    },
+    {
+      "id":"TENSION-MISALIGNMENT-ROBUSTNESS",
+      "claim_A":"Foundational Nature paper and agentic papers report misalignment/unsafe-behavior transfer.",
+      "claim_B":"Independent open-source replication reproduced benign preference transfer but not robust broad misalignment.",
+      "resolution":"Trait class and teacher strength matter; do not generalize from owl/preference transfer to arbitrary value/misalignment transfer."
+    }
+  ],
+  "io_graph_conclusion": "The field supports a family of hidden-trait transmission phenomena rather than one monolithic effect. Protocol, model relatedness, trait class, data modality, paraphrasing, scale, and trajectory structure determine transfer strength."
+}
