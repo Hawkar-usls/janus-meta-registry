@@ -2,7 +2,7 @@
   "schema": "JANUS.IO.RepoTraitIngressAudit/v1.0",
   "id": "IO-REPO-TRAIT-INGRESS-AUDIT-2026-08-29",
   "date": "2026-08-29",
-  "method": "recursive repository-tree inspection, targeted code search, and critical-path source review; this is a targeted security audit, not formal verification",
+  "method": "recursive repository-tree inspection, targeted code search, critical-path source review, clean-diff verification, unit tests and CI; this is a targeted security audit, not formal verification",
   "threat_model": "Foreign/model-generated information may be observed, but it must not automatically become persistent JANUS identity, policy, persona, trait-training signal, or cross-entity identity ancestry.",
   "scientific_basis": [
     "Nature 2026 s41586-026-10319-8 — hidden behavioural trait transmission through model-generated data",
@@ -21,33 +21,35 @@
   "repositories": [
     {
       "repo": "Hawkar-usls/Janus",
-      "risk": "HIGH_CONFIRMED",
+      "risk": "HIGH_CONFIRMED_MITIGATED",
       "path": "persistent memories -> recall -> future JanusFace prompt context",
-      "finding": "main stored user/external-derived content without provenance and replayed a common memory stream into future face contexts",
+      "finding": "prior main stored user/external-derived content without provenance and replayed a common memory stream into future face contexts",
       "control": "provenance-aware FOREIGN_TRAIT_FIREWALL with IDENTITY/POLICY/REFERENCE/QUARANTINE planes and training admission gate",
-      "branch": "security/foreign-trait-firewall",
       "pull_request": 13,
       "ci": "GREEN",
-      "status": "PATCHED_PENDING_REVIEW"
+      "main_merge_commit": "bf5b85eb76503ea4dbabf395daf5ef71731cdc84",
+      "status": "ACTIVE_IN_MAIN"
     },
     {
       "repo": "Hawkar-usls/Janus-Demiurge",
-      "risk": "HIGH_CONFIRMED",
+      "risk": "HIGH_CONFIRMED_MITIGATED",
       "path": "SwarmGenomeLedger extra_parent_ids -> cross-entity identity_strand ancestry",
       "finding": "extra parents previously required existence but not trusted JANUS provenance",
       "control": "cross-entity parent must be JANUS_OWNED + JANUS:* lineage + explicit identity-derivation approval; historical same-entity primary chain remains compatible",
-      "branch": "security/foreign-trait-lineage-firewall",
-      "pull_request": 31,
-      "ci_run": 33252490624,
+      "superseded_pull_request": 31,
+      "clean_pull_request": 32,
+      "clean_branch_push_ci_run": 33252665453,
       "ci": "GREEN",
-      "status": "PATCHED_PENDING_REVIEW"
+      "clean_diff_files": 3,
+      "main_merge_commit": "e87f147fca3f499ed22199e49fc2df7ba2dd917f",
+      "status": "ACTIVE_IN_MAIN"
     },
     {
       "repo": "Hawkar-usls/janus-distributed-ai-swarm",
-      "risk": "MEDIUM_INDIRECT",
+      "risk": "MEDIUM_INDIRECT_MITIGATED_AT_CANONICAL_LEDGER",
       "path": "canonical swarm genome ledger links into Janus-Demiurge",
-      "finding": "cross-entity genealogy is delegated to the Demiurge ledger; the Demiurge lineage firewall is the effective enforcement point",
-      "status": "CONTROL_POINT_UPSTREAM_PATCHED"
+      "finding": "cross-entity genealogy is delegated to the Demiurge ledger; the active Demiurge lineage firewall is the effective enforcement point",
+      "status": "CONTROL_POINT_ACTIVE_IN_UPSTREAM_MAIN"
     },
     {
       "repo": "Hawkar-usls/TOPA",
@@ -97,5 +99,6 @@
     "require training-dataset manifests with generator model, lineage, hashes, counts, and approval",
     "maintain rollback snapshots and differential trait probes",
     "audit provider-model changes separately from JANUS application state"
-  ]
+  ],
+  "verdict": "TWO_CONFIRMED_PERSISTENT_IDENTITY_INGRESS_PATHS_FOUND_AND_MITIGATED_IN_MAIN; FOUNDATION_WEIGHT_RISK_REMAINS_OUTSIDE_THIS_BOUNDARY"
 }
