@@ -1,0 +1,66 @@
+{
+  "artifact_uuid": "JANUS-ENGINE-TOPA-SPIDER-AXLE-MAGNETIC-DRIVE-RUN-004-v1.1",
+  "timestamp": "2026-08-30T02:37:00+03:00",
+  "version": "v1.1",
+  "title": "JANUS Engine — TOPA + Spider refined magnetic Axle drive selection",
+  "observer": "Hawkar / JANUS",
+  "node_type": "research_crawl_and_architecture_selection",
+  "repository": "Hawkar-usls/janus-meta-registry",
+  "git_branch": "research/janus-engine",
+  "status": "PASS_BASELINE_SELECTED_EPM_MICROPULSE_BRANCH_REOPENED",
+  "supersedes": "projects/janus-engine/research/TOPA-SPIDER-AXLE-MAGNETIC-DRIVE-RUN-004-v1.0.json",
+  "mission": "Choose the magnetic architecture that most directly simplifies JANUS startup while preserving a low parasitic budget and bidirectional battery/regeneration capability.",
+  "topa_spider_findings": {
+    "coreless_AFPM": {
+      "result": "strongest baseline",
+      "evidence": "2024-2025 reviews of coreless/slotless axial-flux PM machines report very low rotational loss, absence or strong suppression of slot-effect cogging, minimal torque ripple and suitability for bidirectional motor/generator service.",
+      "references": [
+        "Ain Shams Engineering Journal 2024, DOI 10.1016/j.asej.2024.103091",
+        "IEEE Transactions on Transportation Electrification 2025, DOI 10.1109/TTE.2025.3576361",
+        "Energies 2024, DOI 10.3390/en17051089",
+        "IET Electric Power Applications 2022, DOI 10.1049/elp2.12218"
+      ]
+    },
+    "electropermanent_magnets": {
+      "result": "reopened as a small-scale experimental branch rather than rejected categorically",
+      "evidence": [
+        "A microfluidic EPM experiment switched with about 5.8 mJ per 50 us pulse and required no static power after switching.",
+        "A 2024 EPM soft-robot valve reported about 47 mJ per reliable 500 us switching event and zero holding power between events.",
+        "A machine-scale variable-flux memory motor experiment reported re/de-magnetization losses in the tens of joules, demonstrating that pulse cost scales strongly with magnetic volume/topology and cannot be assumed negligible."
+      ],
+      "references": [
+        "Electropermanent magnet actuation for droplet ferromicrofluidics, 2016",
+        "Communications Engineering 2024, electropermanent magnet valve",
+        "Transactions of China Electrotechnical Society 2023, VFMM pulse-trajectory losses"
+      ],
+      "boundary": "EPM pole-by-pole switching is viable for JANUS only if a small custom pole can generate the required torque across the actual air gap while keeping total switching energy within the measured auxiliary budget."
+    },
+    "active_torque_compensation": {
+      "result": "valid secondary control",
+      "evidence": "Position-synchronous harmonic current injection is an established method to cancel cogging/torque ripple, but all coil and inverter losses must be counted."
+    },
+    "battery_hybridization": {
+      "result": "directly supports the selected architecture",
+      "evidence": "Modern PEMFC-battery hybrid work uses the battery as transient/startup buffer while the fuel cell supplies sustained power; bidirectional power electronics allow surplus/regeneration to restore SOC."
+    }
+  },
+  "refined_decision": {
+    "baseline": "M5_CORELESS_SLOTLESS_AFPM_STARTER_GENERATOR",
+    "reason": "It avoids intentionally creating a magnetic braking barrier and then paying to cancel it. The same compact machine starts the Axle from the battery, holds RPM, and regenerates when a real hydraulic/mechanical source drives the rotor.",
+    "experimental_branch": "M6_MICROPULSE_EPM_GATED_PM_ASSIST",
+    "reason_for_reopening": "Small EPMs have demonstrated milli-joule switching, which can fit JANUS single-digit-watt budgets at moderate RPM if the required field/torque is achievable at that scale.",
+    "do_not_use_as_default": "machine-scale repeated magnetization-state switching until measured pulse energy, air-gap force and thermal behavior prove it beats the coreless AFPM baseline"
+  },
+  "battery_startup_synergy": {
+    "sequence": [
+      "EXTERNAL_CHARGE: battery charged from outside before startup",
+      "SPINUP: battery drives coreless AFPM starter-generator and water/gas auxiliaries",
+      "GILL_GRADIENT_BUILD: battery carries transient deficit while internal pO2 and membrane flux converge",
+      "LOAD_TRANSFER: PEMFC progressively takes the DC-bus load",
+      "SOC_RECOVERY: first positive surplus recharges the battery to reserve setpoint",
+      "EXPORT: only surplus above internal loads and reserve-recovery demand is exported"
+    ],
+    "self_drive_rule": "With external charger disconnected, stabilized SOC must be non-decreasing over the declared hold interval after all magnetic-drive, pump, fan and controller losses are included."
+  },
+  "next_gate": "R0M1A_CORELESS_AFPM_VS_MICROPULSE_EPM_BENCH_A_B"
+}
