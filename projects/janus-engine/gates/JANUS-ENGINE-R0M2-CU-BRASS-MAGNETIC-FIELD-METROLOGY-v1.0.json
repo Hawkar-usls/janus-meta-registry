@@ -1,0 +1,63 @@
+{
+  "artifact_uuid": "JANUS-ENGINE-R0M2-CU-BRASS-MAGNETIC-FIELD-METROLOGY-v1.0",
+  "timestamp": "2026-08-30T02:37:00+03:00",
+  "version": "v1.0",
+  "title": "JANUS Engine R0M2 — Cu/Brass Axle magnetic-field metrology gate",
+  "observer": "Hawkar / JANUS",
+  "node_type": "experimental_metrology_gate",
+  "repository": "Hawkar-usls/janus-meta-registry",
+  "git_branch": "research/janus-engine",
+  "parent": "projects/janus-engine/research/TOPA-SPIDER-AXLE-MAGNETIC-FIELD-RUN-005-v1.0.json",
+  "status": "OPEN_MEASUREMENT_REQUIRED",
+  "purpose": "Measure the complete magnetic signature of the rotating Axle and quantify how copper versus brass structural conductors alter field distribution, eddy drag, heat and magnetic-drive efficiency.",
+  "frozen_questions": [
+    "What are Bx, By, Bz and |B| at the AFPM gap, chamber wall, POMS boundary and outside housing at each operating RPM?",
+    "How much of the rotating field is static PM field versus current-driven stator field versus induced eddy-current reaction field?",
+    "Does copper increase drag/heating enough to disqualify it as the structural Axle material compared with brass?",
+    "Do EPM switching pulses create unacceptable dB/dt, eddy heating or EMI in the conductive Axle/chamber?",
+    "Is stray field low enough for nearby sensors, control electronics and PEMFC instrumentation?"
+  ],
+  "test_matrix": {
+    "materials": ["nonconductive/low-conductivity reference if mechanically feasible", "copper representative sleeve/body", "brass representative sleeve/body"],
+    "RPM": [0,60,120,300,600],
+    "magnetic_states": ["PM_STATIC", "PASSIVE_SPIN_COILS_OFF", "AFPM_MOTOR", "AFPM_GENERATOR", "OPTIONAL_EPM_ASSIST"],
+    "repeat_rule": "same geometry, same air gap, same magnet set, same probe positions, same temperature window"
+  },
+  "synchronized_channels": [
+    "encoder angle/index",
+    "3-axis magnetic flux density",
+    "high-speed switching-field pickup for EPM/transients",
+    "phase/DC current and voltage",
+    "Axle torque / drive power",
+    "Axle and chamber temperature",
+    "RPM"
+  ],
+  "derived_metrics": [
+    "B_peak(theta) and B_RMS",
+    "fundamental and harmonic spectrum",
+    "field phase shift / attenuation between material cases",
+    "incremental no-current drag torque",
+    "incremental drive watts at equal RPM",
+    "eddy-heating temperature rise",
+    "stray-field decay versus radius",
+    "energy per EPM pulse and associated field transient"
+  ],
+  "material_decision_logic": {
+    "brass_preference_condition": "Prefer a corrosion-qualified brass/DZR-brass-class structural solution if it materially reduces eddy drag/heating versus copper without unacceptable corrosion, strength or wear penalty.",
+    "copper_preference_condition": "Use copper structurally only if measured electromagnetic penalty is negligible or if its thermal/electrical advantage provides a larger independently measured system benefit.",
+    "segmentation_option": "If either conductor shows excessive closed-loop eddy current, test geometric/electrical segmentation to interrupt circulating-current paths before abandoning the material."
+  },
+  "pass_criteria": {
+    "no_unbudgeted_field": "all measured magnetic-drive and eddy-current watts are included in the JANUS auxiliary budget",
+    "thermal": "no progressive temperature rise inconsistent with the declared steady-state thermal sink",
+    "field_stability": "field waveform and phase are repeatable at fixed RPM/current within declared uncertainty",
+    "material": "selected Axle material passes electromagnetic plus water-chemistry/corrosion/mechanical criteria",
+    "self_drive_boundary": "magnetic losses are charged before any battery-neutral or surplus-generation claim"
+  },
+  "explicit_nonclaims": [
+    "No numerical tesla value is claimed before the magnet geometry/grade, pole count, air gap and current are frozen or measured.",
+    "Skin-depth calculations are screening calculations, not a substitute for FEA or hardware measurement.",
+    "Copper/brass conductivity alone does not determine total eddy-current loss."
+  ],
+  "next_gate_after_pass": "R0M3_FIELD_AWARE_AFPM_EPM_CONTROL: use measured B(theta,t), torque and loss maps to optimize commutation, EPM timing and battery startup energy."
+}
