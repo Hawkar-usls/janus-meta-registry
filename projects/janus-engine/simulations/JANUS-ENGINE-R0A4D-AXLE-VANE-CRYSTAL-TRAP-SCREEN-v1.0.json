@@ -1,0 +1,158 @@
+{
+  "artifact_uuid": "JANUS-ENGINE-R0A4D-AXLE-VANE-CRYSTAL-TRAP-SCREEN-v1.0",
+  "timestamp": "2026-08-30T01:31:00+03:00",
+  "version": "v1.0",
+  "title": "JANUS Engine R0A4D — Axle vane energy audit + crystal-trap/self-cleaning screen",
+  "observer": "Hawkar / JANUS",
+  "node_type": "hydrodynamic_energy_and_scale_management_simulation",
+  "branch_name": "Janus Engine",
+  "branch_id": "JANUS_ENGINE",
+  "git_branch": "research/janus-engine",
+  "status": "MODEL_PASS_FOR_CRYSTAL_TRAP_ARCHITECTURE_VANE_POWER_RECOVERY_CONDITIONAL",
+  "parents": [
+    "projects/janus-engine/research/TOPA-SPIDER-CALCIFER-ANTISCALANT-RUN-003-v1.0.json",
+    "projects/janus-engine/gates/JANUS-ENGINE-R0A2-POMS-MEMBRANE-STARTUP-v1.0.json",
+    "projects/janus-engine/simulations/JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-005-POMS-STARTUP-v1.0.json"
+  ],
+  "user_design_hypothesis": {
+    "axle_role": "The already-rotating Axle should remain the primary mechanical anti-scale actor; when fragile fresh CaCO3 begins to form on the chamber wall, near-wall Axle edges/wipers disrupt it before a thick rigid shell develops.",
+    "vane_role": "Integrated fins/vanes are secondary: primarily flow-conditioning and anti-scale geometry; any useful shaft-power recovery is accepted only if numbers show a net benefit.",
+    "crystal_trap_role": "Crystal traps reduce the rate at which calcium reaches/attaches to the Axle chamber surfaces and collect removable CaCO3-rich solids in washable service chambers.",
+    "maintenance_goal": "Shift calcium from adherent wall scale into removable solid product while keeping Axle torque, gill flux and pressure drop stable."
+  },
+  "hydraulic_energy_model": {
+    "equations": {
+      "hydraulic_power_removed_by_vane": "P_h = DeltaP_vane * Q",
+      "shaft_power_recovered": "P_recovered = eta_vane * DeltaP_vane * Q",
+      "extra_pump_power_if_pump_driven": "P_pump_extra = DeltaP_vane * Q / eta_pump",
+      "net_local_effect_if_same_pump_drives_flow": "DeltaP_net = P_recovered - P_pump_extra"
+    },
+    "pump_efficiency_screen": 0.70,
+    "vane_efficiency_screen": [0.30, 0.50, 0.70],
+    "POMS_R0A2_water_flow_L_s": [3.380, 4.688, 5.989],
+    "incremental_vane_pressure_drop_Pa": [50, 100, 250, 500, 1000, 2000],
+    "hard_result": "For a pump-driven closed loop, a vane cannot create a positive local energy gain from the same pressure drop it causes. With real pump and vane efficiencies below unity, P_recovered < P_pump_extra for all screened points. Therefore vane geometry is admitted primarily for scraping/mixing/flow distribution unless it harvests energy from an external water current or from hydraulic head that would otherwise be dissipated.",
+    "representative_midflow_Q_4p688_L_s_eta_vane_0p5": [
+      {"DeltaP_vane_Pa": 50, "P_recovered_W": 0.1172, "extra_pump_W": 0.3349, "net_if_pump_driven_W": -0.2177},
+      {"DeltaP_vane_Pa": 100, "P_recovered_W": 0.2344, "extra_pump_W": 0.6697, "net_if_pump_driven_W": -0.4353},
+      {"DeltaP_vane_Pa": 250, "P_recovered_W": 0.5860, "extra_pump_W": 1.6743, "net_if_pump_driven_W": -1.0883},
+      {"DeltaP_vane_Pa": 500, "P_recovered_W": 1.1720, "extra_pump_W": 3.3486, "net_if_pump_driven_W": -2.1766},
+      {"DeltaP_vane_Pa": 1000, "P_recovered_W": 2.3440, "extra_pump_W": 6.6971, "net_if_pump_driven_W": -4.3531},
+      {"DeltaP_vane_Pa": 2000, "P_recovered_W": 4.6880, "extra_pump_W": 13.3943, "net_if_pump_driven_W": -8.7063}
+    ],
+    "external_current_case": {
+      "rule": "If the water current is externally supplied by the environment, P_recovered = eta_vane * DeltaP_vane * Q may legitimately reduce Axle drive load, but the same extraction appears as additional hydrodynamic drag on the vehicle/structure and must be charged to the external-flow energy budget.",
+      "representative_midflow_eta_0p5": [
+        {"DeltaP_equivalent_Pa": 100, "recoverable_shaft_W": 0.2344},
+        {"DeltaP_equivalent_Pa": 250, "recoverable_shaft_W": 0.5860},
+        {"DeltaP_equivalent_Pa": 500, "recoverable_shaft_W": 1.1720},
+        {"DeltaP_equivalent_Pa": 1000, "recoverable_shaft_W": 2.3440},
+        {"DeltaP_equivalent_Pa": 2000, "recoverable_shaft_W": 4.6880}
+      ]
+    },
+    "torque_example_at_600rpm_Q4p688_eta0p5": [
+      {"DeltaP_Pa": 100, "recovered_torque_Nm": 0.00373},
+      {"DeltaP_Pa": 250, "recovered_torque_Nm": 0.00933},
+      {"DeltaP_Pa": 500, "recovered_torque_Nm": 0.01865},
+      {"DeltaP_Pa": 1000, "recovered_torque_Nm": 0.03731},
+      {"DeltaP_Pa": 2000, "recovered_torque_Nm": 0.07461}
+    ],
+    "design_decision": "Do not shape the anti-scale vane to maximize turbine loading in the pump-driven Mode A loop. Minimize its incremental DeltaP while preserving wall-shear, circulation and crystal transport. Treat any recovered torque as a measured bonus."
+  },
+  "crystal_trap_mass_partition_screen": {
+    "purpose": "Test the architecture without pretending that unmeasured JANUS precipitation kinetics are known.",
+    "normalized_basis": "Let M_precipitable = 1.0 be whatever CaCO3 mass actually precipitates during a test interval. The model only partitions that measured mass; it does not predict how much precipitates.",
+    "equations": {
+      "direct_trap_capture": "M_trap_direct = eta_trap * M_precipitable",
+      "residual_after_trap": "M_residual = (1 - eta_trap) * M_precipitable",
+      "scraped_from_residual": "M_scraped = eta_scraper * M_residual",
+      "wall_remaining": "M_wall = (1 - eta_scraper) * M_residual",
+      "filter_capture_of_scraped": "M_filter_scraped = eta_filter * M_scraped",
+      "recirculating_fines": "M_fines = (1 - eta_filter) * M_scraped"
+    },
+    "washable_filter_capture_screen": 0.90,
+    "selected_sensitivity_cases": [
+      {"eta_trap": 0.00, "eta_scraper": 0.50, "captured_fraction": 0.4500, "wall_fraction": 0.5000, "recirculating_fines_fraction": 0.0500},
+      {"eta_trap": 0.50, "eta_scraper": 0.50, "captured_fraction": 0.7250, "wall_fraction": 0.2500, "recirculating_fines_fraction": 0.0250},
+      {"eta_trap": 0.80, "eta_scraper": 0.50, "captured_fraction": 0.8900, "wall_fraction": 0.1000, "recirculating_fines_fraction": 0.0100},
+      {"eta_trap": 0.80, "eta_scraper": 0.70, "captured_fraction": 0.9260, "wall_fraction": 0.0600, "recirculating_fines_fraction": 0.0140},
+      {"eta_trap": 0.95, "eta_scraper": 0.50, "captured_fraction": 0.9725, "wall_fraction": 0.0250, "recirculating_fines_fraction": 0.0025},
+      {"eta_trap": 0.95, "eta_scraper": 0.70, "captured_fraction": 0.9815, "wall_fraction": 0.0150, "recirculating_fines_fraction": 0.0035}
+    ],
+    "interpretation": "The combined architecture is multiplicative: even a moderate scraper becomes much more effective once crystal traps remove most precipitating solids before they can become adherent wall scale. These percentages are sensitivity parameters, not measured JANUS efficiencies."
+  },
+  "factorial_experimental_test": {
+    "goal": "Separate the actual contribution of rotation/scraping from the actual contribution of crystal traps.",
+    "arms": [
+      "A0: no trap + stationary Axle control",
+      "A1: crystal trap only + stationary Axle",
+      "A2: rotating Axle/wiper only + trap bypassed",
+      "A3: rotating Axle/wiper + crystal trap"
+    ],
+    "repeat_under": [
+      "DI/distilled initial-fill baseline",
+      "moderate-hardness stress water",
+      "hard-water stress water",
+      "candidate antiscalant arms only after POMS/material compatibility passes"
+    ],
+    "measurements": [
+      "total CaCO3 mass formed or precipitable balance during the interval",
+      "wall/coupon CaCO3 mass per area",
+      "crystal-trap and washable-filter mass gain",
+      "particle size distribution in trap and circulating water",
+      "Axle torque versus time",
+      "incremental vane/wiper DeltaP",
+      "pump electrical power",
+      "Axle drive power",
+      "POMS J_O2 before/during/after test",
+      "pH, conductivity, calcium hardness and alkalinity",
+      "filter differential pressure"
+    ],
+    "success_definition": "A3 must reduce wall deposition relative to A0/A1/A2 while keeping added hydraulic + mechanical power inside the Mode A auxiliary budget and without measurable POMS oxygen-flux degradation."
+  },
+  "near_wall_axle_design": {
+    "concept": "Axle ring runs very near the chamber wall so existing rotation repeatedly encounters fresh fragile scale and prevents thick-shell maturation.",
+    "preferred_implementation": "small controlled clearance plus replaceable compliant/sacrificial wiper edge; hard continuous metal-on-wall contact remains a test-only hypothesis rather than the baseline.",
+    "why": [
+      "fresh CaCO3 can be brittle/easier to detach than mature scale",
+      "crystal traps reduce the frequency and thickness of deposits the Axle must encounter",
+      "compliant edge tolerates thermal/runout variation better than rigid rubbing contact",
+      "replaceable edge limits wear debris and protects chamber surface"
+    ],
+    "failure_signals": [
+      "rising Axle torque",
+      "rising vibration",
+      "metal/wiper debris in filter",
+      "local wall scoring",
+      "rising DeltaP",
+      "falling J_O2"
+    ]
+  },
+  "existing_operational_invariants_carried_forward": {
+    "purge_interval_minutes": 30,
+    "maximum_requested_system_pressure_drop_during_purge_atm": 2.0,
+    "initial_fill_preference": "distilled/DI or otherwise low-hardness water",
+    "hard_water_policy": "avoid hard-water make-up where practical",
+    "condensate_policy": "clean condensate may be returned only after contamination class is known; compressor condensate is not automatically admitted to the Axle water loop",
+    "nitrogen_policy": "N2 purge/condensate-return duty must be mass- and pressure-balanced and should not unnecessarily strip CO2 from the water if that would increase CaCO3 precipitation tendency"
+  },
+  "CaCO3_product_boundary": {
+    "output_name": "captured CaCO3-rich mineral solid",
+    "note": "Do not call the product construction-grade limestone until composition, moisture, contaminants, particle morphology and mechanical/use-specific specifications are measured.",
+    "possible_later_uses": [
+      "mineral filler",
+      "cement/lime composite feedstock after qualification",
+      "pelletized calcite-rich material",
+      "process calibration by weighing recovered solids"
+    ]
+  },
+  "test_verdict": {
+    "crystal_trap_plus_rotating_axle": "STRONGLY_SUPPORTED_AS_TESTABLE_ARCHITECTURE",
+    "vane_as_pump_driven_energy_recovery": "NEGATIVE_IN_FIRST_PRINCIPLES_LOCAL_ENERGY_AUDIT",
+    "vane_as_external_flow_energy_harvester": "POSSIBLE_BUT_MUST_CHARGE_EXTERNAL_DRAG",
+    "vane_as_scale_prevention_and_flow_conditioner": "RETAIN_AS_PRIMARY_ROLE",
+    "rigid_lathe_contact": "NOT_ADMITTED_AS_BASELINE_BEFORE_WEAR_CLEARANCE_TEST",
+    "main_next_unknown": "Measured eta_trap, wall-removal rate, incremental DeltaP, Axle torque and J_O2 drift under real water chemistry."
+  },
+  "next_gate": "R0A4E_CALCIFER_FACTORIAL_LONG_HOLD: run A0/A1/A2/A3 for long enough to observe measurable scale, using weighed wall coupons and traps, while logging torque, DeltaP, pump/drive watts and POMS oxygen flux. Use measured trap/scraper efficiencies to replace the normalized sensitivity model."
+}
