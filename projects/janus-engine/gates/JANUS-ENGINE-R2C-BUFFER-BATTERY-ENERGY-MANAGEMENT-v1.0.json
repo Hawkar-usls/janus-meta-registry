@@ -1,0 +1,122 @@
+{
+  "artifact_uuid": "JANUS-ENGINE-R2C-BUFFER-BATTERY-ENERGY-MANAGEMENT-v1.0",
+  "timestamp": "2026-08-30T02:37:00+03:00",
+  "version": "v1.0",
+  "title": "JANUS Engine R2C — externally precharged startup battery, transient buffer and surplus-energy accumulator",
+  "observer": "Hawkar / JANUS",
+  "node_type": "hybrid_energy_management_gate",
+  "branch_name": "Janus Engine",
+  "branch_id": "JANUS_ENGINE",
+  "git_branch": "research/janus-engine",
+  "status": "ARCHITECTURE_ACCEPTED_CAPACITY_PENDING_MEASURED_STARTUP_AND_PARASITICS",
+  "purpose": "Give JANUS a physically honest startup-energy reservoir and transient buffer: charge externally before first start, power auxiliaries while the gill/PEMFC and optional VRU/AKS subsystems converge, then recharge from measured surplus after self-drive is reached.",
+  "architecture": {
+    "energy_sources_and_sinks": [
+      "external charger before startup",
+      "PEMFC or later central core after flux lock",
+      "battery bidirectional DC bus",
+      "pumps/fans/controls/valves/startup loads",
+      "optional user/export load only after reserve conditions are satisfied"
+    ],
+    "battery_roles": [
+      "STARTUP_RESERVOIR",
+      "TRANSIENT_POWER_BUFFER",
+      "LOAD_TRANSFER_BRIDGE",
+      "SURPLUS_ENERGY_ACCUMULATOR",
+      "SAFE_SHUTDOWN_RESERVE"
+    ],
+    "important_boundary": "The battery is storage, not a primary energy source. Energy charged externally must never be counted as generated JANUS energy."
+  },
+  "state_machine": [
+    {"state": "B0_EXTERNAL_CHARGE", "criterion": "startup SoC target reached from external source"},
+    {"state": "B1_STARTUP_DISCHARGE", "criterion": "battery powers prime, pO2 drawdown, pumps, fan and controls while the membrane/core are not yet self-supporting"},
+    {"state": "B2_LOAD_TRANSFER", "criterion": "PEMFC/core increasingly carries auxiliaries while battery fills transient deficits"},
+    {"state": "B3_SELF_DRIVE_HOLD", "criterion": "external input is zero and the battery energy state is non-decreasing over a declared stabilized observation window while all active auxiliaries are supplied"},
+    {"state": "B4_SURPLUS_RECHARGE", "criterion": "measured generation exceeds auxiliaries and reserve SoC is restored"},
+    {"state": "B5_FLOAT_AND_EXPORT", "criterion": "reserve SoC is satisfied; only then may persistent surplus be exported to useful load"},
+    {"state": "B6_SAFE_SHUTDOWN", "criterion": "battery retains enough energy for valves, logging, purge/condensate management and controlled stop if generation collapses"}
+  ],
+  "energy_accounting": {
+    "bus_balance": "P_net_bus = P_core + P_battery_discharge - P_aux - P_user_load - P_battery_charge",
+    "battery_energy_update": "dE_bat/dt = eta_charge * max(P_core - P_aux - P_user_load, 0) - max(P_aux + P_user_load - P_core, 0) / eta_discharge",
+    "startup_energy": "E_start_required = integral(P_deficit(t) dt) / eta_discharge",
+    "self_drive_definition": "After STARTUP and LOAD_TRANSFER, with external charger disconnected, average useful generation must cover auxiliaries and battery SoC must not exhibit a continuing downward trend over the declared hold interval.",
+    "anti_self_deception_rule": "A run that merely drains a previously externally charged battery is STARTUP_SUPPORTED, not SELF_DRIVE."
+  },
+  "mode_A_screening_capacity": {
+    "basis": "RUN-005 indicated that direct-gill/PEMFC gradient establishment can range from tens of minutes to hours depending on oxygen consumption and transport. The first demonstrator targets single-digit to low-tens-of-watts auxiliaries.",
+    "ideal_energy_examples": [
+      {"auxiliary_deficit_W": 5, "duration_h": 0.57, "ideal_Wh": 2.85},
+      {"auxiliary_deficit_W": 10, "duration_h": 0.57, "ideal_Wh": 5.7},
+      {"auxiliary_deficit_W": 5, "duration_h": 4.5, "ideal_Wh": 22.5},
+      {"auxiliary_deficit_W": 10, "duration_h": 4.5, "ideal_Wh": 45.0},
+      {"auxiliary_deficit_W": 20, "duration_h": 4.5, "ideal_Wh": 90.0}
+    ],
+    "screening_conclusion": "A roughly 50-100 Wh class buffer is a plausible laboratory screening envelope for the first low-power Mode A demonstrator, but final capacity must be selected only after measured startup duration, bus voltage, peak current, battery temperature and reserve requirements are known.",
+    "boundary": "This is not a final battery specification and no cell chemistry is frozen here."
+  },
+  "mode_B_long_start_boundary": {
+    "principle": "For the integrated VRU/AKS mode, startup may be much longer because sorbent and thermal inventories must stabilize. Capacity scales directly with measured startup deficit and time: E_Wh approximately equals average deficit_W times startup_hours before efficiency/reserve margins.",
+    "legacy_context": "Historical one-to-four-day startup experience is retained only as a plant-specific reference and must not be assigned to JANUS before measurement.",
+    "design_consequence": "Do not size the Mode B battery by analogy alone; first reduce startup parasitics and identify which loads genuinely need continuous support."
+  },
+  "surplus_capture_logic": {
+    "priority_order": [
+      "maintain active auxiliaries",
+      "restore minimum safe battery reserve",
+      "restore normal target SoC",
+      "only then export persistent surplus to external load"
+    ],
+    "reason": "This prevents a momentary positive-power spike from being mistaken for sustained net generation and gives the machine restart/shutdown resilience."
+  },
+  "transient_control": {
+    "battery": "hours/minutes-scale energy buffer and startup reservoir",
+    "optional_supercapacitor": "future seconds/sub-seconds transient buffer if pump/fan/valve current spikes prove material; not required until measured",
+    "fuel_cell_precedent": "Published PEMFC hybrid generators commonly use a battery on a bidirectional power-conditioning bus to absorb/supply transient power while the fuel cell carries the slower average load."
+  },
+  "test_protocol": {
+    "required_logs": [
+      "battery SoC and terminal voltage",
+      "battery charge/discharge W and cumulative Wh",
+      "PEMFC/core W",
+      "pump/fan/control W separately",
+      "external charger state",
+      "pO2 internal",
+      "J_O2 and O2 mass balance",
+      "temperature and humidity",
+      "time of FLUX_LOCK and LOAD_TRANSFER"
+    ],
+    "three_verdicts": {
+      "STARTUP_SUPPORTED": "system runs while battery energy is declining",
+      "BATTERY_NEUTRAL_SELF_DRIVE": "after stabilization external input is zero and battery SoC is stable over the hold window while auxiliaries are supplied",
+      "SURPLUS_GENERATION": "battery target SoC is maintained/restored and persistent additional energy is available to an external load"
+    }
+  },
+  "literature_anchors": [
+    {
+      "reference": "International Journal of Hydrogen Energy 38 (2013) 3727-3740, DOI 10.1016/j.ijhydene.2013.01.085",
+      "finding": "experimental PEM fuel-cell generator hybridized with lithium-ion battery and bidirectional power conditioning to manage fast load dynamics"
+    },
+    {
+      "reference": "Energy Conversion and Management: X (2025) fuel-cell hybrid energy management study",
+      "finding": "battery/supercapacitor buffers handle transients and regenerative/surplus energy while fuel cell carries average power"
+    },
+    {
+      "reference": "Fuel Cells 2026 modular yacht hybrid validation, DOI 10.1002/fuce.70147",
+      "finding": "battery buffering experimentally stabilizes fuel-cell power systems under dynamic loads and can absorb surplus transient power"
+    }
+  ],
+  "hard_invariants": [
+    "EXTERNALLY_CHARGED_STARTUP_ENERGY_IS_NEVER_COUNTED_AS_JANUS_GENERATION",
+    "SELF_DRIVE_REQUIRES_NONDECREASING_BATTERY_ENERGY_AFTER_STABILIZATION_WITH_EXTERNAL_CHARGER_OFF",
+    "BATTERY_CHARGE_POWER_IS_A_REAL_LOAD_ON_GENERATION",
+    "EXPORT_LOAD_IS_ENABLED_ONLY_AFTER_RESERVE_SOC_IS_SATISFIED",
+    "FINAL_BATTERY_CHEMISTRY_AND_CAPACITY_REQUIRE_VOLTAGE_CURRENT_THERMAL_AND_SAFETY_REQUIREMENTS"
+  ],
+  "next_gate": "R2C1_STARTUP_ENERGY_TRACE: instrument one small Mode A loop and record P_deficit(t), E_battery(t), J_O2(t) and pO2(t) from PRIME through SELF_DRIVE_HOLD; use the integral of measured deficit plus declared reserve to freeze the first battery capacity.",
+  "linked_records": [
+    "projects/janus-engine/simulations/JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-005-POMS-STARTUP-v1.0.json",
+    "projects/janus-engine/gates/JANUS-ENGINE-R2B-DIRECT-GILL-PEMFC-v1.0.json",
+    "projects/janus-engine/gates/JANUS-ENGINE-R0A4F-LOW-ADHESION-CYLINDER-WALL-v1.0.json"
+  ]
+}
