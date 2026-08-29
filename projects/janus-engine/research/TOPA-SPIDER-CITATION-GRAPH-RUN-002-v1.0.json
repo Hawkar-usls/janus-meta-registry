@@ -1,0 +1,133 @@
+{
+  "artifact_uuid": "JANUS-ENGINE-TOPA-SPIDER-CITATION-GRAPH-RUN-002-v1.0",
+  "timestamp": "2026-08-30T01:31:00+03:00",
+  "version": "v1.0",
+  "title": "JANUS Engine — TOPA + Spider citation-graph expansion RUN-002",
+  "observer": "Hawkar / JANUS",
+  "node_type": "citation_graph_expansion",
+  "git_branch": "research/janus-engine",
+  "parent": "projects/janus-engine/research/TOPA-SPIDER-ARXIV-VRU-AKS-RUN-001-v1.0.json",
+  "status": "PASS_NEW_MECHANISTIC_EDGES_FOUND",
+  "scope": "Expand outward from direct artificial-gill, membrane-contactor and air-separation hits to find historical lineage, carrier mechanisms, hydrodynamic improvements, fouling constraints, cyclic adsorber heat recovery and simulation methodology.",
+  "artificial_gill_lineage": [
+    {
+      "year": 1965,
+      "title": "Underwater Breathing Device utilizing Oxygen dissolved in Water",
+      "doi": "10.1038/207532a0",
+      "connection": "Early explicit use of dissolved-water O2 partial-pressure gradients to re-oxygenate a recirculating gas/breathing stream."
+    },
+    {
+      "year": 1989,
+      "title": "Artificial gills",
+      "doi": "10.1016/S0376-7388(00)82381-9",
+      "connection": "Microporous hollow fibers harvested dissolved O2 and discharged CO2 to water; established predictive hollow-fiber design equations."
+    },
+    {
+      "year": 2001,
+      "title": "Temperature-controlled enhancement of oxygen uptake from water using oxygen carrier solution",
+      "doi": "10.1016/S0376-7388(00)00602-5",
+      "connection": "Thermo-responsive carrier creates separate cool uptake and warm release states; direct conceptual ancestor of JANUS carrier/regeneration thermal cycling."
+    },
+    {
+      "year": 2005,
+      "title": "The photoresponse of a molybdenum porphyrin makes an artificial gill feasible",
+      "doi": "10.1016/j.memsci.2004.10.040",
+      "connection": "Reversible oxygen affinity/chemical-potential control by external stimulus demonstrates that uptake and release can be actively separated rather than relying on passive membrane diffusion alone."
+    },
+    {
+      "year": 2005,
+      "title": "Rearrangement of hollow fibers for enhancing oxygen transfer in an artificial gill using oxygen carrier solution",
+      "doi": "10.1016/j.memsci.2005.01.008",
+      "connection": "Fiber diameter/pitch/arrangement strongly affect transfer and pumping cost; supports geometry optimization as a primary JANUS gate."
+    },
+    {
+      "year": 2025,
+      "title": "A Fuel Cell Power Supply System Equipped with Artificial Gill Membranes for Underwater Applications",
+      "doi": "10.1002/advs.202410358",
+      "connection": "Closest direct prototype analog: polymer artificial gill + internal recirculating gas + PEMFC + CFD/digital twin."
+    }
+  ],
+  "membrane_module_edges": [
+    {
+      "year": 2008,
+      "title": "A study on pilot-scale degassing by polypropylene (PP) hollow fiber membrane contactors",
+      "doi": "10.1016/j.desal.2007.09.100",
+      "finding": "Woven/transverse-flow packing outperformed simple parallel fiber bundles in mass transfer while retaining low-pressure-drop intent.",
+      "janus_consequence": "R0A2 should compare transverse/refresh geometries, not only maximize membrane area."
+    },
+    {
+      "year": 2008,
+      "title": "Boiler feed water deoxygenation using hollow fiber membrane contactor",
+      "doi": "10.1016/j.desal.2007.09.106",
+      "finding": "Water flow, vacuum level, temperature and fouling materially affect oxygen removal; air backwash was investigated as a cleaning method.",
+      "janus_consequence": "Add FOULING/CLEANING and vacuum-level curves to long-duration gill validation."
+    },
+    {
+      "year": 2020,
+      "title": "Water deoxygenation using a hollow fiber membrane contactor to prevent pipe corrosion for sustainable management of district heating systems: A pilot-scale study",
+      "doi": "10.1016/j.jclepro.2020.124049",
+      "finding": "Pilot-scale dissolved-O2 removal confirms module performance depends on membrane area, flow, temperature and vacuum; organic fouling is a practical limit.",
+      "janus_consequence": "JANUS gill calibration must include water chemistry and time-dependent fouling rather than clean-water instantaneous flux only."
+    }
+  ],
+  "asu_aks_process_edges": [
+    {
+      "title": "Waste heat recovery method for the air pre-purification system of an air separation unit",
+      "doi": "10.1016/j.applthermaleng.2018.07.072",
+      "finding": "ASU pre-purification uses cyclic adsorption, heat-blowing and cold-blowing; waste nitrogen is a regeneration stream and a three-bed configuration was investigated for waste-heat recovery.",
+      "janus_consequence": "Strong external precedent for a three-state/three-bed carousel whose regeneration and cooling duties are thermally integrated."
+    },
+    {
+      "title": "Modular Framework for Simulation-Based Multi-objective Optimization of a Cryogenic Air Separation Unit",
+      "doi": "10.1021/acsomega.1c06669",
+      "finding": "Cryogenic ASU optimization couples purification, compression, separation, heat recovery and economics through high-resolution process simulation plus Python optimization.",
+      "janus_consequence": "JANUS should optimize whole-system Pareto fronts rather than maximize any single metric such as O2 flux, RPM or membrane area."
+    },
+    {
+      "title": "Simulation study of two units of pressure swing adsorption for producing oxygen and nitrogen simultaneously",
+      "doi": "10.1063/5.0000257",
+      "finding": "O2 and N2 PSA systems were numerically cross-coupled by reusing depressurizing/purging gas between units.",
+      "janus_consequence": "Direct support for cross-using intermediate gas streams before venting, subject to purity and energy accounting."
+    }
+  ],
+  "new_graph_edges": [
+    {"from": "THERMO_RESPONSIVE_CARRIER_2001", "to": "JANUS_THREE_STATE_THERMAL_CYCLE", "type": "mechanism_analog"},
+    {"from": "PHOTO_RESPONSIVE_PORPHYRIN_2005", "to": "JANUS_REVERSIBLE_O2_CARRIER", "type": "mechanism_analog"},
+    {"from": "WOVEN_TRANSVERSE_HFMC_2008", "to": "JANUS_STATIONARY_GILL_CROWN", "type": "hydrodynamic_design"},
+    {"from": "HFMC_FOULING_2008_2020", "to": "JANUS_R0A2_LONG_DURATION_GATE", "type": "failure_mode"},
+    {"from": "THREE_BED_TSA_WASTE_HEAT", "to": "JANUS_R0C_CAROUSEL", "type": "industrial_precedent"},
+    {"from": "ASU_MULTI_OBJECTIVE_OPTIMIZATION_2022", "to": "JANUS_SYSTEM_OPTIMIZER", "type": "methodology"},
+    {"from": "DIRECT_GILL_PEMFC_2025", "to": "JANUS_R2B", "type": "closest_functional_precedent"}
+  ],
+  "spider_findings": {
+    "F1": "JANUS artificial-gill concept has a long technical lineage from partial-pressure-gradient devices through hollow-fiber gills, reversible carriers and modern PEMFC-coupled prototypes; novelty should therefore be claimed only at the level of the specific integrated architecture and measured performance, not dissolved-O2 extraction itself.",
+    "F2": "The current ROTATING_AXLE_PLUS_STATIONARY_GILL_CROWN direction is strengthened: transverse-flow/structured membrane modules can improve boundary-layer renewal without spinning the entire membrane inventory.",
+    "F3": "A new required failure gate is biofouling/organic fouling and cleanability. A high initial J_O2 that collapses over hours/days is not a viable gill.",
+    "F4": "The three-state sorbent idea should be modeled as a schedule of thermodynamic states rather than an assumption that each physical ring must continuously rotate. External literature supports both alternating beds and physically rotary packed beds.",
+    "F5": "Process optimization should become multi-objective: maximize net power and O2 capture while minimizing DeltaP, membrane volume, regeneration heat, vacuum/sweep power, transient complexity and fouling sensitivity."
+  },
+  "new_measurement_vector": [
+    "J_O2 versus water velocity",
+    "J_O2 versus collector pO2 or vacuum",
+    "DeltaP versus water flow",
+    "auxiliary vacuum/sweep power",
+    "membrane wetting/leak rate",
+    "O2/N2 selectivity of extracted stream",
+    "water-vapor crossover",
+    "flux degradation versus time",
+    "biofouling/organic-fouling sensitivity",
+    "cleaning recovery fraction after a defined cleaning cycle"
+  ],
+  "next_spider_targets": [
+    "citation graph of Merckelbach & Georgopanos 2025, including all membrane material references and citing papers",
+    "citation graph of Yang & Cussler 1989 and Nagase et al. 2001/2005 for independent artificial-gill replications",
+    "Sherwood/Reynolds correlations for shell-side hollow-fiber and woven membrane contactors",
+    "oxygen-selective POMS/PDMS and facilitated-transport membrane aging/wetting data",
+    "underwater hull-integrated membrane drag and anti-fouling literature",
+    "PEMFC cathode recirculation/humidity control literature",
+    "metal-hydride H2 storage thermal integration as a possible heat-source/heat-sink coupling",
+    "ASU/AKS adsorber cycle timing, nitrogen regeneration temperature and waste-heat recovery",
+    "open-source PSA/TSA solvers suitable for direct translation into JANUS simulation code"
+  ],
+  "safety_and_epistemic_boundary": "All references are evidence for individual mechanisms or analog architectures. None proves JANUS net-positive operation. Oxygen-rich, hydrogen, pressure and cryogenic hardware remain later, separately gated safety domains."
+}
