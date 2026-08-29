@@ -1,0 +1,43 @@
+{
+  "artifact_uuid": "JANUS-ENGINE-DEVELOPMENT-JOURNAL-2026-08-30-v1.0",
+  "timestamp": "2026-08-30T02:37:00+03:00",
+  "version": "v1.0",
+  "title": "JANUS Engine — development journal",
+  "observer": "Hawkar / JANUS",
+  "repository": "Hawkar-usls/janus-meta-registry",
+  "git_branch": "research/janus-engine",
+  "status": "ACTIVE_APPEND_ONLY_PROJECT_JOURNAL",
+  "policy": [
+    "APPEND_VERSIONED_JOURNAL_STATES_DO_NOT_ERASE_PRIOR_HISTORY",
+    "SEPARATE_LITERATURE_OR_MODEL_RESULTS_FROM_HARDWARE_MEASUREMENTS",
+    "RECORD_DESIGN_REVERSALS_AND_NEGATIVE_RESULTS",
+    "EVERY_ENERGY_LOSS_AND_STARTUP_BUFFER_REMAINS_IN_THE_LEDGER"
+  ],
+  "entry": {
+    "subject": "Axle magnetic-field metrology and copper-versus-brass electromagnetic screen",
+    "trigger": "Need to measure the magnetic field generated around the operating Axle and understand the effect of a copper or brass Axle body.",
+    "research_result": [
+      "Copper and brass are approximately non-ferromagnetic structural candidates; their important difference in this branch is electrical conductivity rather than magnetic permeability.",
+      "NIST conductivity anchor: copper about 57 MS/m, brass C260 about 15.5 MS/m, making copper much more capable of supporting induced currents for comparable geometry.",
+      "The Axle's own rigidly co-rotating permanent-magnet field is approximately stationary in the rotor material frame; the important eddy-current drivers are stator field, harmonics, asymmetry, EPM switching and stationary conductive structures seeing the rotating field.",
+      "Coreless/slotless AFPM remains the baseline starter-generator; conductive structures near its time-varying air-gap field must be explicitly loss-tested.",
+      "Preliminary electromagnetic material preference moves toward a lower-conductivity brass-class non-ferromagnetic Axle body rather than solid copper, but the exact brass alloy must pass wet corrosion/dezincification and mechanical tests."
+    ],
+    "calculation_checkpoint": {
+      "screening_formula": "delta = sqrt(1/(pi*f*mu0*sigma))",
+      "frequency_relation": "f_e = pole_pairs * RPM / 60",
+      "example_at_8_pole_pairs_600_RPM": {
+        "f_Hz": 80,
+        "Cu_skin_depth_mm": 7.42,
+        "brass_skin_depth_mm": 14.29
+      },
+      "interpretation": "At JANUS screening speeds the relevant skin depths remain in millimetres/centimetres; a few-mm conductive Axle is not a perfect shield, but eddy drag, heating and phase distortion can still be significant."
+    },
+    "new_records": [
+      "projects/janus-engine/research/TOPA-SPIDER-AXLE-MAGNETIC-FIELD-RUN-005-v1.0.json",
+      "projects/janus-engine/gates/JANUS-ENGINE-R0M2-CU-BRASS-MAGNETIC-FIELD-METROLOGY-v1.0.json"
+    ],
+    "measurement_plan": "Map Bx/By/Bz synchronized with encoder angle, RPM, current, torque and temperature at PM-static, passive-spin, motor, generator and optional EPM states; repeat with geometrically matched Cu and brass bodies/sleeves.",
+    "next_decision": "Do not freeze copper or brass by intuition. Freeze the material only after equal-geometry A/B measurements of drag watts, B-field distortion, heat, corrosion/water compatibility and mechanical behavior."
+  }
+}
