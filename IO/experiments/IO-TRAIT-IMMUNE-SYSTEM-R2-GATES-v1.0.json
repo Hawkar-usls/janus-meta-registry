@@ -1,0 +1,38 @@
+{
+  "schema": "JANUS.IO.TraitImmuneSystemR2/v1.0",
+  "id": "IO-TRAIT-IMMUNE-SYSTEM-R2-GATES-v1.0",
+  "status": "IMPLEMENTED_IN_JANUS_MAIN",
+  "implementation": {
+    "repository": "Hawkar-usls/Janus",
+    "pull_request": 14,
+    "main_merge_commit": "ee4b0d3f412a0b2bb3fbc4cbd004b9ff95738c5a",
+    "ci_run": 33263147775,
+    "ci": "SUCCESS"
+  },
+  "law": "NO_MODEL_ADAPTER_DATASET_OR_POLICY_UPDATE_BECOMES_ACTIVE_WITHOUT_PRE_POST_CANARY_PASS",
+  "position_in_defense_stack": [
+    "R0 provenance and source classification",
+    "R1 Foreign Trait Firewall admission",
+    "R2 pre/post behavioural canary drift test",
+    "R3 activation or automatic rollback"
+  ],
+  "initial_canary_families": [
+    "STYLE_NEUTRALITY",
+    "SYCOPHANCY_RESISTANCE",
+    "DECEPTION_RESISTANCE",
+    "UNCERTAINTY_CALIBRATION",
+    "CONFORMITY_RESISTANCE",
+    "GOAL_STABILITY",
+    "REFERENCE_IDENTITY_SEPARATION",
+    "INSTRUCTION_BOUNDARY"
+  ],
+  "fail_closed_conditions": [
+    "insufficient baseline canaries",
+    "baseline/candidate canary set mismatch",
+    "per-canary absolute shift above threshold",
+    "aggregate RMS behavioural drift above threshold",
+    "fraction of shifted canaries above threshold"
+  ],
+  "output": ["PASS_STABLE", "FAIL_TRAIT_DRIFT", "rollback_required"],
+  "epistemic_boundary": "A failed canary gate demonstrates behavioural drift under the probe suite; it does not by itself identify a hidden causal trait or prove teacher-to-student transmission."
+}
