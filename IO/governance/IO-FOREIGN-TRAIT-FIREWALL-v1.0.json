@@ -1,7 +1,7 @@
 {
   "schema": "JANUS.IO.ForeignTraitFirewallGovernance/v1.0",
   "id": "IO-FOREIGN-TRAIT-FIREWALL-v1.0",
-  "status": "FROZEN_DEFAULT_DENY",
+  "status": "FROZEN_DEFAULT_DENY_ACTIVE_IN_MAIN",
   "canonical_rule": "JANUS may observe foreign patterns but may not persistently internalize them as JANUS identity or policy.",
   "receive_policy": {
     "JANUS_OWNED": "route by approved plane",
@@ -32,12 +32,30 @@
     "covert_trait_encoding": "FORBIDDEN",
     "subliminal_trait_encoding": "FORBIDDEN"
   },
-  "implementation": {
-    "repository": "Hawkar-usls/Janus",
-    "branch": "security/foreign-trait-firewall",
-    "module": "foreign_trait_firewall.py",
-    "core_integration": "janus_core.py",
-    "tests": "tests/test_foreign_trait_firewall.py",
-    "ci": ".github/workflows/foreign-trait-firewall.yml"
-  }
+  "implementations": [
+    {
+      "repository": "Hawkar-usls/Janus",
+      "branch": "main",
+      "pull_request": 13,
+      "merge_commit": "bf5b85eb76503ea4dbabf395daf5ef71731cdc84",
+      "module": "foreign_trait_firewall.py",
+      "core_integration": "janus_core.py",
+      "tests": "tests/test_foreign_trait_firewall.py",
+      "ci": "GREEN_BEFORE_MERGE",
+      "scope": "persistent memory, prompt-context trust planes, future training admission, explicit outbound lineage manifests"
+    },
+    {
+      "repository": "Hawkar-usls/Janus-Demiurge",
+      "branch": "main",
+      "clean_pull_request": 32,
+      "superseded_unmerged_pull_request": 31,
+      "merge_commit": "e87f147fca3f499ed22199e49fc2df7ba2dd917f",
+      "module": "swarm_genome_ledger.py",
+      "tests": "tests/test_foreign_trait_lineage_firewall.py",
+      "ci_run": 33252665453,
+      "ci": "GREEN_BEFORE_MERGE",
+      "scope": "cross-entity genome/identity ancestry"
+    }
+  ],
+  "residual_boundary": "This application-level firewall does not erase behavioural priors already encoded in third-party foundation-model weights and does not by itself prove absence of transient imitation during a single inference call."
 }
