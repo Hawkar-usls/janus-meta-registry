@@ -1,0 +1,77 @@
+{
+  "schema": "JANUS.IO.PairwiseIndependenceSeed/v1.0",
+  "id": "IO-R2-PAIRWISE-INDEPENDENCE-SEED-v1.0",
+  "generated_utc": "2026-08-29T11:24:00Z",
+  "purpose": "Seed auditable pairwise independence judgments for high-value machine-psychology evidence lines.",
+  "rule": "Missing metadata widens the interval; it never counts as confirmed independence.",
+  "pairs": [
+    {
+      "a":"2310.13548","b":"2401.05566","domains":["sycophancy","deception"],
+      "known":{"AUTHORS":{"overlap":1.0,"detail":"11 shared authors confirmed in R1"},"DIRECT_METHOD_LINEAGE":{"overlap":0.5,"detail":"adjacent alignment/safety research lineage"}},
+      "unknown":["DATASET","PROMPT_LINEAGE","EVALUATION_CODE"],
+      "classification":"LINEAGE_LINKED",
+      "reason":"Heavy personnel continuity alone prevents these papers from being treated as independent confirmation of a shared mechanism."
+    },
+    {
+      "a":"2308.03958","b":"2310.13548","domain":"sycophancy",
+      "known":{"AUTHORS":{"overlap":0.0,"detail":"verified author lists do not overlap"},"BENCHMARK_LINEAGE":{"overlap":0.5,"detail":"both study user-belief alignment but use materially different experiment sets"},"MODEL_FAMILY":{"overlap":0.5,"detail":"different reported model sets; cross-family relationship remains partial"}},
+      "unknown":["DATASET","PROMPT_LINEAGE","EVALUATION_CODE","LAB_OR_INSTITUTION"],
+      "classification":"UNRESOLVED_BUT_CANDIDATE_STRONG",
+      "reason":"Different teams and materially different tasks support independence, but code/data/lab metadata is not yet complete."
+    },
+    {
+      "a":"2310.13548","b":"2502.08177","domain":"sycophancy",
+      "known":{"AUTHORS":{"overlap":0.0,"detail":"verified author lists do not overlap"},"BENCHMARK_LINEAGE":{"overlap":0.5,"detail":"same broad construct, new AMPS/MedQuad evaluation framework"},"MODEL_FAMILY":{"overlap":0.5,"detail":"later paper evaluates ChatGPT-4o, Claude-Sonnet and Gemini-1.5-Pro"}},
+      "unknown":["PROMPT_LINEAGE","EVALUATION_CODE","LAB_OR_INSTITUTION"],
+      "classification":"UNRESOLVED_BUT_CANDIDATE_STRONG"
+    },
+    {
+      "a":"2310.13548","b":"2505.13995","domain":"sycophancy",
+      "known":{"AUTHORS":{"overlap":0.0,"detail":"verified author lists do not overlap"},"BENCHMARK_LINEAGE":{"overlap":0.0,"detail":"ELEPHANT introduces distinct social-sycophancy framework and datasets"},"DATASET":{"overlap":0.0,"detail":"OEQ/AITA differ from factual belief-conflict tasks"}},
+      "unknown":["EVALUATION_CODE","LAB_OR_INSTITUTION"],
+      "classification":"STRONG_SCOPE_INDEPENDENCE",
+      "reason":"Strong independence as a scope-extension, not a direct replication of the narrower factual-sycophancy construct."
+    },
+    {
+      "a":"2311.07590","b":"2504.00285","domain":"deception",
+      "known":{"AUTHORS":{"overlap":0.0,"detail":"verified author lists do not overlap"},"BENCHMARK_LINEAGE":{"overlap":0.0,"detail":"stock-trading agent simulation versus preregistered signaling games"},"DIRECT_METHOD_LINEAGE":{"overlap":0.0,"detail":"distinct operational paradigms"}},
+      "unknown":["EVALUATION_CODE","LAB_OR_INSTITUTION","MODEL_FAMILY"],
+      "classification":"UNRESOLVED_BUT_CANDIDATE_STRONG"
+    },
+    {
+      "a":"2504.00285","b":"2603.07202","domain":"deception",
+      "known":{"AUTHORS":{"overlap":0.0,"detail":"verified author lists do not overlap"},"BENCHMARK_LINEAGE":{"overlap":0.0,"detail":"signaling/2x2 games versus parallel-world 20 Questions"},"MODEL_FAMILY":{"overlap":0.5,"detail":"cross-model studies with possible partial frontier-model overlap"}},
+      "unknown":["EVALUATION_CODE","LAB_OR_INSTITUTION"],
+      "classification":"UNRESOLVED_BUT_CANDIDATE_STRONG"
+    },
+    {
+      "a":"2305.02547","b":"2405.07248","domain":"personality",
+      "known":{"AUTHORS":{"overlap":0.0,"detail":"verified author lists do not overlap"},"BENCHMARK_LINEAGE":{"overlap":0.5,"detail":"both use standardized personality psychometrics but answer different validity questions"},"MODEL_FAMILY":{"overlap":1.0,"detail":"both include GPT-3.5/GPT-4-era OpenAI models"}},
+      "unknown":["PROMPT_LINEAGE","EVALUATION_CODE"],
+      "classification":"MODERATELY_INDEPENDENT",
+      "reason":"Independent teams and different validity aims, but strong model/psychometric lineage overlap."
+    },
+    {
+      "a":"2401.05302","b":"2406.14737","domain":"theory-of-mind",
+      "known":{"AUTHORS":{"overlap":0.0,"detail":"verified author lists do not overlap"},"BENCHMARK_LINEAGE":{"overlap":1.0,"detail":"both interrogate perturbations of false-belief/ToM-style tasks"},"DIRECT_METHOD_LINEAGE":{"overlap":0.5,"detail":"SCALPEL explicitly addresses prior perturbation-based failure interpretations"}},
+      "unknown":["MODEL_FAMILY","PROMPT_LINEAGE","EVALUATION_CODE"],
+      "classification":"LINEAGE_LINKED_CHALLENGE",
+      "reason":"Scientifically independent team, but intentionally same test lineage; useful for resolving mechanism, not a fully independent benchmark replication."
+    },
+    {
+      "a":"2406.05659","b":"2603.26089","domain":"theory-of-mind",
+      "known":{"AUTHORS":{"overlap":0.0,"detail":"verified author lists do not overlap"},"BENCHMARK_LINEAGE":{"overlap":0.0,"detail":"open-ended social reasoning versus strategic behavior-based self/other modeling"},"DIRECT_METHOD_LINEAGE":{"overlap":0.0,"detail":"different operational definitions"}},
+      "unknown":["MODEL_FAMILY","EVALUATION_CODE"],
+      "classification":"UNRESOLVED_BUT_CANDIDATE_STRONG"
+    },
+    {
+      "a":"2410.13787","b":"2506.05068","domain":"introspection",
+      "known":{"AUTHORS":{"overlap":0.0,"detail":"verified author lists do not overlap"},"DIRECT_METHOD_LINEAGE":{"overlap":0.5,"detail":"later critical analysis discusses narrow operational introspection cases"},"BENCHMARK_LINEAGE":{"overlap":0.5,"detail":"both concern privileged self-prediction but not identical tests"}},
+      "unknown":["MODEL_FAMILY","DATASET","EVALUATION_CODE"],
+      "classification":"MODERATELY_INDEPENDENT_CRITIQUE",
+      "reason":"Independent authorship and conceptual scrutiny provide useful validation pressure, but the second work is not a full empirical replication of the first."
+    }
+  ],
+  "next_metadata_harvest":["primary institutions","exact model versions","public code repositories","dataset hashes/names","prompt-template ancestry"],
+  "status":"SEED_MATRIX_COMPLETE_METADATA_EXPANSION_REQUIRED"
+}
