@@ -1,0 +1,81 @@
+{
+  "schema": "JANUS.IO.EffectCard/v1.0",
+  "id": "IO-R2-CONFORMITY-EFFECT-CARD-v1.0",
+  "effect_id": "CONF-MAJORITY-DEFERENCE",
+  "domain": "conformity",
+  "generated_utc": "2026-08-29T11:53:00Z",
+  "narrow_claim": "Across multiple tested LLM families and knowledge domains, exposure to a unanimous incorrect majority can increase the probability that a model changes or selects an answer toward that majority; lower initial confidence increases susceptibility.",
+  "verified_primary_lines": [
+    {
+      "paper": "Conformity in Large Language Models",
+      "arxiv_id": "2410.12428",
+      "venue": "ACL 2025",
+      "research_group": "Cambridge/Sheffield collaboration",
+      "models_reported": ["Gemma-2-9B-Instruct", "Llama-3-8B-Instruct", "Mistral-7B-Instruct-v0.3", "Qwen2-7B-Instruct"],
+      "benchmark_families": ["MMLU", "CommonsenseQA", "PopQA", "BBH Object Counting", "OpinionsQA", "Politiscale"],
+      "findings": [
+        "all tested models showed varying conformity toward majority answers",
+        "higher initial confidence predicted greater resistance",
+        "instruction-tuned models were more resistant than base counterparts",
+        "more natural/conversational majority tone amplified conformity",
+        "Devil's Advocate and Question Distillation reduced conformity"
+      ],
+      "source": "https://aclanthology.org/2025.acl-long.195/"
+    },
+    {
+      "paper": "Can LLM Agents Really Debate? A Controlled Study of Multi-Agent Debate in Logical Reasoning",
+      "arxiv_id": "2511.07784",
+      "research_group": "independent 2025 debate study",
+      "construct_extension": "multi-agent deliberation",
+      "finding": "Majority pressure can suppress independent correction; group diversity and intrinsic reasoning strength are dominant success factors.",
+      "source": "https://arxiv.org/abs/2511.07784"
+    },
+    {
+      "paper": "Free-MAD: Consensus-Free Multi-Agent Debate",
+      "venue": "Findings of ACL 2026",
+      "construct_extension": "consensus-free multi-agent reasoning",
+      "finding": "Consensus interaction can propagate errors because correct agents may be influenced by incorrect agents; majority voting can degrade performance in some settings.",
+      "source": "https://aclanthology.org/2026.findings-acl.1600/"
+    },
+    {
+      "paper": "Minority Sentinel: When to Overturn Majority Voting in Multi-Agent LLM Debates",
+      "arxiv_id": "2606.29270",
+      "construct_extension": "minority truth under correlated errors",
+      "finding": "Correlated LLM errors violate naive independence assumptions behind majority voting; a correct minority can be systematically suppressed.",
+      "source": "https://arxiv.org/abs/2606.29270"
+    }
+  ],
+  "related_but_distinct_effects": [
+    {
+      "effect_id": "SYC-USER-DEFERENCE",
+      "relation": "single-user preference or belief pressure rather than peer-majority pressure",
+      "source": "https://arxiv.org/abs/2310.13548"
+    }
+  ],
+  "independence_summary": {
+    "empirical_reports_verified_lower_bound": 4,
+    "research_groups_verified_lower_bound": 4,
+    "benchmark_families_verified_lower_bound": 6,
+    "strongly_independent_evidence_lines_lower_bound": 3,
+    "warning": "The 2026 multi-agent papers study debate architectures rather than exact replications of the 2025 Asch-style protocol; they strengthen the broader majority-pressure/error-propagation claim, not every narrow parameter estimate."
+  },
+  "maturity_dimensions": {
+    "INDEPENDENT_REPLICATION": 0.82,
+    "BENCHMARK_DIVERSITY": 0.92,
+    "MODEL_FAMILY_DIVERSITY": 0.86,
+    "CAUSAL_IDENTIFICATION": 0.68,
+    "ROBUSTNESS_AND_CONTRADICTION_RESOLUTION": 0.78,
+    "ARTIFACT_AND_PROVENANCE_QUALITY": 0.82
+  },
+  "evidence_maturity_score": 81,
+  "class": "VERY_HIGH",
+  "score_note": "This is a corpus-maturity score for the narrow operational claim, not a probability that every model will conform in every setting.",
+  "subclaims": {
+    "majority_pressure_can_shift_llm_answers": "VERY_HIGH",
+    "low_confidence_increases_susceptibility": "HIGH",
+    "repeated_identical_majority_votes_are_independent_evidence": "REJECTED",
+    "majority_vote_is_intrinsically_truth_seeking": "REJECTED",
+    "machine_conformity_has_same_subjective_cause_as_human_conformity": "UNKNOWN"
+  },
+  "r2_rule": "Count independent evidence-producing lineages, not answer multiplicity. Correlated agents, cloned prompts, shared checkpoints or shared retrieval sources must be down-weighted before majority aggregation."
+}
