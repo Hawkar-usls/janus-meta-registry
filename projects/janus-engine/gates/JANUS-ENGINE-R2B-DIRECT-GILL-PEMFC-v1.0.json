@@ -1,0 +1,55 @@
+{
+  "artifact_uuid": "JANUS-ENGINE-R2B-DIRECT-GILL-PEMFC-v1.0",
+  "timestamp": "2026-08-30T01:31:00+03:00",
+  "version": "v1.0",
+  "title": "JANUS Engine R2B — direct artificial-gill to PEM fuel-cell gate",
+  "observer": "Hawkar / JANUS",
+  "node_type": "energy_architecture_gate",
+  "branch_name": "Janus Engine",
+  "branch_id": "JANUS_ENGINE",
+  "git_branch": "research/janus-engine",
+  "status": "OPEN_LITERATURE_CALIBRATED_MODEL_GATE",
+  "purpose": "Evaluate the minimum-complexity JANUS self-drive path in which dissolved oxygen passes through an oxygen-permeable artificial-gill membrane into a low-pO2 recirculating gas loop feeding a PEM fuel cell. Bulk O2/N2 separation, sorbent cycling and LOX are bypassed in the first self-drive screen.",
+  "architecture": "water -> artificial gill -> recirculating low-pO2 gas -> PEMFC cathode -> moisture/heat management -> recirculating gas return",
+  "energy_boundary": "Hydrogen or another explicit fuel remains the primary stored chemical energy source. Dissolved oxygen is the environmental oxidizer. No oxygen extraction or gas circulation is counted as an energy source.",
+  "literature_anchor": {
+    "paper": "A Fuel Cell Power Supply System Equipped with Artificial Gill Membranes for Underwater Applications",
+    "authors": ["Lucas Merckelbach", "Prokopios Georgopanos"],
+    "journal": "Advanced Science",
+    "year": 2025,
+    "doi": "10.1002/advs.202410358",
+    "demonstrated": [
+      "polymer membrane harvesting dissolved oxygen from ambient water",
+      "recirculating internal gas supplying a PEM fuel cell",
+      "oxygen consumption at the fuel cell maintaining a low internal oxygen partial pressure that drives membrane transfer",
+      "prototype plus mathematical model and CFD digital twin"
+    ],
+    "model_inputs_reported": {
+      "fuel_cell_efficiency_assumption": 0.55,
+      "membrane_permeance_mol_m2_s_Pa": 3.39e-9,
+      "illustrative_required_membrane_area_m2": 3.0,
+      "allowed_internal_pO2_bar_approx": 0.1
+    },
+    "prototype_observation": {
+      "membrane_area_m2": 3.0,
+      "oxygen_permeate_total_umol_s_range": [1.5, 2.5],
+      "fuel_cell_power_W_range": [0.18, 0.30],
+      "reported_shortfall_relative_to_target_flux_factor": [6, 10],
+      "authors_interpretation": "Desktop module flow maldistribution reduced oxygen transfer relative to the idealized homogeneous-flow design."
+    }
+  },
+  "janus_consequences": [
+    "The PEMFC oxygen sink naturally supplies the collector-side low-pO2 gradient that R0/R0A required.",
+    "Direct mode removes the first-run requirement for bulk O2/N2 separation and LOX, reducing parasitic load.",
+    "Water-side convective mass transfer remains a dominant constraint; membrane material permeance alone is insufficient.",
+    "Gas recirculation, hydrogen storage/feed, water pumping, heat rejection, humidification/condensation and controls remain explicit loads."
+  ],
+  "pass_rule": "P_PEMFC_electric > P_water + P_gas_recirculation + P_hydrogen_feed + P_thermal_management + P_controls + P_other_aux for a sustained operating point while O2 mass balance closes.",
+  "linked_records": [
+    "projects/janus-engine/JANUS-ENGINE-PROJECT-MANIFEST-v1.0.json",
+    "projects/janus-engine/research/TOPA-SPIDER-ARXIV-VRU-AKS-RUN-001-v1.0.json",
+    "data/JANUS-ENGINE-R0A1-ANNULAR-HOLLOW-FIBER-GILL-PACKAGE-v1.0.json",
+    "data/JANUS-ENGINE-R2A-SELF-DRIVE-NET-GENERATION-v1.0.json"
+  ],
+  "next_run": "JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-004-DIRECT-GILL-PEMFC-v1.0"
+}
