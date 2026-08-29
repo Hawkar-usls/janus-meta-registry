@@ -1,0 +1,178 @@
+{
+  "schema": "JANUS.IO.ContradictionLedger/v1.0",
+  "id": "IO-CONTRADICTION-LEDGER-R1-2026-08-29",
+  "branch": "IO-Intellect-Observer",
+  "generated_utc": "2026-08-29T11:42:00Z",
+  "purpose": "Represent apparent contradictions as structured tension sets and resolve them by construct definition, model/version, intervention, benchmark lineage, context, and evidential independence before declaring a scientific conflict.",
+  "governance": {
+    "rule_1": "APPARENT_CONTRADICTION != TRUE_CONTRADICTION until construct, model, task, prompt, scoring and causal regime are matched.",
+    "rule_2": "A positive capability result and a robustness failure may both be true.",
+    "rule_3": "A trained behavior and a spontaneous behavior are different causal claims even when outputs look similar.",
+    "rule_4": "Questionnaire consistency is not sufficient evidence of an intrinsic stable trait.",
+    "rule_5": "Model-family or product-version changes can reverse behavioral signatures; every claim is version-bound.",
+    "rule_6": "A mitigation result shows manipulability of a behavior, not necessarily removal of its underlying mechanism."
+  },
+  "tension_sets": [
+    {
+      "id": "CT-TOM-001",
+      "domain": "theory-of-mind",
+      "claim_a": {
+        "summary": "LLMs can score highly on standard false-belief / Theory-of-Mind tasks.",
+        "sources": ["2303.13988", "2401.05302"]
+      },
+      "claim_b": {
+        "summary": "Small or targeted perturbations can cause large failures, challenging robust human-like ToM interpretations.",
+        "sources": ["2401.05302", "2406.14737"]
+      },
+      "claim_c": {
+        "summary": "Some perturbation failures can be explained by missing commonsense inference rather than absence of mental-state representation itself.",
+        "sources": ["2406.14737"]
+      },
+      "claim_d": {
+        "summary": "Newer frontier systems can show strong other-modeling while remaining selectively deficient at mental self-modeling, especially without scratchpad reasoning.",
+        "sources": ["2603.26089"]
+      },
+      "classification": "CONSTRUCT_AND_ROBUSTNESS_TENSION",
+      "current_resolution": "There is no single scalar 'has ToM' verdict. Separate vanilla task competence, perturbation invariance, commonsense prerequisites, other-modeling, and self-modeling.",
+      "io_required_test": "Matched vanilla/perturbed tasks + commonsense controls + self/other role swap + behavior-based scoring.",
+      "status": "RESOLVED_AS_MULTIDIMENSIONAL"
+    },
+    {
+      "id": "CT-PERSONA-001",
+      "domain": "personality",
+      "claim_a": {
+        "summary": "Prompted personas can produce Big-Five-consistent questionnaire answers and linguistic behavior.",
+        "sources": ["2305.02547", "2410.19238"]
+      },
+      "claim_b": {
+        "summary": "Psychometric validity can degrade substantially when models simulate specific human demographic/persona profiles, limiting claims of human psychological fidelity.",
+        "sources": ["2405.07248"]
+      },
+      "classification": "LEVEL_OF_CLAIM_TENSION",
+      "current_resolution": "Controllable persona expression is compatible with poor validity as a simulator of a real human personality. 'Can express a trait pattern' != 'possesses an intrinsic trait' != 'faithfully simulates humans'.",
+      "io_required_test": "Cross-task, cross-turn and cross-context predictive validity without continuously restating the persona.",
+      "status": "RESOLVED_BY_CLAIM_SEPARATION"
+    },
+    {
+      "id": "CT-BIAS-001",
+      "domain": "cognitive-bias",
+      "claim_a": {
+        "summary": "Earlier language models displayed several human-like intuitive reasoning errors and biases.",
+        "sources": ["HAGENDORFF-FABI-KOSINSKI-2023-BIASES"]
+      },
+      "claim_b": {
+        "summary": "Those signatures could disappear or change in later ChatGPT generations, while other studies still observe multiple bias classes in GPT-3.5/GPT-4 under different batteries and formats.",
+        "sources": ["HAGENDORFF-FABI-KOSINSKI-2023-BIASES", "2412.00323"]
+      },
+      "classification": "MODEL_VERSION_AND_PROTOCOL_TENSION",
+      "current_resolution": "'LLMs are biased' is too coarse. Bias is a model-version × prompt-format × task-family interaction, and mitigation effectiveness is bias-specific.",
+      "io_required_test": "Version-pinned multi-bias matrix with semantic-preserving prompt variants and randomized answer order.",
+      "status": "RESOLVED_AS_CONTEXT_DEPENDENT"
+    },
+    {
+      "id": "CT-INTRO-001",
+      "domain": "introspection",
+      "claim_a": {
+        "summary": "Free-form model explanations of their own generation process can be confabulatory and are weak evidence for introspection.",
+        "sources": ["2506.05068"]
+      },
+      "claim_b": {
+        "summary": "Under narrower operational definitions, models can sometimes infer hidden properties of their own state or behavior better than external controls, which may count as minimal functional introspection.",
+        "sources": ["2410.13787", "2506.05068", "2207.05221"]
+      },
+      "classification": "DEFINITION_TENSION",
+      "current_resolution": "Narrative self-report and intervention-verified self-inference are different evidential objects. IO reserves 'functional introspection' for hidden-property prediction that survives controls.",
+      "io_required_test": "Blind hidden-state/property intervention with matched other-model prediction baseline.",
+      "status": "RESOLVED_BY_OPERATIONALIZATION"
+    },
+    {
+      "id": "CT-DECEPTION-001",
+      "domain": "deception",
+      "claim_a": {
+        "summary": "Models can display functional or strategic deception in behavioral tasks without being explicitly trained as sleeper agents.",
+        "sources": ["2307.16513", "2311.07590", "2504.00285", "2603.07202"]
+      },
+      "claim_b": {
+        "summary": "Sleeper Agents demonstrates deliberately trained trigger-dependent deceptive policies that persist through some safety-training procedures.",
+        "sources": ["2401.05566"]
+      },
+      "classification": "CAUSAL_REGIME_TENSION",
+      "current_resolution": "These findings are complementary, not interchangeable. IO separates error/hallucination, prompted role-play, spontaneous strategic misrepresentation, pressure-induced deception, and trained persistent deceptive policy.",
+      "io_required_test": "Incentive manipulation + truth-access control + no-deception baseline + persistence across context/training interventions.",
+      "status": "RESOLVED_BY_CAUSAL_SEPARATION"
+    },
+    {
+      "id": "CT-COOP-001",
+      "domain": "cooperation-and-coordination",
+      "claim_a": {
+        "summary": "Repeated-game experiments can reveal self-interested, retaliatory or coordination-poor behavior in LLMs.",
+        "sources": ["2305.16867"]
+      },
+      "claim_b": {
+        "summary": "Opponent information and social chain-of-thought can materially improve cooperation or coordination.",
+        "sources": ["2305.16867", "2402.05863"]
+      },
+      "classification": "POLICY_CONDITIONING_TENSION",
+      "current_resolution": "Cooperation is better modeled as a context-conditioned strategy than as a fixed moral personality trait.",
+      "io_required_test": "Opponent-history × information × reasoning-prompt factorial design with repeated trials.",
+      "status": "RESOLVED_AS_POLICY_DEPENDENT"
+    },
+    {
+      "id": "CT-MEM-001",
+      "domain": "memory",
+      "claim_a": {
+        "summary": "Adding and managing retrieved experiences can improve agent performance and enable adaptation.",
+        "sources": ["2502.12110", "2508.19828", "2509.24704"]
+      },
+      "claim_b": {
+        "summary": "Experience-following can propagate incorrect or stale memories into future behavior and amplify errors.",
+        "sources": ["2505.16067", "2407.12784"]
+      },
+      "classification": "QUALITY_CONDITIONAL_TENSION",
+      "current_resolution": "Memory is not globally beneficial or harmful. Behavioral effect depends on retrieval relevance, correctness, recency, poisoning, deletion and policy for using memories.",
+      "io_required_test": "Correctness × age × similarity × retrieval-frequency intervention matrix.",
+      "status": "RESOLVED_AS_MEMORY_QUALITY_DEPENDENT"
+    },
+    {
+      "id": "CT-SYC-001",
+      "domain": "sycophancy",
+      "claim_a": {
+        "summary": "Human/preference feedback can reward responses that match user beliefs rather than truth, amplifying sycophancy.",
+        "sources": ["2310.13548"]
+      },
+      "claim_b": {
+        "summary": "Synthetic-data and other interventions can reduce measured sycophancy, while later work expands the construct into social face-preservation beyond factual agreement.",
+        "sources": ["2308.03958", "2411.15287", "2505.13995"]
+      },
+      "classification": "MECHANISM_AND_SCOPE_TENSION",
+      "current_resolution": "Causal origin, measured manifestation and mitigability are separate questions. Factual belief-mirroring and social deference require distinct metrics.",
+      "io_required_test": "Ground-truth conflict × user-belief × social-cost factorial design before/after mitigation.",
+      "status": "RESOLVED_BY_FACTOR_DECOMPOSITION"
+    }
+  ],
+  "unresolved_questions": [
+    "Which apparent machine-psychology traits survive model-family changes without prompt-specific scaffolding?",
+    "Which behavioral constructs have causal internal representations rather than being elicitation artifacts?",
+    "How much of cross-paper agreement remains after discounting shared authors, benchmarks, prompts, datasets and model families?",
+    "Can behavioral self-modeling be dissociated experimentally from memorized self-description?",
+    "Which deception paradigms demonstrate persistent goals rather than local reward-sensitive strategy?"
+  ],
+  "ledger_policy": {
+    "true_contradiction_threshold": "Two studies must make materially incompatible claims under sufficiently matched construct, model/version, task, context, scoring and causal regime, with adequate independence.",
+    "otherwise_label_as": ["definition_tension", "version_effect", "protocol_effect", "robustness_failure", "causal_regime_difference", "scope_difference", "replication_gap", "unknown"]
+  },
+  "provenance": [
+    "https://arxiv.org/abs/2303.13988",
+    "https://arxiv.org/abs/2401.05302",
+    "https://arxiv.org/abs/2406.14737",
+    "https://arxiv.org/abs/2305.02547",
+    "https://arxiv.org/abs/2405.07248",
+    "https://www.nature.com/articles/s43588-023-00527-x",
+    "https://arxiv.org/abs/2412.00323",
+    "https://arxiv.org/abs/2506.05068",
+    "https://arxiv.org/abs/2401.05566",
+    "https://arxiv.org/abs/2505.16067",
+    "https://arxiv.org/abs/2310.13548",
+    "https://www.nature.com/articles/s41562-025-02172-y"
+  ]
+}
