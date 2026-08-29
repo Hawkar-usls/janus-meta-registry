@@ -1,7 +1,7 @@
 {
-  "artifact_uuid": "JANUS-ENGINE-PROJECT-MANIFEST-v1.3",
-  "timestamp": "2026-08-30T01:31:00+03:00",
-  "version": "v1.3",
+  "artifact_uuid": "JANUS-ENGINE-PROJECT-MANIFEST-v1.4",
+  "timestamp": "2026-08-30T02:37:00+03:00",
+  "version": "v1.4",
   "title": "JANUS Engine — dedicated research-branch manifest",
   "observer": "Hawkar / JANUS",
   "node_type": "project_manifest",
@@ -34,6 +34,8 @@
     "projects/janus-engine/research/TOPA-SPIDER-CALCIFER-ANTISCALANT-RUN-003-v1.0.json",
     "projects/janus-engine/gates/JANUS-ENGINE-R2B-DIRECT-GILL-PEMFC-v1.0.json",
     "projects/janus-engine/gates/JANUS-ENGINE-R0A2-POMS-MEMBRANE-STARTUP-v1.0.json",
+    "projects/janus-engine/gates/JANUS-ENGINE-R0A4F-LOW-ADHESION-CYLINDER-WALL-v1.0.json",
+    "projects/janus-engine/gates/JANUS-ENGINE-R2C-BUFFER-BATTERY-ENERGY-MANAGEMENT-v1.0.json",
     "projects/janus-engine/simulations/JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-004-DIRECT-GILL-PEMFC-v1.0.json",
     "projects/janus-engine/simulations/JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-005-POMS-STARTUP-v1.0.json",
     "projects/janus-engine/simulations/JANUS-ENGINE-R0A4D-AXLE-VANE-CRYSTAL-TRAP-SCREEN-v1.0.json"
@@ -44,12 +46,13 @@
     "T2_SORBENT_SEPARATION_AND_N2_CASCADE": ["data/JANUS-ENGINE-R0C-THREE-STATE-SORBENT-CAROUSEL-v1.0.json", "data/JANUS-ENGINE-LEGACY-ASU-REFERENCE-v1.0.json"],
     "T3_SELF_DRIVE_AND_GENERATION": ["data/JANUS-ENGINE-R2A-SELF-DRIVE-NET-GENERATION-v1.0.json", "projects/janus-engine/gates/JANUS-ENGINE-R2B-DIRECT-GILL-PEMFC-v1.0.json", "data/JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-001-v1.0.json", "data/JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-002-GEOMETRY-GROUNDED-v1.0.json", "data/JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-003-GILL-PACKAGE-v1.0.json", "projects/janus-engine/simulations/JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-004-DIRECT-GILL-PEMFC-v1.0.json", "projects/janus-engine/simulations/JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-005-POMS-STARTUP-v1.0.json"],
     "T4_TOPA_SPIDER_EXTERNAL_EVIDENCE": ["projects/janus-engine/research/TOPA-SPIDER-ARXIV-VRU-AKS-RUN-001-v1.0.json", "projects/janus-engine/research/TOPA-SPIDER-CITATION-GRAPH-RUN-002-v1.0.json", "projects/janus-engine/research/TOPA-SPIDER-CALCIFER-ANTISCALANT-RUN-003-v1.0.json"],
-    "T5_CALCIFER_SCALE_AND_SELF_MAINTENANCE": ["projects/janus-engine/research/TOPA-SPIDER-CALCIFER-ANTISCALANT-RUN-003-v1.0.json", "projects/janus-engine/simulations/JANUS-ENGINE-R0A4D-AXLE-VANE-CRYSTAL-TRAP-SCREEN-v1.0.json"]
+    "T5_CALCIFER_SCALE_AND_SELF_MAINTENANCE": ["projects/janus-engine/research/TOPA-SPIDER-CALCIFER-ANTISCALANT-RUN-003-v1.0.json", "projects/janus-engine/simulations/JANUS-ENGINE-R0A4D-AXLE-VANE-CRYSTAL-TRAP-SCREEN-v1.0.json", "projects/janus-engine/gates/JANUS-ENGINE-R0A4F-LOW-ADHESION-CYLINDER-WALL-v1.0.json"],
+    "T6_BUFFER_AND_ENERGY_MANAGEMENT": ["projects/janus-engine/gates/JANUS-ENGINE-R2C-BUFFER-BATTERY-ENERGY-MANAGEMENT-v1.0.json"]
   },
   "architecture_modes": {
     "MODE_A_DIRECT_GILL_PEMFC": {
       "status": "PREFERRED_FIRST_SELF_DRIVE_PATH",
-      "flow": "water -> POMS artificial gill -> low-pO2 recirculating cathode gas -> PEMFC -> electricity -> auxiliaries",
+      "flow": "water -> POMS artificial gill -> low-pO2 recirculating cathode gas -> PEMFC -> electricity -> auxiliaries/battery",
       "reason": "avoids bulk O2/N2 separation, N2 service and LOX during first ignition"
     },
     "MODE_B_INTEGRATED_VRU_AKS": {
@@ -61,17 +64,20 @@
     "selected_first_membrane": "POMS thin-film supported membrane",
     "flat_stack_first_crown_area_m2": 21.2109,
     "startup_lesson": "self-drive is a transient state transition; readiness is state convergence rather than t=0 behavior",
-    "scale_management": "Use low-hardness initial fill, candidate low-dose anti-adhesion chemistry only after compatibility tests, rotating near-wall Axle/wipers, centrifugal solids transport and removable crystal traps / washable filters.",
+    "scale_management": "Use low-hardness initial fill, candidate low-dose anti-adhesion chemistry only after compatibility tests, low-adhesion wall engineering, rotating near-wall Axle/wipers, centrifugal solids transport and removable crystal traps / washable filters.",
+    "wall_surface_result": "Use a dual-zone surface strategy: hard smooth low-adhesion coating on repeatedly wiped tracks, and durable superhydrophobic/low-surface-energy coating only on non-contact wall zones unless wear testing proves otherwise.",
     "vane_energy_result": "If the same local pump supplies the pressure drop across an Axle vane, recovered shaft power is always smaller than added pump power for realistic efficiencies. Therefore vanes are primarily anti-scale/flow-conditioning elements; external-current energy recovery is a separate case and must charge drag.",
     "crystal_trap_result": "Normalized sensitivity shows strong multiplicative benefit when trap capture and Axle scraping are combined, but actual eta_trap and eta_scraper remain measurement gates rather than assumed hardware performance.",
+    "battery_result": "Admit an externally precharged bidirectional battery as startup reservoir, transient buffer and surplus accumulator. It must never be counted as generated energy; self-drive requires the charger disconnected and battery energy non-decreasing over the stabilized hold window.",
+    "mode_A_battery_screen": "For a first low-power demonstrator, 50-100 Wh is a plausible screening buffer envelope for hours-scale startup at single-digit/low-tens-of-watts deficit, but final capacity remains measurement-driven.",
     "calcium_product_boundary": "Recovered solids are recorded as CaCO3-rich mineral product until composition and use-specific qualification justify a stronger material claim."
   },
   "current_project_state": {
     "nickname": "Howl's Moving Castle / Calcifer",
     "latest_simulation": "projects/janus-engine/simulations/JANUS-ENGINE-R0A4D-AXLE-VANE-CRYSTAL-TRAP-SCREEN-v1.0.json",
     "latest_simulation_status": "MODEL_PASS_FOR_CRYSTAL_TRAP_ARCHITECTURE_VANE_POWER_RECOVERY_CONDITIONAL",
-    "dominant_boss": "Measure long-duration coupled oxygen flux, hydraulic/rotational parasitics and calcium partitioning under real water chemistry.",
-    "next_experimental_gate": "R0A4E_CALCIFER_FACTORIAL_LONG_HOLD"
+    "dominant_boss": "Measure long-duration coupled oxygen flux, auxiliary watts, startup energy, wall adhesion/wear and calcium partitioning under real water chemistry.",
+    "next_experimental_gates": ["R0A4E_CALCIFER_FACTORIAL_LONG_HOLD", "R0A4F1_SURFACE_COUPON_LONG_HOLD", "R2C1_STARTUP_ENERGY_TRACE"]
   },
   "project_constitution": [
     "NO_STREAM_IS_WASTE_UNTIL_REMAINING_USEFUL_DUTIES_HAVE_BEEN_EVALUATED",
@@ -84,13 +90,16 @@
     "MEMBRANE_AREA_IS_NOT_O2_OUTPUT_WITHOUT_TRANSPORT_CALIBRATION",
     "WASTE_HEAT_REQUIRES_A_REAL_EXTERNAL_SINK",
     "VANE_POWER_RECOVERY_MUST_NOT_DOUBLE_COUNT_PUMP_ENERGY",
-    "CRYSTAL_TRAP_AND_SCRAPER_EFFICIENCIES_MUST_BE_MEASURED_BEFORE LIFETIME CLAIMS"
+    "CRYSTAL_TRAP_AND_SCRAPER_EFFICIENCIES_MUST_BE_MEASURED_BEFORE_LIFETIME_CLAIMS",
+    "LOW_ADHESION_SURFACE_MUST_SURVIVE_WEAR_AND_CHEMISTRY_TESTS",
+    "EXTERNALLY_CHARGED_BATTERY_ENERGY_IS_NEVER_COUNTED_AS_JANUS_GENERATION",
+    "SELF_DRIVE_REQUIRES_NONDECREASING_BATTERY_ENERGY_AFTER_STABILIZATION_WITH_EXTERNAL_CHARGER_OFF"
   ],
   "next_actions": [
-    "Run A0/A1/A2/A3 factorial: stationary/no-trap, trap-only, rotating-Axle-only, and combined rotating-Axle + trap.",
-    "Log wall CaCO3 mass, trap/filter mass, Axle torque, DeltaP, pump/drive watts and POMS J_O2 over a long hold.",
-    "Measure incremental vane DeltaP separately from useful scraper/flow-distribution benefit.",
-    "Use the external-current energy-recovery branch only where the external hydraulic source and corresponding drag are explicitly budgeted.",
-    "Replace normalized trap/scraper sensitivity parameters with measured efficiencies before lifetime or maintenance-interval claims."
+    "Run A0/A1/A2/A3 long-hold factorial for scale partitioning and self-cleaning.",
+    "Run bare versus hard-low-adhesion versus superhydrophobic wall coupons under representative chemistry and repeated wiper cycles.",
+    "Instrument startup battery Wh in/out and freeze capacity from measured P_deficit(t), not from analogy.",
+    "Use battery surplus charging as a diagnostic: only after reserve SoC is stable/restored may persistent power be declared exportable.",
+    "Replace normalized trap/scraper/coating parameters with measured values before lifetime or maintenance-interval claims."
   ]
 }
