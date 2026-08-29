@@ -1,0 +1,134 @@
+{
+  "artifact_uuid": "JANUS-ENGINE-TOPA-SPIDER-CALCIFER-ANTISCALANT-RUN-003-v1.0",
+  "timestamp": "2026-08-30T01:31:00+03:00",
+  "version": "v1.0",
+  "title": "JANUS Engine — TOPA + Spider calcium-scale prevention, crystal management and washable-trap crawl",
+  "observer": "Hawkar / JANUS",
+  "node_type": "research_crawl_and_materials_selection",
+  "branch_name": "Janus Engine",
+  "branch_id": "JANUS_ENGINE",
+  "git_branch": "research/janus-engine",
+  "status": "PASS_WITH_CANDIDATES_REQUIRES_POMS_AND_MATERIAL_COMPATIBILITY_TESTS",
+  "mission": [
+    "identify practical CaCO3 antiscalants suitable for a low-mineral recirculating water loop",
+    "prefer chemistries that inhibit adhesion or keep precipitate soft/dispersed rather than creating hard wall scale",
+    "connect chemistry to removable washable side-stream filters / crystal traps",
+    "preserve membrane, PEMFC, seals and oxygen-side compatibility boundaries"
+  ],
+  "archive_and_literature_result": {
+    "internal_registry_search": "No prior dedicated JANUS antiscalant record was found in the accessible meta-registry code search during this pass.",
+    "arxiv_anchor": {
+      "id": "arXiv:2311.11404",
+      "title": "Adsorption isotherm and mechanism of Ca2+ binding to polyelectrolyte",
+      "relevance": "supports sodium polyacrylate/PAA as a mechanistically grounded CaCO3 antiscalant candidate"
+    },
+    "industrial_review_2026": {
+      "reference": "Desalination 631 (2026) 120221",
+      "doi": "10.1016/j.desal.2026.120221",
+      "finding": "phosphonates and polycarboxylates remain leading industrial inhibitor families; common representatives include PBTC, ATMP, HEDP and PAA, with many applications in roughly 1-10 mg/L ranges",
+      "caution": "mechanisms are more complex than simple calcium chelation; dosage must be validated against actual water chemistry"
+    }
+  },
+  "candidate_rank": [
+    {
+      "rank": 1,
+      "candidate": "low-molecular-weight polyacrylate / sodium polyacrylate (PAA/NaPAA)",
+      "role": "threshold inhibitor + dispersant + crystal-growth modifier",
+      "why_JANUS": "strong CaCO3 evidence, phosphorus-free, can reduce adherent scale and favor smaller/dispersed particles that are compatible with a side-stream washable trap concept",
+      "evidence": [
+        "arXiv:2311.11404 Ca2+ binding mechanism",
+        "Desalination 268 (2011) 38-45 PAA inhibited CaCO3 and CaSO4 in cooling-water tests",
+        "Desalination 397 (2016) 43-52 polymer antiscalants inhibited calcite growth in recirculating cooling pilot plants"
+      ],
+      "JANUS_boundary": "Must be tested for adsorption/fouling on the selected POMS support and for any effect on dissolved-O2 transport before full-loop dosing."
+    },
+    {
+      "rank": 2,
+      "candidate": "polyaspartic acid (PASP), optionally studied with PESA",
+      "role": "biodegradable crystal-growth inhibitor / green antiscalant",
+      "why_JANUS": "PASP has industrial-circuit CaCO3 growth-inhibition evidence; PASP/PESA mixtures have shown delayed nucleation plus strong growth suppression, offering a lower-phosphorus path",
+      "evidence": [
+        "Water Research 186 (2020) 116334: PASP and PAA inhibited CaCO3 crystal growth; PESA delayed nucleation; PASP+PESA mixture produced long delay and strong inhibition in the tested circuit"
+      ],
+      "JANUS_boundary": "Biodegradability can be environmentally attractive but may affect microbiological control in a warm closed loop; biofouling must be monitored."
+    },
+    {
+      "rank": 3,
+      "candidate": "HEDP or PBTC-class phosphonate",
+      "role": "high-efficiency threshold inhibitor / crystal morphology modifier",
+      "why_JANUS": "very strong industrial CaCO3 scale-inhibition precedent and recent evidence that HEDP-4Na makes CaCO3 less ordered and less adherent",
+      "evidence": [
+        "Journal of Crystal Growth 691 (2026) 128674: HEDP-4Na changed CaCO3 morphology and reduced adhesion",
+        "Desalination 631 (2026) 120221: HEDP/PBTC/ATMP remain widespread commercial inhibitors"
+      ],
+      "JANUS_boundary": "Phosphonates can themselves form calcium/magnesium-phosphonate deposits under some conditions and add phosphorus to the water. Treat as secondary candidate until compatibility and speciation are measured."
+    },
+    {
+      "rank": 4,
+      "candidate": "sodium hexametaphosphate (SHMP)",
+      "role": "classic threshold inhibitor / sequestration aid",
+      "why_JANUS": "well-established antiscalant performance and strong calcite-deposition reduction in comparative studies",
+      "evidence": [
+        "2022 calcite inhibitor comparison found SHMP highly effective against CaCO3 deposition"
+      ],
+      "JANUS_boundary": "Polyphosphate hydrolysis/reversion, phosphorus loading and possible long-term chemistry drift make it less attractive than PAA/PASP for the first closed-loop JANUS trial."
+    },
+    {
+      "rank": 5,
+      "candidate": "citric acid / citrate",
+      "role": "offline or condition-triggered descaling/cleaning, not preferred as continuous-dose primary inhibitor",
+      "why_JANUS": "membrane-industry cleaning guidance commonly uses citric acid for early carbonate-scale removal",
+      "JANUS_boundary": "Continuous acidification can alter corrosion, materials, membrane transport and system pH. Use only in an isolated cleaning cycle after material-compatibility validation."
+    }
+  ],
+  "strongest_architecture_connection": {
+    "name": "CALCIFER_SIDE_STREAM_CRYSTAL_TRAP",
+    "principle": "Do not rely on chemistry to keep all calcium dissolved forever. Use low-mineral make-up water + low-dose antiscalant to prevent wall adhesion, then route a small side-stream through a removable crystal-collection chamber.",
+    "industrial_precedent": "Fluidized-bed pellet softening intentionally crystallizes CaCO3 onto seed media and removes pellets. Such reactors have decades of water-softening precedent and power-plant circulating-water applications.",
+    "JANUS_adaptation": [
+      "main Axle chamber stays near neutral operating chemistry and receives the inhibitor/dispersant only after compatibility validation",
+      "scraper/wiper action removes nascent wall scale before it becomes thick",
+      "centrifugal flow sends detached solids toward an outer gutter",
+      "side-stream washable basket/filter captures loose particles",
+      "optional future seed-crystal cassette provides a preferred nucleation surface so calcium deposits in a serviceable chamber instead of on the Axle or POMS stack",
+      "filter differential pressure or mass gain becomes a maintenance signal"
+    ]
+  },
+  "mechanical_boundary": {
+    "decision": "Do not use rigid metal-to-wall rubbing as the default 'lathe' interface.",
+    "preferred": "controlled small radial clearance plus sacrificial/compliant scraper or wiper inserts carried by the Axle ring",
+    "reason": "direct hard contact risks wear debris, galling, heat, seal damage, rotor seizure and contamination of membrane/PEMFC water. The scraping edge should be replaceable and softer/engineered relative to the chamber wall."
+  },
+  "proposed_first_matrix": {
+    "water": ["DI/distilled baseline", "moderate hardness", "hard-water stress control"],
+    "chemistry_arms": ["no additive control", "PAA/NaPAA low-dose screening", "PASP low-dose screening", "PASP+PESA exploratory", "HEDP low-dose comparator"],
+    "measure": [
+      "Ca hardness and alkalinity",
+      "pH and conductivity",
+      "CaCO3 mass on wall coupon",
+      "CaCO3 mass captured in washable trap",
+      "particle-size distribution",
+      "Axle torque trend",
+      "DeltaP trend",
+      "POMS O2-flux change",
+      "membrane visual/fouling inspection",
+      "corrosion/material coupon change"
+    ],
+    "selection_metric": "minimize adherent-wall CaCO3 and O2-flux loss while maximizing removable-trap capture at the lowest reagent dose and lowest parasitic burden"
+  },
+  "hard_invariants": [
+    "ANTISCALANT_DOSAGE_IS_NOT_TRANSFERABLE_BETWEEN_WATERS_WITHOUT_SPECIFIC_CHEMISTRY_TESTING",
+    "NO_CHEMICAL_MAY_BE_ADMITTED_TO_THE_AXLE_LOOP_BEFORE_POMS_SEAL_METAL_AND_PEMFC_COMPATIBILITY_SCREENING",
+    "CHEMISTRY_SHOULD_PREVENT_ADHERENT_SCALE_NOT CREATE_UNCONTROLLED_BULK_SLUDGE",
+    "WASHABLE_FILTERS_REQUIRE_A_BYPASS_AND_DIFFERENTIAL_PRESSURE_LIMIT_SO_BLOCKAGE_CANNOT_STARVE_THE_GILL_LOOP",
+    "DIRECT_METAL_ON_WALL_ROTARY_CONTACT_IS_NOT_THE_BASELINE_SELF_CLEANING_MECHANISM",
+    "CLEANING_ACIDS_ARE_MAINTENANCE_CHEMISTRY_NOT_CONTINUOUS_OPERATING_CHEMISTRY"
+  ],
+  "spider_verdict": {
+    "first_candidate": "PAA/NaPAA",
+    "green_candidate": "PASP, with PASP+PESA as an exploratory synergistic pair",
+    "high_performance_comparator": "HEDP/PBTC-class phosphonate",
+    "best_system_level_move": "combine low-dose anti-adhesion chemistry with mechanical Axle wiping plus a removable side-stream seed/filter trap",
+    "next_gate": "R0A4C_ANTISCALANT_AND_WASHABLE_CRYSTAL_TRAP_MATRIX"
+  }
+}
