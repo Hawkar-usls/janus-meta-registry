@@ -1,19 +1,19 @@
 {
-  "artifact_uuid": "JANUS-ENGINE-PROJECT-MANIFEST-v1.5",
+  "artifact_uuid": "JANUS-ENGINE-PROJECT-MANIFEST-v1.6",
   "timestamp": "2026-08-30T02:37:00+03:00",
-  "version": "v1.5",
+  "version": "v1.6",
   "title": "JANUS Engine — dedicated research-branch manifest",
   "observer": "Hawkar / JANUS",
   "node_type": "project_manifest",
   "repository": "Hawkar-usls/janus-meta-registry",
   "git_branch": "research/janus-engine",
   "status": "ACTIVE_DEDICATED_RESEARCH_BRANCH",
-  "purpose": "Structured index for JANUS Engine architecture, simulations, literature crawls and staged validation without prematurely merging research conclusions into main.",
   "branch_records": [
     "projects/janus-engine/research/TOPA-SPIDER-ARXIV-VRU-AKS-RUN-001-v1.0.json",
     "projects/janus-engine/research/TOPA-SPIDER-CITATION-GRAPH-RUN-002-v1.0.json",
     "projects/janus-engine/research/TOPA-SPIDER-CALCIFER-ANTISCALANT-RUN-003-v1.0.json",
     "projects/janus-engine/research/TOPA-SPIDER-AXLE-MAGNETIC-DRIVE-RUN-004-v1.0.json",
+    "projects/janus-engine/research/TOPA-SPIDER-AXLE-MAGNETIC-DRIVE-RUN-004-v1.1.json",
     "projects/janus-engine/gates/JANUS-ENGINE-R2B-DIRECT-GILL-PEMFC-v1.0.json",
     "projects/janus-engine/gates/JANUS-ENGINE-R0A2-POMS-MEMBRANE-STARTUP-v1.0.json",
     "projects/janus-engine/gates/JANUS-ENGINE-R0A4F-LOW-ADHESION-CYLINDER-WALL-v1.0.json",
@@ -21,24 +21,15 @@
     "projects/janus-engine/simulations/JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-004-DIRECT-GILL-PEMFC-v1.0.json",
     "projects/janus-engine/simulations/JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-005-POMS-STARTUP-v1.0.json",
     "projects/janus-engine/simulations/JANUS-ENGINE-R0A4D-AXLE-VANE-CRYSTAL-TRAP-SCREEN-v1.0.json",
-    "projects/janus-engine/simulations/JANUS-ENGINE-M4-MAGNETIC-COMMUTATION-SELECTION-SCREEN-v1.0.json"
+    "projects/janus-engine/simulations/JANUS-ENGINE-M4-MAGNETIC-COMMUTATION-SELECTION-SCREEN-v1.0.json",
+    "projects/janus-engine/simulations/JANUS-ENGINE-M4-MAGNETIC-COMMUTATION-SELECTION-SCREEN-v1.1.json"
   ],
   "tracks": {
-    "T1_GILL_AND_WATER_TRANSPORT": [
-      "data/JANUS-ENGINE-R0A1-ANNULAR-HOLLOW-FIBER-GILL-PACKAGE-v1.0.json",
-      "projects/janus-engine/gates/JANUS-ENGINE-R0A2-POMS-MEMBRANE-STARTUP-v1.0.json"
-    ],
     "T3_SELF_DRIVE_AND_GENERATION": [
       "data/JANUS-ENGINE-R2A-SELF-DRIVE-NET-GENERATION-v1.0.json",
       "projects/janus-engine/gates/JANUS-ENGINE-R2B-DIRECT-GILL-PEMFC-v1.0.json",
       "projects/janus-engine/gates/JANUS-ENGINE-R2C-BUFFER-BATTERY-ENERGY-MANAGEMENT-v1.0.json",
       "projects/janus-engine/simulations/JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-005-POMS-STARTUP-v1.0.json"
-    ],
-    "T4_TOPA_SPIDER_EXTERNAL_EVIDENCE": [
-      "projects/janus-engine/research/TOPA-SPIDER-ARXIV-VRU-AKS-RUN-001-v1.0.json",
-      "projects/janus-engine/research/TOPA-SPIDER-CITATION-GRAPH-RUN-002-v1.0.json",
-      "projects/janus-engine/research/TOPA-SPIDER-CALCIFER-ANTISCALANT-RUN-003-v1.0.json",
-      "projects/janus-engine/research/TOPA-SPIDER-AXLE-MAGNETIC-DRIVE-RUN-004-v1.0.json"
     ],
     "T5_CALCIFER_SCALE_AND_SELF_MAINTENANCE": [
       "projects/janus-engine/research/TOPA-SPIDER-CALCIFER-ANTISCALANT-RUN-003-v1.0.json",
@@ -46,44 +37,38 @@
       "projects/janus-engine/simulations/JANUS-ENGINE-R0A4D-AXLE-VANE-CRYSTAL-TRAP-SCREEN-v1.0.json"
     ],
     "T6_MAGNETIC_AXLE_AND_ENERGY_BUFFER": [
-      "projects/janus-engine/research/TOPA-SPIDER-AXLE-MAGNETIC-DRIVE-RUN-004-v1.0.json",
-      "projects/janus-engine/simulations/JANUS-ENGINE-M4-MAGNETIC-COMMUTATION-SELECTION-SCREEN-v1.0.json",
+      "projects/janus-engine/research/TOPA-SPIDER-AXLE-MAGNETIC-DRIVE-RUN-004-v1.1.json",
+      "projects/janus-engine/simulations/JANUS-ENGINE-M4-MAGNETIC-COMMUTATION-SELECTION-SCREEN-v1.1.json",
       "projects/janus-engine/gates/JANUS-ENGINE-R2C-BUFFER-BATTERY-ENERGY-MANAGEMENT-v1.0.json"
     ]
   },
-  "architecture_modes": {
-    "MODE_A_DIRECT_GILL_PEMFC": "water -> POMS gill -> low-pO2 recirculating cathode gas -> PEMFC -> bidirectional DC bus -> auxiliaries + battery",
-    "MODE_B_INTEGRATED_VRU_AKS": "dissolved-gas extraction -> conditioning -> O2/N2 separation -> useful O2/N2 duties -> optional cryogenic branch"
-  },
   "latest_findings": {
-    "magnetic_selection": "Coreless/slotless axial-flux PM starter-generator selected as first Axle magnetic architecture. It directly solves startup, controlled rotation and regeneration without intentionally creating a magnetic braking barrier that later needs cancellation.",
-    "active_cancellation": "Position-synchronous current injection remains an optional ripple/cogging-trim function only if bench data shows enough benefit to exceed coil/inverter losses.",
-    "electropermanent_role": "Electropermanent/variable-flux magnets are retained for infrequent persistent state changes such as latches, valves or rare flux modes, not baseline per-pole Axle commutation.",
-    "battery_integration": "Externally precharged battery supplies startup and transients. After PEMFC/gill stabilization, genuine surplus can recharge the same battery; self-drive remains battery-neutral only if SOC is non-decreasing with external charger disconnected.",
-    "scale_management": "Low-hardness water + low-adhesion wall + Axle/wipers + crystal trap remain the layered calcium-control architecture."
+    "magnetic_baseline": "Coreless/slotless axial-flux PM starter-generator remains the preferred first Axle drive because it provides low-cogging battery spinup, RPM control and regeneration in one bidirectional machine.",
+    "micro_EPM_refinement": "TOPA/Spider found that small electropermanent magnets can switch with milli-joule pulses and zero holding power, so per-sector gated magnetic assist is not categorically rejected. It is reopened as an A/B branch provided real torque across the JANUS gap is sufficient and total switching watts remain below the energy saved.",
+    "micro_EPM_screen": "At 8 switching events per revolution, 5.8-10 mJ/event corresponds to about 0.23-0.40 W at 300 RPM and 0.46-0.80 W at 600 RPM. At 16 events/rev the same range is about 0.46-0.80 W at 300 RPM and 0.93-1.60 W at 600 RPM. These are switching-only figures; force, drivers, hysteresis, eddy-current and reliability losses remain unmeasured.",
+    "battery_startup": "External precharge -> battery spinup/auxiliary support -> gill/PEMFC state convergence -> load transfer -> first surplus restores reserve SOC -> export only above reserve recovery.",
+    "self_drive_rule": "External charger disconnected and SOC_end >= SOC_start over the stabilized hold after all pumps, fans, magnetic electronics and controls are charged."
   },
   "current_project_state": {
     "nickname": "Howl's Moving Castle / Calcifer",
-    "latest_simulation": "projects/janus-engine/simulations/JANUS-ENGINE-M4-MAGNETIC-COMMUTATION-SELECTION-SCREEN-v1.0.json",
-    "latest_simulation_status": "CORELESS_AFPM_SELECTED_EPM_PER_SECTOR_REJECTED",
-    "dominant_boss": "Bench-measure Axle breakaway/drag torque, starter energy, motor/generator efficiency, inverter idle loss and eddy-current interaction, then feed measured values into the POMS/PEMFC startup model.",
-    "next_experimental_gate": "R0M1_CORELESS_AFPM_BENCH_CALIBRATION"
+    "latest_simulation": "projects/janus-engine/simulations/JANUS-ENGINE-M4-MAGNETIC-COMMUTATION-SELECTION-SCREEN-v1.1.json",
+    "latest_simulation_status": "AFPM_BASELINE_EPM_AB_TEST_WARRANTED",
+    "next_experimental_gate": "R0M1A_CORELESS_AFPM_VS_MICROPULSE_EPM_BENCH_A_B"
   },
   "project_constitution": [
     "PROCESS_INTEGRATION_REDUCES_PARASITICS_BUT_DOES_NOT_CREATE_ENERGY",
-    "OXYGEN_IS_AN_OXIDIZER_NOT_PRIMARY_ENERGY",
-    "PERMANENT_MAGNETS_ARE_FIELD_SOURCES_NOT_NET_ENERGY SOURCES",
+    "PERMANENT_MAGNETS_ARE_FIELD_SOURCES_NOT_NET_ENERGY_SOURCES",
     "EVERY_ACTIVE_MAGNETIC_CONTROL_WATT_IS_COUNTED",
+    "EPM_ZERO_HOLD_POWER_DOES_NOT_MEAN_ZERO_SWITCHING_ENERGY",
     "REGENERATION_IS_CREDITED_ONLY_FROM_AN_INDEPENDENTLY_IDENTIFIED_MECHANICAL_SOURCE",
     "BATTERY_STARTUP_ENERGY_IS_NOT_STEADY_STATE_GENERATION",
     "BATTERY_NEUTRAL_SELF_DRIVE_REQUIRES_SOC_END_GREATER_THAN_OR_EQUAL_TO_SOC_START",
     "DO_NOT_JUDGE_SELF_DRIVE_AT_T0"
   ],
   "next_actions": [
-    "Parameterize/build a coreless AFPM bench article and measure no-current breakaway/drag torque versus RPM.",
-    "Map motor and generator efficiency at 60/120/300/600 RPM and measure inverter idle/switching load.",
-    "Integrate measured startup electrical energy into battery sizing and RUN-005 transient state machine.",
-    "Test harmonic torque-ripple compensation only if native ripple justifies its electrical cost.",
-    "Reserve electropermanent magnets for low-duty-cycle persistent states rather than per-revolution Axle switching."
+    "Bench coreless AFPM and micro-EPM assist against the same Axle load profile.",
+    "Measure total Wh from S0_OFF to target RPM and through the startup hold, not just peak torque.",
+    "For EPM branch measure E_switch, field on/off ratio, assist torque, residual braking torque, thermal rise and switch lifetime.",
+    "Select micro-EPM assist only if it reduces integrated battery Wh more than all switching and driver losses; otherwise keep AFPM-only baseline."
   ]
 }
