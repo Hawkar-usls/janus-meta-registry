@@ -1,0 +1,134 @@
+{
+  "artifact_uuid": "JANUS-ENGINE-TOPA-SPIDER-AXLE-MAGNETIC-FIELD-RUN-005-v1.0",
+  "timestamp": "2026-08-30T02:37:00+03:00",
+  "version": "v1.0",
+  "title": "JANUS Engine — TOPA + Spider magnetic-field / copper-vs-brass Axle pass",
+  "observer": "Hawkar / JANUS",
+  "node_type": "research_crawl_and_electromagnetic_material_screen",
+  "repository": "Hawkar-usls/janus-meta-registry",
+  "git_branch": "research/janus-engine",
+  "status": "PASS_WITH_CLEAR_MEASUREMENT_GATE_NO_HARDWARE_FIELD_VALUE_YET",
+  "mission": [
+    "Determine how a copper or brass Axle body changes the magnetic field and parasitic losses of the selected coreless AFPM / optional micro-EPM architecture.",
+    "Define a synchronized magnetic-field measurement protocol for the rotating Axle.",
+    "Separate static permanent-magnet field, stator-drive field, EPM switching transients and eddy-current reaction field.",
+    "Choose the preliminary structural conductor candidate without pretending to have measured JANUS hardware."
+  ],
+  "literature_anchors": [
+    {
+      "reference": "NIST Technical Note 1531 conductivity measurements",
+      "finding": "Copper C110-type samples measured about 57.2-57.6 MS/m while brass C260 measured about 15.5 MS/m at room temperature.",
+      "role": "conductivity anchor for eddy-current screening"
+    },
+    {
+      "reference": "Ain Shams Engineering Journal 2024, DOI 10.1016/j.asej.2024.103091",
+      "finding": "Coreless AFPM machines remove iron-core losses/cogging but require attention to electromagnetic leakage, winding loss and field topology.",
+      "role": "selected machine-family context"
+    },
+    {
+      "reference": "Energies 2025, DOI 10.3390/en18102603",
+      "finding": "Conductors exposed to the alternating air-gap field in slotless axial-flux machines develop additional eddy-current loss.",
+      "role": "direct warning for conductive structures near rotating/time-varying field"
+    },
+    {
+      "reference": "IEEE TIA 2024, DOI 10.1109/TIA.2024.3379314",
+      "finding": "Coreless PCB axial-flux windings can incur substantial AC/eddy losses when copper is directly exposed to the rotating air-gap field.",
+      "role": "conductive-body / high-dBdt analogy"
+    }
+  ],
+  "physical_interpretation": {
+    "copper_and_brass_magnetism": "Copper and ordinary brass are approximately non-ferromagnetic, so they do not concentrate static flux like iron or electrical steel. Their main electromagnetic effect here is conductivity, not high permeability.",
+    "co_rotating_field_nuance": "Permanent magnets rigidly mounted to the same Axle produce a field that is approximately stationary in the Axle material frame. In an ideal symmetric rotor this own-field component alone does not continuously sweep through the rotor body and therefore is not the main source of rotor eddy currents.",
+    "what_drives_eddy_currents": [
+      "stator current field changing relative to the rotating Axle",
+      "spatial harmonics and asymmetry of the PM field",
+      "micro-EPM switching pulses / high dB/dt",
+      "stationary conductive chamber or nearby metallic structures seeing the rotating PM field",
+      "transient acceleration/regeneration states and inverter harmonics"
+    ],
+    "lenz_boundary": "Any induced current creates a reaction field opposing the responsible field change and appears as drag/heat or altered field distribution; it is never free acceleration."
+  },
+  "material_screen": {
+    "conductivity_MS_m": {
+      "copper_representative": 57.5,
+      "brass_C260_representative": 15.5
+    },
+    "conductivity_ratio_copper_to_brass": 3.71,
+    "interpretation": "For otherwise comparable low-frequency geometry, copper has a much stronger tendency to support eddy currents than C260 brass. Exact drag/loss is geometry- and frequency-dependent and must not be inferred as a universal 3.71x loss ratio.",
+    "preliminary_structural_choice": "BRASS_OR_OTHER_LOWER_CONDUCTIVITY_NONFERROMAGNETIC_ALLOY_PREFERRED_FOR_AXLE_BODY_PENDING_MECHANICAL_AND_WATER_CHEMISTRY_TESTS",
+    "why": [
+      "lower eddy-current tendency than copper",
+      "still non-ferromagnetic for the intended field geometry",
+      "better structural/machining role than soft high-conductivity copper in many rotor-body applications"
+    ],
+    "caution": "Brass alloy selection must include dezincification/corrosion resistance in the actual low-hardness/DI-water chemistry. Do not freeze C260 specifically as the final wet-material alloy without corrosion testing.",
+    "copper_role": "retain copper where high electrical/thermal conductivity is deliberately useful, but electrically segment or isolate large closed current loops near the changing magnetic field where practical"
+  },
+  "skin_depth_screen": {
+    "formula": "delta = sqrt(1/(pi*f*mu0*sigma)) for a nonmagnetic conductor",
+    "electrical_frequency": "f_e = pole_pairs * RPM / 60",
+    "assumed_materials": "sigma_Cu=57.5 MS/m, sigma_brass=15.5 MS/m, mu_r approximately 1",
+    "cases_mm": [
+      {"pole_pairs":4,"RPM":60,"f_Hz":4,"delta_Cu_mm":33.19,"delta_brass_mm":63.92},
+      {"pole_pairs":4,"RPM":120,"f_Hz":8,"delta_Cu_mm":23.47,"delta_brass_mm":45.20},
+      {"pole_pairs":4,"RPM":300,"f_Hz":20,"delta_Cu_mm":14.84,"delta_brass_mm":28.59},
+      {"pole_pairs":4,"RPM":600,"f_Hz":40,"delta_Cu_mm":10.49,"delta_brass_mm":20.21},
+      {"pole_pairs":8,"RPM":60,"f_Hz":8,"delta_Cu_mm":23.47,"delta_brass_mm":45.20},
+      {"pole_pairs":8,"RPM":120,"f_Hz":16,"delta_Cu_mm":16.59,"delta_brass_mm":31.96},
+      {"pole_pairs":8,"RPM":300,"f_Hz":40,"delta_Cu_mm":10.49,"delta_brass_mm":20.21},
+      {"pole_pairs":8,"RPM":600,"f_Hz":80,"delta_Cu_mm":7.42,"delta_brass_mm":14.29}
+    ],
+    "interpretation": "At the current JANUS 60-600 RPM screening range and 4-8 pole-pair examples, skin depth remains millimetres to centimetres rather than microscopic. A few-mm Axle shell therefore will not behave like a perfect magnetic shield, but closed conductive paths can still carry meaningful eddy currents and require measurement."
+  },
+  "measurement_map": {
+    "sensors": [
+      "stationary calibrated 3-axis Hall / gauss probes for DC through low-frequency Bx, By, Bz",
+      "small search coil or equivalent dB/dt pickup for switching harmonics/transients",
+      "encoder index for rotor angle synchronization",
+      "phase-current and DC-bus current measurement",
+      "Axle torque / drive power and rotor/chamber temperature"
+    ],
+    "recommended_sample_rate": "At least several kS/s for the first 60-600 RPM / <=80 Hz fundamental screen so harmonics and EPM pulses are not aliased; EPM pulse capture may require a separate faster transient channel.",
+    "probe_locations": [
+      "near Axle magnetic ring / intended AFPM air gap",
+      "inner chamber wall",
+      "POMS gill boundary",
+      "outside chamber housing as stray-field measurement",
+      "near sensitive electronics/PEMFC instrumentation"
+    ],
+    "states": [
+      "M0_BACKGROUND: Axle unmagnetized/de-energized where possible; measure ambient and sensor offset",
+      "M1_STATIC_PM: rotor stationary, coils off; map B(theta,r,z)",
+      "M2_PASSIVE_SPIN: external spin, drive coils off; isolate rotating-PM plus eddy reaction field",
+      "M3_MOTOR: battery/AFPM drives Axle at 60/120/300/600 RPM; measure field plus electrical input",
+      "M4_GENERATOR: independently driven Axle with regenerative load; map reaction field and recovered power",
+      "M5_EPM: optional micro-EPM assist; capture pulse dB/dt, residual field and heating"
+    ],
+    "record_per_state": [
+      "B_peak and B_RMS for each axis",
+      "vector magnitude and phase versus encoder angle",
+      "FFT fundamental and harmonics",
+      "dB/dt peak during switching",
+      "drag torque and electrical watts",
+      "temperature rise of Axle/chamber",
+      "stray field versus radius"
+    ]
+  },
+  "copper_vs_brass_A_B": {
+    "principle": "Use geometrically identical interchangeable conductive sleeves or representative coupons so material is the only intentional variable.",
+    "compare": [
+      "no-current spin-down time",
+      "incremental drive watts required for the same RPM",
+      "B waveform attenuation/phase shift at fixed probe points",
+      "temperature rise",
+      "EPM pulse response",
+      "corrosion / water-chemistry condition after hold"
+    ],
+    "selection_metric": "choose the wet structural material that minimizes electromagnetic parasitics plus corrosion/mechanical risk, not the material with the highest electrical conductivity"
+  },
+  "spider_verdict": {
+    "field_measurement": "MANDATORY; actual JANUS magnetic field in tesla cannot be honestly stated before magnet grade, geometry, air gap, pole count, coil current and hardware measurements/FEA are frozen.",
+    "material_preference_now": "brass-class lower-conductivity non-ferromagnetic structural body is a better first electromagnetic candidate than solid copper, subject to dezincification-resistant alloy selection and water compatibility",
+    "next_gate": "R0M2_CU_BRASS_MAGNETIC_FIELD_METROLOGY"
+  }
+}
