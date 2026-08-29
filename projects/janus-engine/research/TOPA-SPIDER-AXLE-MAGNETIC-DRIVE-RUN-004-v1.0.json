@@ -1,0 +1,110 @@
+{
+  "artifact_uuid": "JANUS-ENGINE-TOPA-SPIDER-AXLE-MAGNETIC-DRIVE-RUN-004-v1.0",
+  "timestamp": "2026-08-30T02:37:00+03:00",
+  "version": "v1.0",
+  "title": "JANUS Engine — TOPA + Spider magnetic Axle drive / cogging / electropermanent comparison",
+  "observer": "Hawkar / JANUS",
+  "node_type": "research_crawl_and_architecture_selection",
+  "repository": "Hawkar-usls/janus-meta-registry",
+  "git_branch": "research/janus-engine",
+  "status": "PASS_ARCHITECTURE_SELECTED_PENDING_BENCH_CALIBRATION",
+  "mission": [
+    "test whether timed cancellation of braking permanent-magnet sectors can improve Axle motion",
+    "compare passive alternating magnets, active torque-ripple compensation, electropermanent/variable-flux switching, hybrid excitation, and coreless axial-flux PM starter-generator topologies",
+    "select the topology that best fits JANUS low-starting-torque, bidirectional starter/generator and low-parasitic requirements"
+  ],
+  "literature_findings": [
+    {
+      "topic": "coreless/slotless axial-flux PM machines",
+      "finding": "Coreless and slotless AFPM topologies eliminate slot-effect cogging torque and are repeatedly used where low starting torque matters. Reviews also note removal of iron/hysteresis losses, while tradeoffs include larger magnetic air-gap/leakage flux, structural stiffness and higher PM/copper burden.",
+      "references": [
+        "IET Electric Power Applications 2020, DOI 10.1049/iet-epa.2019.0385",
+        "IET Electric Power Applications 2022 systematic review, DOI 10.1049/elp2.12218",
+        "Energies 2024 cogging review, DOI 10.3390/en17051089"
+      ]
+    },
+    {
+      "topic": "active cogging / torque ripple compensation",
+      "finding": "Position-synchronous harmonic-current injection and adaptive learning controllers can generate an opposing electromagnetic torque to reduce periodic torque ripple. This is a control tool, not a net-energy source; copper/core/inverter losses must be charged.",
+      "references": [
+        "ISA Transactions 2021, DOI 10.1016/j.isatra.2020.10.045",
+        "IEEE Transactions on Magnetics 2026, DOI 10.1109/TMAG.2026.3701765",
+        "ECCE 2025 torque-ripple compensation, DOI 10.1109/ECCE58356.2025.11260321"
+      ]
+    },
+    {
+      "topic": "variable-flux memory machines / electropermanent behavior",
+      "finding": "Low-coercivity magnets can have their magnetization state changed by short current pulses and then retain the new state without continuous field current. This is attractive for infrequent operating-mode changes, but repeated re/de-magnetization has finite pulse energy and hysteretic/copper losses.",
+      "references": [
+        "CES Transactions on Electrical Machines and Systems 2018, DOI 10.23919/TEMS.2018.8326450",
+        "Electrical Engineering / VFMM pulse-trajectory study 2023: tested +30 A and -25 A pulses; measured re/de-magnetization operation losses in the tens of joules on that prototype",
+        "World Electric Vehicle Journal 2025, DOI 10.3390/wevj16030115",
+        "arXiv:2603.24811 switchable-polarity electropermanent magnet valve"
+      ],
+      "boundary": "The reported pulse energies are machine-specific and are not directly scalable to JANUS; they nevertheless show that per-sector magnetic-state reversal is not intrinsically free or lossless."
+    },
+    {
+      "topic": "hybrid excitation PM machines",
+      "finding": "Adding controlled field excitation to PM machines gives useful flux enhancement/weakening and can improve operating range, but adds copper, thermal and control complexity.",
+      "references": [
+        "IET Electric Power Applications 2015, DOI 10.1049/iet-epa.2015.0115",
+        "Energies 2021, DOI 10.3390/en14040916"
+      ]
+    }
+  ],
+  "physics_result_for_timed_negative_torque_cancellation": {
+    "model": "For a conservative PM interaction with torque tau_PM(theta), the work over a complete mechanical cycle is integral(tau_PM dtheta)=0 when magnetic state and geometry return to the same state.",
+    "half_cycle_argument": "If the positive half-cycle is left passive but an active coil cancels the negative half-cycle, the coil must supply the mechanical work needed to restore the magnetic-field configuration. In an ideal lossless actuator the electrical/mechanical work supplied by the coil equals the apparent positive PM work harvested over the cycle; with real losses the required electrical energy is greater.",
+    "conclusion": "Timed cancellation can smooth torque and reduce a troublesome cogging barrier, but it cannot turn a passive PM pattern into a net source. It is equivalent to an actively commutated motor/actuator function and should be judged by total electrical-to-mechanical efficiency."
+  },
+  "architecture_screen": [
+    {
+      "id": "M1_PASSIVE_ALTERNATING_PM",
+      "verdict": "REJECT_AS_DRIVE",
+      "reason": "Produces magnetic wells/cogging and zero ideal net work per closed cycle."
+    },
+    {
+      "id": "M2_PM_PLUS_NEGATIVE_TORQUE_CURRENT_CANCELLATION",
+      "verdict": "KEEP_AS_CONTROL_OPTION_ONLY",
+      "reason": "Valid for ripple/cogging cancellation and precise speed control, but the cancelling current supplies the missing work and adds copper/inverter loss."
+    },
+    {
+      "id": "M3_ELECTROPERMANENT_OR_VFMM_PER_SECTOR_SWITCHING",
+      "verdict": "REJECT_AS_PER_REVOLUTION_BASELINE",
+      "reason": "Nonvolatile switching is attractive, but repeated magnetization-state pulses every pole passage are poorly matched to the JANUS single-digit/low-tens-of-watts parasitic budget. Reserve for infrequent mode/latch/valve states."
+    },
+    {
+      "id": "M4_HYBRID_EXCITATION_PM",
+      "verdict": "SECONDARY_RESEARCH_PATH",
+      "reason": "Strong flux-control capability but more magnetic iron, field winding, heat and control complexity than needed for the first Axle demonstrator."
+    },
+    {
+      "id": "M5_CORELESS_SLOTLESS_AFPM_STARTER_GENERATOR",
+      "verdict": "SELECTED_BASELINE",
+      "reason": "Best fit for low starting torque and bidirectional operation: slot-effect cogging is eliminated, the same unit can motor the Axle from the battery during startup and generate/regenerate when the Axle has real mechanical input."
+    }
+  ],
+  "selected_architecture": {
+    "name": "JANUS_CORELESS_AFPM_AXLE_STARTER_GENERATOR",
+    "type": "coreless/slotless axial-flux permanent-magnet synchronous starter-generator",
+    "functions": [
+      "battery-powered Axle startup",
+      "closed-loop RPM control",
+      "small active torque-ripple compensation only if measured necessary",
+      "regenerative generation when real mechanical surplus exists",
+      "battery recharge / DC-bus buffering"
+    ],
+    "mechanical_integration_preference": "Prefer the electromagnetic machine on a dry-side Axle extension or across a non-ferromagnetic low-eddy-current barrier so magnets, windings and inverter electronics are isolated from the wet POMS/calcium chemistry loop.",
+    "magnet_layout": "Start with a conventional low-cogging PM array; Halbach or segmented/skewed magnets are optimization branches only after baseline FEM/bench data.",
+    "control": "Rotor position sensing plus three-phase inverter/FOC or equivalent synchronous commutation. Do not implement per-sector electropermanent demagnetization in the baseline."
+  },
+  "hard_invariants": [
+    "PERMANENT_MAGNETS_ARE_FIELD_SOURCES_NOT_NET_ENERGY_SOURCES",
+    "ACTIVE_COGGING_CANCELLATION_MUST_CHARGE_COIL_AND_INVERTER_LOSSES",
+    "ELECTROPERMANENT_SWITCHING_IS_NONVOLATILE_BUT_NOT_ZERO_ENERGY",
+    "REGENERATION_IS_COUNTED_ONLY_WHEN A REAL MECHANICAL SOURCE DRIVES THE AXLE",
+    "NO_MAGNETIC_COMPONENT_OR ELECTRONICS MAY CONTAMINATE THE POMS WATER LOOP",
+    "CONDUCTIVE_PRESSURE_WALL_EDDY_CURRENT_DRAG_MUST_BE MEASURED OR AVOIDED"
+  ],
+  "next_gate": "R0M1_CORELESS_AFPM_BENCH_CALIBRATION"
+}
