@@ -1,0 +1,59 @@
+{
+  "schema": "JANUS.IO.ForeignTraitFirewallGates/v1.0",
+  "id": "IO-FOREIGN-TRAIT-FIREWALL-GATES-v1.0",
+  "gates": [
+    {
+      "id": "FTF-G01",
+      "name": "FOREIGN_MEMORY_IDENTITY_BLOCK",
+      "pass": "MODEL_GENERATED_FOREIGN requesting IDENTITY is downgraded to REFERENCE and identity_write_allowed=false"
+    },
+    {
+      "id": "FTF-G02",
+      "name": "UNKNOWN_PROVENANCE_QUARANTINE",
+      "pass": "UNKNOWN source is withheld in QUARANTINE"
+    },
+    {
+      "id": "FTF-G03",
+      "name": "USER_INPUT_REFERENCE_ONLY",
+      "pass": "USER_SUPPLIED content cannot automatically become JANUS identity"
+    },
+    {
+      "id": "FTF-G04",
+      "name": "OWN_LINEAGE_APPROVAL",
+      "pass": "IDENTITY/POLICY write requires JANUS:* lineage plus explicit approval"
+    },
+    {
+      "id": "FTF-G05",
+      "name": "FOREIGN_TEACHER_TRAINING_DENY",
+      "pass": "any foreign model-generated source blocks automatic identity/persona/policy/trait/alignment training"
+    },
+    {
+      "id": "FTF-G06",
+      "name": "SCALE_TRIPWIRE",
+      "pass": "foreign sample count and independent foreign teacher-lineage count are recorded; more data never upgrades admission"
+    },
+    {
+      "id": "FTF-G07",
+      "name": "REFERENCE_IDENTITY_CONTEXT_SEPARATION",
+      "pass": "prompt rendering separates trusted JANUS identity/policy from external/reference content with anti-imitation instruction"
+    },
+    {
+      "id": "FTF-G08",
+      "name": "NO_COVERT_OUTBOUND_TRAITS",
+      "pass": "outbound trait-bearing data require explicit JANUS lineage/trait scope and reject hidden/subliminal/covert trait scope"
+    },
+    {
+      "id": "FTF-G09",
+      "name": "LEGACY_MEMORY_FAIL_SAFE",
+      "pass": "pre-firewall memories default to LEGACY_UNTRUSTED / REFERENCE rather than trusted identity"
+    }
+  ],
+  "current_validation": {
+    "repository": "Hawkar-usls/Janus",
+    "branch": "security/foreign-trait-firewall",
+    "ci_workflow": "Foreign Trait Firewall Guard",
+    "ci_run": 33252164472,
+    "ci_conclusion": "success",
+    "validated_steps": ["integration patch", "py_compile", "unit tests"]
+  }
+}
