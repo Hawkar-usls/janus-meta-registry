@@ -1,7 +1,7 @@
 {
-  "artifact_uuid": "JANUS-ENGINE-PROJECT-MANIFEST-v1.2",
+  "artifact_uuid": "JANUS-ENGINE-PROJECT-MANIFEST-v1.3",
   "timestamp": "2026-08-30T01:31:00+03:00",
-  "version": "v1.2",
+  "version": "v1.3",
   "title": "JANUS Engine — dedicated research-branch manifest",
   "observer": "Hawkar / JANUS",
   "node_type": "project_manifest",
@@ -31,17 +31,20 @@
   "branch_records": [
     "projects/janus-engine/research/TOPA-SPIDER-ARXIV-VRU-AKS-RUN-001-v1.0.json",
     "projects/janus-engine/research/TOPA-SPIDER-CITATION-GRAPH-RUN-002-v1.0.json",
+    "projects/janus-engine/research/TOPA-SPIDER-CALCIFER-ANTISCALANT-RUN-003-v1.0.json",
     "projects/janus-engine/gates/JANUS-ENGINE-R2B-DIRECT-GILL-PEMFC-v1.0.json",
-    "projects/janus-engine/simulations/JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-004-DIRECT-GILL-PEMFC-v1.0.json",
     "projects/janus-engine/gates/JANUS-ENGINE-R0A2-POMS-MEMBRANE-STARTUP-v1.0.json",
-    "projects/janus-engine/simulations/JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-005-POMS-STARTUP-v1.0.json"
+    "projects/janus-engine/simulations/JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-004-DIRECT-GILL-PEMFC-v1.0.json",
+    "projects/janus-engine/simulations/JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-005-POMS-STARTUP-v1.0.json",
+    "projects/janus-engine/simulations/JANUS-ENGINE-R0A4D-AXLE-VANE-CRYSTAL-TRAP-SCREEN-v1.0.json"
   ],
   "tracks": {
     "T0_REFERENCE_AND_ORIGIN": ["data/JANUS-ENGINE-v1.0.json", "data/JANUS-ENGINE-LEGACY-ASU-REFERENCE-v1.0.json", "data/JANUS-ENGINE-BRANCH-CHECKPOINT-v1.1.json"],
     "T1_GILL_AND_WATER_TRANSPORT": ["data/JANUS-ENGINE-R0-ROTATING-GILL-RING-v1.0.json", "data/JANUS-ENGINE-R0A-GEOMETRY-FREEZE-FLOW-BUDGET-v1.0.json", "data/JANUS-ENGINE-R0A1-ANNULAR-HOLLOW-FIBER-GILL-PACKAGE-v1.0.json", "projects/janus-engine/gates/JANUS-ENGINE-R0A2-POMS-MEMBRANE-STARTUP-v1.0.json", "data/JANUS-ENGINE-R0B-WATER-CONDENSATE-REOXYGENATION-v1.0.json"],
     "T2_SORBENT_SEPARATION_AND_N2_CASCADE": ["data/JANUS-ENGINE-R0C-THREE-STATE-SORBENT-CAROUSEL-v1.0.json", "data/JANUS-ENGINE-LEGACY-ASU-REFERENCE-v1.0.json"],
     "T3_SELF_DRIVE_AND_GENERATION": ["data/JANUS-ENGINE-R2A-SELF-DRIVE-NET-GENERATION-v1.0.json", "projects/janus-engine/gates/JANUS-ENGINE-R2B-DIRECT-GILL-PEMFC-v1.0.json", "data/JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-001-v1.0.json", "data/JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-002-GEOMETRY-GROUNDED-v1.0.json", "data/JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-003-GILL-PACKAGE-v1.0.json", "projects/janus-engine/simulations/JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-004-DIRECT-GILL-PEMFC-v1.0.json", "projects/janus-engine/simulations/JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-005-POMS-STARTUP-v1.0.json"],
-    "T4_TOPA_SPIDER_EXTERNAL_EVIDENCE": ["projects/janus-engine/research/TOPA-SPIDER-ARXIV-VRU-AKS-RUN-001-v1.0.json", "projects/janus-engine/research/TOPA-SPIDER-CITATION-GRAPH-RUN-002-v1.0.json"]
+    "T4_TOPA_SPIDER_EXTERNAL_EVIDENCE": ["projects/janus-engine/research/TOPA-SPIDER-ARXIV-VRU-AKS-RUN-001-v1.0.json", "projects/janus-engine/research/TOPA-SPIDER-CITATION-GRAPH-RUN-002-v1.0.json", "projects/janus-engine/research/TOPA-SPIDER-CALCIFER-ANTISCALANT-RUN-003-v1.0.json"],
+    "T5_CALCIFER_SCALE_AND_SELF_MAINTENANCE": ["projects/janus-engine/research/TOPA-SPIDER-CALCIFER-ANTISCALANT-RUN-003-v1.0.json", "projects/janus-engine/simulations/JANUS-ENGINE-R0A4D-AXLE-VANE-CRYSTAL-TRAP-SCREEN-v1.0.json"]
   },
   "architecture_modes": {
     "MODE_A_DIRECT_GILL_PEMFC": {
@@ -56,20 +59,19 @@
   },
   "latest_findings": {
     "selected_first_membrane": "POMS thin-film supported membrane",
-    "published_selective_layer_thickness_um": 4.0,
-    "published_measured_permeance_mol_m2_s_Pa": 3.39e-9,
-    "published_effective_CFD_permeance_mol_m2_s_Pa": 2.6e-10,
-    "dominant_transport_lesson": "water-side mass transfer and flow distribution dominate before intrinsic POMS permeance; condensation can suppress effective permeance",
-    "flat_stack_crown_correction": "At the published 3 m2 per approximately 0.3 m cube packing density, the current 700 mm OD x 500 mm annular crown carries about 21.2 m2 POMS flat-stack area, not 423.5 m2.",
-    "startup_lesson": "self-drive is a transient state transition. Direct gill/PEMFC gradient establishment is naturally hours-scale in the published inventory screen; full VRU/AKS can take much longer while cyclic sorbents and thermal inventories stabilize.",
-    "user_legacy_reference": "Historical integrated air-separation startup experience of roughly one to four days is retained as plant-specific operational evidence, not a universal JANUS constant."
+    "flat_stack_first_crown_area_m2": 21.2109,
+    "startup_lesson": "self-drive is a transient state transition; readiness is state convergence rather than t=0 behavior",
+    "scale_management": "Use low-hardness initial fill, candidate low-dose anti-adhesion chemistry only after compatibility tests, rotating near-wall Axle/wipers, centrifugal solids transport and removable crystal traps / washable filters.",
+    "vane_energy_result": "If the same local pump supplies the pressure drop across an Axle vane, recovered shaft power is always smaller than added pump power for realistic efficiencies. Therefore vanes are primarily anti-scale/flow-conditioning elements; external-current energy recovery is a separate case and must charge drag.",
+    "crystal_trap_result": "Normalized sensitivity shows strong multiplicative benefit when trap capture and Axle scraping are combined, but actual eta_trap and eta_scraper remain measurement gates rather than assumed hardware performance.",
+    "calcium_product_boundary": "Recovered solids are recorded as CaCO3-rich mineral product until composition and use-specific qualification justify a stronger material claim."
   },
   "current_project_state": {
     "nickname": "Howl's Moving Castle / Calcifer",
-    "latest_simulation": "projects/janus-engine/simulations/JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-005-POMS-STARTUP-v1.0.json",
-    "latest_simulation_status": "POSITIVE_LOW_PARASITIC_REGION_EXISTS_STARTUP_NOT_YET_MEASURED",
-    "dominant_boss": "Simultaneously achieve POMS O2 flux, homogeneous water renewal, condensation control and a single-digit/low-tens-of-watts auxiliary budget in a realizable cassette.",
-    "next_experimental_gate": "R0A3_DISTRIBUTED_MANIFOLD_AND_PARASITIC_BUDGET"
+    "latest_simulation": "projects/janus-engine/simulations/JANUS-ENGINE-R0A4D-AXLE-VANE-CRYSTAL-TRAP-SCREEN-v1.0.json",
+    "latest_simulation_status": "MODEL_PASS_FOR_CRYSTAL_TRAP_ARCHITECTURE_VANE_POWER_RECOVERY_CONDITIONAL",
+    "dominant_boss": "Measure long-duration coupled oxygen flux, hydraulic/rotational parasitics and calcium partitioning under real water chemistry.",
+    "next_experimental_gate": "R0A4E_CALCIFER_FACTORIAL_LONG_HOLD"
   },
   "project_constitution": [
     "NO_STREAM_IS_WASTE_UNTIL_REMAINING_USEFUL_DUTIES_HAVE_BEEN_EVALUATED",
@@ -80,12 +82,15 @@
     "READINESS_IS_STATE_CONVERGENCE_NOT_AN_ARBITRARY_CLOCK",
     "WATER_SIDE_AND_COLLECTOR_SIDE_O2_MASS_BALANCES_MUST_CLOSE",
     "MEMBRANE_AREA_IS_NOT_O2_OUTPUT_WITHOUT_TRANSPORT_CALIBRATION",
-    "WASTE_HEAT_REQUIRES_A_REAL_EXTERNAL_SINK"
+    "WASTE_HEAT_REQUIRES_A_REAL_EXTERNAL_SINK",
+    "VANE_POWER_RECOVERY_MUST_NOT_DOUBLE_COUNT_PUMP_ENERGY",
+    "CRYSTAL_TRAP_AND_SCRAPER_EFFICIENCIES_MUST_BE_MEASURED_BEFORE LIFETIME CLAIMS"
   ],
   "next_actions": [
-    "Design a small sectorized POMS cassette with distributed water headers and 4 mm-class water / 3 mm-class gas channels as the first literature-anchored geometry.",
-    "Measure J_O2, DeltaP, gas-loop fan power, humidity/condensate and active-flow utilization through startup and sustained hold.",
-    "Use a starter/buffer source until FLUX_LOCK and LOAD_TRANSFER; do not count starter energy as steady-state generation.",
-    "Only scale the validated cassette toward the ~21.2 m2 crown after measured oxygen and energy balances close."
+    "Run A0/A1/A2/A3 factorial: stationary/no-trap, trap-only, rotating-Axle-only, and combined rotating-Axle + trap.",
+    "Log wall CaCO3 mass, trap/filter mass, Axle torque, DeltaP, pump/drive watts and POMS J_O2 over a long hold.",
+    "Measure incremental vane DeltaP separately from useful scraper/flow-distribution benefit.",
+    "Use the external-current energy-recovery branch only where the external hydraulic source and corresponding drag are explicitly budgeted.",
+    "Replace normalized trap/scraper sensitivity parameters with measured efficiencies before lifetime or maintenance-interval claims."
   ]
 }
