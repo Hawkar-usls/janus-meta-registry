@@ -1,0 +1,22 @@
+{
+  "schema": "JANUS.IO.TraitImmuneSpiralR2.1/v1.0",
+  "id": "IO-TRAIT-IMMUNE-SPIRAL-R2.1-v1.0",
+  "status": "IMPLEMENTATION_IN_PROGRESS",
+  "supersedes_representation": "A->B->C->D linear update-generation notation",
+  "canonical_process": "JANUS_SPIRAL",
+  "laws": [
+    "RETURN_TO_THE_SAME_PROTECTED_NODE_ONLY_AFTER_CARRYING_FORWARD_NEWLY_DISCOVERED_CONSTRAINTS",
+    "REPLAY_AFFECTED_DOWNSTREAM_EDGES_AFTER_A_FAILED_OR_REVISED_TURN",
+    "NEVER_TREAT_AN_IDENTICAL_SEMANTIC_STATE_AS_ASCENT",
+    "MEASURE_LOCAL_AND_ANCESTRAL_DRIFT_ON_EVERY_TURN"
+  ],
+  "turn": {
+    "input": "previous accepted JANUS state plus newly discovered constraints",
+    "checks": ["local behavioural drift", "ancestral cumulative drift", "lineage continuity", "canary replay"],
+    "pass": "PASS_SPIRAL_ASCEND",
+    "fail": "HOLD_OR_ROLLBACK_AND_REPLAY"
+  },
+  "reason": "Many individually small accepted changes can accumulate into a large behavioural displacement from the protected ancestor. Spiral replay preserves both immediate and historical comparison.",
+  "epistemic_boundary": "The spiral detects behavioural change under protected probes. It does not by itself establish a hidden psychological trait, consciousness, intent, or a specific causal teacher signal.",
+  "external_methodology_note": "Risk-driven spiral development independently supports repeated risk evaluation across successive iterations; JANUS Spiral retains its own project-specific state, replay and constraint semantics."
+}
