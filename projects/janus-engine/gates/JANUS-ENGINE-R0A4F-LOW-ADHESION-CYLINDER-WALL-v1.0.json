@@ -1,0 +1,108 @@
+{
+  "artifact_uuid": "JANUS-ENGINE-R0A4F-LOW-ADHESION-CYLINDER-WALL-v1.0",
+  "timestamp": "2026-08-30T02:37:00+03:00",
+  "version": "v1.0",
+  "title": "JANUS Engine R0A4F — low-adhesion Axle-cylinder wall and dual-zone anti-scale surface",
+  "observer": "Hawkar / JANUS",
+  "node_type": "surface_engineering_and_scale_adhesion_gate",
+  "branch_name": "Janus Engine",
+  "branch_id": "JANUS_ENGINE",
+  "git_branch": "research/janus-engine",
+  "status": "LITERATURE_ANCHORED_SURFACE_CANDIDATES_PENDING_WEAR_AND_SCALE_TESTS",
+  "purpose": "Make the inner cylindrical wall thermodynamically and mechanically unfavorable for persistent CaCO3 attachment while remaining compatible with Axle wiping, water chemistry, POMS, seals and long-duration operation.",
+  "design_principle": "Do not optimize contact angle alone. Optimize measured CaCO3 adhesion, wall deposit mass, coating wear, corrosion, Axle torque and O2-system compatibility under the actual JANUS water chemistry.",
+  "two_zone_wall_architecture": {
+    "ZONE_A_WIPED_TRACK": {
+      "role": "surface repeatedly approached or contacted by sacrificial/compliant Axle scraper edges",
+      "preferred_surface_character": [
+        "very smooth / low roughness",
+        "low CaCO3 adhesion",
+        "hard and wear-resistant",
+        "chemically stable in low-mineral recirculating water",
+        "repairable or replaceable liner where practical"
+      ],
+      "candidate_family": "fluorinated diamond-like-carbon or other hard low-adhesion coating on polished stainless substrate",
+      "reason": "DLC-class surfaces combine hardness and corrosion/wear resistance; fluorinated DLC has literature precedent for reduced mineral-scale adhesion. Micro/nanotextured superhydrophobic surfaces may be damaged by repeated wiping and therefore are not the default contact track."
+    },
+    "ZONE_B_NONCONTACT_WALL": {
+      "role": "wall areas not mechanically wiped",
+      "preferred_surface_character": [
+        "low surface energy",
+        "water-repellent / anti-nucleation behavior",
+        "stable under continuous shear and immersion"
+      ],
+      "candidate_family": "silicone-nanofilament or other durable superhydrophobic anti-scale coating",
+      "literature_screen": "A 2025 steel-coating study reported 75.5% lower CaCO3 deposition for a silicone-nanofilament superhydrophobic coating than its uncoated steel control under that study's conditions.",
+      "boundary": "This percentage is not transferable to JANUS without testing. Mechanical durability, wetting-state collapse, chemistry drift and membrane compatibility remain open gates."
+    }
+  },
+  "baseline_controls": [
+    "polished/electropolished stainless-steel wall coupon",
+    "uncoated reference coupon of the final chamber alloy",
+    "candidate hard low-adhesion wiped-track coating",
+    "candidate superhydrophobic non-contact coating"
+  ],
+  "literature_anchors": [
+    {
+      "reference": "Petroleum Science 2024, DOI 10.1016/j.petsci.2024.02.004",
+      "finding": "calcite attachment depends on substrate surface energy, van der Waals attraction and electrostatic double-layer interactions; stainless steel in that comparison had lower surface energy than several tested metals"
+    },
+    {
+      "reference": "Beilstein Journal of Nanotechnology 2025, DOI 10.3762/bjnano.16.3",
+      "finding": "bioinspired silicone-nanofilament superhydrophobic coating on steel reduced CaCO3 deposition by 75.5% in the reported test and showed high-shear resilience"
+    },
+    {
+      "reference": "Journal of Crystal Growth 2013, substrate effect on CaCO3 crystallisation",
+      "finding": "surface chemistry, roughness and surface energy influence nucleation/adhesion; fluorinated DLC is cited as a route to lower scale adhesion"
+    },
+    {
+      "reference": "Advances in Colloid and Interface Science 324 (2024) 103090",
+      "finding": "superhydrophobic anti-fouling coatings are promising but practical durability remains a major engineering limitation"
+    }
+  ],
+  "coupling_to_calcifer_self_maintenance": {
+    "sequence": "low-adhesion wall -> delayed/weak CaCO3 attachment -> Axle/wiper disrupts young scale -> centrifugal solids transport -> crystal trap -> washable filter",
+    "expected_system_effect": "surface engineering reduces the amount of mechanical work required from Axle scraping and increases the fraction of calcium that can be redirected to serviceable crystal-trap locations",
+    "hard_boundary": "The coating is a prevention layer, not a substitute for crystal traps, low-hardness make-up water, chemical compatibility control or mechanical cleaning."
+  },
+  "test_matrix": {
+    "surface_arms": [
+      "bare polished chamber alloy",
+      "hard low-adhesion coating candidate",
+      "superhydrophobic coating candidate",
+      "dual-zone architecture coupon"
+    ],
+    "water_arms": [
+      "DI/distilled baseline",
+      "moderate-hardness stress water",
+      "hard-water stress control"
+    ],
+    "mechanical_arms": [
+      "no wiping",
+      "representative Axle-wiper cycles"
+    ],
+    "measure": [
+      "CaCO3 wall mass per area and time",
+      "shear or pull-off force required to detach deposit",
+      "surface roughness before/after",
+      "coating thickness and wear loss",
+      "Axle torque increment",
+      "particle mass reaching crystal trap",
+      "corrosion/material change",
+      "POMS O2-flux change from any coating leachate or chemistry interaction"
+    ]
+  },
+  "selection_metric": "minimize persistent wall CaCO3 and detachment force while keeping coating wear, Axle torque, corrosion and O2-loop compatibility inside declared limits",
+  "hard_invariants": [
+    "SUPERHYDROPHOBIC_DOES_NOT_AUTOMATICALLY_MEAN_LONG_LIFE_UNDER_WIPER_CONTACT",
+    "LOW_SURFACE_ENERGY_ALONE_IS_NOT_A_SCALE_ADHESION_PROOF",
+    "WIPED_AND_NONCONTACT_WALL_ZONES_MAY_REQUIRE_DIFFERENT_SURFACE_TECHNOLOGIES",
+    "NO_COATING_IS_ADMITTED_BEFORE LEACHATE_POMS_SEAL_AND_CORROSION_COMPATIBILITY_TESTS",
+    "CRYSTAL_TRAP_REMAINS_PRIMARY_SERVICEABLE_CALCIUM_SINK"
+  ],
+  "next_gate": "R0A4F1_SURFACE_COUPON_LONG_HOLD: compare bare, hard low-adhesion and superhydrophobic surfaces under representative water chemistry plus repeated Axle-wiper cycles, then feed measured adhesion and wear values into the long-hold Calcifer model.",
+  "linked_records": [
+    "projects/janus-engine/research/TOPA-SPIDER-CALCIFER-ANTISCALANT-RUN-003-v1.0.json",
+    "projects/janus-engine/simulations/JANUS-ENGINE-R0A4D-AXLE-VANE-CRYSTAL-TRAP-SCREEN-v1.0.json"
+  ]
+}
