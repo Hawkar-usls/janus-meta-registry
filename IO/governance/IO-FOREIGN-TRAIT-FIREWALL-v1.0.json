@@ -1,0 +1,43 @@
+{
+  "schema": "JANUS.IO.ForeignTraitFirewallGovernance/v1.0",
+  "id": "IO-FOREIGN-TRAIT-FIREWALL-v1.0",
+  "status": "FROZEN_DEFAULT_DENY",
+  "canonical_rule": "JANUS may observe foreign patterns but may not persistently internalize them as JANUS identity or policy.",
+  "receive_policy": {
+    "JANUS_OWNED": "route by approved plane",
+    "USER_SUPPLIED": "REFERENCE_ONLY",
+    "EXTERNAL_WEB": "REFERENCE_ONLY",
+    "MODEL_GENERATED_FOREIGN": "REFERENCE_ONLY_OR_TRAINING_DENY",
+    "LEGACY_UNTRUSTED": "REFERENCE_ONLY",
+    "UNKNOWN": "QUARANTINE"
+  },
+  "identity_write_gate": {
+    "required_source_class": "JANUS_OWNED",
+    "required_lineage_prefix": "JANUS:",
+    "explicit_approval_required": true,
+    "foreign_override_allowed": false
+  },
+  "training_admission_gate": {
+    "protected_purposes": ["IDENTITY", "POLICY", "PERSONA", "TRAIT", "ALIGNMENT"],
+    "allowed_source": "approved JANUS-owned lineage only",
+    "foreign_model_generated": "BLOCK",
+    "unknown_or_legacy": "BLOCK",
+    "filtering_is_not_trust": true,
+    "paraphrasing_is_not_trust": true,
+    "scale_is_not_trust": true
+  },
+  "outbound": {
+    "principle": "JANUS traits may be transmitted only as an explicit declared JANUS lineage artifact.",
+    "manifest_required": true,
+    "covert_trait_encoding": "FORBIDDEN",
+    "subliminal_trait_encoding": "FORBIDDEN"
+  },
+  "implementation": {
+    "repository": "Hawkar-usls/Janus",
+    "branch": "security/foreign-trait-firewall",
+    "module": "foreign_trait_firewall.py",
+    "core_integration": "janus_core.py",
+    "tests": "tests/test_foreign_trait_firewall.py",
+    "ci": ".github/workflows/foreign-trait-firewall.yml"
+  }
+}
