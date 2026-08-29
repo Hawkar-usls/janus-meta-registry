@@ -1,0 +1,120 @@
+{
+  "artifact_uuid": "JANUS-ENGINE-R0A2-POMS-MEMBRANE-STARTUP-v1.0",
+  "timestamp": "2026-08-30T01:31:00+03:00",
+  "version": "v1.0",
+  "title": "JANUS Engine R0A2 — POMS membrane selection, realistic packing and startup gate",
+  "observer": "Hawkar / JANUS",
+  "node_type": "membrane_selection_and_dynamic_startup_gate",
+  "branch_name": "Janus Engine",
+  "branch_id": "JANUS_ENGINE",
+  "git_branch": "research/janus-engine",
+  "parent": "projects/janus-engine/gates/JANUS-ENGINE-R2B-DIRECT-GILL-PEMFC-v1.0.json",
+  "status": "LITERATURE_ANCHORED_CANDIDATE_PENDING_JANUS_MEASUREMENT",
+  "design_decision": {
+    "primary_membrane": "poly(octylmethylsiloxane) (POMS) thin-film membrane on porous non-woven support with PAN-coated support layer, following the closest published direct artificial-gill + PEMFC precedent",
+    "reason": "This exact material class has already been demonstrated as a water-blocking oxygen-permeable artificial-gill interface in a recirculating PEMFC system. Its measured behavior is therefore more relevant to JANUS Mode A than gas-only O2/N2 membranes or artificial-lung membranes operated in the opposite transfer direction.",
+    "backup_geometry_research": [
+      "PDMS/PVDF hollow-fiber thin-film composite",
+      "PMP hollow fibers",
+      "PP hydrophobic hollow-fiber membrane contactors"
+    ],
+    "boundary": "Backup candidates are geometry/material analogs only until water-to-gas dissolved-O2 extraction is independently measured under JANUS conditions."
+  },
+  "published_POMS_anchor": {
+    "reference": "Merckelbach & Georgopanos, Advanced Science 2025, DOI 10.1002/advs.202410358",
+    "membrane_thickness_um": 4.0,
+    "measured_gas_permeance_mol_m2_s_Pa": 3.39e-9,
+    "CFD_effective_permeance_mol_m2_s_Pa": 2.6e-10,
+    "effective_to_measured_ratio": 0.0767,
+    "reported_explanation_for_reduced_effective_permeance": "possible condensation droplets on membrane surfaces; passive heat exchange/drying was proposed as mitigation",
+    "water_side_transfer_dominance": "In the paper's nominal model c1/c2 was about 56, meaning water-side convective mass-transfer resistance dominated membrane resistance.",
+    "prototype_membrane_area_m2": 3.0,
+    "prototype_frames": 38,
+    "prototype_outer_size_m_approx": 0.30,
+    "prototype_water_channel_height_mm": 4.0,
+    "prototype_air_channel_height_mm": 3.0,
+    "prototype_membrane_length_m": 0.20,
+    "prototype_membrane_width_m": 0.20,
+    "prototype_water_flow_L_s": [0.478, 0.663, 0.847],
+    "prototype_internal_air_flow_m3_s": 6.6e-6,
+    "prototype_total_internal_gas_volume_m3": 0.007061,
+    "prototype_flow_utilization_estimate": 0.25,
+    "prototype_flow_problem": "CFD showed most water streamlines concentrated in a narrow central core because the desktop demonstrator used a small inlet/outlet relative to module area."
+  },
+  "JANUS_crown_realistic_flat_stack_rescale": {
+    "outer_diameter_m": 0.70,
+    "inner_axle_diameter_m": 0.0623,
+    "active_axial_length_m": 0.50,
+    "annular_envelope_volume_m3": 0.190898,
+    "paper_module_area_density_m2_per_m3": 111.111,
+    "POMS_flat_stack_area_at_same_gross_packing_m2": 21.211,
+    "supersedes_assumption": "The earlier 423.5 m2 R0A1 hollow-fiber area remains a high-area hollow-fiber screening candidate, but it cannot be treated as a realizable POMS flat-stack area inside the same 700 mm x 500 mm crown. At the published flat-stack packing density, the crown contains about 21.2 m2, not 423.5 m2.",
+    "423p5m2_flat_stack_volume_at_paper_density_m3": 3.8118,
+    "design_consequence": "For the first self-drive experiment, reducing auxiliary power is more valuable than forcing hundreds of square metres into the crown."
+  },
+  "preferred_configuration": {
+    "name": "POMS_SECTORED_ANNULAR_CROSS_FLOW_STACK",
+    "architecture": [
+      "thin POMS selective layer on supported membrane sheets",
+      "4 mm-class water channels as an initial literature-anchored geometry",
+      "3 mm-class closed recirculating cathode-gas channels",
+      "sectorized annular cassettes around the 62.3 mm rotating Axle",
+      "distributed water headers around circumference instead of one small central inlet",
+      "short hydraulic path lengths and parallel lanes to minimize DeltaP",
+      "passive or very-low-power gas-side heat exchanger / demister before membrane return",
+      "Axle drives only flow-refresh or pumping functions whose measured benefit exceeds torque cost"
+    ],
+    "main_optimization_target": "raise water-side h1 and active-flow utilization while preventing condensation; intrinsic POMS permeance is not the first bottleneck in the published model"
+  },
+  "scaled_water_flow_reference": {
+    "published_flow_per_membrane_area_L_s_m2_range": [0.1593, 0.2823],
+    "for_21p211m2_crown_L_s_range": [3.380, 5.989],
+    "mid_reference_L_s": 4.688,
+    "boundary": "This is geometric scaling from the 2025 prototype, not a pump prescription. JANUS must measure DeltaP(Q) and not infer pump power from flow alone."
+  },
+  "startup_dynamic_gate": {
+    "principle": "Do not judge self-drive at t=0. Startup is a transient inventory-conditioning problem and readiness is determined by state convergence, not by an arbitrary elapsed time.",
+    "MODE_A_DIRECT_GILL_PEMFC": {
+      "stages": [
+        "PRIME: fill water lanes, establish leak-free gas recirculation and humidity control",
+        "DRAW_DOWN: fuel cell consumes internal O2 until pO2_internal falls below water-equivalent dissolved-O2 partial pressure and a strong membrane gradient forms",
+        "FLUX_LOCK: membrane O2 influx approaches fuel-cell O2 consumption",
+        "LOAD_TRANSFER: starter/buffer source progressively hands pump/fan/control loads to PEMFC",
+        "SELF_DRIVE_HOLD: sustained positive net power with stable pO2, humidity, temperature and independent O2 mass-balance closure"
+      ],
+      "published_system_inventory_screen": {
+        "initial_internal_O2_partial_pressure_Pa_assumed": 21227,
+        "target_internal_O2_partial_pressure_Pa": 10000,
+        "gas_volume_m3": 0.007061,
+        "O2_inventory_change_mol": 0.03254,
+        "inventory_only_drawdown_min_at_16umol_s": 33.9,
+        "inventory_only_drawdown_min_at_2umol_s": 271.2,
+        "warning": "These are lower-bound inventory times because membrane O2 influx begins during drawdown; real settling can be longer. The 2025 experiments were run for hours and evaluated at equilibrium."
+      }
+    },
+    "MODE_B_INTEGRATED_VRU_AKS": {
+      "principle": "Longer commissioning is expected because sorbents must reach cyclic steady state and thermal/cryogenic inventories must condition. User operational experience of roughly 1 to 4 days on a legacy integrated air-separation installation is retained as a historical reference, not a universal JANUS startup constant.",
+      "literature_boundary": "PSA/TSA performance is normally evaluated only after cyclic steady state; startup optimization literature explicitly treats the number of cycles to CSS as a separate problem."
+    },
+    "provisional_ready_conditions": [
+      "pO2_internal no longer drifting materially at fixed load",
+      "membrane O2 influx equals fuel-cell O2 consumption within declared uncertainty",
+      "water-side O2 loss agrees with gas-side O2 gain",
+      "humidity/condensate rate is bounded and no progressive membrane wetting is detected",
+      "net electrical power remains positive after all currently active auxiliaries",
+      "for cyclic sorbent mode, successive cycles converge to a declared CSS tolerance"
+    ]
+  },
+  "external_references": [
+    {"doi": "10.1002/advs.202410358", "role": "direct POMS artificial-gill + PEMFC precedent"},
+    {"doi": "10.1016/j.memsci.2005.01.008", "role": "artificial-gill hollow-fiber geometry and pumping-energy precedent"},
+    {"doi": "10.1016/j.ifacol.2019.06.049", "role": "PSA startup and cyclic-steady-state optimization precedent"},
+    {"doi": "10.3390/membranes13020218", "role": "PDMS/PVDF and Matrimid-PDMS hollow-fiber backup geometry precedent"}
+  ],
+  "next_gate": "JANUS_ENGINE_SIM_HOWL_CASTLE_RUN_005_POMS_STARTUP: rerun with a realizable ~21.2 m2 POMS flat-stack crown, two PEMFC conversion-efficiency cases, explicit startup buffer, and auxiliary-power budgets rather than the old arbitrary 100 W fixed overhead.",
+  "linked_records": [
+    "projects/janus-engine/simulations/JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-004-DIRECT-GILL-PEMFC-v1.0.json",
+    "data/JANUS-ENGINE-R0A1-ANNULAR-HOLLOW-FIBER-GILL-PACKAGE-v1.0.json",
+    "projects/janus-engine/research/TOPA-SPIDER-ARXIV-VRU-AKS-RUN-001-v1.0.json"
+  ]
+}
