@@ -35,11 +35,12 @@
   },
   "method": {
     "agent_label": "TOPA+Spider",
-    "mode": "citation graph + author overlap + test lineage + contradiction analysis",
+    "mode": "citation graph + author overlap + test lineage + contradiction analysis + evidence independence scoring",
     "source_priority": [
       "arXiv primary records",
       "peer-reviewed venue records when available",
       "citation/index pages for graph expansion",
+      "public code/data records when available",
       "arXiv full text when needed"
     ],
     "workflow": [
@@ -49,6 +50,10 @@
       "track repeated behavioral test lineages",
       "separate independent replication from same-lineage accumulation",
       "record apparent contradictions as structured tension sets",
+      "score pairwise evidential redundancy across authors, labs, model families, benchmarks, datasets, prompts and evaluation code",
+      "compute bounded effective evidence count rather than raw paper count",
+      "score evidence maturity for narrowly operationalized claims",
+      "preserve UNKNOWN metadata as uncertainty rather than independence",
       "separate observed behavior from inferred mechanism",
       "encode papers and derived hypotheses independently",
       "create falsifiable experiment backlog"
@@ -60,9 +65,12 @@
     "author_overlap_pass": "R1_COMPLETE",
     "test_lineage_pass": "R1_COMPLETE",
     "contradiction_ledger_pass": "R1_COMPLETE",
+    "evidence_independence_engine": "R2_INITIALIZED",
+    "effect_cards": "R2_SEED_COMPLETE",
+    "pairwise_independence_matrix": "R2_SEED_COMPLETE_METADATA_EXPANSION_REQUIRED",
     "exhaustiveness": "NOT_EXHAUSTIVE",
-    "reason": "arXiv and citation indexes are continuously changing; R1 is a curated, provenance-preserving graph rather than a complete bibliometric enumeration.",
-    "next_mode": "R2 independent-replication scoring + citation-neighborhood expansion + model-version normalization"
+    "reason": "arXiv, citation indexes, public model versions and code/data provenance are continuously changing; R2 reports lower/upper independence bounds where metadata is incomplete.",
+    "next_mode": "R2 metadata completion for labs/model versions/datasets/prompts/code + full pairwise matrix + automatic N_eff intervals"
   },
   "files": [
     "IO/corpus/ARXIV-TOPA-SPIDER-SEED-2026-08-29.json",
@@ -72,6 +80,9 @@
     "IO/graph/CITATION-GRAPH-R1-2026-08-29.json",
     "IO/graph/AUTHOR-OVERLAP-GRAPH-R1-2026-08-29.json",
     "IO/graph/TEST-LINEAGE-R1-2026-08-29.json",
-    "IO/graph/CONTRADICTION-LEDGER-R1-2026-08-29.json"
+    "IO/graph/CONTRADICTION-LEDGER-R1-2026-08-29.json",
+    "IO/evidence/R2-EVIDENCE-INDEPENDENCE-ENGINE-v1.0.json",
+    "IO/evidence/R2-EFFECT-CARDS-v1.0.json",
+    "IO/evidence/R2-PAIRWISE-INDEPENDENCE-SEED-v1.0.json"
   ]
 }
