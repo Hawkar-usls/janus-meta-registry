@@ -1,0 +1,130 @@
+{
+  "artifact_uuid": "JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-005-POMS-STARTUP-v1.0",
+  "timestamp": "2026-08-30T01:31:00+03:00",
+  "version": "v1.0",
+  "title": "JANUS Engine — Howl's Moving Castle RUN-005, POMS realistic-packing and startup screen",
+  "observer": "Hawkar / JANUS",
+  "node_type": "literature_grounded_transient_and_power_screen",
+  "branch_name": "Janus Engine",
+  "branch_id": "JANUS_ENGINE",
+  "git_branch": "research/janus-engine",
+  "parent": "projects/janus-engine/gates/JANUS-ENGINE-R0A2-POMS-MEMBRANE-STARTUP-v1.0.json",
+  "status": "POSITIVE_LOW_PARASITIC_REGION_EXISTS_STARTUP_NOT_YET_MEASURED",
+  "purpose": "Replace the speculative 423.5 m2 flat-stack interpretation with a literature-grounded POMS packing density, include the user's startup insight as a transient readiness gate, and determine what auxiliary-power ceiling is compatible with a first self-driving demonstrator.",
+  "geometry": {
+    "axle_diameter_mm": 62.3,
+    "gill_crown_outer_diameter_mm": 700.0,
+    "active_length_mm": 500.0,
+    "annular_volume_m3": 0.190898,
+    "published_prototype_area_density_m2_m3": 111.111,
+    "realistic_flat_POMS_area_m2": 21.2109,
+    "note": "The 423.5 m2 R0A1 figure remains a high-area hollow-fiber screening concept, not a realizable flat POMS stack in this envelope."
+  },
+  "membrane_and_flow_anchor": {
+    "material": "POMS",
+    "selective_layer_thickness_um": 4.0,
+    "measured_permeance_mol_m2_s_Pa": 3.39e-9,
+    "prototype_effective_CFD_permeance_mol_m2_s_Pa": 2.6e-10,
+    "water_channel_mm": 4.0,
+    "gas_channel_mm": 3.0,
+    "published_water_flow_per_area_L_s_m2_range": [0.1593, 0.2823],
+    "scaled_21p21m2_water_flow_L_s_range": [3.380, 5.989],
+    "flow_distribution_target": "substantially better than the published desktop module's approximate 25% actively flushed volume"
+  },
+  "oxygen_flux_cases": [
+    {
+      "label": "LOW_BREAK_EVEN_TARGET_FROM_RUN004",
+      "flux_mg_m2_s": 0.064,
+      "O2_g_s": 0.0013575,
+      "gross_power_W_empirical_prototype_conversion": 5.0906,
+      "gross_power_W_at_55pct_PEMFC_design_efficiency": 13.2526
+    },
+    {
+      "label": "MID_TARGET",
+      "flux_mg_m2_s": 0.100,
+      "O2_g_s": 0.0021211,
+      "gross_power_W_empirical_prototype_conversion": 7.9541,
+      "gross_power_W_at_55pct_PEMFC_design_efficiency": 20.7072
+    },
+    {
+      "label": "HIGH_BREAK_EVEN_TARGET_FROM_RUN004",
+      "flux_mg_m2_s": 0.130,
+      "O2_g_s": 0.0027574,
+      "gross_power_W_empirical_prototype_conversion": 10.3403,
+      "gross_power_W_at_55pct_PEMFC_design_efficiency": 26.9193
+    },
+    {
+      "label": "PAPER_TARGET_APPROX",
+      "flux_mg_m2_s": 0.160,
+      "O2_g_s": 0.0033937,
+      "gross_power_W_empirical_prototype_conversion": 12.7266,
+      "gross_power_W_at_55pct_PEMFC_design_efficiency": 33.1315
+    },
+    {
+      "label": "PAPER_5W_3m2_TARGET_EQUIVALENT",
+      "flux_mg_m2_s": 0.1707,
+      "O2_g_s": 0.0036209,
+      "gross_power_W_empirical_prototype_conversion": 13.5776,
+      "gross_power_W_at_55pct_PEMFC_design_efficiency": 35.3471
+    }
+  ],
+  "conversion_efficiency_audit": {
+    "RUN004_empirical_conversion_J_gO2": 3750.0,
+    "meaning": "derived from the small published prototype's observed 0.18-0.30 W versus measured O2 consumption",
+    "paper_design_efficiency_fraction": 0.55,
+    "paper_design_conversion_J_gO2": 9762.5,
+    "important_correction": "RUN-004 conservatively extrapolated the prototype's low observed electrical conversion to the paper target flux. RUN-005 therefore carries both the empirical low-performance case and the paper's 55%-efficiency design case instead of conflating them."
+  },
+  "auxiliary_budget_area_requirements": {
+    "formula": "A_break_even = P_aux / (J_O2 * e_electric_per_gO2), with J converted from mg/m2/s to g/m2/s",
+    "examples": [
+      {"flux_mg_m2_s": 0.064, "aux_W": 5, "area_m2_empirical": 20.83, "area_m2_55pct": 8.00},
+      {"flux_mg_m2_s": 0.064, "aux_W": 10, "area_m2_empirical": 41.67, "area_m2_55pct": 16.00},
+      {"flux_mg_m2_s": 0.100, "aux_W": 10, "area_m2_empirical": 26.67, "area_m2_55pct": 10.24},
+      {"flux_mg_m2_s": 0.130, "aux_W": 10, "area_m2_empirical": 20.51, "area_m2_55pct": 7.88},
+      {"flux_mg_m2_s": 0.160, "aux_W": 20, "area_m2_empirical": 33.33, "area_m2_55pct": 12.80},
+      {"flux_mg_m2_s": 0.1707, "aux_W": 20, "area_m2_empirical": 31.25, "area_m2_55pct": 12.00}
+    ],
+    "design_discovery": "A first demonstrator should minimize fixed parasitics rather than maximize membrane area. With the 21.2 m2 realistic flat POMS crown, a 10 W total auxiliary ceiling is compatible with the 0.064-0.13 target range only if PEMFC conversion approaches the design-efficiency case; under the measured small-prototype conversion, the same crown needs the upper end of the target flux and auxiliaries below roughly 10 W."
+  },
+  "startup_inventory_screen": {
+    "source_system_gas_volume_L": 7.061,
+    "assumed_initial_pO2_kPa": 21.227,
+    "target_pO2_kPa": 10.0,
+    "O2_inventory_to_remove_mol": 0.03254,
+    "inventory_only_drawdown_minutes_at_16_umol_s": 33.9,
+    "inventory_only_drawdown_minutes_at_2_umol_s": 271.2,
+    "interpretation": "For a direct gill/PEMFC architecture of similar gas-volume-to-membrane-area ratio, establishment of the oxygen gradient is naturally an hours-scale transient rather than an instantaneous switch. Membrane influx during drawdown makes these inventory-only times lower bounds.",
+    "full_VRU_AKS_note": "The richer Mode B can require much longer stabilization because adsorption cycles must approach CSS and thermal/cryogenic inventories must condition. The user's historical 1-4 day startup experience is retained as a plant-specific precedent and motivates condition-based rather than clock-based readiness."
+  },
+  "startup_state_machine": [
+    {"state": "S0_OFF", "external_buffer": "available"},
+    {"state": "S1_PRIME", "criterion": "water and gas loops established, leak and humidity checks pass"},
+    {"state": "S2_PO2_DRAWDOWN", "criterion": "internal pO2 falls below water-equivalent pO2 and oxygen influx becomes measurable"},
+    {"state": "S3_FLUX_LOCK", "criterion": "O2 membrane influx and PEMFC consumption converge within measurement uncertainty"},
+    {"state": "S4_LOAD_TRANSFER", "criterion": "auxiliaries progressively migrate from starter/buffer to PEMFC bus"},
+    {"state": "S5_SELF_DRIVE_HOLD", "criterion": "positive net power and stable O2/humidity/temperature balances over repeated observation windows"},
+    {"state": "S6_MODE_B_CSS_OPTIONAL", "criterion": "if sorbent/VRU/AKS branch enabled, successive cycles meet declared cyclic-steady-state tolerance"}
+  ],
+  "main_result": {
+    "selected_membrane": "POMS thin-film supported membrane",
+    "selected_first_geometry": "sectorized annular cross-flow flat-stack cassettes with distributed water headers",
+    "realistic_first_crown_area_m2": 21.2109,
+    "target_flux_band_mg_m2_s": [0.064, 0.13],
+    "required_total_auxiliary_strategy": "single-digit to low-tens of watts for first ignition, with every pump/fan/control watt measured",
+    "highest_priority_geometry_fix": "flow distribution and boundary-layer renewal, because the published prototype actively flushed only about 25% of its volume and the nominal water-side mass-transfer resistance dominated membrane resistance",
+    "highest_priority_thermal_fix": "prevent gas-side condensation from reducing effective POMS permeance"
+  },
+  "verdict": {
+    "castle_status": "CALCIFER_HAS_A_REAL_MEMBRANE_CANDIDATE_AND_A_REALISTIC_FIRST_CROWN_SCALE",
+    "self_drive": "NOT_YET_PROVEN",
+    "positive_region": "YES_IF_TARGET_FLUX_AND_LOW_AUXILIARY_BUDGET_ARE_SIMULTANEOUSLY_ACHIEVED",
+    "startup": "MUST_BE_MODELED_AND_MEASURED_AS_TRANSIENT_NOT_JUDGED_AT_T0"
+  },
+  "next_gate": "R0A3_DISTRIBUTED_MANIFOLD_AND_PARASITIC_BUDGET: design one small POMS cassette with distributed water feed, measure active-flow utilization, J_O2, DeltaP, fan/blower W, humidity and condensation over an hours-scale startup/hold test; then scale the validated cassette to the 21.2 m2 crown.",
+  "linked_records": [
+    "projects/janus-engine/gates/JANUS-ENGINE-R0A2-POMS-MEMBRANE-STARTUP-v1.0.json",
+    "projects/janus-engine/simulations/JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-004-DIRECT-GILL-PEMFC-v1.0.json",
+    "projects/janus-engine/research/TOPA-SPIDER-ARXIV-VRU-AKS-RUN-001-v1.0.json"
+  ]
+}
