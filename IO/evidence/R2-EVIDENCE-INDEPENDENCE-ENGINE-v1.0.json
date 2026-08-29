@@ -1,0 +1,88 @@
+{
+  "schema": "JANUS.IO.EvidenceIndependenceEngine/v1.0",
+  "id": "IO-R2-EVIDENCE-INDEPENDENCE-ENGINE-v1.0",
+  "branch": "IO-Intellect-Observer",
+  "purpose": "Estimate evidential independence of machine-psychology findings instead of treating publication count or citation count as replication count.",
+  "epistemic_warning": "Scores produced by this engine are evidence-maturity metrics, not probabilities that a psychological interpretation is true.",
+  "unit_of_analysis": {
+    "report": "one empirical paper or independently analyzable experiment family",
+    "research_group": "author/lab cluster with material personnel or institutional continuity",
+    "benchmark_family": "tests descended from substantially the same task/template/scoring lineage",
+    "evidence_line": "a report or cluster contributing non-redundant evidence to a narrowly defined claim"
+  },
+  "pairwise_redundancy_dimensions": [
+    {"id":"AUTHORS","weight":0.24,"measure":"weighted author-set overlap; core-author overlap counts more than peripheral overlap"},
+    {"id":"LAB_OR_INSTITUTION","weight":0.10,"measure":"shared primary lab/institution or directly continuous team"},
+    {"id":"MODEL_FAMILY","weight":0.14,"measure":"same model/product family and materially similar checkpoint/version"},
+    {"id":"BENCHMARK_LINEAGE","weight":0.16,"measure":"same benchmark, questionnaire, task template or direct derivative"},
+    {"id":"DATASET","weight":0.10,"measure":"same evaluation/training dataset or direct sample derivative"},
+    {"id":"PROMPT_LINEAGE","weight":0.10,"measure":"same prompts/templates or lightly modified descendants"},
+    {"id":"EVALUATION_CODE","weight":0.08,"measure":"same evaluation implementation/codebase or direct fork"},
+    {"id":"DIRECT_METHOD_LINEAGE","weight":0.08,"measure":"direct follow-up, reproduction or method transfer from the compared report"}
+  ],
+  "pairwise_formula": {
+    "redundancy_ij": "sum(weight_d * overlap_ij_d)",
+    "independence_ij": "1 - redundancy_ij",
+    "overlap_scale": {"0":"confirmed independent on dimension","0.5":"partial/related","1":"substantially shared","UNKNOWN":"unresolved"},
+    "bounds_rule": "For UNKNOWN overlap, compute conservative lower independence assuming shared and upper independence assuming independent. UNKNOWN must never silently become zero overlap."
+  },
+  "pairwise_classes": [
+    {"class":"STRONGLY_INDEPENDENT","criterion":"independence_lower_bound >= 0.75"},
+    {"class":"MODERATELY_INDEPENDENT","criterion":"0.50 <= independence_lower_bound < 0.75"},
+    {"class":"LINEAGE_LINKED","criterion":"0.25 <= independence_upper_bound < 0.50 or strong known shared lineage"},
+    {"class":"NEAR_REPLICATION_SAME_LINEAGE","criterion":"independence_upper_bound < 0.25"},
+    {"class":"UNRESOLVED","criterion":"bounds cross multiple classes because metadata is missing"}
+  ],
+  "effective_evidence_count": {
+    "method": "redundancy-adjusted effective-number analogue",
+    "formula": "N_eff = (sum_i w_i)^2 / sum_i sum_j (w_i * w_j * R_ij), with R_ii=1 and R_ij=redundancy_ij",
+    "default_report_weight": 1.0,
+    "bounds": "Compute N_eff_low using conservative UNKNOWN overlaps and N_eff_high using optimistic UNKNOWN overlaps.",
+    "interpretation": "N_eff approximates how many fully independent equally weighted evidence lines would contain comparable non-redundant information."
+  },
+  "claim_maturity": {
+    "dimensions": [
+      {"id":"INDEPENDENT_REPLICATION","weight":0.30},
+      {"id":"BENCHMARK_DIVERSITY","weight":0.15},
+      {"id":"MODEL_FAMILY_DIVERSITY","weight":0.15},
+      {"id":"CAUSAL_IDENTIFICATION","weight":0.15},
+      {"id":"ROBUSTNESS_AND_CONTRADICTION_RESOLUTION","weight":0.15},
+      {"id":"ARTIFACT_AND_PROVENANCE_QUALITY","weight":0.10}
+    ],
+    "formula": "100 * weighted_sum(normalized_dimension_scores)",
+    "classes": [
+      {"range":"0-24","label":"VERY_LOW"},
+      {"range":"25-44","label":"LOW"},
+      {"range":"45-64","label":"MODERATE"},
+      {"range":"65-79","label":"HIGH"},
+      {"range":"80-100","label":"VERY_HIGH"}
+    ],
+    "rule": "A high maturity score supports the narrowly operationalized claim only. It cannot upgrade behavioral evidence into subjective experience, intrinsic personality or consciousness."
+  },
+  "non_independence_penalties": {
+    "same_authors_and_same_benchmark": "large penalty",
+    "same_model_only": "small-to-moderate penalty; model replication still informs reproducibility but not cross-model generality",
+    "same_benchmark_only": "moderate penalty",
+    "same_lab_new_benchmark": "moderate penalty",
+    "different_authors_same_public_code": "partial penalty",
+    "different_everything_but_same_construct": "candidate strong independent replication"
+  },
+  "anti_double_counting_rules": [
+    "A survey does not count as an empirical replication of the papers it summarizes.",
+    "A benchmark paper reusing source-paper examples does not become fully independent merely by testing more models.",
+    "A paper containing many experiments contributes multiple evidence lines only when experiments have materially independent datasets/tasks and are not pseudo-replicates.",
+    "A model-version comparison within one paper is model-diversity evidence, not multiple research-group replications.",
+    "A direct mitigation study can support manipulability without independently confirming the proposed causal mechanism.",
+    "Citation count contributes zero direct replication weight."
+  ],
+  "required_metadata_per_report": [
+    "paper_id","authors","primary_institutions","model_names_and_versions","benchmark_family","datasets","prompt_or_template_lineage","evaluation_code_provenance","training_or_intervention_regime","claim_type","positive_negative_or_mixed_result"
+  ],
+  "input_files": [
+    "IO/graph/AUTHOR-OVERLAP-GRAPH-R1-2026-08-29.json",
+    "IO/graph/CITATION-GRAPH-R1-2026-08-29.json",
+    "IO/graph/TEST-LINEAGE-R1-2026-08-29.json",
+    "IO/graph/CONTRADICTION-LEDGER-R1-2026-08-29.json"
+  ],
+  "status": "R2_ENGINE_INITIALIZED"
+}
