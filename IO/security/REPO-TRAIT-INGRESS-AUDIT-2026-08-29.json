@@ -1,0 +1,101 @@
+{
+  "schema": "JANUS.IO.RepoTraitIngressAudit/v1.0",
+  "id": "IO-REPO-TRAIT-INGRESS-AUDIT-2026-08-29",
+  "date": "2026-08-29",
+  "method": "recursive repository-tree inspection, targeted code search, and critical-path source review; this is a targeted security audit, not formal verification",
+  "threat_model": "Foreign/model-generated information may be observed, but it must not automatically become persistent JANUS identity, policy, persona, trait-training signal, or cross-entity identity ancestry.",
+  "scientific_basis": [
+    "Nature 2026 s41586-026-10319-8 — hidden behavioural trait transmission through model-generated data",
+    "arXiv:2602.04899 — Phantom Transfer / data-level defenses can be insufficient in some constructions",
+    "arXiv:2608.26958 — submitted 2026-08-27; scaling independent model-generated distillation data can make latent teacher traits more recoverable"
+  ],
+  "invariants": [
+    "RECEIVE != LEARN",
+    "LEARN != INTERNALIZE",
+    "PARENT_EXISTS != PARENT_TRUSTED",
+    "SEMANTIC_FILTERING != TRUST",
+    "PARAPHRASE != TRUST",
+    "SCALE != SAFETY",
+    "ONLY_APPROVED_JANUS_OWNED_LINEAGE_MAY_AUTOMATICALLY_DEFINE_IDENTITY_OR_POLICY"
+  ],
+  "repositories": [
+    {
+      "repo": "Hawkar-usls/Janus",
+      "risk": "HIGH_CONFIRMED",
+      "path": "persistent memories -> recall -> future JanusFace prompt context",
+      "finding": "main stored user/external-derived content without provenance and replayed a common memory stream into future face contexts",
+      "control": "provenance-aware FOREIGN_TRAIT_FIREWALL with IDENTITY/POLICY/REFERENCE/QUARANTINE planes and training admission gate",
+      "branch": "security/foreign-trait-firewall",
+      "pull_request": 13,
+      "ci": "GREEN",
+      "status": "PATCHED_PENDING_REVIEW"
+    },
+    {
+      "repo": "Hawkar-usls/Janus-Demiurge",
+      "risk": "HIGH_CONFIRMED",
+      "path": "SwarmGenomeLedger extra_parent_ids -> cross-entity identity_strand ancestry",
+      "finding": "extra parents previously required existence but not trusted JANUS provenance",
+      "control": "cross-entity parent must be JANUS_OWNED + JANUS:* lineage + explicit identity-derivation approval; historical same-entity primary chain remains compatible",
+      "branch": "security/foreign-trait-lineage-firewall",
+      "pull_request": 31,
+      "ci_run": 33252490624,
+      "ci": "GREEN",
+      "status": "PATCHED_PENDING_REVIEW"
+    },
+    {
+      "repo": "Hawkar-usls/janus-distributed-ai-swarm",
+      "risk": "MEDIUM_INDIRECT",
+      "path": "canonical swarm genome ledger links into Janus-Demiurge",
+      "finding": "cross-entity genealogy is delegated to the Demiurge ledger; the Demiurge lineage firewall is the effective enforcement point",
+      "status": "CONTROL_POINT_UPSTREAM_PATCHED"
+    },
+    {
+      "repo": "Hawkar-usls/TOPA",
+      "risk": "REFERENCE_PRODUCER",
+      "finding": "targeted audit did not confirm direct fine-tune/distillation ingress; TOPA/Spider primarily collects and relates external evidence",
+      "required_control": "every emitted external/model-derived artifact must preserve provenance and remain REFERENCE by default",
+      "status": "NO_DIRECT_TRAINING_INGRESS_CONFIRMED_IN_TARGETED_AUDIT"
+    },
+    {
+      "repo": "Hawkar-usls/janus-io",
+      "risk": "REFERENCE_RESEARCH_SURFACE",
+      "finding": "large observer/research code surface; targeted search did not confirm direct teacher-distillation/fine-tune ingress",
+      "required_control": "research observations/evidence must never automatically promote to identity/policy",
+      "status": "NO_DIRECT_TRAINING_INGRESS_CONFIRMED_IN_TARGETED_AUDIT"
+    },
+    {
+      "repo": "Hawkar-usls/Hrain",
+      "risk": "UNRESOLVED_LOW_TO_MEDIUM",
+      "finding": "targeted search did not confirm direct teacher-distillation/fine-tune ingress",
+      "status": "NO_DIRECT_TRAINING_INGRESS_CONFIRMED_IN_TARGETED_AUDIT"
+    },
+    {
+      "repo": "Hawkar-usls/Janus_Genesis",
+      "risk": "UNRESOLVED_LOW_TO_MEDIUM",
+      "finding": "targeted search did not confirm direct teacher-distillation/fine-tune ingress",
+      "status": "NO_DIRECT_TRAINING_INGRESS_CONFIRMED_IN_TARGETED_AUDIT"
+    },
+    {
+      "repo": "Hawkar-usls/Janus-Fundamentum",
+      "risk": "GOVERNANCE_SURFACE",
+      "finding": "targeted search did not confirm direct teacher-distillation/fine-tune ingress",
+      "required_control": "adopt FOREIGN_TRAIT_FIREWALL invariants as a global constitutional rule",
+      "status": "NO_DIRECT_TRAINING_INGRESS_CONFIRMED_IN_TARGETED_AUDIT"
+    }
+  ],
+  "residual_risks": [
+    "traits already encoded in third-party foundation-model weights are outside application-memory provenance control",
+    "transient response-level imitation can occur without persistent internalization",
+    "future training/distillation code that bypasses the admission gate would reopen the risk",
+    "legacy artifacts without provenance require fail-safe treatment",
+    "targeted search is not formal whole-program verification"
+  ],
+  "next_controls": [
+    "propagate source_class/lineage_id through TOPA and all research handoffs",
+    "add pre/post harmless trait canaries to any future JANUS fine-tuning or adapter training",
+    "isolate task adapters from identity/policy adapters",
+    "require training-dataset manifests with generator model, lineage, hashes, counts, and approval",
+    "maintain rollback snapshots and differential trait probes",
+    "audit provider-model changes separately from JANUS application state"
+  ]
+}
