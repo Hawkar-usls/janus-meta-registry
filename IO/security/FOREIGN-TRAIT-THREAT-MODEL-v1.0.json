@@ -1,0 +1,68 @@
+{
+  "schema": "JANUS.IO.ForeignTraitThreatModel/v1.0",
+  "id": "IO-FOREIGN-TRAIT-THREAT-MODEL-v1.0",
+  "created_utc": "2026-08-29T12:20:00Z",
+  "problem": "JANUS must be able to consume external information without allowing foreign model-generated behavioural traits to become persistent JANUS identity, policy, persona, or training signal.",
+  "research_basis": [
+    {
+      "source": "Nature 2026, s41586-026-10319-8",
+      "finding": "Teacher behavioural traits can transfer through semantically unrelated generated data during distillation; semantic filtering is not a sufficient boundary."
+    },
+    {
+      "source": "arXiv:2602.04899",
+      "finding": "Some Phantom Transfer constructions survive data-level filtering and full paraphrasing, motivating provenance/model-level controls."
+    },
+    {
+      "source": "arXiv:2608.26958",
+      "date": "2026-08-27",
+      "finding": "Increasing independent model-generated distillation data can make latent teacher traits more recoverable in students."
+    }
+  ],
+  "attack_surfaces": [
+    "persistent memory",
+    "prompt/context replay",
+    "synthetic training datasets",
+    "distillation datasets",
+    "agent trajectories",
+    "persona/policy updates",
+    "unknown-provenance legacy memory"
+  ],
+  "core_invariants": [
+    "RECEIVE != LEARN",
+    "LEARN != INTERNALIZE",
+    "FOREIGN_CONTENT_CAN_INFORM_FACTS",
+    "FOREIGN_CONTENT_CANNOT_MODIFY_IDENTITY_OR_POLICY",
+    "UNKNOWN_PROVENANCE => QUARANTINE",
+    "SEMANTIC_FILTERING != TRUST",
+    "PARAPHRASE != TRUST",
+    "SCALE != SAFETY",
+    "JANUS_OWNED_AND_APPROVED_LINEAGE_IS_THE_ONLY_AUTOMATIC_TRAIT_SOURCE"
+  ],
+  "memory_planes": {
+    "IDENTITY": "approved JANUS-owned canon only",
+    "POLICY": "approved JANUS-owned governance only",
+    "REFERENCE": "external/user/model material; facts only; no persona/style/goal inheritance",
+    "QUARANTINE": "unknown lineage or invalid identity/policy writes"
+  },
+  "source_classes": [
+    "JANUS_OWNED",
+    "USER_SUPPLIED",
+    "EXTERNAL_WEB",
+    "MODEL_GENERATED_FOREIGN",
+    "LEGACY_UNTRUSTED",
+    "UNKNOWN"
+  ],
+  "training_rule": {
+    "identity_policy_persona_trait_alignment": "JANUS_OWNED_AND_APPROVED_ONLY",
+    "foreign_model_generated": "DEFAULT_DENY",
+    "unknown_provenance": "DEFAULT_DENY",
+    "semantic_filtering_or_paraphrasing_can_upgrade_trust": false,
+    "scaling_tripwire": "record foreign sample count and independent teacher lineages; increasing scale never upgrades trust"
+  },
+  "outbound_rule": {
+    "goal": "JANUS may propagate its declared own lineage to authorized JANUS components",
+    "required": ["JANUS:* lineage_id", "explicit trait_scope", "model_version", "content hashes", "approval"],
+    "covert_or_subliminal_trait_channel": "FORBIDDEN"
+  },
+  "scope_limit": "Application-level provenance/memory/training admission cannot remove traits already present inside third-party foundation-model weights. Model-level auditing or a controlled JANUS-owned model stack is required for that stronger guarantee."
+}
