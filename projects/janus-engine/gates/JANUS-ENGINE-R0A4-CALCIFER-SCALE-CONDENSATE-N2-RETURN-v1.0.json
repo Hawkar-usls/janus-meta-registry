@@ -1,0 +1,98 @@
+{
+  "artifact_uuid": "JANUS-ENGINE-R0A4-CALCIFER-SCALE-CONDENSATE-N2-RETURN-v1.0",
+  "timestamp": "2026-08-30T01:31:00+03:00",
+  "version": "v1.0",
+  "title": "JANUS Engine R0A4 — Calcifer scale control and N2-driven condensate return",
+  "observer": "Hawkar / JANUS",
+  "node_type": "water_chemistry_and_condensate_management_gate",
+  "branch_name": "Janus Engine",
+  "branch_id": "JANUS_ENGINE",
+  "git_branch": "research/janus-engine",
+  "parent": "projects/janus-engine/gates/JANUS-ENGINE-R0A2-POMS-MEMBRANE-STARTUP-v1.0.json",
+  "status": "DESIGN_GATE_OPEN_PENDING_WATER_CHEMISTRY_AND_CONTAMINATION_TESTS",
+  "nickname": "Calcifer chamber hygiene gate",
+  "problem_statement": "The central Axle water chamber can accumulate mineral scale over long operation. Calcium-carbonate deposition is a first-order lifetime risk because local heating, CO2 stripping/degassing, pH shift, rough surfaces, stagnant zones and repeated wet/dry interfaces can increase supersaturation and nucleation on the Axle, seals, channels and nearby membrane hardware.",
+  "important_mode_split": {
+    "once_through_external_water": "No concentration-cycle buildup is assumed, so scale risk is primarily surface-chemistry / temperature / degassing / nucleation driven.",
+    "recirculating_or_partially_closed_water": "Dissolved minerals can concentrate unless bleed/replacement closes the salt balance; this mode has materially higher scaling risk and requires explicit conductivity/hardness control."
+  },
+  "scale_chemistry_screen": {
+    "principal_candidate": "CaCO3",
+    "qualitative_relation": "Higher Ca2+ activity, alkalinity, pH and temperature together with CO2 removal can move water toward CaCO3 supersaturation.",
+    "rotation_effect": "Axle rotation may reduce stagnant boundary layers and mechanically limit weak deposits, but rotation is not accepted as a scale-prevention mechanism without long-duration measurement.",
+    "N2_sparging_warning": "Directly bubbling N2 through hard water can strip dissolved CO2. Because CO2 removal can raise carbonate supersaturation, N2 sparging may increase CaCO3 precipitation under some water chemistries rather than clean the chamber.",
+    "invariant": "N2_PURGE_IS_A_TRANSPORT_AND_INERTING_TOOL_NOT_AN_ASSUMED_ANTISCALE_CHEMISTRY"
+  },
+  "preferred_condensate_return_architecture": {
+    "principle": "Use nitrogen pressure to move condensate without requiring the nitrogen itself to bubble through the Axle water inventory unless a specific mixing duty is proven beneficial.",
+    "sequence": [
+      "collect condensate in a small separator/accumulator",
+      "classify and qualify condensate before reuse",
+      "apply N2 pressure to the gas space of the accumulator",
+      "push liquid condensate through a check-valved return line into the Axle water circuit",
+      "route displaced N2 to a controlled vent/recycle manifold rather than automatically sparging it through the chamber"
+    ],
+    "benefit": "Retains the user's desired N2-driven self-service function while avoiding unnecessary CO2 stripping, bubble loading and dissolved-gas disturbance in the gill chamber."
+  },
+  "condensate_classes": {
+    "C1_clean_heat_exchanger_or_water_vapor_condensate": {
+      "reuse_status": "CANDIDATE_RETURN",
+      "qualification": ["conductivity", "pH", "TOC or equivalent contamination screen", "oil/grease absence where relevant", "particulate load"]
+    },
+    "C2_compressor_condensate": {
+      "reuse_status": "QUARANTINE_UNTIL_PROVEN_CLEAN",
+      "reason": "Compressor condensate can contain lubricant aerosols, wear metals, seal residues or upstream contaminants even when the bulk liquid appears clear.",
+      "rule": "Do not return C2 to the Axle/gill water or oxygen-adjacent hardware without contamination analysis and oil-free compatibility evidence."
+    },
+    "C3_oxygen_or_cathode_loop_condensate": {
+      "reuse_status": "CANDIDATE_RETURN_AFTER_MATERIAL_COMPATIBILITY_CHECK",
+      "rule": "Maintain oxygen-clean separation from oil-bearing compressor hardware and verify that leachables or corrosion products are absent before water-side return."
+    }
+  },
+  "calcifer_trap_concept": {
+    "description": "Preferentially sacrifice a removable side-stream nucleation surface or scale coupon before allowing uncontrolled deposition on the Axle and membrane hardware.",
+    "status": "HYPOTHESIS_TO_TEST",
+    "boundary": "No chemical antiscalant or acid dosing is authorized by this record. Any chemistry added to water must first pass membrane, materials, environmental and oxygen-system compatibility gates."
+  },
+  "passive_design_preferences": [
+    "distributed high-shear flow with no persistent dead legs around the Axle",
+    "removable / inspectable chamber liner and sacrificial scale coupons",
+    "keep hottest heat-transfer surfaces physically separated from the most scale-sensitive membrane and seal regions",
+    "smooth low-adhesion wetted surfaces where structurally and chemically compatible",
+    "periodic low-mineral condensate flush only after condensate cleanliness is verified",
+    "drainability so shutdown does not leave repeated partially dried mineral films"
+  ],
+  "measurements_required": [
+    "calcium hardness",
+    "total alkalinity",
+    "pH",
+    "conductivity",
+    "water temperature at chamber inlet/outlet and hot surfaces",
+    "dissolved CO2 or a carbonate-equilibrium surrogate where practical",
+    "turbidity/particulate generation",
+    "scale coupon mass gain and surface coverage versus runtime",
+    "Axle torque/current drift versus runtime",
+    "water-side DeltaP drift",
+    "membrane O2 flux drift",
+    "condensate conductivity and contamination class before return"
+  ],
+  "startup_and_lifetime_test": {
+    "short_startup": "Do not use a clean first-hour result as evidence of lifetime reliability.",
+    "minimum_logic": "Run chemistry and mechanical trends across startup, stable operation and repeated shutdown/restart cycles; judge scale by trend and deposited mass, not only visual inspection.",
+    "failure_signatures": [
+      "progressive Axle torque rise",
+      "increasing pressure drop",
+      "declining O2 flux at unchanged water chemistry and flow",
+      "visible hard crystalline deposits",
+      "gas bubbles or N2 purge disturbing O2 mass-balance closure"
+    ]
+  },
+  "system_integration_rule": "Condensate recovery is allowed to serve two useful duties — water recovery and controlled chamber flushing/dilution — but mineral ions are not destroyed by condensation elsewhere in the plant. The chamber salt balance must be closed independently.",
+  "next_gate": "R0A4A_WATER_CHEMISTRY_STRESS_MATRIX: run the Axle/cassette water loop across representative soft/medium/hard-water chemistries and temperatures, with and without controlled N2-driven condensate return, measuring scale mass, torque, DeltaP, O2 flux and pH/alkalinity drift before locking the final purge routing.",
+  "linked_records": [
+    "projects/janus-engine/gates/JANUS-ENGINE-R0A2-POMS-MEMBRANE-STARTUP-v1.0.json",
+    "projects/janus-engine/simulations/JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-005-POMS-STARTUP-v1.0.json",
+    "data/JANUS-ENGINE-R0B-WATER-CONDENSATE-REOXYGENATION-v1.0.json",
+    "data/JANUS-ENGINE-R0C-THREE-STATE-SORBENT-CAROUSEL-v1.0.json"
+  ]
+}
