@@ -1,0 +1,85 @@
+{
+  "artifact_uuid": "JANUS-ENGINE-M4-MAGNETIC-COMMUTATION-SELECTION-SCREEN-v1.0",
+  "timestamp": "2026-08-30T02:37:00+03:00",
+  "version": "v1.0",
+  "title": "JANUS Engine — magnetic commutation selection screen for Axle",
+  "observer": "Hawkar / JANUS",
+  "node_type": "energy_and_architecture_screen",
+  "git_branch": "research/janus-engine",
+  "parent": "projects/janus-engine/research/TOPA-SPIDER-AXLE-MAGNETIC-DRIVE-RUN-004-v1.0.json",
+  "status": "CORELESS_AFPM_SELECTED_EPM_PER_SECTOR_REJECTED",
+  "purpose": "Numerically test whether repeated magnetic-state cancellation is compatible with the low-power JANUS Axle budget and quantify the starter-generator torque envelope before detailed electromagnetic geometry exists.",
+  "closed_cycle_energy_test": {
+    "assumed_PM_torque_example": "tau_PM(theta)=tau_pk*sin(theta)",
+    "positive_half_work_J": "2*tau_pk",
+    "negative_half_work_J": "-2*tau_pk",
+    "full_cycle_PM_work_J": 0,
+    "active_cancel_case": "If a coil supplies -tau_PM over the negative half-cycle, coil mechanical work is +2*tau_pk, while net shaft work over the full cycle becomes +2*tau_pk.",
+    "result": "The apparent net shaft work equals the work supplied by the active cancelling field in the ideal limit; real copper, inverter and magnetic losses make electrical input larger. Therefore selective cancellation is torque shaping, not energy multiplication."
+  },
+  "electropermanent_per_sector_budget": {
+    "formula": "f_switch=(RPM/60)*N_switches_per_rev; E_pulse_max=P_budget/f_switch",
+    "baseline_switches_per_rev": 8,
+    "cases": [
+      {"RPM": 60, "switch_frequency_Hz": 8, "E_pulse_max_at_1W_J": 0.125, "E_pulse_max_at_2W_J": 0.250, "E_pulse_max_at_5W_J": 0.625},
+      {"RPM": 120, "switch_frequency_Hz": 16, "E_pulse_max_at_1W_J": 0.0625, "E_pulse_max_at_2W_J": 0.125, "E_pulse_max_at_5W_J": 0.3125},
+      {"RPM": 300, "switch_frequency_Hz": 40, "E_pulse_max_at_1W_J": 0.025, "E_pulse_max_at_2W_J": 0.050, "E_pulse_max_at_5W_J": 0.125},
+      {"RPM": 600, "switch_frequency_Hz": 80, "E_pulse_max_at_1W_J": 0.0125, "E_pulse_max_at_2W_J": 0.025, "E_pulse_max_at_5W_J": 0.0625}
+    ],
+    "literature_scale_check": "A published VFMM pulse-trajectory experiment reported re/de-magnetization operation losses of roughly 33.58 J and 27.88 J for one specific machine and pulse strategy. Those values are not transferable to JANUS dimensions, but they are far above the per-event energy ceiling that a low-power per-sector JANUS scheme would require at hundreds of RPM.",
+    "verdict": "DO_NOT_USE_EPM_MAGNETIZATION_STATE_SWITCHING_EVERY_SECTOR. Use EPM/VFMM only for infrequent persistent mode changes if a later subsystem benefits."
+  },
+  "coreless_AFPM_power_to_torque_screen": {
+    "formula": "tau=P/omega, omega=2*pi*RPM/60",
+    "cases": [
+      {"RPM": 60, "torque_Nm_at_5W": 0.7958, "at_10W": 1.5915, "at_20W": 3.1831, "at_35W": 5.5704},
+      {"RPM": 120, "torque_Nm_at_5W": 0.3979, "at_10W": 0.7958, "at_20W": 1.5915, "at_35W": 2.7852},
+      {"RPM": 300, "torque_Nm_at_5W": 0.1592, "at_10W": 0.3183, "at_20W": 0.6366, "at_35W": 1.1141},
+      {"RPM": 600, "torque_Nm_at_5W": 0.0796, "at_10W": 0.1592, "at_20W": 0.3183, "at_35W": 0.5570}
+    ],
+    "interpretation": "The current JANUS low-tens-of-watts electrical scale corresponds to sub-Nm to about 1.1 Nm shaft torque in the 300-600 RPM range. That is a tractable first electromagnetic bench target; 60 RPM requires much larger torque for the same power and is a less attractive baseline unless the Axle hydrodynamics demand it."
+  },
+  "candidate_scorecard": [
+    {"candidate": "passive alternating PM ring", "startup_drag": "poor", "bidirectional_motor_generator": "no without coils", "control": "poor", "parasitic_risk": "cogging", "score": 1},
+    {"candidate": "PM ring + timed negative-torque cancellation", "startup_drag": "medium", "bidirectional_motor_generator": "yes with coils", "control": "good", "parasitic_risk": "continuous/pulsed copper loss", "score": 3},
+    {"candidate": "EPM/VFMM per-sector switching", "startup_drag": "configurable", "bidirectional_motor_generator": "not inherently", "control": "complex", "parasitic_risk": "magnetization pulse loss/hysteresis", "score": 2},
+    {"candidate": "hybrid-excitation PM machine", "startup_drag": "good", "bidirectional_motor_generator": "yes", "control": "excellent", "parasitic_risk": "field-winding and iron loss", "score": 4},
+    {"candidate": "coreless/slotless AFPM starter-generator", "startup_drag": "best-fit low cogging", "bidirectional_motor_generator": "yes", "control": "excellent with inverter", "parasitic_risk": "copper/leakage/structural", "score": 5}
+  ],
+  "selected_test_article": {
+    "architecture": "coreless/slotless AFPM starter-generator",
+    "preferred_installation": "dry-side or magnetically coupled across non-ferromagnetic low-eddy-current boundary",
+    "baseline_control": "position sensor + three-phase inverter + FOC/synchronous commutation",
+    "operating_modes": [
+      "START: battery supplies positive Axle torque",
+      "ASSIST: controller supplies only the torque needed to hold target RPM",
+      "COAST: zero commanded torque to measure native Axle drag",
+      "REGEN: if real hydraulic/mechanical input drives Axle above command, inverter returns electrical energy to DC bus/battery",
+      "RIPPLE_TRIM: inject only the minimum measured harmonic compensation current if residual torque ripple matters"
+    ]
+  },
+  "R0M1_measurements": [
+    "no-current breakaway torque and drag torque versus RPM",
+    "back-EMF constant versus RPM",
+    "motor torque constant",
+    "motor electrical-to-shaft efficiency map at 60/120/300/600 RPM",
+    "generator shaft-to-DC efficiency map",
+    "inverter idle and switching power",
+    "temperature rise in coils and magnets",
+    "residual torque ripple/cogging",
+    "eddy-current drag with the intended chamber/barrier material",
+    "battery energy used during startup and recovered during regen"
+  ],
+  "pass_conditions": {
+    "energy": "Integrated motor/assist electrical energy must be charged to the battery/DC bus; regen credited only from independently identified mechanical input.",
+    "cogging": "No-current magnetic drag/cogging must be small compared with native Axle hydrodynamic/scale-management torque.",
+    "startup": "Starter-generator must reach target Axle RPM within the allowed battery startup envelope without overheating.",
+    "self_drive": "After JANUS reaches steady state, battery-neutral/self-drive may be claimed only if SOC does not decrease over the declared hold window after all active auxiliaries and magnetic-drive electronics are included."
+  },
+  "verdict": {
+    "selected": "M5_CORELESS_SLOTLESS_AFPM_STARTER_GENERATOR",
+    "why": "It solves the actual JANUS need—startup, controlled rotation and regeneration—without deliberately introducing a magnetic braking barrier that later has to be electrically cancelled.",
+    "EPM_role": "reserve for rare persistent state switching, latches or valves, not Axle pole-by-pole commutation",
+    "next_gate": "R0M1_CORELESS_AFPM_BENCH_CALIBRATION_THEN_FEM_GEOMETRY_FREEZE"
+  }
+}
