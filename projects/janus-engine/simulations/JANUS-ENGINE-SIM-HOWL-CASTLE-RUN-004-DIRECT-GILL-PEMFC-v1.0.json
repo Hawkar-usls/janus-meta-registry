@@ -1,0 +1,125 @@
+{
+  "artifact_uuid": "JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-004-DIRECT-GILL-PEMFC-v1.0",
+  "timestamp": "2026-08-30T01:31:00+03:00",
+  "version": "v1.0",
+  "title": "JANUS Engine — Howl's Moving Castle RUN-004, literature-calibrated direct-gill PEMFC",
+  "observer": "Hawkar / JANUS",
+  "node_type": "literature_calibrated_energy_transport_simulation",
+  "branch_name": "Janus Engine",
+  "branch_id": "JANUS_ENGINE",
+  "git_branch": "research/janus-engine",
+  "parent": "projects/janus-engine/gates/JANUS-ENGINE-R2B-DIRECT-GILL-PEMFC-v1.0.json",
+  "status": "MIXED_RESULT_MEASURED_PROTOTYPE_FLUX_FAILS_CURRENT_FIXED_OVERHEAD_PAPER_TARGET_FLUX_PASSES",
+  "purpose": "Repeat the self-drive calculation using measured and target artificial-gill/PEMFC performance reported by Merckelbach & Georgopanos (2025), while retaining the JANUS R0A1 membrane crown as the scale envelope and removing the full O2/N2/LOX processing burden from the direct mode.",
+  "source_data": {
+    "paper": "Merckelbach & Georgopanos, Advanced Science 2025, DOI 10.1002/advs.202410358",
+    "prototype_membrane_area_m2": 3.0,
+    "prototype_O2_total_umol_s_range": [1.5, 2.5],
+    "prototype_fuel_cell_power_W_range": [0.18, 0.30],
+    "prototype_measured_flux_mg_O2_m2_s_range": [0.016, 0.0266667],
+    "prototype_power_density_W_m2_range": [0.06, 0.10],
+    "inferred_target_total_O2_umol_s_approx": 15.0,
+    "inferred_target_flux_mg_O2_m2_s_approx": 0.16,
+    "target_inference_basis": "Authors report measured 1.5-2.5 umol/s as roughly 6-10 times below target; both endpoints imply a target near 15 umol/s for the 3 m2 module.",
+    "gross_electric_conversion_from_observed_pair_kJ_per_g_O2": 3.75
+  },
+  "janus_geometry_carried_from_R0A1": {
+    "membrane_area_m2": 423.5294,
+    "gill_crown_outer_diameter_mm": 700.0,
+    "gill_active_length_mm": 500.0,
+    "axle_diameter_mm": 62.3,
+    "architecture": "rotating Axle plus stationary high-area gill crown"
+  },
+  "water_and_auxiliary_model": {
+    "dissolved_O2_mg_L": 8.0,
+    "screening_capture_fraction_for_water_supply": 0.50,
+    "R0A1_hydraulic_reference": {
+      "Q_L_s": 100.0,
+      "hydraulic_power_W": 262.07,
+      "flow_regime_note": "R0A1 straight-channel screen was laminar; RUN-004 scales hydraulic power approximately with Q^2 only as a low-flow screening relation."
+    },
+    "shared_fixed_auxiliary_W": 100.0,
+    "gas_recirculation_power_W": "EXPLICIT_UNKNOWN",
+    "hydrogen_feed_power_W": "EXPLICIT_UNKNOWN",
+    "thermal_management_increment_W": "EXPLICIT_UNKNOWN",
+    "full_VRU_AKS_processing_removed_from_direct_mode": true
+  },
+  "case_A_measured_prototype_flux_scaled_to_JANUS_area": {
+    "O2_capture_g_s_range": [0.0067765, 0.0112941],
+    "gross_PEMFC_electric_W_range": [25.4118, 42.3529],
+    "water_flow_L_s_required_at_8mgL_50pct_range": [1.6941, 2.8235],
+    "hydraulic_power_W_range": [0.0752, 0.2089],
+    "net_after_100W_fixed_before_gas_loop_W_range": [-74.6635, -57.8560],
+    "verdict": "FAIL_WITH_CURRENT_100W_FIXED_OVERHEAD",
+    "interpretation": "The published desktop prototype flux is experimentally real but too low, when linearly scaled to 423.5 m2, to pay a 100 W shared overhead. The water-pumping bill at the correspondingly lower throughput is tiny; the deficit is dominated by fixed/gas-side auxiliaries rather than hydraulic power."
+  },
+  "case_B_paper_target_flux_scaled_to_JANUS_area": {
+    "target_flux_mg_O2_m2_s": 0.16,
+    "O2_capture_g_s": 0.0677647,
+    "O2_capture_kg_h": 0.243953,
+    "gross_PEMFC_electric_W": 254.118,
+    "water_flow_L_s_required_at_8mgL_50pct": 16.9412,
+    "hydraulic_power_W": 7.5215,
+    "shared_fixed_auxiliary_W": 100.0,
+    "net_before_gas_hydrogen_thermal_aux_W": 146.596,
+    "maximum_combined_unmodeled_auxiliary_budget_before_break_even_W": 146.596,
+    "verdict": "PASS_REGION_EXISTS_IF_MODULE_APPROACHES_PAPER_TARGET_TRANSPORT",
+    "interpretation": "At the paper's intended module-level transfer rate, the JANUS crown no longer needs the old 0.4 g/s oxygen target to become self-driving. A roughly 0.068 g/s O2 stream already yields about 254 W gross electrical power, leaving about 147 W after the current fixed and water-side screening loads, before gas recirculation/hydrogen-feed/thermal auxiliaries are charged."
+  },
+  "break_even_transport_for_423p53m2": {
+    "with_100W_fixed_and_no_extra_gas_loop": {
+      "minimum_flux_mg_O2_m2_s": 0.063714,
+      "minimum_O2_g_s": 0.026985,
+      "minimum_water_flow_L_s_at_8mgL_50pct": 6.7462,
+      "gross_power_W": 101.193,
+      "hydraulic_power_W": 1.1927,
+      "multiple_of_measured_midpoint_flux": 2.987,
+      "fraction_of_paper_target_flux": 0.3982
+    },
+    "with_100W_fixed_plus_50W_other_aux": {
+      "minimum_flux_mg_O2_m2_s": 0.096155,
+      "multiple_of_measured_midpoint_flux": 4.507,
+      "fraction_of_paper_target_flux": 0.6010
+    },
+    "with_100W_fixed_plus_100W_other_aux": {
+      "minimum_flux_mg_O2_m2_s": 0.129005,
+      "multiple_of_measured_midpoint_flux": 6.047,
+      "fraction_of_paper_target_flux": 0.8063
+    },
+    "design_meaning": "RUN-004 does not require the full paper target to cross zero if gas-side auxiliaries are controlled. With the current 100 W shared overhead and no additional gas-loop penalty, about 40% of the paper target flux is mathematically enough."
+  },
+  "old_0p4g_s_target_reassessment": {
+    "target_O2_g_s": 0.4,
+    "membrane_area_required_at_published_measured_flux_m2_range": [15000.0, 25000.0],
+    "membrane_area_required_at_inferred_paper_target_flux_m2": 2500.0,
+    "current_R0A1_area_m2": 423.5294,
+    "conclusion": "The previous 0.4 g/s target is too aggressive for a first direct-gill PEMFC self-drive demonstration at current literature-calibrated membrane transport. RUN-004 therefore changes the optimization objective from hitting 0.4 g/s to crossing P_net=0 at the lowest realizable oxygen flux and auxiliary burden."
+  },
+  "comparison_to_RUN003_full_VRU_AKS": {
+    "RUN003_full_processing_placeholder_W_at_0p4g_s": 320.0,
+    "direct_mode_effect": "Bulk gas separation, N2 service and LOX are not required for first ignition; this removes a major auxiliary block but replaces it with an explicit recirculating cathode-gas loop whose power must be measured.",
+    "strategic_result": "MODE_A_DIRECT_GILL_PEMFC is now the preferred first-self-drive path; MODE_B_VRU_AKS remains the richer process-integration architecture for later scaling and storage functions."
+  },
+  "dominant_unknowns_after_RUN004": [
+    "actual O2 flux of a JANUS membrane cassette under controlled water velocity and internal pO2",
+    "gas recirculation blower power required to maintain the PEMFC loop",
+    "hydrogen storage/feed parasitic power and chosen fuel-cell stack efficiency",
+    "heat and water management parasitics",
+    "long-duration membrane fouling and flux recovery",
+    "scale-up maldistribution inside the annular crown"
+  ],
+  "run_verdict": {
+    "castle_status": "CALCIFER_CATCHES_WITH_LITERATURE_GILLS_BUT_NOT_YET_SELF_SUSTAINED_BY_MEASURED_PROTOTYPE_FLUX",
+    "measured_prototype_scaled_case": "FAIL",
+    "paper_target_transport_case": "PASS_BEFORE_UNMODELED_GAS_SIDE_AUXILIARIES",
+    "main_discovery": "Only about 0.027 g/s O2 and 0.064 mg m-2 s-1 membrane flux are required to beat the current 100 W fixed overhead in the direct PEMFC screen; the first self-drive target can be much smaller than 0.4 g/s.",
+    "experimental_status": "UNVERIFIED_JANUS_HARDWARE"
+  },
+  "next_gate": "R0A2_SMALL_CASSETTE_TRANSPORT_CALIBRATION + R2B1_GAS_LOOP_PARASITIC_GATE: measure J_O2(v_water,pO2_internal), DeltaP/Q and blower power on a small closed recirculating cathode loop. Re-run with measured JANUS values; do not scale to the full 423.5 m2 crown until the small cassette closes O2 and energy balances.",
+  "linked_records": [
+    "projects/janus-engine/gates/JANUS-ENGINE-R2B-DIRECT-GILL-PEMFC-v1.0.json",
+    "projects/janus-engine/research/TOPA-SPIDER-ARXIV-VRU-AKS-RUN-001-v1.0.json",
+    "data/JANUS-ENGINE-R0A1-ANNULAR-HOLLOW-FIBER-GILL-PACKAGE-v1.0.json",
+    "data/JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-003-GILL-PACKAGE-v1.0.json"
+  ]
+}
