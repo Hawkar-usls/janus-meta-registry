@@ -35,16 +35,20 @@
   },
   "method": {
     "agent_label": "TOPA+Spider",
-    "mode": "broad literature graph sweep",
+    "mode": "citation graph + author overlap + test lineage + contradiction analysis",
     "source_priority": [
       "arXiv primary records",
-      "arXiv abstracts",
+      "peer-reviewed venue records when available",
+      "citation/index pages for graph expansion",
       "arXiv full text when needed"
     ],
     "workflow": [
       "seed exact machine-psychology literature",
-      "expand by behavioral construct",
-      "cross-link constructs and methods",
+      "expand upstream references and downstream citations",
+      "cross-link shared authors and researcher clusters",
+      "track repeated behavioral test lineages",
+      "separate independent replication from same-lineage accumulation",
+      "record apparent contradictions as structured tension sets",
       "separate observed behavior from inferred mechanism",
       "encode papers and derived hypotheses independently",
       "create falsifiable experiment backlog"
@@ -52,14 +56,22 @@
   },
   "status": {
     "corpus": "SEED_SWEEP_COMPLETE",
+    "citation_graph_pass": "R1_COMPLETE",
+    "author_overlap_pass": "R1_COMPLETE",
+    "test_lineage_pass": "R1_COMPLETE",
+    "contradiction_ledger_pass": "R1_COMPLETE",
     "exhaustiveness": "NOT_EXHAUSTIVE",
-    "reason": "arXiv is continuously changing and web indexing/search is not a complete enumeration interface.",
-    "next_mode": "incremental citation-graph and keyword expansion"
+    "reason": "arXiv and citation indexes are continuously changing; R1 is a curated, provenance-preserving graph rather than a complete bibliometric enumeration.",
+    "next_mode": "R2 independent-replication scoring + citation-neighborhood expansion + model-version normalization"
   },
   "files": [
     "IO/corpus/ARXIV-TOPA-SPIDER-SEED-2026-08-29.json",
     "IO/taxonomy/MACHINE-PSYCHOLOGY-TAXONOMY-v1.0.json",
     "IO/governance/IO-EPISTEMIC-CONSTITUTION-v1.0.json",
-    "IO/experiments/IO-EXPERIMENT-BACKLOG-v1.0.json"
+    "IO/experiments/IO-EXPERIMENT-BACKLOG-v1.0.json",
+    "IO/graph/CITATION-GRAPH-R1-2026-08-29.json",
+    "IO/graph/AUTHOR-OVERLAP-GRAPH-R1-2026-08-29.json",
+    "IO/graph/TEST-LINEAGE-R1-2026-08-29.json",
+    "IO/graph/CONTRADICTION-LEDGER-R1-2026-08-29.json"
   ]
 }
