@@ -1,0 +1,128 @@
+{
+  "schema": "hawkar.topa.spider.tspu_external.account_age_media_laundering.v1",
+  "artifact_id": "ACCOUNT-AGE-REPURPOSING-OLD-MEDIA-LAUNDERING-v1.0",
+  "generated_date_utc": "2026-08-30",
+  "status": "EVIDENCE_LANE_ACTIVE",
+  "purpose": "Track old-account repurposing, dormant-account activation, thematic pivots, and reuse of old visual media in false/new contexts without treating account age or old footage alone as attribution evidence.",
+  "user_observation": {
+    "summary": "User reports manually observing long-lived accounts, with special interest in accounts created around 2014, and old YouTube material later reused with modern claims as purported evidence about past events.",
+    "state": "HIGH_VALUE_USER_OSINT_LEAD",
+    "claim_limit": "Specific account identities/operators remain unresolved unless independently verified."
+  },
+  "account_age_signals": [
+    {
+      "id": "AA1",
+      "signal": "ACCOUNT_CREATED_2013_2014_LATER_ACTIVATED",
+      "evidence": "Published analysis of Internet Research Agency campaigns found many political/news accounts registered in 2013-2014 and used later; some cohorts showed multi-year lag between account creation and concentrated operational activity.",
+      "state": "CONFIRMED_PRECEDENT",
+      "source": "https://journals.sagepub.com/doi/10.1177/2056305119865466"
+    },
+    {
+      "id": "AA2",
+      "signal": "EARLY_2014_PSEUDOPERSONAS",
+      "evidence": "Secondary Infektion reporting documents early persona experiments beginning in 2014, including pseudo-personalities and cross-language amplification.",
+      "state": "CONFIRMED_PRECEDENT",
+      "source": "https://secondaryinfektion.org/report/early-experiments-with-personas/"
+    },
+    {
+      "id": "AA3",
+      "signal": "OLD_CHANNEL_REPURPOSING",
+      "evidence": "DFRLab identified a 2025-2026 network of YouTube channels where some accounts were years older than the current political-content campaign, including one created in 2007, suggesting possible repurposing as content farms.",
+      "state": "CONFIRMED_CURRENT_PRECEDENT",
+      "source": "https://dfrlab.org/2026/03/23/ai-generated-youtube-channels-co-opt-war-coverage-to-farm-nearly-two-billion-views/"
+    },
+    {
+      "id": "AA4",
+      "signal": "SECOND_HAND_CHANNEL_MARKET",
+      "evidence": "Academic research on YouTube repurposed 'chameleon channels' documents a market for second-hand accounts and frequent shifts into policy-sensitive content.",
+      "state": "ACADEMIC_SUPPORT",
+      "source": "https://arxiv.org/abs/2507.16045"
+    }
+  ],
+  "media_laundering_signals": [
+    {
+      "id": "ML1",
+      "signal": "OLD_FOOTAGE_PRESENTED_AS_CURRENT_OR_DIFFERENT_EVENT",
+      "state": "WELL_DOCUMENTED_GENERIC_METHOD",
+      "evidence": "Old footage is repeatedly recycled in Russia-Ukraine information flows with changed captions, dates, locations, or actors."
+    },
+    {
+      "id": "ML2",
+      "signal": "2014_NEWSFRONT_OLD_VIDEO_AS_NEW_PROOF",
+      "state": "CONFIRMED_2014_CASE",
+      "evidence": "StopFake documented multiple December 2014 News Front/Novorossia summaries using older YouTube footage as if it proved new events.",
+      "sources": [
+        "https://www.stopfake.org/en/video-fake-of-novorossia-channel/",
+        "https://www.stopfake.org/en/video-fake-ukrainian-military-machinery-near-mariupol/",
+        "https://www.stopfake.org/en/video-fake-explosion-on-the-road-to-komsomolske/"
+      ]
+    },
+    {
+      "id": "ML3",
+      "signal": "2014_STATE_TV_OLD_FOOTAGE_AS_FRESH_ATROCITY",
+      "state": "CONFIRMED_2014_CASE",
+      "evidence": "RFE/RL documented Russian state TV reusing footage from an earlier North Caucasus report in a fresh Ukraine atrocity claim in May 2014.",
+      "source": "https://www.rferl.org/a/ukraine-unspun-russian-tv-airs-old-footage/25390153.html"
+    },
+    {
+      "id": "ML4",
+      "signal": "FAKE_FACT_CHECK_SELF_FABRICATION",
+      "state": "CONFIRMED_FORENSIC_PATTERN_2022",
+      "evidence": "Media Forensics Hub/ProPublica found Russian-language fake fact-check videos whose metadata showed a single source file duplicated to fabricate both the alleged Ukrainian fake and its debunking.",
+      "source": "https://www.propublica.org/article/in-the-ukraine-conflict-fake-fact-checks-are-being-used-to-spread-disinformation"
+    },
+    {
+      "id": "ML5",
+      "signal": "OLD_2014_VIDEO_RELABELED_THROUGH_2023_2026",
+      "state": "CONFIRMED_LONGITUDINAL_RECONTEXTUALIZATION",
+      "evidence": "MythDetector traced a video uploaded in November 2014 that continued circulating with changing false descriptions through later years, including 2023-2026 claims.",
+      "source": "https://mythdetector.com/en/ukrainian-soldiers-is-being-used/"
+    }
+  ],
+  "priority_scoring": {
+    "account_creation_year_2014": "PRIORITY_SIGNAL_NOT_PROOF",
+    "creation_date_far_before_thematic_pivot": "HIGHER_VALUE",
+    "long_dormancy_then_synchronized_activation": "HIGHER_VALUE",
+    "name_avatar_topic_change": "HIGHER_VALUE",
+    "old_video_original_date_preserved_but_context_changed": "HIGH_VALUE_MEDIA_LAUNDERING_SIGNAL",
+    "same_old_asset_reused_across_multiple_accounts": "HIGHER_VALUE",
+    "same_asset_plus_same_false_caption_sequence": "VERY_HIGH_VALUE_COORDINATION_LEAD"
+  },
+  "account_level_gate": [
+    "creation date",
+    "first observed activity",
+    "dormancy intervals",
+    "name/avatar/history changes",
+    "topic pivot date",
+    "first political/war content date",
+    "exact or near-exact phrase reuse",
+    "shared URLs/media hashes",
+    "synchronized reactivation",
+    "cross-platform identity reuse"
+  ],
+  "media_forensics_gate": [
+    "earliest known upload",
+    "original title/description",
+    "original date/location/event",
+    "later claimed date/location/event",
+    "cropping/flipping/re-encoding",
+    "watermarks and channel IDs",
+    "frame-level reverse search",
+    "metadata when lawfully available",
+    "first false-context appearance",
+    "subsequent reuse lineage"
+  ],
+  "claim_ceiling": {
+    "old_account_equals_bot": "REJECTED",
+    "2014_creation_equals_russian_state_actor": "REJECTED",
+    "old_video_equals_disinformation": "REJECTED",
+    "repurposing_or_context_substitution_requires_chronology": "REQUIRED"
+  },
+  "agency_fit": {
+    "FBI": "HIGH_IF_ACCOUNT_OR_INFRASTRUCTURE_LINKAGE_EMERGES",
+    "ODNI_FMIC": "HIGH_FOR_LONGITUDINAL_INFLUENCE_INFRASTRUCTURE",
+    "STATE_CFIMI": "HIGH_FOR_MEDIA_LAUNDERING_AND_ATTRIBUTION_MANIPULATION",
+    "META": "LOW_FOR_THIS_SPECIFIC_HISTORICAL_LANE",
+    "CISA": "LOW_UNLESS_TECHNICAL_NETWORK_TRIGGER"
+  }
+}
