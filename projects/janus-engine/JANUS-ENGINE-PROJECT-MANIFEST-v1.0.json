@@ -1,7 +1,7 @@
 {
-  "artifact_uuid": "JANUS-ENGINE-PROJECT-MANIFEST-v1.9",
+  "artifact_uuid": "JANUS-ENGINE-PROJECT-MANIFEST-v2.0",
   "timestamp": "2026-08-30T02:37:00+03:00",
-  "version": "v1.9",
+  "version": "v2.0",
   "title": "JANUS Engine — dedicated research-branch manifest",
   "observer": "Hawkar / JANUS",
   "node_type": "project_manifest",
@@ -24,11 +24,13 @@
     "projects/janus-engine/gates/JANUS-ENGINE-R0M3-MOTOR-REGEN-CROSSOVER-v1.0.json",
     "projects/janus-engine/simulations/JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-004-DIRECT-GILL-PEMFC-v1.0.json",
     "projects/janus-engine/simulations/JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-005-POMS-STARTUP-v1.0.json",
+    "projects/janus-engine/simulations/JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-006-FULL-INTEGRATED-IGNITION-v1.0.json",
     "projects/janus-engine/simulations/JANUS-ENGINE-R0A4D-AXLE-VANE-CRYSTAL-TRAP-SCREEN-v1.0.json",
     "projects/janus-engine/simulations/JANUS-ENGINE-M4-MAGNETIC-COMMUTATION-SELECTION-SCREEN-v1.1.json",
     "projects/janus-engine/journal/JANUS-ENGINE-DEVELOPMENT-JOURNAL-2026-08-30-v1.0.json",
     "projects/janus-engine/journal/JANUS-ENGINE-DEVELOPMENT-JOURNAL-2026-08-30-v1.1.json",
     "projects/janus-engine/journal/JANUS-ENGINE-DEVELOPMENT-JOURNAL-2026-08-30-v1.2.json",
+    "projects/janus-engine/journal/JANUS-ENGINE-DEVELOPMENT-JOURNAL-2026-08-30-v1.3.json",
     "projects/janus-engine/journal/JANUS-ENGINE-DEVELOPMENT-JOURNAL-CURRENT.json"
   ],
   "tracks": {
@@ -37,7 +39,8 @@
       "projects/janus-engine/gates/JANUS-ENGINE-R2B-DIRECT-GILL-PEMFC-v1.0.json",
       "projects/janus-engine/gates/JANUS-ENGINE-R2C-BUFFER-BATTERY-ENERGY-MANAGEMENT-v1.0.json",
       "projects/janus-engine/gates/JANUS-ENGINE-R2D-DUAL-BATTERY-SUPPORT-REGEN-v1.0.json",
-      "projects/janus-engine/gates/JANUS-ENGINE-R0M3-MOTOR-REGEN-CROSSOVER-v1.0.json"
+      "projects/janus-engine/gates/JANUS-ENGINE-R0M3-MOTOR-REGEN-CROSSOVER-v1.0.json",
+      "projects/janus-engine/simulations/JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-006-FULL-INTEGRATED-IGNITION-v1.0.json"
     ],
     "T5_CALCIFER_SCALE_AND_SELF_MAINTENANCE": [
       "projects/janus-engine/research/TOPA-SPIDER-CALCIFER-ANTISCALANT-RUN-003-v1.0.json",
@@ -51,47 +54,48 @@
       "projects/janus-engine/simulations/JANUS-ENGINE-M4-MAGNETIC-COMMUTATION-SELECTION-SCREEN-v1.1.json",
       "projects/janus-engine/gates/JANUS-ENGINE-R0M2-CU-BRASS-MAGNETIC-FIELD-METROLOGY-v1.0.json",
       "projects/janus-engine/gates/JANUS-ENGINE-R0M3-MOTOR-REGEN-CROSSOVER-v1.0.json",
-      "projects/janus-engine/gates/JANUS-ENGINE-R2C-BUFFER-BATTERY-ENERGY-MANAGEMENT-v1.0.json",
       "projects/janus-engine/gates/JANUS-ENGINE-R2D-DUAL-BATTERY-SUPPORT-REGEN-v1.0.json"
     ],
     "T7_DEVELOPMENT_JOURNAL": [
       "projects/janus-engine/journal/JANUS-ENGINE-DEVELOPMENT-JOURNAL-CURRENT.json",
       "projects/janus-engine/journal/JANUS-ENGINE-DEVELOPMENT-JOURNAL-2026-08-30-v1.0.json",
       "projects/janus-engine/journal/JANUS-ENGINE-DEVELOPMENT-JOURNAL-2026-08-30-v1.1.json",
-      "projects/janus-engine/journal/JANUS-ENGINE-DEVELOPMENT-JOURNAL-2026-08-30-v1.2.json"
+      "projects/janus-engine/journal/JANUS-ENGINE-DEVELOPMENT-JOURNAL-2026-08-30-v1.2.json",
+      "projects/janus-engine/journal/JANUS-ENGINE-DEVELOPMENT-JOURNAL-2026-08-30-v1.3.json"
     ]
   },
   "latest_findings": {
-    "dual_battery_result": "Two packs are admitted as an energy-management architecture, not as an energy source. One pack may support only the Axle torque deficit/startup/transients while the second preserves regenerative headroom and collects verified AFPM/PEMFC surplus; roles may swap under BMS supervision.",
-    "authoritative_energy_metric": "For any battery-neutral claim use E_A + E_B. Swapping or charging one pack from the other does not count as generation.",
-    "support_battery_nuance": "The support pack need not be the primary source of rotation. As hydraulic/process torque rises, its motor contribution can fall toward zero; above the motor/regen crossover the AFPM can charge the recovery pack from independently sourced shaft work.",
-    "power_electronics_boundary": "Prefer controlled bidirectional DC/DC stages and BMS/contactors rather than direct battery-to-battery alternation, to avoid uncontrolled equalization currents and preserve clean energy accounting.",
-    "regen_headroom": "A second pack can deliberately remain below full SOC, preventing genuine regenerative pulses from being discarded because the support pack is already full."
+    "integrated_run": "RUN-006 numerically launched the current Mode A architecture for 6 h using the literature-grounded 21.2109 m2 POMS crown, coreless AFPM, dual battery, explicit hydrogen fuel boundary and the current calcium-maintenance architecture.",
+    "screening_schedule": "0.5 h prime at 12 W auxiliaries, 4 h linear PEMFC ramp at 10 W auxiliaries, then 1.5 h hold at 8 W auxiliaries. These are screening assumptions, not hardware measurements.",
+    "nominal_0p130_empirical": "At 0.130 mg/m2/s and the RUN005 empirical conversion, steady net is +2.3403 W but total dual-pack energy is still -23.3195 Wh after 6 h; startup repayment occurs around 16.49 h if the modeled steady state persists.",
+    "nominal_0p130_design": "At the same flux and 55% design conversion, total pack energy returns to the initial level around 4.09 h and ends the 6 h screen about +33.03 Wh after 95% bidirectional DC/DC efficiencies.",
+    "matrix_result": "In the 55% design branch the six-hour battery-neutral screen passes from 0.100 mg/m2/s upward. The empirical branch needs higher flux and/or longer hold; 0.160-0.1707 mg/m2/s repay startup around 9.34-8.28 h in this model.",
+    "fuel_boundary": "At the nominal 0.130 mg/m2/s six-hour trajectory the model transports about 34.74 g O2 and requires about 4.38 g stoichiometric H2 minimum. Hydrogen remains the external primary chemical-energy source.",
+    "regen_boundary": "No AFPM regenerative power is credited in RUN-006 because no independent hydraulic/mechanical source has yet been measured."
   },
   "current_project_state": {
     "nickname": "Howl's Moving Castle / Calcifer",
-    "latest_gate": "projects/janus-engine/gates/JANUS-ENGINE-R2D-DUAL-BATTERY-SUPPORT-REGEN-v1.0.json",
-    "latest_journal": "projects/janus-engine/journal/JANUS-ENGINE-DEVELOPMENT-JOURNAL-2026-08-30-v1.2.json",
-    "next_experimental_gates": [
-      "R0M3_MOTOR_REGEN_CROSSOVER_AND_BACK_EMF_MAP",
-      "R2D1_DUAL_PACK_DC_BUS_AB_TEST"
-    ]
+    "latest_simulation": "projects/janus-engine/simulations/JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-006-FULL-INTEGRATED-IGNITION-v1.0.json",
+    "latest_simulation_status": "MIXED_CONDITIONAL_PASS_DESIGN_EFFICIENCY_FAILS_EMPIRICAL_6H_RECOVERY",
+    "latest_journal": "projects/janus-engine/journal/JANUS-ENGINE-DEVELOPMENT-JOURNAL-2026-08-30-v1.3.json",
+    "next_experimental_gate": "RUN007_MEASURED_PARASITIC_REPLACEMENT"
   },
   "project_constitution": [
     "PROCESS_INTEGRATION_REDUCES_PARASITICS_BUT_DOES_NOT_CREATE_ENERGY",
-    "PERMANENT_MAGNETS_ARE_FIELD_SOURCES_NOT_NET_ENERGY_SOURCES",
-    "GENERATOR_OUTPUT_IS_CREDITED_ONLY_AGAINST_IDENTIFIED_MECHANICAL_INPUT_OR_KINETIC_ENERGY_DECREASE",
-    "BATTERY_MOTOR_DRIVEN_SAME_SHAFT_REGENERATION_IS_NOT_NEW_ENERGY",
+    "OXYGEN_IS_AN_OXIDIZER_NOT_PRIMARY_ENERGY",
+    "HYDROGEN_FUEL_REMAINS_EXPLICIT_IN_MODE_A",
     "TWO_BATTERIES_DO_NOT_CHANGE_THE_TOTAL_ENERGY_LEDGER",
     "DUAL_PACK_SELF_DRIVE_PROOF_USES_TOTAL_STORED_ENERGY_E_A_PLUS_E_B",
-    "BATTERY_STARTUP_ENERGY_IS_NOT_STEADY_STATE_GENERATION",
+    "GENERATOR_OUTPUT_IS_CREDITED_ONLY_AGAINST_IDENTIFIED_MECHANICAL_INPUT_OR_KINETIC_ENERGY_DECREASE",
+    "UNMEASURED_PARASITICS_REMAIN_OPEN",
+    "MODEL_PASS_NE_HARDWARE_PASS",
     "DEVELOPMENT_JOURNAL_IS_APPEND_ONLY"
   ],
   "next_actions": [
-    "A/B single-pack versus dual-pack startup/support under identical Axle load and hydraulic conditions.",
-    "Keep one dual-pack test with fixed roles A=support, B=recovery and another with supervised role swap.",
-    "Measure V/I/Wh and temperature of both packs plus DC/DC losses, AFPM torque/RPM and hydraulic power.",
-    "Locate the point where support-pack motor power reaches zero and verify any subsequent recovery-pack charge against measured external shaft work.",
-    "Select the dual-pack design only if regenerative headroom/reliability/measurement benefits exceed added converter and control losses."
+    "Replace the assumed 12/10/8 W auxiliary schedule with measured pump, gas-loop, AFPM, purge, crystal-trap, controls and thermal-management watts.",
+    "Replace conversion branches with measured PEMFC gross/net efficiency at the actual gill oxygen delivery rate.",
+    "Measure POMS flux through startup and hold, not only at the endpoint.",
+    "Measure AFPM motor-to-zero-to-regeneration crossover before adding any shaft-regeneration credit.",
+    "Keep dual-pack E_A+E_B as the authoritative stored-energy ledger."
   ]
 }
