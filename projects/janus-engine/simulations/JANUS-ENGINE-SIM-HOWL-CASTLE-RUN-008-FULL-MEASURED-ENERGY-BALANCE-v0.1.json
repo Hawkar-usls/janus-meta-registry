@@ -1,0 +1,71 @@
+{
+  "artifact_uuid": "JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-008-FULL-MEASURED-ENERGY-BALANCE-v0.1",
+  "timestamp": "2026-08-30T14:30:00+03:00",
+  "version": "v0.1",
+  "title": "JANUS Engine — Howl's Moving Castle RUN-008 full measured energy balance preregistration",
+  "observer": "Hawkar / JANUS",
+  "repository": "Hawkar-usls/janus-meta-registry",
+  "git_branch": "research/janus-engine",
+  "parents": [
+    "projects/janus-engine/simulations/JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-007-MEASURED-PARASITIC-REPLACEMENT-v1.0.json",
+    "projects/janus-engine/gates/JANUS-ENGINE-R0P1-PARASITIC-METERING-HARNESS-v1.0.json",
+    "projects/janus-engine/gates/JANUS-ENGINE-R0P1A-MEASUREMENT-DATA-CONTRACT-v1.0.json"
+  ],
+  "status": "PREREGISTERED_BLOCKED_ON_PHYSICAL_METERING",
+  "important_boundary": "RUN-008 is now frozen before observing the missing JANUS hardware measurements. No final measured-net verdict will be generated until R0P1 P0-P7 data are ingested.",
+  "frozen_architecture": {
+    "gill": "21.2109 m2 POMS sectorized annular cross-flow concept; actual achieved J_O2 must be measured",
+    "fuel_cell": "PEMFC with explicit external H2 fuel; actual low-pO2 gross/net conversion measured on the article",
+    "axle_drive": "coreless/slotless AFPM bidirectional starter-generator; micro-EPM receives zero benefit credit unless separately measured",
+    "energy_buffer": "dual managed batteries A/B; authoritative stored-energy metric E_A + E_B",
+    "scale_management": "low-hardness water + low-adhesion wall + Axle/wiper + crystal trap; all added DeltaP/torque included",
+    "purge": "nominal 1800 s heartbeat; event energy, gas mass and pressure loss measured rather than assumed"
+  },
+  "predeclared_energy_equations": {
+    "E_total_battery": "E_A + E_B",
+    "P_mech_Axle": "tau * omega",
+    "P_hydraulic": "DeltaP * Q",
+    "P_aux": "sum of all simultaneously active metered auxiliary loads",
+    "P_net_bus": "P_PEMFC + P_verified_regen + P_battery_discharge - P_aux - P_battery_charge - P_export",
+    "E_net_window": "integral(P_net_bus dt)",
+    "battery_neutral": "E_A_end + E_B_end >= E_A_start + E_B_start with external charger disconnected over the declared stabilized window",
+    "exportable_surplus": "positive energy remaining after internal loads and restoration of both declared battery reserve targets"
+  },
+  "required_subruns": [
+    {"state":"P0","name":"CONTROLS_ONLY","verdict_now":"BLOCKED_NO_JANUS_MEASUREMENT"},
+    {"state":"P1","name":"WATER_ONLY","verdict_now":"BLOCKED_DELTA_P_AND_PUMP_W_UNKNOWN"},
+    {"state":"P2","name":"GAS_ONLY","verdict_now":"BLOCKED_FAN_W_UNKNOWN"},
+    {"state":"P3","name":"AFPM_ONLY","verdict_now":"BLOCKED_TORQUE_EFFICIENCY_CROSSOVER_UNKNOWN"},
+    {"state":"P4","name":"PURGE","verdict_now":"BLOCKED_EVENT_JOULES_AND_GAS_WORK_UNKNOWN"},
+    {"state":"P5","name":"SCALE_HARDWARE","verdict_now":"BLOCKED_TRAP_DELTAP_AND_WIPER_TORQUE_UNKNOWN"},
+    {"state":"P6","name":"THERMAL","verdict_now":"BLOCKED_HEAT_REJECTION_AND_DELTAP_UNKNOWN"},
+    {"state":"P7","name":"FULL_STACK","verdict_now":"LOCKED_UNTIL_P0_P6"}
+  ],
+  "known_comparators_not_admitted_as_RUN008_measurements": {
+    "published_POMS_prototype_flux_mg_m2_s": [0.016,0.02667],
+    "JANUS_target_flux_mg_m2_s": [0.064,0.13],
+    "H12_full_power_efficiency_rating": 0.40,
+    "old_RUN006_aux_schedule_W": [12,10,8],
+    "old_RUN007_nominal_shadow_result": "0.130 mg/m2/s with 40% rating and old auxiliary envelope produced +8.33 Wh at 6 h; comparison only, not evidence"
+  },
+  "predeclared_verdict_classes": [
+    "FAIL_NET_NEGATIVE",
+    "PASS_STEADY_POSITIVE_BUT_STARTUP_NOT_REPAID",
+    "PASS_BATTERY_NEUTRAL_NO_EXPORT",
+    "PASS_BATTERY_NEUTRAL_WITH_VERIFIED_SURPLUS",
+    "UNKNOWN_MEASUREMENT_INCOMPLETE",
+    "INVALID_ENERGY_LEDGER_DOES_NOT_CLOSE"
+  ],
+  "current_verdict": "UNKNOWN_MEASUREMENT_INCOMPLETE",
+  "reason": "The remaining information cannot be obtained honestly by additional simulation alone. Physical subsystem metering is the next evidence source.",
+  "anti_self_deception_rules": [
+    "A POSITIVE BATTERY B DELTA DOES NOT COUNT IF BATTERY A LOST MORE ENERGY",
+    "SAME_SHAFT_MOTOR_TO_GENERATOR_RECIRCULATION_IS_NOT NEW ENERGY",
+    "NO REGEN CREDIT WITHOUT MEASURED EXTERNAL SHAFT/HYDRAULIC WORK OR ROTOR DECELERATION",
+    "FLOW RATE IS NOT PUMP POWER",
+    "RATED COMPONENT EFFICIENCY IS NOT MEASURED SYSTEM EFFICIENCY",
+    "UNKNOWN PARASITIC CANNOT BE SET TO ZERO",
+    "OXYGEN IS OXIDIZER; HYDROGEN IS EXPLICIT CHEMICAL FUEL"
+  ],
+  "next_action": "Acquire R0P1A-compliant P0-P7 dataset, then supersede this v0.1 preregistration with RUN-008 v1.0 containing measured integrals and uncertainty."
+}
