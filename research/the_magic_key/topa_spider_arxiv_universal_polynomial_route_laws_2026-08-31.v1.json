@@ -1,0 +1,206 @@
+{
+  "schema": "JANUS/THE_MAGIC_KEY/TOPA_SPIDER_ARXIV_UNIVERSAL_POLYNOMIAL_ROUTE_LAWS/v1.0",
+  "registry_id": "JANUS-THE-MAGIC-KEY-TOPA-SPIDER-ARXIV-UNIVERSAL-POLYNOMIAL-ROUTE-LAWS-2026-08-31-v1.0",
+  "date": "2026-08-31",
+  "status": "HIGH_RECALL_THEORY_MAP_COMPLETE__UNIVERSAL_SAT_ROUTE_LAW_NOT_FOUND__P_VS_NP_OPEN",
+  "target_question": "Find mathematical law families that resemble: polynomially find the next correct small state/key, preserve exact semantics, and guarantee polynomial progress to termination.",
+  "janus_target": "UNIVERSAL_POLYNOMIAL_ROUTE_LAW = POLY_FIND + POLY_HOLD + POLY_ADVANCE",
+  "scientific_boundary": [
+    "No cited result proves a universal polynomial-time route law for arbitrary CNF SAT.",
+    "Restricted-class tractability does not imply SAT in P.",
+    "FPT in a structural parameter does not become polynomial unless that parameter is globally bounded by O(log n) or a constant in the needed exponent regime.",
+    "Monotone local progress alone does not imply polynomial trajectory length.",
+    "Existence of a short proof/representation does not imply polynomial-time discovery."
+  ],
+  "law_families": [
+    {
+      "id": "L1_DP_SIMPLICIAL_ELIMINATION",
+      "type": "POSITIVE_RESTRICTED_CLASS_TEMPLATE",
+      "source": {
+        "arxiv": "1104.4279",
+        "title": "Satisfiability of Acyclic and Almost Acyclic CNF Formulas",
+        "authors": "Sebastian Ordyniak, Daniel Paulusma, Stefan Szeider"
+      },
+      "law": "For beta-acyclic CNF, Davis-Putnam elimination can follow variables whose resolvents remain subsets of parent clauses; elimination does not increase formula size and removes a variable each step.",
+      "janus_mapping": {
+        "POLY_FIND": "On beta-acyclic instances the appropriate structural elimination behavior is recognizable/constructible in polynomial time.",
+        "POLY_HOLD": "For a weakly/DP-simplicial elimination step, DP_x(F) does not exceed the parent formula size in the tractable setting.",
+        "POLY_ADVANCE": "One variable is eliminated per step, hence at most n eliminations."
+      },
+      "killer_barrier": "The broader class of formulas admitting some DP-simplicial elimination ordering has NP-complete membership: several locally legal-looking variables may exist and choosing the globally right continuation can itself encode SAT.",
+      "importance": "STRONGEST_DIRECT_SAT_ANALOGUE_OF_NEXT_SMALL_KEY_PLUS_PROGRESS"
+    },
+    {
+      "id": "L2_BOUNDED_WIDTH_LOCAL_TO_GLOBAL",
+      "type": "POSITIVE_LOCAL_TO_GLOBAL_TEMPLATE",
+      "sources": [
+        {"arxiv": "1605.00565", "title": "Weaker consistency notions for all the CSPs of bounded width"},
+        {"arxiv": "2301.05084", "title": "Local consistency as a reduction between constraint satisfaction problems"}
+      ],
+      "law": "For bounded-width CSP languages, a fixed level/type of local consistency is sufficient to decide global satisfiability in polynomial time.",
+      "janus_mapping": {
+        "key": "bounded local views/constraints",
+        "route": "repeated consistency propagation",
+        "progress": "domain/constraint pruning until contradiction or globally extendible state",
+        "theorem_shape": "LOCAL_CERTIFIED_CONSISTENCY => GLOBAL_SOLVABILITY for a characterized language class"
+      },
+      "killer_barrier": "Arbitrary SAT/CSP is not bounded-width; the algebraic structural property is the substantive restriction.",
+      "importance": "BEST_TEMPLATE_FOR_A_TRUE_LOCAL_RULE_THAT_IMPLIES_GLOBAL_CORRECTNESS"
+    },
+    {
+      "id": "L3_BOUNDED_TREEWIDTH_DECOMPOSITION",
+      "type": "POSITIVE_PARAMETERIZED_TEMPLATE",
+      "sources": [
+        {"arxiv": "cs/0610174", "title": "A Fixed-Parameter Algorithm for #SAT with Parameter Incidence Treewidth"},
+        {"arxiv": "2211.07154", "title": "An Improved Parameterized Algorithm for Treewidth"},
+        {"arxiv": "2502.00434", "title": "Compilation and Fast Model Counting beyond CNF"},
+        {"arxiv": "2607.11230", "title": "Courcelle's Theorem in Truly Linear FPT"}
+      ],
+      "law": "If a suitable decomposition has bounded width k, dynamic programming/compilation maintains states exponential only in k and polynomial in input size; fixed k gives polynomial/linear-FPT behavior.",
+      "janus_mapping": {
+        "POLY_FIND": "Tree decompositions of width k can be found by FPT algorithms such as 2^{O(k^2)} n^{O(1)}; for fixed k this is polynomial.",
+        "POLY_HOLD": "bag/interface state is bounded by f(k) poly(n)",
+        "POLY_ADVANCE": "process a polynomial-size decomposition tree"
+      },
+      "killer_barrier": "For unrestricted CNF, k may grow with n, converting f(k) into exponential cost. A universal proof would need a width-like parameter provably small for every CNF or a different route when it is large.",
+      "importance": "CANONICAL_WIDTH_BOUNDED_ROUTE_LAW"
+    },
+    {
+      "id": "L4_BACKDOOR_TO_TRACTABILITY",
+      "type": "POSITIVE_PARAMETERIZED_ROUTE_SWITCH",
+      "sources": [
+        {"arxiv": "2202.08326", "title": "SAT Backdoors: Depth Beats Size"},
+        {"arxiv": "1110.6384", "title": "Backdoors to Acyclic SAT"}
+      ],
+      "law": "Find a small set/depth of decisions that sends every or some relevant residual instance into a polynomial-time tractable base class, then solve there.",
+      "janus_mapping": {
+        "key": "backdoor variables/obstructions/separators",
+        "route": "bounded branching depth into Horn/Krom/acyclic tractable region",
+        "progress": "distance-to-tractable-core decreases"
+      },
+      "killer_barrier": "Backdoor detection is hard in general for important target classes (including W[2]-hard cases); bounded distance is a structural promise, not a universal theorem for all CNFs.",
+      "importance": "DIRECT_ANALOGUE_OF_FIND_SMALL_MAGIC_KEY_THAT_UNLOCKS_EASY_BACKEND"
+    },
+    {
+      "id": "L5_SAT_SELF_REDUCIBILITY",
+      "type": "CONDITIONAL_ROUTE_LAW",
+      "source": {"arxiv": "1902.08299", "title": "The Power of Self-Reducibility: Selectivity, Information, and Approximation"},
+      "law": "SAT search can fix variables one by one with polynomially many queries to a SAT decision procedure; the residual instance shrinks monotonically.",
+      "janus_mapping": {
+        "POLY_HOLD": "partial assignment plus residual formula remains polynomial-size",
+        "POLY_ADVANCE": "one variable fixed per stage, O(n) stages",
+        "missing_piece": "POLY_FIND of the correct branch requires the SAT decision capability itself"
+      },
+      "killer_barrier": "This is not a SAT algorithm without a decision oracle; it relocates the hard bit into each branch query.",
+      "importance": "SHOWS_PROGRESS_IS_EASY_ONCE_CORRECT_NEXT_BRANCH_IS_DECIDABLE"
+    },
+    {
+      "id": "L6_PROOF_AUTOMATIZATION_BARRIER",
+      "type": "NEGATIVE_DISCOVERY_LAW",
+      "sources": [
+        {"arxiv": "1904.02991", "title": "Automating Resolution is NP-Hard"},
+        {"arxiv": "2104.04711", "title": "Information in propositional proofs and algorithmic proof search"}
+      ],
+      "law": "Short certificates can exist while finding a comparably short Resolution refutation is computationally hard; proof existence and proof discovery are distinct resources.",
+      "janus_mapping": {
+        "warning": "SMALL_CERTIFICATE_EXISTS != POLY_DISCOVERY",
+        "target": "Any JANUS route law relying on 'there is a short proof nearby' must include a polynomial proof-search theorem."
+      },
+      "killer_barrier": "Resolution is not automatizable unless P=NP; finding a refutation polynomially related to the shortest one is NP-hard.",
+      "importance": "DIRECT_EXTERNAL_THEOREM_FOR_THE_POLY_DISCOVERY_OBLIGATION"
+    },
+    {
+      "id": "L7_PLS_LOCAL_PROGRESS_BARRIER",
+      "type": "NEGATIVE_TRAJECTORY_LAW",
+      "source": {"arxiv": "2510.15712", "title": "PLS-complete problems with lexicographic cost functions: Max-k-SAT and Abelian Permutation Orbit Minimization"},
+      "law": "A neighborhood may be polynomially searchable and every accepted move may strictly improve a potential, yet reaching a local optimum need not have a polynomial step bound.",
+      "janus_mapping": {
+        "POLY_FIND": "next improving neighbor can be locally specified/searchable",
+        "POLY_HOLD": "each state is compact",
+        "failure": "POLY_ADVANCE can still fail because the potential range/path height is exponential"
+      },
+      "killer_barrier": "A strictly monotone measure is insufficient; JANUS needs a polynomially bounded rank or a guaranteed polynomial decrease in a bounded numeric quantity, with bit complexity charged.",
+      "importance": "EXACT_WARNING_AGAINST_EQUATING_PROGRESS_WITH_POLYNOMIAL_PROGRESS"
+    },
+    {
+      "id": "L8_SIMPLEX_PIVOT_RULE_ANALOGY",
+      "type": "NEGATIVE_AND_OPEN_ROUTE_SELECTION_ANALOGY",
+      "sources": [
+        {"arxiv": "2403.04886", "title": "Exponential Lower Bounds for Many Pivot Rules for the Simplex Method"},
+        {"arxiv": "1911.01074", "title": "An Exponential Lower Bound for Zadeh's pivot rule"}
+      ],
+      "law": "Compact states plus locally valid improving pivots do not ensure a strongly polynomial global trajectory; many natural pivot rules have exponential worst cases.",
+      "janus_mapping": "The 'choose next exact local transformation' problem is structurally analogous to choosing a pivot rule: local correctness is easy, universal path-length control is the hard theorem.",
+      "killer_barrier": "For simplex, existence of a pivot rule guaranteeing strongly polynomial runtime remains a longstanding open problem, despite LP itself being polynomial-time solvable by other methods.",
+      "importance": "BEST_CROSS_DOMAIN_ANALOGUE_OF_ROUTE_LAW_VS_ROUTE_LENGTH"
+    },
+    {
+      "id": "L9_SUCCINCT_PROGRESS_MEASURES",
+      "type": "POSITIVE_PROGRESS_CERTIFICATE_TEMPLATE",
+      "source": {"arxiv": "1702.05051", "title": "Succinct progress measures for solving parity games"},
+      "law": "Encode a well-founded progress order compactly and repeatedly lift states until a fixed point; the size/range of the progress domain controls termination complexity.",
+      "janus_mapping": {
+        "candidate": "Attach rank mu(K) drawn from a certified finite ordered domain and require every nonterminal transition to decrease/increase monotonically toward a bound.",
+        "lesson": "Compression of the rank domain can improve complexity, but the cited parity-game result is quasi-polynomial, not the polynomial SAT theorem we need."
+      },
+      "killer_barrier": "A progress measure is useful only if its representation, update, and total number of distinct admissible rank values are all polynomially bounded.",
+      "importance": "BEST_POSITIVE_TEMPLATE_FOR_CERTIFIED_TRAJECTORY_BOUND"
+    },
+    {
+      "id": "L10_SPARSIFICATION_AND_KERNELIZATION",
+      "type": "POSITIVE_AND_NEGATIVE_COMPRESSION_TEMPLATE",
+      "sources": [
+        {"arxiv": "1509.07437", "title": "Sparsification Upper and Lower Bounds for Graph Problems and Not-All-Equal SAT"},
+        {"arxiv": "2507.17878", "title": "Strong Sparsification for 1-in-3-SAT via Polynomial Freiman-Ruzsa"},
+        {"arxiv": "2508.10550", "title": "On Kernelization with Access to NP-Oracles"}
+      ],
+      "law": "Polynomial preprocessing can sometimes reduce redundant structure while preserving the decision problem, but strong compression has conditional lower bounds and problem-specific limits.",
+      "janus_mapping": "A Magic Key compression step must prove that the reduced state is equivalent, small, polynomially discoverable, and not hiding an NP oracle or nonuniform advice.",
+      "killer_barrier": "There is no general license to assume every NP-hard instance has a substantially smaller polynomial-time discoverable equivalent encoding under standard complexity assumptions.",
+      "importance": "EXTERNAL_SUPPORT_FOR_NO_FREE_SEMANTIC_COMPRESSION"
+    }
+  ],
+  "topa_spider_synthesis": {
+    "strongest_positive_template": "BETA_ACYCLIC_DP_SIMPLICIAL_ELIMINATION: locally recognizable elimination, non-growing representation, one-variable progress. This is almost exactly the JANUS desired law, but only on a tractable structural class.",
+    "strongest_local_to_global_template": "BOUNDED_WIDTH_CSP: a fixed local-consistency rule is guaranteed to settle globally all instances from a characterized tractable language family.",
+    "strongest_discovery_barrier": "RESOLUTION_AUTOMATIZATION: a short target proof can exist while finding a near-shortest proof is NP-hard.",
+    "strongest_trajectory_barrier": "PLS/SIMPLEX: compact states plus polynomial local moves plus strict improvement can still generate exponentially long trajectories.",
+    "strongest_width_barrier": "TREEWIDTH/BACKDOORS: strong route laws exist when a structural parameter is bounded, but the parameter or its discovery cost can become the exponential resource on unrestricted inputs.",
+    "main_gap": "No arXiv result found supplies a single uniform polynomially computable next-move law with polynomial state size and polynomially bounded progress rank for every CNF formula.",
+    "candidate_meta_lemma": "If there exist polynomial-time computable NEXT(F,K), exact transition semantics, a polynomial p with |K|<=p(|F|), and an integer rank mu(F,K) in [0,p(|F|)] that strictly decreases on every nonterminal transition, then the resulting trajectory has polynomial length and polynomial total transition cost provided each transition is polynomial. The lemma is elementary; finding such NEXT and mu for arbitrary SAT is the unresolved substance.",
+    "new_firewalls": [
+      "LEGAL_NEXT_MOVE_EXISTS != LEGAL_NEXT_MOVE_POLY_FINDABLE",
+      "STRICT_PROGRESS != POLYNOMIAL_PROGRESS",
+      "SMALL_STATE != SHORT_TRAJECTORY",
+      "SHORT_PROOF != EASY_PROOF_SEARCH",
+      "BOUNDED_PARAMETER_TRACTABILITY != UNIVERSAL_TRACTABILITY",
+      "PREPROCESSING != FREE_COMPRESSION",
+      "MONOTONE_POTENTIAL_WITH_EXPONENTIAL_RANGE != POLY_BOUND",
+      "FPT_DISCOVERY != POLY_DISCOVERY_FOR_UNBOUNDED_PARAMETER"
+    ]
+  },
+  "recommended_r5_attack_order": [
+    {
+      "gate": "R5A_DP_SIMPLICIAL_GENERALIZATION",
+      "question": "Can JANUS define a polynomially recognizable local elimination predicate strictly broader than known beta-acyclic/DP-simplicial-safe classes while preserving a non-growth invariant?",
+      "failure_signal": "Recognizing whether a safe elimination continuation exists becomes NP-hard or selected eliminations cause superpolynomial state growth."
+    },
+    {
+      "gate": "R5B_POLYNOMIAL_RANK_SEARCH",
+      "question": "Can every nonterminal CNF state be assigned a polynomial-bit rank mu<=poly(n), computable in polytime, such that the selected exact next step strictly decreases it?",
+      "failure_signal": "Rank requires exponential numeric range/precision, is not poly-computable, or admits exponentially many unit decreases."
+    },
+    {
+      "gate": "R5C_DISCOVERY_VS_EXISTENCE",
+      "question": "For each candidate representation/proof/backdoor/decomposition, distinguish EXISTS_SMALL from FIND_SMALL and charge the latter independently.",
+      "failure_signal": "Route selection reduces to known hard discovery/automatization problems."
+    },
+    {
+      "gate": "R5D_PARAMETER_ESCAPE",
+      "question": "When treewidth/backdoor depth/representation width grows, require a certified switch to another route whose own parameter is small, without circular discovery or cumulative switching blowup.",
+      "failure_signal": "There exists a family where all portfolio parameters become large or finding which parameter is small is itself hard."
+    }
+  ],
+  "verdict": "ARXIV_CONTAINS_MULTIPLE_RESTRICTED_LAWS_AND_STRONG_NO_GO_ANALOGUES__NO_UNIVERSAL_POLYNOMIAL_ROUTE_LAW_FOR_ARBITRARY_CNF_FOUND__R5_SHOULD_TARGET_DP_SIMPLICIAL_GENERALIZATION_PLUS_POLYNOMIAL_RANK",
+  "p_vs_np": "OPEN"
+}
