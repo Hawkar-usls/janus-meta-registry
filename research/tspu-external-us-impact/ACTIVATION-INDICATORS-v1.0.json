@@ -1,0 +1,78 @@
+{
+  "schema": "hawkar.topa.spider.tspu_external.activation_indicators.v1",
+  "artifact_id": "TSPU-EXTERNAL-ACTIVATION-INDICATORS-v1.0",
+  "generated_date_utc": "2026-08-30",
+  "purpose": "Defensive early-warning model for detecting staged or synchronized activation of TSPU-like or Russian-origin DPI/SORM filtering outside the normal Russian domestic censorship perimeter.",
+  "rule": "No single indicator is sufficient for attribution. Escalation requires independent signals from different measurement layers.",
+  "indicator_groups": [
+    {
+      "group": "PACKET_AND_PROTOCOL",
+      "weight": 3,
+      "signals": [
+        "Simultaneous appearance of protocol-specific blocking for QUIC/TLS/DNS that matches a known TSPU fingerprint rather than generic packet loss.",
+        "Consistent TTL/hop localization of injected resets, DNS rewriting, drops or policy responses at the same AS or border segment.",
+        "Sudden blocking of DoH/DoT or interception of plaintext DNS to public resolvers while matched TCP/alternate-path controls behave differently.",
+        "Cross-provider appearance of the same domain/SNI policy with closely matching timing and packet behavior."
+      ]
+    },
+    {
+      "group": "ROUTING",
+      "weight": 4,
+      "signals": [
+        "Unexpected foreign-origin traffic begins transiting a Russian or Russian-linked AS that was absent from the stable baseline.",
+        "BGP origin or AS-path changes coincide with newly observed filtering or blackholing.",
+        "RPKI-invalid or newly originated routes appear for prefixes serving major US cloud/CDN/SaaS endpoints.",
+        "Matched bypass paths avoiding the suspected AS do not reproduce the filtering."
+      ]
+    },
+    {
+      "group": "GEOGRAPHIC_SYNCHRONIZATION",
+      "weight": 3,
+      "signals": [
+        "Multiple countries with documented Russian DPI/SORM deployments show the same new filtering behavior within a narrow time window.",
+        "Changes appear first in networks with known Russian vendor relationships and later in adjacent networks.",
+        "OONI/RIPE Atlas measurements show the anomaly clustering by operator or equipment lineage rather than by destination service alone."
+      ]
+    },
+    {
+      "group": "VENDOR_AND_CONTROL_PLANE",
+      "weight": 2,
+      "signals": [
+        "Coordinated maintenance/firmware/configuration windows across foreign operators using the same Russian vendor stack.",
+        "New procurement, regulator mandates or lawful-interception/filtering requirements appear shortly before behavioral changes.",
+        "Public documentation reveals remote-management or vendor-maintained control channels for deployed DPI/SORM equipment."
+      ]
+    },
+    {
+      "group": "US_EFFECT",
+      "weight": 4,
+      "signals": [
+        "Users in multiple foreign networks simultaneously lose or degrade access specifically to US-hosted cloud, communications, financial, developer or media services while local services remain normal.",
+        "US providers observe geographically clustered reachability changes from ASes with documented Russian-origin filtering equipment.",
+        "Traffic from affected countries shifts toward unexpected transit ASes before the service degradation begins.",
+        "US-side telemetry sees abrupt protocol mix changes, QUIC collapse, DNS resolver migration, reset bursts or path inflation limited to the affected networks."
+      ]
+    }
+  ],
+  "escalation_logic": {
+    "GREEN": "0-3 weighted points: background/noise; collect only.",
+    "YELLOW": "4-7 points with at least two independent groups: anomalous behavior; freeze baseline and intensify measurements.",
+    "ORANGE": "8-11 points with PACKET_AND_PROTOCOL or ROUTING evidence plus one independent geography/vendor signal: plausible coordinated activation; notify defensive stakeholders and preserve packet/route evidence.",
+    "RED": "12+ points with reproducible path-specific filtering from foreign vantage points, matched bypass controls, and independent replication: strong evidence of coordinated external filtering activity. Attribution to TSPU still requires device/operator linkage."
+  },
+  "required_measurements": [
+    "RIPE Atlas traceroute and DNS measurements from affected and control networks.",
+    "OONI measurements where available.",
+    "RIPE RIS/RouteViews/BGPStream path history and RPKI validation.",
+    "Packet captures from consenting/controlled endpoints where lawful.",
+    "Matched alternate-path or VPN controls that change routing without changing destination.",
+    "US-provider status/RCA data to exclude provider-local incidents."
+  ],
+  "anti_false_positive_rules": [
+    "Cloud/provider RCA identifying an internal failure overrides external attribution unless independent network evidence remains unexplained.",
+    "A single-country government shutdown is not evidence of Russian remote activation.",
+    "Generic latency, packet loss or DNS failure without a stable fingerprint is insufficient.",
+    "Commercial Russian vendor presence is a risk factor, not an activation event.",
+    "Temporal coincidence alone contributes zero attribution points."
+  ]
+}
