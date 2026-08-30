@@ -1,0 +1,94 @@
+{
+  "schema": "hawkar.topa.spider.tspu_external.fingerprint_library.v1",
+  "artifact_id": "TSPU-EXTERNAL-FINGERPRINT-LIBRARY-v1.0",
+  "generated_date_utc": "2026-08-30",
+  "status": "DEFENSIVE_REMOTE_MEASUREMENT_LIBRARY",
+  "scope": "Published or reproducible network-behavior fingerprints only. The library is for attribution-resistant defensive measurement and does not contain bypass/exploitation instructions.",
+  "primary_measurement_families": [
+    {
+      "id": "FP1",
+      "name": "IN_PATH_DISTRIBUTED_TSPU",
+      "evidence": "Censored Planet IMC 2022 remotely fingerprinted a centrally controlled but geographically distributed in-path censorship system across more than six thousand observed TSPU devices and roughly 650 Russian ASes.",
+      "sources": ["https://censoredplanet.org/tspu", "https://censoredplanet.org/assets/tspu-imc22.pdf"],
+      "defensive_use": "Treat censorship that localizes close to access networks and repeats a known TSPU response family as stronger evidence than generic timeout observations.",
+      "claim_limit": "Topology similarity is not device identity."
+    },
+    {
+      "id": "FP2",
+      "name": "SNI_DEPENDENT_TLS_BLOCKING",
+      "evidence": "Published TSPU research shows filtering decisions can depend on TLS SNI and can exhibit multiple blocking behaviors rather than one universal reset signature.",
+      "sources": ["https://censoredplanet.org/assets/tspu-imc22.pdf"],
+      "defensive_use": "Matched destinations/SNI controls help distinguish domain-sensitive policy from endpoint failure.",
+      "claim_limit": "SNI filtering is common to many DPI systems and is not TSPU-specific by itself."
+    },
+    {
+      "id": "FP3",
+      "name": "IP_TRIGGERED_FILTERING",
+      "evidence": "IMC 2022 measurements identified IP-address-triggered TSPU blocking behavior alongside hostname/SNI mechanisms.",
+      "sources": ["https://censoredplanet.org/assets/tspu-imc22.pdf"],
+      "defensive_use": "Compare name-based and direct-address reachability to separate DNS effects from IP policy.",
+      "claim_limit": "IP blocking is generic censorship behavior."
+    },
+    {
+      "id": "FP4",
+      "name": "QUIC_POLICY_AND_SNI_FILTERING",
+      "evidence": "FOCI 2026 documents Russia moving from broad international QUIC blocking to large-scale SNI-dependent QUIC censorship, demonstrating protocol-specific and rapidly reconfigurable policy.",
+      "sources": ["https://foci.community/foci26.html", "https://github.com/UPB-SysSec/RussiaQuicResults"],
+      "defensive_use": "Use paired TCP/TLS versus QUIC observations to detect protocol-selective intervention rather than generic service unavailability.",
+      "claim_limit": "QUIC blocking alone does not identify TSPU."
+    },
+    {
+      "id": "FP5",
+      "name": "ORIGIN_DIRECTION_ASYMMETRY",
+      "evidence": "FOCI 2026 measurements found the studied Russian QUIC censorship regime affected traffic originating in Russia and leaving the country while measured inbound traffic was not affected in the same way.",
+      "sources": ["https://foci.community/foci26.html"],
+      "defensive_use": "Directionality is a discriminator when comparing suspected foreign deployments with known Russian policy families.",
+      "claim_limit": "Policy can change over time and different TSPU rules may have different directionality."
+    },
+    {
+      "id": "FP6",
+      "name": "DNS_DESTINATION_INTERCEPTION_CANDIDATE",
+      "evidence": "Public Russian network experiments beginning around 2026-08-26 reported selective interception/redirection of plaintext UDP DNS requests addressed to public resolvers such as 8.8.8.8 and 1.1.1.1 while protocol-dependent controls behaved differently.",
+      "sources": ["https://habr.com/ru/articles/1075272/", "https://wiki.zapret.moe/DPI/tspu-dns-nsdi-dnat-august-2026"],
+      "classification": "COMMUNITY_RESEARCH_NOT_PEER_REVIEWED",
+      "defensive_use": "Candidate early-warning fingerprint only when destination, TTL/path localization and matched TCP/encrypted-DNS controls are captured.",
+      "claim_limit": "Do not use as sole attribution evidence."
+    },
+    {
+      "id": "FP7",
+      "name": "FRAGMENTATION_RESPONSE_BEHAVIOR",
+      "evidence": "IMC 2022 used response differences to packet fragmentation and protocol construction as part of remote TSPU fingerprinting.",
+      "sources": ["https://censoredplanet.org/assets/tspu-imc22.pdf"],
+      "defensive_use": "Published response ambiguity can help distinguish specific DPI implementation families in controlled measurements.",
+      "claim_limit": "Must remain within benign measurement traffic and independent replication."
+    }
+  ],
+  "adjacent_research": [
+    {
+      "title": "Fingerprinting Deep Packet Inspection Devices by Their Ambiguities",
+      "url": "https://arxiv.org/abs/2504.19262",
+      "classification": "ARXIV_RESEARCH_CANDIDATE",
+      "relevance": "Develops remote behavioral fingerprinting of DPI implementations through ambiguity handling; useful methodology for distinguishing commercial/nation-state DPI families without physical device access."
+    },
+    {
+      "title": "Understanding Routing-Induced Censorship Changes Globally",
+      "url": "https://arxiv.org/abs/2406.19304",
+      "classification": "ARXIV_ROUTING_CONTROL",
+      "relevance": "Shows observed censorship can change with routing/ECMP alone, so suspected TSPU fingerprints require stable route capture and matched path controls."
+    }
+  ],
+  "minimum_measurement_bundle": [
+    "measurement UTC timestamp",
+    "source country and source ASN",
+    "destination hostname and resolved addresses",
+    "AS path/traceroute or equivalent path evidence",
+    "DNS resolver destination and observed response path where relevant",
+    "paired TCP/TLS and QUIC reachability where safe and applicable",
+    "matched unfiltered/control hostname or service",
+    "matched alternate/bypass path when available",
+    "provider status/RCA negative control",
+    "repeat observation from an independent vantage or platform"
+  ],
+  "attribution_rule": "No single timeout, reset, blocked domain, vendor name, or protocol anomaly is a TSPU fingerprint. Escalation requires a composite behavior pattern plus path localization and independent replication.",
+  "safety_boundary": "Observation and defensive characterization only; no exploitation, unauthorized access, destructive testing, credential use, or evasion deployment."
+}
