@@ -1,0 +1,200 @@
+{
+  "schema": "hawkar.topa.spider.tspu_external.rhetoric_fingerprint_blame_shift.v1",
+  "artifact_id": "RHETORIC-FINGERPRINT-HABR-REDDIT-BLAME-SHIFT-v1.0",
+  "generated_date_utc": "2026-08-30",
+  "status": "OPEN_SOURCE_PATTERN_PASS_COMPLETE_ATTRIBUTION_UNRESOLVED",
+  "purpose": "Identify recurring public rhetoric that shifts responsibility for Russian users losing access to Western platforms away from Russian filtering/policy and toward Google/YouTube/the West, while preserving legitimate technical failures and counterarguments as controls.",
+  "method": {
+    "sources": ["Habr", "Reddit"],
+    "search_dimensions": ["Google Global Cache", "YouTube slowdown", "Google left Russia", "Western agenda", "Russian media blocked first", "American/Western sites blocking Russian visitors", "technical failure versus censorship"],
+    "rule": "Repeated rhetoric is evidence of narrative recurrence, not evidence that accounts share an operator or are state-directed.",
+    "anti_cherry_pick": "Preserve rebuttals, genuine Google/platform restrictions, genuine CDN degradation risk and contradictory technical observations."
+  },
+  "rhetoric_families": [
+    {
+      "id": "RF1_RECIPROCAL_CENSORSHIP",
+      "canonical_form": "Russia may block/restrict YouTube because YouTube/the West blocked Russian media first; therefore Russian blocking is framed as response rather than originating censorship policy.",
+      "observed_reddit_examples": [
+        {
+          "thread": "https://www.reddit.com/r/AskARussian/comments/ticzcz",
+          "date": "2022-03-20",
+          "observation": "A recurring argument says YouTube itself blocks content outside the Western agenda and that future Russian blocking is due to YouTube blocking Russian media.",
+          "state": "PUBLIC_REDDIT_RHETORIC_CONFIRMED"
+        },
+        {
+          "thread": "https://www.reddit.com/r/AskARussian/comments/tioclc",
+          "date": "2022-03-20",
+          "observation": "The post explicitly pre-frames a possible future Russian YouTube block as a consequence of YouTube blocking Russian media and rejects a one-sided Russian-censorship interpretation.",
+          "state": "PUBLIC_REDDIT_RHETORIC_CONFIRMED"
+        }
+      ],
+      "interpretation": "This family shifts causal responsibility from domestic censorship policy toward retaliation against foreign-platform moderation.",
+      "attribution": "UNATTRIBUTED_RHETORIC"
+    },
+    {
+      "id": "RF2_INFRASTRUCTURE_EXCULPATION_GGC",
+      "canonical_form": "YouTube degradation is caused by Google's aging/unmaintained Global Cache infrastructure after Google reduced operations in Russia, not by Russian throttling.",
+      "observed_habr_examples": [
+        {
+          "source": "https://habr.com/ru/news/828418/",
+          "date": "2024-07-12",
+          "observation": "Roskomnadzor said it had nothing to add to Rostelecom's explanation that GGC technical problems could degrade YouTube.",
+          "state": "OFFICIAL_PUBLIC_EXPLANATION_CONFIRMED"
+        },
+        {
+          "source": "https://habr.com/ru/news/834188/",
+          "date": "2024-08-06",
+          "observation": "A senior Duma official attributed YouTube slowdown to degraded cache equipment and said the solution was for Google to return, service equipment and comply with Russian law.",
+          "state": "OFFICIAL_PUBLIC_EXPLANATION_CONFIRMED"
+        }
+      ],
+      "observed_reddit_examples": [
+        {
+          "thread": "https://www.reddit.com/r/technology/comments/1edjz4d",
+          "date": "2024-07-27",
+          "observation": "The Reddit discussion revolves around the official claim that Google is responsible for slower YouTube because local Google cache infrastructure was no longer maintained; multiple commenters reject that explanation and point to Russian throttling.",
+          "state": "PUBLIC_REDDIT_NARRATIVE_AND_REBUTTAL_CONFIRMED"
+        }
+      ],
+      "technical_counterevidence": [
+        "https://www.reddit.com/r/AmneziaVPN/comments/1e1m61f",
+        "https://habr.com/ru/news/839708/",
+        "https://habr.com/ru/news/835182/",
+        "https://habr.com/ru/news/833284/"
+      ],
+      "interpretation": "This is the strongest public blame-shifting family because the same specific technical cause (GGC degradation) was repeated by officials/operators while independent path/protocol observations and bypass behavior pointed toward deliberate filtering/throttling.",
+      "claim_limit": "Real GGC degradation/capacity problems were technically possible and documented before 2024; the rhetoric cannot be classified as false solely because it references GGC.",
+      "attribution": "OFFICIAL_RUSSIAN_EXPLANATION_PLUS_PUBLIC_REPETITION; COORDINATED_ACCOUNT_PROPAGATION_NOT_PROVEN"
+    },
+    {
+      "id": "RF3_PLATFORM_SELF_BLOCKING_OR_WESTERN_AGENDA",
+      "canonical_form": "Google/YouTube itself blocks Russia or suppresses Russian viewpoints because it follows a Western agenda; therefore later Russian restrictions are secondary or justified.",
+      "observed_reddit_examples": [
+        {
+          "thread": "https://www.reddit.com/r/AskARussian/comments/ticzcz",
+          "date": "2022-03-20",
+          "observation": "A commenter says YouTube itself blocks everything that does not fit the Western agenda.",
+          "state": "PUBLIC_REDDIT_RHETORIC_CONFIRMED"
+        },
+        {
+          "thread": "https://www.reddit.com/r/AskARussian/comments/tioclc",
+          "date": "2022-03-20",
+          "observation": "The post argues that YouTube's blocking of Russian media establishes the causal reason for any future Russian block.",
+          "state": "PUBLIC_REDDIT_RHETORIC_CONFIRMED"
+        }
+      ],
+      "negative_control": "Western platforms did in fact restrict Russian state media, monetization and some Russian-linked content after the 2022 invasion. Those real moderation/sanctions actions must be preserved and distinguished from claims about who caused domestic network-level inaccessibility.",
+      "attribution": "UNATTRIBUTED_RHETORIC"
+    },
+    {
+      "id": "RF4_TWO_SIDED_IRON_CURTAIN",
+      "canonical_form": "Russian isolation is not primarily caused by Russian authorities because Western sites and companies also block Russian visitors/services; the barrier is bilateral.",
+      "observed_reddit_examples": [
+        {
+          "thread": "https://www.reddit.com/r/AskARussian/comments/1l7443t/why_do_american_sites_block_russian_visitors/",
+          "date": "2025-06-09",
+          "observation": "Users discuss U.S. sites blocking Russian visitors; one summary says some restrictions come from Russia and others from site owners. The thread supports the real existence of Western-side geoblocking while also showing disagreement about how much is Russian-side censorship.",
+          "state": "PUBLIC_REDDIT_MIXED_CAUSALITY_DISCUSSION_CONFIRMED"
+        },
+        {
+          "thread": "https://www.reddit.com/r/AskARussian/comments/1gffcf7/how_do_you_see_googles_future_in_russia/",
+          "date": "2024-10-30",
+          "observation": "A prominent framing says multinational platforms must obey national law or be banned and compares Russian platform pressure to regulation elsewhere, normalizing the conflict as a generic sovereignty dispute rather than exceptional censorship.",
+          "state": "PUBLIC_REDDIT_NORMALIZATION_FRAME_CONFIRMED"
+        }
+      ],
+      "interpretation": "This rhetoric can be partly factually grounded because foreign services really do geoblock/sanction Russian users; the manipulation risk arises when that fact is used to erase separate evidence of Russian domestic blocking/throttling.",
+      "attribution": "UNATTRIBUTED_RHETORIC"
+    },
+    {
+      "id": "RF5_EXTERNAL_EXIT_AS_SELF_ISOLATION_COVER",
+      "canonical_form": "Google/platform left Russia or refuses to maintain infrastructure, so service loss is the company's own decision rather than Russian policy pressure.",
+      "observed_reddit_examples": [
+        {
+          "thread": "https://www.reddit.com/r/UkraineRussiaReport/comments/w43x6k",
+          "date": "2022-07-21",
+          "observation": "Discussion includes the interpretation that legal/financial pressure can force a platform to leave while allowing authorities to say the company left voluntarily rather than being directly blocked.",
+          "state": "PUBLIC_REDDIT_COUNTER_INTERPRETATION_CONFIRMED"
+        }
+      ],
+      "observed_habr_context": [
+        {
+          "source": "https://habr.com/ru/news/677574/comments/",
+          "date": "2022-07",
+          "observation": "Discussion explicitly anticipates a scenario in which Google could leave and Russia's Internet would become more isolated without a simple formal block order.",
+          "state": "PUBLIC_TECH_COMMUNITY_SCENARIO_CONFIRMED"
+        }
+      ],
+      "interpretation": "This is a useful causal-framing family: policy pressure and platform exit can coexist, so 'the company left by itself' is not enough to establish who created the conditions of exit.",
+      "attribution": "PUBLIC_CAUSAL_FRAME_NOT_COORDINATION_EVIDENCE"
+    }
+  ],
+  "reddit_counterevidence_and_controls": [
+    {
+      "thread": "https://www.reddit.com/r/AskARussian/comments/1eqn8gy",
+      "date": "2024-08-12",
+      "finding": "Users explicitly identify RKN-controlled DPI as the likely throttling layer and note that individual ISPs may not control it; other users report heterogeneity across providers.",
+      "value": "Shows Reddit is not one-directional and contains technical rebuttals and provider-level variance."
+    },
+    {
+      "thread": "https://www.reddit.com/r/AmneziaVPN/comments/1e1m61f",
+      "date": "2024-07-12",
+      "finding": "The Amnezia team publicly describes throttling and argues overnight degradation is inconsistent with ordinary cache aging, while noting implementation may differ by provider.",
+      "value": "Technical counterexample to pure-GGC explanation."
+    },
+    {
+      "thread": "https://www.reddit.com/r/Minecraft/comments/1enytol",
+      "date": "2024-08-09",
+      "finding": "A highly visible discussion corrects a mistaken assumption that Google was reducing bandwidth and points instead to Russian government blocking.",
+      "value": "Shows spontaneous misconception and correction; useful control against assuming every blame-West statement is coordinated."
+    },
+    {
+      "thread": "https://www.reddit.com/r/ModSupport/comments/t66l5f/reddit_blocked_all_domains_under_russian_ccTLD_ru/",
+      "date": "2022-03-04",
+      "finding": "Reddit itself really did impose broad restrictions on .ru links during the early invasion period, including collateral effects on anti-war Russian sources.",
+      "value": "Strong negative control: some 'the West/platform blocked Russian content' claims are factually true and must not be collapsed into propaganda by default."
+    }
+  ],
+  "cross_platform_repeat_pattern": {
+    "sequence": [
+      "FOREIGN_PLATFORM_TAKES_REAL_OR_ALLEGED_ACTION_AGAINST_RUSSIAN_CONTENT",
+      "RUSSIAN_POLICY_OR_NETWORK_PRESSURE_ESCALATES",
+      "PUBLIC_EXPLANATION_EMPHASIZES_FOREIGN_PLATFORM_FAULT_OR_INFRASTRUCTURE",
+      "USERS_REPEAT_RECIPROCAL_OR_TECHNICAL_EXCULPATION FRAME",
+      "TECHNICAL_COUNTEREVIDENCE_IS_DISPUTED_OR_REFRAMED"
+    ],
+    "state": "RHETORIC_PATTERN_CONFIRMED_ACROSS_MULTIPLE_PUBLIC_THREADS_AND_YEARS",
+    "operator_coordination": "NOT_ESTABLISHED",
+    "state_direction_of_specific_reddit_accounts": "NOT_ESTABLISHED"
+  },
+  "user_observed_longitudinal_cluster_relation": {
+    "state": "SUPPORTS_EXTERNAL_PATTERN_MATCH_BUT_NOT_ATTRIBUTION",
+    "meaning": "The user's manual observation of long-lived accounts repeating similar blame-shifting rhetoric is now supported by independently visible recurrence of the same rhetorical families on Habr and Reddit. This raises the value of the user's account-cluster lead but does not prove those accounts share operators or state direction.",
+    "best_next_bridge": [
+      "same distinctive technical phrases across multiple old accounts",
+      "chronology showing phrases before later restrictions",
+      "cross-platform reuse of exact wording/links",
+      "synchronized posting windows",
+      "shared external URLs/media",
+      "operator/infrastructure overlap where public or platform/law-enforcement telemetry exists"
+    ]
+  },
+  "outreach_relevance": {
+    "META": "LOW_FOR_THIS_LANE; keep Meta complaint focused on Threads account integrity.",
+    "FBI": "HIGH as an unattributed influence/technical-cover-story pattern if account-level coordination can be linked to known operators.",
+    "ODNI_FMIC": "HIGH as recurring attribution-manipulation rhetoric and pre-positioned explanatory inventory.",
+    "STATE_CFIMI": "HIGH as foreign information manipulation around causal attribution of platform/service loss.",
+    "CISA": "MEDIUM only when paired with a measurable path-localized technical event; still HOLD."
+  },
+  "claim_ceiling": {
+    "repeated_blame_shift_rhetoric_exists": "CONFIRMED",
+    "same_rhetoric_appears_on_reddit": "CONFIRMED",
+    "same_rhetoric_appears_on_habr": "CONFIRMED",
+    "specific_reddit_accounts_are_bots": "NOT_ESTABLISHED",
+    "specific_habr_accounts_are_bots": "NOT_ESTABLISHED",
+    "common_operator_across_platforms": "NOT_ESTABLISHED",
+    "russian_state_direction_of_specific_accounts": "NOT_ESTABLISHED",
+    "all_google_west_blame_is_false": "REJECTED_AS_OVERBROAD"
+  },
+  "verdict": "A recurring multi-year rhetorical pattern is independently visible on Reddit and Habr: responsibility for Russian users losing Western-platform access is repeatedly shifted toward foreign-platform moderation, Google infrastructure, platform exit, sanctions, or reciprocal Western blocking. The pattern is real as discourse. Coordination, bot operation and state control of the specific accounts remain unproven and require account/infrastructure or platform-level evidence."
+}
