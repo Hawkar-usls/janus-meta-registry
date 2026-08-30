@@ -1,0 +1,50 @@
+{
+  "schema": "hawkar.topa.spider.tspu_external.correction.kazakhstan_2022_dpi_origin.v1",
+  "artifact_id": "CORRECTION-KAZAKHSTAN-2022-DPI-ORIGIN-v1.0",
+  "generated_date_utc": "2026-08-30",
+  "status": "MATERIAL_SOURCE_CONFLICT_CORRECTION",
+  "correction_policy": "APPEND_ONLY_DO_NOT_DELETE_PRIOR_ARTIFACTS",
+  "issue": "Earlier artifacts promoted the January 2022 Kazakhstan targeted-filtering episode as confirmed foreign use of Russian-origin DPI. A later reverse-spiral pass recovered a materially conflicting public account about the equipment origin. The event remains relevant, but the Russian-origin attribution must be downgraded.",
+  "source_conflict": [
+    {
+      "source": "Freedom House, Freedom on the Net 2022/2023 Kazakhstan material",
+      "url": "https://freedomhouse.org/country/kazakhstan/freedom-net/2023",
+      "reported_claim": "Later media reports indicated the government initially tried to use Russian deep packet inspection technology to impose more targeted filtering before escalating to broad shutdowns.",
+      "source_chain_note": "Freedom House cites secondary media reporting, including Exclusive.kz/other local reporting."
+    },
+    {
+      "source": "Eurasianet, How did Kazakhstan shut down the internet?",
+      "url": "https://eurasianet.org/how-did-kazakhstan-shut-down-the-internet",
+      "reported_claim": "Eurasianet, citing Forbes reporting and telecom sources, describes Israeli-made DPI equipment used for targeted blocking and attributes blocking commands/access to Kazakhstan authorities, including the National Security Committee/operator infrastructure.",
+      "source_chain_note": "This materially conflicts with a simple Russian-origin device attribution while strengthening the local-control interpretation."
+    }
+  ],
+  "corrected_verdict": {
+    "kazakhstan_january_2022_targeted_dpi_filtering_attempt": "CONFIRMED_BY_MULTIPLE_PUBLIC_ACCOUNTS",
+    "specific_dpi_device_origin": "UNRESOLVED_CONFLICTING_PUBLIC_SOURCES",
+    "russian_origin_dpi_used_in_that_specific_event": "NOT_ESTABLISHED",
+    "israeli_origin_dpi_used_in_that_specific_event": "PLAUSIBLE_AND_REPORTED_BUT_REQUIRES_PRIMARY_PROCUREMENT_OR_DEVICE_CONFIRMATION",
+    "kazakhstan_local_authority_control_of_blocking": "STRONGLY_SUPPORTED",
+    "russian_remote_operational_control": "NOT_ESTABLISHED",
+    "roskomnadzor_tspu_identity": "NOT_ESTABLISHED"
+  },
+  "why_this_matters": "The Kazakhstan episode remains evidence that a sovereign government can use centralized DPI for crisis-time targeted filtering, but it cannot currently serve as proof that exported Russian-origin DPI performed that filtering. This narrows rather than destroys the broader threat model.",
+  "affected_prior_artifacts": [
+    "research/tspu-external-us-impact/INDEX.json v1.4",
+    "research/tspu-external-us-impact/REVERSE-SPIRAL-R1-2026-08-30.json",
+    "research/tspu-external-us-impact/COUNTRY-CHAIN-REVERSE-MATRIX-v1.0.json",
+    "research/tspu-external-us-impact/REVERSE-FORWARD-SPIRAL-X50-2026-08-30.json",
+    "research/tspu-external-us-impact/SPIRAL-X50-CHECKPOINT-v1.0.json"
+  ],
+  "interpretation_rule": "All downstream summaries must cite this correction when discussing Kazakhstan 2022. Do not use the episode as evidence of Russian-origin foreign DPI censorship until the exact device/vendor lineage is independently resolved.",
+  "next_gate": {
+    "id": "KAZAKHSTAN_2022_EXACT_DEVICE_LINEAGE",
+    "requirements": [
+      "recover original Forbes/local reporting and any named vendor/model",
+      "search public procurement/operator disclosures for DPI equipment deployed at the relevant operators before January 2022",
+      "separate multiple DPI platforms that may have coexisted in Kazakhstan",
+      "identify which component actually executed targeted blocking",
+      "retain local-authority command evidence separately from equipment-origin evidence"
+    ]
+  }
+}
