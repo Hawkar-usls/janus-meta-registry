@@ -1,4 +1,4 @@
-# TECHNICAL BLAME-SHIFTING / PRE-POSITIONED COVER STORY — OUTREACH ANNEX v1.0
+# TECHNICAL BLAME-SHIFTING / PRE-POSITIONED COVER STORY — OUTREACH ANNEX v1.1
 
 **Recipients:** FBI, ODNI/FMIC, State CDP + R/CFIMI
 
@@ -52,22 +52,37 @@ Counterevidence:
 
 **Assessment:** this is the clearest public precedent in the current package for a mismatch between the official technical attribution (`Google infrastructure degradation`) and stronger independent evidence of deliberate domestic throttling.
 
-## User-held 2014 archive lead
+## Public example: Habr 975812
 
-The submitting researcher reports having archived early-2014 examples/accounts that allegedly used a similar technical explanation in advance: claims that Google clusters were degrading and that Google/the West, rather than Russian authorities, was responsible for YouTube/resource unavailability.
+The submitting researcher provided Habr publication 975812 as a **visible example of the rhetoric environment**, not as the sole evidence for the account-level pattern.
 
-This material is **not yet promoted to confirmed evidence**. Its value depends on chronology and provenance.
+The December 2025 Habr item quotes State Duma deputy Andrey Svintsov advocating the gradual “soft expulsion” of Google services and saying services may progressively slow or become harder to use so users and businesses move to Russian alternatives. In the associated discussion, some users simultaneously assign responsibility to Google or to “both sides.”
 
-To establish pre-positioning, the following should be preserved and reviewed:
-- original URLs or account handles;
-- screenshots with visible timestamps;
-- archive snapshots where available;
-- exact technical wording;
-- evidence that the explanation predates the later restriction it is used to explain;
-- later reuse of the same wording/accounts during actual service degradation;
-- any linkage to coordinated personas, media outlets, contractors, or state-affiliated infrastructure.
+Source: https://habr.com/ru/news/975812/
 
-If that chronology is verified, the material would support a stronger hypothesis: **technical cover stories may be pre-positioned before access restrictions, rather than invented only after users notice the failure.**
+This juxtaposition is relevant because explicit policy rhetoric about degrading/limiting Google access coexists with causal explanations that shift some responsibility to the foreign platform. It does **not** by itself prove coordinated account management.
+
+## User-observed longitudinal account cluster
+
+The submitting researcher reports conducting a **manual account-by-account longitudinal review**, including inspection of historical posts/comments and account registration history. According to the researcher, multiple long-lived accounts — including accounts whose histories reach back to approximately 2014 — repeatedly converge on the same broader technical rhetoric: when Google/YouTube access degrades or restrictions are discussed, responsibility is framed as foreign-platform/CDN degradation or Western-side blocking rather than Russian network-policy intervention.
+
+This is stronger than a single-comment observation because the reported pattern concerns **cross-account rhetorical continuity over time**, but it remains a user-observed OSINT lead until independently reproduced or correlated with platform/law-enforcement telemetry.
+
+Current state:
+
+- manual longitudinal account review: **USER-REPORTED / HIGH-VALUE LEAD**;
+- repeated technical blame-shifting rhetoric across reviewed accounts: **USER-REPORTED**;
+- exact account set and all registration dates: **NOT INDEPENDENTLY REPRODUCED IN THIS PACKAGE**;
+- common SMM operator: **NOT ESTABLISHED**;
+- bot/fake-account status: **NOT ESTABLISHED**;
+- Russian state direction: **NOT ESTABLISHED**;
+- intent to pre-position the accounts at creation: **NOT ESTABLISHED**.
+
+If independently corroborated, the important mechanism would be:
+
+**long-lived persona/network → repeated technical causal story → later service restriction/degradation → same causal story remains available to explain the event.**
+
+That would support a stronger hypothesis of **narrative pre-positioning for technical attribution**, while still requiring separate evidence before state attribution.
 
 ## Claim ceiling
 
@@ -75,15 +90,19 @@ If that chronology is verified, the material would support a stronger hypothesis
 
 **Confirmed baseline:** domestic Russian filtering infrastructure has previously caused collateral Google/YouTube access failures.
 
-**Not established:** that the researcher's 2014 archived accounts were coordinated, state-directed, or intentionally preparing a later blocking operation.
+**Confirmed public example:** Habr 975812 shows explicit 2025 Russian policy rhetoric about gradual Google-service degradation alongside user-level blame-shifting discussion.
 
-**Not established:** that every Russian claim of Google/YouTube technical failure is deceptive; real platform outages and moderation actions also occur.
+**User-observed lead:** multiple long-lived accounts reportedly repeat the same technical blame-shifting rhetoric across their histories.
+
+**Not established:** common account control, bot operation, state direction, or pre-positioning intent at account creation.
+
+**Not established:** that every Russian claim of Google/YouTube technical failure is deceptive; real CDN failures, anti-abuse controls and platform-side restrictions are necessary negative controls.
 
 ## Recipient relevance
 
-**FBI:** relevant if archived personas/accounts can be connected to coordinated influence infrastructure, operators, or known Russian foreign-influence networks.
+**FBI:** relevant if the longitudinal account cluster can be correlated with coordinated influence infrastructure, operators, payments, contractors, or previously attributed Russian networks.
 
-**ODNI/FMIC:** relevant as a strategic deception pattern in which technical network control and attribution manipulation can reinforce one another.
+**ODNI/FMIC:** relevant as a strategic deception pattern in which technical network control and causal-attribution manipulation may reinforce one another.
 
 **State / R/CFIMI:** relevant as foreign information manipulation: a population may lose access to an external platform while simultaneously being encouraged to blame that platform or the West for the loss.
 
