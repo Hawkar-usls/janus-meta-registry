@@ -1,0 +1,71 @@
+{
+  "schema": "hawkar.topa.spider.tspu_external.temporal_precursor_function_shift.v1",
+  "artifact_id": "TEMPORAL-PRECURSOR-SEMANTIC-FUNCTION-SHIFT-v1.0",
+  "generated_date_utc": "2026-08-30",
+  "status": "TEMPORAL_PRECURSOR_PASS_ACTIVE",
+  "purpose": "Distinguish simple phrase pre-existence from a more informative shift where a legitimate technical statement later becomes an exculpatory explanation for a policy-linked access event.",
+  "core_model": "PHRASE_OR_FACT_ORIGIN -> INTERMEDIATE_REPETITION -> EVENT -> LATER_CAUSAL_USE",
+  "critical_distinction": {
+    "simple_precursor": "A phrase existed before an event.",
+    "function_shift": "The same technical fact or phrase changes role over time, e.g. from neutral operational risk to causal explanation minimizing a policy-control hypothesis.",
+    "why_it_matters": "Function shift can be informative even where the original statement was true. It is not proof of pre-planned deception."
+  },
+  "ggc_lineage": [
+    {
+      "date": "2022-05-26",
+      "layer": "EARLY_TECHNICAL_BASELINE",
+      "finding": "Russian technical commentary reported GGC shutdown/maintenance loss could worsen Google service quality but explicitly said YouTube should continue operating.",
+      "source": "https://ria.ru/20220526/google-1790818867.html",
+      "function": "TECHNICAL_RISK_EXPLANATION",
+      "state": "CONFIRMED"
+    },
+    {
+      "date": "2023-12-05_to_2023-12-06",
+      "layer": "INDUSTRY_WARNING",
+      "finding": "Telecom industry sources described aging/overloaded GGC and Google's direct-peering proposal as mitigation, establishing genuine cache-capacity risk before the 2024 slowdown.",
+      "sources": [
+        "https://www.comnews.ru/content/230536/2023-12-05/2023-w49/1008/google-global-cache-rf-umiraet-no-ne-sdaetsya",
+        "https://habr.com/ru/news/778626/"
+      ],
+      "function": "NETWORK_CAPACITY_AND_MAINTENANCE_RISK",
+      "state": "CONFIRMED_NEGATIVE_CONTROL"
+    },
+    {
+      "date": "2024-07-12_to_2024-07-26",
+      "layer": "OFFICIAL_CAUSAL_EXPLANATION_DURING_SLOWDOWN",
+      "finding": "Rostelecom/Roskomnadzor and senior officials attributed YouTube degradation to Google/GGC maintenance and capacity problems while contemporaneous evidence also pointed to deliberate throttling/policy intervention.",
+      "sources": [
+        "https://habr.com/ru/news/828376/",
+        "https://www.interfax.com/newsroom/top-stories/104600/"
+      ],
+      "function": "EXCULPATORY_OR_COMPETING_CAUSAL_EXPLANATION",
+      "state": "CONFIRMED_FUNCTION_SHIFT_CANDIDATE"
+    }
+  ],
+  "assessment": {
+    "technical_fact_preexisted_2024_event": "CONFIRMED",
+    "technical_fact_was_entirely_false": "REJECTED",
+    "same_fact_later_used_as_primary_public_explanation": "CONFIRMED",
+    "preplanned_cover_story": "NOT_ESTABLISHED",
+    "best_current_interpretation": "A legitimate technical risk narrative existed before the 2024 slowdown and was later reused as an official/public causal explanation during an event for which independent evidence also indicated Russian throttling. This is a semantic-function shift worth tracking, not proof that the earlier technical warnings were planted."
+  },
+  "temporal_precursor_gate": {
+    "high_value_sequence": "USER_OR_ACCOUNT_PHRASE_BEFORE_OFFICIAL_EXPLANATION -> OFFICIAL_EXPLANATION -> ACCESS_RESTRICTION_OR_POLICY_EVENT",
+    "stronger_sequence": "RARE_PHRASE_OR_SOURCE_ORDER_BEFORE_PUBLIC_OFFICIAL_SOURCE -> MULTIPLE_INDEPENDENT_ACCOUNTS -> LATER_OFFICIAL_REUSE -> EVENT",
+    "counterexample": "Phrase appears only after widely syndicated official/industry reporting; classify as ordinary propagation unless additional coordination evidence exists."
+  },
+  "new_spider_fields": [
+    "phrase_first_seen_utc",
+    "account_created_utc",
+    "account_first_active_utc",
+    "account_topic_pivot_utc",
+    "official_first_seen_utc",
+    "restriction_first_seen_utc",
+    "semantic_function_at_each_stage",
+    "source_dependency",
+    "syndication_or_independent_restatement",
+    "exact_phrase_similarity",
+    "argument_order_similarity"
+  ],
+  "claim_ceiling": "TEMPORAL_PRECEDENCE_PLUS_SEMANTIC_REUSE_IS_A_COLLECTION_SIGNAL; IT DOES_NOT BY ITSELF ESTABLISH STATE DIRECTION OR PRE-PLANNED DECEPTION."
+}
