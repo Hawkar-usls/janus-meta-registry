@@ -1,8 +1,8 @@
 {
-  "schema": "hawkar.topa.spider.tspu_external.index.v1_1",
-  "artifact_id": "TSPU-EXTERNAL-US-IMPACT-OBSERVATORY-INDEX-v1.1",
+  "schema": "hawkar.topa.spider.tspu_external.index.v1_2",
+  "artifact_id": "TSPU-EXTERNAL-US-IMPACT-OBSERVATORY-INDEX-v1.2",
   "generated_date_utc": "2026-08-30",
-  "status": "ACTIVE_RESEARCH_BRANCH",
+  "status": "ACTIVE_RESEARCH_BRANCH_PRE_OUTREACH_COLLECTION",
   "repository": "Hawkar-usls/janus-meta-registry",
   "branch": "research/tspu-external-us-impact",
   "directory": "research/tspu-external-us-impact/",
@@ -11,26 +11,15 @@
     "reason_for_split": "WATCHERS remains the incident dossier for 2026-08-26/28; this branch is a persistent forward-looking threat-intelligence and forecasting surface."
   },
   "artifacts": [
-    {
-      "path": "research/tspu-external-us-impact/README.md",
-      "role": "MISSION_AND_EPISTEMIC_FIREWALL"
-    },
-    {
-      "path": "research/tspu-external-us-impact/EVIDENCE-LEDGER-v1.0.json",
-      "role": "APPEND_ONLY_EVIDENCE_AND_NEGATIVE_CONTROLS"
-    },
-    {
-      "path": "research/tspu-external-us-impact/ACTIVATION-INDICATORS-v1.0.json",
-      "role": "DEFENSIVE_EARLY_WARNING_SIGNAL_MODEL"
-    },
-    {
-      "path": "research/tspu-external-us-impact/US-IMPACT-FORECAST-v1.0.json",
-      "role": "DIRECT_AND_INDIRECT_US_CONSEQUENCE_SCENARIOS"
-    },
-    {
-      "path": "research/tspu-external-us-impact/INFORMATION-ISOLATION-AND-NARRATIVE-CAPTURE-v1.0.json",
-      "role": "EXTERNAL_INFORMATION_ISOLATION_NARRATIVE_CAPTURE_AND_US_OBSERVABILITY_RISK"
-    }
+    {"path": "research/tspu-external-us-impact/README.md", "role": "MISSION_AND_EPISTEMIC_FIREWALL"},
+    {"path": "research/tspu-external-us-impact/EVIDENCE-LEDGER-v1.0.json", "role": "APPEND_ONLY_EVIDENCE_AND_NEGATIVE_CONTROLS"},
+    {"path": "research/tspu-external-us-impact/ACTIVATION-INDICATORS-v1.0.json", "role": "DEFENSIVE_EARLY_WARNING_SIGNAL_MODEL"},
+    {"path": "research/tspu-external-us-impact/US-IMPACT-FORECAST-v1.0.json", "role": "DIRECT_AND_INDIRECT_US_CONSEQUENCE_SCENARIOS"},
+    {"path": "research/tspu-external-us-impact/INFORMATION-ISOLATION-AND-NARRATIVE-CAPTURE-v1.0.json", "role": "EXTERNAL_INFORMATION_ISOLATION_NARRATIVE_CAPTURE_AND_US_OBSERVABILITY_RISK"},
+    {"path": "research/tspu-external-us-impact/RUSSIAN-NATO-US-WAR-NARRATIVE-EVIDENCE-v1.0.json", "role": "RUSSIAN_OFFICIAL_AND_PUBLIC_NARRATIVE_REFERENCE_LAYER"},
+    {"path": "research/tspu-external-us-impact/FOREIGN-DEPLOYMENT-GRAPH-v1.0.json", "role": "COUNTRY_OPERATOR_VENDOR_SORM_DPI_EXPORT_GRAPH"},
+    {"path": "research/tspu-external-us-impact/OCCUPIED-UKRAINE-PROOF-OF-CONCEPT-v1.0.json", "role": "HISTORICAL_ROUTE_CONTROL_CENSORSHIP_INFORMATION_CONTROL_PROOF_OF_CONCEPT"},
+    {"path": "research/tspu-external-us-impact/FOUR-AGENCY-EVIDENCE-MATRIX-v1.0.json", "role": "FBI_CISA_ODNI_FMIC_STATE_RELEVANCE_AND_EVIDENCE_MAP"}
   ],
   "core_questions": [
     "Where has Russian-origin DPI/SORM technology actually been deployed outside Russia?",
@@ -41,67 +30,39 @@
     "Can technical access restrictions and anti-US narrative shifts be temporally correlated without confusing correlation with coordination?",
     "Which US services, users, personnel, partners and routes are exposed directly versus indirectly?",
     "How much foreign-vantage observability would the United States retain during a coordinated information-isolation event?",
+    "Which evidence belongs to FBI, CISA, ODNI/FMIC and State/CDP/CFIMI, and what would each recipient need before escalation?",
     "What observations would falsify the hypothesis of Russian coordination?"
   ],
   "priority_collection_gates": [
-    {
-      "priority": "P0",
-      "gate": "FOREIGN_DEPLOYMENT_GRAPH",
-      "task": "Build a country/operator/vendor evidence graph from procurement records, vendor case studies, sanctions material and independent threat-intelligence reports. Keep TSPU, SORM and generic DPI labels separate."
-    },
-    {
-      "priority": "P0",
-      "gate": "ROUTE_STABLE_BASELINE",
-      "task": "Establish RIPE Atlas/OONI/BGP baselines from candidate foreign networks to a fixed set of US cloud/CDN/SaaS endpoints, preserving AS path, DNS behavior, protocol success and RPKI state."
-    },
-    {
-      "priority": "P0",
-      "gate": "TSPU_FINGERPRINT_LIBRARY",
-      "task": "Extract only published defensive fingerprints from peer-reviewed TSPU research: QUIC/SNI behavior, protocol asymmetry, DNS interception signatures, TTL localization and blocking persistence."
-    },
-    {
-      "priority": "P0",
-      "gate": "INFORMATION_REACHABILITY_BASELINE",
-      "task": "Measure a stable basket of US/open media, government, social, developer, cloud and communications endpoints from candidate foreign networks alongside local/state-aligned substitute services."
-    },
-    {
-      "priority": "P1",
-      "gate": "SYNCHRONIZED_ACTIVATION_DETECTOR",
-      "task": "Correlate sudden changes across networks sharing vendor/operator lineage. Require at least two independent evidence layers before escalation."
-    },
-    {
-      "priority": "P1",
-      "gate": "NARRATIVE_TECHNICAL_COUPLING",
-      "task": "Compare technical restriction timestamps with public narrative shifts using pre-event baselines; never infer coordination from content similarity or timing alone."
-    },
-    {
-      "priority": "P1",
-      "gate": "US_EXPOSURE_MATRIX",
-      "task": "Map effects onto US domestic core, US-hosted services abroad, government/business personnel abroad, partner communications, information reach, supply chains and interdomain routing."
-    },
-    {
-      "priority": "P1",
-      "gate": "BGP_BRIDGE_TEST",
-      "task": "Search RIPE RIS, RouteViews/BGPStream and RPKI data for route leaks, origin changes or path steering that could place otherwise foreign traffic onto a filtering path."
-    },
-    {
-      "priority": "P2",
-      "gate": "ATTRIBUTION_THRESHOLD",
-      "task": "Promote a foreign TSPU claim only with device/operator linkage or a reproducible TSPU-specific fingerprint localized to a controlled path and independently replicated."
-    }
+    {"priority": "P0", "gate": "FOREIGN_DEPLOYMENT_GRAPH", "state": "R0_BUILT_CONTINUE_EXPANSION", "task": "Expand country/operator/vendor evidence from procurement records, vendor case studies, sanctions material and independent threat-intelligence. Keep TSPU, SORM and generic DPI labels separate."},
+    {"priority": "P0", "gate": "ROUTE_STABLE_BASELINE", "state": "OPEN", "task": "Establish RIPE Atlas/OONI/BGP baselines from candidate foreign networks to a fixed set of US cloud/CDN/SaaS endpoints, preserving AS path, DNS behavior, protocol success and RPKI state."},
+    {"priority": "P0", "gate": "TSPU_FINGERPRINT_LIBRARY", "state": "OPEN", "task": "Extract only published defensive fingerprints from peer-reviewed TSPU research: QUIC/SNI behavior, protocol asymmetry, DNS interception signatures, TTL localization and blocking persistence."},
+    {"priority": "P0", "gate": "INFORMATION_REACHABILITY_BASELINE", "state": "OPEN", "task": "Measure a stable basket of US/open media, government, social, developer, cloud and communications endpoints from candidate foreign networks alongside local/state-aligned substitute services."},
+    {"priority": "P0", "gate": "OCCUPIED_UKRAINE_INTEGRATED_MECHANISM_POC", "state": "CONFIRMED", "task": "Preserve as historical control showing Russia has combined route control, censorship and information-environment control outside internationally recognized Russian territory."},
+    {"priority": "P1", "gate": "SYNCHRONIZED_ACTIVATION_DETECTOR", "state": "OPEN", "task": "Correlate sudden changes across networks sharing vendor/operator lineage. Require at least two independent evidence layers before escalation."},
+    {"priority": "P1", "gate": "NARRATIVE_TECHNICAL_COUPLING", "state": "OPEN", "task": "Compare technical restriction timestamps with public narrative shifts using pre-event baselines; never infer coordination from content similarity or timing alone."},
+    {"priority": "P1", "gate": "US_EXPOSURE_MATRIX", "state": "R0_BUILT", "task": "Map effects onto US domestic core, US-hosted services abroad, government/business personnel abroad, partner communications, information reach, supply chains and interdomain routing."},
+    {"priority": "P1", "gate": "BGP_BRIDGE_TEST", "state": "OPEN", "task": "Search RIPE RIS, RouteViews/BGPStream and RPKI data for route leaks, origin changes or path steering that could place otherwise foreign traffic onto a filtering path."},
+    {"priority": "P1", "gate": "FOUR_AGENCY_RELEVANCE_MAP", "state": "R0_BUILT", "task": "Continuously map new evidence to FBI, CISA, ODNI/FMIC and State/CDP/CFIMI mandates so eventual outreach is recipient-specific rather than duplicated."},
+    {"priority": "P2", "gate": "ATTRIBUTION_THRESHOLD", "state": "LOCKED", "task": "Promote a foreign TSPU/coordination claim only with device/operator linkage or reproducible fingerprint localized to a controlled path and independently replicated."}
   ],
   "current_top_level_verdict": {
     "known_russian_dpi_sorm_export": "CONFIRMED",
+    "named_foreign_sorm_country_set": ["Belarus", "Kazakhstan", "Kyrgyzstan", "Uzbekistan", "Cuba", "Nicaragua"],
+    "named_likely_foreign_telecom_customers_from_insikt_appendix": 14,
     "known_tspu_cross_border_control_on_russian_side": "CONFIRMED",
+    "occupied_ukraine_route_control_plus_censorship_plus_information_control": "CONFIRMED_PROOF_OF_CONCEPT",
     "russia_domestic_information_isolation_reference_model": "STRONGLY_DOCUMENTED",
     "official_anti_us_west_conflict_rhetoric": "DOCUMENTED_AS_RHETORIC",
+    "us_government_assessment_of_russian_malign_influence": "STRONGLY_CONFIRMED",
     "known_external_roskomnadzor_tspu_nodes": "NOT_ESTABLISHED",
     "known_mass_activation_outside_russia": "NOT_ESTABLISHED",
     "coordinated_multi_country_information_curtain": "NOT_ESTABLISHED",
     "plausible_indirect_us_effect": "YES_HIGHER_THAN_DIRECT_DPI_ONLY_DOMESTIC_EFFECT",
     "demonstrated_direct_us_domestic_effect": "NO",
     "us_observability_under_external_isolation": "DEGRADED_OR_DELAYED_PLAUSIBLE_NOT_ZERO",
-    "highest_value_missing_bridge": "FOREIGN_DEPLOYMENT_PLUS_SYNCHRONIZED_TECHNICAL_ACTIVATION_PLUS_MATCHED_INFORMATION_AND_ROUTING_CONTROLS"
+    "outreach_state": "HOLD_UNTIL_P0_EVIDENCE_PASS_MATURES",
+    "highest_value_missing_bridge": "FOREIGN_DEPLOYMENT_PLUS_OBSERVED_ACTIVE_FILTERING_OR_REMOTE_CONTROL_PLUS_ROUTE_LOCALIZATION_PLUS_INDEPENDENT_REPLICATION"
   },
-  "update_policy": "APPEND_ONLY_FOR_EVIDENCE; FORECASTS_MAY_BE_VERSIONED_WHEN_PRIORS_CHANGE; NEVER_DELETE_FALSIFIERS"
+  "update_policy": "APPEND_ONLY_FOR_EVIDENCE; FORECASTS_MAY_BE_VERSIONED_WHEN PRIORS CHANGE; NEVER DELETE FALSIFIERS; DO NOT SEND OUTREACH UNTIL USER EXPLICITLY APPROVES AFTER EVIDENCE REVIEW"
 }
