@@ -1,14 +1,14 @@
 {
-  "schema": "JANUS/META-REGISTRY/BRANCH-INDEX/v1.0",
-  "registry_id": "JANUS-THE-MAGIC-KEY-BRANCH-INDEX-2026-08-30-v1.0",
-  "status": "ACTIVE_RESEARCH_BRANCH__R2AB_COMPLETE__R2C_DISCOVERY_FRONTIER_OPEN",
-  "date": "2026-08-30",
-  "title": "The Magic Key",
-  "branch": "research/the-magic-key-json-meta-2026-08-30",
-  "base_commit": "ecd2397bdfb11165b35b0c6cd9d82e93344f7d16",
-  "root": "research/the_magic_key/",
-  "purpose": "Explore JSON/typed constraints as non-authoritative IR for exact JANUS proof-state identity, future-equivalence compression, representation-language selection and replayable provenance.",
-  "files": [
+  "schema":"JANUS/META-REGISTRY/BRANCH-INDEX/v1.0",
+  "registry_id":"JANUS-THE-MAGIC-KEY-BRANCH-INDEX-2026-08-30-v1.0",
+  "status":"ACTIVE_RESEARCH_BRANCH__R2C_COMPLETE__R2D_CROSS_LANGUAGE_FRONTIER_OPEN",
+  "date":"2026-08-30",
+  "title":"The Magic Key",
+  "branch":"research/the-magic-key-json-meta-2026-08-30",
+  "base_commit":"ecd2397bdfb11165b35b0c6cd9d82e93344f7d16",
+  "root":"research/the_magic_key/",
+  "purpose":"Explore JSON/typed constraints as non-authoritative IR for exact JANUS proof-state identity, future-equivalence compression, representation-language selection and replayable provenance.",
+  "files":[
     "research/the_magic_key/README.md",
     "research/the_magic_key/the_magic_key.v1.json",
     "research/the_magic_key/topa_spider_prior_art_map.v1.json",
@@ -21,25 +21,22 @@
     "research/the_magic_key/mk_bceg_r0_future_equivalence_arena_result.v1.json",
     "research/the_magic_key/mk_bceg_r0_reconciliation_primary_plus_repro.v1.json",
     "research/the_magic_key/mk_bceg_r1_scale_order_symbolic_congruence_result.v1.json",
-    "research/the_magic_key/mk_bceg_r2_hwb_sdd_portfolio_result.v1.json"
+    "research/the_magic_key/mk_bceg_r2_hwb_sdd_portfolio_result.v1.json",
+    "research/the_magic_key/mk_bceg_r2c_discovery_attack_result.v1.json"
   ],
-  "new_findings": [
-    "Magic Key is split into MK_ID for exact-state identity and MK_FUTURE for certified future-semantic equivalence.",
-    "Minimality is not part of the theorem core; polynomial size/discovery/verification/update/sufficiency are the relevant obligations.",
-    "Primary R0: 4,644 reachable CNF states, 55,728 ASSIGN/EXISTS congruence checks, 0 ROBDD semantic collisions and 13,195 safe merge pairs; verdict FINITE_SURVIVOR_NOT_THEOREM.",
-    "Independent narrower R0 reproducibility epoch: 482 states, 4,702 replayed structural semantic collisions, 0 ROBDD collisions, 130 safe merge pairs and 5,784/5,784 congruence checks; do not double-count as theorem evidence.",
-    "R1 separates semantic correctness from representation complexity: EQ_m grouped numeric order has exact node signature 3*2^m-3 while interleaved pair order has 3m nodes.",
-    "R1 m=13 reproduces the historical C022 signature 24,573 grouped vs 39 interleaved nodes; this is a rediscovered recurring barrier, not independent novelty.",
-    "A symbolic residual-future argument gives a >=2^m grouped-order OBDD cut lower bound on EQ_m, refuting fixed grouped/numeric-order ROBDD as a universal polynomial MK_FUTURE representation.",
-    "R2A exactly enumerated every OBDD order for HWB through n=8; n=8 best/median/worst sizes were 46/59/66 with 40,320 orders checked and zero semantic failures.",
-    "External literature independently places HWB in the all-order exponential OBDD-hard class; this remains an external theorem reference, not an internally re-proved JANUS theorem receipt.",
-    "R2B built an exact HWB SDD-style partition certificate through n=12 with zero partition or semantic failures, but the concrete certificate did not beat the best OBDD on overlapping finite n<=8; frozen G4 therefore FAILed.",
-    "New law: representation-language class advantage does not imply a concrete compiler is cost-competitive.",
-    "Projected-semantics guard is now explicit: auxiliary/Tseitin state cannot hide interface complexity; measure EXISTS z F(x,z) on frozen interface x and charge auxiliary state separately.",
-    "Total certified representation cost now includes payload plus detection, language/structure choice, compile, update, translate and verify; unmeasured components remain OPEN, never zero."
+  "new_findings":[
+    "R0 established finite exact future-semantic quotienting with ROBDD and explicit semantic-collision monsters for lossy structural keys.",
+    "R1 refuted fixed grouped/numeric ROBDD as a universal polynomial MK_FUTURE representation and reproduced the historical C022 order-sensitivity barrier.",
+    "R2A exactly enumerated all OBDD orders for HWB through n=8; external literature separately places HWB in the all-order exponential OBDD-hard class.",
+    "R2B produced a semantically exact SDD-style HWB certificate through n=12 but the concrete compiler did not beat best OBDD on overlapping finite scope; theoretical language-class advantage is not free compiler performance.",
+    "Projected semantics guard is active: auxiliary/Tseitin state cannot hide complexity of the frozen interface semantics EXISTS z F(x,z).",
+    "R2C removed family labels and hid variable pairing. The structural detector correctly certified all 20 renamed EQ/XOR pair instances, made 0 false-positive certifications on 10 random controls, and selected an oracle-node-optimal candidate order on all pair instances.",
+    "Despite perfect finite selection correctness, R2C median paid regret was 4.46875 because detection/selection work was charged; frozen G6 failed and verdict is REFUTED_REPRESENTATION_DISCOVERY_POLICY.",
+    "New law: correct representation discovery does not imply cost-effective representation discovery.",
+    "Total certified representation cost must retain detection, structure choice, compile, translation, update and verification rather than optimizing node count alone."
   ],
-  "algorithmic_spine": "SEARCH_GRAMMAR + REPRESENTATION_GRAMMAR + INTERFACE_GRAMMAR + PROCESS_LINEAGE + MK_ID/MK_FUTURE quotient semantics + BCEG exact composition + charged representation portfolio",
-  "truth_firewall": [
+  "algorithmic_spine":"SEARCH_GRAMMAR + REPRESENTATION_GRAMMAR + INTERFACE_GRAMMAR + PROCESS_LINEAGE + MK_ID/MK_FUTURE quotient semantics + BCEG exact composition + charged representation portfolio",
+  "truth_firewall":[
     "JSON/Schema/Hash/Fingerprint are not proof authority",
     "Equal MK_FUTURE means certified merge only after future-equivalence certification",
     "Finite survivor is not theorem",
@@ -47,8 +44,9 @@
     "Family-specific good order is not universal polynomial order discovery",
     "External asymptotic succinctness theorem does not make an unmeasured JANUS compiler free",
     "Auxiliary state is not free semantic compression",
-    "Missing detection/translation/switching cost is OPEN, not zero",
+    "Correct discovery is not free discovery",
+    "Missing translation/switching/update cost is OPEN, not zero",
     "P_VS_NP remains OPEN"
   ],
-  "next_gate": "MK_BCEG_R2C_DISCOVERY_ATTACK: remove oracle family labels; provide only a frozen opaque typed/CNF state, require JANUS to pay detection, representation-language and structure-selection costs, compare JANUS-discovered package against oracle-best for evaluation only, and preserve projected-semantics and exact-replay firewalls. R2D cross-language congruence and R2E cumulative switching monster remain subsequent frozen gates."
+  "next_gate":"MK_BCEG_R2D_CROSS_LANGUAGE_CONGRUENCE: every representation switch L_i -> L_j must carry an exact replayable certificate that the destination denotes the same projected future semantics after the authorized transition. Measure translation and verification cost explicitly; reject syntax-only equivalence and auxiliary-state hiding. R2E cumulative switching monster follows afterward."
 }
