@@ -1,0 +1,35 @@
+{
+  "artifact_uuid": "JANUS-ENGINE-DEVELOPMENT-JOURNAL-2026-08-30-v1.1",
+  "timestamp": "2026-08-30T02:37:00+03:00",
+  "version": "v1.1",
+  "title": "JANUS Engine — development journal",
+  "observer": "Hawkar / JANUS",
+  "repository": "Hawkar-usls/janus-meta-registry",
+  "git_branch": "research/janus-engine",
+  "status": "ACTIVE_APPEND_ONLY_PROJECT_JOURNAL",
+  "parent": "projects/janus-engine/journal/JANUS-ENGINE-DEVELOPMENT-JOURNAL-2026-08-30-v1.0.json",
+  "policy": [
+    "APPEND_VERSIONED_JOURNAL_STATES_DO_NOT_ERASE_PRIOR_HISTORY",
+    "SEPARATE_LITERATURE_OR_MODEL_RESULTS_FROM_HARDWARE_MEASUREMENTS",
+    "RECORD_DESIGN_REVERSALS_AND_NEGATIVE_RESULTS",
+    "EVERY_ENERGY_LOSS_AND_STARTUP_BUFFER_REMAINS_IN_THE_LEDGER"
+  ],
+  "entry": {
+    "subject": "Axle as generator / transformer analogy and battery regeneration path",
+    "trigger": "Question whether the rotating magnetized Axle creates transformer-like induction and whether resulting electrical energy can be collected into the battery.",
+    "result": [
+      "The underlying physics is Faraday induction. A transformer changes flux electrically; JANUS changes flux at stationary coils mechanically by rotating the magnetic Axle.",
+      "With permanent magnets on the Axle and stationary AFPM windings, the system is already a permanent-magnet generator whenever external mechanical torque drives the rotor.",
+      "The same coreless AFPM unit can therefore operate as starter motor, RPM controller, regenerative brake and generator through a bidirectional inverter/DC bus.",
+      "Bulk eddy currents induced in a copper/brass Axle are not preferred as a collection mechanism; they behave more like an unintended shorted transformer secondary and mainly produce heat and Lenz drag.",
+      "If the battery is the only source spinning the Axle, harvesting from the same rotation cannot produce a net gain; electrical loading increases opposing torque and returns less energy than was supplied.",
+      "True regenerative battery charge is valid when independently measured hydraulic/external shaft work drives the Axle or when finite rotor kinetic energy is recovered during deceleration."
+    ],
+    "new_architecture": "AUTO_MOTOR_TO_REGEN_CROSSOVER: battery starts Axle -> hydraulic/process assistance reduces motor current -> zero-current crossover -> if external torque exceeds losses, AFPM automatically reverses DC power flow and charges battery.",
+    "new_records": [
+      "projects/janus-engine/research/TOPA-SPIDER-AXLE-FARADAY-GENERATOR-RUN-006-v1.0.json",
+      "projects/janus-engine/gates/JANUS-ENGINE-R0M3-MOTOR-REGEN-CROSSOVER-v1.0.json"
+    ],
+    "next_measurement": "Measure open-circuit back EMF, torque, DC-bus power, battery Wh, water hydraulic power and B-field together across 60/120/300/600 RPM to locate the real motor-to-zero-to-regeneration crossover."
+  }
+}
