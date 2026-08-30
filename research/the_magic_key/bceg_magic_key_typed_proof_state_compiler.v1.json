@@ -1,0 +1,186 @@
+{
+  "schema": "JANUS/THE_MAGIC_KEY/BCEG_TYPED_PROOF_STATE_COMPILER/v1.0",
+  "registry_id": "JANUS-THE-MAGIC-KEY-BCEG-TYPED-PROOF-STATE-COMPILER-2026-08-30-v1.0",
+  "status": "THEOREM_CANDIDATE_AND_ARCHITECTURE_SPEC__NOT_PROOF",
+  "date": "2026-08-30",
+  "branch": "research/the-magic-key-json-meta-2026-08-30",
+  "core_synthesis": "MAGIC_KEY + Adaptive_JUXTAPOSE + BCEG/UFK -> typed proof-state compiler",
+  "authoritative_boundary": {
+    "exact_replay_is_authority": true,
+    "model_prediction_is_proof": false,
+    "spider_association_is_proof": false,
+    "fingerprint_is_identity": false,
+    "hash_is_proof": false,
+    "P_VS_NP": "OPEN"
+  },
+  "crosslinks": {
+    "algorithm_spiral": "data/JANUS-META-REGISTRY-ALGORITHM-SPIRAL-RESTORATION-CHECKPOINT-2026-08-29-v1.0.json",
+    "bceg_current": "data/JANUS-META-REGISTRY-BCEG-MADLAB-BOUNDARY-ELIMINATION-V1-2026-08-30.json",
+    "magic_key_core": "research/the_magic_key/the_magic_key.v1.json"
+  },
+  "critical_refinement": {
+    "reason": "Exact identity and future-semantic sufficiency are different tasks and must not be conflated.",
+    "MK_ID": {
+      "purpose": "Distinguish the exact proof state for audit, provenance and replay.",
+      "desired_property": "MK_ID(S1)=MK_ID(S2) implies S1=S2 under the frozen typed canonical model.",
+      "compression_role": "secondary"
+    },
+    "MK_FUTURE": {
+      "purpose": "Compress states by exact continuation semantics rather than byte/state identity.",
+      "desired_property": "MK_FUTURE(S1)=MK_FUTURE(S2) implies S1 and S2 are future-equivalent for all authorized continuations relevant to correctness.",
+      "compression_role": "primary",
+      "important": "S1 may differ from S2. If their future semantics are formally equivalent, the merge is desired, not a collision."
+    }
+  },
+  "future_equivalence": {
+    "notation": "S1 ≡_J S2",
+    "definition_candidate": "For every authorized continuation program pi in the frozen JANUS continuation language, correctness-relevant terminal verdicts and exact replay obligations induced from S1 and S2 agree.",
+    "collision_definition": "A semantic collision exists only when MK_FUTURE(S1)=MK_FUTURE(S2) but S1 is not equivalent to S2 under the frozen continuation semantics.",
+    "non_collision": "S1 != S2 with equal MK_FUTURE is allowed and desirable when future equivalence is formally established."
+  },
+  "minimality_refinement": {
+    "warning": "A truly minimum distinguishing constraint set may itself be expensive to discover.",
+    "theorem_core_should_not_require_minimality": true,
+    "required_instead": "Find any polynomial-size certified sufficient interface; minimization remains an optional optimization objective.",
+    "candidate_name": "POLYNOMIAL_CERTIFIED_FUTURE_INTERFACE",
+    "reason": "For complexity claims, polynomial boundedness, discoverability, verifiability, updatability and sufficiency matter; exact minimum size does not."
+  },
+  "typed_proof_state_compiler": {
+    "input": "full exact typed state S=(D,C,boundary,L,provenance,capabilities,...) ",
+    "output": {
+      "exact_state_ref": "content-addressed exact proof-DAG node or replayable typed payload",
+      "mk_id": "optional exact distinguishing interface",
+      "mk_future": "candidate or certified future-semantic interface",
+      "schema": "typed structural contract",
+      "provenance": "source/predecessor/epoch/capability digest",
+      "status": "CANDIDATE|ATTACKED|FINITE_SURVIVOR|FORMALLY_CERTIFIED|REFUTED"
+    },
+    "law": "compressed interface never deletes exact fallback before formal sufficiency is proved"
+  },
+  "bceg_mk_cycle": [
+    "DISCOVER",
+    "VERIFY_CERTIFICATE",
+    "COMPOSE",
+    "ELIMINATE",
+    "PROJECT_BOUNDARY",
+    "GENERATE_MK_FUTURE_CANDIDATE",
+    "ATTACK_SEMANTIC_COLLISIONS",
+    "CHECK_TRANSITION_CONGRUENCE",
+    "CHECK_DECISION_SUFFICIENCY",
+    "CHECK_WITNESS_OR_REPLAY_LIFTING",
+    "CANONICALIZE_TYPED_INTERFACE",
+    "UPDATE",
+    "PRESERVE_EXACT_FALLBACK"
+  ],
+  "formal_obligations": {
+    "O1_POLY_SIZE": "|K(S)| <= poly(|input|) for every reachable state in the claimed domain.",
+    "O2_POLY_DISCOVER": "K(S) is computable in polynomial time; hidden exponential certificate discovery is forbidden.",
+    "O3_POLY_VERIFY": "The claimed interface invariants and certificates are polynomially verifiable.",
+    "O4_DECISION_SUFFICIENCY": "The SAT/correctness decision factors through K: Decision(S)=Decision_K(K(S)).",
+    "O5_TRANSITION_CONGRUENCE": "For each authorized typed transition a, there exists a polynomial update U_a such that K(a(S))=U_a(K(S)) whenever a is applicable.",
+    "O6_APPLICABILITY_SUFFICIENCY": "The interface contains enough exact information to decide whether each authorized transition/certificate is applicable, or carries an exact boundary certificate for that decision.",
+    "O7_COMPOSITION": "Composed certificate languages preserve exact boundary semantics through a typed cross-language certificate.",
+    "O8_REPLAY_LIFT": "Terminal claims produced through K retain a replayable exact path or proof-DAG linkage sufficient for JANUS authority.",
+    "O9_NO_POINTER_CHEAT": "Pointers/hashes do not hide unpaid exponential payload, serialization, provenance or discovery cost.",
+    "O10_CANONICAL_TYPED_SEMANTICS": "Canonical JSON is frozen together with numeric, duplicate-key, type, Unicode and schema semantics; raw canonicalization alone is not semantic proof."
+  },
+  "polynomial_magic_key_boundary_lemma_candidate": {
+    "status": "OPEN_THEOREM_CANDIDATE",
+    "statement": "For every reachable state in the claimed SAT/BCEG domain there exists a polynomial-size, polynomially discoverable, polynomially verifiable and polynomially updatable typed interface K whose equality implies exact future equivalence for the authorized continuation language and through which correctness decisions factor.",
+    "stronger_than_needed": "requiring K to uniquely reconstruct the entire exact state",
+    "weaker_but_useful": "K may merge distinct exact states if the merge is formally future-congruent",
+    "consequence_if_constructively_proved_for_arbitrary_CNF": "Would provide a substantive route toward a polynomial-time exact SAT procedure, subject to all stated obligations; this file does not establish that result."
+  },
+  "magic_key_semantic_collision_arena": {
+    "goal": "Actively refute insufficient MK_FUTURE candidates.",
+    "target_pair": "S1,S2 with equal candidate K but distinguishable authorized continuation behavior.",
+    "attack_families": [
+      "same local boundary summary but different distant clauses",
+      "same counts/types but different implication topology",
+      "same projection but different witness extendability",
+      "same key under variable renaming but asymmetric continuation constraints",
+      "same canonical structural summary but different provenance/capability applicability",
+      "adversarial clause gadgets that activate only after several elimination steps",
+      "states equal on all currently queried constraints but separable by a future certificate language"
+    ],
+    "verdicts": ["REFUTED_COLLISION", "FINITE_SURVIVOR_NOT_THEOREM", "FORMAL_SUFFICIENCY_PROVED"],
+    "law": "absence of collisions on bounded domains is evidence for refinement, never universal proof"
+  },
+  "pippi_metrics": [
+    "full_state_bytes",
+    "boundary_width",
+    "mk_id_size",
+    "mk_future_size",
+    "discover_time",
+    "verify_time",
+    "update_time",
+    "canonicalization_time",
+    "proof_dag_payload_bytes",
+    "candidate_collision_count",
+    "semantic_collision_count",
+    "exact_fallback_rate",
+    "certified_merge_rate"
+  ],
+  "spider_role": {
+    "association_graph": "discovers candidate recurring relation/constraint motifs",
+    "candidate_output": "possible MK_FUTURE basis families",
+    "authority": "ADVISORY_ONLY",
+    "proof_handoff": "JUXTAPOSE/MAD-LAB/exact symbolic gate"
+  },
+  "representation_language": {
+    "typed_relations": [
+      "REQUIRES",
+      "FORBIDS",
+      "IMPLIES",
+      "REFUTES",
+      "SUPERSEDES",
+      "PROJECTS_TO",
+      "SAME_AS",
+      "NOT_SAME_AS",
+      "CAPABILITY_DEPENDS_ON",
+      "FAILED_UNDER",
+      "RESTORED_BY"
+    ],
+    "edge_metadata": ["source", "proof_status", "capability_digest", "counterexamples", "epoch", "confidence", "authority"]
+  },
+  "data_schema_cycle": {
+    "form": "DATA_t -> PROJECTED_CONSTRAINT_t -> SCHEMA_OF_FUTURE_t -> DATA_t+1",
+    "interpretation": "Projected boundary messages become typed contracts restricting the next reachable state without becoming mathematical authority until exact sufficiency is verified.",
+    "bceg_mapping": "DISCOVER -> COMPOSE -> ELIMINATE -> PROJECT -> MAGIC_KEY/SCHEMA -> UPDATE"
+  },
+  "key_semantic_field": {
+    "scope": "JGPT/Slime/Keymaster representation experiments only",
+    "use": "Measure whether semantically explicit field names improve candidate search, calibration and exact-verification compliance.",
+    "firewall": "schema-key influence on model behavior != influence on mathematical truth",
+    "example_contrast": [
+      {"candidate": "...", "score": 0.8},
+      {"unproven_candidate": "...", "advisory_rank_only": 0.8, "exact_verification_required": true}
+    ]
+  },
+  "proof_dag_json_role": {
+    "pipeline": "typed semantic object -> frozen canonical JSON profile -> hash -> content address",
+    "benefit": "stable exact proof-node addressing and deduplication",
+    "guard": "HASH != PROOF; POINTER != FREE_REPRESENTATION; payload/provenance/serialization costs remain charged"
+  },
+  "current_evidence_alignment": {
+    "ufk_algorithm_spiral": "Already requires search grammar + representation grammar + interface grammar, charges certificate discovery, keeps proof DAG provenance and rejects fingerprint as identity/truth.",
+    "bceg_v1": "Already demonstrates finite exact representation-language escape on structured CNF cases while explicitly leaving the universal polynomial boundary lemma open.",
+    "interpretation": "Magic Key is therefore best positioned as a candidate exact interface-compression layer inside BCEG, not as a replacement for BCEG and not as evidence that P=NP."
+  },
+  "next_gate": {
+    "id": "MK_BCEG_R0_FUTURE_EQUIVALENCE_ARENA",
+    "priority": "HIGH",
+    "scope": "small frozen reachable CNF state universe with exact exhaustive continuation where feasible",
+    "steps": [
+      "freeze exact state semantics and continuation language",
+      "generate candidate MK_FUTURE bases",
+      "enumerate or adversarially search equal-key state pairs",
+      "compute exact continuation distinguishability",
+      "preserve first counterexample for each failed key language",
+      "measure size/discover/verify/update cost",
+      "only survivors advance to symbolic congruence obligations"
+    ],
+    "success_condition": "A key language survives bounded exact attacks with materially smaller interface and no hidden cost, then receives a formal transition-congruence proof obligation.",
+    "failure_condition": "Any equal-key pair with different correctness-relevant future behavior refutes that key language immediately."
+  }
+}
