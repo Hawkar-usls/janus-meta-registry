@@ -1,0 +1,44 @@
+{
+  "artifact_uuid": "JANUS-ENGINE-DEVELOPMENT-JOURNAL-2026-08-30-v1.3",
+  "timestamp": "2026-08-30T02:37:00+03:00",
+  "version": "v1.3",
+  "title": "JANUS Engine — development journal",
+  "observer": "Hawkar / JANUS",
+  "repository": "Hawkar-usls/janus-meta-registry",
+  "git_branch": "research/janus-engine",
+  "status": "ACTIVE_APPEND_ONLY_PROJECT_JOURNAL",
+  "parent": "projects/janus-engine/journal/JANUS-ENGINE-DEVELOPMENT-JOURNAL-2026-08-30-v1.2.json",
+  "entry": {
+    "subject": "First integrated Calcifer ignition simulation with POMS + PEMFC + AFPM + dual battery + maintenance architecture",
+    "trigger": "Run the whole current JANUS Engine architecture as far as existing measured/literature anchors allow and save the result.",
+    "run_record": "projects/janus-engine/simulations/JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-006-FULL-INTEGRATED-IGNITION-v1.0.json",
+    "scope_boundary": "Numerical integrated launch only; no physical JANUS hardware was started.",
+    "result": [
+      "The integrated model was run for 6 h with 0.5 h prime, 4 h linear PEMFC ramp and 1.5 h hold. Screening auxiliaries were frozen at 12/10/8 W for those stages.",
+      "At the nominal 0.130 mg/m2/s POMS target, the RUN005 empirical electrical-conversion branch reaches +2.3403 W steady net at 8 W auxiliaries but does not repay startup/bidirectional-converter losses inside 6 h; modeled total recovery occurs near 16.49 h if steady conditions persist.",
+      "At the same flux with the paper 55% design-conversion branch, total dual-pack stored energy returns to its initial level around 4.09 h and ends the 6 h screen about +33.03 Wh after 95% charge/discharge DC/DC efficiencies.",
+      "Across the matrix, the 55% design branch passes the 6 h battery-neutral screen from 0.100 mg/m2/s upward. The empirical branch requires higher flux and longer hold; 0.160 and 0.1707 mg/m2/s repay startup at about 9.34 h and 8.28 h respectively under this screening schedule.",
+      "No AFPM regenerative watts were credited because an independent hydraulic/mechanical input has not yet been measured. This prevents same-shaft double counting.",
+      "Two batteries improved support/recovery separation and regenerative headroom but did not change the governing energy balance.",
+      "The selected nominal 0.130 mg/m2/s six-hour flux trajectory corresponds to about 34.74 g O2 throughput and about 4.38 g theoretical stoichiometric H2 minimum; hydrogen remains the explicit external chemical-energy source."
+    ],
+    "decision": "Proceed to RUN007 only by replacing assumed 12/10/8 W parasitics and conversion values with measured subsystem data. The current result is a conditional model pass, not hardware self-drive proof.",
+    "next_measurements": [
+      "water pump watts and DeltaP at the actual POMS cassette flow",
+      "gas recirculation and humidity-management watts",
+      "AFPM motor/generator efficiency and zero-current crossover",
+      "purge gas mass/pressure work every 30 min",
+      "crystal-trap DeltaP and Axle/wiper torque",
+      "POMS J_O2 through startup and long hold",
+      "PEMFC gross/net efficiency at the actual oxygen delivery rate",
+      "Bx/By/Bz and eddy heating for the selected Axle material"
+    ]
+  },
+  "laws_reaffirmed": [
+    "MODEL_PASS_NE_HARDWARE_PASS",
+    "HYDROGEN_FUEL_MUST_REMAIN_EXPLICIT",
+    "DUAL_PACK_LEDGER_EQUALS_E_A_PLUS_E_B",
+    "NO_REGEN_CREDIT_WITHOUT_IDENTIFIED_MECHANICAL_INPUT",
+    "UNMEASURED_PARASITICS_REMAIN_OPEN"
+  ]
+}
