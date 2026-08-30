@@ -1,0 +1,176 @@
+{
+  "schema": "hawkar.topa.spider.tspu_external.four_agency_matrix.v1",
+  "artifact_id": "TSPU-EXTERNAL-FOUR-AGENCY-EVIDENCE-MATRIX-v1.0",
+  "generated_date_utc": "2026-08-30",
+  "status": "PRE_OUTREACH_EVIDENCE_BUILD_NO_SEND",
+  "core_warning": "Russian-origin surveillance/DPI technology has demonstrably proliferated abroad; Russia has already combined route control, censorship and information manipulation in occupied Ukrainian territory; U.S. agencies independently assess Russian malign influence as a persistent threat to U.S. interests. The unproven but testable risk is that exported control infrastructure could be used, locally or coordinately, to isolate foreign populations from U.S./open information and services while increasing the effectiveness of Russian influence operations.",
+  "claim_ladder": [
+    {"level": "L0", "claim": "Russia operates large-scale domestic network censorship/surveillance infrastructure", "state": "CONFIRMED"},
+    {"level": "L1", "claim": "Russian SORM/DPI technology and practices have spread outside Russia", "state": "CONFIRMED"},
+    {"level": "L2", "claim": "Russia has operationally combined route control, censorship and information manipulation outside internationally recognized Russian territory", "state": "CONFIRMED_IN_OCCUPIED_UKRAINE"},
+    {"level": "L3", "claim": "Russian state actors conduct malign influence operations against U.S. and foreign audiences to reduce support for Ukraine, weaken U.S. leadership and shape political attitudes", "state": "CONFIRMED_BY_US_GOVERNMENT_ACTIONS_AND_ASSESSMENTS"},
+    {"level": "L4", "claim": "Exported Russian-origin SORM/DPI systems in sovereign third countries are currently under coordinated Russian operational control", "state": "NOT_ESTABLISHED"},
+    {"level": "L5", "claim": "A synchronized foreign activation is currently being prepared to isolate large populations from U.S. information/services", "state": "NOT_ESTABLISHED_EARLY_WARNING_HYPOTHESIS"}
+  ],
+  "agency_matrix": {
+    "ODNI_FMIC": {
+      "fit": "VERY_HIGH_STRATEGIC_FIT",
+      "mandate_evidence": [
+        {
+          "source": "ODNI Foreign Malign Influence Center",
+          "url": "https://www.dni.gov/index.php/who-we-are/organizations/icig/icig-partnerships/icig-forum/340-about/organization/foreign-malign-influence-center",
+          "relevance": "FMIC leads the Intelligence Community on foreign malign influence threats to democracy and U.S. national interests and integrates intelligence on foreign activities intended to affect another nation's popular or political attitudes, perceptions or behaviors."
+        },
+        {
+          "source": "ODNI Annual Threat Assessment 2025",
+          "url": "https://www.dni.gov/files/ODNI/documents/assessments/ATA-2025-Unclassified-Report.pdf",
+          "relevance": "The IC assesses Moscow uses influence activities to sow discord, undermine U.S. global leadership, degrade Western support for Ukraine and amplify preferred Russian narratives, and expects these operations to increase in sophistication and volume."
+        }
+      ],
+      "best_material_for_recipient": [
+        "integrated threat model linking foreign network-control capability to foreign malign influence",
+        "country/vendor/operator graph",
+        "occupied-Ukraine historical proof of concept",
+        "scenario indicators for synchronized activation",
+        "explicit falsifiers and confidence levels"
+      ],
+      "avoid": "Do not present mass activation as an established operation. Frame as strategic warning and collection requirement."
+    },
+    "FBI": {
+      "fit": "HIGH_WHEN_US_NEXUS_OR_CRIMINAL_INFLUENCE_NEXUS_EXISTS",
+      "mandate_evidence": [
+        {
+          "source": "DOJ/FBI Doppelganger disruption 2024",
+          "url": "https://www.justice.gov/usao-edpa/pr/justice-department-disrupts-covert-russian-government-sponsored-foreign-malign",
+          "relevance": "FBI-supported action disrupted 32 domains used in a Russian government-directed influence campaign aimed at reducing international support for Ukraine, bolstering Russian interests and influencing U.S. and foreign voters."
+        },
+        {
+          "source": "DOJ Russian AI-enhanced bot farm disruption 2024",
+          "url": "https://www.justice.gov/usao-ndil/pr/justice-department-leads-efforts-among-federal-international-and-private-sector",
+          "relevance": "FBI and partners disrupted Russian government-operated infrastructure spreading disinformation in the United States and abroad."
+        },
+        {
+          "source": "FBI/CISA PSA on Russian Influence Efforts",
+          "url": "https://www.cisa.gov/sites/default/files/2024-10/PSA_Just%20So%20You%20Know_Foreign_Threat_Actors_Likely_to_Use_a_Variety_of_Tactics.pdf",
+          "relevance": "FBI and CISA publicly describe Russian malign influence actors using fake media, personas and infrastructure to shape U.S. audiences."
+        }
+      ],
+      "best_material_for_recipient": [
+        "any evidence that a foreign DPI/SORM deployment is used to target U.S. persons, companies, diplomats or communications",
+        "remote-access/backdoor indicators tied to Russian state or intelligence actors",
+        "U.S.-hosted infrastructure, domains, companies or financial flows supporting a coordinated operation",
+        "foreign influence operation evidence with a U.S. audience nexus"
+      ],
+      "avoid": "A purely geopolitical forecast without U.S. nexus is less FBI-specific than FMIC/State."
+    },
+    "CISA": {
+      "fit": "HIGH_FOR_TECHNICAL_NETWORK_RISK_LOW_FOR_STANDALONE_PROPAGANDA_ANALYSIS",
+      "mandate_evidence": [
+        {
+          "source": "CISA Russia Threat Overview",
+          "url": "https://www.cisa.gov/topics/cyber-threats-and-advisories/advanced-persistent-threats/russia",
+          "relevance": "CISA provides guidance to U.S. critical infrastructure and partners on Russian state-sponsored cyber activity."
+        },
+        {
+          "source": "CISA/NSTAC BGP security materials",
+          "url": "https://www.cisa.gov/sites/default/files/2024-07/2024.07.17_NSTAC-May2024-MeetingSummary_508c.pdf",
+          "relevance": "U.S. network-security policy treats malicious BGP routing as a disruption and espionage risk and promotes RPKI/ROA defenses."
+        },
+        {
+          "source": "CISA response on foreign malign influence scope",
+          "url": "https://www.cisa.gov/sites/default/files/2023-03/formal_response_to_cisa_cybersecurity_advisory_committee_recommendations_june_2022%20%282%29.pdf",
+          "relevance": "CISA explicitly said it was not pursuing independent detection of foreign malign influence threatening general critical infrastructure, focusing its disinformation work on election infrastructure. This is a scope boundary, not a weakness in the technical network mission."
+        }
+      ],
+      "best_material_for_recipient": [
+        "BGP/AS-path changes",
+        "RPKI state and route-origin anomalies",
+        "DNS interception",
+        "QUIC/TLS/SNI protocol fingerprints",
+        "packet-level localization and matched bypass controls",
+        "US service reachability degradation from foreign vantage points",
+        "evidence of compromised routers/transit or remote control of telecom equipment"
+      ],
+      "avoid": "Do not ask CISA to judge broad propaganda narratives as the primary task."
+    },
+    "STATE": {
+      "fit": "VERY_HIGH_WITH_TWO_INTERNAL_LANES",
+      "subrecipients": {
+        "CDP": {
+          "role": "cyberspace, international telecommunications, internet governance and digital freedom",
+          "source": "https://fam.state.gov/fam/01fam/01fam0490.html",
+          "relevance": "CDP is the strongest State recipient for exported network-control technology, cross-border connectivity and open-Internet risk."
+        },
+        "CFIMI_HUB": {
+          "role": "Counter Foreign Information Manipulation and Interference Hub",
+          "current_org_evidence": "State Department Foreign Affairs Manual organization code R/CFIMI effective 2024-12-23; program allowance active from 2025-01-03.",
+          "source": "https://fam.state.gov/fam/04FAH01/04FAH010420.html",
+          "relevance": "CFIMI is a more direct State routing target than CDP for the narrative-manipulation half of the package."
+        }
+      },
+      "strategic_evidence": [
+        {
+          "source": "U.S. International Cyberspace & Digital Policy Strategy",
+          "url": "https://2021-2025.state.gov/united-states-international-cyberspace-and-digital-policy-strategy/",
+          "relevance": "State identifies governments 'closing and siloing the Internet' through shutdowns, restricted networks and blocked websites; it also documents Russia's censorship and attempts to divert/censor Ukrainian Internet access alongside information manipulation."
+        },
+        {
+          "source": "G7 Rapid Response Mechanism statement on Russian influence campaign",
+          "url": "https://2021-2025.state.gov/office-of-the-spokesperson/releases/2025/01/joint-statement-by-the-g7-rapid-response-mechanism-rrm-on-a-russian-influence-campaign",
+          "relevance": "The U.S. and partners explicitly treat Russian FIMI as including hostile cyber activity, psychological/information operations and covert influence."
+        }
+      ],
+      "best_material_for_recipient": [
+        "CDP: country/vendor/routing map and digital-freedom implications",
+        "CFIMI: narrative campaigns, audience targeting, anti-U.S./anti-West information operations and technical isolation as an amplifier",
+        "occupied Ukraine as a concrete integration precedent",
+        "partner-country resilience and alternative connectivity implications"
+      ]
+    }
+  },
+  "strongest_cross_domain_evidence": [
+    {
+      "id": "E1",
+      "finding": "Russian SORM technology has proliferated to at least six named foreign countries, with at least eight Russian providers and at least fifteen likely telecom customers identified by Insikt Group.",
+      "confidence": "HIGH"
+    },
+    {
+      "id": "E2",
+      "finding": "Insikt Group assesses Russia can likely gain some degree of access to Russian-component SORM systems abroad because of vendor-security-service ties and intelligence value, while acknowledging the degree of access is unclear.",
+      "confidence": "MEDIUM_TO_HIGH_AS_ASSESSMENT_NOT_DIRECT_ACCESS_PROOF"
+    },
+    {
+      "id": "E3",
+      "finding": "Cloudflare independently measured forced rerouting of more than twenty occupied Ukrainian networks to Russian ISPs, producing Russian censorship/surveillance conditions.",
+      "confidence": "VERY_HIGH"
+    },
+    {
+      "id": "E4",
+      "finding": "The State Department itself describes Russian cyber operations, information manipulation and attempts to divert/censor Ukrainians' access to the Internet in the same conflict context.",
+      "confidence": "VERY_HIGH_US_OFFICIAL"
+    },
+    {
+      "id": "E5",
+      "finding": "ODNI, FBI, DOJ, CISA and State have independently documented ongoing Russian malign influence activities aimed at U.S. and foreign audiences, including reducing support for Ukraine and undermining U.S. leadership.",
+      "confidence": "VERY_HIGH"
+    },
+    {
+      "id": "E6",
+      "finding": "Kazakhstan and Kyrgyzstan combine Russian-origin SORM exposure with substantial dependence on Russia or Russia-linked routes for international connectivity according to GMF's 2025 technology-stack assessment.",
+      "confidence": "HIGH"
+    }
+  ],
+  "current_outreach_verdict": {
+    "send_letters_now": "NO",
+    "reason": "The evidence justifies a serious early-warning research program, but the strongest allegation — synchronized Russian operational control of foreign DPI/SORM for mass information isolation — remains unproven.",
+    "best_current_position": "CONCERN_IS_WELL_FOUNDED_AND_TESTABLE_NOT_YET_ATTRIBUTABLE_AS_AN_ACTIVE_MASS_OPERATION"
+  },
+  "p0_before_outreach": [
+    "Complete route/dependency baselines for Kazakhstan, Kyrgyzstan, Cuba and Nicaragua to representative U.S. service endpoints.",
+    "Search RIPE RIS/RouteViews/BGPStream for recurring Russian transit or route steering affecting candidate networks.",
+    "Build a published TSPU/SORM/DPI fingerprint library and distinguish surveillance-only capability from active censorship capability.",
+    "Find evidence of actual censorship/traffic manipulation on foreign Russian-origin equipment, not merely surveillance procurement.",
+    "Correlate any technical restriction with independently measured changes in access to U.S./independent sources and increases in known Russian FIMI narratives.",
+    "Preserve counterexamples where Russian-origin equipment exists but open access remains normal."
+  ]
+}
