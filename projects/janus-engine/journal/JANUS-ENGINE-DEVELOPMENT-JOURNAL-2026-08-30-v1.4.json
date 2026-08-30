@@ -1,0 +1,38 @@
+{
+  "artifact_uuid": "JANUS-ENGINE-DEVELOPMENT-JOURNAL-2026-08-30-v1.4",
+  "timestamp": "2026-08-30T14:00:00+03:00",
+  "version": "v1.4",
+  "title": "JANUS Engine — development journal",
+  "observer": "Hawkar / JANUS",
+  "repository": "Hawkar-usls/janus-meta-registry",
+  "git_branch": "research/janus-engine",
+  "status": "ACTIVE_APPEND_ONLY_PROJECT_JOURNAL",
+  "parent": "projects/janus-engine/journal/JANUS-ENGINE-DEVELOPMENT-JOURNAL-2026-08-30-v1.3.json",
+  "entry": {
+    "subject": "RUN-007 measured-parasitic replacement audit",
+    "trigger": "Retire the RUN-006 12/10/8 W auxiliary envelope and replace assumptions progressively with measured or hardware-rated values.",
+    "records": [
+      "projects/janus-engine/simulations/JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-007-MEASURED-PARASITIC-REPLACEMENT-v1.0.json",
+      "projects/janus-engine/gates/JANUS-ENGINE-R0P1-PARASITIC-METERING-HARNESS-v1.0.json"
+    ],
+    "result": [
+      "RUN-007 refused to fabricate a total auxiliary watt value because JANUS pump, gas fan, AFPM support, purge, crystal-trap/wiper and controller watts have not yet been physically metered.",
+      "The direct artificial-gill paper provides measured water flow, internal air flow, O2 flux and low-pO2 fuel-cell power, but explicitly states that internal/external electronics were powered from an external supply; therefore it does not close the fan/controller parasitic ledger.",
+      "The H-12 hardware family provides a 40% full-power system-efficiency rating, 5 V blower and 6 V purge-valve ratings. The prior 55% paper design assumption is demoted to sensitivity-only; 40% is now an intermediate hardware-rating reference, while the measured low-pO2 prototype branch remains the conservative direct evidence.",
+      "The measured prototype POMS flux remains about 0.016-0.02667 mg/m2/s. The JANUS first-demonstrator target 0.064-0.13 mg/m2/s is still an unproven target requiring the improved distributed-flow geometry to be physically tested.",
+      "A diagnostic shadow replay using the old RUN-006 auxiliary envelope but the 40% H-12 reference keeps the nominal 0.130 mg/m2/s case above the six-hour battery-neutral line, with about +8.33 Wh dual-pack delta and recovery near 5.24 h. This is not admitted as measured-net proof because the auxiliary schedule is still a placeholder.",
+      "R0P1 now defines isolated power-meter states for controls, water loop, gas loop, AFPM, purge, scale hardware and thermal management, followed by a full-bus closure check."
+    ],
+    "decision": "Numerical refinement has reached a hard measurement boundary. Proceed by measuring subsystem watts/Wh and pressure/torque losses; replace placeholders one by one. Do not publish or internally label a full measured self-drive result until the P7 full-stack bus closure passes.",
+    "next_frontier": "R0P1_PARASITIC_METERING_HARNESS_AND_SUBSYSTEM_ISOLATION -> RUN008_FULL_MEASURED_ENERGY_BALANCE"
+  },
+  "laws_reaffirmed": [
+    "UNKNOWN_WATTS_REMAIN_UNKNOWN",
+    "FLOW_RATE_NE_POWER",
+    "VOLTAGE_NE_POWER_WITHOUT_CURRENT_AND_DUTY",
+    "RATED_FULL_POWER_EFFICIENCY_NE_LOW_PO2_MEASURED_EFFICIENCY",
+    "MODEL_PASS_NE_HARDWARE_PASS",
+    "HYDROGEN_FUEL_REMAINS_EXPLICIT",
+    "DEVELOPMENT_JOURNAL_IS_APPEND_ONLY"
+  ]
+}
