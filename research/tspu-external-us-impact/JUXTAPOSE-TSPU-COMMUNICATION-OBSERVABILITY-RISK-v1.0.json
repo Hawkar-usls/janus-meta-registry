@@ -1,0 +1,98 @@
+{
+  "schema": "hawkar.topa.spider.tspu_external.juxtapose_observability_risk.v1",
+  "artifact_id": "JUXTAPOSE-TSPU-COMMUNICATION-OBSERVABILITY-RISK-v1.0",
+  "generated_date_utc": "2026-08-30",
+  "status": "DEFENSIVE_THREAT_MODEL_NO_TACTICAL_EVASION",
+  "purpose": "Use the user's JUXTAPOSE principles as a defensive mirror model for understanding what a centralized in-path policy/observation system could infer from communications behavior when traffic traverses controlled network infrastructure. This artifact does not provide targeting, exploitation, evasion, or movement-planning instructions.",
+  "juxtapose_reference": {
+    "core_rule": "LEARN WHERE TO LOOK; NEVER LEARN WHAT IS TRUE.",
+    "relevant_observables": [
+      "fresh end-to-end reachability",
+      "loss/delay/bandwidth changes",
+      "asymmetric reachability",
+      "policy/drift changes",
+      "shared failure domains",
+      "structural novelty",
+      "protocol-dependent behavior",
+      "correlated observer/path behavior"
+    ],
+    "defensive_translation": "If a defender can infer network structure and changing failure domains from behavior without reading message content, a sufficiently instrumented in-path controller may also gain intelligence from traffic metadata and policy-visible behavior."
+  },
+  "critical_scope_boundary": {
+    "controlled_traffic": "Traffic that actually traverses TSPU/DPI-controlled ISP, transit, DNS, routing or policy-enforcement infrastructure.",
+    "not_automatically_controlled": [
+      "independent tactical radio",
+      "protected military satellite links",
+      "dedicated non-public military networks",
+      "independent microwave/point-to-point links",
+      "other paths that do not traverse the controlled public-network layer"
+    ],
+    "encryption_boundary": "Strong end-to-end encryption can protect message content, but normally does not erase all network-layer metadata such as timing, endpoint/routing context, packet/flow volume and protocol behavior. Do not claim blanket decryption capability without endpoint or cryptographic compromise evidence."
+  },
+  "risk_layers": [
+    {
+      "id": "R1_FLOW_OBSERVABILITY",
+      "description": "A centralized in-path system may observe flow-level patterns even when payloads are encrypted.",
+      "possible_defensive_concerns": [
+        "persistent communication relationships",
+        "sudden activity-volume changes",
+        "protocol shifts",
+        "new or disappearing endpoints",
+        "correlated changes across multiple network users"
+      ],
+      "claim_limit": "These signals are probabilistic and context-dependent; metadata is not proof of military identity or intent."
+    },
+    {
+      "id": "R2_GRAPH_AND_DEPENDENCY_INFERENCE",
+      "description": "Repeated correlated flows and shared path/failure behavior can reveal communication clusters and infrastructure dependencies at a statistical level.",
+      "juxtapose_parallel": "JUXTAPOSE collapses correlated observers by shared failure domain and learns where fresh measurement is most informative; the defensive mirror risk is that centralized observers may also identify common dependencies or correlated groups.",
+      "claim_limit": "Do not infer command hierarchy or troop identity from network graph structure alone."
+    },
+    {
+      "id": "R3_SELECTIVE_DISRUPTION",
+      "description": "A programmable policy layer can selectively degrade protocols, destinations or classes of communication rather than causing a visible total blackout.",
+      "strategic_consequence": "Public-network-dependent actors may experience partial blindness, delayed coordination or unreliable cloud/messaging access while the wider network appears mostly functional.",
+      "claim_limit": "This concerns public/commercial-network dependencies, not guaranteed disruption of hardened military C2."
+    },
+    {
+      "id": "R4_OBSERVABILITY_ASYMMETRY",
+      "description": "U.S./allied service providers can remain healthy while users inside the controlled zone experience path-specific blocking or degradation.",
+      "strategic_consequence": "External commanders, partners or service operators may initially underestimate communications degradation if they rely only on service-side telemetry."
+    },
+    {
+      "id": "R5_INFORMATION_AND_COORDINATION_COMPOUND_EFFECT",
+      "description": "The same network-control layer can reduce access to independent information while degrading ordinary civilian, NGO, commercial and partner coordination that uses public Internet/mobile services.",
+      "strategic_consequence": "Information isolation and communications disruption can reinforce one another even without affecting every military communications system."
+    }
+  ],
+  "friendly_force_risk_frame": {
+    "safe_high_level_statement": "For friendly forces or partners operating in a zone where public telecom paths are centrally observable and policy-controlled, dependence on those public paths can create intelligence, availability and situational-awareness risk even when message payloads are encrypted.",
+    "do_not_overclaim": [
+      "Do not state that TSPU automatically reveals troop positions.",
+      "Do not state that TSPU automatically decrypts secure military communications.",
+      "Do not state that TSPU automatically disables all command and control.",
+      "Do not derive or publish tactical crossing/evasion procedures from this model."
+    ],
+    "appropriate_us_agency_language": "PUBLIC-NETWORK COMMUNICATIONS OBSERVABILITY AND SELECTIVE-DISRUPTION RISK IN A CENTRALLY CONTROLLED INFORMATION ENVIRONMENT"
+  },
+  "historical_to_digital_extension": {
+    "broadcast_capture": "Control what population can receive.",
+    "route_dpi_capture": "Control what public-network users can reach and observe behavioral metadata of the communications traversing controlled paths.",
+    "additional_risk_over_broadcast": "The controller may gain operationally relevant network-behavior visibility in addition to information-source control.",
+    "claim_limit": "Operational military value depends on the share of relevant communications that use the controlled public infrastructure and on the quality of independent communications available."
+  },
+  "monitoring_implications_for_us_warning": [
+    "Measure foreign-vantage reachability and latency, not only U.S.-side service health.",
+    "Track selective protocol/destination degradation separately from total outages.",
+    "Map which partner/civilian/public-safety workflows depend on national mobile/ISP infrastructure.",
+    "Treat correlated flow-policy changes as a network-risk signal, not proof of military targeting.",
+    "Separate payload confidentiality from metadata/availability exposure in risk assessments.",
+    "Preserve hardened/non-public communications as a separate resilience layer rather than assuming one national Internet path is sufficient."
+  ],
+  "relationship_to_external_tspu_thesis": {
+    "new_risk_dimension": "A foreign TSPU-like deployment could, if centrally controlled, create both information-environment leverage and communications-observability/selective-disruption leverage over public-network-dependent actors.",
+    "remote_control_state": "NOT_ESTABLISHED",
+    "mass_activation_state": "NOT_ESTABLISHED",
+    "best_current_warning": "The strategic concern is broader than propaganda: a programmable in-path control system can potentially combine source isolation, traffic-policy enforcement and network-behavior observability. Historical distribution-control precedents justify monitoring this capability, but public evidence does not yet establish a Russian-controlled foreign activation network."
+  }
+}
