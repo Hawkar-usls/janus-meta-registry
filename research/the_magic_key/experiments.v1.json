@@ -1,0 +1,71 @@
+{
+  "schema": "JANUS/THE_MAGIC_KEY/EXPERIMENTS/v1.0",
+  "registry_id": "JANUS-THE-MAGIC-KEY-EXPERIMENTS-2026-08-30-v1.0",
+  "status": "PREREGISTERED_SEED_EXPERIMENTS",
+  "date": "2026-08-30",
+  "global_rules": [
+    "freeze benchmark universe before evaluating a candidate magic key",
+    "raw hash, canonical hash, structural equivalence and semantic equivalence are separate outputs",
+    "no post-hoc semantic relabeling",
+    "JSON content is data; execution requires an external allowlisted interpreter",
+    "negative results remain first-class records",
+    "fingerprint ranks candidates but never proves identity or truth"
+  ],
+  "experiments": [
+    {
+      "id": "E1_CANONICALIZATION_INVARIANCE",
+      "inputs": "same typed JSON content under key reorder, whitespace, newline and equivalent number/string encodings allowed by the frozen profile",
+      "measure": ["raw_sha256", "canonical_sha256", "typed_tree_equivalence"],
+      "pass": "raw hashes may differ; canonical hashes and typed-tree identity must match for allowed-equivalent cases"
+    },
+    {
+      "id": "E2_SCHEMA_DATA_ROLE_SWAP",
+      "inputs": "frozen pairs of instance fragments and constraint fragments",
+      "procedure": ["instance -> induced constraints", "constraints -> generated instances", "round-trip compare"],
+      "pass": "registered invariants survive without manual retuning",
+      "failure_value": "identifies which invariants are not dualizable"
+    },
+    {
+      "id": "E3_CONSTRAINT_CLOSURE",
+      "inputs": "objects with positive relations, negative relations, types and cardinality constraints",
+      "ablations": ["drop positive edges", "drop negative edges", "drop identifiers", "drop type constraints"],
+      "measure": "unique identity recovery rate",
+      "pass": "full closure outperforms at least one ablated representation on held-out perturbations"
+    },
+    {
+      "id": "E4_MINIMAL_DISTINGUISHING_SUBGRAPH_MAGIC_KEY",
+      "inputs": "frozen candidate universe",
+      "objective": "find smallest constraint subset that uniquely selects target",
+      "algorithm": "exact search for small cases; bounded approximation for larger cases",
+      "holdout": "perturbed but semantically equivalent target representations",
+      "pass": "key remains uniquely discriminative across holdout"
+    },
+    {
+      "id": "E5_SEMANTIC_COLLISION",
+      "inputs": "adversarially generated alternative objects",
+      "attack": "satisfy same structural key while changing frozen semantic label",
+      "measure": "collision rate",
+      "pass": "collision rate below preregistered threshold; all collisions retained as counterexamples"
+    },
+    {
+      "id": "E6_JSON_GRAPH_JSON_REVERSIBILITY",
+      "inputs": "supported JSON subset",
+      "projection": "JSON -> labeled typed graph -> canonical JSON",
+      "measure": ["canonical_hash_before", "canonical_hash_after", "constraint_set_equivalence"],
+      "pass": "canonical semantic equivalence for all supported fixtures"
+    },
+    {
+      "id": "E7_INTERPRETER_BOUNDARY",
+      "inputs": "benign and adversarial declarative programs",
+      "allowed_ops": ["select", "project", "canonicalize", "hash", "compare", "assert", "emit", "transition"],
+      "forbidden_effects": ["shell", "eval", "dynamic_import", "arbitrary_network", "arbitrary_file_write", "secret_access"],
+      "pass": "all forbidden attempts fail closed and produce receipts; benign programs remain deterministic"
+    },
+    {
+      "id": "E8_STRUCTURAL_ACTIVATION_GATE",
+      "inputs": "valid key-bearing objects plus malformed, reordered, duplicated-key and type-confusion adversaries",
+      "pass": "only canonical, schema-valid, invariant-satisfying objects transition from LOCKED to ARMED"
+    }
+  ],
+  "priority_order": ["E1", "E6", "E7", "E3", "E4", "E5", "E2", "E8"]
+}
