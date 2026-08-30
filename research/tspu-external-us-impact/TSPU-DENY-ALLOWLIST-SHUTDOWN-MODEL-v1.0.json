@@ -1,0 +1,118 @@
+{
+  "schema": "hawkar.topa.spider.tspu_external.deny_allowlist_shutdown.v1",
+  "artifact_id": "TSPU-DENY-ALLOWLIST-SHUTDOWN-MODEL-v1.0",
+  "generated_date_utc": "2026-08-30",
+  "status": "DEFENSIVE_CAPABILITY_MODEL_PUBLIC_EVIDENCE_GRADED",
+  "purpose": "Correct the prior observability-first framing by explicitly modeling a harder denial mode in which public mobile Internet/cellular services are regionally disabled or constrained to an allowlist, making traffic observation secondary because ordinary communications may not traverse the network at all.",
+  "key_correction": "For public-network-dependent actors in a shutdown zone, the first-order risk may be DENIAL rather than OBSERVABILITY. TSPU-related infrastructure and Russian policy practice support regional/mobile shutdown and allowlist modes; this does not mean every fixed-line or independent communication path is disabled.",
+  "evidence": [
+    {
+      "date": "2018-2019",
+      "case": "INGUSHETIA_PROTESTS",
+      "finding": "Mobile Internet was repeatedly cut during protests in Ingushetia, including Magas; rights monitors documented the outages as authorities attempted to limit real-time social-media coverage.",
+      "sources": [
+        "https://www.hrw.org/news/2018/10/16/russias-north-caucasus-unprecedented-peaceful-protest",
+        "https://www.accessnow.org/keepiton-2021-%D0%BD%D0%B0%D0%B1%D0%BB%D1%8E%D0%B4%D0%B5%D0%BD%D0%B8%D0%B5-%D0%B7%D0%B0-%D0%B2%D1%8B%D0%B1%D0%BE%D1%80%D0%B0%D0%BC%D0%B8/"
+      ],
+      "classification": "HISTORICAL_MOBILE_SHUTDOWN_DURING_UNREST"
+    },
+    {
+      "date": "2019-07_to_2019-08",
+      "case": "MOSCOW_ELECTION_PROTESTS",
+      "finding": "Mobile connectivity disruptions occurred during Moscow election protests; Access Now and HRW documented recurring throttling/jamming/disruptions in protest areas.",
+      "sources": [
+        "https://www.accessnow.org/press-release/open-letter-keepiton-russian-authorities-and-isps/",
+        "https://www.hrw.org/ru/news/2019/08/06/332741"
+      ],
+      "classification": "HISTORICAL_URBAN_MOBILE_DISRUPTION_DURING_PROTESTS"
+    },
+    {
+      "date": "2025",
+      "case": "COUNTRYWIDE_ESCALATION",
+      "finding": "Human Rights Watch and Access Now documented a sharp expansion in regional mobile Internet shutdowns across Russia, officially justified largely by public-safety/drone threats. TSPU is described by HRW as enabling isolation drills and regional shutdowns.",
+      "sources": [
+        "https://www.hrw.org/news/2025/07/30/russia-internet-blocking-disruptions-and-increasing-isolation",
+        "https://www.accessnow.org/wp-content/uploads/2026/03/KeepItOn-Internet-Shutdowns-2025-Annual-Report.pdf"
+      ],
+      "classification": "MODERN_REGIONAL_SHUTDOWN_CAPABILITY_AND_PRACTICE"
+    },
+    {
+      "date": "2026-03",
+      "case": "MOSCOW_ST_PETERSBURG_EXTENDED_RESTRICTIONS",
+      "finding": "HRW reported broad mobile Internet and cellular restrictions in areas of Moscow and St. Petersburg for much of March 2026, followed by protests against the restrictions.",
+      "source": "https://www.hrw.org/news/2026/03/31/russia-internet-shutdowns-escalate",
+      "classification": "CURRENT_LARGE_URBAN_RESTRICTION_PRECEDENT"
+    },
+    {
+      "date": "2025-2026",
+      "case": "MOBILE_ALLOWLIST_MODE",
+      "finding": "Russia's Ministry of Digital Development publicly confirmed use of a whitelist of services that remain accessible when mobile Internet is restricted. In March 2026 the ministry explicitly said the whitelist applied to mobile Internet restrictions and denied that an equivalent regime had been introduced for fixed/home Internet.",
+      "sources": [
+        "https://www.interfax.ru/russia/1079238",
+        "https://www.interfax.ru/moscow/1088645",
+        "https://www.interfax.ru/russia/1098136"
+      ],
+      "classification": "OFFICIAL_DENY_EXCEPT_ALLOWLIST_MODE"
+    }
+  ],
+  "mode_ladder": [
+    {
+      "id": "M0_MONITOR_ONLY",
+      "description": "Traffic traverses controlled infrastructure and may be subject to metadata/policy visibility without blocking.",
+      "state": "PLAUSIBLE_GENERAL_IN_PATH_CAPABILITY"
+    },
+    {
+      "id": "M1_SELECTIVE_FILTER",
+      "description": "Specific destinations, protocols, platforms or circumvention tools are blocked/throttled while general Internet remains available.",
+      "state": "STRONGLY_DOCUMENTED_IN_RUSSIA"
+    },
+    {
+      "id": "M2_MOBILE_REGIONAL_SHUTDOWN",
+      "description": "Mobile Internet and/or cellular data are disabled across an area/region for a period, leaving public-network-dependent users without ordinary data connectivity.",
+      "state": "DOCUMENTED_REPEATEDLY"
+    },
+    {
+      "id": "M3_DENY_EXCEPT_ALLOWLIST",
+      "description": "General mobile Internet is constrained while a selected list of approved domestic/socially significant services remains reachable.",
+      "state": "OFFICIALLY_CONFIRMED_IN_2025_2026"
+    },
+    {
+      "id": "M4_BROADER_MULTI_ACCESS_ISOLATION",
+      "description": "Mobile plus fixed plus other public-network access is broadly disabled or isolated across a city/region/country.",
+      "state": "TECHNICALLY_CONCEIVABLE_AND_LEGALLY_ENVISAGED_BUT_NOT_TO_BE_ASSUMED_FROM_MOBILE_SHUTDOWN_EVIDENCE"
+    }
+  ],
+  "correction_to_prior_juxtapose_model": {
+    "old_overweight": "Traffic observability was treated as a principal risk for friendly/public-network-dependent actors.",
+    "corrected_order": [
+      "DENIAL/ALLOWLIST may be first-order during crisis restrictions",
+      "OBSERVABILITY matters mainly for traffic that still traverses the controlled network",
+      "SELECTIVE DEGRADATION can coexist with allowlisted domestic services",
+      "INDEPENDENT communications remain outside this claim unless they traverse the same controlled infrastructure"
+    ],
+    "safe_statement": "If a friendly actor depends on the affected public mobile network, the controller may not merely observe the traffic; it can prevent ordinary Internet traffic from existing on that path at all, while preserving selected approved services."
+  },
+  "strategic_consequence_for_external_tspu_hypothesis": {
+    "information_field": "An allowlist regime can sharply reduce access to foreign/open sources while preserving selected local/state-aligned services, producing source substitution without a total visible communications blackout.",
+    "coordination": "Public-network-dependent civilian, partner, logistics, media and some operational workflows can lose ordinary coordination channels immediately rather than merely suffer surveillance risk.",
+    "observability_asymmetry": "U.S. and foreign service providers may remain healthy while users inside the controlled zone cannot reach them at all.",
+    "military_boundary": "This still does not establish denial of independent tactical radio, protected satellite, dedicated military networks or other communications outside the controlled public network.",
+    "external_russian_control_state": "NOT_ESTABLISHED"
+  },
+  "early_warning_signature": [
+    "sudden foreign-vantage mobile reachability collapse across multiple external/U.S. endpoints",
+    "selected local or state-approved services remain reachable",
+    "fixed-line and alternate-path controls measured separately",
+    "operator statements cite external/security restrictions rather than service failure",
+    "TSPU/DPI or centralized policy enforcement evidence on the affected path",
+    "independent replication from multiple vantage points",
+    "shared external control or command linkage required before Russian cross-border attribution"
+  ],
+  "claim_limits": [
+    "Do not equate mobile shutdown with total citywide loss of every form of communication.",
+    "Do not infer TSPU as the mechanism for every historical protest outage before deployment/technical linkage is established.",
+    "Do not infer Russian external control of foreign DPI from the existence of a similar deny/allowlist capability.",
+    "Do not publish tactical evasion or movement procedures; this model is for defensive risk assessment and early warning."
+  ],
+  "best_current_claim": "Russia has repeatedly used regional/urban mobile Internet shutdowns and now openly operates a deny-except-allowlist mode during mobile restrictions. HRW identifies TSPU as infrastructure capable of regional isolation/shutdown functions. Therefore, for any future foreign TSPU-like deployment under centralized external control, denial of ordinary public-network communications and selective preservation of approved local services must be modeled as a first-order risk, not merely traffic observability."
+}
