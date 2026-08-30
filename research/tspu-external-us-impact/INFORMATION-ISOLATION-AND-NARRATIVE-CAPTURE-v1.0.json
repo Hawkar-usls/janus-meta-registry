@@ -1,0 +1,177 @@
+{
+  "schema": "hawkar.topa.spider.tspu_external.information_isolation.v1",
+  "artifact_id": "TSPU-EXTERNAL-INFORMATION-ISOLATION-AND-NARRATIVE-CAPTURE-v1.0",
+  "generated_date_utc": "2026-08-30",
+  "status": "DEFENSIVE_FORECAST_AND_EARLY_WARNING_MODEL_NOT_ATTRIBUTION",
+  "parent_surface": "research/tspu-external-us-impact/",
+  "core_thesis": "The strategic risk to the United States is not limited to direct disruption of US domestic infrastructure. A coordinated foreign filtering ecosystem can leave US systems technically healthy while progressively isolating foreign populations from US services, independent media and direct interpersonal channels; substitute locally controlled information sources; and create an observability gap in which the United States receives slower, narrower or more biased evidence of public attitudes and network conditions abroad.",
+  "important_correction": "US awareness would not become zero. Embassies, intelligence collection, satellite communications, diaspora communities, global providers, measurement platforms and circumvention users provide alternate observation channels. The defensible risk is DEGRADED_OR_DELAYED_OBSERVABILITY rather than AMERICA_WILL_NOT_KNOW.",
+  "threat_chain": [
+    {
+      "stage": "A1_ACCESS_CONSTRICTION",
+      "mechanisms": [
+        "Block or throttle US-hosted media, social networks, developer platforms, cloud/CDN services and encrypted communications.",
+        "Block VPN/circumvention and app distribution paths needed to restore access.",
+        "Use allowlists or protocol-level filtering so technically unblocked domains remain unreliable."
+      ],
+      "strategic_effect": "Direct contact between foreign populations and US/open information sources shrinks while the US service itself remains healthy."
+    },
+    {
+      "stage": "A2_SOURCE_SUBSTITUTION",
+      "mechanisms": [
+        "Promote domestic/state-compliant messengers, search, hosting, news and social platforms as replacements.",
+        "Move discovery and social communication onto surfaces with stronger local moderation, surveillance or agenda control."
+      ],
+      "strategic_effect": "The information diet becomes easier for the local state or aligned actors to shape even without fabricating every item."
+    },
+    {
+      "stage": "A3_NARRATIVE_CAPTURE",
+      "mechanisms": [
+        "Repeated framing of geopolitical events through anti-US or anti-West narratives.",
+        "Reduce visibility of contradictory reporting and increase repetition of state-aligned interpretations.",
+        "Exploit ordinary grievances, economic disruption or service outages as narrative evidence against the United States."
+      ],
+      "strategic_effect": "Public attitudes can move without a corresponding change in US policy or infrastructure because the accessible evidence environment has changed."
+    },
+    {
+      "stage": "A4_OBSERVABILITY_GAP",
+      "mechanisms": [
+        "Foreign users cannot reliably reach US platforms while US-side availability metrics remain green.",
+        "Local platforms and censored networks expose less representative public sentiment to outside observers.",
+        "Outages and filtering can be misclassified as provider failures when measured only from US or Western vantage points."
+      ],
+      "strategic_effect": "US institutions can underestimate the scale, timing or cause of information isolation unless they maintain foreign-vantage measurements and human reporting."
+    },
+    {
+      "stage": "A5_MULTI_COUNTRY_SYNCHRONIZATION",
+      "mechanisms": [
+        "Similar filtering rules activate across several networks or countries sharing vendor, policy or security relationships.",
+        "The same US information/service categories degrade within a narrow time window.",
+        "Narrative themes and technical restrictions reinforce each other across borders."
+      ],
+      "strategic_effect": "A regional information sphere can partially decouple from US/open networks without disrupting the American domestic Internet."
+    }
+  ],
+  "russia_current_reference_case": {
+    "state": "STRONG_REFERENCE_MODEL_FOR_DOMESTIC_INFORMATION_ISOLATION",
+    "observations": [
+      {
+        "finding": "Human Rights Watch reports continued censorship of information and opinions about the war in Ukraine that do not align with the official narrative, large-scale blocking of sites, expansion of VPN restrictions, and promotion of Russian online services as alternatives to blocked services.",
+        "source": "https://www.hrw.org/world-report/2026/country-chapters/russia"
+      },
+      {
+        "finding": "Human Rights Watch's August 24, 2026 briefing reports more than 1.8 million websites blocked in Russia, extensive VPN blocking, communication-app restrictions, and periods in which mobile networks use narrow allowlists.",
+        "source": "https://www.hrw.org/news/2026/08/24/briefing-paper-on-the-human-rights-situation-in-the-russian-federation"
+      },
+      {
+        "finding": "Freedom House describes pervasive hyperpatriotic propaganda, state control over online/offline expression and legal pressure on political speech as cumulative constraints on open discussion.",
+        "source": "https://freedomhouse.org/country/russia/freedom-world/2026"
+      },
+      {
+        "finding": "Official Kremlin rhetoric has explicitly framed Western actors as fighting Russia through Ukraine; in a published presidential transcript Putin told European interlocutors that 'you are fighting us through Ukrainian nationalists'.",
+        "source": "https://special.kremlin.ru/events/president/transcripts/78815",
+        "note": "This records official rhetoric and does not validate the factual truth of the claim."
+      }
+    ]
+  },
+  "github_russia_note": {
+    "classification": "MIXED_EVIDENCE_DO_NOT_OVERSTATE",
+    "finding": "There are 2026 user reports of severe GitHub/GitHub-dependent connectivity problems and documented GitHub Copilot regional restrictions, but the available evidence in this pass does not support encoding github.com itself as a confirmed nationwide Russian block.",
+    "controls": [
+      "GitHub's own trade-control documentation distinguishes product/export restrictions from Russian censorship.",
+      "A live third-party accessibility aggregator classified github.com as accessible in Russia on 2026-08-28, but with low confidence and only eight measurements.",
+      "The operator's first-hand experience may be preserved separately as USER_OBSERVED rather than promoted to nationwide FACT without cross-AS measurement."
+    ],
+    "sources": [
+      "https://docs.github.com/en/site-policy/other-site-policies/github-and-trade-controls",
+      "https://voidly.ai/blocked/github.com/ru",
+      "https://github.com/orgs/community/discussions/203671"
+    ]
+  },
+  "us_effect_model": {
+    "domestic_us_network_availability": "CAN_REMAIN_GREEN",
+    "foreign_reachability_to_us_sources": "CAN_DEGRADE_SEVERELY",
+    "american_public_visibility_of_foreign_attitudes": "CAN_BECOME_LESS_REPRESENTATIVE",
+    "us_government_and_provider_awareness": "DEGRADED_OR_DELAYED_BUT_NOT_ZERO",
+    "economic_effect": "LOSS_OF_FOREIGN_CUSTOMERS_PARTNERS_DEVELOPER_ACCESS_AND_SERVICE_REACH",
+    "strategic_effect": "ANTI_US_NARRATIVE_LOCK_IN_CAN_GROW_WHILE_US_INFRASTRUCTURE_APPEARS_HEALTHY"
+  },
+  "early_warning_indicators": [
+    {
+      "id": "I1",
+      "indicator": "US/open information sources become unreachable or unreliable across multiple foreign ASes while local/state-aligned substitutes remain healthy.",
+      "required_control": "Matched US-side service health plus uncensored neighboring/alternate-AS vantage."
+    },
+    {
+      "id": "I2",
+      "indicator": "VPN, ECH, QUIC, encrypted DNS, app-store or circumvention transport blocking increases immediately before or during content-source restrictions.",
+      "required_control": "Protocol fingerprint and path localization, not user complaint count alone."
+    },
+    {
+      "id": "I3",
+      "indicator": "Multiple countries/operators sharing Russian-origin DPI/SORM vendor lineage introduce semantically similar restrictions within a narrow time window.",
+      "required_control": "Independent measurement from each country and evidence of common vendor/policy lineage."
+    },
+    {
+      "id": "I4",
+      "indicator": "State or state-aligned platforms are promoted as replacements at the same time external communication surfaces are degraded.",
+      "required_control": "Official policy/platform statements plus independent reachability data."
+    },
+    {
+      "id": "I5",
+      "indicator": "Anti-US narratives spike after access to US/independent counter-sources is reduced.",
+      "required_control": "Content time-series with pre-restriction baseline and multiple media/social sources; correlation alone does not prove central coordination."
+    },
+    {
+      "id": "I6",
+      "indicator": "US-side availability dashboards remain normal while foreign-vantage measurements show geographically clustered failures.",
+      "required_control": "Same endpoint, same time, paired foreign and control vantage measurements."
+    }
+  ],
+  "forecast_scenarios": [
+    {
+      "id": "F1",
+      "name": "SOVEREIGN_BUBBLE_REPLICATION",
+      "description": "A foreign government adopts Russian-origin filtering/surveillance technology and progressively reproduces the Russian pattern: external-service restriction, circumvention suppression and domestic-platform substitution.",
+      "us_impact": "Loss of direct information/service reach into that society; reduced quality of public-opinion observation; elevated propaganda susceptibility.",
+      "current_status": "PLAUSIBLE_CLASS_NOT_ATTRIBUTED_TO_ANY_UNVERIFIED_COUNTRY"
+    },
+    {
+      "id": "F2",
+      "name": "REGIONAL_INFORMATION_CURTAIN",
+      "description": "Several states or operators synchronize filtering against categories of US/open services while preserving local/regional substitutes.",
+      "us_impact": "A multi-country audience can become partially detached from US sources even though US infrastructure remains healthy.",
+      "current_status": "NOT_ESTABLISHED_MONITOR_FOR_SYNCHRONIZED_ACTIVATION"
+    },
+    {
+      "id": "F3",
+      "name": "CRISIS_WINDOW_NARRATIVE_LOCK",
+      "description": "During war, sanctions, elections or another crisis, technical filtering and state messaging intensify together for a short high-impact window.",
+      "us_impact": "Foreign populations encounter a narrowed information environment exactly when attitudes and decisions are most sensitive.",
+      "current_status": "HIGH_VALUE_EARLY_WARNING_SCENARIO"
+    },
+    {
+      "id": "F4",
+      "name": "FALSE_PROVIDER_OUTAGE_COVER",
+      "description": "Selective external-service blocking resembles an ordinary US provider/CDN outage to users and analysts lacking foreign-vantage telemetry.",
+      "us_impact": "Delayed attribution and slower diplomatic/provider response while the affected population is told that the external service or the United States is responsible.",
+      "current_status": "TECHNICALLY_PLAUSIBLE_REQUIRES_MEASUREMENT"
+    }
+  ],
+  "defensive_us_observability_requirements": [
+    "Foreign-vantage reachability probes to US media, government, cloud, developer, communications and circumvention endpoints.",
+    "Paired measurement of state/local substitute platforms to distinguish generalized outages from selective information isolation.",
+    "BGP/AS-path, DNS, TLS/QUIC and packet-fingerprint telemetry attached to each reachability event.",
+    "Independent human reporting from journalists, civil society, businesses, embassies and diaspora communities.",
+    "Narrative time-series that measure which explanations are promoted before, during and after technical restrictions.",
+    "Strict separation of provider outage, sanctions/product restriction, local operator failure, censorship and coordinated foreign activation."
+  ],
+  "current_verdict": {
+    "russia_domestic_information_isolation_and_state_narrative_control": "STRONGLY_DOCUMENTED",
+    "official_russian_rhetoric_framing_war_as_western_conflict_against_russia": "DOCUMENTED_AS_RHETORIC",
+    "exported_russian_dpi_sorm_capability": "CONFIRMED_IN_PARENT_EVIDENCE_LEDGER",
+    "coordinated_multi_country_information_curtain_against_the_us": "NOT_ESTABLISHED",
+    "strategic_risk_if_synchronized_foreign_activation_occurs": "HIGH_EVEN_WITH_HEALTHY_US_DOMESTIC_INFRASTRUCTURE",
+    "primary_missing_evidence": "FOREIGN_DEPLOYMENT_PLUS_SYNCHRONIZED_TECHNICAL_ACTIVATION_PLUS_NARRATIVE_SHIFT_WITH_MATCHED_CONTROLS"
+  }
+}
