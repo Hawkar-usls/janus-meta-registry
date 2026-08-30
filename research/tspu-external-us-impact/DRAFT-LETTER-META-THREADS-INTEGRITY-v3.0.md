@@ -36,6 +36,8 @@ I am intentionally **not** attaching a manually assembled screenshot dossier or 
 
 If an unaffiliated user can identify a repeatable pattern from public-facing behavior alone, Meta should be capable of confirming or falsifying that pattern using its own internal telemetry. My role here is to report the observable mechanism and the hypothesis. I do not believe the burden of reconstructing Meta's own evidence graph should be shifted to the reporting user when Meta is uniquely positioned to perform the relevant integrity analysis.
 
+Given Meta's resources, engineering capacity, and uniquely privileged visibility into its own platform, failure to distinguish ordinary independent fan behavior from coordinated deceptive amplification after receiving a concrete behavioral lead would itself raise a serious platform-integrity question. I am therefore asking Meta to test the pattern with its own data and either falsify my concern or identify the coordinating structure if one exists.
+
 Respectfully,
 
 [Name]
