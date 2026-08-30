@@ -1,0 +1,128 @@
+{
+  "schema": "hawkar.topa.spider.tspu_external.us_impact_forecast.v1",
+  "artifact_id": "TSPU-EXTERNAL-US-IMPACT-FORECAST-v1.0",
+  "generated_date_utc": "2026-08-30",
+  "status": "DEFENSIVE_SCENARIO_FORECAST_NOT_ATTRIBUTION",
+  "goal": "Estimate how coordinated activation of exported Russian-origin DPI/SORM or TSPU-like filtering could affect United States users, services, organizations and network reachability, while separating direct US network impact from indirect international effects.",
+  "baseline_assessment": {
+    "direct_domestic_us_backbone_effect_from_foreign_dpi_activation_alone": "LOW",
+    "indirect_effect_on_us_services_and_organizations_via_foreign_networks": "MEDIUM",
+    "severity_if_combined_with_route_redirection_or_compromised_transit": "HIGH",
+    "evidence_of_current_mass_activation": "NOT_ESTABLISHED"
+  },
+  "scenarios": [
+    {
+      "id": "S1",
+      "name": "LOCAL_FOREIGN_ACTIVATION",
+      "description": "One foreign operator using Russian-origin DPI/SORM activates new filtering, throttling or interception rules.",
+      "likelihood_given_known_capability": "PLAUSIBLE",
+      "direct_us_network_impact": "LOW",
+      "indirect_us_impact": "MEDIUM",
+      "expected_effects": [
+        "Users in that country lose or degrade access to selected US cloud, communications, developer, media or financial services.",
+        "US companies serving the affected market see support incidents, lower availability and misleading regional telemetry.",
+        "US personnel and partners operating locally face increased surveillance and degraded secure communications."
+      ],
+      "best_discriminator": "Operator-local packet fingerprint with normal reachability from matched neighboring/control ASes."
+    },
+    {
+      "id": "S2",
+      "name": "SYNCHRONIZED_MULTI_COUNTRY_ACTIVATION",
+      "description": "Several operators/countries with common Russian-origin DPI/SORM technology introduce similar filtering in a narrow window.",
+      "likelihood_given_current_public_evidence": "UNCONFIRMED_BUT_WORTH_MONITORING",
+      "direct_us_network_impact": "LOW_TO_MEDIUM",
+      "indirect_us_impact": "HIGH",
+      "expected_effects": [
+        "Simultaneous reachability degradation to US-hosted services across multiple foreign markets.",
+        "Loss of reliable communications with regional partners, journalists, NGOs, businesses and travelers.",
+        "Cloud/CDN providers may reroute traffic or shift protocol behavior, complicating incident attribution.",
+        "Economic impact is more likely through customers, payment/communications dependencies and regional operations than through failure of the US domestic Internet."
+      ],
+      "best_discriminator": "Shared packet/protocol fingerprint plus common vendor/operator lineage and independent measurement from multiple countries."
+    },
+    {
+      "id": "S3",
+      "name": "FOREIGN_DPI_PLUS_ROUTE_REDIRECTION",
+      "description": "Traffic that normally avoids filtering infrastructure is redirected through a controlled or compromised AS/path and then filtered, observed or blackholed.",
+      "likelihood_given_current_public_evidence": "LOW_BUT_TECHNICALLY_PLAUSIBLE",
+      "direct_us_network_impact": "MEDIUM_TO_HIGH",
+      "indirect_us_impact": "HIGH",
+      "expected_effects": [
+        "Foreign-origin traffic to US destinations can be intercepted or disrupted even if the endpoint country itself has no Russian equipment.",
+        "If US-origin return paths are also redirected, selected bidirectional sessions can fail or leak metadata.",
+        "Large providers may experience regional reachability anomalies without a failure in their own application stack."
+      ],
+      "required_bridge": [
+        "BGP/AS-path change or other verified routing shift",
+        "path localization to the filtering segment",
+        "matched bypass route without the effect",
+        "RPKI/ROV state and route-origin evidence"
+      ],
+      "us_defense_relevance": "FCC/CISA routing-security guidance makes RPKI, ROA/ROV, strict route filtering and route-change monitoring the primary defensive controls for this scenario."
+    },
+    {
+      "id": "S4",
+      "name": "REMOTE_ACCESS_TO_EXPORTED_SURVEILLANCE_STACK",
+      "description": "A Russian vendor or state-linked actor retains or obtains remote administrative access to foreign-deployed interception equipment.",
+      "likelihood_given_current_public_evidence": "UNCERTAIN",
+      "direct_us_network_impact": "LOW",
+      "indirect_us_impact": "MEDIUM_TO_HIGH_FOR_CONFIDENTIALITY",
+      "expected_effects": [
+        "Potential collection of metadata or content transiting the foreign operator subject to encryption and local architecture.",
+        "US government, corporate and partner communications in affected countries become a counterintelligence concern.",
+        "Availability impact is secondary unless remote access is used to modify filtering/routing policy."
+      ],
+      "claim_limit": "Public reporting raises this risk but does not prove Russian government access to any specific deployment."
+    },
+    {
+      "id": "S5",
+      "name": "MASS_ACTIVATION_PLUS_NETWORK_INTRUSION",
+      "description": "Coordinated filtering activation is combined with compromise of routers, transit providers or routing control planes.",
+      "likelihood_given_current_public_evidence": "LOW",
+      "impact_if_realized": "VERY_HIGH",
+      "expected_effects": [
+        "Regional or multi-regional loss of access to US services.",
+        "Traffic redirection, interception or blackholing beyond networks that intentionally deployed the filtering stack.",
+        "Complex failure signatures that resemble cloud outages, DDoS or ordinary routing incidents.",
+        "Potential strategic pressure on communications during a geopolitical crisis."
+      ],
+      "important_boundary": "This scenario is no longer 'TSPU activation alone'; it requires a separate cyber/routing operation and must be evidenced independently."
+    }
+  ],
+  "us_exposure_layers": [
+    {
+      "layer": "US_DOMESTIC_CORE",
+      "risk": "LOW_FROM_DPI_ONLY",
+      "note": "Foreign DPI cannot normally control routes that never traverse it. Direct domestic impact requires US-located infrastructure, compromised routing, traffic redirection or a shared upstream dependency."
+    },
+    {
+      "layer": "US_CLOUD_SAAS_CDN_REACHABILITY_ABROAD",
+      "risk": "MEDIUM_TO_HIGH",
+      "note": "This is the most realistic first-order US consequence of synchronized foreign filtering: foreign users lose access to US services even though the US service remains healthy."
+    },
+    {
+      "layer": "US_GOVERNMENT_AND_BUSINESS_PERSONNEL_ABROAD",
+      "risk": "MEDIUM_TO_HIGH",
+      "note": "Surveillance, DNS manipulation and secure-protocol blocking can affect confidentiality and availability of communications in countries using the equipment."
+    },
+    {
+      "layer": "US_SUPPLY_CHAIN_AND_PARTNER_COMMUNICATIONS",
+      "risk": "MEDIUM",
+      "note": "Regional filtering can interrupt operational links, support channels, development infrastructure, payments or telemetry used by US organizations."
+    },
+    {
+      "layer": "US_INTERDOMAIN_ROUTING",
+      "risk": "LOW_BASELINE_HIGH_CONSEQUENCE",
+      "note": "Risk becomes materially higher if censorship infrastructure is paired with BGP hijack/leak, compromised transit or policy-based redirection."
+    }
+  ],
+  "defensive_priorities_for_us_validation": [
+    "Measure reachability to a stable set of US cloud/CDN/SaaS endpoints from countries/operators with known Russian DPI/SORM procurement.",
+    "Maintain RIPE Atlas/OONI/control-vantage baselines so activation can be detected as a change rather than inferred after an outage.",
+    "Track BGP path and RPKI state for the same measurements to distinguish filtering from route manipulation.",
+    "Correlate packet/protocol fingerprints across countries before inferring coordination.",
+    "Use provider RCAs and US-side telemetry as negative controls.",
+    "Treat synchronized DNS/QUIC/TLS policy changes across common-vendor networks as an early-warning signal, not immediate attribution."
+  ],
+  "current_conclusion": "A mass activation of exported Russian-origin DPI/SORM would most plausibly hurt the United States indirectly first: by cutting foreign users, partners and operations off from US services and by increasing interception risk abroad. A severe direct impact on the US domestic Internet becomes credible only if filtering is paired with route redirection, compromised transit/control planes, or infrastructure physically/logically present on US-relevant paths. That bridge is not currently established and is the highest-value object for TOPA+Spider to monitor."
+}
