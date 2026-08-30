@@ -1,0 +1,123 @@
+{
+  "schema": "hawkar.topa.spider.tspu_external.route_baseline_targets.v1",
+  "artifact_id": "TSPU-EXTERNAL-ROUTE-BASELINE-TARGETS-v1.0",
+  "generated_date_utc": "2026-08-30",
+  "status": "P0_TARGET_SET_R0",
+  "purpose": "Identify verifiable public AS-level vantage/target networks where Russian-origin SORM/DPI procurement evidence can be correlated with routing and reachability measurements to representative U.S./open-Internet endpoints.",
+  "targets": [
+    {
+      "country": "Kazakhstan",
+      "operator": "Kazakhtelecom",
+      "asn": 9198,
+      "vendor_evidence": "MFI Soft / Analytical Business Solutions client in Insikt Group appendix",
+      "routing_evidence": "Current AS data lists Russian upstreams including Rostelecom AS12389, TransTeleCom AS20485, Vimpelcom AS3216 and MegaFon AS31133 alongside non-Russian transit.",
+      "measurement_surface": "RIPE Atlas anchor/ongoing measurements publicly discoverable",
+      "priority": "P0",
+      "reason": "Large national eyeball network plus Russian SORM customer evidence plus mixed Russian/non-Russian transit creates useful matched-path comparison opportunities."
+    },
+    {
+      "country": "Kazakhstan",
+      "operator": "Kcell",
+      "asn": 29355,
+      "vendor_evidence": "TekhArgos client in Insikt Group appendix",
+      "routing_evidence": "Current routing data lists Kazakhtelecom AS9198 among upstreams.",
+      "priority": "P0"
+    },
+    {
+      "country": "Kazakhstan",
+      "operator": "Tele2 Kazakhstan",
+      "asn": 48503,
+      "vendor_evidence": "TekhArgos client in Insikt Group appendix",
+      "routing_evidence": "Current routing data lists Kazakhtelecom AS9198 and TNS-Plus AS35168 as upstreams.",
+      "measurement_surface": "Multiple public RIPE Atlas anchors are currently visible in Tele2 Kazakhstan AS48503, including Shymkent and Taraz.",
+      "priority": "P0"
+    },
+    {
+      "country": "Kazakhstan",
+      "operator": "TNS Plus",
+      "asn": 35168,
+      "vendor_evidence": "TekhArgos client in Insikt Group appendix",
+      "routing_role": "Regional NSP/transit network with multiple Kazakhstan and Kyrgyzstan downstreams",
+      "priority": "P0_TRANSIT"
+    },
+    {
+      "country": "Kyrgyzstan",
+      "operator": "KyrgyzTelecom",
+      "asn": 12997,
+      "vendor_evidence": "MFI Soft client in Insikt Group appendix",
+      "routing_evidence": "RIPE routing policy lists imports from Kazakhtelecom AS9198 and TNS-Plus AS35168 among other providers.",
+      "priority": "P0"
+    },
+    {
+      "country": "Kyrgyzstan",
+      "operator": "Sky Mobile / Beeline Kyrgyzstan",
+      "asn": 41329,
+      "vendor_evidence": "TekhArgos client in Insikt Group appendix",
+      "routing_evidence": "Current routing data lists TNS-Plus AS35168 as an upstream. RIPE CAPIF material says Kazakhstan is the main transit country for Kyrgyzstan and Russia second, with Russian carriers such as Rostelecom visible in external paths.",
+      "priority": "P0"
+    },
+    {
+      "country": "Uzbekistan",
+      "operator": "Uzbektelecom / UzPAK",
+      "asn": 8193,
+      "vendor_evidence": "MFI Soft client in Insikt Group appendix",
+      "routing_evidence": "Verified active Uzbektelecom ASN; national-scale target for baseline collection.",
+      "priority": "P1"
+    },
+    {
+      "country": "Cuba",
+      "operator": "ETECSA",
+      "asn": 27725,
+      "vendor_evidence": "Protei client in Insikt Group appendix",
+      "priority": "P0_US_PROXIMITY",
+      "reason": "Sole/major national telecom role plus geographic and diplomatic relevance to U.S. interests makes reachability and information-access changes high-value even without a direct Russian transit dependency."
+    },
+    {
+      "country": "Nicaragua",
+      "operator": "Yota de Nicaragua",
+      "asn": 52242,
+      "vendor_evidence": "VAS Experts SKAT DPI client and SORM-compatible deployment evidence in Insikt Group reporting",
+      "routing_evidence": "Current AS data lists UFINET Panama AS52468 as upstream; Russian transit is not established by this R0 check.",
+      "priority": "P0_WESTERN_HEMISPHERE",
+      "negative_control_value": "Useful case where Russian-origin DPI procurement exists without an immediately visible Russian upstream, helping separate equipment effects from transit effects."
+    }
+  ],
+  "route_context_controls": [
+    {
+      "finding": "RIPE CAPIF 2024 analysis of Kyrgyzstan external paths describes Kazakhstan as the main transit country and Russia as second, showing that Russian transit is a normal potential path component for Kyrgyz networks rather than proof of malicious steering.",
+      "source": "https://www.ripe.net/participate/forms/uploads/fobi_plugins/file/capif-3-presentation-archive/Interconnection%20-%20CAPIF%203_ec5ab11c-023b-44de-8f25-8e153c482e40.pdf"
+    },
+    {
+      "finding": "Kazakhtelecom AS9198 currently has both Russian and non-Russian upstreams, enabling path diversity controls rather than assuming every route is Russia-dependent.",
+      "source": "https://bgp.tools/as/9198"
+    }
+  ],
+  "measurement_basket": {
+    "endpoint_classes": [
+      "U.S. government public information endpoints",
+      "major U.S.-hosted developer/code collaboration services",
+      "major U.S.-hosted cloud/CDN/SaaS endpoints",
+      "independent international media endpoints",
+      "secure communications endpoints",
+      "local/state-aligned substitute services as paired controls"
+    ],
+    "metrics": [
+      "DNS resolution and resolver path",
+      "TCP/TLS success",
+      "QUIC success where supported",
+      "latency and loss",
+      "HTTP status/redirect behavior from public measurement platforms",
+      "AS path and origin",
+      "RPKI validity/state",
+      "route changes near event onset",
+      "provider-side incident status",
+      "matched neighboring-AS/control-vantage behavior"
+    ]
+  },
+  "interpretation_rules": [
+    "Russian transit in an AS path is not evidence of censorship or state coordination.",
+    "Russian-origin DPI procurement plus service failure is not enough; packet/protocol fingerprint and controls are required.",
+    "A path change preceding a censorship fingerprint materially strengthens the routing-bridge hypothesis but still requires independent replication.",
+    "Stable open access on networks with Russian-origin equipment is a required negative control and must be preserved."
+  ]
+}
