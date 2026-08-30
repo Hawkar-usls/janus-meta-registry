@@ -1,0 +1,199 @@
+{
+  "schema": "hawkar.topa.spider.tspu_external.phrase_lineage_graph.v1",
+  "artifact_id": "PHRASE-LINEAGE-GRAPH-v1.0",
+  "generated_date_utc": "2026-08-30",
+  "status": "OPEN_SOURCE_PHRASE_LINEAGE_BUILT_OPERATOR_ATTRIBUTION_UNRESOLVED",
+  "purpose": "Track rare or technically specific causal phrases and argument-order reuse across Russian official/industry statements, Habr, Reddit and adjacent user-generated discussions. Distinguish direct quotation/syndication from independent restatement so ordinary news propagation is not misclassified as coordinated influence.",
+  "epistemic_rules": [
+    "Phrase similarity is evidence of message propagation or shared framing, not proof of a shared operator.",
+    "Exact quotation of an official statement is SOURCE_PROPAGATION, not coordinated inauthentic behavior by itself.",
+    "Near-exact independent restatement is more informative than copied press-release language but still requires operator/infrastructure evidence for attribution.",
+    "Real Western geoblocking, sanctions effects, platform moderation and genuine GGC degradation are preserved as negative controls.",
+    "Do not politically profile or identify ordinary users as bots from text similarity alone."
+  ],
+  "lineage_families": [
+    {
+      "id": "PL1_RECIPROCAL_CENSORSHIP",
+      "canonical_template": "WESTERN_PLATFORM_BLOCKS_RUSSIAN_MEDIA_FIRST -> RUSSIAN_RESTRICTION_PRESENTED_AS_RESPONSE_OR_RECIPROCAL_ACTION",
+      "rare_tokens": ["blocked Russian media", "Western agenda", "response/reciprocity"],
+      "observations": [
+        {
+          "date": "2022-03-19",
+          "platform": "Reddit",
+          "source": "https://www.reddit.com/r/AskARussian/comments/thpp9b",
+          "type": "INDEPENDENT_USER_RESTATEMENT",
+          "summary": "A user explains difficulty finding Putin's speech by saying YouTube blocked Russian media; another extends blame to search-engine filtering."
+        },
+        {
+          "date": "2022-03-20",
+          "platform": "Reddit",
+          "source": "https://www.reddit.com/r/AskARussian/comments/ticzcz",
+          "type": "INDEPENDENT_USER_RESTATEMENT",
+          "summary": "Possible Russian YouTube blocking is framed as following YouTube's blocking of Russian media; a second user characterizes YouTube as filtering against a Western agenda."
+        }
+      ],
+      "lineage_state": "REPEATED_CAUSAL_TEMPLATE_CONFIRMED",
+      "operator_state": "NOT_ESTABLISHED"
+    },
+    {
+      "id": "PL2_GGC_INFRASTRUCTURE_EXCULPATION",
+      "canonical_template": "GOOGLE_LEFT_OR_REDUCED_RUSSIA_OPERATIONS -> GGC_NOT_MAINTAINED_OR_EXPANDED -> YOUTUBE_DEGRADATION_ATTRIBUTED_TO_GOOGLE_INFRASTRUCTURE",
+      "rare_tokens": ["Google Global Cache", "Google left Russia", "stopped maintaining", "cache servers", "degradation"],
+      "observations": [
+        {
+          "date": "2023-12-05",
+          "platform": "Habr/industry reporting",
+          "source": "https://habr.com/ru/news/778626/",
+          "type": "LEGITIMATE_TECHNICAL_BASELINE",
+          "summary": "Google proposed direct peering as an alternative to aging/overloaded GGC nodes; real capacity and maintenance risk existed before the 2024 slowdown."
+        },
+        {
+          "date": "2024-07-12",
+          "platform": "Habr / Rostelecom / RKN",
+          "source": "https://habr.com/ru/news/828418/",
+          "type": "OFFICIAL_SOURCE_PROPAGATION",
+          "summary": "Rostelecom attributes possible YouTube degradation to technical problems and inability to expand Google-owned GGC capacity; Roskomnadzor says it has nothing to add."
+        },
+        {
+          "date": "2024-07-26",
+          "platform": "Roskomnadzor via Interfax",
+          "source": "https://interfax.com/newsroom/top-stories/104600/",
+          "type": "OFFICIAL_CAUSAL_TEMPLATE",
+          "summary": "RKN links declining YouTube quality to Google leaving Russia and stopping support for caching infrastructure, while in the same statement criticizing YouTube for blocking Russian channels and reserving measures against the platform."
+        },
+        {
+          "date": "2024-07_to_2024-08",
+          "platform": "User-generated forums / YouTube Community",
+          "source": "https://dfrlab.org/2025/01/31/how-russia-throttled-youtube-for-domestic-audiences/",
+          "type": "DOCUMENTED_USER_RESTATEMENT",
+          "summary": "DFRLab documents users repeating the server-depreciation explanation after Google allegedly stopped maintenance, while other users rejected it and pointed to throttling."
+        },
+        {
+          "date": "2025-11",
+          "platform": "Reddit",
+          "source": "https://www.reddit.com/r/rusAskReddit/comments/1p0y0i1/",
+          "type": "INDEPENDENT_USER_RESTATEMENT_WITH_COUNTERARGUMENT",
+          "summary": "A user lists non-upgraded GGC nodes and Google's abandoned Russian legal entity as evidence of partial exit; another responds that YouTube itself did not leave and free functionality remains from Google's side."
+        }
+      ],
+      "lineage_state": "OFFICIAL_TO_USER_PROPAGATION_CONFIRMED",
+      "exact_copy_note": "Many exact matches are expected quotations or news syndication and are not treated as coordination evidence.",
+      "operator_state": "NOT_ESTABLISHED"
+    },
+    {
+      "id": "PL3_PLATFORM_SELF_BLOCKING",
+      "canonical_template": "WESTERN_PLATFORM_OR_SEARCH_ENGINE_FILTERS_RUSSIAN_CONTENT -> ACCESS_OR_INFORMATION_LOSS_ATTRIBUTED_TO_THE_WESTERN_PLATFORM",
+      "rare_tokens": ["YouTube blocked Russian media", "search engines filter Russian media", "Western agenda"],
+      "observations": [
+        {
+          "date": "2022-03",
+          "platform": "Reddit AskARussian",
+          "source": "https://www.reddit.com/r/AskARussian/comments/thpp9b",
+          "type": "INDEPENDENT_USER_RESTATEMENT",
+          "summary": "Access/search difficulty is explained by YouTube and search engines suppressing Russian media."
+        },
+        {
+          "date": "2022-03",
+          "platform": "Reddit AskARussian",
+          "source": "https://www.reddit.com/r/AskARussian/comments/ticzcz",
+          "type": "INDEPENDENT_USER_RESTATEMENT",
+          "summary": "YouTube moderation is framed as filtering content inconsistent with a Western agenda."
+        }
+      ],
+      "lineage_state": "REPEATED_ON_REDDIT_CONFIRMED",
+      "operator_state": "NOT_ESTABLISHED"
+    },
+    {
+      "id": "PL4_TWO_SIDED_IRON_CURTAIN",
+      "canonical_template": "RUSSIAN_STATE_BLOCKS_SOME_SERVICES + WESTERN_SITE_OWNERS_BLOCK_RUSSIAN_IPS -> ISOLATION_FRAMED_AS_TWO_SIDED_OR_MUTUAL",
+      "rare_tokens": ["blocked by Russian government", "blocked by site owners", "sanctions", "Russian IPs"],
+      "observations": [
+        {
+          "date": "2025-06",
+          "platform": "Reddit AskARussian",
+          "source": "https://www.reddit.com/r/AskARussian/comments/1l7443t/",
+          "type": "ORGANIC_MULTI_VIEW_DISCUSSION",
+          "summary": "Users discuss U.S. sites blocking Russian IPs; one summarizes the environment as partly Russian-state blocking and partly site-owner blocking, while others cite sanctions, security and commercial reasons."
+        },
+        {
+          "date": "2026-08",
+          "platform": "Reddit",
+          "source": "https://www.reddit.com/r/RecommandedVPN/comments/1w0pj8y/",
+          "type": "INDEPENDENT_RESTATEMENT",
+          "summary": "In a discussion of Wikipedia accessibility in Russia, a reply invokes European blocking of Russian websites as a reciprocal comparison."
+        }
+      ],
+      "negative_control": "Foreign sites genuinely do geoblock Russian IPs for sanctions, security, commercial or political reasons. The factual core must not be erased.",
+      "lineage_state": "REPEATED_MUTUALIZATION_FRAME_CONFIRMED",
+      "operator_state": "NOT_ESTABLISHED"
+    },
+    {
+      "id": "PL5_GOOGLE_LEFT_BY_ITSELF",
+      "canonical_template": "FOREIGN_COMPANY_LEFT_OR_REDUCED_SUPPORT_VOLUNTARILY -> SERVICE_LOSS_PRESENTED_AS_EXTERNAL_COMPANY_CHOICE_RATHER_THAN_DOMESTIC_CONTROL",
+      "rare_tokens": ["Google left Russia", "company left", "stopped support", "sanctions"],
+      "observations": [
+        {
+          "date": "2023-04",
+          "platform": "Google Search Community",
+          "source": "https://support.google.com/websearch/thread/207034513?hl=ru",
+          "type": "INDEPENDENT_USER_GUESS",
+          "summary": "A user attributes a Google feature problem to Google leaving Russia and sanctions, despite mixed reports from other users."
+        },
+        {
+          "date": "2024-07",
+          "platform": "Roskomnadzor/Interfax",
+          "source": "https://interfax.com/newsroom/top-stories/104600/",
+          "type": "OFFICIAL_CAUSAL_TEMPLATE",
+          "summary": "The regulator explicitly ties service degradation to Google having left Russia and stopped infrastructure support."
+        }
+      ],
+      "lineage_state": "GENERAL_EXTERNALIZATION_FRAME_CONFIRMED",
+      "operator_state": "NOT_ESTABLISHED"
+    }
+  ],
+  "counter_lineages": [
+    {
+      "id": "CL1_DPI_LOCALIZATION_COUNTER",
+      "summary": "Habr technical testing found YouTube slowdown disappeared when DPI could no longer classify the destination while connections still reached the same IPs, supporting policy-layer intervention rather than simple CDN failure.",
+      "source": "https://habr.com/ru/articles/828598/"
+    },
+    {
+      "id": "CL2_DFRLAB_THROTTLING_COUNTER",
+      "summary": "DFRLab documents the official GGC explanation, user repetition of it, criticism from other users, and subsequent evidence/timeline consistent with throttling.",
+      "source": "https://dfrlab.org/2025/01/31/how-russia-throttled-youtube-for-domestic-audiences/"
+    },
+    {
+      "id": "CL3_REAL_GGC_FAILURE_CONTROL",
+      "summary": "GGC nodes can genuinely age, overload or be removed; a GGC explanation is technically plausible in some circumstances and requires path/protocol evidence to falsify.",
+      "source": "https://habr.com/ru/news/778626/"
+    }
+  ],
+  "graph_edges": [
+    {"from":"PL1_RECIPROCAL_CENSORSHIP","to":"PL3_PLATFORM_SELF_BLOCKING","type":"SHARED_CAUSAL_CORE","meaning":"Western platform moderation is used as the initiating cause or justification for later Russian restriction."},
+    {"from":"PL2_GGC_INFRASTRUCTURE_EXCULPATION","to":"PL5_GOOGLE_LEFT_BY_ITSELF","type":"TECHNICAL_TO_GENERAL_EXTERNALIZATION","meaning":"A technical maintenance claim nests inside the broader idea that the foreign company caused the loss by leaving."},
+    {"from":"PL1_RECIPROCAL_CENSORSHIP","to":"PL4_TWO_SIDED_IRON_CURTAIN","type":"MUTUALIZATION","meaning":"A one-event reciprocity claim generalizes into the idea that information isolation is produced equally by both sides."},
+    {"from":"PL2_GGC_INFRASTRUCTURE_EXCULPATION","to":"PL4_TWO_SIDED_IRON_CURTAIN","type":"RESPONSIBILITY_DILUTION","meaning":"Domestic policy intervention becomes one of several possible causes, diluting clear causal attribution."}
+  ],
+  "highest_value_next_gate": {
+    "name":"ACCOUNT_LEVEL_PHRASE_REUSE_GATE",
+    "requires":[
+      "same rare technical phrase or argument order reused by multiple long-lived accounts",
+      "timestamps showing non-trivial temporal clustering or pre-positioning",
+      "independent URLs/posts rather than common quotation of one news article",
+      "shared external links/media beyond mainstream source citations",
+      "cross-platform recurrence where available",
+      "operator/infrastructure evidence before any bot/state attribution"
+    ],
+    "current_state":"OPEN"
+  },
+  "current_verdict": {
+    "rare_repeated_causal_templates":"CONFIRMED",
+    "reddit_recurrence":"CONFIRMED",
+    "habr_recurrence":"CONFIRMED",
+    "official_to_user_message_propagation":"CONFIRMED_FOR_GGC_TEMPLATE",
+    "exact_copy_between_independent_accounts":"NOT_ESTABLISHED_IN_THIS_PASS",
+    "common_operator":"NOT_ESTABLISHED",
+    "botnet":"NOT_ESTABLISHED",
+    "russian_state_direction_of_specific_accounts":"NOT_ESTABLISHED"
+  }
+}
