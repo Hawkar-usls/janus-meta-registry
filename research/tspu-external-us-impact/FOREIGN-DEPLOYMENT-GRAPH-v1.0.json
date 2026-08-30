@@ -1,0 +1,102 @@
+{
+  "schema": "hawkar.topa.spider.tspu_external.foreign_deployment_graph.v1",
+  "artifact_id": "TSPU-EXTERNAL-FOREIGN-DEPLOYMENT-GRAPH-v1.0",
+  "generated_date_utc": "2026-08-30",
+  "status": "EVIDENCE_GRAPH_ACTIVE",
+  "scope_rule": "SORM, TSPU, DPI and generic lawful-intercept products are distinct labels. No foreign SORM deployment is promoted to a foreign TSPU deployment without TSPU-specific evidence.",
+  "primary_assessment_source": {
+    "source": "Recorded Future / Insikt Group, Tracking Deployment of Russian Surveillance Technologies in Central Asia and Latin America, 2025-01-07",
+    "url": "https://assets.recordedfuture.com/insikt-report-pdfs/2025/ta-ru-2025-0107.pdf",
+    "summary": "Insikt Group identified evidence of at least eight Russian SORM providers exporting to Belarus, Kazakhstan, Kyrgyzstan, Uzbekistan, Cuba and Nicaragua and at least fifteen telecommunications companies as likely customers. The report assesses that Russian intelligence can likely gain some degree of access to SORM-based systems abroad built with Russian provider components, while the degree of access remains uncertain."
+  },
+  "countries": [
+    {
+      "country": "Belarus",
+      "assessment": "RUSSIAN_SORM_BASED_SURVEILLANCE_STRONGLY_SUPPORTED",
+      "known_customer_edges": [
+        {"operator": "Unet", "vendor": "VAS Experts", "relationship": "client"}
+      ],
+      "additional_provider_evidence": ["Citadel", "MFI Soft", "Protei"],
+      "risk": "VERY_HIGH_STATE_SURVEILLANCE"
+    },
+    {
+      "country": "Kazakhstan",
+      "assessment": "RUSSIAN_SORM_BASED_SURVEILLANCE_STRONGLY_SUPPORTED",
+      "known_customer_edges": [
+        {"operator": "Beeline Kazakhstan", "vendor": "TekhArgos", "relationship": "client"},
+        {"operator": "Kazakhtelecom", "vendor": "MFI Soft / Analytical Business Solutions", "relationship": "client"},
+        {"operator": "Kcell", "vendor": "TekhArgos", "relationship": "client"},
+        {"operator": "Nursat", "vendor": "Protei", "relationship": "client"},
+        {"operator": "Tele2 Kazakhstan", "vendor": "TekhArgos", "relationship": "client"},
+        {"operator": "TNS Plus", "vendor": "TekhArgos", "relationship": "client"},
+        {"operator": "X-COMMUNICATION", "vendor": "VAS Experts", "relationship": "client"},
+        {"operator": "2Day Telecom", "vendor": "TekhArgos", "relationship": "client"}
+      ],
+      "routing_context": "GMF 2025 assesses Kazakhstan as reliant on Russia for high-bandwidth international connectivity while ISPs are required to deploy Russian SORM systems with potential backdoor concerns.",
+      "routing_source": "https://www.gmfus.org/sites/default/files/2025-06/Russia%20and%20China%20in%20Central%20Asia%E2%80%99s%20Technology%20Stack.pdf",
+      "priority": "P0_ROUTE_PLUS_CONTROL_STACK"
+    },
+    {
+      "country": "Kyrgyzstan",
+      "assessment": "RUSSIAN_SORM_BASED_SURVEILLANCE_STRONGLY_SUPPORTED",
+      "known_customer_edges": [
+        {"operator": "Beeline Kyrgyzstan", "vendor": "TekhArgos", "relationship": "client"},
+        {"operator": "KyrgyzTelecom", "vendor": "MFI Soft", "relationship": "client"}
+      ],
+      "routing_context": "GMF 2025 assesses Kyrgyzstan as reliant on Russia and Kazakhstan for high-bandwidth international connectivity and exposed to mandated Russian SORM surveillance systems.",
+      "priority": "P0_ROUTE_PLUS_CONTROL_STACK"
+    },
+    {
+      "country": "Uzbekistan",
+      "assessment": "RUSSIAN_SORM_BASED_SURVEILLANCE_STRONGLY_SUPPORTED",
+      "known_customer_edges": [
+        {"operator": "Uzbektelecom", "vendor": "MFI Soft", "relationship": "client"}
+      ],
+      "priority": "P1"
+    },
+    {
+      "country": "Cuba",
+      "assessment": "RUSSIAN_SORM_BASED_SURVEILLANCE_STRONGLY_SUPPORTED",
+      "known_customer_edges": [
+        {"operator": "ETECSA", "vendor": "Protei", "relationship": "client"}
+      ],
+      "risk": "HIGH_STATE_SURVEILLANCE",
+      "priority": "P0_US_PROXIMITY_AND_US_PERSON_RISK"
+    },
+    {
+      "country": "Nicaragua",
+      "assessment": "RUSSIAN_SORM_COMPATIBLE_DPI_AND_SORM_PROCUREMENT_STRONGLY_SUPPORTED",
+      "known_customer_edges": [
+        {"operator": "Yota Nicaragua", "vendor": "VAS Experts", "relationship": "SKAT DPI client since at least 2014 according to vendor review cited by Insikt Group"}
+      ],
+      "additional_finding": "Insikt Group reports Nicaragua has used SORM technology obtained through the NK SESLA network since 2018 and cites earlier reporting that VAS Experts exported SORM equipment to Nicaragua.",
+      "risk": "HIGH_STATE_SURVEILLANCE",
+      "priority": "P0_WESTERN_HEMISPHERE"
+    },
+    {
+      "country": "Iran",
+      "assessment": "RUSSIAN_VENDOR_LEGAL_INTERCEPT_DPI_NEGOTIATION_CONFIRMED_NOT_COMPLETED_DEPLOYMENT_PROOF",
+      "known_edges": [
+        {"operator": "Ariantel", "vendor": "PROTEI", "relationship": "advanced negotiations / selected for core-network components including DPI in leaked project material analyzed by Citizen Lab"}
+      ],
+      "source": "https://citizenlab.ca/research/uncovering-irans-mobile-legal-intercept-system/",
+      "claim_limit": "Do not label this as a completed foreign TSPU or SORM deployment without additional evidence."
+    }
+  ],
+  "vendor_expansion_surface": {
+    "major_vendors": ["Citadel", "Norsi-Trans", "Protei", "VAS Experts", "MFI Soft", "TekhArgos"],
+    "reported_marketing_regions": ["Africa", "Latin America", "Middle East", "Central Asia", "CIS"],
+    "assessment": "EXPORT_AND_MARKETING_EXPANSION_CONFIRMED; COUNTRY_SPECIFIC_TSPU_DEPLOYMENT_NOT_ESTABLISHED"
+  },
+  "high_value_bridge": {
+    "finding": "The risk becomes materially more relevant to United States reachability where Russian-origin control/interception equipment coincides with dependence on Russian or Russia-adjacent international transit.",
+    "highest_priority_current_cases": ["Kazakhstan", "Kyrgyzstan", "Cuba", "Nicaragua"],
+    "why": "These cases combine evidence of Russian-origin surveillance/DPI technology with either international-routing dependence, proximity/relationship to US interests, or both."
+  },
+  "falsifiers": [
+    "Vendor-client relationship alone does not prove the installed product is SORM or TSPU unless the source says so.",
+    "Russian-manufactured SORM equipment abroad does not prove live Russian-government remote access.",
+    "A country's use of censorship does not prove Russian direction.",
+    "No evidence currently establishes a synchronized mass activation across these countries."
+  ]
+}
