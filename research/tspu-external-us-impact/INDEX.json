@@ -1,0 +1,86 @@
+{
+  "schema": "hawkar.topa.spider.tspu_external.index.v1",
+  "artifact_id": "TSPU-EXTERNAL-US-IMPACT-OBSERVATORY-INDEX-v1.0",
+  "generated_date_utc": "2026-08-30",
+  "status": "ACTIVE_RESEARCH_BRANCH",
+  "repository": "Hawkar-usls/janus-meta-registry",
+  "branch": "research/tspu-external-us-impact",
+  "directory": "research/tspu-external-us-impact/",
+  "origin": {
+    "watchers_parent": "data/WATCHERS-OF-WHAT-IS-HAPPENING-2026-08-26-28-v1.4.json",
+    "reason_for_split": "WATCHERS remains the incident dossier for 2026-08-26/28; this branch is a persistent forward-looking threat-intelligence and forecasting surface."
+  },
+  "artifacts": [
+    {
+      "path": "research/tspu-external-us-impact/README.md",
+      "role": "MISSION_AND_EPISTEMIC_FIREWALL"
+    },
+    {
+      "path": "research/tspu-external-us-impact/EVIDENCE-LEDGER-v1.0.json",
+      "role": "APPEND_ONLY_EVIDENCE_AND_NEGATIVE_CONTROLS"
+    },
+    {
+      "path": "research/tspu-external-us-impact/ACTIVATION-INDICATORS-v1.0.json",
+      "role": "DEFENSIVE_EARLY_WARNING_SIGNAL_MODEL"
+    },
+    {
+      "path": "research/tspu-external-us-impact/US-IMPACT-FORECAST-v1.0.json",
+      "role": "DIRECT_AND_INDIRECT_US_CONSEQUENCE_SCENARIOS"
+    }
+  ],
+  "core_questions": [
+    "Where has Russian-origin DPI/SORM technology actually been deployed outside Russia?",
+    "Which foreign deployments expose observable packet/protocol fingerprints compatible with TSPU rather than generic DPI?",
+    "Can any non-Russian-origin traffic be shown to traverse a Russian-controlled filtering segment and experience route-specific censorship?",
+    "Can synchronized activation across multiple foreign networks be detected before it becomes a broad service incident?",
+    "Which US services, users, personnel, partners and routes are exposed directly versus indirectly?",
+    "What observations would falsify the hypothesis of Russian coordination?"
+  ],
+  "priority_collection_gates": [
+    {
+      "priority": "P0",
+      "gate": "FOREIGN_DEPLOYMENT_GRAPH",
+      "task": "Build a country/operator/vendor evidence graph from procurement records, vendor case studies, sanctions material and independent threat-intelligence reports. Keep TSPU, SORM and generic DPI labels separate."
+    },
+    {
+      "priority": "P0",
+      "gate": "ROUTE_STABLE_BASELINE",
+      "task": "Establish RIPE Atlas/OONI/BGP baselines from candidate foreign networks to a fixed set of US cloud/CDN/SaaS endpoints, preserving AS path, DNS behavior, protocol success and RPKI state."
+    },
+    {
+      "priority": "P0",
+      "gate": "TSPU_FINGERPRINT_LIBRARY",
+      "task": "Extract only published defensive fingerprints from peer-reviewed TSPU research: QUIC/SNI behavior, protocol asymmetry, DNS interception signatures, TTL localization and blocking persistence."
+    },
+    {
+      "priority": "P1",
+      "gate": "SYNCHRONIZED_ACTIVATION_DETECTOR",
+      "task": "Correlate sudden changes across networks sharing vendor/operator lineage. Require at least two independent evidence layers before escalation."
+    },
+    {
+      "priority": "P1",
+      "gate": "US_EXPOSURE_MATRIX",
+      "task": "Map effects onto US domestic core, US-hosted services abroad, government/business personnel abroad, partner communications, supply chains and interdomain routing."
+    },
+    {
+      "priority": "P1",
+      "gate": "BGP_BRIDGE_TEST",
+      "task": "Search RIPE RIS, RouteViews/BGPStream and RPKI data for route leaks, origin changes or path steering that could place otherwise foreign traffic onto a filtering path."
+    },
+    {
+      "priority": "P2",
+      "gate": "ATTRIBUTION_THRESHOLD",
+      "task": "Promote a foreign TSPU claim only with device/operator linkage or a reproducible TSPU-specific fingerprint localized to a controlled path and independently replicated."
+    }
+  ],
+  "current_top_level_verdict": {
+    "known_russian_dpi_sorm_export": "CONFIRMED",
+    "known_tspu_cross_border_control_on_russian_side": "CONFIRMED",
+    "known_external_roskomnadzor_tspu_nodes": "NOT_ESTABLISHED",
+    "known_mass_activation_outside_russia": "NOT_ESTABLISHED",
+    "plausible_indirect_us_effect": "YES",
+    "demonstrated_direct_us_domestic_effect": "NO",
+    "highest_value_missing_bridge": "FOREIGN_PATH_PLUS_TSPU_FINGERPRINT_PLUS_INDEPENDENT_REPLICATION"
+  },
+  "update_policy": "APPEND_ONLY_FOR_EVIDENCE; FORECASTS_MAY_BE_VERSIONED_WHEN_PRIORS_CHANGE; NEVER_DELETE_FALSIFIERS"
+}
