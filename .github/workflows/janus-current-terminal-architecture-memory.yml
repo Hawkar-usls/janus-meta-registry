@@ -1,0 +1,67 @@
+name: JANUS Current Terminal Architecture Memory
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'data/JANUS-TERMINAL-HRAIN-HOME-TRUMP-CURRENT-ARCHITECTURE-2026-08-30-v1.0.json'
+      - 'tests/test_current_terminal_architecture_memory.py'
+      - 'research/site/janus_hrain_registry_export.py'
+      - 'research/site/janus_site_curator.py'
+      - '.github/workflows/janus-current-terminal-architecture-memory.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'data/JANUS-TERMINAL-HRAIN-HOME-TRUMP-CURRENT-ARCHITECTURE-2026-08-30-v1.0.json'
+      - 'tests/test_current_terminal_architecture_memory.py'
+      - 'research/site/janus_hrain_registry_export.py'
+      - 'research/site/janus_site_curator.py'
+      - '.github/workflows/janus-current-terminal-architecture-memory.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  memory-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate current architecture JSON
+        run: python -m json.tool data/JANUS-TERMINAL-HRAIN-HOME-TRUMP-CURRENT-ARCHITECTURE-2026-08-30-v1.0.json >/dev/null
+      - name: Compile HRAiN projection and architecture tests
+        run: |
+          python -m py_compile research/site/janus_site_curator.py
+          python -m py_compile research/site/janus_hrain_registry_export.py
+          python -m py_compile tests/test_current_terminal_architecture_memory.py
+      - name: Prove source memory and dry-run HRAiN structural neuron
+        run: python -m unittest -v tests.test_current_terminal_architecture_memory
+      - name: Independent dry-run projection adjudication
+        run: |
+          python research/site/janus_hrain_registry_export.py --output /tmp/hrain-current-architecture-index.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          index=json.loads(Path('/tmp/hrain-current-architecture-index.json').read_text(encoding='utf-8'))
+          expected='JANUS-TERMINAL-HRAIN-HOME-TRUMP-CURRENT-ARCHITECTURE'
+          nodes=[n for n in index['nodes'] if isinstance(n,dict) and n.get('lineageKey')==expected]
+          assert len(nodes)==1, nodes
+          node=nodes[0]
+          assert node['label']=='JANUS Terminal HRAiN HOME TRUMP Current Architecture'
+          assert node['readOnly'] is True
+          assert node['deleteAllowed'] is False
+          structural=' '.join([node['label'],node['lineageKey'],node['path']]).lower()
+          for token in ('terminal','hrain','home','trump'):
+              assert token in structural, token
+          print('JANUS_CURRENT_TERMINAL_ARCHITECTURE_MEMORY=PASS')
+          print('HRAIN_CANONICAL_STRUCTURAL_NEURON=PASS')
+          print('lineage', node['lineageKey'])
+          print('path', node['path'])
+          print('source_commit', index['sourceCommit'])
+          PY
