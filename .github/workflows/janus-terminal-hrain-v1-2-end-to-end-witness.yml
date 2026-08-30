@@ -1,0 +1,67 @@
+name: JANUS Terminal HRAiN v1.2 End-to-End Witness
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'data/JANUS-TERMINAL-HRAIN-V1_2-END-TO-END-WITNESS-2026-08-30-v1.0.json'
+      - 'data/JANUS-TERMINAL-HRAIN-HOME-TRUMP-CURRENT-ARCHITECTURE-2026-08-30-v1.0.json'
+      - 'tests/test_terminal_hrain_v1_2_end_to_end_witness.py'
+      - 'research/site/janus_hrain_registry_export.py'
+      - '.github/workflows/janus-terminal-hrain-v1-2-end-to-end-witness.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'data/JANUS-TERMINAL-HRAIN-V1_2-END-TO-END-WITNESS-2026-08-30-v1.0.json'
+      - 'data/JANUS-TERMINAL-HRAIN-HOME-TRUMP-CURRENT-ARCHITECTURE-2026-08-30-v1.0.json'
+      - 'tests/test_terminal_hrain_v1_2_end_to_end_witness.py'
+      - 'research/site/janus_hrain_registry_export.py'
+      - '.github/workflows/janus-terminal-hrain-v1-2-end-to-end-witness.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  witness:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate successor witness JSON
+        run: python -m json.tool data/JANUS-TERMINAL-HRAIN-V1_2-END-TO-END-WITNESS-2026-08-30-v1.0.json >/dev/null
+      - name: Compile witness and HRAiN projection code
+        run: |
+          python -m py_compile research/site/janus_site_curator.py
+          python -m py_compile research/site/janus_hrain_registry_export.py
+          python -m py_compile tests/test_terminal_hrain_v1_2_end_to_end_witness.py
+      - name: Prove append-only successor and exact end-to-end bindings
+        run: python -m unittest -v tests.test_terminal_hrain_v1_2_end_to_end_witness
+      - name: Independent structural-memory adjudication
+        run: |
+          python research/site/janus_hrain_registry_export.py --output /tmp/hrain-v12-e2e-index.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          index=json.loads(Path('/tmp/hrain-v12-e2e-index.json').read_text(encoding='utf-8'))
+          successor='JANUS-TERMINAL-HRAIN-V1-2-END-TO-END-WITNESS'
+          predecessor='JANUS-TERMINAL-HRAIN-HOME-TRUMP-CURRENT-ARCHITECTURE'
+          s=[n for n in index['nodes'] if isinstance(n,dict) and n.get('lineageKey')==successor]
+          p=[n for n in index['nodes'] if isinstance(n,dict) and n.get('lineageKey')==predecessor]
+          assert len(s)==1, s
+          assert len(p)==1, p
+          assert s[0]['status']=='HRAIN_V1_2_END_TO_END_TERMINAL_WITNESS_PROVEN'
+          assert p[0]['status']=='CURRENT_ARCHITECTURE_MEMORY_WITH_PROVEN_END_TO_END_LINEAGE'
+          assert s[0]['path']!='' and s[0]['path']!=p[0]['path']
+          assert s[0]['readOnly'] is True and s[0]['deleteAllowed'] is False
+          print('JANUS_HRAIN_V1_2_END_TO_END_SUCCESSOR=PASS')
+          print('PREDECESSOR_PRESERVED_AS_DISTINCT_MEMORY=PASS')
+          print('successor_path', s[0]['path'])
+          print('predecessor_path', p[0]['path'])
+          print('projection_source_commit', index['sourceCommit'])
+          PY
