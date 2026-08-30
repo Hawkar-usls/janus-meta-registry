@@ -1,0 +1,50 @@
+{
+  "artifact_uuid": "JANUS-ENGINE-R0M3-MOTOR-REGEN-CROSSOVER-v1.0",
+  "timestamp": "2026-08-30T02:37:00+03:00",
+  "version": "v1.0",
+  "title": "JANUS Engine R0M3 — motor/regenerator crossover and back-EMF map",
+  "observer": "Hawkar / JANUS",
+  "node_type": "experimental_energy_metrology_gate",
+  "repository": "Hawkar-usls/janus-meta-registry",
+  "git_branch": "research/janus-engine",
+  "parent": "projects/janus-engine/research/TOPA-SPIDER-AXLE-FARADAY-GENERATOR-RUN-006-v1.0.json",
+  "status": "OPEN_MEASUREMENT_REQUIRED",
+  "purpose": "Prove when the Axle magnetic machine is consuming battery energy, merely reducing motor demand through hydraulic assistance, or actually regenerating independently sourced mechanical energy into the battery.",
+  "states": [
+    "G0_OPEN_CIRCUIT_BACK_EMF",
+    "G1_BATTERY_MOTOR_ONLY",
+    "G2_MOTOR_PLUS_HYDRAULIC_ASSIST",
+    "G3_ZERO_CURRENT_CROSSOVER",
+    "G4_REGENERATIVE_CHARGE",
+    "G5_CONTROLLED_DECELERATION_REGEN"
+  ],
+  "RPM": [60,120,300,600],
+  "measure": [
+    "open-circuit phase/back EMF",
+    "DC-bus voltage and current",
+    "phase current",
+    "Axle torque",
+    "RPM and encoder angle",
+    "battery Wh in/out",
+    "water flow and pressure drop",
+    "Bx/By/Bz",
+    "inverter and Axle temperature"
+  ],
+  "equations": {
+    "P_mech": "tau * omega",
+    "P_DC": "V_bus * I_bus",
+    "eta_generator": "P_DC_charge / P_mech_external",
+    "eta_motor": "P_mech_shaft / P_DC_from_battery",
+    "faraday": "V_induced = -N*dPhi/dt"
+  },
+  "pass_rules": [
+    "Back EMF increases repeatably with RPM for frozen field geometry.",
+    "Applying an electrical generator load produces measurable opposing shaft torque consistent with energy conservation.",
+    "A regenerative claim requires independently measured external shaft/hydraulic work or a measured decrease in rotor kinetic energy.",
+    "Battery-motor-only operation must never credit same-shaft regeneration as new generated energy.",
+    "The zero-current crossover must be identified experimentally: hydraulic/external torque carries the rotating load with AFPM electrical torque approximately zero.",
+    "Above crossover, positive battery charging is credited only after inverter, bearing, eddy-current and hydraulic accounting closes."
+  ],
+  "design_target": "One coreless/slotless AFPM unit should start the Axle, control RPM, recover braking energy and automatically regenerate whenever genuine external mechanical torque exceeds process drag.",
+  "next_after_pass": "Feed measured motor/generator efficiency and crossover maps into startup-battery sizing and full JANUS net-energy simulation."
+}
