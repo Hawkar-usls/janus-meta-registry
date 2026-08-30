@@ -36,6 +36,12 @@ jobs:
         run: python -m compileall -q research/site/janus_hrain_full_memory_export.py tests/test_hrain_full_memory_export.py
       - name: Run full-current memory tests
         run: python -m pytest -q tests/test_hrain_full_memory_export.py
+      - name: Prove writer notices first-time untracked output
+        shell: bash
+        run: |
+          grep -q "git status --porcelain -- assets/hrain-full-memory" .github/workflows/janus-hrain-full-memory.yml
+          ! grep -q "git diff --quiet -- assets/hrain-full-memory" .github/workflows/janus-hrain-full-memory.yml
+          echo 'FIRST_GENERATED_CATALOG_PERSISTENCE=GUARDED'
       - name: Build one bounded full-current catalog witness
         run: |
           mkdir -p runtime
@@ -81,7 +87,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if git diff --quiet -- assets/hrain-full-memory; then
+          if [[ -z "$(git status --porcelain -- assets/hrain-full-memory)" ]]; then
             echo 'HRAIN_FULL_MEMORY=UNCHANGED'
             exit 0
           fi
