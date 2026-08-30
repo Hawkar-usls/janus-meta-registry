@@ -1,0 +1,80 @@
+{
+  "artifact_uuid": "JANUS-ENGINE-R0P1-PARASITIC-METERING-HARNESS-v1.0",
+  "timestamp": "2026-08-30T14:00:00+03:00",
+  "version": "v1.0",
+  "title": "JANUS Engine R0P1 — parasitic metering harness and subsystem isolation gate",
+  "observer": "Hawkar / JANUS",
+  "node_type": "experimental_power_metrology_gate",
+  "repository": "Hawkar-usls/janus-meta-registry",
+  "git_branch": "research/janus-engine",
+  "parent": "projects/janus-engine/simulations/JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-007-MEASURED-PARASITIC-REPLACEMENT-v1.0.json",
+  "status": "OPEN_HARDWARE_MEASUREMENT_REQUIRED",
+  "purpose": "Replace every remaining auxiliary-power placeholder with directly measured electrical/mechanical/hydraulic data and uncertainty before repeating the integrated energy-balance run.",
+  "metering_architecture": {
+    "electrical_channels": [
+      "Battery A voltage/current/Wh",
+      "Battery B voltage/current/Wh",
+      "common DC-bus voltage/current/Wh",
+      "water-pump electrical input",
+      "gas-recirculation fan/blower electrical input",
+      "AFPM inverter DC input/output and phase current",
+      "controls/sensors electrical input",
+      "purge valve/actuator pulse energy",
+      "any active thermal-management input",
+      "hydrogen-feed valve/regulator electronics if electrically active"
+    ],
+    "mechanical_hydraulic_channels": [
+      "Axle torque and RPM",
+      "water flow rate Q",
+      "POMS module DeltaP",
+      "crystal-trap/filter DeltaP",
+      "heat-exchanger/demister gas-side DeltaP",
+      "gas-loop flow rate",
+      "purge pressure before/after and recovered pressure",
+      "filter loading / collected CaCO3 mass"
+    ],
+    "process_state_channels": [
+      "pO2 internal",
+      "dissolved O2 inlet/outlet",
+      "humidity",
+      "gas/water temperature",
+      "conductivity/pH/hardness for scale tests",
+      "Bx/By/Bz where magnetic-loss mapping is active"
+    ]
+  },
+  "subsystem_isolation_sequence": [
+    {"state":"P0_CONTROLS_ONLY","goal":"measure controller/sensor baseline W"},
+    {"state":"P1_WATER_ONLY","goal":"map pump W and DeltaP versus Q with POMS path installed"},
+    {"state":"P2_GAS_ONLY","goal":"map fan/blower W versus gas flow and humidity-management DeltaP"},
+    {"state":"P3_AFPM_ONLY","goal":"map AFPM support W versus RPM/torque and no-current drag"},
+    {"state":"P4_PURGE","goal":"measure joules per purge event, gas mass lost/returned and pressure recovery"},
+    {"state":"P5_SCALE_HARDWARE","goal":"measure crystal-trap DeltaP and wiper incremental torque clean versus loaded"},
+    {"state":"P6_THERMAL","goal":"prove passive heat-rejection path or meter active thermal watts"},
+    {"state":"P7_FULL_STACK","goal":"run all subsystems together and verify that sum of isolated channels agrees with bus-level power within uncertainty"}
+  ],
+  "purge_accounting": {
+    "nominal_interval_s": 1800,
+    "average_electrical_power_formula": "P_purge_elec_avg = E_valve_event / 1800",
+    "gas_work_boundary": "pressure/gas loss must be accounted separately from solenoid electrical energy",
+    "rule": "A 30-minute purge heartbeat does not imply a full 2-atm blowdown; 2 atm remains the maximum requested transient pressure loss, not a target."
+  },
+  "AFPM_accounting": {
+    "motor_region": "P_AFPM is an auxiliary load",
+    "zero_current_region": "external/hydraulic torque carries Axle rotation",
+    "generator_region": "credit DC charge only against independently measured mechanical input or rotor kinetic-energy decrease",
+    "required_sync": "RPM + torque + DC bus power + phase current + B-field"
+  },
+  "sampling": {
+    "slow_thermal_chemistry": "1-10 Hz as appropriate",
+    "electrical_bus_and_torque": ">=100 Hz preferred for transient integration",
+    "AFPM_phase_and_EPM_switching": "kHz-class or faster as required to resolve switching/harmonics",
+    "energy_integral_rule": "Use time-integrated Wh/J, not snapshot watts, for startup and purge decisions"
+  },
+  "replacement_rule": "A RUN-006/RUN-007 placeholder is deleted only after a directly measured value/range plus uncertainty and operating condition are recorded.",
+  "closure_test": {
+    "equation": "P_aux_measured = sum(all simultaneously active measured loads)",
+    "bus_crosscheck": "P_PEMFC + P_battery_discharge + P_verified_regen - P_battery_charge - P_aux_measured - P_export = 0 within declared uncertainty",
+    "pass": "isolated-channel sum and common-bus measurement agree within the measurement uncertainty over steady windows and transient energy integrals close over startup/hold/shutdown"
+  },
+  "next_after_pass": "RUN008_FULL_MEASURED_ENERGY_BALANCE: rerun the integrated Calcifer trajectory using only measured POMS flux, PEMFC conversion, subsystem parasitics, AFPM maps and dual-pack Wh."
+}
