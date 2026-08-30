@@ -2,7 +2,7 @@
   "schema": "hawkar.topa.spider.tspu_external.fingerprint_library.v1",
   "artifact_id": "TSPU-EXTERNAL-FINGERPRINT-LIBRARY-v1.0",
   "generated_date_utc": "2026-08-30",
-  "status": "DEFENSIVE_REMOTE_MEASUREMENT_LIBRARY",
+  "status": "DEFENSIVE_REMOTE_MEASUREMENT_LIBRARY_CORRECTED",
   "scope": "Published or reproducible network-behavior fingerprints only. The library is for attribution-resistant defensive measurement and does not contain bypass/exploitation instructions.",
   "primary_measurement_families": [
     {
@@ -33,7 +33,7 @@
       "id": "FP4",
       "name": "QUIC_POLICY_AND_SNI_FILTERING",
       "evidence": "FOCI 2026 documents Russia moving from broad international QUIC blocking to large-scale SNI-dependent QUIC censorship, demonstrating protocol-specific and rapidly reconfigurable policy.",
-      "sources": ["https://foci.community/foci26.html", "https://github.com/UPB-SysSec/RussiaQuicResults"],
+      "sources": ["https://www.petsymposium.org/foci/2026/foci-2026-0010.php", "https://github.com/UPB-SysSec/RussiaQuicResults"],
       "defensive_use": "Use paired TCP/TLS versus QUIC observations to detect protocol-selective intervention rather than generic service unavailability.",
       "claim_limit": "QUIC blocking alone does not identify TSPU."
     },
@@ -41,7 +41,7 @@
       "id": "FP5",
       "name": "ORIGIN_DIRECTION_ASYMMETRY",
       "evidence": "FOCI 2026 measurements found the studied Russian QUIC censorship regime affected traffic originating in Russia and leaving the country while measured inbound traffic was not affected in the same way.",
-      "sources": ["https://foci.community/foci26.html"],
+      "sources": ["https://www.petsymposium.org/foci/2026/foci-2026-0010.php"],
       "defensive_use": "Directionality is a discriminator when comparing suspected foreign deployments with known Russian policy families.",
       "claim_limit": "Policy can change over time and different TSPU rules may have different directionality."
     },
@@ -66,8 +66,9 @@
   "adjacent_research": [
     {
       "title": "Fingerprinting Deep Packet Inspection Devices by Their Ambiguities",
-      "url": "https://arxiv.org/abs/2504.19262",
-      "classification": "ARXIV_RESEARCH_CANDIDATE",
+      "url": "https://arxiv.org/abs/2509.09081",
+      "doi": "10.1145/3719027.3765145",
+      "classification": "CCS_2025_PEER_REVIEWED",
       "relevance": "Develops remote behavioral fingerprinting of DPI implementations through ambiguity handling; useful methodology for distinguishing commercial/nation-state DPI families without physical device access."
     },
     {
@@ -90,5 +91,6 @@
     "repeat observation from an independent vantage or platform"
   ],
   "attribution_rule": "No single timeout, reset, blocked domain, vendor name, or protocol anomaly is a TSPU fingerprint. Escalation requires a composite behavior pattern plus path localization and independent replication.",
-  "safety_boundary": "Observation and defensive characterization only; no exploitation, unauthorized access, destructive testing, credential use, or evasion deployment."
+  "safety_boundary": "Observation and defensive characterization only; no exploitation, unauthorized access, destructive testing, credential use, or evasion deployment.",
+  "correction_note": "The previous draft incorrectly listed arXiv:2504.19262 for 'Fingerprinting Deep Packet Inspection Devices by Their Ambiguities'. Reverse pre-send audit on 2026-08-30 verified the correct identifier as arXiv:2509.09081 and the CCS 2025 DOI 10.1145/3719027.3765145."
 }
