@@ -1,0 +1,75 @@
+{
+  "artifact_uuid": "JANUS-ENGINE-R2D-DUAL-BATTERY-SUPPORT-REGEN-v1.0",
+  "timestamp": "2026-08-30T02:37:00+03:00",
+  "version": "v1.0",
+  "title": "JANUS Engine R2D — dual-battery support and regeneration architecture",
+  "observer": "Hawkar / JANUS",
+  "node_type": "energy_buffer_architecture_gate",
+  "repository": "Hawkar-usls/janus-meta-registry",
+  "git_branch": "research/janus-engine",
+  "parent": "projects/janus-engine/gates/JANUS-ENGINE-R0M3-MOTOR-REGEN-CROSSOVER-v1.0.json",
+  "status": "ARCHITECTURE_ADMITTED_PENDING_POWER_ELECTRONICS_AND_CYCLE_TESTS",
+  "idea": "Use two independently managed batteries so one can support Axle rotation/startup/transients while the other is preferentially available to receive genuine regenerative or process surplus, then alternate roles under a supervisory controller.",
+  "key_physics": {
+    "support_not_primary_drive": "A support battery may provide only the torque deficit required to hold target RPM. If hydraulic/process torque carries most of the load, battery power can be small and eventually fall to zero.",
+    "two_batteries_do_not_create_energy": "Alternating Battery A and Battery B does not change total energy conservation. Charge moved from one battery through motor/generator paths is reduced by conversion losses unless an independent source adds energy.",
+    "valid_regen": "Battery charge is genuine recovered energy only when traced to independently measured hydraulic/mechanical work, PEMFC electrical surplus, or rotor kinetic-energy reduction.",
+    "benefit_of_two_buffers": "Two packs can improve isolation, startup availability, pulse handling, regenerative headroom, redundancy and measurement clarity even though they do not improve the thermodynamic ceiling."
+  },
+  "proposed_roles": {
+    "BAT_A_SUPPORT": [
+      "startup reserve",
+      "AFPM torque-deficit support",
+      "pump/fan/control transient support",
+      "minimum reserve SOC protected from opportunistic charging loads"
+    ],
+    "BAT_B_RECOVERY": [
+      "preferred sink for AFPM regeneration",
+      "preferred sink for verified PEMFC/process surplus",
+      "maintain charging headroom so regeneration is not clipped by a full support pack"
+    ],
+    "ROLE_SWAP": "When SOC, temperature, health and reserve rules permit, A and B may swap roles so cycle wear is balanced and either pack can become the startup reserve."
+  },
+  "power_path": "BAT_A/B <-> bidirectional DC/DC stages <-> common DC bus <-> coreless AFPM + auxiliaries + PEMFC",
+  "why_not_direct_battery_swapping": "Direct alternation without bidirectional power electronics can create uncontrolled equalization currents and poor SOC control. The architecture should use isolated or appropriately controlled bidirectional conversion/contactors and BMS supervision.",
+  "control_states": [
+    "D0_BOTH_SAFE_IDLE",
+    "D1_A_SUPPORT_B_RESERVE",
+    "D2_A_SUPPORT_B_REGEN_SINK",
+    "D3_ZERO_MOTOR_CURRENT",
+    "D4_B_REGEN_CHARGING",
+    "D5_ROLE_SWAP",
+    "D6_SURPLUS_TO_BOTH_AFTER_RESERVE_RECOVERY"
+  ],
+  "energy_ledger": {
+    "total_stored_energy": "E_total = E_A + E_B",
+    "proof_metric": "With external charger disconnected, compare E_A + E_B at start and end of the stabilized test, not either battery alone.",
+    "battery_neutral_rule": "E_A_end + E_B_end >= E_A_start + E_B_start over the declared stabilized hold before any claim of battery-neutral self-drive.",
+    "export_rule": "Only energy above internal loads plus restoration of both declared reserve SOC targets is exportable surplus."
+  },
+  "important_advantage": {
+    "regen_headroom": "Keeping one pack below full SOC gives the generator somewhere to put short regenerative pulses even when the support pack must remain near its startup reserve target.",
+    "measurement_clarity": "Separating support and recovery paths makes it easier to distinguish consumed startup/support Wh from genuinely recovered Wh.",
+    "reliability": "Either pack can preserve controlled shutdown or restart capability if the other is isolated by the BMS."
+  },
+  "test_matrix": [
+    "single-battery baseline",
+    "dual-battery fixed roles A=support B=recovery",
+    "dual-battery automatic role swap",
+    "hydraulic torque sweep through motor-current zero into regeneration",
+    "PEMFC-surplus charging case",
+    "deceleration-regeneration case"
+  ],
+  "measure": [
+    "V/I/Wh of each battery independently",
+    "common DC-bus V/I",
+    "AFPM phase and DC power",
+    "Axle torque and RPM",
+    "hydraulic flow and DeltaP",
+    "PEMFC gross/net electrical power",
+    "converter losses",
+    "SOC/temperature/pack health"
+  ],
+  "pass_condition": "Dual-battery architecture is retained if it reduces startup/support stress, preserves regeneration headroom or improves reliability/measurement while total E_A+E_B accounting remains closed and added DC/DC/BMS losses are acceptable.",
+  "next_gate": "R2D1_DUAL_PACK_DC_BUS_AB_TEST"
+}
