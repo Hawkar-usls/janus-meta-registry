@@ -1,6 +1,6 @@
 {
-  "schema": "hawkar.topa.spider.tspu_external.index.v1",
-  "artifact_id": "TSPU-EXTERNAL-US-IMPACT-OBSERVATORY-INDEX-v1.0",
+  "schema": "hawkar.topa.spider.tspu_external.index.v1_1",
+  "artifact_id": "TSPU-EXTERNAL-US-IMPACT-OBSERVATORY-INDEX-v1.1",
   "generated_date_utc": "2026-08-30",
   "status": "ACTIVE_RESEARCH_BRANCH",
   "repository": "Hawkar-usls/janus-meta-registry",
@@ -26,6 +26,10 @@
     {
       "path": "research/tspu-external-us-impact/US-IMPACT-FORECAST-v1.0.json",
       "role": "DIRECT_AND_INDIRECT_US_CONSEQUENCE_SCENARIOS"
+    },
+    {
+      "path": "research/tspu-external-us-impact/INFORMATION-ISOLATION-AND-NARRATIVE-CAPTURE-v1.0.json",
+      "role": "EXTERNAL_INFORMATION_ISOLATION_NARRATIVE_CAPTURE_AND_US_OBSERVABILITY_RISK"
     }
   ],
   "core_questions": [
@@ -33,7 +37,10 @@
     "Which foreign deployments expose observable packet/protocol fingerprints compatible with TSPU rather than generic DPI?",
     "Can any non-Russian-origin traffic be shown to traverse a Russian-controlled filtering segment and experience route-specific censorship?",
     "Can synchronized activation across multiple foreign networks be detected before it becomes a broad service incident?",
+    "Can external populations be selectively separated from US/open information sources while local/state-aligned substitutes remain reachable?",
+    "Can technical access restrictions and anti-US narrative shifts be temporally correlated without confusing correlation with coordination?",
     "Which US services, users, personnel, partners and routes are exposed directly versus indirectly?",
+    "How much foreign-vantage observability would the United States retain during a coordinated information-isolation event?",
     "What observations would falsify the hypothesis of Russian coordination?"
   ],
   "priority_collection_gates": [
@@ -53,14 +60,24 @@
       "task": "Extract only published defensive fingerprints from peer-reviewed TSPU research: QUIC/SNI behavior, protocol asymmetry, DNS interception signatures, TTL localization and blocking persistence."
     },
     {
+      "priority": "P0",
+      "gate": "INFORMATION_REACHABILITY_BASELINE",
+      "task": "Measure a stable basket of US/open media, government, social, developer, cloud and communications endpoints from candidate foreign networks alongside local/state-aligned substitute services."
+    },
+    {
       "priority": "P1",
       "gate": "SYNCHRONIZED_ACTIVATION_DETECTOR",
       "task": "Correlate sudden changes across networks sharing vendor/operator lineage. Require at least two independent evidence layers before escalation."
     },
     {
       "priority": "P1",
+      "gate": "NARRATIVE_TECHNICAL_COUPLING",
+      "task": "Compare technical restriction timestamps with public narrative shifts using pre-event baselines; never infer coordination from content similarity or timing alone."
+    },
+    {
+      "priority": "P1",
       "gate": "US_EXPOSURE_MATRIX",
-      "task": "Map effects onto US domestic core, US-hosted services abroad, government/business personnel abroad, partner communications, supply chains and interdomain routing."
+      "task": "Map effects onto US domestic core, US-hosted services abroad, government/business personnel abroad, partner communications, information reach, supply chains and interdomain routing."
     },
     {
       "priority": "P1",
@@ -76,11 +93,15 @@
   "current_top_level_verdict": {
     "known_russian_dpi_sorm_export": "CONFIRMED",
     "known_tspu_cross_border_control_on_russian_side": "CONFIRMED",
+    "russia_domestic_information_isolation_reference_model": "STRONGLY_DOCUMENTED",
+    "official_anti_us_west_conflict_rhetoric": "DOCUMENTED_AS_RHETORIC",
     "known_external_roskomnadzor_tspu_nodes": "NOT_ESTABLISHED",
     "known_mass_activation_outside_russia": "NOT_ESTABLISHED",
-    "plausible_indirect_us_effect": "YES",
+    "coordinated_multi_country_information_curtain": "NOT_ESTABLISHED",
+    "plausible_indirect_us_effect": "YES_HIGHER_THAN_DIRECT_DPI_ONLY_DOMESTIC_EFFECT",
     "demonstrated_direct_us_domestic_effect": "NO",
-    "highest_value_missing_bridge": "FOREIGN_PATH_PLUS_TSPU_FINGERPRINT_PLUS_INDEPENDENT_REPLICATION"
+    "us_observability_under_external_isolation": "DEGRADED_OR_DELAYED_PLAUSIBLE_NOT_ZERO",
+    "highest_value_missing_bridge": "FOREIGN_DEPLOYMENT_PLUS_SYNCHRONIZED_TECHNICAL_ACTIVATION_PLUS_MATCHED_INFORMATION_AND_ROUTING_CONTROLS"
   },
   "update_policy": "APPEND_ONLY_FOR_EVIDENCE; FORECASTS_MAY_BE_VERSIONED_WHEN_PRIORS_CHANGE; NEVER_DELETE_FALSIFIERS"
 }
