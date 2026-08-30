@@ -1,7 +1,7 @@
 {
-  "artifact_uuid": "JANUS-ENGINE-PROJECT-MANIFEST-v2.2",
-  "timestamp": "2026-08-30T14:30:00+03:00",
-  "version": "v2.2",
+  "artifact_uuid": "JANUS-ENGINE-PROJECT-MANIFEST-v2.3",
+  "timestamp": "2026-08-30T15:00:00+03:00",
+  "version": "v2.3",
   "title": "JANUS Engine — dedicated research-branch manifest",
   "observer": "Hawkar / JANUS",
   "node_type": "project_manifest",
@@ -15,6 +15,7 @@
     "projects/janus-engine/research/TOPA-SPIDER-AXLE-MAGNETIC-DRIVE-RUN-004-v1.1.json",
     "projects/janus-engine/research/TOPA-SPIDER-AXLE-MAGNETIC-FIELD-RUN-005-v1.0.json",
     "projects/janus-engine/research/TOPA-SPIDER-AXLE-FARADAY-GENERATOR-RUN-006-v1.0.json",
+    "projects/janus-engine/research/TOPA-SPIDER-US-OUTREACH-ROUTING-RUN-007-v1.0.json",
     "projects/janus-engine/gates/JANUS-ENGINE-R2B-DIRECT-GILL-PEMFC-v1.0.json",
     "projects/janus-engine/gates/JANUS-ENGINE-R0A2-POMS-MEMBRANE-STARTUP-v1.0.json",
     "projects/janus-engine/gates/JANUS-ENGINE-R0A4F-LOW-ADHESION-CYLINDER-WALL-v1.0.json",
@@ -37,6 +38,7 @@
     "projects/janus-engine/journal/JANUS-ENGINE-DEVELOPMENT-JOURNAL-2026-08-30-v1.3.json",
     "projects/janus-engine/journal/JANUS-ENGINE-DEVELOPMENT-JOURNAL-2026-08-30-v1.4.json",
     "projects/janus-engine/journal/JANUS-ENGINE-DEVELOPMENT-JOURNAL-2026-08-30-v1.5.json",
+    "projects/janus-engine/journal/JANUS-ENGINE-DEVELOPMENT-JOURNAL-2026-08-30-v1.6.json",
     "projects/janus-engine/journal/JANUS-ENGINE-DEVELOPMENT-JOURNAL-CURRENT.json"
   ],
   "tracks": {
@@ -66,10 +68,15 @@
     ],
     "T7_DEVELOPMENT_JOURNAL": [
       "projects/janus-engine/journal/JANUS-ENGINE-DEVELOPMENT-JOURNAL-CURRENT.json",
-      "projects/janus-engine/journal/JANUS-ENGINE-DEVELOPMENT-JOURNAL-2026-08-30-v1.5.json"
+      "projects/janus-engine/journal/JANUS-ENGINE-DEVELOPMENT-JOURNAL-2026-08-30-v1.6.json"
     ],
     "T8_MEASUREMENT_AND_CLOSURE": [
       "projects/janus-engine/gates/JANUS-ENGINE-R0P1-PARASITIC-METERING-HARNESS-v1.0.json",
+      "projects/janus-engine/gates/JANUS-ENGINE-R0P1A-MEASUREMENT-DATA-CONTRACT-v1.0.json",
+      "projects/janus-engine/simulations/JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-008-FULL-MEASURED-ENERGY-BALANCE-v0.1.json"
+    ],
+    "T9_EXTERNAL_VALIDATION_AND_US_OUTREACH": [
+      "projects/janus-engine/research/TOPA-SPIDER-US-OUTREACH-ROUTING-RUN-007-v1.0.json",
       "projects/janus-engine/gates/JANUS-ENGINE-R0P1A-MEASUREMENT-DATA-CONTRACT-v1.0.json",
       "projects/janus-engine/simulations/JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-008-FULL-MEASURED-ENERGY-BALANCE-v0.1.json"
     ]
@@ -77,8 +84,8 @@
   "latest_findings": {
     "RUN008_preregistration": "RUN-008 v0.1 is frozen before acquisition of missing JANUS hardware parasitics. Current verdict is UNKNOWN_MEASUREMENT_INCOMPLETE, not a simulated pass or fail.",
     "measurement_contract": "R0P1A freezes electrical, hydraulic, mechanical, process and event channels plus sign conventions and energy integrals needed for auditable P0-P7 closure.",
-    "repository_sweep": "No existing JANUS record was found that supplies the missing physical pump, gas-loop, AFPM, purge, scale-hardware and controller power measurements required for a measured net-energy result.",
-    "evidence_boundary": "Published POMS measurements, H-12 ratings and prior 12/10/8 W envelopes remain comparators only; none may be relabeled as measured JANUS parasitic power.",
+    "external_validation_route": "A U.S.-priority outreach route is now frozen. Priority order: ONR Global -> NUWC Newport/Northeast Tech Bridge -> WHOI OSL/AOPE -> NRL Alternative Energy/TTO -> DARPA office-wide BAA. DIU is later-stage and ARPA-E is cleaner through a U.S. partner.",
+    "outreach_claim_boundary": "JANUS is to be presented as a literature-anchored, preregistered engineering concept awaiting physical validation, never as proven self-powered hardware.",
     "proof_metric": "External charger off; dual-pack proof uses E_A + E_B and all verified energy flows."
   },
   "current_project_state": {
@@ -86,8 +93,9 @@
     "latest_simulation": "projects/janus-engine/simulations/JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-008-FULL-MEASURED-ENERGY-BALANCE-v0.1.json",
     "latest_simulation_status": "PREREGISTERED_BLOCKED_ON_PHYSICAL_METERING",
     "latest_gate": "projects/janus-engine/gates/JANUS-ENGINE-R0P1A-MEASUREMENT-DATA-CONTRACT-v1.0.json",
-    "latest_journal": "projects/janus-engine/journal/JANUS-ENGINE-DEVELOPMENT-JOURNAL-2026-08-30-v1.5.json",
-    "next_experimental_gate": "R0P1A_DATA_ACQUISITION_AND_P7_BUS_CLOSURE",
+    "latest_research": "projects/janus-engine/research/TOPA-SPIDER-US-OUTREACH-ROUTING-RUN-007-v1.0.json",
+    "latest_journal": "projects/janus-engine/journal/JANUS-ENGINE-DEVELOPMENT-JOURNAL-2026-08-30-v1.6.json",
+    "next_experimental_gate": "EXTERNAL_LAB_R0P1A_DATA_ACQUISITION_AND_P7_BUS_CLOSURE",
     "next_integrated_run": "RUN008_v1.0_AFTER_MEASUREMENTS"
   },
   "project_constitution": [
@@ -99,13 +107,15 @@
     "UNKNOWN_WATTS_REMAIN_UNKNOWN",
     "NO_PLACEHOLDER_WATTS_IN_RUN008_FINAL_VERDICT",
     "MODEL_PASS_NE_HARDWARE_PASS",
+    "USE_FORMAL_SUBMISSION_ROUTES_WHEN_REQUIRED",
+    "DO_NOT_DUPLICATE_OUTREACH_TO_THE_SAME_RECIPIENT",
     "DEVELOPMENT_JOURNAL_IS_APPEND_ONLY"
   ],
   "next_actions": [
-    "Acquire P0 controls-only baseline watts.",
-    "Acquire P1 pump W, Q and DeltaP on the actual POMS path.",
-    "Acquire P2 gas-loop watts and flow, then P3 AFPM torque/RPM/DC maps.",
-    "Measure P4 purge joules and gas/pressure loss, P5 trap/wiper penalties and P6 thermal path.",
-    "Run P7 full-stack and require bus-level energy closure before RUN-008 v1.0."
+    "Prepare one concise nonconfidential U.S.-style technical brief centered on R0P1A and RUN-008.",
+    "Start sequential outreach with ONR Global, then NUWC Newport/Northeast Tech Bridge and WHOI OSL/AOPE.",
+    "Request independent technical review and the smallest instrumented experiment capable of replacing the dominant UNKNOWN measurements.",
+    "Maintain a recipient/contact ledger and do not send duplicate messages.",
+    "After measured P0-P7 data arrive, run P7 bus closure and supersede RUN-008 v0.1 with v1.0."
   ]
 }
