@@ -1,29 +1,25 @@
 {
-  "schema": "hawkar.topa.spider.tspu_external.habr_google_youtube_blame_shift.v1",
-  "artifact_id": "HABR-2014-TO-2024-GOOGLE-YOUTUBE-BLAME-SHIFTING-LEAD-v1.0",
+  "schema": "hawkar.topa.spider.tspu_external.habr_google_youtube_blame_shift.v1_1",
+  "artifact_id": "HABR-2014-TO-2025-GOOGLE-YOUTUBE-BLAME-SHIFTING-LEAD-v1.1",
   "generated_date_utc": "2026-08-30",
-  "status": "OPEN_SOURCE_TIMELINE_BUILT_ACCOUNT_NETWORK_UNRESOLVED",
+  "status": "OPEN_SOURCE_TIMELINE_CORRECTED_ACCOUNT_NETWORK_UNRESOLVED",
   "purpose": "Track public Habr-era technical narratives around Russian Internet restrictions and later YouTube/Google Global Cache explanations, while separating contemporaneous anti-censorship discussion, legitimate CDN degradation, official blame shifting, and any future evidence of coordinated persona/account pre-positioning.",
   "user_lead": {
     "claim": "The user reports seeing similar talking points/method-like narratives and accounts registered around 2014 that later frame YouTube/Google access problems as Google cluster degradation rather than Russian blocking.",
     "state": "HIGH_VALUE_USER_OSINT_LEAD_UNVERIFIED_AT_ACCOUNT_NETWORK_LEVEL",
-    "required_bridge": "Exact handles/profile URLs, registration dates, archived comments/posts and chronology tying the same or coordinated accounts to the technical explanation before or during later restrictions."
+    "required_bridge": "Exact Habr handles/profile metadata, registration dates, archived comments/posts and chronology tying the same or coordinated accounts to the technical explanation before or during later restrictions."
   },
-  "link_resolution_note": {
-    "provided_url": "https://habr.com/ru/amp/publications/975812/",
-    "observed_resolution": "Public web retrieval resolved to Habr article 215121, published 2014-03-08: 'Информационно-технологические средства практического выживания социальных сообществ в условиях отключения Интернета в 2014 году'.",
-    "interpretation": "The recovered article is primarily anti-censorship / resilience-oriented, not evidence of a pro-government blame-shifting manual. Do not relabel it as propaganda."
+  "material_correction": {
+    "incorrect_prior_note": "A previous pass incorrectly stated that the supplied Habr ID 975812 resolved to article 215121 from 2014.",
+    "correct_resolution": "Current direct retrieval of Habr publication ID 975812 resolves to the 2025-12-11 Habr news item 'Сервера Google, похоже, продолжат деградацию — на очереди остальные сервисы'.",
+    "source": "https://habr.com/ru/news/975812/",
+    "state": "CORRECTED"
   },
   "2014_context_confirmed": [
     {
-      "finding": "On 2014-03-08 Habr published a detailed discussion anticipating Russian Internet restrictions, citing planned/actual blocks and discussing resilient communications outside ordinary Internet infrastructure.",
+      "finding": "On 2014-03-08 Habr separately published article 215121 discussing anticipated Russian Internet restrictions and resilient communications outside ordinary Internet infrastructure.",
       "source": "https://habr.com/ru/articles/215121/",
-      "state": "CONFIRMED"
-    },
-    {
-      "finding": "The article explicitly mentioned partial YouTube blocking by Russian providers and broader fears of foreign-resource restrictions.",
-      "source": "https://habr.com/ru/articles/215121/",
-      "state": "CONFIRMED"
+      "state": "CONFIRMED_SEPARATE_SOURCE_NOT_ID_975812"
     }
   ],
   "2023_2024_ggc_context": [
@@ -33,12 +29,12 @@
       "state": "CONFIRMED_NEGATIVE_CONTROL"
     },
     {
-      "finding": "On 2024-07-12 Rostelecom publicly attributed YouTube quality problems to Google Global Cache equipment capacity/maintenance issues, and Roskomnadzor said it had nothing to add to that explanation; Kremlin spokesman Dmitry Peskov said Russia was not considering limiting access and repeated the equipment explanation.",
+      "finding": "On 2024-07-12 Rostelecom publicly attributed YouTube quality problems to Google Global Cache equipment capacity/maintenance issues, and Roskomnadzor said it had nothing to add to that explanation; Kremlin spokesman Dmitry Peskov repeated the equipment explanation.",
       "source": "https://habr.com/ru/news/828376/",
       "state": "CONFIRMED_OFFICIAL_ATTRIBUTION"
     },
     {
-      "finding": "Google later publicly said it was not responsible for the reported YouTube problems in Russia, while Rostelecom continued to attribute them to Google/GGC.",
+      "finding": "Google later publicly said it was not responsible for reported YouTube problems in Russia, while Rostelecom continued to attribute them to Google/GGC.",
       "source": "https://habr.com/ru/news/833284/",
       "state": "CONFIRMED_DISPUTED_ATTRIBUTION"
     },
@@ -46,13 +42,31 @@
       "finding": "By August 2024 Habr reported YouTube traffic shifting from GGC toward backbone/direct paths and providers supplying GGC connection data to Roskomnadzor; this is inconsistent with treating all observed degradation as a simple single-cause CDN failure.",
       "source": "https://habr.com/ru/news/835182/",
       "state": "CONFIRMED_COMPLEX_NETWORK_EVENT"
-    },
-    {
-      "finding": "By November 2024 Rostelecom continued saying it had not technically restricted YouTube and blamed GGC aging, while Habr also reported that Roskomnadzor's GRFC required operators to stop traffic distortion/substitution techniques used against the slowdown and that YouTube had been slowed dramatically versus June levels.",
-      "source": "https://habr.com/ru/news/859590/",
-      "state": "CONFIRMED_TENSION_BETWEEN_PUBLIC_EXPLANATION_AND_NETWORK_CONTROL_CONTEXT"
     }
   ],
+  "2025_habr_thread": {
+    "article_finding": "The December 11 2025 Habr item quotes State Duma deputy Andrey Svintsov advocating the gradual 'soft expulsion' of Google from Russia and stating that services may progressively slow or become harder to use so users and businesses have time to switch to Russian alternatives.",
+    "source": "https://habr.com/ru/news/975812/",
+    "state": "CONFIRMED_PUBLIC_POLICY_RHETORIC",
+    "commentary_examples": [
+      {
+        "handle": "causalrat",
+        "summary": "Frames Google as also blocking Russian users and says the 'iron curtain is being built from both sides'.",
+        "state": "UNATTRIBUTED_USER_COMMENT"
+      },
+      {
+        "handle": "kiwanaz",
+        "summary": "Supports the 'both sides' framing in the same thread.",
+        "state": "UNATTRIBUTED_USER_COMMENT"
+      },
+      {
+        "handle": "TerrorDroid",
+        "summary": "Provides a legitimate anti-abuse explanation for VPN/datacenter/shared-IP restrictions, serving as a negative/control interpretation.",
+        "state": "UNATTRIBUTED_NEGATIVE_CONTROL"
+      }
+    ],
+    "interpretation": "The thread demonstrates coexistence of explicit Russian policy rhetoric about deliberately degrading/limiting Google access and user-level causal narratives assigning some responsibility to Google or both sides. It does not by itself establish coordinated account management."
+  },
   "analytic_model": {
     "legitimate_failure_path": "REAL_GGC_CAPACITY_OR_MAINTENANCE_DEGRADATION -> SLOWER_CONTENT_DELIVERY",
     "state_blame_shift_candidate": "POLICY_OR_PATH_INTERVENTION -> USER_SEES_DEGRADATION -> PUBLIC_EXPLANATION_ATTRIBUTES_FAILURE_TO_GOOGLE_GGC",
@@ -61,16 +75,16 @@
   },
   "account_network_question": {
     "state": "OPEN",
-    "current_evidence": "No independently verified set of Habr accounts registered in 2014 has yet been linked to coordinated repetition of the GGC/Google blame narrative in this pass.",
+    "current_evidence": "No independently verified set of Habr accounts registered in 2014 has yet been linked to coordinated repetition of the GGC/Google blame narrative in this pass. The 975812 article author exTvr is publicly indexed as registered in 2023, showing that account age must be verified individually.",
     "do_not_claim": [
       "2014 Habr accounts were Russian state assets",
       "all GGC-degradation discussion was coordinated propaganda",
-      "the 2014 anti-censorship article is itself a propaganda manual"
+      "account creation in 2014 proves pre-positioning"
     ],
     "next_evidence_needed": [
-      "exact profile handles",
+      "exact Habr handles",
       "profile registration dates",
-      "archived posts/comments",
+      "archived historical activity",
       "repeated phrase or framing similarity",
       "posting-time coordination",
       "cross-platform reuse",
@@ -78,11 +92,11 @@
     ]
   },
   "outreach_relevance": {
-    "META": "LOW — this is not a Threads integrity issue and should not be added to the Meta complaint.",
-    "FBI": "HIGH AS HISTORICAL TECHNICAL COVER-STORY / ATTRIBUTION-MANIPULATION LEAD IF ACCOUNT COORDINATION IS LATER VERIFIED.",
+    "META": "LOW — keep Meta focused on Threads platform integrity; do not add this network-attribution lane.",
+    "FBI": "HIGH AS TECHNICAL COVER-STORY / ATTRIBUTION-MANIPULATION LEAD IF ACCOUNT COORDINATION IS LATER VERIFIED.",
     "ODNI_FMIC": "HIGH AS STRATEGIC NARRATIVE PREPOSITIONING / BLAME-SHIFTING MECHANISM.",
     "STATE_CFIMI": "HIGH AS FOREIGN INFORMATION MANIPULATION AROUND CAUSAL ATTRIBUTION OF ACCESS RESTRICTIONS.",
     "CISA": "MEDIUM ONLY AFTER TECHNICAL PATH-LOCALIZED EVENT; CURRENTLY HOLD."
   },
-  "current_verdict": "The historical/public record supports a real Russian information-control environment by 2014 and a later 2024 dispute in which Russian authorities/operators attributed YouTube degradation to Google/GGC while broader evidence pointed to active Russian network-control intervention. The user's claimed 2014 account/method network remains an important but unverified lead requiring exact account-level evidence before attribution."
+  "current_verdict": "The public record supports a real Russian information-control trajectory, legitimate historical GGC degradation as a negative control, official Russian attribution of YouTube problems to Google/GGC in 2024, and explicit 2025 policy rhetoric about gradually degrading/limiting Google services. The user's claimed long-lived 2014 account network remains an important but unverified lead requiring account-level chronology before attribution."
 }
