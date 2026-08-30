@@ -1,0 +1,138 @@
+{
+  "artifact_uuid": "JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-007-MEASURED-PARASITIC-REPLACEMENT-v1.0",
+  "timestamp": "2026-08-30T14:00:00+03:00",
+  "version": "v1.0",
+  "title": "JANUS Engine — Howl's Moving Castle RUN-007 measured-parasitic replacement audit",
+  "observer": "Hawkar / JANUS",
+  "node_type": "measured_anchor_replacement_and_metering_gate_simulation",
+  "repository": "Hawkar-usls/janus-meta-registry",
+  "git_branch": "research/janus-engine",
+  "parent": "projects/janus-engine/simulations/JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-006-FULL-INTEGRATED-IGNITION-v1.0.json",
+  "status": "PARTIAL_MEASURED_REPLACEMENT__HONEST_STOP_BEFORE_FULL_MEASURED_NET_CLAIM",
+  "scope_boundary": "RUN-007 replaces RUN-006 assumptions only where a published measurement, hardware rating, or already measured JANUS datum exists. Unknown subsystem watts remain UNKNOWN rather than being filled by invented values. This is not a physical JANUS hardware run.",
+  "source_audit": {
+    "direct_artificial_gill_paper": {
+      "reference": "Merckelbach & Georgopanos, Advanced Science 2025, DOI 10.1002/advs.202410358",
+      "measured_prototype_membrane_area_m2": 3.0,
+      "measured_water_flow_L_s": [0.478, 0.663, 0.847],
+      "measured_internal_air_flow_m3_s": 6.6e-6,
+      "measured_total_O2_umol_s_range": [1.5, 2.5],
+      "measured_gross_fuel_cell_W_range": [0.18, 0.30],
+      "measured_flux_mg_m2_s_range": [0.016, 0.02667],
+      "important_power_boundary": "The paper states that the internal and external electronic circuits were powered by an external power supply. Therefore the paper does not provide a closed self-powered fan/controller parasitic measurement for JANUS to import.",
+      "thermal_boundary": "The paper proposed a passive heat exchanger for humidity control but did not integrate it in the prototype. No active thermal-management watt value is therefore imported."
+    },
+    "H12_hardware_rating": {
+      "model": "Horizon H-12 / FCS-B12 PEM fuel-cell system used by the paper",
+      "rated_power_W": 12.0,
+      "rated_performance": "7.8 V at 1.5 A",
+      "rated_system_efficiency_full_power_fraction": 0.40,
+      "blower_voltage_V": 5.0,
+      "purge_valve_voltage_V": 6.0,
+      "hydrogen_flow_at_max_output_L_min": 0.18,
+      "startup_time_s_max_ambient": 30,
+      "boundary": "40% is a manufacturer/system rating at full power, not a measured JANUS low-pO2 operating efficiency. Voltage values alone do not determine blower or valve watts because current/duty were not provided."
+    }
+  },
+  "replacement_ledger": {
+    "PEMFC_conversion": {
+      "RUN006_55pct_design_branch": "DEMOTED_TO_SENSITIVITY_ONLY",
+      "direct_low_pO2_empirical_branch": "RETAINED_AS_CLOSEST_MEASURED_BEHAVIOR",
+      "H12_40pct_rated_branch": "ADDED_AS_INTERMEDIATE_HARDWARE_RATING_REFERENCE",
+      "decision": "No battery-neutral hardware claim may use 55% as the sole conversion assumption."
+    },
+    "POMS_flux": {
+      "measured_prototype_mg_m2_s": [0.016, 0.02667],
+      "JANUS_first_demonstrator_target_mg_m2_s": [0.064, 0.13],
+      "status": "TARGET_NOT_YET_MEASURED_ON_JANUS_GEOMETRY",
+      "ratio_target_to_measured_prototype_range": "approximately 2.4x to 8.1x depending endpoints; expected flow-distribution gains remain an experimental hypothesis"
+    },
+    "water_loop": {
+      "measured_paper_Q_L_s": [0.478, 0.663, 0.847],
+      "JANUS_scaled_21p2109m2_reference_Q_L_s": [3.380, 5.989],
+      "measured_JANUS_DeltaP_Pa": null,
+      "measured_JANUS_pump_W": null,
+      "status": "NOT_REPLACED__FLOW_IS_ANCHORED_BUT_POWER_REQUIRES_DELTA_P_AND_ELECTRICAL_MEASUREMENT"
+    },
+    "gas_loop": {
+      "measured_paper_internal_air_flow_m3_s": 6.6e-6,
+      "paper_flow_per_area_m3_s_m2": 2.2e-6,
+      "same_flow_density_reference_for_21p2109m2_m3_s": 4.6664e-5,
+      "same_flow_density_reference_L_min": 2.7998,
+      "measured_JANUS_fan_W": null,
+      "status": "FLOW_ANCHORED__FAN_POWER_UNKNOWN"
+    },
+    "AFPM": {
+      "measured_motor_W_vs_RPM_torque": null,
+      "measured_generator_efficiency": null,
+      "measured_zero_current_crossover": null,
+      "status": "NOT_REPLACED__R0M3_REQUIRED"
+    },
+    "purge": {
+      "nominal_interval_s": 1800,
+      "H12_purge_valve_voltage_V": 6.0,
+      "measured_valve_current_A": null,
+      "measured_N2_or_gas_mass_per_purge": null,
+      "measured_pressure_recovery_work_J": null,
+      "status": "NOT_REPLACED__VOLTAGE_WITHOUT_CURRENT_AND_DUTY_IS_NOT_POWER"
+    },
+    "crystal_trap_and_wiper": {
+      "measured_trap_DeltaP_Pa": null,
+      "measured_wiper_incremental_torque_Nm": null,
+      "measured_filter_loading_curve": null,
+      "status": "NOT_REPLACED__R0A4E_LONG_HOLD_REQUIRED"
+    },
+    "controls_and_sensors": {
+      "paper_prototype_power_source": "external power supply",
+      "measured_JANUS_control_W": null,
+      "status": "NOT_REPLACED__MUST_METER_THE_ACTUAL_SELECTED_CONTROLLER_SENSOR_SET"
+    },
+    "thermal_management": {
+      "architecture_preference": "passive water-coupled heat exchanger/demister where possible",
+      "direct_active_electric_W": "may approach zero only if passive design is validated",
+      "pressure_drop_and_heat_rejection": "UNMEASURED",
+      "status": "NO_ACTIVE_WATT_CREDIT_UNTIL_THERMAL_AND_DELTA_P_HOLD_TEST_CLOSES"
+    }
+  },
+  "measured_parasitic_sum": {
+    "formula": "P_aux_measured = P_water + P_gas + P_AFPM_support + P_purge_average + P_crystal_trap_increment + P_controls + P_active_thermal + P_other_measured",
+    "current_numeric_total_W": null,
+    "reason": "The dominant required subsystem powers have not yet been measured on the JANUS article. A numeric total here would be fabricated.",
+    "RUN006_12_10_8W_schedule": "RETIRED_AS_EVIDENCE; retained only as a comparison envelope until each component is replaced"
+  },
+  "H12_40pct_shadow_screen_using_old_RUN006_aux_envelope_only": {
+    "purpose": "Diagnostic only: show how replacing the optimistic 55% conversion reference with the H-12 40% full-power rating changes the previous 12/10/8 W envelope. This does NOT satisfy the measured-parasitic objective because those auxiliary watts remain placeholders.",
+    "method": "Scale the RUN006 55%-conversion gross-power branch by 40/55, retain 0.5 h at 12 W, 4 h linear ramp at 10 W, 1.5 h at 8 W, and retain 95% bidirectional DC/DC efficiency.",
+    "cases": [
+      {"flux_mg_m2_s":0.064,"final_gross_W":9.6383,"bus_net_6h_Wh":-24.2661,"max_bus_deficit_Wh":26.7235,"dual_pack_delta_Wh":-25.7955,"battery_recovery_time_h":22.574,"shadow_verdict":"FAIL_6H_EVENTUAL_RECOVERY_IF_STEADY"},
+      {"flux_mg_m2_s":0.100,"final_gross_W":15.0598,"bus_net_6h_Wh":-5.2908,"max_bus_deficit_Wh":19.2804,"dual_pack_delta_Wh":-7.0050,"battery_recovery_time_h":7.045,"shadow_verdict":"NEAR_PASS_BUT_NOT_6H"},
+      {"flux_mg_m2_s":0.130,"final_gross_W":19.5777,"bus_net_6h_Wh":10.5219,"max_bus_deficit_Wh":16.2157,"dual_pack_delta_Wh":8.3315,"battery_recovery_time_h":5.243,"shadow_verdict":"PASS_OLD_ENVELOPE_ONLY"},
+      {"flux_mg_m2_s":0.160,"final_gross_W":24.0956,"bus_net_6h_Wh":26.3347,"max_bus_deficit_Wh":14.3003,"dual_pack_delta_Wh":23.5503,"battery_recovery_time_h":4.454,"shadow_verdict":"PASS_OLD_ENVELOPE_ONLY"},
+      {"flux_mg_m2_s":0.1707,"final_gross_W":25.7070,"bus_net_6h_Wh":31.9744,"max_bus_deficit_Wh":13.7800,"dual_pack_delta_Wh":28.9615,"battery_recovery_time_h":4.236,"shadow_verdict":"PASS_OLD_ENVELOPE_ONLY"}
+    ],
+    "interpretation": "The nominal 0.130 mg/m2/s point remains energetically interesting even after demoting 55% to a 40% rated-efficiency reference, but this cannot be called a measured net-power pass until the auxiliary ledger is physically metered."
+  },
+  "RUN007_verdict": {
+    "measured_replacement_progress": "PARTIAL",
+    "what_changed": [
+      "55% is no longer the primary pass anchor; it is sensitivity-only.",
+      "The closest measured low-pO2 prototype branch remains conservative evidence.",
+      "A 40% H-12 full-power system rating is added as an intermediate hardware reference.",
+      "Water and gas flow anchors are separated from pump/fan power; flow is not treated as watts.",
+      "Unknown AFPM, purge, crystal-trap/wiper, controls and thermal parasitics remain explicitly open."
+    ],
+    "hardware_self_drive": "NOT_PROVEN",
+    "full_measured_net_power": "NOT_COMPUTABLE_YET",
+    "reason": "The experiment has now reached the point where additional numerical polishing cannot replace physical subsystem metering.",
+    "next_gate": "R0P1_PARASITIC_METERING_HARNESS_AND_SUBSYSTEM_ISOLATION"
+  },
+  "hard_invariants": [
+    "FLOW_RATE_IS_NOT_PUMP_POWER",
+    "VOLTAGE_IS_NOT_DEVICE_POWER_WITHOUT_CURRENT_AND_DUTY",
+    "MANUFACTURER_FULL_POWER_EFFICIENCY_IS_NOT_LOW_PO2_JANUS_EFFICIENCY",
+    "UNKNOWN_WATTS_REMAIN_UNKNOWN",
+    "NO_AFPM_REGEN_CREDIT_WITHOUT_INDEPENDENT_MECHANICAL_INPUT",
+    "HYDROGEN_REMAINS_THE_EXTERNAL_CHEMICAL_ENERGY_SOURCE",
+    "RUN007_PARTIAL_REPLACEMENT_NE_HARDWARE_PASS"
+  ]
+}
