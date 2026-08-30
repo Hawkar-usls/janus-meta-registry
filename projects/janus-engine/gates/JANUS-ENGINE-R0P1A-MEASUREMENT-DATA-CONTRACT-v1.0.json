@@ -1,0 +1,63 @@
+{
+  "artifact_uuid": "JANUS-ENGINE-R0P1A-MEASUREMENT-DATA-CONTRACT-v1.0",
+  "timestamp": "2026-08-30T14:30:00+03:00",
+  "version": "v1.0",
+  "title": "JANUS Engine R0P1A — measurement data contract for RUN-008",
+  "observer": "Hawkar / JANUS",
+  "repository": "Hawkar-usls/janus-meta-registry",
+  "git_branch": "research/janus-engine",
+  "parent": "projects/janus-engine/gates/JANUS-ENGINE-R0P1-PARASITIC-METERING-HARNESS-v1.0.json",
+  "status": "READY_FOR_HARDWARE_DATA_INGEST",
+  "purpose": "Freeze the exact channels, signs, units and acceptance rules required before RUN-008 may compute a measured system energy balance.",
+  "required_channels": {
+    "electrical": [
+      "t_s", "V_bus_V", "I_bus_A", "P_bus_W", "E_bus_Wh",
+      "V_batA_V", "I_batA_A", "E_batA_Wh", "V_batB_V", "I_batB_A", "E_batB_Wh",
+      "P_pump_W", "P_gasloop_W", "P_AFPM_DC_W", "P_controls_W", "P_thermal_active_W", "P_PEMFC_gross_W"
+    ],
+    "mechanical_hydraulic": [
+      "RPM", "tau_Axle_Nm", "Q_water_L_s", "DeltaP_POMS_Pa", "DeltaP_trap_Pa", "Q_gas_L_min"
+    ],
+    "process": [
+      "pO2_internal_kPa", "DO_in_mg_L", "DO_out_mg_L", "T_water_C", "T_gas_C", "RH_gas_pct"
+    ],
+    "event": [
+      "purge_event_id", "E_purge_valve_J", "DeltaP_purge_Pa", "gas_or_N2_mass_event_g"
+    ],
+    "optional_diagnostics": [
+      "Bx_T", "By_T", "Bz_T", "filter_mass_CaCO3_g", "wiper_state", "battery_role_state"
+    ]
+  },
+  "sign_convention": {
+    "battery_current": "positive when battery discharges to the DC bus; negative when charging",
+    "AFPM_power": "positive when AFPM consumes DC power as motor; negative when it delivers DC power as generator",
+    "PEMFC_power": "positive generation to bus",
+    "export_power": "positive when leaving JANUS to an external load"
+  },
+  "derived_metrics": {
+    "P_hydraulic_W": "DeltaP_POMS_Pa * Q_water_m3_s",
+    "P_Axle_mech_W": "tau_Axle_Nm * 2*pi*RPM/60",
+    "P_purge_avg_W": "sum(E_purge_valve_J)/elapsed_s plus separately reported pressure/gas-loss work",
+    "O2_capture_g_s": "Q_water_L_s * (DO_in_mg_L - DO_out_mg_L) / 1000",
+    "E_total_battery_Wh": "E_batA_Wh + E_batB_Wh",
+    "P_aux_measured_W": "P_pump_W + P_gasloop_W + max(P_AFPM_DC_W,0) + P_controls_W + P_thermal_active_W + P_purge_avg_W + measured scale-hardware increments + other declared loads",
+    "bus_residual_W": "P_PEMFC_gross_W + battery_discharge_W + verified_regen_W - battery_charge_W - P_aux_measured_W - P_export_W"
+  },
+  "measurement_quality": {
+    "rule": "Every numeric value entering RUN-008 must include operating condition and uncertainty or instrument resolution.",
+    "transient_energy": "integrate timestamped V*I or direct Wh/J channels; do not infer startup energy from one snapshot watt value",
+    "closure": "isolated-channel sum and common-bus integral must agree within declared combined measurement uncertainty",
+    "no_interpolation_rule": "missing dominant load channels remain UNKNOWN; they are not backfilled from the old 12/10/8 W envelope"
+  },
+  "run_states": [
+    "P0_CONTROLS_ONLY", "P1_WATER_ONLY", "P2_GAS_ONLY", "P3_AFPM_ONLY", "P4_PURGE", "P5_SCALE_HARDWARE", "P6_THERMAL", "P7_FULL_STACK"
+  ],
+  "unlock_condition_for_RUN008": "P0-P6 required channels contain measured data and P7 full-stack bus closure passes within uncertainty.",
+  "hard_invariants": [
+    "NO_PLACEHOLDER_WATTS_IN_RUN008_FINAL_VERDICT",
+    "DUAL_PACK_LEDGER_USES_E_A_PLUS_E_B",
+    "REGEN_REQUIRES_IDENTIFIED_MECHANICAL_SOURCE_OR_KINETIC_ENERGY_DECREASE",
+    "HYDROGEN_REMAINS_EXPLICIT_EXTERNAL_FUEL",
+    "MODEL_AND_RATED_VALUES_MAY_BE_COMPARATORS_BUT_NOT_MEASURED_JANUS_VALUES"
+  ]
+}
