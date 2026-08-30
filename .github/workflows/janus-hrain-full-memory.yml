@@ -1,0 +1,91 @@
+name: JANUS HRAiN Full Memory
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'data/JANUS-HRAIN-FULL-MEMORY-CONTRACT-v1.0.json'
+      - 'research/site/janus_hrain_full_memory_export.py'
+      - 'tests/test_hrain_full_memory_export.py'
+      - '.github/workflows/janus-hrain-full-memory.yml'
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'assets/hrain-full-memory/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install test dependency
+        run: python -m pip install --quiet pytest
+      - name: Validate full-memory contract
+        run: python -m json.tool data/JANUS-HRAIN-FULL-MEMORY-CONTRACT-v1.0.json >/dev/null
+      - name: Compile exporter and tests
+        run: python -m compileall -q research/site/janus_hrain_full_memory_export.py tests/test_hrain_full_memory_export.py
+      - name: Run full-current memory tests
+        run: python -m pytest -q tests/test_hrain_full_memory_export.py
+      - name: Build one bounded full-current catalog witness
+        run: |
+          python research/site/janus_hrain_full_memory_export.py \
+            --output-root runtime/hrain-full-memory \
+            --validate | tee runtime/hrain-full-memory-summary.json
+          python - <<'PY'
+          import json
+          m=json.load(open('runtime/hrain-full-memory/manifest.json'))
+          c=m['coverage']
+          assert c['coverage_complete'] is True
+          assert c['tracked_blob_count'] == c['cataloged_blob_count'] + c['generated_self_export_exclusion_count']
+          assert m['historical_lineage_included'] is False
+          assert m['authority']['read_only'] is True
+          assert m['authority']['scientific_authority_granted'] is False
+          print('HRAIN_FULL_CURRENT_MEMORY_CONTRACT=PASS')
+          print('CATALOG_DIGEST='+m['catalog_digest'])
+          print('CATALOGED_BLOBS='+str(c['cataloged_blob_count']))
+          print('SHARDS='+str(m['sharding']['shard_count']))
+          PY
+
+  refresh-main:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: contract
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    concurrency:
+      group: janus-hrain-full-memory-writer
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Generate deterministic full-current memory catalog
+        run: python research/site/janus_hrain_full_memory_export.py --validate
+      - name: Commit generated HRAiN full-memory catalog if changed
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- assets/hrain-full-memory; then
+            echo 'HRAIN_FULL_MEMORY=UNCHANGED'
+            exit 0
+          fi
+          git config user.name 'JANUS HRAiN Memory'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/hrain-full-memory
+          git commit -m 'chore(hrain): refresh full current Meta Registry memory catalog'
+          git push origin HEAD:main
