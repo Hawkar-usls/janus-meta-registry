@@ -38,6 +38,7 @@ jobs:
         run: python -m pytest -q tests/test_hrain_full_memory_export.py
       - name: Build one bounded full-current catalog witness
         run: |
+          mkdir -p runtime
           python research/site/janus_hrain_full_memory_export.py \
             --output-root runtime/hrain-full-memory \
             --validate | tee runtime/hrain-full-memory-summary.json
