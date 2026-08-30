@@ -1,0 +1,120 @@
+{
+  "artifact_uuid": "JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-006-FULL-INTEGRATED-IGNITION-v1.0",
+  "timestamp": "2026-08-30T02:37:00+03:00",
+  "version": "v1.0",
+  "title": "JANUS Engine — Howl's Moving Castle RUN-006 full integrated ignition screen",
+  "observer": "Hawkar / JANUS",
+  "node_type": "integrated_transient_energy_simulation",
+  "repository": "Hawkar-usls/janus-meta-registry",
+  "git_branch": "research/janus-engine",
+  "status": "MIXED_CONDITIONAL_PASS_DESIGN_EFFICIENCY_FAILS_EMPIRICAL_6H_RECOVERY",
+  "scope_boundary": "This is a numerical integrated launch using current literature/model anchors. It is not a physical hardware startup and does not replace the open measurement gates.",
+  "parents": [
+    "projects/janus-engine/simulations/JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-005-POMS-STARTUP-v1.0.json",
+    "projects/janus-engine/gates/JANUS-ENGINE-R2D-DUAL-BATTERY-SUPPORT-REGEN-v1.0.json",
+    "projects/janus-engine/gates/JANUS-ENGINE-R0M3-MOTOR-REGEN-CROSSOVER-v1.0.json",
+    "projects/janus-engine/simulations/JANUS-ENGINE-M4-MAGNETIC-COMMUTATION-SELECTION-SCREEN-v1.1.json",
+    "projects/janus-engine/simulations/JANUS-ENGINE-R0A4D-AXLE-VANE-CRYSTAL-TRAP-SCREEN-v1.0.json"
+  ],
+  "frozen_architecture": {
+    "water_side": "21.2109 m2 sectorized annular flat POMS crown",
+    "magnetic_machine": "coreless/slotless AFPM starter-generator",
+    "optional_magnetics": "micro-EPM assist not credited until bench A/B proves lower total Wh",
+    "battery": "dual independently managed packs through bidirectional DC/DC stages",
+    "scale_control": "low-hardness initial water + low-adhesion wall + rotating Axle/wiper + crystal trap",
+    "energy_source_boundary": "PEMFC requires explicit external hydrogen fuel; oxygen extracted by the gill is oxidizer, not primary energy"
+  },
+  "run_schedule": {
+    "total_hours": 6.0,
+    "S1_prime": {"hours": 0.5, "gross_PEMFC_W": 0.0, "auxiliary_W": 12.0},
+    "S2_to_S4_ramp": {"hours": 4.0, "gross_PEMFC": "linear 0 -> final case value", "auxiliary_W": 10.0},
+    "S5_hold": {"hours": 1.5, "gross_PEMFC": "final case value", "auxiliary_W": 8.0},
+    "note": "12/10/8 W are explicit screening envelopes, not measured JANUS loads. No unmeasured hydraulic regeneration is credited."
+  },
+  "dual_battery_screen": {
+    "capacity_each_Wh": 100.0,
+    "BAT_A_start_Wh": 80.0,
+    "BAT_B_start_Wh": 50.0,
+    "total_start_Wh": 130.0,
+    "BAT_A_role": "startup/support source",
+    "BAT_B_role": "recovery/surplus sink",
+    "bidirectional_DC_DC_discharge_efficiency": 0.95,
+    "bidirectional_DC_DC_charge_efficiency": 0.95,
+    "proof_metric": "E_A + E_B",
+    "external_charger": "OFF during declared run"
+  },
+  "flux_conversion_matrix": [
+    {"flux_mg_m2_s":0.064,"conversion":"RUN005 empirical","final_gross_W":5.0906,"bus_net_6h_Wh":-40.1829,"max_bus_deficit_Wh":40.1849,"dual_pack_delta_Wh":-42.2980,"battery_recovery_time_h":null,"verdict":"FAIL"},
+    {"flux_mg_m2_s":0.064,"conversion":"55pct design","final_gross_W":13.2526,"bus_net_6h_Wh":-11.6159,"max_bus_deficit_Wh":21.0924,"dual_pack_delta_Wh":-13.1998,"battery_recovery_time_h":8.6453,"verdict":"EVENTUAL_RECOVERY_AFTER_6H"},
+    {"flux_mg_m2_s":0.100,"conversion":"RUN005 empirical","final_gross_W":7.9541,"bus_net_6h_Wh":-30.1607,"max_bus_deficit_Wh":30.1627,"dual_pack_delta_Wh":-31.7483,"battery_recovery_time_h":null,"verdict":"FAIL_STEADY_GROSS_BELOW_8W_AUX"},
+    {"flux_mg_m2_s":0.100,"conversion":"55pct design","final_gross_W":20.7072,"bus_net_6h_Wh":14.4752,"max_bus_deficit_Wh":15.6595,"dual_pack_delta_Wh":12.1443,"battery_recovery_time_h":4.9941,"verdict":"PASS_SCREEN"},
+    {"flux_mg_m2_s":0.130,"conversion":"RUN005 empirical","final_gross_W":10.3403,"bus_net_6h_Wh":-21.8090,"max_bus_deficit_Wh":25.3428,"dual_pack_delta_Wh":-23.3195,"battery_recovery_time_h":16.4888,"verdict":"STEADY_POSITIVE_BUT_STARTUP_NOT_RECOVERED_IN_6H"},
+    {"flux_mg_m2_s":0.130,"conversion":"55pct design","final_gross_W":26.9193,"bus_net_6h_Wh":36.2176,"max_bus_deficit_Wh":13.4306,"dual_pack_delta_Wh":33.0283,"battery_recovery_time_h":4.0889,"verdict":"PASS_SCREEN"},
+    {"flux_mg_m2_s":0.160,"conversion":"RUN005 empirical","final_gross_W":12.7266,"bus_net_6h_Wh":-13.4569,"max_bus_deficit_Wh":21.7161,"dual_pack_delta_Wh":-15.0128,"battery_recovery_time_h":9.3435,"verdict":"EVENTUAL_RECOVERY_AFTER_6H"},
+    {"flux_mg_m2_s":0.160,"conversion":"55pct design","final_gross_W":33.1315,"bus_net_6h_Wh":57.9603,"max_bus_deficit_Wh":12.0376,"dual_pack_delta_Wh":53.8268,"battery_recovery_time_h":3.5019,"verdict":"PASS_SCREEN"},
+    {"flux_mg_m2_s":0.1707,"conversion":"RUN005 empirical","final_gross_W":13.5776,"bus_net_6h_Wh":-10.4784,"max_bus_deficit_Wh":20.7311,"dual_pack_delta_Wh":-12.0822,"battery_recovery_time_h":8.2803,"verdict":"EVENTUAL_RECOVERY_AFTER_6H"},
+    {"flux_mg_m2_s":0.1707,"conversion":"55pct design","final_gross_W":35.3471,"bus_net_6h_Wh":65.7149,"max_bus_deficit_Wh":11.6592,"dual_pack_delta_Wh":61.2325,"battery_recovery_time_h":3.3415,"verdict":"PASS_SCREEN"}
+  ],
+  "selected_nominal_case": {
+    "flux_mg_m2_s": 0.130,
+    "reason": "RUN005 high break-even target inside the currently selected 0.064-0.13 first-demonstrator band",
+    "oxygen_rate_at_full_flux_g_s": 0.0027574,
+    "six_hour_O2_throughput_g_with_linear_ramp": 34.74324,
+    "stoichiometric_H2_minimum_g_for_that_O2": 4.37765,
+    "fuel_caution": "This H2 number is stoichiometric reactant only; practical PEMFC feed/purge/excess and fuel-system auxiliaries remain hardware measurements. Hydrogen remains the external chemical-energy source."
+  },
+  "selected_nominal_case_results": {
+    "empirical_conversion": {
+      "final_gross_W": 10.3403,
+      "steady_net_at_8W_aux_W": 2.3403,
+      "maximum_bus_deficit_Wh": 25.3428,
+      "time_of_maximum_deficit_h": 4.3684,
+      "dual_pack_end_total_Wh": 106.6805,
+      "dual_pack_delta_Wh": -23.3195,
+      "startup_energy_recovery_time_h_if_steady_state_persists": 16.4888,
+      "verdict": "NO_6H_BATTERY_NEUTRAL_PASS"
+    },
+    "design_55pct_conversion": {
+      "final_gross_W": 26.9193,
+      "steady_net_at_8W_aux_W": 18.9193,
+      "maximum_bus_deficit_Wh": 13.4306,
+      "time_of_maximum_deficit_h": 1.9859,
+      "battery_total_returns_to_initial_energy_h": 4.0889,
+      "BAT_A_end_Wh_fixed_role_screen": 65.8625,
+      "BAT_B_end_Wh_fixed_role_screen": 97.1658,
+      "dual_pack_end_total_Wh": 163.0283,
+      "dual_pack_delta_Wh": 33.0283,
+      "verdict": "BATTERY_NEUTRAL_AND_POSITIVE_AFTER_RECOVERY_IN_SCREEN"
+    }
+  },
+  "magnetic_and_hydraulic_accounting": {
+    "AFPM_regeneration_in_baseline_W": 0.0,
+    "reason": "No independent mechanical source is numerically proven in this integrated run, so generator recovery from the Axle is not credited.",
+    "external_flow_sensitivity": "R0A4D shows external-flow torque can reduce AFPM support or enter regeneration, but it must be measured with flow/head/drag and AFPM efficiency before being added.",
+    "micro_EPM": "not credited; switching-only power can be low in prior screens but assist torque is unmeasured",
+    "magnetic_field_tesla": "UNKNOWN_PENDING_R0M2_MEASUREMENT"
+  },
+  "scale_and_maintenance_accounting": {
+    "crystal_trap": "enabled architecturally but no assumed eta_trap is converted into an energy credit",
+    "Axle_wiper": "enabled architecturally; no measured wear/torque penalty available",
+    "purge_heartbeat_minutes": 30,
+    "purge_pressure_drop_max_requested_atm": 2.0,
+    "limitation": "purge gas mass, valve work, crystal-trap DeltaP, Axle cleaning torque and chemistry effects remain open measured parasitics and therefore are not hidden inside a claim of hardware proof"
+  },
+  "main_result": {
+    "best_current_region": "At 21.2109 m2 POMS and 8 W steady auxiliary screen, the model becomes battery-neutral during the 6 h run at >=0.100 mg/m2/s if PEMFC conversion reaches the 55% design case.",
+    "conservative_region": "Using the small-prototype empirical electrical conversion, the nominal 0.130 mg/m2/s case has positive steady power but requires about 16.49 h total runtime in this startup envelope to repay battery/converter startup losses; 0.160-0.1707 recover in about 9.34-8.28 h.",
+    "dominant_uncertainty": "The result is controlled more by actual PEMFC conversion + total auxiliary watts + startup trajectory than by battery count. Two batteries improve control/headroom but not the thermodynamic balance.",
+    "hardware_status": "NOT_YET_PROVEN"
+  },
+  "hard_invariants": [
+    "THIS_RUN_IS_A_MODEL_NOT_A_PHYSICAL_IGNITION",
+    "EXTERNAL_HYDROGEN_FUEL_IS_REQUIRED_AND_IS_THE_PRIMARY_CHEMICAL_ENERGY_SOURCE",
+    "OXYGEN_IS_AN_OXIDIZER_NOT_PRIMARY_ENERGY",
+    "DUAL_BATTERY_ACCOUNTING_USES_E_A_PLUS_E_B",
+    "AFPM_REGENERATION_IS_ZERO_UNLESS_AN_INDEPENDENT_MECHANICAL_SOURCE_IS_MEASURED",
+    "UNMEASURED_PURGE_SCALE_MAGNETIC_AND_THERMAL_PARASITICS_CANNOT_BE_HIDDEN",
+    "BATTERY_NEUTRAL_MODEL_PASS_IS_NOT_HARDWARE_SELF_DRIVE_PROOF"
+  ],
+  "next_gate": "RUN007_MEASURED_PARASITIC_REPLACEMENT: replace the 12/10/8 W screening schedule with measured water pump, gas loop, AFPM, purge, crystal-trap, controls and thermal-management watts; replace assumed conversion with measured PEMFC efficiency and measured POMS flux."
+}
