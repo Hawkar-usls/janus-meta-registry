@@ -1,0 +1,75 @@
+{
+  "artifact_uuid": "JANUS-ENGINE-TOPA-SPIDER-AXLE-FARADAY-GENERATOR-RUN-006-v1.0",
+  "timestamp": "2026-08-30T02:37:00+03:00",
+  "version": "v1.0",
+  "title": "JANUS Engine — Axle Faraday / transformer-analogy / generator-harvest analysis",
+  "observer": "Hawkar / JANUS",
+  "node_type": "electromagnetic_energy_accounting_research",
+  "repository": "Hawkar-usls/janus-meta-registry",
+  "git_branch": "research/janus-engine",
+  "status": "PASS_GENERATOR_EFFECT_REAL_BULK_EDDY_HARVEST_REJECTED_AS_PRIMARY_PATH",
+  "question": "Does the rotating magnetic Axle create a transformer-like electromagnetic effect and can useful electrical energy be collected into the startup/surplus battery?",
+  "answer": {
+    "short": "Yes, if magnetic flux changes through an intentionally wound stationary coil. That is generator action governed by Faraday induction. The existing coreless AFPM starter-generator is already the correct device to collect it.",
+    "transformer_analogy": "A transformer and a generator share Faraday's law. A transformer changes magnetic flux without mechanical rotation; JANUS changes flux at the stationary stator because the magnetic Axle rotates relative to it.",
+    "faraday_law": "V_induced = -N * dPhi/dt",
+    "mechanical_limit": "P_electric_out <= tau_external * omega after conversion losses",
+    "back_emf_relation": "V_oc approximately proportional to omega for a frozen PM geometry: V_oc = k_e * omega"
+  },
+  "important_distinction": {
+    "useful_generator_path": "Axle PM field -> stationary AFPM windings -> bidirectional inverter/rectifier -> DC bus -> battery",
+    "bulk_copper_or_brass_path": "time-varying field -> eddy currents inside the conductive Axle/chamber -> Lenz reaction torque + heat",
+    "interpretation": "The second path is analogous to an unintended shorted transformer secondary. It is normally a parasitic loss, not an attractive power-harvesting route."
+  },
+  "energy_boundary": {
+    "battery_driven_spin": "If the battery/AFPM motor is the only source spinning the Axle, simultaneously harvesting generator power from the same motion cannot create a net gain. Generator loading increases opposing torque and the motor must supply that energy plus losses.",
+    "real_regeneration": [
+      "external water current drives or assists Axle rotation",
+      "a process pressure/flow source independently supplies shaft work",
+      "Axle is decelerating and finite rotational kinetic energy is being recovered",
+      "another independently identified mechanical source drives the shaft"
+    ],
+    "PEMFC_boundary": "If PEMFC electricity drives the AFPM motor and the same motor-generator immediately regenerates from that self-created shaft motion, the loop is lossy and cannot add energy."
+  },
+  "JANUS_control_opportunity": {
+    "name": "AUTO_MOTOR_TO_REGEN_CROSSOVER",
+    "principle": "Use one bidirectional coreless AFPM machine. During startup it consumes battery power as a motor. If water/hydraulic torque later reduces required motor torque to zero and then exceeds process drag, the inverter automatically crosses into generator mode and charges the battery.",
+    "torque_balance": "tau_hydraulic + tau_other_external - tau_process_drag - tau_bearing - tau_eddy = tau_generator",
+    "regeneration_condition": "tau_external_available * omega > total mechanical losses and generator/inverter losses",
+    "benefit": "No separate generator is required; the same magnetic hardware can start, hold RPM, brake regeneratively and recover genuine external mechanical surplus."
+  },
+  "measurement_gate": {
+    "tests": [
+      "open-circuit back-EMF versus RPM at 60/120/300/600 RPM",
+      "loaded generator voltage/current/power versus RPM",
+      "shaft torque increase when electrical load is applied",
+      "generator efficiency eta_gen = P_DC_to_bus / (tau * omega)",
+      "motor efficiency and inverter bidirectional efficiency",
+      "battery charge power when independently spinning the Axle",
+      "motor-current reduction when hydraulic flow assists the Axle",
+      "zero-current crossover where hydraulic torque exactly carries rotational demand",
+      "regenerative region where DC-bus power reverses into the battery",
+      "simultaneous B(theta,t), RPM, torque, bus current and temperature logging"
+    ],
+    "controls": [
+      "coils open circuit",
+      "coils connected to resistive/dummy electrical load",
+      "battery-connected regenerative inverter",
+      "battery-motor-only spin with no independent mechanical input"
+    ],
+    "decisive_metric": "Only count recovered electrical energy when its source is traceable to independently measured mechanical work or rotor kinetic-energy decrease."
+  },
+  "copper_brass_implication": {
+    "rule": "Do not try to harvest the Axle's bulk eddy currents through solid copper/brass as the main generator architecture.",
+    "reason": "They form poorly controlled circulating currents, cause braking and heat, and are harder to route efficiently to the battery than stationary designed windings.",
+    "preferred": "Use brass-class structural material if it wins the eddy/corrosion A/B; use intentional copper windings where electrical collection is desired."
+  },
+  "verdict": {
+    "transformer_like_effect": "YES_AT_THE_LEVEL_OF_FARADAY_INDUCTION",
+    "actual_machine_class": "ROTATING_PM_GENERATOR_NOT_A_TRANSFORMER",
+    "battery_harvest": "YES_WHEN_AN_INDEPENDENT_MECHANICAL_SOURCE_OR_DECELERATION_SUPPLIES_THE_WORK",
+    "free_extra_energy_from_motor_driven_rotation": "NO",
+    "selected_harvest_path": "CORELESS_AFPM_BIDIRECTIONAL_STARTER_GENERATOR_TO_DC_BUS_AND_BATTERY",
+    "next_gate": "R0M3_MOTOR_REGEN_CROSSOVER_AND_BACK_EMF_MAP"
+  }
+}
