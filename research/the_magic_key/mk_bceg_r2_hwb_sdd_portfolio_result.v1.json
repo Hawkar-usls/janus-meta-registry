@@ -1,0 +1,40 @@
+{
+  "schema":"JANUS/THE_MAGIC_KEY/MK_BCEG_R2_HWB_SDD_PORTFOLIO/META_RESULT/v1.0",
+  "registry_id":"JANUS-THE-MAGIC-KEY-MK-BCEG-R2-HWB-SDD-PORTFOLIO-RESULT-2026-08-30-v1.0",
+  "status":"R2AB_COMPLETE__R2C_R2D_R2E_OPEN",
+  "date":"2026-08-30",
+  "fundamentum_branch":"research/mk-bceg-r2-hwb-sdd-portfolio-2026-08-30",
+  "preregistration_commit":"418efcfb864312f47cb0bc5e128706d128331f8f",
+  "runner_commit":"ea9d199e2517fec41311756ec4129caa0d6da995",
+  "workflow_head":"e75baf4c73124abe3028a6fd32a96ec531bf3217",
+  "workflow_run_id":33324747165,
+  "artifact_id":9735897856,
+  "artifact_zip_sha256":"db93eea4a4518d45da0de361c9a5ac102686188a44a0d7e149fe603c2d727e7a",
+  "result_commit":"5f63dc6d5a461955e07c50dd5ba3ac17f5efdd29",
+  "journal_commit":"d0c3096e0c461dfbe33c9d0d9a4928ee2c16d87f",
+  "verdict":"REFUTED_SDD_ESCAPE_CANDIDATE__FINITE_SCOPE_SOUND_BUT_NOT_SMALLER",
+  "headline":{
+    "HWB_all_order_exact_enumeration_n_max":8,
+    "n8_orders_checked":40320,
+    "n8_best_OBDD_nodes":46,
+    "n8_median_OBDD_nodes":59.0,
+    "n8_worst_OBDD_nodes":66,
+    "SDD_style_exact_verification_n_max":12,
+    "n12_SDD_style_certificate_size_proxy":402,
+    "SDD_partition_failures":0,
+    "SDD_semantic_mismatches":0,
+    "projected_semantics_guard":"PASS"
+  },
+  "four_firewalls":["SEMANTIC_SUFFICIENCY","REPRESENTATION_SIZE","REPRESENTATION_DISCOVERY","REPRESENTATION_UPDATE_COMPOSITION"],
+  "main_finding":"The concrete SDD-style HWB certificate is semantically exact on the frozen finite scope, but it did not beat the best exact OBDD on the overlapping n<=8 range. Published asymptotic SDD-vs-OBDD succinctness results remain external prior art and are not substituted for measured JANUS compiler cost.",
+  "new_law":"REPRESENTATION_LANGUAGE_CLASS_ADVANTAGE_DOES_NOT_IMPLY_THIS_COMPILER_IS_COST_COMPETITIVE",
+  "projected_semantics_law":"AUXILIARY_VARIABLES_MUST_NOT_HIDE_INTERFACE_COMPLEXITY",
+  "open_costs":["T_detect","T_choose_language","T_choose_structure","T_translate","cumulative_switching_cost"],
+  "external_prior_art":[
+    {"claim":"HWB has exponential OBDD size for any variable ordering","source":"Graph driven BDDs — a new data structure for Boolean functions, TCS 141 (1995)","authority":"EXTERNAL_REFERENCE_NOT_INTERNAL_PROOF_RECEIPT"},
+    {"claim":"HWB admits polynomial-size uncompressed SDD; generalized HWB yields exponential compressed-SDD vs OBDD separation","source":"Bova, SDDs Are Exponentially More Succinct than OBDDs, AAAI 2016","authority":"EXTERNAL_REFERENCE_NOT_INTERNAL_PROOF_RECEIPT"}
+  ],
+  "next_gate":"MK_BCEG_R2C_DISCOVERY_ATTACK",
+  "next_objective":"Remove oracle family labels. JANUS receives only a frozen typed/CNF state, pays detection/language/structure-selection cost, and must choose a representation package whose total certified representation cost is compared with oracle-best only for evaluation.",
+  "scientific_boundary":{"P_VS_NP":"OPEN","finite_SDD_soundness_is_universal_escape":false,"universal_polynomial_representation_portfolio_proved":false}
+}
