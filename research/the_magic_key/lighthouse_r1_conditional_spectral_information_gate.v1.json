@@ -1,0 +1,134 @@
+{
+  "schema": "JANUS/THE_MAGIC_KEY/LIGHTHOUSE_R1_CONDITIONAL_SPECTRAL_INFORMATION_GATE/v1.0",
+  "registry_id": "JANUS-THE-MAGIC-KEY-LIGHTHOUSE-R1-CONDITIONAL-SPECTRAL-INFORMATION-GATE-2026-08-30-v1.0",
+  "date": "2026-08-30",
+  "status": "PREREGISTERED_RESEARCH_GATE__RESULT_OPEN",
+  "title": "LIGHTHOUSE R1 — Conditional Spectral Information Gate",
+  "parent_artifacts": [
+    "research/the_magic_key/lighthouse_spectral_memory_welfare_bridge.v1.json",
+    "research/the_magic_key/topa_spider_arxiv_lighthouse_max_sweep_2026-08-30.v1.json"
+  ],
+  "core_upgrade": {
+    "old_axis": "lambda as optional single wavelength/band",
+    "new_axis": "S_spectral as a measured spectral profile with provenance and uncertainty",
+    "canonical_state": "L_t=(K_t,C_t,M_t,W_t,S_t^spectral,Source,Calibration,Uncertainty,PresentAnchor)",
+    "spectral_contract": "S_t^spectral=(SPD,lambda_band,sensor_id,calibration_id,measurement_error,timestamp,session_id,derived_from)",
+    "monochromatic_special_case": "If a source is physically demonstrated to be monochromatic, SPD may reduce to lambda plus measurement uncertainty."
+  },
+  "master_laws": [
+    "PHYSICAL_MEASURABILITY != DISCRIMINATIVE_UTILITY",
+    "DERIVED_SPECTRUM != INDEPENDENT_SPECTRAL_EVIDENCE",
+    "NO_DOUBLE_COUNTED_EVIDENCE",
+    "RGB_PIXEL != UNIQUE_PHYSICAL_WAVELENGTH",
+    "SPECTRAL_DISCRIMINATION != OBJECT_DISCRIMINATION_UNTIL_DEVICE_AND_SESSION_CONFOUNDS_ARE_CONTROLLED",
+    "SPECTRAL_IDENTITY != PERCEPTUAL_IDENTITY",
+    "BETTER_MEMORY_IDENTIFICATION != GREATER_AUTHORITY_TO_ACT",
+    "LIGHT_IS_NOT_MEANING",
+    "LIGHT_IS_MEASURABLE_EVIDENCE",
+    "MEMORY_RETRIEVAL != CONSENT",
+    "CAPABILITY != AUTHORITY"
+  ],
+  "evidence_classes": {
+    "S_MEASURED": {
+      "definition": "Direct sensor measurement from a calibrated spectrometer/multispectral/hyperspectral acquisition chain.",
+      "may_count_as_new_channel": true,
+      "requirements": ["sensor_id", "calibration_id", "session_id", "measurement_error", "timestamp", "raw_or_replayable_measurement_ref"]
+    },
+    "S_DERIVED_FROM_RGB": {
+      "definition": "Spectrum reconstructed from RGB or another already-counted parent representation.",
+      "may_count_as_new_channel": false,
+      "role": "REPRESENTATION_TRANSFORM_ONLY",
+      "information_rule": "If S_hat=f(V_RGB) deterministically, then I(Y;S_hat|V_RGB,A,C)=0 by construction. A stochastic transform with independent randomness also cannot be credited as independent evidence about the observed object without an external measurement source."
+    }
+  },
+  "magic_key_split": {
+    "MK_memory_ID": "Distinguishes a specific cultural/sensory target inside a frozen candidate universe.",
+    "MK_memory_FUTURE": "Retains only cue distinctions that change correctness-relevant future memory operations or admissible retrieval behavior.",
+    "future_equivalence": "Two spectral observations may be physically different yet merge under MK_memory_FUTURE if they lead to the same certified memory neighborhood and identical allowed future operations.",
+    "firewall": "Physical difference alone does not force a future-state distinction."
+  },
+  "primary_endpoints": {
+    "K0": "{Audio,Visual,Context}",
+    "KS": "K0 U {S_measured}",
+    "collision_gain": "Delta_spectral = CollisionRate(K0) - CollisionRate(KS)",
+    "conditional_information": "Delta_I = I(Y;S_measured | A,V,C)",
+    "paid_cost": "C_S=C_sensor+C_calibration+C_acquire+C_canonicalize+C_encode+C_retrieve+C_verify",
+    "experimental_utility": "U_S = preregistered discrimination gain / C_S",
+    "interpretation": "Utility is experimental accounting, not a theorem metric."
+  },
+  "frozen_controls": [
+    "BASE_K0_AUDIO_VISUAL_CONTEXT",
+    "MEASURED_SPECTRAL_KS",
+    "DERIVED_RGB_TO_SPECTRUM_ARM",
+    "SHUFFLED_SPECTRUM",
+    "CONSTANT_SPECTRUM",
+    "SAME_ENTROPY_RANDOM_SCALAR",
+    "NOISE_LADDER",
+    "RGB_ONLY_NO_CALIBRATION",
+    "METAMER_CONTROL",
+    "SIMILAR_SPECTRUM_DIFFERENT_TARGET_CONTROL",
+    "AUDIO_ONLY_ABLATION",
+    "VISUAL_ONLY_ABLATION",
+    "AUDIO_VISUAL_ABLATION",
+    "AUDIO_VISUAL_CONTEXT_ABLATION",
+    "SESSION_PRESERVING_TARGET_SHUFFLE",
+    "TARGET_PRESERVING_SESSION_SHUFFLE",
+    "DEVICE_HOLDOUT",
+    "ACQUISITION_SESSION_HOLDOUT"
+  ],
+  "anti_leakage_protocol": {
+    "split_rule": "Holdouts must be grouped by acquisition session and device where applicable; random sample splits alone are insufficient.",
+    "device_rule": "A sensor fingerprint or session drift may not be credited as target identity.",
+    "derived_channel_rule": "Any feature whose derived_from lineage points to an already-counted parent channel is excluded from independent-evidence credit.",
+    "estimator_rule": "Mutual-information estimator, preprocessing, binning/band selection and thresholds must be frozen before holdout inspection.",
+    "permutation_null": "Observed conditional information gain must be compared against shuffled-spectrum permutation null; positive point estimate alone is not certified information gain.",
+    "bootstrap": "Report holdout uncertainty/bootstrap interval where statistically meaningful."
+  },
+  "decision_states": [
+    "MEASURED_SPECTRUM_ADDS_CONDITIONAL_INFORMATION__FINITE_SURVIVOR_NOT_THEOREM",
+    "SPECTRAL_GAIN_IS_REDUNDANT",
+    "GAIN_DESTROYED_BY_DEVICE_OR_SESSION_HOLDOUT",
+    "GAIN_DESTROYED_BY_NOISE",
+    "GAIN_EXISTS_BUT_COST_DOMINATES",
+    "DERIVED_SPECTRUM_DOUBLE_COUNTING_DETECTED",
+    "NO_SPECTRAL_DISAMBIGUATION",
+    "INCONCLUSIVE",
+    "NO_CERTIFIED_SAFE_ROUTE"
+  ],
+  "welfare_firewall": {
+    "rule": "No increase in cue resolution, collision reduction, confidence, spectral specificity or memory retrieval accuracy modifies W_t automatically.",
+    "pipeline": "SENSORY_EVIDENCE -> CUE_RESOLUTION -> MEMORY_CANDIDATES -> HUMAN_SELECTION/CONSENT/EXIT -> MEMORY_ASSIST -> RETURN_PRESENT",
+    "law": "POWER_CAN_MEASURE; MEASUREMENT_CAN_HELP_REMEMBER; MEMORY_CAN_INFORM; NONE_OF_THEM_MAY_CHOOSE_FOR_THE_HUMAN."
+  },
+  "spider_relations": [
+    "SPECTRALLY_DISTINGUISHES",
+    "PERCEPTUALLY_EQUIVALENT",
+    "DERIVED_FROM",
+    "MEASURED_BY",
+    "CALIBRATED_BY",
+    "ACQUIRED_IN_SESSION",
+    "DEVICE_DEPENDENT",
+    "ADDS_CONDITIONAL_INFORMATION",
+    "REDUNDANT_WITH",
+    "COLLIDES_WITH"
+  ],
+  "topa_spider_prior_art_bridge": {
+    "arxiv_sweep": "research/the_magic_key/topa_spider_arxiv_lighthouse_max_sweep_2026-08-30.v1.json",
+    "signals": [
+      "Associative/context-gated retrieval motivates testing separation gain from an extra context dimension.",
+      "Hyperspectral band-selection literature motivates measuring information gain and redundancy rather than assuming every wavelength is useful.",
+      "RGB-to-spectrum and metamer literature supports treating reconstructed spectra as inverse-problem outputs, not independent physical observations.",
+      "Multimodal retrieval literature motivates ablation and modality-complementarity controls.",
+      "Photonic computing literature supports wavelength as a computational/measurement degree of freedom without intrinsic semantic meaning."
+    ]
+  },
+  "next_action": "Run only on a frozen corpus with real measured spectral evidence or clearly labeled calibrated synthetic controls. Do not treat screenshots or RGB-derived spectra as independent evidence. Preserve raw provenance and charge sensing/calibration/retrieval/verification costs.",
+  "scientific_boundary": {
+    "result_known": false,
+    "real_world_efficacy_established": false,
+    "universal_memory_wavelength_claimed": false,
+    "wavelength_to_happiness_mapping_claimed": false,
+    "machine_subjective_memory_claimed": false,
+    "status_note": "This file freezes the test architecture before empirical results."
+  }
+}
