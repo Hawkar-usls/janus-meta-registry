@@ -1,0 +1,108 @@
+{
+  "schema": "hawkar.topa.spider.tspu_external.country_reverse_matrix.v1",
+  "artifact_id": "TSPU-EXTERNAL-COUNTRY-CHAIN-REVERSE-MATRIX-v1.0",
+  "generated_date_utc": "2026-08-30",
+  "status": "REVERSE_CAUSAL_COUNTRY_MATRIX_R0",
+  "legend": {
+    "C": "confirmed",
+    "P": "partial or plausible with evidence",
+    "N": "not established",
+    "X": "negative/control evidence weakens the proposed bridge"
+  },
+  "columns": [
+    "information_restriction_or_isolation",
+    "active_technical_filtering_or_shutdown",
+    "russian_origin_sorm_dpi_present",
+    "russian_origin_stack_tied_to_filtering",
+    "russian_transit_or_route_control_relevant",
+    "russian_remote_state_control",
+    "anti_us_or_state_narrative_capture",
+    "multi_country_synchronization"
+  ],
+  "cases": [
+    {
+      "case": "OCCUPIED_UKRAINE",
+      "jurisdiction_note": "Internationally recognized Ukrainian territory under Russian occupation; historical proof-of-concept, not a sovereign third-country procurement case.",
+      "scores": ["C","C","C","C","C","C","C","N"],
+      "evidence_summary": "Russian forces compelled or caused local networks to reroute through Russian-controlled providers such as Miranda Media/Rostelecom-linked infrastructure; users then inherited Russian censorship/surveillance conditions, with restrictions on external services and an explicit information-control objective reported by Ukrainian authorities and independent network observers.",
+      "sources": [
+        "https://www.wired.com/story/ukraine-russia-internet-takeover/",
+        "https://freedomhouse.org/country/ukraine/freedom-net/2024"
+      ],
+      "value": "STRONGEST_INTEGRATED_MECHANISM_POC"
+    },
+    {
+      "case": "KAZAKHSTAN",
+      "scores": ["C","C","C","C","C","N","P","N"],
+      "evidence_summary": "Kazakhstan uses Russian-origin SORM/DPI; Freedom House reports authorities attempted targeted filtering with Russian DPI during the January 2022 protest crisis before escalating to nationwide shutdown. Kazakhtelecom has both Russian and non-Russian international transit, enabling matched-path tests.",
+      "sources": [
+        "https://freedomhouse.org/country/kazakhstan/freedom-net/2023",
+        "https://freedomhouse.org/vi/node/7160",
+        "https://bgp.he.net/AS9198",
+        "https://www.iijlab.net/en/members/romain/pdf/nowmay_tprc2025.pdf"
+      ],
+      "value": "STRONGEST_SOVEREIGN_THIRD_COUNTRY_BRIDGE_FROM_RUSSIAN_DPI_TO_ACTUAL_FILTERING",
+      "blocker": "Exact device/vendor lineage and any Russian remote-control involvement remain unresolved."
+    },
+    {
+      "case": "BELARUS",
+      "scores": ["C","C","C","P","C","N","C","N"],
+      "evidence_summary": "Russian-developed SORM has been used since 2010; independent media and information sources are heavily blocked, self-censorship is severe, and state/Kremlin-aligned narratives dominate much of the information environment. A substantial share of internet traffic has historically passed through Russia.",
+      "source": "https://freedomhouse.org/country/belarus/freedom-net/2024",
+      "value": "STRONG_SOVEREIGN_INFORMATION_CAPTURE_ANALOG",
+      "blocker": "No device-level evidence in this pass proves Russian SORM itself executes the blocking or is commanded remotely by Russia."
+    },
+    {
+      "case": "KYRGYZSTAN",
+      "scores": ["C","C","C","P","P","N","P","N"],
+      "evidence_summary": "All ISPs/mobile providers are required to maintain Russian-model SORM compliance; authorities actively block content and TikTok, and international connectivity is concentrated through Kazakhstan and China with Russia a relevant regional transit path in broader routing data.",
+      "source": "https://freedomhouse.org/country/kyrgyzstan/freedom-net/2024",
+      "value": "GOOD_MATCHED_OPERATOR_AND_TRANSIT_TEST_CASE",
+      "blocker": "No evidence that Russia remotely ordered the observed Kyrgyz blocks."
+    },
+    {
+      "case": "UZBEKISTAN",
+      "scores": ["C","C","C","P","P","N","P","N"],
+      "evidence_summary": "Uzbekistan imported Russian SORM/DPI technology and maintains routine website blocking, surveillance, and a history of protest-related internet shutdowns including Karakalpakstan in 2022.",
+      "sources": [
+        "https://freedomhouse.org/country/uzbekistan/freedom-net/2024",
+        "https://www.researchgate.net/publication/360064804_Digital_Silk_Road_in_Central_Asia_Present_and_Future_for_Russian_and_Eurasian_Studies_Cataloging-in-Publication_data"
+      ],
+      "value": "FOREIGN_STACK_PLUS_ACTIVE_CENSORSHIP_CASE",
+      "blocker": "Specific filtering events are not yet tied to a specific Russian-origin device or external command channel."
+    },
+    {
+      "case": "CUBA",
+      "scores": ["C","C","C","P","N","N","C","N"],
+      "evidence_summary": "ETECSA is a Russian-technology procurement target in the existing export graph and operates Cuba's state telecom monopoly; Cuba exhibits protest-correlated connectivity disruptions, independent-media blocking and coordinated pro-government manipulation.",
+      "source": "https://freedomhouse.org/country/cuba/freedom-net/2024",
+      "value": "HIGH_US_PROXIMITY_INFORMATION_ISOLATION_CASE",
+      "blocker": "No public evidence in this pass connects a Russian device to the specific blocking events or proves Russian remote control."
+    },
+    {
+      "case": "NICARAGUA",
+      "scores": ["P","P","C","X","N","N","C","N"],
+      "evidence_summary": "Nicaragua reportedly deployed Russian government-linked SORM-3 around 2018 and deepened cybersecurity cooperation with Russia. Surveillance, intimidation and self-censorship are strongly documented, but broad website blocking was not the dominant 2024 technical pattern.",
+      "source": "https://freedomhouse.org/country/nicaragua/freedom-net/2024",
+      "value": "CRITICAL_NEGATIVE_CONTROL_SURVEILLANCE_DOES_NOT_EQUAL_MASS_CENSORSHIP",
+      "blocker": "No evidence of TSPU-like filtering or Russian remote command."
+    }
+  ],
+  "reverse_ranking": [
+    {"rank": 1, "case": "OCCUPIED_UKRAINE", "reason": "Integrated route-control + Russian censorship + information-control mechanism is directly documented, but occupation changes the legal/operational context."},
+    {"rank": 2, "case": "KAZAKHSTAN", "reason": "Best sovereign-country evidence that Russian DPI was actually attempted for targeted filtering during a political crisis."},
+    {"rank": 3, "case": "BELARUS", "reason": "Strongest sovereign information-capture analog combining Russian surveillance lineage, heavy censorship and pro-Kremlin narrative environment."},
+    {"rank": 4, "case": "KYRGYZSTAN", "reason": "Mandatory Russian-model SORM and active platform/media blocking plus useful transit topology."},
+    {"rank": 5, "case": "UZBEKISTAN", "reason": "Russian SORM/DPI imports plus strong censorship record but weaker device-event linkage."},
+    {"rank": 6, "case": "CUBA", "reason": "High strategic relevance to the United States and strong information control, but weak Russian-device-to-blocking bridge."},
+    {"rank": 7, "case": "NICARAGUA", "reason": "Valuable falsifier: Russian SORM exposure is compatible with surveillance-heavy control without broad TSPU-style blocking."
+  ],
+  "highest_value_next_checks": [
+    "Resolve the exact Russian DPI vendor/product used by Kazakhstan during January 2022 targeted-filtering attempts.",
+    "Search vendor maintenance architecture, procurement clauses, firmware/update channels and sanctions/forensics for remote administrative access evidence in sovereign deployments.",
+    "Build country-specific censorship timelines and compare them for suspicious synchronization only after a normal independent-policy baseline is frozen.",
+    "Use Kazakhstan mixed-transit paths as the first route-dependent fingerprint test because Russian and non-Russian upstreams coexist.",
+    "Preserve Nicaragua as a permanent negative control against the claim 'Russian SORM export implies mass filtering'."
+  ],
+  "current_verdict": "THE_REVERSE_SPIRAL_PARTIALLY_CLOSES_THE_FOREIGN_USE_GAP_BUT_STOPS_CLEANLY_AT_RUSSIAN_REMOTE_CONTROL_AND_MULTI_COUNTRY_SYNCHRONIZATION"
+}
