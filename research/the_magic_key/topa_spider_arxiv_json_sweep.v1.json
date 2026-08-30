@@ -1,0 +1,191 @@
+{
+  "schema": "JANUS/THE_MAGIC_KEY/TOPA_SPIDER_ARXIV_SWEEP/v1.0",
+  "registry_id": "JANUS-THE-MAGIC-KEY-TOPA-SPIDER-ARXIV-JSON-SWEEP-2026-08-30-v1.0",
+  "status": "FIRST_PASS_PRIOR_ART_MAP_NOT_EXHAUSTIVE",
+  "date": "2026-08-30",
+  "branch": "research/the-magic-key-json-meta-2026-08-30",
+  "mission": "Найти исследования, которые рассматривают JSON не только как синтаксис передачи данных, но как формальную модель, логический язык схем, граф/семантический слой, интерфейс constrained generation и потенциальный инструктивный канал для ИИ.",
+  "search_scope": {
+    "source": "arXiv + web-indexed arXiv records",
+    "queries": [
+      "JSON data model schema inference formal semantics",
+      "JSON Schema satisfiability inclusion equivalence witness generation",
+      "JSON-LD RDF graph semantics",
+      "JSON graph transformation reversible projection",
+      "JSON constrained decoding structured output LLM",
+      "schema key wording instruction channel",
+      "structured output JSON model behavior diversity",
+      "schema-valid versus semantic-valid LLM agents"
+    ],
+    "exhaustive": false,
+    "rule": "Отсутствие работы в первом sweep не является доказательством новизны."
+  },
+  "papers": [
+    {
+      "id": "ARXIV-1701.02221",
+      "title": "JSON: data model, query languages and schema specification",
+      "authors": ["Pierre Bourhis", "Juan L. Reutter", "Fernando Suárez", "Domagoj Vrgoč"],
+      "year": 2017,
+      "url": "https://arxiv.org/abs/1701.02221",
+      "cluster": ["formal_json_model", "query_language", "schema_logic"],
+      "relevance": "Формализует JSON-документы, навигационный язык и логику схем; подтверждает, что JSON можно изучать как математический объект, а не только как сериализацию.",
+      "impact_on_magic_key": "База для строгого определения JSON-tree, путей и вычислительной сложности операций над constraint-defined identity."
+    },
+    {
+      "id": "ARXIV-2104.14828",
+      "title": "Not Elimination and Witness Generation for JSON Schema",
+      "authors": ["Mohamed-Amine Baazizi", "Dario Colazzo", "Giorgio Ghelli", "Carlo Sartiani", "Stefanie Scherzinger"],
+      "year": 2021,
+      "url": "https://arxiv.org/abs/2104.14828",
+      "cluster": ["json_schema", "logic", "negation", "recursion", "witnesses"],
+      "relevance": "Рассматривает JSON Schema как логический язык с отрицанием, рекурсией и нетривиальными взаимодействиями ключевых слов.",
+      "impact_on_magic_key": "Очень сильная связь с мем-seed: positive и negative constraints — уже полноценный логический материал. Новизну следует искать не в наличии отрицаний, а в использовании минимального distinguishing constraint closure как идентичности/ключа."
+    },
+    {
+      "id": "ARXIV-2202.12849",
+      "title": "Witness Generation for JSON Schema",
+      "authors": ["Lyes Attouche", "Mohamed-Amine Baazizi", "Dario Colazzo", "Giorgio Ghelli", "Carlo Sartiani", "Stefanie Scherzinger"],
+      "year": 2022,
+      "url": "https://arxiv.org/abs/2202.12849",
+      "cluster": ["json_schema", "satisfiability", "inclusion", "equivalence", "witness_generation"],
+      "relevance": "Показывает связь satisfiability/inclusion/equivalence с генерацией witness и использует реальный корпус из тысяч схем.",
+      "impact_on_magic_key": "Даёт готовую научную опору для MAGIC_KEY witness/counterexample engine: ключ должен не только совпадать, но и выдерживать автоматическую генерацию альтернативных свидетелей."
+    },
+    {
+      "id": "ARXIV-2603.25306",
+      "title": "JSON Schema Inclusion through Refutational Normalization: Reconciling Efficiency and Completeness",
+      "authors": ["Mohamed-Amine Baazizi", "Nour El Houda Ben Ali", "Dario Colazzo", "Giorgio Ghelli", "Stefan Klessinger", "Carlo Sartiani", "Stefanie Scherzinger"],
+      "year": 2026,
+      "url": "https://arxiv.org/abs/2603.25306",
+      "cluster": ["json_schema", "inclusion", "normalization", "refutation"],
+      "relevance": "Современная работа по проверке включения схем через refutational normalization, ориентированная на полноту и практическую эффективность.",
+      "impact_on_magic_key": "Подсказывает отдельный путь: MAGIC_KEY можно искать не только генеративно, но и через refutation — доказать, какие ограничения необходимы, создавая контрпример после удаления каждого кандидата."
+    },
+    {
+      "id": "ARXIV-2501.10868",
+      "title": "Generating Structured Outputs from Language Models: Benchmark and Studies",
+      "authors": ["Saibo Geng", "Hudson Cooper", "Michał Moskal", "Samuel Jenkins", "Julian Berman", "Nathan Ranchin", "Robert West", "Eric Horvitz", "Harsha Nori"],
+      "year": 2025,
+      "url": "https://arxiv.org/abs/2501.10868",
+      "cluster": ["LLM", "JSON_Schema", "constrained_decoding", "benchmark"],
+      "relevance": "JSON Schema стал стандартной мишенью structured output/constrained decoding; работа вводит JSONSchemaBench примерно на 10K реальных схемах.",
+      "impact_on_magic_key": "Даёт внешний benchmark universe для проверки того, какие свойства схем реально поддерживаются различными декодерами и где representation grammar влияет на модель."
+    },
+    {
+      "id": "ARXIV-2604.14862",
+      "title": "Schema Key Wording as an Instruction Channel in Structured Generation under Constrained Decoding",
+      "authors": ["Yifan Le"],
+      "year": 2026,
+      "url": "https://arxiv.org/abs/2604.14862",
+      "cluster": ["LLM", "JSON", "schema_keys", "instruction_channel", "constrained_decoding"],
+      "relevance": "Ключевой для THE_MAGIC_KEY результат: изменение формулировки schema keys при той же структуре и без изменения prompt/model parameters заметно меняет поведение моделей; автор трактует structured generation как multi-channel instruction problem.",
+      "impact_on_magic_key": "Это прямое внешнее основание для MK-R1: имя JSON-ключа может быть не только адресом данных, но и лингвистическим управляющим сигналом для LLM. Требуется независимая репликация и тест на разных моделях."
+    },
+    {
+      "id": "ARXIV-2607.18476",
+      "title": "Structured Output Collapses Answer Diversity Across 44 Language Models",
+      "authors": ["Tapan Parikh"],
+      "year": 2026,
+      "url": "https://arxiv.org/abs/2607.18476",
+      "cluster": ["LLM", "JSON", "format_effect", "behavior", "diversity"],
+      "relevance": "Сообщает, что сама просьба отвечать JSON меняет распределение ответов моделей и снижает разнообразие; эффект связывается не только с decoder enforcement, но и с response register модели.",
+      "impact_on_magic_key": "Очень сильный IO-мост: JSON может быть частью психологического/поведенческого контекста машины. Следует отделять semantic content от FORMAT_REGISTER и измерять representation-induced behavior drift."
+    },
+    {
+      "id": "ARXIV-2607.18261",
+      "title": "When JSON Is Not Enough: Semantic Reliability of Schema-Constrained LLM Ordering Agents",
+      "authors": ["Yin Li"],
+      "year": 2026,
+      "url": "https://arxiv.org/abs/2607.18261",
+      "cluster": ["LLM_agents", "JSON_Schema", "semantic_validity", "fail_closed"],
+      "relevance": "Показывает важную отрицательную границу: 100% schema-valid outputs не означают 100% semantic correctness или безопасность транзакции.",
+      "impact_on_magic_key": "Подтверждает наш закон STRUCTURAL_VALIDITY != TRUTH. MAGIC_KEY не должен повышать authority только из-за валидной формы; необходимы семантические и provenance gates."
+    },
+    {
+      "id": "ARXIV-1407.5117",
+      "title": "Implementing Transitive Credit with JSON-LD",
+      "authors": ["Daniel S. Katz", "Arfon M. Smith"],
+      "year": 2014,
+      "url": "https://arxiv.org/abs/1407.5117",
+      "cluster": ["JSON_LD", "linked_data", "provenance", "transitive_relations"],
+      "relevance": "Практический пример использования JSON-LD для транзитивной сети атрибуции и отношений.",
+      "impact_on_magic_key": "Показывает, что graph/provenance semantics поверх JSON — зрелое направление. Новизну THE_MAGIC_KEY следует искать в минимальных distinguishing subgraphs, bidirectional role-swap и алгоритмических gates, а не в самой идее JSON→graph."
+    },
+    {
+      "id": "ARXIV-2404.03868",
+      "title": "Extract, Define, Canonicalize: An LLM-based Framework for Knowledge Graph Construction",
+      "authors": ["Bowen Zhang", "Harold Soh"],
+      "year": 2024,
+      "url": "https://arxiv.org/abs/2404.03868",
+      "cluster": ["knowledge_graph", "schema_generation", "canonicalization", "LLM"],
+      "relevance": "Не JSON-специфичная, но важная смежная работа: LLM извлекает отношения, строит/использует схему и затем выполняет canonicalization.",
+      "impact_on_magic_key": "Полезный внешний аналог нашего SEARCH_GRAMMAR -> REPRESENTATION_GRAMMAR -> CANONICALIZE контура и контроля schema discovery."
+    }
+  ],
+  "TOPA_spider_synthesis": {
+    "confirmed_known_territory": [
+      "JSON имеет формализуемую tree/data model",
+      "JSON Schema является логическим языком, включающим Boolean composition, negation и recursion",
+      "schema satisfiability, inclusion, equivalence и witness generation являются полноценными задачами статического анализа",
+      "JSON/JSON-LD может служить поверхностью graph/provenance representation",
+      "JSON Schema широко используется для constrained structured generation LLM",
+      "schema validity не гарантирует semantic validity"
+    ],
+    "high_value_signal": [
+      "Формулировка schema keys способна действовать как скрытый/дополнительный instruction channel для LLM.",
+      "Сам формат ответа JSON способен сдвигать распределение поведения модели даже без жёсткого constrained decoder.",
+      "Следовательно, REPRESENTATION GRAMMAR является не пассивной упаковкой: для ИИ она может входить в причинный контур поведения."
+    ],
+    "magic_key_novelty_candidates_not_claimed_new": [
+      "минимальный distinguishing constraint subgraph как переносимый semantic key",
+      "совместное positive+negative constraint closure как identity layer поверх JSON",
+      "измеримая semantic-collision resistance отдельно от cryptographic collision resistance",
+      "контролируемый DATA ↔ SCHEMA role swap с round-trip gate",
+      "единый JSON meta-object = dataset + provenance + tests + declarative algorithm, при жёстком separation DATA != AUTHORITY",
+      "representation-induced behavior drift как совместный объект THE_MAGIC_KEY + IO"
+    ]
+  },
+  "new_experiments_authorized": [
+    {
+      "id": "ARX-MK-01-KEY-WORDING",
+      "test": "При неизменных values/schema topology менять только лингвистическую формулировку ключей и измерять изменение LLM accuracy, choice distribution, latency и token path.",
+      "control": "Нейтральные случайные key aliases той же длины и topology.",
+      "goal": "Отделить машинный structural channel от linguistic instruction channel."
+    },
+    {
+      "id": "ARX-MK-02-FORMAT-REGISTER",
+      "test": "Одинаковая задача в plain text, JSON, XML, YAML и искусственном wrapper format.",
+      "goal": "Измерить FORMAT_REGISTER_BEHAVIOR_DELTA и проверить переносимость опубликованного diversity effect."
+    },
+    {
+      "id": "ARX-MK-03-REFUTATIONAL-MAGIC-KEY",
+      "test": "Удалять по одному constraint из полного discriminator set и генерировать witness/counterexample, пока не будет найден минимальный устойчивый набор.",
+      "goal": "Связать MAGIC_KEY exact search с JSON Schema witness/refutation literature."
+    },
+    {
+      "id": "ARX-MK-04-SEMANTIC-VALIDITY-BARRIER",
+      "test": "Создавать schema-valid, но семантически неверные объекты и проверять, может ли provenance+constraint closure отличать их до activation transition.",
+      "goal": "Не допустить STRUCTURAL_VALIDITY => AUTHORITY."
+    },
+    {
+      "id": "ARX-MK-05-JSON-GRAPH-ROUNDTRIP",
+      "test": "JSON -> typed graph -> JSON на frozen subset; отдельно измерять raw, canonical, structural и semantic equivalence.",
+      "goal": "Найти границу обратимости и информацию, которая теряется при graph projection."
+    }
+  ],
+  "recommended_next_spider_pass": {
+    "outward_graph": [
+      "references of ARXIV-1701.02221",
+      "papers citing JSON Schema witness generation",
+      "JSON Schema formal semantics and automata",
+      "JSON Pointer / JSON Patch / JSONPath formal work",
+      "JSON-LD / RDF canonicalization and graph normalization",
+      "canonical JSON / signing / Merkle DAG / content-addressed structured data",
+      "bidirectional transformations and lenses over trees/documents",
+      "schema inference and schema evolution for document stores",
+      "LLM grammar-constrained decoding and structured-output behavioral effects"
+    ],
+    "rule": "Строить citation graph, считать независимые группы и сохранять противоречащие результаты, а не только количество публикаций."
+  },
+  "verdict": "JSON действительно является чрезвычайно важным интерфейсным языком современной вычислительной инфраструктуры и особенно заметен на границе API↔LLM. Первый arXiv sweep показывает, что наиболее перспективная для JANUS территория — не 'секретный синтаксис JSON', а взаимодействие STRUCTURE + SCHEMA LOGIC + CANONICALIZATION + GRAPH PROJECTION + PROVENANCE + LLM REPRESENTATION EFFECTS."
+}
