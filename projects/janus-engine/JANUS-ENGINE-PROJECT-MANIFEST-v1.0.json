@@ -1,7 +1,7 @@
 {
-  "artifact_uuid": "JANUS-ENGINE-PROJECT-MANIFEST-v1.7",
+  "artifact_uuid": "JANUS-ENGINE-PROJECT-MANIFEST-v1.8",
   "timestamp": "2026-08-30T02:37:00+03:00",
-  "version": "v1.7",
+  "version": "v1.8",
   "title": "JANUS Engine — dedicated research-branch manifest",
   "observer": "Hawkar / JANUS",
   "node_type": "project_manifest",
@@ -14,16 +14,19 @@
     "projects/janus-engine/research/TOPA-SPIDER-CALCIFER-ANTISCALANT-RUN-003-v1.0.json",
     "projects/janus-engine/research/TOPA-SPIDER-AXLE-MAGNETIC-DRIVE-RUN-004-v1.1.json",
     "projects/janus-engine/research/TOPA-SPIDER-AXLE-MAGNETIC-FIELD-RUN-005-v1.0.json",
+    "projects/janus-engine/research/TOPA-SPIDER-AXLE-FARADAY-GENERATOR-RUN-006-v1.0.json",
     "projects/janus-engine/gates/JANUS-ENGINE-R2B-DIRECT-GILL-PEMFC-v1.0.json",
     "projects/janus-engine/gates/JANUS-ENGINE-R0A2-POMS-MEMBRANE-STARTUP-v1.0.json",
     "projects/janus-engine/gates/JANUS-ENGINE-R0A4F-LOW-ADHESION-CYLINDER-WALL-v1.0.json",
     "projects/janus-engine/gates/JANUS-ENGINE-R2C-BUFFER-BATTERY-ENERGY-MANAGEMENT-v1.0.json",
     "projects/janus-engine/gates/JANUS-ENGINE-R0M2-CU-BRASS-MAGNETIC-FIELD-METROLOGY-v1.0.json",
+    "projects/janus-engine/gates/JANUS-ENGINE-R0M3-MOTOR-REGEN-CROSSOVER-v1.0.json",
     "projects/janus-engine/simulations/JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-004-DIRECT-GILL-PEMFC-v1.0.json",
     "projects/janus-engine/simulations/JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-005-POMS-STARTUP-v1.0.json",
     "projects/janus-engine/simulations/JANUS-ENGINE-R0A4D-AXLE-VANE-CRYSTAL-TRAP-SCREEN-v1.0.json",
     "projects/janus-engine/simulations/JANUS-ENGINE-M4-MAGNETIC-COMMUTATION-SELECTION-SCREEN-v1.1.json",
     "projects/janus-engine/journal/JANUS-ENGINE-DEVELOPMENT-JOURNAL-2026-08-30-v1.0.json",
+    "projects/janus-engine/journal/JANUS-ENGINE-DEVELOPMENT-JOURNAL-2026-08-30-v1.1.json",
     "projects/janus-engine/journal/JANUS-ENGINE-DEVELOPMENT-JOURNAL-CURRENT.json"
   ],
   "tracks": {
@@ -31,7 +34,7 @@
       "data/JANUS-ENGINE-R2A-SELF-DRIVE-NET-GENERATION-v1.0.json",
       "projects/janus-engine/gates/JANUS-ENGINE-R2B-DIRECT-GILL-PEMFC-v1.0.json",
       "projects/janus-engine/gates/JANUS-ENGINE-R2C-BUFFER-BATTERY-ENERGY-MANAGEMENT-v1.0.json",
-      "projects/janus-engine/simulations/JANUS-ENGINE-SIM-HOWL-CASTLE-RUN-005-POMS-STARTUP-v1.0.json"
+      "projects/janus-engine/gates/JANUS-ENGINE-R0M3-MOTOR-REGEN-CROSSOVER-v1.0.json"
     ],
     "T5_CALCIFER_SCALE_AND_SELF_MAINTENANCE": [
       "projects/janus-engine/research/TOPA-SPIDER-CALCIFER-ANTISCALANT-RUN-003-v1.0.json",
@@ -41,30 +44,35 @@
     "T6_MAGNETIC_AXLE_AND_ENERGY_BUFFER": [
       "projects/janus-engine/research/TOPA-SPIDER-AXLE-MAGNETIC-DRIVE-RUN-004-v1.1.json",
       "projects/janus-engine/research/TOPA-SPIDER-AXLE-MAGNETIC-FIELD-RUN-005-v1.0.json",
+      "projects/janus-engine/research/TOPA-SPIDER-AXLE-FARADAY-GENERATOR-RUN-006-v1.0.json",
       "projects/janus-engine/simulations/JANUS-ENGINE-M4-MAGNETIC-COMMUTATION-SELECTION-SCREEN-v1.1.json",
       "projects/janus-engine/gates/JANUS-ENGINE-R0M2-CU-BRASS-MAGNETIC-FIELD-METROLOGY-v1.0.json",
+      "projects/janus-engine/gates/JANUS-ENGINE-R0M3-MOTOR-REGEN-CROSSOVER-v1.0.json",
       "projects/janus-engine/gates/JANUS-ENGINE-R2C-BUFFER-BATTERY-ENERGY-MANAGEMENT-v1.0.json"
     ],
     "T7_DEVELOPMENT_JOURNAL": [
       "projects/janus-engine/journal/JANUS-ENGINE-DEVELOPMENT-JOURNAL-CURRENT.json",
-      "projects/janus-engine/journal/JANUS-ENGINE-DEVELOPMENT-JOURNAL-2026-08-30-v1.0.json"
+      "projects/janus-engine/journal/JANUS-ENGINE-DEVELOPMENT-JOURNAL-2026-08-30-v1.0.json",
+      "projects/janus-engine/journal/JANUS-ENGINE-DEVELOPMENT-JOURNAL-2026-08-30-v1.1.json"
     ]
   },
   "latest_findings": {
-    "magnetic_baseline": "Coreless/slotless AFPM starter-generator remains the preferred first Axle drive; micro-EPM remains an A/B assist branch only if it reduces total startup Wh after switching losses.",
-    "magnetic_field_metrology": "The project now requires synchronized Bx/By/Bz mapping versus encoder angle, RPM, current, torque and temperature in static-PM, passive-spin, motor, generator and optional EPM states.",
-    "copper_vs_brass": "NIST conductivity anchors put copper around 57 MS/m and brass C260 around 15.5 MS/m. A brass-class non-ferromagnetic structural Axle is therefore the preliminary electromagnetic preference because it should support weaker eddy currents than copper for comparable geometry, but the exact alloy must pass corrosion/dezincification, mechanical and wet-chemistry tests.",
-    "co_rotating_field_rule": "The PM field rigidly attached to the Axle is approximately static in the rotor frame; eddy losses are driven mainly by relative time-varying stator fields, harmonics/asymmetry, EPM pulses and stationary conductive structures exposed to the rotating field.",
-    "skin_depth_screen": "For 4-8 pole-pair examples over 60-600 RPM, representative skin depths are millimetres to centimetres; a few-mm copper/brass Axle is not a perfect magnetic shield but still requires eddy-drag/heating measurement.",
-    "journal_policy": "JANUS Engine now has an append-only project development journal separate from the global restoration journal."
+    "magnetic_baseline": "Coreless/slotless AFPM starter-generator remains the preferred first Axle magnetic machine.",
+    "faraday_generator_result": "The transformer analogy is valid only at the shared Faraday-law level. Rotating Axle magnets relative to stationary windings form a generator. The intended harvest path is stationary AFPM windings -> bidirectional inverter -> DC bus -> battery.",
+    "bulk_conductor_result": "Eddy currents induced in solid copper/brass Axle material behave like an unintended shorted secondary: they create Lenz drag and heat and are not the preferred collection path.",
+    "motor_regen_rule": "Battery-only spin cannot create net gain by regenerating from the same shaft. Genuine regeneration requires independently measured mechanical input or recovery of finite rotor kinetic energy.",
+    "automatic_crossover": "During startup AFPM is a motor; hydraulic/external assistance can reduce current toward zero; if external torque exceeds total drag the same AFPM crosses into generator mode and charges the battery.",
+    "copper_vs_brass": "Brass-class non-ferromagnetic structural material remains the preliminary electromagnetic preference over solid copper pending matched-geometry field/eddy/corrosion testing.",
+    "journal_policy": "JANUS Engine development journal remains append-only and now records the generator/regeneration interpretation."
   },
   "current_project_state": {
     "nickname": "Howl's Moving Castle / Calcifer",
-    "latest_research": "projects/janus-engine/research/TOPA-SPIDER-AXLE-MAGNETIC-FIELD-RUN-005-v1.0.json",
-    "latest_gate": "projects/janus-engine/gates/JANUS-ENGINE-R0M2-CU-BRASS-MAGNETIC-FIELD-METROLOGY-v1.0.json",
+    "latest_research": "projects/janus-engine/research/TOPA-SPIDER-AXLE-FARADAY-GENERATOR-RUN-006-v1.0.json",
+    "latest_gate": "projects/janus-engine/gates/JANUS-ENGINE-R0M3-MOTOR-REGEN-CROSSOVER-v1.0.json",
     "next_experimental_gates": [
       "R0M1A_CORELESS_AFPM_VS_MICROPULSE_EPM_BENCH_A_B",
-      "R0M2_CU_BRASS_MAGNETIC_FIELD_METROLOGY"
+      "R0M2_CU_BRASS_MAGNETIC_FIELD_METROLOGY",
+      "R0M3_MOTOR_REGEN_CROSSOVER_AND_BACK_EMF_MAP"
     ]
   },
   "project_constitution": [
@@ -72,17 +80,17 @@
     "PERMANENT_MAGNETS_ARE_FIELD_SOURCES_NOT_NET_ENERGY_SOURCES",
     "EVERY_ACTIVE_MAGNETIC_CONTROL_WATT_IS_COUNTED",
     "EDDY_CURRENT_DRAG_AND_HEATING_ARE_AUXILIARY_LOSSES_AND_MUST_BE_MEASURED",
-    "CONDUCTIVITY_DOES_NOT_EQUAL_MAGNETIC_PERMEABILITY",
-    "NO_TESLA_VALUE_IS_CLAIMED_BEFORE_GEOMETRY_CURRENT_AND_FIELD_ARE_FROZEN_OR_MEASURED",
+    "GENERATOR_OUTPUT_IS_CREDITED_ONLY_AGAINST_IDENTIFIED_MECHANICAL_INPUT_OR_KINETIC_ENERGY_DECREASE",
+    "BATTERY_MOTOR_DRIVEN_SAME_SHAFT_REGENERATION_IS_NOT_NEW_ENERGY",
     "BATTERY_STARTUP_ENERGY_IS_NOT_STEADY_STATE_GENERATION",
     "BATTERY_NEUTRAL_SELF_DRIVE_REQUIRES_SOC_END_GREATER_THAN_OR_EQUAL_TO_SOC_START",
     "DEVELOPMENT_JOURNAL_IS_APPEND_ONLY"
   ],
   "next_actions": [
-    "Freeze pole count, magnet grade/dimensions, air gap and coil-current envelope for first AFPM bench article.",
-    "Perform equal-geometry copper-versus-brass magnetic A/B with 3-axis field, encoder, current, torque and temperature synchronized.",
-    "Measure stray field at chamber wall, POMS boundary and outside housing.",
-    "Use measured field/loss maps to choose Axle material and only then optimize EPM timing or field shaping.",
-    "Append every design decision and reversal to the project development journal."
+    "Freeze AFPM magnet/winding geometry and measure open-circuit back EMF versus RPM.",
+    "Map motor current reduction under increasing hydraulic Axle assistance and locate zero-current crossover.",
+    "Drive Axle independently and measure generator DC watts, shaft torque and battery charge efficiency.",
+    "Keep bulk Cu/Brass eddy-current response in the loss ledger rather than treating it as free harvested electricity.",
+    "Append every generator/regen measurement and design reversal to the project development journal."
   ]
 }
