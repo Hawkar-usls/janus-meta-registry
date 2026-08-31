@@ -1,0 +1,87 @@
+name: TT-Mobile AS43197 targeted OONI sweep
+
+on:
+  push:
+    branches:
+      - research/tspu-external-us-impact
+    paths:
+      - .github/workflows/tspu-as43197-targeted-ooni-sweep.yml
+
+permissions:
+  contents: read
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Acquire targeted historical windows
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p out/raw out/index
+          cat > /tmp/c.py <<'PY'
+          import concurrent.futures as cf,json,os,time,urllib.parse,urllib.request
+          from collections import defaultdict
+          API='https://api.ooni.io/api/v1'; ASN='AS43197'; UA='janus-as43197-targeted/1.0'
+          windows={
+            '2015_MAY_BLOCKS':('2015-05-25','2015-06-06'),
+            '2015_AUG_SEP_BLOCKS':('2015-08-20','2015-09-30'),
+            '2016_REFERENDUM':('2016-05-01','2016-06-05'),
+            '2018_GBAO_UNREST':('2018-11-01','2018-11-20'),
+            '2021_GBAO':('2021-11-20','2021-12-05'),
+            '2022_GBAO':('2022-05-10','2022-06-15')
+          }
+          def get(u,retries=2):
+            e=None
+            for i in range(retries):
+              try:
+                req=urllib.request.Request(u,headers={'User-Agent':UA,'Accept':'application/json'})
+                with urllib.request.urlopen(req,timeout=20) as r:return json.loads(r.read().decode())
+              except Exception as x:e=x;time.sleep(i+1)
+            raise e
+          def safe(s):return ''.join(c if c.isalnum() or c in '._-' else '_' for c in str(s))[:170]
+          rows=[]; qlog=[]
+          for label,(since,until) in windows.items():
+            p={'probe_asn':ASN,'test_name':'web_connectivity','since':since,'until':until,'order':'asc','limit':100}
+            try:
+              d=get(API+'/measurements?'+urllib.parse.urlencode(p)); rs=d.get('results',[])
+              qlog.append({'label':label,'query':p,'rows':len(rs)})
+              for r in rs:r['_window']=label
+              rows+=rs
+            except Exception as e:qlog.append({'label':label,'query':p,'error':repr(e)})
+          # keep anomalies/confirmed first, then a few controls per window/input
+          selected=[]; seen=set(); controls=defaultdict(int)
+          for r in rows:
+            key=(r.get('report_id'),r.get('input'),r.get('measurement_start_time'))
+            if key in seen:continue
+            seen.add(key)
+            if r.get('anomaly') or r.get('confirmed'):selected.append(r)
+          for r in rows:
+            key=(r.get('report_id'),r.get('input'),r.get('measurement_start_time'))
+            if r in selected:continue
+            wk=r.get('_window','x')
+            if controls[wk]<8:selected.append(r);controls[wk]+=1
+          selected=selected[:160]
+          with open('out/index/LIST.json','w') as f:json.dump({'query_log':qlog,'total_rows':len(rows),'selected':selected},f,ensure_ascii=False,indent=2)
+          def fetch(r):
+            try:
+              m=get(r['measurement_url']);rid=r.get('report_id') or m.get('report_id') or 'u'; inp=r.get('input') or m.get('input') or ''
+              fn=safe(r.get('_window','W')+'__'+rid+'__'+inp)+'.json'
+              with open('out/raw/'+fn,'w') as f:json.dump(m,f,ensure_ascii=False,indent=2)
+              return {'ok':True,'window':r.get('_window'),'file':fn,'report_id':rid,'input':inp,'time':r.get('measurement_start_time'),'anomaly':r.get('anomaly'),'confirmed':r.get('confirmed')}
+            except Exception as e:return {'ok':False,'window':r.get('_window'),'report_id':r.get('report_id'),'input':r.get('input'),'error':repr(e)}
+          with cf.ThreadPoolExecutor(max_workers=12) as ex:res=list(ex.map(fetch,selected))
+          summary={'asn':ASN,'network':'TT-Mobile / MegaFon Tajikistan','query_log':qlog,'rows':len(rows),'selected':len(selected),'raw_ok':sum(x.get('ok',False) for x in res),'raw_failed':sum(not x.get('ok',False) for x in res),'anomaly_selected':sum(bool(r.get('anomaly') or r.get('confirmed')) for r in selected)}
+          with open('out/index/MANIFEST.json','w') as f:json.dump(res,f,ensure_ascii=False,indent=2)
+          with open('out/index/SUMMARY.json','w') as f:json.dump(summary,f,ensure_ascii=False,indent=2)
+          print(json.dumps(summary,indent=2))
+          PY
+          python /tmp/c.py
+      - name: Upload targeted AS43197 data
+        uses: actions/upload-artifact@v4
+        with:
+          name: as43197-targeted-ooni
+          path: out/
+          if-no-files-found: error
+          retention-days: 30
