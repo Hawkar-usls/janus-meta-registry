@@ -1,0 +1,180 @@
+{
+  "schema": "hawkar.topa.spider.raw_ooni_dpi_dna_extraction.v1",
+  "artifact_id": "RAW-OONI-DPI-DNA-EXTRACTION-CU-KG-v1.0",
+  "generated_date_utc": "2026-08-31",
+  "purpose": "Freeze analysis of raw public OONI measurement JSON acquired directly through GitHub Actions, prioritizing Cuba AS27725 Signal measurements from July 2021 and Kyrgyzstan TikTok measurements from April 2024. This artifact distinguishes raw-measurement findings from article-level summaries and enforces a strict ceiling below PCAP/device attribution.",
+  "acquisition": {
+    "workflow": ".github/workflows/tspu-raw-ooni-collector.yml",
+    "optimized_workflow_commit": "a79a2ec62fd8be67441667ce92aa172fcf9f3dde",
+    "workflow_run_id": 33359150073,
+    "workflow_conclusion": "SUCCESS",
+    "artifact_id": 9746113732,
+    "artifact_name": "tspu-raw-ooni-bundle-v2",
+    "artifact_sha256": "0d89ae8fdc0d88403fdac304952dc65dc51c2353c16db851e918d6cede27eb87",
+    "source": "OONI public API raw measurement JSON",
+    "raw_measurements_obtained": {
+      "Cuba_AS27725_Signal": 30,
+      "Kyrgyzstan_www_tiktok_all_selected_ASNs": 48,
+      "Kyrgyzstan_AS50223_tiktok_root": 1
+    },
+    "integrity_note": "The GitHub Actions artifact digest freezes the exact acquired bundle. OONI JSON is raw test output but is not a packet capture."
+  },
+  "cuba_as27725_signal_2021": {
+    "probe_asn": "AS27725",
+    "probe_country": "CU",
+    "window_in_sample": "2021-07-11 through 2021-07-14",
+    "measurements": 30,
+    "signal_endpoints": [
+      "textsecure-service.whispersystems.org",
+      "storage.signal.org",
+      "api.directory.signal.org",
+      "cdn.signal.org",
+      "cdn2.signal.org",
+      "sfu.voip.signal.org"
+    ],
+    "tls_handshakes_total": 179,
+    "tls_successes": 18,
+    "tls_failures": 161,
+    "failure_classes": {
+      "connection_reset": 143,
+      "windows_reset_equivalent": 18
+    },
+    "windows_reset_equivalent_literal": "unknown_failure: read tcp [scrubbed]->[scrubbed]: wsarecv: An existing connection was forcibly closed by the remote host.",
+    "mechanism": "TCP connect succeeds; OONI records a TLS ClientHello write; the following TLS read is reset/forcibly closed in failed handshakes.",
+    "clienthello_write_to_failed_read_seconds": {
+      "n": 161,
+      "min": 0.00729948,
+      "p10": 0.022564695,
+      "p25": 0.029885729,
+      "median": 0.040392295,
+      "p75": 0.054974218,
+      "p90": 0.147499962,
+      "p95": 0.184455808,
+      "max": 0.391679461,
+      "mean": 0.058079915,
+      "std": 0.055352619
+    },
+    "fully_successful_measurements": [
+      {
+        "measurement_start_time": "2021-07-11 20:32:33",
+        "report_id": "20210711T203228Z_signal_CU_27725_n1_S2U6B0xYzo2CYiDH",
+        "successful_tls_endpoints": 6
+      },
+      {
+        "measurement_start_time": "2021-07-11 21:06:31",
+        "report_id": "20210711T210631Z_signal_CU_27725_n1_pnnLoh9RTNuwu8nj",
+        "successful_tls_endpoints": 6
+      },
+      {
+        "measurement_start_time": "2021-07-13 17:45:51",
+        "report_id": "20210713T174549Z_signal_CU_27725_n1_7vRlwFlAxAg1kKPE",
+        "successful_tls_endpoints": 6
+      }
+    ],
+    "partial_measurement": {
+      "measurement_start_time": "2021-07-13 07:41:27",
+      "report_id": "20210713T074127Z_signal_CU_27725_n1_AYPlANBNYDGQdVge",
+      "result": "5 connection_reset failures; api.directory.signal.org DNS lookup failed with no address, leaving 5 TLS handshakes rather than 6"
+    },
+    "interpretation": {
+      "supported": [
+        "The sampled Cuban AS27725 Signal failures are strongly post-ClientHello and reset-like rather than DNS-only failures.",
+        "The short and repeatable write-to-reset delay across several unrelated Signal service endpoints is compatible with active on-path or in-path policy enforcement.",
+        "The existence of fully successful measurements in the same ASN/window is valuable temporal variation and argues against treating AS27725 as permanently unable to reach Signal endpoints."
+      ],
+      "not_supported_by_ooni_json_alone": [
+        "Injected RST initial TTL",
+        "IP-ID pattern",
+        "TCP seq/ack morphology",
+        "checksum properties",
+        "exact censor hop",
+        "vendor identity",
+        "PROTEI identity",
+        "TSPU identity"
+      ]
+    }
+  },
+  "kyrgyzstan_tiktok_2024": {
+    "window_in_sample": "2024-04-18 through 2024-04-30",
+    "www_tiktok_selected_measurements": 48,
+    "observed_ASNs": ["AS206351", "AS29061", "AS41750", "AS47237", "AS50223"],
+    "mechanism_by_asn": {
+      "AS50223": {
+        "identity": "MegaCom / Alfa Telecom; historical PROTEI_DPI deployment documented in 2014-2015",
+        "www_measurements": 18,
+        "www_results": {
+          "dns_blocking_measurements": 17,
+          "other_measurements": 1,
+          "dns_nxdomain_failures": 34,
+          "dns_generic_timeout_failures": 2,
+          "tls_handshakes_observed": 0
+        },
+        "root_tiktok_measurement": {
+          "measurement_start_time": "2024-04-18 02:58:20",
+          "blocking": "dns",
+          "A_failure": "android_dns_cache_no_data",
+          "AAAA_failure": "android_dns_cache_no_data"
+        },
+        "raw_finding": "In the acquired April 2024 sample, the known historical PROTEI_DPI ASN is blocked at DNS before TLS. It therefore cannot serve as a TLS-timeout reference fingerprint for this event."
+      },
+      "AS47237": {
+        "www_measurements": 18,
+        "blocking_label": "http-failure",
+        "dns_behavior": "legitimate-looking Akamai IPv4 answers returned",
+        "tls_handshakes": 162,
+        "tls_failure": "generic_timeout_error",
+        "tls_failures": 162,
+        "raw_finding": "This ASN, not AS50223, carries the clean post-DNS TLS-timeout mechanism in the selected Kyrgyzstan sample."
+      },
+      "AS29061": {
+        "www_measurements": 8,
+        "dns_answer": "127.0.0.1",
+        "next_stage": "connection_refused",
+        "blocking": "dns"
+      },
+      "AS206351": {
+        "www_measurements": 3,
+        "dns_answer": "127.0.0.1",
+        "next_stage": "connection_refused",
+        "blocking": "dns"
+      },
+      "AS41750": {
+        "www_measurements": 1,
+        "dns_answer": "127.0.0.1",
+        "next_stage": "connection_refused",
+        "blocking": "dns"
+      }
+    },
+    "cross_asn_result": "A single national TikTok restriction produced at least three distinct observable mechanisms in the raw sample: NXDOMAIN/no-data on AS50223, loopback DNS poisoning on AS206351/AS29061/AS41750, and post-DNS TLS timeout on AS47237.",
+    "epistemic_consequence": "The 2024 Kyrgyzstan TikTok event is evidence against inferring vendor identity from the national policy event or from a generic TLS timeout. Different ASNs implement the same policy through different mechanisms."
+  },
+  "major_correction": {
+    "previous_short_bridge": "KNOWN PROTEI network AS50223 -> measured TLS/ClientHello timeout -> compare to Cuba RST",
+    "raw_verdict": "BUSTED_FOR_THIS_EVENT",
+    "reason": "The acquired AS50223 measurements show DNS NXDOMAIN/no-data and no TLS handshakes; the TLS timeout belongs to AS47237.",
+    "important_caveat": "This does not establish a PROTEI DNS fingerprint either. The public deployment evidence is from 2014-2015; raw 2024 OONI measurements do not identify what product enforced the TikTok block or whether the historical PROTEI_DPI remained in that enforcement path."
+  },
+  "measurement_ceiling": {
+    "ooni_raw_json": "HIGH_VALUE_APPLICATION_AND_NETWORK_EVENT_EVIDENCE",
+    "pcap_equivalent": false,
+    "device_attribution_possible_from_this_bundle": false,
+    "reason": "OONI test JSON provides transaction/network-event timing and failure semantics but not the complete IP/TCP packet headers required for TTL/IPID/seq-ack/checksum fingerprinting."
+  },
+  "next_acquisition_targets": [
+    "Acquire raw OONI measurements from additional independently documented PROTEI_DPI deployments rather than treating AS50223 2024 as a PROTEI fingerprint.",
+    "Priority known deployment: TT-Mobile / MegaFon Tajikistan, independently mapped to AS43197; PROTEI publicly reported DPI launch there in 2015.",
+    "Priority known deployments: Comores Telecom AS36939 and Niger Telecom AS37385, while separating shutdown/BGP effects from selective DPI behavior.",
+    "Acquire Censored Planet/CenProbe/TSPU active-probe dataset or PCAP-level material to test the high-specificity 45-fragment/TTL-inheritance/overlap fingerprint.",
+    "Do not upgrade Cuba->PROTEI or Cuba->TSPU attribution without multivariate discriminating evidence or direct deployment/device identity."
+  ],
+  "final_status": {
+    "CUBA_POST_CLIENTHELLO_RESET": "RAW_CONFIRMED_IN_SAMPLE",
+    "MEGACOM_AS50223_TLS_TIMEOUT_REFERENCE": "REJECTED_FOR_2024_TIKTOK_SAMPLE",
+    "MEGACOM_AS50223_DNS_INTERFERENCE": "RAW_CONFIRMED_IN_SAMPLE",
+    "KYRGYZSTAN_MULTI_IMPLEMENTATION_POLICY": "RAW_CONFIRMED_IN_SAMPLE",
+    "PROTEI_UNIQUE_FINGERPRINT": "NOT_ESTABLISHED",
+    "CUBA_PROTEI_CAUSAL_BRIDGE": "OPEN",
+    "CUBA_TSPU_CAUSAL_BRIDGE": "OPEN",
+    "CISA_GATE": "HOLD"
+  }
+}
