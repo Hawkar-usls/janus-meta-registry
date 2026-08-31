@@ -1,0 +1,57 @@
+{
+  "schema": "hawkar.topa.spider.known_vendor_network_raw_coverage.v1",
+  "artifact_id": "KNOWN-PROTEI-AS43197-RAW-OONI-COVERAGE-v1.0",
+  "generated_date_utc": "2026-08-31",
+  "network": {
+    "operator": "TT-Mobile / MegaFon Tajikistan",
+    "asn": "AS43197",
+    "vendor_deployment": "PROTEI publicly reported on 2015-06-04 that its DPI platform was launched on TT-Mobile, worked stably in the network, and served real traffic.",
+    "asn_identity": "PeeringDB identifies AS43197 as TT mobile, also known as MegaFon Tajikistan."
+  },
+  "acquisition": {
+    "targeted_workflow": ".github/workflows/tspu-as43197-targeted-ooni-sweep.yml",
+    "workflow_commit": "8306458dd05ad0f13701378e152b01fce0b2032a",
+    "run_id": 33360034878,
+    "conclusion": "SUCCESS",
+    "artifact_id": 9746371865,
+    "artifact_sha256": "da253f5a72450d679f1241f9340c46f0e8151d6d7ad792fedc68c3aedc02ed63",
+    "targeted_windows": {
+      "2015-05-25_to_2015-06-06": 0,
+      "2015-08-20_to_2015-09-30": 0,
+      "2016-05-01_to_2016-06-05": 0,
+      "2018-11-01_to_2018-11-20": 0,
+      "2021-11-20_to_2021-12-05": 0,
+      "2022-05-10_to_2022-06-15": 21
+    },
+    "selected_raw_measurements": 8,
+    "raw_download_success": 8,
+    "anomaly_or_confirmed_selected": 0,
+    "year_status_sweep_note": "A separate anomaly=true/confirmed=true year-sliced collector returned HTTP 400 on those parameter combinations and is not used as evidence."
+  },
+  "interpretation": {
+    "positive": "We now have a second independently identified network where PROTEI explicitly said its DPI served real traffic, and we have frozen ASN-resolved OONI coverage for selected historical censorship windows.",
+    "negative_result": "The available targeted OONI data did not yield anomalous web_connectivity measurements suitable for extracting a PROTEI packet/application fingerprint.",
+    "silence_rule": "This is DATA_COVERAGE_LIMIT, not evidence that censorship did not occur and not evidence that PROTEI did not enforce policy. Several historically documented blocking windows had zero AS43197 OONI rows, and shutdown conditions can suppress measurements themselves.",
+    "vendor_fingerprint_status": "NOT_EXTRACTABLE_FROM_CURRENT_AS43197_OONI_SAMPLE"
+  },
+  "historical_context": [
+    "In May 2015, multiple Tajik providers including MegaFon were reported to block RFE/RL, YouTube and social networks on regulator orders.",
+    "In 2016, repeated blocks coincided with the constitutional referendum period and the country moved toward a government-controlled single communications nexus.",
+    "By 2018, reporting described all Internet traffic as passing through the government-controlled Unified Electronic Communications Switching Center, meaning later blocks need not have been implemented independently at TT-Mobile's own DPI.",
+    "The centralization change is a major confound: even a known PROTEI edge network can experience censorship imposed upstream."
+  ],
+  "claim_ceiling": [
+    "PROTEI_DPI deployment in AS43197: CONFIRMED BY VENDOR PUBLICATION",
+    "AS43197 identity as TT-Mobile/MegaFon Tajikistan: CONFIRMED",
+    "Current raw OONI vendor fingerprint: NOT_AVAILABLE",
+    "Specific historical Tajik blocking event caused by PROTEI: NOT_ESTABLISHED",
+    "Russian remote control: NOT_ESTABLISHED"
+  ],
+  "sources": [
+    "https://protei.ru/news/dpi-platforma-protey-upravlyaet-trafikom-v-tadzhikistane",
+    "https://www.peeringdb.com/asn/43197",
+    "https://www.rferl.org/a/tajikistan-rferl-internet-sites-blocked/27041938.html",
+    "https://eurasianet.org/tajikistan-limits-access-on-popular-messaging-app"
+  ],
+  "status": "COVERAGE_FROZEN_NO_DISCRIMINATING_ANOMALY"
+}
