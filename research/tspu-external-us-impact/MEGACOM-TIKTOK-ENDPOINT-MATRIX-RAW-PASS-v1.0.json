@@ -1,0 +1,87 @@
+{
+  "schema": "hawkar.topa.spider.megacom_tiktok_endpoint_matrix.raw_pass.v1",
+  "artifact_id": "MEGACOM-TIKTOK-ENDPOINT-MATRIX-RAW-PASS-v1.0",
+  "generated_date_utc": "2026-08-31",
+  "github_actions": {
+    "run_id": 33366530121,
+    "artifact_id": 9748480975,
+    "artifact_name": "tspu-megacom-tiktok-endpoint-matrix",
+    "artifact_sha256": "2668ba008ee0c1fb4206ea80f29910e3130b1789ee27ae4e3f9e54a86b38d960",
+    "workflow_commit": "3e600b7ac17e8f87b5c89f1689603bde582a724f",
+    "harvester_commit": "529a5a9b744a05dd741a7c735de8192ddaca5d16",
+    "conclusion": "SUCCESS"
+  },
+  "scope": {
+    "country": "Kyrgyzstan",
+    "network": "MegaCom / Alfa Telecom / AS50223",
+    "period": "2024-04-18 through 2024-04-30",
+    "mode": "PASSIVE OONI PUBLIC RAW MEASUREMENTS",
+    "candidate_domains": [
+      "www.tiktok.com",
+      "m.tiktok.com",
+      "tiktok.com",
+      "tiktokv.com",
+      "api.tiktokv.com",
+      "api-h2.tiktokv.com",
+      "api21-h2.tiktokv.com",
+      "ib.tiktokv.com",
+      "tiktokcdn.com",
+      "v16.tiktokcdn.com",
+      "v19.tiktokcdn.com"
+    ]
+  },
+  "raw_matrix": {
+    "www.tiktok.com": {
+      "listed_measurements": 18,
+      "raw_fetched": 8,
+      "dns_nxdomain": 7,
+      "dns_timeout": 1,
+      "reached_tcp": 0,
+      "reached_tls": 0
+    },
+    "m.tiktok.com": {
+      "listed_measurements": 9,
+      "raw_fetched": 8,
+      "dns_nxdomain": 7,
+      "android_dns_cache_no_data": 1,
+      "reached_tcp": 0,
+      "reached_tls": 0
+    },
+    "tiktok.com": {
+      "listed_measurements": 1,
+      "raw_fetched": 1,
+      "android_dns_cache_no_data": 1,
+      "reached_tcp": 0,
+      "reached_tls": 0
+    },
+    "tiktokv.com": {"listed_measurements": 0},
+    "api.tiktokv.com": {"listed_measurements": 0},
+    "api-h2.tiktokv.com": {"listed_measurements": 0},
+    "api21-h2.tiktokv.com": {"listed_measurements": 0},
+    "ib.tiktokv.com": {"listed_measurements": 0},
+    "tiktokcdn.com": {"listed_measurements": 0},
+    "v16.tiktokcdn.com": {"listed_measurements": 0},
+    "v19.tiktokcdn.com": {"listed_measurements": 0}
+  },
+  "interpretation": {
+    "known_protei_presence": "HISTORICALLY CONFIRMED BY PROTEI: DPI platform in MegaCom commercial traffic since 2014; content-filter integration in 2015.",
+    "public_raw_2024_tiktok_mechanism_on_tested_as50223_inputs": "DNS-LEVEL FAILURE",
+    "protei_tls_reference_available": false,
+    "protei_dns_attribution_available": false,
+    "country_level_ooni_context": "OONI's April 2024 Kyrgyzstan finding reports that most measurements across multiple TikTok endpoints and five networks showed TLS timeout after ClientHello. The AS50223 public samples harvested here show that this majority mechanism cannot be assumed for MegaCom itself.",
+    "claim_ceiling": "AS50223 TikTok blocking is observed in the harvested corpus at DNS level; the responsible box/product cannot be attributed from these measurements."
+  },
+  "consequences_for_dpi_dna": [
+    "Remove MegaCom AS50223/www.tiktok.com TLS timeout from the PROTEI reference fingerprint set.",
+    "Do not infer PROTEI behavior from the country-wide Kyrgyzstan TLS majority.",
+    "MegaCom remains useful as a documented deployment environment, but a vendor fingerprint requires another independently localized event or packet capture.",
+    "A future MegaCom measurement that reaches TLS must be analyzed separately and localized against resolver/upstream/national filtering controls before being admitted as PROTEI evidence."
+  ],
+  "verdict": "PROTEI_TLS_REFERENCE_FROM_2024_TIKTOK_PUBLIC_RAW = NOT_AVAILABLE",
+  "sources": [
+    "OONI public Measurements API",
+    "https://explorer.ooni.org/findings/2024-kyrgyzstan-blocked-tiktok",
+    "https://protei.ru/news/dpi-platforma-protey-upravlyaet-trafikom-v-seti-megacom",
+    "https://protei.ru/news/ntc-protey-i-entensys-porabotali-dlya-megacom"
+  ]
+}
