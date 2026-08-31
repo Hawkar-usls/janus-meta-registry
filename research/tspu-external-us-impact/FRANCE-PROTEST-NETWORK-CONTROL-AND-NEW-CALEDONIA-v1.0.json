@@ -1,0 +1,86 @@
+{
+  "schema": "hawkar.topa.spider.tspu_external.country_protest_network_control.v1",
+  "artifact_id": "FRANCE-PROTEST-NETWORK-CONTROL-AND-NEW-CALEDONIA-v1.0",
+  "generated_date_utc": "2026-08-31",
+  "country_scope": ["France mainland", "New Caledonia (French territory)"],
+  "purpose": "Use France as a control case for distinguishing democratic/legal selective blocking from centralized DPI/TSPU-like filtering, and test whether any PROTEI/Russian-vendor bridge exists in French public networks.",
+  "headline_assessment": {
+    "mainland_protest_internet_shutdown_pattern": "NOT_ESTABLISHED",
+    "2023_riot_shutdown_claim": "FALSE / DEBUNKED",
+    "new_caledonia_2024_selective_block": "CONFIRMED",
+    "new_caledonia_mechanism": "DNS-BASED BLOCKING ON MOBILIS/OPT-NC, NOT PUBLICLY SHOWN AS RST/TLS DPI",
+    "russian_tspu_or_protei_control_in_france": "NOT_ESTABLISHED",
+    "protei_orange_bs_lead": "AMBIGUOUS CUSTOMER-LIST LEAD ONLY",
+    "role_in_spider": "NEGATIVE/MECHANISM CONTROL"
+  },
+  "events": [
+    {
+      "window": "2023-06-27 to early July 2023",
+      "event": "nationwide riots after police killing of Nahel Merzouk",
+      "finding": "Claims that France announced an Internet shutdown were false. French authorities publicly rejected a circulating fake notice; no nationwide Internet shutdown was established. President Macron publicly floated discussion of limiting social-media access during extreme unrest, but no such nationwide measure was implemented.",
+      "classification": "NEGATIVE_CONTROL_PROTEST_WITHOUT_SHUTDOWN"
+    },
+    {
+      "window": "2024-05-14 to 2024-05-29",
+      "event": "violent unrest in New Caledonia linked to electoral-reform dispute",
+      "finding": "The French government ordered TikTok access blocked in New Caledonia. Conseil d'Etat records show the Prime Minister asked OPT-NC, whose Mobilis service was the territory's unique mobile operator, to implement the block. Other social networks and press/TV/radio remained accessible. Le Monde reported implementation through DNS manipulation on Mobilis rather than packet-level RST/TLS DPI. The block ended 29 May 2024.",
+      "classification": "CONFIRMED_SELECTIVE_DNS_BLOCK"
+    },
+    {
+      "window": "2025-04-01 judicial review",
+      "event": "Conseil d'Etat merits judgment on TikTok suspension",
+      "finding": "Conseil d'Etat held that in exceptional circumstances temporary social-network suspension can be legally conceivable under strict necessity/proportionality constraints, but the May 2024 TikTok measure was unlawful because its duration was not properly limited and less restrictive alternatives were not adequately bounded.",
+      "classification": "LEGAL_ACCOUNTABILITY_CONTROL"
+    }
+  ],
+  "network_and_mechanism": {
+    "new_caledonia_operator": "Office des Postes et Telecommunications de Nouvelle-Caledonie (OPT-NC), Mobilis",
+    "new_caledonia_asn": "AS18200",
+    "operator_structure": "OPT-NC is the unique mobile-network operator and principal fixed/mobile infrastructure operator in the territory.",
+    "reported_blocking_method": "DNS manipulation / DNS response interference for TikTok on Mobilis",
+    "what_is_not_publicly_established": [
+      "TCP RST injection for the TikTok block",
+      "TLS ClientHello/SNI DPI interference",
+      "PROTEI_DPI involvement",
+      "RDP/EcoDPI/TSPU involvement",
+      "Russian remote command or Russian control-plane participation"
+    ]
+  },
+  "protei_lead": {
+    "observation": "PROTEI's public client list contains the label 'Orange BS'. This plausibly denotes Orange Business Services, a French-headquartered multinational group.",
+    "claim_ceiling": "This does not establish that PROTEI equipment was deployed in Orange's French domestic public-access network, which PROTEI product was involved, where it was located, whether it was DPI/SORM, or whether it participated in any blocking event.",
+    "status": "LEAD_ONLY",
+    "next_test": "Search archived PROTEI/Orange Business Services project announcements, procurement records, product references, country/location details and exact product names before assigning any French-network relevance."
+  },
+  "why_france_matters_to_the_spider": [
+    "France mainland supplies a high-value negative control: severe unrest does not automatically produce network shutdowns.",
+    "New Caledonia supplies a clean selective-blocking control with a simple DNS mechanism and a legally documented command path.",
+    "A policy block can therefore occur during unrest without implying TSPU-like DPI, Russian vendor lineage or foreign remote control.",
+    "Mechanism identity must be demonstrated at packet/path level rather than inferred from political timing or legal authority."
+  ],
+  "comparison_with_current_hypothesis": {
+    "france_new_caledonia": "DNS-based selective platform block",
+    "cuba": "measured RST/connection-reset and TLS/SNI interference on ETECSA plus separate Russian vendor relationship",
+    "megacom_kyrgyzstan": "post-ClientHello timeout/interference on a network with confirmed historical PROTEI DPI deployment, but shared-national/upstream confounds",
+    "russia_tspu": "documented DPI platform capable of multiple TLS/SNI/QUIC filtering behaviors",
+    "conclusion": "France/New Caledonia does not support a PROTEI/TSPU bridge; it strengthens the anti-false-positive framework by showing a distinct, simpler mechanism producing politically timed selective blocking."
+  },
+  "sources": [
+    "https://www.conseil-etat.fr/en/news/tiktok-in-new-caledonia-ban-on-the-social-media-platform-not-suspended",
+    "https://www.conseil-etat.fr/en/news/in-exceptional-circumstances-the-government-may-temporarily-suspend-access-to-a-social-network-subject-to-certain-conditions",
+    "https://www.legifrance.gouv.fr/ceta/id/CETATEXT000051427220",
+    "https://www.lemonde.fr/en/pixels/article/2024/05/16/why-and-how-tiktok-was-banned-in-new-caledonia_6671655_13.html",
+    "https://www.reuters.com/fact-check/tiktok-has-not-been-banned-france-contrary-social-media-claims-2024-05-20/",
+    "https://politifact.com/factchecks/2023/jul/05/facebook-posts/no-evidence-france-announced-stoppage-of-internet/",
+    "https://protei.ru/clients",
+    "https://www.opt.nc/",
+    "https://ipinfo.io/AS18200"
+  ],
+  "epistemic_firewall": [
+    "political unrest != network shutdown",
+    "selective blocking != DPI",
+    "DNS blocking != RST/TLS fingerprint",
+    "multinational customer name != deployment in home-country public network",
+    "vendor relationship != control-plane relationship"
+  ]
+}
