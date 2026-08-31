@@ -1,0 +1,44 @@
+{
+  "schema": "hawkar.topa.spider.megacom_protei_fingerprint_correction.v1",
+  "artifact_id": "MEGACOM-PROTEI-DPI-FINGERPRINT-COMPARISON-v1.1",
+  "generated_date_utc": "2026-08-31",
+  "supersedes": "MEGACOM-PROTEI-DPI-FINGERPRINT-COMPARISON-v1.0.json",
+  "reason_for_supersession": "Direct raw OONI harvesting of the exact AS50223/www.tiktok.com case showed DNS-level blocking rather than TLS interference. The earlier use of the country-level OONI finding as if it described this exact AS/endpoint pair was too broad.",
+  "confirmed_background": {
+    "protei_deployment": "PROTEI states that its DPI platform entered commercial traffic operation on MegaCom in June 2014.",
+    "filtering_integration": "PROTEI states that in 2015 MegaCom integrated Entensys/UserGate Web Filter classification with PROTEI DPI policy enforcement.",
+    "network": "MegaCom / Alfa Telecom / AS50223",
+    "these_facts_do_not_prove": "that every later censorship event or DNS/TLS failure on AS50223 is produced by PROTEI"
+  },
+  "raw_ooni_www_tiktok_com_2024": {
+    "source_artifact": "tspu-dpi-dna-raw-harvest / GitHub Actions run 33365847014",
+    "sample_size": 18,
+    "input": "https://www.tiktok.com/",
+    "probe_asn": "AS50223",
+    "dns_nxdomain": 17,
+    "dns_timeout": 1,
+    "control_dns_success": 18,
+    "tls_handshakes": 0,
+    "network_events": 0,
+    "verdict": "DNS_BLOCKING_OBSERVED; NO_TLS_FINGERPRINT_AVAILABLE_IN_THIS EXACT SAMPLE"
+  },
+  "relation_to_ooni_country_finding": {
+    "country_level": "OONI reported that most Kyrgyzstan TikTok measurements across multiple endpoints and five tested networks showed TLS sessions timing out after ClientHello.",
+    "exact_as_endpoint_level": "The harvested AS50223/www.tiktok.com sample did not reproduce that mechanism because DNS failed first.",
+    "rule": "COUNTRY-LEVEL MAJORITY MECHANISM MUST NOT BE IMPUTED TO A SPECIFIC ASN/ENDPOINT WITHOUT RAW CONFIRMATION"
+  },
+  "protei_fingerprint_status": {
+    "known_presence": "CONFIRMED HISTORICAL DEPLOYMENT",
+    "known_enforcement_capability": "CONFIRMED HISTORICAL CONTENT-FILTER POLICY INTEGRATION",
+    "unique_tls_fingerprint": "NOT_ESTABLISHED",
+    "unique_dns_fingerprint": "NOT_ESTABLISHED",
+    "2024_tiktok_block_causally_bound_to_protei": "NOT_ESTABLISHED",
+    "use_as_cuba_reference": "NOT YET VALID"
+  },
+  "next_test": "Harvest multiple TikTok app endpoints on AS50223 that OONI tested during the April 2024 block and isolate any raw measurements that reach TCP/TLS. Compare those with other Kyrgyz ASNs under the same national policy and with non-PROTEI controls.",
+  "sources": [
+    "https://protei.ru/news/dpi-platforma-protey-upravlyaet-trafikom-v-seti-megacom",
+    "https://protei.ru/news/ntc-protey-i-entensys-porabotali-dlya-megacom",
+    "https://explorer.ooni.org/findings/2024-kyrgyzstan-blocked-tiktok"
+  ]
+}
