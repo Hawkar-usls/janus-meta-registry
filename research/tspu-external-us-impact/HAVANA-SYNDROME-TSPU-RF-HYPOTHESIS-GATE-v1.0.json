@@ -1,0 +1,57 @@
+{
+  "schema": "hawkar.topa.spider.hypothesis_gate.v1",
+  "artifact_id": "HAVANA-SYNDROME-TSPU-RF-HYPOTHESIS-GATE-v1.0",
+  "generated_date_utc": "2026-08-31",
+  "question": "Could TSPU/SORM-like telecom-control infrastructure itself be the RF source behind some Anomalous Health Incidents (Havana syndrome), rather than a separate portable directed-energy device?",
+  "current_verdict": "NOT_SUPPORTED_BY_PUBLIC_EVIDENCE; CATEGORY_MISMATCH_WITH_KNOWN_TSPU_ARCHITECTURE",
+  "confirmed_facts": [
+    "CNN reported in January 2026, citing sources briefed on the matter, that DoD and DHS/HSI had spent more than a year testing a compact device bought in an undercover operation. Sources said it can fit in a backpack, produces pulsed radio waves, is not entirely Russian in origin, and contains some Russian components. The device has not been conclusively linked to AHIs.",
+    "The January 2025 ODNI updated AHI assessment states that most IC components still assess a foreign adversary is very unlikely to be responsible for the overall set of reported AHIs, while two components shifted toward roughly-even-chance judgments concerning development and/or use of a novel weapon for a small subset, with low confidence.",
+    "The ODNI/CIA expert-panel work found pulsed electromagnetic energy, particularly RF, a plausible explanation for the core characteristics of a subset of AHIs, while acknowledging major information gaps.",
+    "Censored Planet characterizes TSPU as in-path, centrally controlled DPI equipment deployed inside ISP networks to inspect, block, throttle and otherwise manipulate Internet traffic based on IP/SNI/QUIC/protocol signatures.",
+    "Public technical descriptions of TSPU-class hardware describe rack-mounted x86/network-appliance platforms with Ethernet/SFP network interfaces used for DPI/filtering. No public TSPU documentation reviewed in this pass identifies a directed RF emitter, high-power RF amplifier, beam-forming antenna, microwave source or human-targeting function."
+  ],
+  "mechanism_separation": {
+    "TSPU_known_function": "packet inspection/filtering/throttling on wired or routed IP paths",
+    "directed_rf_device_required_function": "generate shaped/pulsed RF energy, couple it efficiently to free space through an antenna/radiator, and deliver sufficient field strength at a target",
+    "why_not_equivalent": "Packet-processing capability does not imply free-space RF emission capability. Standard network appliances produce incidental electromagnetic emissions like other electronics, but that is categorically different from a designed high-power pulsed RF transmitter.",
+    "cellular_network_caveat": "A mobile network contains legitimate RF transmitters at base stations, but TSPU operates as traffic-control infrastructure in or near the packet/core path. No public evidence reviewed here shows that TSPU commands eNodeB/gNodeB radio waveform generation or can repurpose cellular RAN transmitters into a directed-energy system. Such a capability would require a separate RAN/control/physics bridge."
+  },
+  "cuba_specific_assessment": {
+    "eteCSA_and_russian_lineage": "Cuba remains a high-value case because ETECSA is a Protei customer and Russian SORM procurement is assessed very likely by Recorded Future; however this establishes telecom surveillance/vendor lineage, not an RF weapon capability.",
+    "ahi_geography": "AHIs were reported at residences, diplomatic facilities, hotels and other locations in multiple countries. A TSPU explanation would require evidence that relevant telecom equipment or RF-capable infrastructure was physically positioned and capable of illuminating each location during the incident windows.",
+    "protest_filtering_link": "Cuba's measured DPI/RST filtering and protest-conditioned shutdowns are network-layer evidence. They do not provide evidence of biological RF exposure."
+  },
+  "what_would_make_the_hypothesis_testable": [
+    "Hardware teardown or procurement documentation showing that a TSPU/SORM appliance includes an RF power stage and antenna/radiator beyond ordinary wireless management interfaces.",
+    "RF-spectrum captures during an AHI showing pulsed emissions with direction-of-arrival localizing to a telecom/TSPU installation.",
+    "Geospatial co-location between confirmed AHI sites and the suspected transmitter with physically plausible line-of-sight/range/power geometry.",
+    "Temporal correlation between TSPU/device activation/configuration events and AHI onset, with matched non-AHI control periods.",
+    "A repeatable laboratory demonstration that the specific device/model emits the measured waveform and field strength under realistic operating conditions.",
+    "Independent replication by separate measurement teams and exclusion of ordinary cellular/Wi-Fi/radar/industrial RF sources."
+  ],
+  "falsifiers": [
+    "TSPU hardware inspection shows only conventional server/network interfaces with no RF transmitter chain capable of the required field strengths.",
+    "Direction-finding measurements localize suspected AHI emissions to a portable/local source rather than telecom infrastructure.",
+    "AHI events occur where no relevant TSPU/SORM/RAN infrastructure or propagation path exists.",
+    "The acquired 2026 device is independently shown to reproduce AHI-relevant effects while being operationally unrelated to telecom DPI infrastructure."
+  ],
+  "claim_ceiling": {
+    "portable_pulsed_rf_device_reported": "SUPPORTED_BY_MULTIPLE_2026_MEDIA_REPORTS; NOT_PUBLICLY_PROVEN_AS_AHI_CAUSE",
+    "pulsed_rf_plausible_for_some_ahi": "SUPPORTED_AS_PLAUSIBLE_BY_IC_EXPERT_PANEL; NOT_ESTABLISHED_AS_CAUSE",
+    "tspu_is_rf_weapon": "NO_EVIDENCE",
+    "tspu_can_burn_brains": "NO_EVIDENCE / REJECT_AS_CURRENT_CLAIM",
+    "shared_russian_components_or_vendor_ecosystem": "POSSIBLE AS A PROCUREMENT/LINEAGE QUESTION ONLY; NOT A MECHANISM BRIDGE",
+    "russian_remote_control_of_cuban_telecom_or_ahi_device": "NOT_ESTABLISHED"
+  },
+  "sources": [
+    "https://transcripts.cnn.com/show/tbwjs/date/2026-01-13/segment/01",
+    "https://transcripts.cnn.com/show/cnr/date/2026-01-14/segment/20",
+    "https://www.odni.gov/files/ODNI/documents/assessments/NIC-Unclassified-ICA-Updated-Assessment-AHI-December2024.pdf",
+    "https://archive.dni.gov/index.php/newsroom/reports-publications/reports-publications-2022/3591-complementary-efforts-on-anomalous-health-incidents",
+    "https://censoredplanet.org/tspu",
+    "https://docs.selectel.ru/en/dedicated/troubleshooting/tspu/",
+    "https://github.com/DanielLavrushin/tspu-docs/blob/main/chapters/11.md"
+  ],
+  "spider_rule": "Keep AHI/RF and TSPU/DPI as separate mechanism families unless a direct hardware, RF-spectrum, geospatial and temporal bridge is observed. Shared country, Russian component, telecom vendor or timing is insufficient."
+}
