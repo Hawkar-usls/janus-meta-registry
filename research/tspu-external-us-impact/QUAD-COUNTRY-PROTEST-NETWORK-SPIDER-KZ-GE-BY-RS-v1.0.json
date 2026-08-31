@@ -1,0 +1,122 @@
+{
+  "schema": "hawkar.topa.spider.tspu_external.cross_country_comparison.v1",
+  "artifact_id": "QUAD-COUNTRY-PROTEST-NETWORK-SPIDER-KZ-GE-BY-RS-v1.0",
+  "generated_date_utc": "2026-08-31",
+  "countries": ["Kazakhstan", "Georgia", "Belarus", "Serbia"],
+  "input_artifacts": [
+    "KAZAKHSTAN-PROTEST-DAY-NETWORK-CORRELATION-v1.0.json",
+    "GEORGIA-PROTEST-DAY-NETWORK-CORRELATION-v1.0.json",
+    "BELARUS-PROTEST-DAY-NETWORK-CORRELATION-v1.0.json",
+    "SERBIA-PROTEST-DAY-NETWORK-CORRELATION-v1.0.json",
+    "ACTIVATION-INDICATORS-v1.0.json",
+    "CISA-GLOBAL-EXTERNAL-TECHNICAL-TRIGGER-GATE-v1.0.json"
+  ],
+  "comparison_matrix": [
+    {
+      "country": "Belarus",
+      "protest_conditioned_internet_control": "VERY_HIGH",
+      "gateway_centralization": "VERY_HIGH",
+      "repeated_temporal_correlation": "VERY_HIGH",
+      "independent_network_replication": "VERY_HIGH",
+      "russian_technology_lineage": "CONFIRMED_SORM_ARCHITECTURE_PLUS_RUSSIAN_INTEGRATOR_SUPPLY_CHAIN",
+      "active_russian_remote_control": "NOT_ESTABLISHED",
+      "other_control_technology": "Sandvine DPI",
+      "role_in_model": "POSITIVE_CONTROL_FOR_EVENT_CONDITIONED_CENTRALIZED_NETWORK_RESTRICTION"
+    },
+    {
+      "country": "Kazakhstan",
+      "protest_conditioned_internet_control": "HIGH",
+      "gateway_or_operator_localization": "PARTIAL_NEEDS_ASN_DRILLDOWN",
+      "repeated_temporal_correlation": "HIGH",
+      "independent_network_replication": "MEDIUM_TO_HIGH_HISTORICALLY",
+      "russian_technology_lineage": "DOCUMENTED_SORM_LINEAGE",
+      "active_russian_remote_control": "NOT_ESTABLISHED",
+      "other_control_technology": "Allot DPI reported in 2022",
+      "role_in_model": "ORANGE_CANDIDATE_FOR_PROTEST_CONDITIONED_PATH_CONTROL"
+    },
+    {
+      "country": "Georgia",
+      "protest_conditioned_internet_control": "LOW_NOT_ESTABLISHED",
+      "gateway_centralization": "NO_EQUIVALENT_EVIDENCE_IN_CURRENT_ARTIFACT",
+      "repeated_temporal_correlation": "LOW",
+      "independent_network_replication": "LOW_FOR_2026_ANOMALIES",
+      "russian_technology_lineage": "NOT_ESTABLISHED",
+      "active_russian_remote_control": "NOT_ESTABLISHED",
+      "other_control_technology": "Domestic lawful-interception capability; external Russian cyberattacks are separate mechanism",
+      "role_in_model": "NEGATIVE_CONTROL_PROTESTS_WITHOUT_SYSTEMATIC_NETWORK_SHUTDOWN"
+    },
+    {
+      "country": "Serbia",
+      "protest_conditioned_internet_control": "LOW_NOT_ESTABLISHED",
+      "gateway_centralization": "LOWER_DECENTRALIZED_ISP_IXP_STRUCTURE",
+      "repeated_temporal_correlation": "LOW_FOR_INTERNET_HIGH_VALUE_FOR_RF_GNSS",
+      "independent_network_replication": "LOW_FOR_2026_INTERNET_ANOMALIES",
+      "russian_technology_lineage": "NOT_ESTABLISHED",
+      "active_russian_remote_control": "NOT_ESTABLISHED",
+      "other_control_technology": "Targeted spyware/device extraction; Huawei-linked infrastructure; GNSS interference signal",
+      "role_in_model": "NEGATIVE_CONTROL_FOR_INTERNET_SHUTDOWN_AND_CROSS_DOMAIN_RF_CONTROL_CANDIDATE"
+    }
+  ],
+  "spider_synthesis": {
+    "finding_1": "PROTEST alone is not predictive of internet shutdown. Georgia and Serbia experienced very large/repeated protests without an established systematic shutdown pattern.",
+    "finding_2": "Network architecture matters. Belarus combines strong state gateway centralization with repeated cross-provider protest/election restrictions; this is the cleanest positive control in the set.",
+    "finding_3": "Technology lineage is not mechanism identity. Belarus combines Russian SORM architecture with Sandvine DPI; Kazakhstan combines Russian SORM lineage with reported Allot DPI; therefore Russian surveillance lineage cannot be used as a shortcut to attribute active filtering technology.",
+    "finding_4": "Repressive states can choose different technical layers. Belarus/Kazakhstan show path-level connectivity controls; Serbia shows targeted device surveillance and a separate RF/GNSS interference candidate; Georgia shows legal/physical pressure with no systematic shutdown baseline.",
+    "finding_5": "The strongest causal signature is EVENT -> NETWORK POLICY CHANGE -> EVENT END/PHASE CHANGE -> RECOVERY, replicated across independent telemetry and localized to operator/path. Political coincidence without network localization is insufficient.",
+    "finding_6": "A Russian remote-control hypothesis remains unproven across all four countries. The current graph supports capability diffusion/supply-chain/architectural analogies, not a common Moscow-operated control plane."
+  },
+  "cisa_gate": {
+    "status": "HOLD",
+    "reason": "Historical domestic repression and technology lineage are not enough. No current incident yet satisfies the full foreign-vantage U.S.-service/path-specific/control-plane bridge contract.",
+    "minimum_unlock_bundle": [
+      "Current foreign-vantage failure affecting a stable basket of U.S./open services while provider-side health remains normal.",
+      "ASN/operator/path localization with matched alternate-path control.",
+      "Independent replication from at least two measurement families, e.g. OONI plus IODA/RIPE/Cloudflare/provider telemetry.",
+      "Policy-like selectivity such as deny/allowlist, protocol-specific blocking, or stable middlebox fingerprint rather than generic congestion/outage.",
+      "A real cross-border or control-plane bridge. Vendor lineage alone is insufficient; remote management, common configuration, synchronized multi-country behavior, or equivalent evidence is required.",
+      "Explicit falsifiers: ordinary provider outage, power failure, crowd-cell congestion, local legal blocking, and destination-service incident must be tested first."
+    ]
+  },
+  "priority_spider_passes": [
+    {
+      "priority": 1,
+      "target": "Kazakhstan",
+      "task": "Resolve protest/2026 anomalies to ASN/operator and compare fingerprint across Kcell/Activ, Kazakhtelecom, Beeline and Tele2/Altel with bypass controls."
+    },
+    {
+      "priority": 2,
+      "target": "Belarus",
+      "task": "Extract provider/ASN-level signatures from 2020 and 2025 positive-control windows and separate Sandvine-style DPI behavior from gateway blackholing/throttling and SORM surveillance."
+    },
+    {
+      "priority": 3,
+      "target": "Serbia",
+      "task": "Resolve 2026-08-19/20 OONI middlebox anomalies and August IODA regional outages to ASN/protest context; keep GNSS interference in a separate RF graph."
+    },
+    {
+      "priority": 4,
+      "target": "Georgia",
+      "task": "Resolve 2026-07-18 and 2026-08-20 anomalies to ASN/operator and test against power-failure and destination-service controls."
+    },
+    {
+      "priority": 5,
+      "target": "CROSS_COUNTRY",
+      "task": "Search for synchronized policy/fingerprint changes across two or more countries; timing contributes zero attribution weight unless packet/path behavior also matches."
+    }
+  ],
+  "claim_ceiling": {
+    "confirmed": [
+      "Belarus repeatedly used protest/election-conditioned network restrictions and has highly centralized international connectivity.",
+      "Kazakhstan has a repeated historical protest/network-control correlation.",
+      "Georgia and Serbia are useful negative controls for the proposition that protests automatically cause shutdowns.",
+      "Russian-developed SORM architecture has documented deployment outside Russia, including Belarus and Kazakhstan in the broader research corpus."
+    ],
+    "not_established": [
+      "A common Russian command-and-control plane across the four countries.",
+      "Foreign TSPU nodes controlled by Roskomnadzor.",
+      "Russian remote activation of Belarusian or Kazakh filtering.",
+      "Russian involvement in Serbian GNSS interference.",
+      "A shared vendor or packet fingerprint across all four countries."
+    ]
+  }
+}
