@@ -1,0 +1,98 @@
+{
+  "schema": "hawkar.topa.spider.tspu_external.vendor_fingerprint_comparison.v1",
+  "artifact_id": "MEGACOM-PROTEI-DPI-FINGERPRINT-COMPARISON-v1.0",
+  "generated_date_utc": "2026-08-31",
+  "purpose": "Test whether the known PROTEI DPI deployment at MegaCom/Alfa Telecom in Kyrgyzstan yields a censorship fingerprint that can be compared against Cuba/ETECSA and Russia/RDP-TSPU. Distinguish mechanism compatibility from vendor-unique attribution.",
+  "headline": {
+    "megacom_operator": "CJSC Alfa Telecom / MegaCom",
+    "megacom_asn": "AS50223",
+    "protei_dpi_deployment": "CONFIRMED",
+    "deployment_date": "2014-06",
+    "content_filter_extension": "CONFIRMED 2015-01/03 via Entensys UserGate Web Filter integrated with PROTEI DPI",
+    "ooni_censorship_signal_2024": "CONFIRMED AT COUNTRY/NETWORK-SET LEVEL; AS50223 INCLUDED",
+    "vendor_unique_fingerprint": "NOT_ESTABLISHED",
+    "cuba_measured_rst_to_protei_bridge": "NOT_CLOSED",
+    "result": "MECHANISM_COMPATIBILITY_PASS / VENDOR_FINGERPRINT_UNKNOWN"
+  },
+  "confirmed_megacom_stack": [
+    {
+      "date": "2014-06-25",
+      "claim": "PROTEI announced successful production deployment of its DPI platform in MegaCom's network; the platform was serving commercial traffic.",
+      "source": "https://protei.ru/news/dpi-platforma-protey-upravlyaet-trafikom-v-seti-megacom"
+    },
+    {
+      "date": "2015-03-04",
+      "claim": "PROTEI and Entensys announced content filtering on MegaCom using PROTEI DPI plus UserGate Web Filter. Entensys classified requested sites and PROTEI DPI applied policy based on the response.",
+      "source": "https://protei.ru/news/ntc-protey-i-entensys-porabotali-dlya-megacom"
+    },
+    {
+      "claim": "PROTEI technical documentation describes a traffic-processing architecture where an appliance/traffic filter handles packets and a control server inspects initial packets up to application layer, determines service/subscriber, obtains policy and instructs traffic handling.",
+      "source": "https://protei.ru/sites/default/files/2020-04/DPI_TechDescription.pdf"
+    }
+  ],
+  "ooni_kyrgyzstan_2024": {
+    "event": "Kyrgyzstan TikTok blocking beginning 2024-04-18",
+    "tested_networks": ["AS206351", "AS29061", "AS41750", "AS47237", "AS50223"],
+    "megacom_included": true,
+    "aggregate_mechanism": "Most OONI measurements showed TLS interference: session timeout after ClientHello during TLS handshake.",
+    "important_limit": "The published finding reports the mechanism across five tested networks and does not, in the surfaced text, provide a raw per-AS packet trace proving that AS50223 specifically generated the exact same timeout behavior. Therefore AS50223-specific fingerprint is PARTIAL until raw per-AS measurements are extracted.",
+    "source": "https://explorer.ooni.org/findings/2024-kyrgyzstan-blocked-tiktok"
+  },
+  "routing_confound": {
+    "finding": "Cloudflare's Q3 2024 disruption report identified AS12389 Rostelecom as MegaCom/AS50223's only upstream provider at the time of a September 2024 outage, and inferred damage on the MegaCom-Rostelecom connection.",
+    "implication": "For 2024 path-level censorship measurements on AS50223, interference cannot be attributed to an on-net PROTEI device solely from the probe ASN. A policy-enforcement point upstream in Rostelecom, or another shared path element, must be excluded through hop/path localization.",
+    "source": "https://blog.cloudflare.com/q3-2024-internet-disruption-summary/",
+    "current_state_note": "Later routing data shows additional/changed upstream and peering relationships. The Cloudflare statement is used only for the 2024 temporal context."
+  },
+  "comparison": {
+    "CUBA_2017": {
+      "network": "ETECSA / AS27725",
+      "mechanism": "DPI reset connections to blocked HTTP sites and served blank block pages; Skype blocking showed injected TCP RST with low latency and inconsistent TTL, localizing injection to a nearby middlebox.",
+      "source": "https://ooni.org/documents/cuba-internet-censorship-2017.pdf"
+    },
+    "CUBA_2021": {
+      "network": "ETECSA / AS27725",
+      "mechanism": "During July 2021 protests, anomalous Signal measurements consistently failed TLS handshake with connection_reset; OONI assessed this as likely SNI-targeting DPI.",
+      "source": "https://ooni.org/post/2021-how-signal-private-messenger-blocked-around-the-world/"
+    },
+    "MEGACOM_2024": {
+      "network": "MegaCom / AS50223 included among affected networks",
+      "mechanism": "TLS interference after ClientHello; published aggregate description emphasizes timeout, not a uniquely identified injected RST.",
+      "source": "https://explorer.ooni.org/findings/2024-kyrgyzstan-blocked-tiktok"
+    },
+    "RUSSIA_RDP_TSPU_2024_2026": {
+      "mechanism": "OONI reports repeated centralized-style TLS interference in Russia: Discord/Viber commonly time out after first TLS write; Bluesky measurements show either TLS timeout or injected RST immediately after ClientHello; Telegram shows resets/timeouts on blocked endpoints.",
+      "sources": [
+        "https://explorer.ooni.org/findings/2025-russia-blocked-discord",
+        "https://explorer.ooni.org/findings/2026-russia-blocked-bluesky",
+        "https://explorer.ooni.org/findings/2026-russia-blocked-telegram"
+      ]
+    }
+  },
+  "fingerprint_assessment": {
+    "shared_family": "TLS/SNI-aware interference occurring immediately after or around ClientHello/first TLS write is compatible across MegaCom/Kyrgyzstan, Cuba, and Russia.",
+    "uniqueness": "LOW",
+    "reason": "Post-ClientHello timeout/reset is a generic DPI censorship technique observed in many unrelated countries and vendor environments, including Saudi Arabia and India. It cannot identify PROTEI or TSPU by itself.",
+    "cuba_vs_megacom": "PARTIAL_MATCH at mechanism family level: Cuba 2021 connection_reset vs Kyrgyzstan 2024 mostly timeout after ClientHello. This is not a device fingerprint match.",
+    "megacom_vs_russia": "PARTIAL_MATCH at mechanism family level: both show TLS interruption around ClientHello, but no packet-level uniqueness, TTL/IPID signature, injected-packet source behavior, or device metadata ties them together.",
+    "cuba_vs_russia": "PARTIAL_MATCH at mechanism family level: both can produce RST near TLS ClientHello, but this behavior is non-unique and cannot establish shared implementation."
+  },
+  "what_would_close_vendor_fingerprint": [
+    "Raw AS50223 OONI measurements showing exact failure stage, reset/timeout type, remote/local endpoint behavior and timestamps.",
+    "Packet captures from MegaCom showing injected RST TTL, IPID, TCP sequence/ack patterns, directionality, timing and hop localization.",
+    "Comparable packet captures from Cuba/AS27725 and a confirmed PROTEI deployment other than MegaCom.",
+    "A PROTEI implementation or operations document specifying its block action for SNI/TLS targets (RST, drop/timeout, redirect) and packet construction behavior.",
+    "A matched alternate-path test on AS50223 that avoids Rostelecom while keeping the same destination, to distinguish MegaCom-local enforcement from upstream enforcement.",
+    "Device-management, procurement, support, or configuration evidence proving that the censorship function on AS50223 is executed by the installed PROTEI DPI rather than another box."
+  ],
+  "claim_ceiling": [
+    "CONFIRMED: MegaCom/AS50223 deployed PROTEI DPI in 2014 and integrated PROTEI-based URL filtering in 2015.",
+    "CONFIRMED: AS50223 was one of five Kyrgyz networks in OONI's 2024 TikTok blocking finding; the dominant reported mechanism across measurements was post-ClientHello TLS timeout.",
+    "SUPPORTED: the observed Kyrgyz mechanism is technically compatible with capabilities expected of a DPI platform such as PROTEI.",
+    "NOT ESTABLISHED: the specific 2024 AS50223 block was executed by PROTEI DPI.",
+    "NOT ESTABLISHED: PROTEI has a vendor-unique RST/TLS fingerprint matching Cuba.",
+    "NOT ESTABLISHED: Cuba's measured DPI is PROTEI.",
+    "NOT ESTABLISHED: PROTEI and RDP/TSPU share code, packet-injection logic or a common control plane."
+  ],
+  "next_spider_step": "Extract raw OONI measurements for AS50223 during 18-30 April 2024 and compare per-flow TLS failures against AS29061/AS47237 controls. The decisive question is whether AS50223 has a distinctive reset/timeout signature different from other Kyrgyz ISPs. If identical across unrelated networks, the national-policy/shared-upstream explanation gains weight; if AS50223 is uniquely different and matches a known PROTEI behavior, the vendor bridge strengthens."
+}
