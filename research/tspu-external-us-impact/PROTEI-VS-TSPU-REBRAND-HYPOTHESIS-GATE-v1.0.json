@@ -1,0 +1,79 @@
+{
+  "schema": "hawkar.topa.spider.tspu_external.rebrand_hypothesis_gate.v1",
+  "artifact_id": "PROTEI-VS-TSPU-REBRAND-HYPOTHESIS-GATE-v1.0",
+  "generated_date_utc": "2026-08-31",
+  "hypothesis": "PROTEI DPI is substantially the same product as Russian TSPU/EcoFilter, merely rebranded for export or alternate customers.",
+  "verdict": "NOT_SUPPORTED_LIKELY_FALSE_AS_FULL_PLATFORM",
+  "confidence": "MODERATE_TO_HIGH",
+  "headline": "Public evidence points to two independently developed DPI product lines: RDP.RU EcoDPI/EcoFilter as the principal TSPU filtering stack, and NTC PROTEI's separate PROTEI_DPI product. Shared generic server components, standards, customers, or Russian telecom ecosystem links remain possible and do not change this verdict.",
+  "evidence_against_rebrand": [
+    {
+      "finding": "TSPU's main DPI/filtering component is publicly attributed to RDP.RU EcoFilter/EcoDPI, not PROTEI.",
+      "detail": "Current reporting and technical reconstructions identify RDP.RU as the DPI developer/supplier for TSPU, with EcoFilter/EcoDPI used for filtering and application recognition. RDP.RU EcoDPI trademark was filed in 2016 and registered in 2017.",
+      "weight": "HIGH"
+    },
+    {
+      "finding": "PROTEI_DPI has a separate legal/software lineage.",
+      "detail": "PROTEI_DPI was independently entered in the Russian software registry in June 2017 under NTC PROTEI and later separately registered/certified. PROTEI describes the product as its own DPI platform and has independently deployed it in foreign operator networks such as Niger.",
+      "weight": "HIGH"
+    },
+    {
+      "finding": "The two vendors were treated as separate competitors in pre-TSPU DPI testing.",
+      "detail": "2018 reporting on tests of Russian traffic-filtering systems listed RDP.RU and NTC PROTEI as separate candidate vendors. PROTEI co-owner Anton Pinchuk confirmed the company had been invited/tested but said PROTEI withdrew from participation.",
+      "weight": "HIGH"
+    },
+    {
+      "finding": "Known TSPU hardware/software composition differs from published PROTEI DPI composition.",
+      "detail": "TSPU technical reporting identifies EcoFilter/EcoDPI software from RDP.RU, with later hardware associated with Yadro Vegman servers plus separate bypass/switch components. PROTEI DPI certification describes its own server-based platform and product versioning. Similar x86/Intel/network-card components would be generic telecom hardware, not evidence of common product identity.",
+      "weight": "MEDIUM_HIGH"
+    },
+    {
+      "finding": "Corporate lineages are distinct.",
+      "detail": "NTC PROTEI is a separately founded St Petersburg company with its own founders and product portfolio. RDP.RU is a distinct Moscow company that became controlled by Rostelecom structures and is publicly tied to the state TSPU deployment chain.",
+      "weight": "HIGH"
+    }
+  ],
+  "evidence_that_keeps_a_narrow_overlap_hypothesis_open": [
+    "Both are Russian telecom DPI vendors operating in the same standards/ecosystem and can implement overlapping functions such as URL/domain filtering, traffic classification, policy enforcement and bandwidth control.",
+    "Both may use commodity server/NIC components or third-party hardware platforms; identical OEM components would not imply identical DPI software.",
+    "PROTEI and Rostelecom formed a separate 5G joint venture in 2024, showing ecosystem proximity, but this is not evidence that PROTEI supplied TSPU DPI.",
+    "A future component-level discovery could show shared libraries, protocol classifiers, OEM hardware, subcontracting or integration, without making the complete products identical."
+  ],
+  "important_2018_test": {
+    "significance": "NEGATIVE_REBRAND_EVIDENCE",
+    "finding": "RDP.RU and PROTEI were separately named among DPI/filtering vendors evaluated for Telegram-blocking technology. PROTEI reportedly declined participation. This strongly disfavors the idea that PROTEI was simply the same RDP/TSPU system under another label at that time."
+  },
+  "current_best_model": {
+    "tspu_filtering_stack": "RDP.RU EcoFilter/EcoDPI + TSPU control/management infrastructure and supporting hardware",
+    "protei_stack": "Independent PROTEI_DPI / PCEF traffic-management platform plus separate PROTEI/NEOS SORM products",
+    "relationship": "PARALLEL_RUSSIAN_DPI_ECOSYSTEMS; NO_PUBLIC_PROOF_OF_REBRAND",
+    "cuba_implication": "A PROTEI customer/vendor bridge on Cuba cannot be converted into TSPU deployment evidence merely because PROTEI_DPI and TSPU share filtering capabilities."
+  },
+  "killer_tests_if_reopened": [
+    "Compare firmware/package names, binaries, symbol strings, protocol signature databases or software hashes from PROTEI_DPI and EcoDPI/EcoFilter.",
+    "Search procurement/BOM documents for cross-supply or OEM relationships between NTC PROTEI and RDP.RU.",
+    "Compare management protocols, API paths, CLI syntax, configuration schema and telemetry formats.",
+    "Compare packet-level active-block fingerprints generated by known deployments of each product under controlled conditions.",
+    "Look for shared engineers, patents, code ownership transfers, sublicensing, subcontracting or source-code provenance.",
+    "Do not infer identity from identical server chassis, NICs, Intel CPUs, DPDK use, or generic DPI functionality."
+  ],
+  "epistemic_firewall": [
+    "same function != same product",
+    "same commodity hardware != same software",
+    "same state ecosystem != same vendor",
+    "same Rostelecom relationship != same TSPU role",
+    "exported PROTEI DPI != exported TSPU unless a direct product/control-plane bridge is demonstrated"
+  ],
+  "sources": [
+    "https://www.cnews.ru/news/top/2024-07-10_vlasti_nachali_upravlyat",
+    "https://www.kommersant.ru/doc/7735622",
+    "https://protei.ru/documents",
+    "https://protei.ru/products/traffic-managenent-aaa-policy-control/dpi",
+    "https://protei.ru/news/dpi-niger",
+    "https://www.vedomosti.ru/technology/news/2018/08/30/779502-o-novoi-tehnologii",
+    "https://companies.rbc.ru/trademark/609261/ecodpi-ecodpi-dpi-eco-dpi/",
+    "https://protei.ru/company",
+    "https://protei.ru/news/pao-rostelekom-i-ooo-ntc-protey-obedinyayut-usiliya-dlya-razvitiya-tekhnologiy-5g",
+    "https://www.consultant.ru/document/cons_doc_LAW_472976/b507a04970978798a0c3937837c96a0b6006005e/"
+  ]
+}
