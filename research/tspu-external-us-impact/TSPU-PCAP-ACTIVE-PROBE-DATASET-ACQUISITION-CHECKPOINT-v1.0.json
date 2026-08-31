@@ -1,0 +1,57 @@
+{
+  "schema": "hawkar.topa.spider.dataset_acquisition_checkpoint.v1",
+  "artifact_id": "TSPU-PCAP-ACTIVE-PROBE-DATASET-ACQUISITION-CHECKPOINT-v1.0",
+  "generated_date_utc": "2026-08-31",
+  "goal": "Acquire packet/active-probe level material needed to test high-specificity TSPU DPI-DNA such as fragment limit, overlap handling, TTL inheritance, TCP state-machine behavior and exact device localization.",
+  "public_dataset_attempt": {
+    "source_project": "censoredplanet/CenProbe",
+    "workflow": ".github/workflows/tspu-cenprobe-dataset-acquire.yml",
+    "workflow_commit": "01547e850a7902eec57da2285c5fb696d683fe38",
+    "run_id": 33359873031,
+    "conclusion": "SUCCESS_AS_ACQUISITION_TEST",
+    "artifact_id": 9746323326,
+    "artifact_sha256": "05656513fb902c103fb749c0476a80d2b62e109130848166c147cd5a478d5642",
+    "google_drive_file_id": "1begpJRkNfI8Rg378A1S0BQKVYrWFfuSa",
+    "download_result": "UNAVAILABLE_VIA_PUBLIC_LINK",
+    "downloaded_bytes": 0,
+    "gdown_result": "Cannot retrieve the public link; file may no longer be link-public or may be access-limited.",
+    "interpretation": "The old public data link cannot currently be used from a clean GitHub runner. This is an availability result only, not evidence that the study dataset no longer exists."
+  },
+  "official_repository_state": {
+    "repository": "https://github.com/censoredplanet/CenProbe",
+    "open_material": [
+      "collection scripts",
+      "nmap/censys/zgrab example outputs",
+      "clustering notebook",
+      "pipeline describing CenTrace + CenProbe + CenFuzz aggregation"
+    ],
+    "full_dataset_access_statement": "The CenProbe README states that access to the full dataset for the project is available by emailing the researchers.",
+    "researcher_contacts_listed_publicly": [
+      "ramaks@umich.edu",
+      "monaw@princeton.edu"
+    ],
+    "email_status": "NOT_SENT; no external outreach was performed in this acquisition pass."
+  },
+  "tspu_high_specificity_reference_frozen_from_peer_reviewed_paper": {
+    "paper": "TSPU: Russia's Decentralized Censorship System, IMC 2022",
+    "doi": "10.1145/3517745.3561461",
+    "features": {
+      "fragment_buffering": "Incomplete fragments are buffered; after the last fragment arrives, fragments are forwarded individually rather than reassembled for forwarding.",
+      "ttl_inheritance": "Subsequent fragments are rewritten to use the TTL of fragment zero / first fragment.",
+      "duplicate_overlap_behavior": "Duplicate or overlapping fragments cause the entire fragmentation state/queue to be discarded.",
+      "fragment_cache_timeout": "approximately 5 seconds",
+      "fragment_limit": 45,
+      "limit_behavior": "45 fragments accepted; a 46-fragment test is used as a discriminator because exceeding the limit discards the queue.",
+      "remote_localization": "TTL-limited fragments and traceroute were used to identify links immediately before/after TSPU behavior.",
+      "rarity_control": "The paper reports the 45-fragment limit as uncommon and uses multiple behaviors jointly rather than the limit alone."
+    },
+    "why_ooni_is_insufficient": "OONI raw JSON preserves application/network-event timing and failure semantics but does not expose complete packet headers and crafted-fragment response behavior required to reproduce these discriminators."
+  },
+  "next_legal_acquisition_routes": [
+    "Search for mirrors, supplementary repositories or archived copies of the released CenProbe/CenTrace/CenFuzz dataset.",
+    "If the user explicitly authorizes researcher outreach, request the full published research dataset from the addresses listed by the project.",
+    "Do not perform intrusive active probing from the user's network; the CenProbe project itself warns that such experiments can create risk in censoring regimes.",
+    "Continue mining already-public raw OONI and non-intrusive archival telemetry, but keep packet-header attribution ceiling explicit."
+  ],
+  "status": "PUBLIC_LINK_BLOCKED_DATASET_REQUEST_ROUTE_IDENTIFIED"
+}
