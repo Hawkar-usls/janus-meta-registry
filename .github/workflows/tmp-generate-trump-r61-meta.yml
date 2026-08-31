@@ -1,0 +1,56 @@
+name: TMP Generate TRUMP R6.1 Exact Meta Receipt
+
+on:
+  push:
+    branches:
+      - research/tmp-r61-meta-generator-2026-08-31
+    paths:
+      - '.github/workflows/tmp-generate-trump-r61-meta.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate-clean-meta-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Fetch canonical R6.1 runtime receipt and generate exact meta JSON
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RECEIPT_PATH: trump/TRUMP_SLIME_R6_1_REGRET_BOUNDED_EXPLORATION_FROZEN_PASS_RECEIPT_2026-08-31.json
+          OUTPUT_PATH: data/JANUS-TRUMP-R6-1-REGRET-BOUNDED-EXPLORATION-SCOPED-PASS-2026-08-31-v1.0.json
+        run: |
+          DEMIURGE_REPO='Hawkar-usls/Janus-Demiurge'
+          DEMI_MAIN="$(gh api "repos/${DEMIURGE_REPO}/branches/main" --jq '.commit.sha')"
+          RECEIPT_BLOB="$(gh api "repos/${DEMIURGE_REPO}/contents/${RECEIPT_PATH}?ref=main" --jq '.sha')"
+          gh api "repos/${DEMIURGE_REPO}/contents/${RECEIPT_PATH}?ref=main" --jq '.content' | tr -d '\n' | base64 -d > /tmp/r61-receipt.json
+          python tools/tmp_generate_trump_r61_meta.py \
+            --receipt /tmp/r61-receipt.json \
+            --demiurge-main "$DEMI_MAIN" \
+            --receipt-blob "$RECEIPT_BLOB" \
+            --output "$OUTPUT_PATH"
+      - name: Commit generated meta on temporary branch
+        run: |
+          git config user.name 'JANUS R6.1 Meta Generator'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/JANUS-TRUMP-R6-1-REGRET-BOUNDED-EXPLORATION-SCOPED-PASS-2026-08-31-v1.0.json
+          git commit -m 'tmp: materialize exact R6.1 scoped PASS meta receipt'
+          git push origin HEAD:${GITHUB_REF_NAME}
+      - name: Create clean meta branch from current main
+        run: |
+          TEMP_BRANCH="${GITHUB_REF_NAME}"
+          CLEAN_BRANCH='research/trump-r6-1-scoped-pass-meta-2026-08-31'
+          TARGET='data/JANUS-TRUMP-R6-1-REGRET-BOUNDED-EXPLORATION-SCOPED-PASS-2026-08-31-v1.0.json'
+          git fetch origin main
+          git switch -C "$CLEAN_BRANCH" origin/main
+          git checkout "$TEMP_BRANCH" -- "$TARGET"
+          git add "$TARGET"
+          git commit -m 'meta: preserve exact TRUMP R6.1 scoped frozen PASS'
+          git push --force-with-lease origin HEAD:"$CLEAN_BRANCH"
