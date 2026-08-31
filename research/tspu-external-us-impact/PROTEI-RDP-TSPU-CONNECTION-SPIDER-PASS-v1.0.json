@@ -1,0 +1,203 @@
+{
+  "schema": "hawkar.topa.spider.tspu_external.vendor_connection_graph.v1",
+  "artifact_id": "PROTEI-RDP-TSPU-CONNECTION-SPIDER-PASS-v1.0",
+  "generated_date_utc": "2026-08-31",
+  "purpose": "Test whether PROTEI_DPI and RDP.RU EcoDPI/EcoFilter/TSPU share code, hardware, ownership, integrators, control-plane components or other causal bridges. Distinguish product identity from ecosystem convergence.",
+  "headline_verdict": {
+    "protei_equals_tspu_rebrand": "NOT_SUPPORTED",
+    "protei_and_rdp_are_independent_dpi_product_lines": "STRONGLY_SUPPORTED",
+    "shared_russian_telecom_ecosystem": "CONFIRMED",
+    "shared_rostelecom_orbit": "CONFIRMED_BUT_DIFFERENT_FORMS",
+    "shared_codebase": "NOT_ESTABLISHED",
+    "shared_signature_database": "NOT_ESTABLISHED",
+    "shared_management_plane": "NOT_ESTABLISHED",
+    "shared_oem_or_generic_components": "PLAUSIBLE_GENERIC_ONLY",
+    "direct_tspu_role_for_protei": "NOT_ESTABLISHED",
+    "best_remaining_hypothesis": "ECOSYSTEM_CONVERGENCE_OR_COMPONENT_REUSE, NOT SIMPLE_REBRAND"
+  },
+  "chronology": [
+    {
+      "date": "2012-05",
+      "finding": "PROTEI publicly demonstrated PROTEI DPI as a new independent product for deep packet analysis and traffic management.",
+      "implication": "PROTEI DPI predates the 2019 sovereign-Runet/TSPU rollout and has its own product history."
+    },
+    {
+      "date": "2014-06",
+      "finding": "PROTEI deployed its DPI platform commercially at MegaCom in Kyrgyzstan.",
+      "implication": "Independent foreign carrier deployment existed years before TSPU."
+    },
+    {
+      "date": "2015",
+      "finding": "PROTEI integrated Entensys/UserGate Web Filter with its DPI at MegaCom; the external product classified requested sites and PROTEI DPI applied policy.",
+      "implication": "PROTEI historically used modular third-party classification integrations rather than evidence of RDP code reuse."
+    },
+    {
+      "date": "2016-2017",
+      "finding": "Rostelecom invested 15% in RDP.RU in 2016; PROTEI_DPI entered the Russian software registry in 2017 as its own product (registry no. 3672).",
+      "implication": "Separate ownership and software-registration lineages are visible before TSPU."
+    },
+    {
+      "date": "2018-08",
+      "finding": "RDP.RU and NTC PROTEI were listed as separate candidate vendors in FSB/Roskomnadzor/Mincomsvyaz testing of traffic-filtering systems for Telegram blocking. PROTEI co-owner Anton Pinchuk confirmed the testing context and said PROTEI withdrew; later reporting identified RDP.RU equipment as the most effective in the laboratory experiment.",
+      "implication": "This is the strongest anti-rebrand evidence: regulators treated them as distinct competing systems in the selection process that preceded sovereign-Runet/TSPU deployment."
+    },
+    {
+      "date": "2019",
+      "finding": "Sovereign-Runet trials on Russian operator networks publicly identified RDP.RU DPI equipment as the tested system.",
+      "implication": "The publicly traceable path into TSPU runs through RDP.RU, not PROTEI."
+    },
+    {
+      "date": "2020",
+      "finding": "Rostelecom group consolidated control of RDP.RU; by 2025 the group stated that 100% of RDP.RU had been collected under its Gradient structure as an intragroup optimization.",
+      "implication": "RDP.RU became a controlled Rostelecom-group asset."
+    },
+    {
+      "date": "2024-01",
+      "finding": "Rostelecom and NTC PROTEI created joint venture PROTEI-RTK for Russian 5G development.",
+      "implication": "PROTEI entered a separate formal Rostelecom partnership years after the TSPU vendor-selection period. This is ecosystem convergence, not evidence that older PROTEI DPI became TSPU."
+    },
+    {
+      "date": "2026",
+      "finding": "A current telecom solution presentation lists RDP.RU network-packet-broker functionality and PROTEI PCRF in the same mobile-core architecture as distinct functions.",
+      "implication": "They can coexist in one stack as separate components, further weakening a simple label-swap model."
+    }
+  ],
+  "software_fingerprint_comparison": {
+    "PROTEI_DPI": {
+      "public_installation_namespace": [
+        "/usr/protei/Protei-DPI/",
+        "/usr/protei/OM/"
+      ],
+      "historic_packaging": [
+        "protei-dpi-*.x86_64.rpm",
+        "data-proc-*.noarch.rpm",
+        "Apache Tomcat web application DPI.war"
+      ],
+      "historic_os": "RedHat/CentOS in older public technical description",
+      "current_certified_os": ["Ubuntu 20.04/24.04 LTS", "Astra Linux", "AltLinux", "RED OS"],
+      "current_database": "ClickHouse 22.9",
+      "current_packet_io": "10G NIC with DPDK support; up to 100G interfaces",
+      "technical_spec_prefix": "PAMR.465616.007",
+      "product_version_in_2026_certificate": "4.1"
+    },
+    "RDP_EcoDPI_EcoFilter": {
+      "platform": "EcoSGE multifunction service platform",
+      "historic_function_names": ["EcoNAT", "EcoFILTER", "EcoBRAS", "Eco3in1/EcoNATDPI"],
+      "registered_software_names": [
+        "EcoDPIOS-DU",
+        "EcoDPIOS-cEMS",
+        "EcoDPIOS-LB",
+        "EcoDPIOS-DC"
+      ],
+      "technical_spec_prefix": "RDPT / РДПТ (e.g. РДПТ.465614.040 for EcoFilter 5340R)",
+      "current_hardware_line": "EcoFilter 5340R family; public reporting also ties current TSPU supply to RDP software on Yadro Vegman server platforms",
+      "architecture_style": "EcoSGE firmware/software family with separate DU/cEMS/LB/DC roles"
+    },
+    "comparison_result": "Namespaces, package naming, technical-specification prefixes, product modularization and registry identities are visibly different. No public binary/package/config-schema evidence found that one is a relabeled build of the other."
+  },
+  "functional_overlap": {
+    "common_capabilities": [
+      "deep packet inspection",
+      "subscriber/flow policy enforcement",
+      "URL/domain classification",
+      "black/white lists",
+      "bandwidth/QoS management",
+      "traffic statistics",
+      "operator-scale deployment"
+    ],
+    "interpretation": "These are normal overlapping capabilities for carrier-grade DPI products and do not establish common code or manufacturer identity."
+  },
+  "common_component_check": {
+    "x86": "Both product families can run on commodity/server-class x86 platforms; this is generic and has no attribution value.",
+    "DPDK": "PROTEI current certification explicitly names DPDK-capable NICs. Public evidence sufficient to make DPDK a PROTEI component exists; no unique DPDK-derived bridge to RDP was established in this pass. Even if both use DPDK, DPDK is widely used open-source packet-processing infrastructure and would carry near-zero identity weight.",
+    "database": "PROTEI current certificate names ClickHouse. RDP/TSPU ecosystem reporting also contains ClickHouse in monitoring/control infrastructure, but this is generic analytics infrastructure and does not imply a shared DPI codebase.",
+    "hardware": "PROTEI certification specifies generic minimum server characteristics; RDP/TSPU public evidence points to EcoFilter appliances/Yadro server platforms in modern deployments. No same-appliance/OEM identity was established.",
+    "signature_engine": "No common proprietary signature database, file format, update endpoint or signature identifier was found.",
+    "management_protocol": "No common proprietary management API, command namespace, controller hostname, certificate chain or remote-management backend was found."
+  },
+  "corporate_and_institutional_links": {
+    "rostelecom_rdp": "Rostelecom invested in RDP.RU in 2016 and consolidated control in 2020; by 2025 100% was held inside Rostelecom group via Gradient.",
+    "rostelecom_protei": "Rostelecom and NTC PROTEI formed PROTEI-RTK in January 2024 for 5G development.",
+    "industry_committee": "Both NTC PROTEI and RDP.RU are members of the ARPP Domestic Software telecommunications committee.",
+    "coexistence": "2026 mobile-network architecture materials show RDP.RU and PROTEI functions in the same stack as separate named components.",
+    "interpretation": "A shared institutional ecosystem is confirmed. This can facilitate interoperability, standards alignment, personnel/vendor familiarity or future component reuse, but it is not evidence of product identity."
+  },
+  "strongest_negative_evidence_against_rebrand": [
+    "PROTEI DPI was publicly demonstrated in 2012 and commercially deployed abroad in 2014, before TSPU selection/deployment.",
+    "In 2018 regulators tested RDP.RU and PROTEI as separate candidate systems; PROTEI withdrew while RDP reportedly performed best.",
+    "2019 sovereign-Runet/TSPU trials publicly identify RDP.RU equipment.",
+    "PROTEI and RDP have distinct software namespaces, registry entries, technical-spec prefixes and management/component families.",
+    "Modern telecom materials can place RDP and PROTEI products side-by-side as separate network functions."
+  ],
+  "remaining_open_connections": [
+    {
+      "hypothesis": "Shared low-level packet-processing libraries beyond generic DPDK",
+      "status": "OPEN_NO_EVIDENCE",
+      "killer_test": "Obtain legal/public binaries, SBOMs, package manifests or symbol/version strings and compare proprietary libraries."
+    },
+    {
+      "hypothesis": "Common signature/content-classification feed",
+      "status": "OPEN_NO_EVIDENCE",
+      "killer_test": "Compare update endpoints, feed formats, category IDs, rule identifiers and signature versioning."
+    },
+    {
+      "hypothesis": "Shared OEM or bypass/NIC hardware supplier",
+      "status": "OPEN_LOW_VALUE",
+      "killer_test": "Compare BOMs, PCI IDs, bypass cards, firmware vendor strings and certification annexes."
+    },
+    {
+      "hypothesis": "Shared management/control-plane code introduced after Rostelecom ecosystem convergence",
+      "status": "OPEN_POST_2024",
+      "killer_test": "Compare current management APIs, controllers, certificates, telemetry schemas and orchestration components in Rostelecom-integrated deployments."
+    },
+    {
+      "hypothesis": "PROTEI technology used as a non-DPI component inside a broader TSPU site",
+      "status": "PLAUSIBLE_BUT_NOT_ESTABLISHED",
+      "killer_test": "Find procurement/BOM/site documentation naming PROTEI alongside RDP/DCOA components at a TSPU node."
+    }
+  ],
+  "cuba_implication": {
+    "rule": "PROTEI presence in Cuba cannot be translated into TSPU presence.",
+    "still_valid": "PROTEI_DPI is technically capable of active filtering and PROTEI has a documented Cuban telecom relationship.",
+    "missing_bridge": "Evidence that ETECSA's measured RST/filtering appliance is specifically PROTEI_DPI remains absent.",
+    "new_spider_angle": "If Cuban packet behavior can be matched to a known PROTEI deployment such as MegaCom, that would support PROTEI attribution without invoking TSPU identity."
+  },
+  "claim_ceiling": {
+    "allowed": "PROTEI and RDP.RU are separate DPI vendors that became increasingly connected through the broader Rostelecom/Russian telecom ecosystem. Their products overlap functionally and may use generic common infrastructure, but no public evidence found shows that PROTEI_DPI is EcoDPI/TSPU under another label.",
+    "forbidden_without_new_evidence": [
+      "PROTEI is TSPU",
+      "PROTEI_DPI and EcoDPI share a proprietary codebase",
+      "Cuban PROTEI equipment is a TSPU node",
+      "Rostelecom partnership proves shared remote control",
+      "shared x86/DPDK/ClickHouse implies common manufacturer or control plane"
+    ]
+  },
+  "sources": [
+    "https://protei.ru/news/itogi-uchastiya-v-vystavke-svyaz-ekspokomm-2012",
+    "https://protei.ru/news/dpi-platforma-protey-upravlyaet-trafikom-v-seti-megacom",
+    "https://protei.ru/news/ntc-protey-i-entensys-porabotali-dlya-megacom",
+    "https://www.vedomosti.ru/technology/news/2018/08/30/779502-o-novoi-tehnologii",
+    "https://www.kommersant.ru/doc/4093921",
+    "https://habr.com/ru/news/487778/",
+    "https://www.company.rt.ru/press/news_ir/news/d438084/",
+    "https://www.cnews.ru/news/top/2021-03-15_rostelekom_zaplatil_17",
+    "https://www.cnews.ru/news/top/2025-09-30_u_sozdatelej_reshenij_dlya",
+    "https://protei.ru/news/pao-rostelekom-i-ooo-ntc-protey-obedinyayut-usiliya-dlya-razvitiya-tekhnologiy-5g",
+    "https://static.cnews.ru/img/book/2026/05/05/prezentatsiya_kompanii_maj_2026.pdf",
+    "https://protei.ru/sites/default/files/2020-04/DPI_TechDescription.pdf",
+    "https://protei.ru/sites/default/files/2025-12/S_DPI_2028.pdf",
+    "https://rdp.ru/wp-content/uploads/ENAT_UserGuide.pdf",
+    "https://rdp.ru/wp-content/uploads/datasheets/ru/RDP-EcoFilter-Datasheet-RU.pdf",
+    "https://reestr.digital.gov.ru/reestr/?EX_PAGE_N=41&EX_PAGE_S=20&PAGE_N=679&PAGE_S=40",
+    "https://reestr.digital.gov.ru/reestr/?EX_PAGE_N=72&EX_PAGE_S=20&PAGE_N=198&PAGE_S=100&filter_owner=55736",
+    "https://catalog.arppsoft.ru/product/6039137",
+    "https://arppsoft.ru/boards/tele/members.php"
+  ],
+  "next_spider_pass": [
+    "Mine archived PROTEI and RDP manuals for proprietary config-key, API-route, service-name and telemetry-schema overlap.",
+    "Search procurement/BOM documents for sites where PROTEI and RDP equipment coexist, especially Rostelecom and DCOA deployments.",
+    "Compare public certificates/SBOM-like metadata for NIC vendor IDs, bypass cards, cryptographic libraries and service dependencies.",
+    "Use known PROTEI deployment MegaCom as a fingerprint control: locate censorship/middlebox measurements on that network and compare TCP reset behavior with Cuba and RDP/TSPU.",
+    "Preserve the distinction between ecosystem relationship and causal product identity."
+  ]
+}
