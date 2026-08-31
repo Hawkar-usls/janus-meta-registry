@@ -1,0 +1,285 @@
+{
+  "schema": "hawkar.topa.spider.tspu_external.global_world_map.v1",
+  "artifact_id": "GLOBAL-SPIDER-WORLD-CONTROL-PLANE-MAP-v1.0",
+  "generated_date_utc": "2026-08-31",
+  "status": "ACTIVE_GLOBAL_WATCH",
+  "purpose": "Global defensive map connecting network-level censorship, shutdown, allowlisting, DPI, lawful-interception lineage, cross-border telecom dependencies, and foreign-information-manipulation response structures without conflating functional similarity with common command.",
+  "epistemic_law": "SAME_FUNCTION != SAME_VENDOR != SAME_LINEAGE != SAME_OPERATOR != SAME_CONTROL_PLANE. Attribution requires direct bridge evidence.",
+  "global_baseline": {
+    "access_now_2025": {
+      "shutdowns": 313,
+      "countries": 52,
+      "countries_with_shutdown_since_2016": 100,
+      "shutdowns_persisting_into_2026": 75,
+      "countries_with_persistent_shutdowns_into_2026": 33,
+      "source": "https://www.accessnow.org/internet-shutdowns-2025/"
+    },
+    "ooni": {
+      "scope": "global censorship telemetry from more than 200 countries; OONI Explorer currently exposes measurements across 245 countries and more than 31,000 networks",
+      "source": "https://explorer.ooni.org/"
+    }
+  },
+  "control_archetypes": [
+    {
+      "id": "A_CENTRAL_PROGRAMMABLE_DPI",
+      "definition": "Policy enforcement at or near ISP/gateway level using DPI/TLS/HTTP/DNS/QUIC-aware controls.",
+      "examples": ["Russia/TSPU", "China/Great Firewall", "Pakistan/WMS", "Egypt/DPI filtering", "Saudi Arabia/TLS interference"]
+    },
+    {
+      "id": "B_GATEWAY_AND_NATIONAL_NETWORK_CONTROL",
+      "definition": "International connectivity is centralized or separable from a domestic/national service environment.",
+      "examples": ["Iran/National Information Network and government-controlled international gateways", "China/state-controlled international gateways"]
+    },
+    {
+      "id": "C_SHUTDOWN_PLUS_ALLOWLIST",
+      "definition": "Broad connectivity is disabled or degraded while selected approved services remain available.",
+      "examples": ["Russia/mobile deny-except-allowlist", "Myanmar/approved-service lists", "Uganda/2026 whitelisted services during shutdown regime"]
+    },
+    {
+      "id": "D_SORM_OR_LAWFUL_INTERCEPTION_LINEAGE",
+      "definition": "Telecom interception infrastructure modeled on Russian/Soviet SORM or supplied by Russian/SORM-compatible vendors.",
+      "examples": ["Kazakhstan", "Kyrgyzstan", "Uzbekistan", "other Central Asian surveillance environments requiring case-specific proof"]
+    },
+    {
+      "id": "E_CROSS_BORDER_TELECOM_INTERCONNECT_ABUSE",
+      "definition": "Foreign operator signalling/interconnect infrastructure can be abused across borders without owning the target country's ISP control plane.",
+      "examples": ["Citizen Lab 2026 SS7/Diameter surveillance mapped to operator infrastructure in Israel, UK and Channel Islands"]
+    }
+  ],
+  "regional_nodes": [
+    {
+      "region": "RUSSIA",
+      "countries": ["Russia"],
+      "evidence_state": "STRONG_CONFIRMED_DOMESTIC_CONTROL",
+      "mechanisms": ["TSPU", "central policy distribution", "DPI", "filtering", "rerouting", "mobile deny/allowlist", "SORM"],
+      "claim_ceiling": "Domestic centralized TSPU capability is established. Foreign synchronized TSPU command is not established.",
+      "sources": [
+        "https://www.hrw.org/report/2025/07/30/disrupted-throttled-and-blocked/state-censorship-control-and-increasing-isolation",
+        "https://censoredplanet.org/tspu"
+      ]
+    },
+    {
+      "region": "CHINA",
+      "countries": ["China"],
+      "evidence_state": "STRONG_FUNCTIONAL_ANALOGUE",
+      "mechanisms": ["state-controlled international gateways", "Great Firewall", "DPI", "DNS poisoning", "TCP reset injection", "throttling"],
+      "claim_ceiling": "Strong functional analogue of national network control; no inference of Russian lineage.",
+      "sources": [
+        "https://freedomhouse.org/country/china/freedom-net/2023",
+        "https://citizenlab.ca/research/chinas-great-cannon/"
+      ]
+    },
+    {
+      "region": "IRAN",
+      "countries": ["Iran"],
+      "evidence_state": "STRONG_FUNCTIONAL_ANALOGUE",
+      "mechanisms": ["National Information Network", "centralized international gateways", "ISP disconnect orders", "platform blocks", "VPN filtering"],
+      "claim_ceiling": "National/international separation capability is established; Russian command is not implied.",
+      "sources": [
+        "https://www.article19.org/ttn-iran-november-shutdown/",
+        "https://freedomhouse.org/country/iran/freedom-net/2024"
+      ]
+    },
+    {
+      "region": "CENTRAL_ASIA",
+      "countries": ["Kazakhstan", "Kyrgyzstan", "Uzbekistan", "Tajikistan", "Turkmenistan"],
+      "evidence_state": "MIXED_RUSSIAN_LINEAGE_AND_COMMERCIAL_SURVEILLANCE",
+      "mechanisms": ["SORM-like lawful interception", "Russian/SORM-compatible suppliers", "DPI in selected countries", "shutdown capability"],
+      "strongest_links": [
+        "Privacy International documented the Russian SORM model in Central Asia.",
+        "Kazakhstan, Kyrgyzstan and Uzbekistan have documented Russian/SORM-linked equipment or architecture in historical open-source reporting.",
+        "Uzbek legislation explicitly defines SORM technical means on telecom networks."
+      ],
+      "claim_ceiling": "Russian-origin or Russian-model equipment is a lineage/dependency signal, not proof of Russian remote command.",
+      "sources": [
+        "https://privacyinternational.org/report/837/private-interests-monitoring-central-asia",
+        "https://privacyinternational.org/blog/1296/lawful-interception-russian-approach"
+      ]
+    },
+    {
+      "region": "BELARUS",
+      "countries": ["Belarus"],
+      "evidence_state": "STRONG_STATE_NETWORK_CONTROL",
+      "mechanisms": ["state backbone leverage", "DPI", "shutdown", "commercial filtering technology"],
+      "notable_vendor_history": "Sandvine equipment was publicly linked to Belarusian DPI filtering; Sandvine later terminated the contract.",
+      "claim_ceiling": "State control and DPI are established; vendor identity does not establish foreign state command.",
+      "source": "https://freedomhouse.org/country/belarus/freedom-net/2021"
+    },
+    {
+      "region": "PAKISTAN",
+      "countries": ["Pakistan"],
+      "evidence_state": "STRONG_GATEWAY_DPI_ANALOGUE",
+      "mechanisms": ["Web Monitoring System", "gateway-level DPI", "platform blocking"],
+      "claim_ceiling": "National DPI capability is documented; not Russian lineage unless separately proven.",
+      "source": "https://freedomhouse.org/country/pakistan/freedom-net/2024"
+    },
+    {
+      "region": "MYANMAR",
+      "countries": ["Myanmar"],
+      "evidence_state": "STRONG_SHUTDOWN_AND_ALLOWLIST_ANALOGUE",
+      "mechanisms": ["nationwide shutdowns", "telecom/regulator seizure or coercion", "URL/IP blocks", "approved-service lists"],
+      "claim_ceiling": "Demonstrates state ability to combine shutdown and selective access; no Russian-control inference.",
+      "source": "https://freedomhouse.org/country/myanmar/freedom-net/2021"
+    },
+    {
+      "region": "UGANDA",
+      "countries": ["Uganda"],
+      "evidence_state": "FRESH_2026_ALLOWLIST_ANALOGUE",
+      "mechanisms": ["election-related shutdown", "post-restoration social-media blocking", "service whitelisting"],
+      "importance": "Direct functional analogue of deny/allowlist behavior outside Russia.",
+      "claim_ceiling": "This is an independent analogue, not evidence of common control plane.",
+      "source": "https://explorer.ooni.org/findings/2026-uganda-blocked-social-media-following-2026-general-election"
+    },
+    {
+      "region": "SAUDI_ARABIA",
+      "countries": ["Saudi Arabia"],
+      "evidence_state": "FRESH_2026_DPI_FINGERPRINT",
+      "mechanisms": ["TLS interference", "RST injection after ClientHello", "selective service blocking"],
+      "importance": "Fresh path-level DPI-like evidence useful for fingerprint comparison.",
+      "claim_ceiling": "Network-local censorship fingerprint only; no shared control-plane inference.",
+      "source": "https://explorer.ooni.org/findings/2026-saudi-arabia-just-blocked-tinder"
+    },
+    {
+      "region": "TURKIYE",
+      "countries": ["Türkiye"],
+      "evidence_state": "STRONG_FILTERING_AND_NEGATIVE_CONTROL",
+      "mechanisms": ["DNS interference", "throttling", "TLS-level interference", "platform blocking"],
+      "negative_control": "Discord was blocked in Türkiye and Russia on the same day in October 2024, demonstrating that temporal synchrony alone cannot establish common command.",
+      "source": "https://explorer.ooni.org/findings/2025-turkiye-blocked-discord"
+    },
+    {
+      "region": "EGYPT",
+      "countries": ["Egypt"],
+      "evidence_state": "DPI_FILTERING_ANALOGUE",
+      "mechanisms": ["DPI connection resets", "packet dropping", "HTTP/HTTPS blocking"],
+      "claim_ceiling": "Functional censorship analogue only.",
+      "source": "https://ooni.org/documents/Egypt-Internet-Censorship-AFTE-OONI-2018-07.pdf"
+    },
+    {
+      "region": "AFRICA_BROAD",
+      "countries": ["Cameroon", "Central African Republic", "Chad", "DRC", "Equatorial Guinea", "Ethiopia", "Gabon", "Guinea", "Guinea-Bissau", "Kenya", "Nigeria", "South Sudan", "Sudan", "Tanzania", "Togo", "Uganda"],
+      "evidence_state": "REGIONAL_SHUTDOWN_PATTERN",
+      "mechanisms": ["election shutdowns", "protest-related social-media blocking", "conflict blackouts", "LEO satellite interference in selected countries"],
+      "claim_ceiling": "Region-wide tactic prevalence; country-level mechanisms must be measured independently.",
+      "source": "https://www.accessnow.org/press-release/resilience-and-resistance-internet-shutdowns-in-africa-in-2025/"
+    },
+    {
+      "region": "MENA_BROAD",
+      "countries": ["Algeria", "Iran", "Iraq", "Jordan", "Lebanon", "Libya", "Oman", "Palestine", "Qatar", "Saudi Arabia", "Syria", "UAE", "Yemen"],
+      "evidence_state": "REGIONAL_SHUTDOWN_AND_FILTERING_PATTERN",
+      "mechanisms": ["shutdowns", "platform blocks", "conflict-related connectivity denial", "LEO interference in selected countries"],
+      "claim_ceiling": "Regional prevalence is established; common technology or command is not.",
+      "source": "https://www.accessnow.org/press-release/blocking-millions-in-mena-internet-shutdowns-in-2025/"
+    },
+    {
+      "region": "ASIA_PACIFIC_BROAD",
+      "countries": ["Afghanistan", "Bangladesh", "Cambodia", "China", "India", "Indonesia", "Malaysia", "Myanmar", "Nepal", "Pakistan", "Papua New Guinea", "Vietnam"],
+      "evidence_state": "HIGHEST_GLOBAL_SHUTDOWN_BURDEN",
+      "mechanisms": ["shutdowns", "platform blocking", "conflict/election restrictions"],
+      "claim_ceiling": "High prevalence does not imply a common vendor or sponsor.",
+      "source": "https://www.accessnow.org/press-release/one-region-half-the-worlds-shutdowns-in-the-asia-pacific-in-2025/"
+    },
+    {
+      "region": "LATIN_AMERICA_CARIBBEAN",
+      "countries": ["Venezuela", "Panama", "Cuba", "Nicaragua"],
+      "evidence_state": "MIXED_CENSORSHIP_AND_SHUTDOWN_CASES",
+      "mechanisms": ["state-ISP blocking", "DNS/TCP interference", "shutdowns in selected countries"],
+      "claim_ceiling": "Country-specific evidence only; no global common-control inference.",
+      "sources": [
+        "https://www.accessnow.org/campaign/keepiton/",
+        "https://ooni.org/reports/"
+      ]
+    }
+  ],
+  "cross_border_watch": {
+    "telecom_interconnect": {
+      "finding": "Citizen Lab 2026 mapped live SS7/Diameter surveillance attack telemetry to operator signalling infrastructure in Israel, the United Kingdom and the Channel Islands.",
+      "importance": "Proves that trusted global telecom interconnect can be exploited across borders without a target-country TSPU-like control plane.",
+      "source": "https://citizenlab.ca/research/uncovering-global-telecom-exploitation-by-covert-surveillance-actors/"
+    },
+    "shutdowns": {
+      "finding": "Access Now documented 18 cross-border shutdowns in 2025 implemented by seven perpetrators affecting seven countries or occupied/colonized territories.",
+      "importance": "External connectivity control is not merely hypothetical globally, but each event requires mechanism-specific attribution.",
+      "source": "https://www.accessnow.org/internet-shutdowns-2025/"
+    }
+  },
+  "global_response_and_measurement_nodes": [
+    {
+      "node": "OONI",
+      "role": "packet/service-level censorship measurements and open global telemetry",
+      "source": "https://ooni.org/"
+    },
+    {
+      "node": "Access Now / #KeepItOn",
+      "role": "global shutdown event tracking and cross-border shutdown taxonomy",
+      "source": "https://www.accessnow.org/campaign/keepiton/"
+    },
+    {
+      "node": "EEAS FIMI Situational Awareness / FIMI Toolbox",
+      "role": "EU operational FIMI monitoring, early warning and coordinated response",
+      "source": "https://www.eeas.europa.eu/eeas/4th-eeas-report-foreign-information-manipulation-and-interference-threats_en"
+    },
+    {
+      "node": "NATO StratCom COE",
+      "role": "attribution frameworks, counter-FIMI research, hostile influence situational awareness",
+      "source": "https://stratcomcoe.org/publications/attributing-russian-information-influence-operations-testing-the-information-influence-attribution-framework-with-real-world-case-studies/340"
+    },
+    {
+      "node": "G7 Rapid Response Mechanism",
+      "role": "multilateral foreign-interference/FIMI coordination and common operating picture",
+      "source": "https://www.international.gc.ca/world-monde/issues_development-enjeux_developpement/peace_security-paix_securite/combatt-disinformation-desinformation.aspx?lang=eng"
+    }
+  ],
+  "spider_edge_types": [
+    "FUNCTIONAL_ANALOGUE",
+    "SHARED_VENDOR",
+    "RUSSIAN_OR_SORM_LINEAGE",
+    "ROUTING_DEPENDENCY",
+    "CROSS_BORDER_EFFECT",
+    "TEMPORAL_COINCIDENCE_ONLY",
+    "DIRECT_CONTROL_PLANE_BRIDGE"
+  ],
+  "edge_rule": "Only DIRECT_CONTROL_PLANE_BRIDGE may support a claim of common remote command. All other edge types are context, risk, or collection leads.",
+  "priority_watch_clusters": [
+    {
+      "tier": "P0",
+      "targets": ["Russia", "Kazakhstan", "Kyrgyzstan", "Uzbekistan", "Belarus"],
+      "reason": "Russian/SORM lineage or close network-control relevance. Watch for vendor/control-plane and path evidence."
+    },
+    {
+      "tier": "P1",
+      "targets": ["Uganda", "Myanmar", "Iran", "Pakistan", "Saudi Arabia", "Türkiye", "Egypt", "China"],
+      "reason": "Strong functional analogues useful for false-positive calibration and fingerprint comparison."
+    },
+    {
+      "tier": "P2",
+      "targets": ["global shutdown countries from Access Now 2025", "OONI networks with fresh TLS/DNS/QUIC anomalies"],
+      "reason": "Broad anomaly discovery; promote only after reproducible technical evidence."
+    }
+  ],
+  "anti_overclaim_firewall": [
+    "A shutdown outside Russia is not evidence of Russian involvement.",
+    "A DPI fingerprint similar to TSPU is not a TSPU attribution without device/operator/control-plane linkage.",
+    "Russian-origin SORM equipment is not evidence of Russian remote command.",
+    "Shared vendor use across countries is not evidence of synchronized policy.",
+    "Temporal coincidence alone has zero attribution weight.",
+    "Information-manipulation activity and network censorship may coexist without being operationally coupled.",
+    "Platform coordination evidence cannot be promoted into telecom attribution without an independent technical bridge."
+  ],
+  "next_spider_jobs": [
+    "Build a country-by-country vendor lineage table for all known SORM/DPI deployments with source date and confidence.",
+    "Continuously compare OONI TLS/DNS/QUIC fingerprints against known TSPU behaviors from controlled public literature.",
+    "Track RIPE Atlas/BGP route changes for P0 countries and preserve pre-event baselines.",
+    "Track shutdown-to-allowlist transitions and local-vs-US-service reachability asymmetry.",
+    "Cross-reference technical events with FIMI bursts only after freezing network evidence timestamps.",
+    "Treat synchrony cases such as Russia/Türkiye Discord 2024 as negative controls unless a direct bridge emerges."
+  ],
+  "current_verdict": {
+    "GLOBAL_ANALOGUE_NETWORK": "CONFIRMED",
+    "RUSSIAN_SORM_LINEAGE_OUTSIDE_RUSSIA": "CONFIRMED_IN_SELECTED_COUNTRIES",
+    "CROSS_BORDER_NETWORK_CONTROL_AS_A_GENERAL_PHENOMENON": "CONFIRMED",
+    "GLOBAL_RUSSIAN_TSPU_CONTROL_PLANE": "NOT_ESTABLISHED",
+    "SYNCHRONIZED_MULTI_COUNTRY_RUSSIAN_ACTIVATION": "NOT_ESTABLISHED",
+    "CISA_TRIGGER": "HOLD"
+  }
+}
