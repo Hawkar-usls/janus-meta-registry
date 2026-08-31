@@ -1,0 +1,123 @@
+{
+  "schema": "hawkar.topa.spider.tspu_external.multi_country_comparison.v1",
+  "artifact_id": "QUINT-COUNTRY-PROTEST-NETWORK-SPIDER-KZ-GE-BY-RS-CU-v1.0",
+  "generated_date_utc": "2026-08-31",
+  "countries": ["Kazakhstan", "Georgia", "Belarus", "Serbia", "Cuba"],
+  "purpose": "Compare protest-day network-control behavior across five countries while separating political timing, network centralization, filtering mechanism, vendor lineage and foreign control-plane attribution.",
+  "country_roles": {
+    "Belarus": {
+      "role": "STRONG_POSITIVE_CONTROL",
+      "network_pattern": "Repeated protest/election-conditioned national and mobile Internet restrictions in a centralized state-controlled international connectivity environment.",
+      "lineage": "Russian SORM lineage confirmed/strongly supported; protest-era DPI associated publicly with Sandvine supplied through Russian integrator Jet Infosystems.",
+      "remote_russian_control": "NOT_ESTABLISHED"
+    },
+    "Cuba": {
+      "role": "STRONG_POSITIVE_CONTROL_PLUS_VENDOR_BRIDGE",
+      "network_pattern": "Repeated protest-conditioned national/regional restrictions on state monopoly ETECSA/AS27725; OONI/NetBlocks observed selective platform blocking and TCP RST/TLS-handshake interference.",
+      "lineage": "Recorded Future assesses Russian SORM procurement very likely, most notably Protei; ETECSA is listed as Protei customer; 2024 Protei-Movitel agreement. Chinese infrastructure is a major alternative lineage.",
+      "remote_russian_control": "NOT_ESTABLISHED"
+    },
+    "Kazakhstan": {
+      "role": "ORANGE_PATH_CONTROL_CANDIDATE",
+      "network_pattern": "Repeated protest-conditioned local/national degradation and historical path-dependent HTTPS interception; 2026 filtering anomalies remain under ASN/path drill-down.",
+      "lineage": "Russian SORM vendor lineage strongly supported; separate DPI evidence includes Allot, preventing simplistic Russian-equipment attribution.",
+      "remote_russian_control": "NOT_ESTABLISHED"
+    },
+    "Georgia": {
+      "role": "NEGATIVE_PROTEST_SHUTDOWN_CONTROL",
+      "network_pattern": "Severe and prolonged protest repression without a stable historic protest-to-shutdown pattern; small 2026 anomalies remain YELLOW.",
+      "lineage": "Domestic lawful-interception capability exists; Russian public-network SORM/TSPU vendor lineage not established.",
+      "remote_russian_control": "NOT_ESTABLISHED"
+    },
+    "Serbia": {
+      "role": "NEGATIVE_INTERNET_CONTROL_PLUS_SEPARATE_RF_CANDIDATE",
+      "network_pattern": "Large protests without established national Internet shutdown pattern; 15 March 2025 GNSS jamming/spoofing treated as a separate RF mechanism, not DPI/TSPU.",
+      "lineage": "No established Russian TSPU/SORM public-network control lineage relevant to protest-day Internet behavior.",
+      "remote_russian_control": "NOT_ESTABLISHED"
+    }
+  },
+  "cross_country_findings": [
+    "PROTEST alone has zero attribution weight: Georgia and Serbia provide strong negative controls.",
+    "CENTRALIZED NETWORK CONTROL materially increases the feasibility of repeatable protest-conditioned restrictions: Belarus and Cuba are the clearest positive controls.",
+    "Russian-origin SORM vendor presence is not sufficient to infer that Russian equipment performs censorship, that a TSPU-like mechanism is deployed, or that Moscow controls the system remotely.",
+    "Cuba materially strengthens the global Spider because it combines a centralized state monopoly ASN, independently measured RST/DPI behavior, repeated protest-day restrictions, and a documented Russian SORM vendor relationship in the same national environment.",
+    "The critical missing bridge across all foreign cases is DEVICE/CONTROL-CHANNEL CAUSALITY: public evidence rarely links a measured block/reset to a specific vendor appliance, firmware/control server or foreign operator command path.",
+    "Power-grid failures are a mandatory confound in Cuba and some Kazakhstan windows; physical repression and spyware are separate mechanisms in Georgia/Serbia and must not be counted as network filtering evidence.",
+    "Matching timing across countries contributes no remote-control attribution without matching packet fingerprint, path localization and control/vendor bridge."
+  ],
+  "mechanism_matrix": {
+    "protest_conditioned_shutdown_or_filtering": {
+      "Belarus": "STRONG",
+      "Cuba": "STRONG",
+      "Kazakhstan": "STRONG_HISTORICAL / CURRENT_UNDER_TEST",
+      "Georgia": "WEAK_NOT_ESTABLISHED",
+      "Serbia": "NOT_ESTABLISHED"
+    },
+    "centralized_or_dominant_control_surface": {
+      "Belarus": "STRONG",
+      "Cuba": "VERY_STRONG_STATE_MONOPOLY",
+      "Kazakhstan": "MATERIAL",
+      "Georgia": "LESS_SUPPORTIVE_OF_SHUTDOWN_MODEL",
+      "Serbia": "DECENTRALIZED_NEGATIVE_CONTROL"
+    },
+    "path_or_protocol_specific_fingerprint": {
+      "Belarus": "SUPPORTED",
+      "Cuba": "CONFIRMED_TCP_RST_DPI / TLS_HANDSHAKE_BLOCKING",
+      "Kazakhstan": "CONFIRMED_HISTORICAL / 2026_PENDING",
+      "Georgia": "YELLOW_SMALL_SAMPLE",
+      "Serbia": "YELLOW_MIDDLEBOX_ANOMALY; SEPARATE_GNSS_SIGNAL"
+    },
+    "russian_sorm_vendor_lineage": {
+      "Belarus": "YES",
+      "Cuba": "VERY_LIKELY / PROTEI CUSTOMER BRIDGE",
+      "Kazakhstan": "YES",
+      "Georgia": "NOT_ESTABLISHED",
+      "Serbia": "NOT_ESTABLISHED_FOR_THIS_MECHANISM"
+    },
+    "measured_filter_to_russian_device_causal_link": {
+      "Belarus": "NO",
+      "Cuba": "NO",
+      "Kazakhstan": "NO",
+      "Georgia": "NO",
+      "Serbia": "NO"
+    },
+    "russian_remote_control": {
+      "Belarus": "NOT_ESTABLISHED",
+      "Cuba": "NOT_ESTABLISHED",
+      "Kazakhstan": "NOT_ESTABLISHED",
+      "Georgia": "NOT_ESTABLISHED",
+      "Serbia": "NOT_ESTABLISHED"
+    }
+  },
+  "cisa_gate_implications": {
+    "historical_best_positive_control": ["Cuba", "Belarus"],
+    "best_current_path_hunt": ["Kazakhstan", "Cuba"],
+    "best_negative_controls": ["Georgia", "Serbia"],
+    "status": "HOLD_FOR_CURRENT_RED_TRIGGER",
+    "reason": "Cuba now satisfies most historical technical dimensions, but public evidence still does not causally bind the measured DPI/reset/shutdown mechanism to a Russian SORM device/control channel, and the 2026 protest-day outage signal is not yet independently mechanism-localized.",
+    "red_trigger_needed": [
+      "current reproducible foreign-vantage path-specific filtering affecting US/open services",
+      "matched service/provider-side negative controls",
+      "ASN/hop/middlebox localization",
+      "independent measurement replication",
+      "specific device/vendor/control-channel bridge or cross-country matching fingerprint",
+      "power/infrastructure outage exclusions"
+    ]
+  },
+  "spider_next_targets": [
+    "Cuba: extract raw OONI fingerprints for 2017 and July 2021 and compare reset TTL/timing/handshake phase.",
+    "Cuba: align June 19-20 2026 IODA drops with protest and power restoration timelines.",
+    "Cuba: identify exact Protei products delivered to ETECSA/Movitel and whether any product provides SORM/DPI/filtering/control-plane functions.",
+    "Kazakhstan: continue ASN/path localization of 2026 anomalies and compare against historical protest windows.",
+    "Belarus: preserve as packet/policy positive control and separate Sandvine censorship stack from Russian SORM stack.",
+    "Georgia/Serbia: continue as negative controls to quantify false-positive rate of protest-date coincidence."
+  ],
+  "epistemic_firewall": [
+    "same political event != same network mechanism",
+    "same network effect != same vendor",
+    "same vendor != same product",
+    "same product family != same control plane",
+    "Russian-origin vendor presence != Russian remote command",
+    "temporal coincidence alone = zero attribution weight"
+  ]
+}
