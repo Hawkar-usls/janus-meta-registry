@@ -1,0 +1,42 @@
+name: TSPU MegaCom TikTok Endpoint Matrix
+
+on:
+  push:
+    branches:
+      - research/tspu-external-us-impact
+    paths:
+      - '.github/workflows/tspu-megacom-tiktok-endpoint-matrix.yml'
+      - 'research/tspu-external-us-impact/tools/ooni_megacom_tiktok_endpoint_matrix.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  harvest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Harvest endpoint matrix
+        env:
+          MEGACOM_MATRIX_OUT: megacom-tiktok-endpoint-matrix
+          PER_DOMAIN: '8'
+          OONI_REQUEST_DELAY: '0.35'
+        run: |
+          python research/tspu-external-us-impact/tools/ooni_megacom_tiktok_endpoint_matrix.py | tee megacom-tiktok-endpoint-matrix-run.log
+      - name: Hash matrix artifact
+        run: |
+          find megacom-tiktok-endpoint-matrix -type f -print0 | sort -z | xargs -0 sha256sum > megacom-tiktok-endpoint-matrix/SHA256SUMS.txt
+      - name: Upload endpoint matrix artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tspu-megacom-tiktok-endpoint-matrix
+          path: |
+            megacom-tiktok-endpoint-matrix/
+            megacom-tiktok-endpoint-matrix-run.log
+          if-no-files-found: error
+          retention-days: 30
