@@ -1,0 +1,92 @@
+{
+  "schema": "hawkar.topa.spider.cuba_protei_causal_bridge_hunt.v1",
+  "artifact_id": "CUBA-PROTEI-DPI-CAUSAL-BRIDGE-HUNT-v1.0",
+  "generated_date_utc": "2026-08-31",
+  "goal": "Test the specific bridge MEASURED_RST_OR_FILTER <-> SPECIFIC_PROTEI_DEVICE_OR_CONTROL_CHANNEL without conflating SORM surveillance, DPI policy enforcement, vendor proximity, or Russian remote control.",
+  "verdict": {
+    "bridge_status": "PARTIAL_INTERMEDIATE_BRIDGE_FOUND_CAUSAL_LINK_NOT_CLOSED",
+    "cisa_red_gate": "NOT_OPEN",
+    "most_important_new_fact": "PROTEI has a separate DPI platform with explicit blocking, URL blacklist/whitelist, scheduling, redirection, bandwidth/policy control and DNS whitelist enforcement capabilities; ETECSA is a documented PROTEI customer and PROTEI states its technologies/equipment have operated in Cuba since 2015.",
+    "most_important_negative_fact": "PROTEI SORM-2 traffic-tap documentation describes monitoring-mode/passive interception that does not affect client traffic; therefore measured TCP RST censorship should not be attributed to SORM simply because SORM is present."
+  },
+  "evidence_chain": [
+    {
+      "node": "ETECSA_MEASURED_RST_DPI",
+      "status": "CONFIRMED",
+      "detail": "OONI tested ETECSA AS27725 in May-June 2017 and reported DPI technology serving blank block pages and injecting TCP resets to blocked sites; the blocking system was suspected to be located in Havana."
+    },
+    {
+      "node": "PROTEI_TECH_PRESENT_IN_CUBA",
+      "status": "CONFIRMED_VENDOR_LEVEL",
+      "detail": "PROTEI states that Russian technologies and equipment operate successfully in Cuba and that Latin American installations began in 2015. PROTEI also identifies ETECSA as a customer."
+    },
+    {
+      "node": "PROTEI_SORM_CUBA",
+      "status": "STRONGLY_SUPPORTED",
+      "detail": "Recorded Future assesses Cuba very likely procured SORM hardware/software from Russian providers, most notably PROTEI, citing INSS and company/customer evidence. INSS reports PROTEI/SORM-3 technology as associated with heightened Cuban repression, but does not technically bind a specific filtering event to a PROTEI appliance."
+    },
+    {
+      "node": "PROTEI_DPI_BLOCKING_CAPABILITY",
+      "status": "CONFIRMED_PRODUCT_CAPABILITY",
+      "detail": "Official PROTEI DPI documentation states the platform can detect application-layer traffic, apply per-flow policies, block/categorize URLs, use URL blacklists/whitelists, schedule black/white-list actions, block sites by domain name, enforce DNS-server IP whitelists, redirect traffic, dynamically manage bandwidth and integrate with PCRF/external systems."
+    },
+    {
+      "node": "PROTEI_SORM_PASSIVE_INTERCEPT_CHARACTER",
+      "status": "CONFIRMED_FOR_DOCUMENTED_COMPONENTS",
+      "detail": "Official PROTEI SORM-2 traffic-tap and LIS documentation describes monitoring/passive interception and explicitly says insertion does not affect customer traffic/network switching. This weakens any direct inference SORM itself generated RST censorship."
+    },
+    {
+      "node": "PROTEI_DPI_DEPLOYED_AT_ETECSA",
+      "status": "NOT_ESTABLISHED",
+      "detail": "No public source found in this pass names PROTEI_DPI as a product purchased or deployed by ETECSA, despite PROTEI's customer relationship and confirmed Cuban deployments."
+    },
+    {
+      "node": "MEASURED_RST_MATCHES_PROTEI_DPI",
+      "status": "NOT_ESTABLISHED",
+      "detail": "No device fingerprint, reset TTL/IPID signature, block-page marker, management IP, rack/device photograph, procurement record, configuration export or vendor-specific protocol artifact currently ties the 2017 or 2021 Cuban censorship fingerprint to PROTEI_DPI."
+    },
+    {
+      "node": "RUSSIAN_REMOTE_CONTROL",
+      "status": "NOT_ESTABLISHED",
+      "detail": "No public evidence found connecting any Cuban filtering device to a Russian remote management endpoint or operational command channel."
+    }
+  ],
+  "temporal_bridge": {
+    "protei_cuba_presence": "since at least 2015 according to PROTEI's own 2022 Cuba/Latin-America statement",
+    "ooni_rst_measurement": "May-June 2017",
+    "assessment": "TEMPORALLY_COMPATIBLE_BUT_NOT_CAUSAL"
+  },
+  "product_separation": {
+    "PROTEI_SORM": "surveillance/interception/storage/control-panel ecosystem; documented traffic tap/passive interception components do not by themselves explain active RST injection",
+    "PROTEI_DPI": "active packet-policy platform capable of selective blocking, allow/deny lists, traffic redirection, scheduling and bandwidth control; technically capable of implementing censorship-like policy",
+    "rule": "PROTEI_SORM presence cannot be substituted for evidence of PROTEI_DPI deployment."
+  },
+  "next_killer_evidence": [
+    "ETECSA or Cuban procurement/import/customs record naming PROTEI_DPI, PCRF/PCEF or related traffic-management product.",
+    "PROTEI case study, installation note, support ticket, CV, tender, maintenance record or technical presentation naming ETECSA and DPI.",
+    "Archived FIHAV/Informática exhibitor material specifying which PROTEI products were demonstrated or delivered to ETECSA.",
+    "Network fingerprint unique enough to compare with a known PROTEI_DPI deployment elsewhere, including RST packet characteristics, HTTP block-page behavior, TTL/IPID, TCP sequence behavior, TLS/SNI handling or DNS policy behavior.",
+    "Management/control endpoint, firmware artifact, device certificate, vendor banner or configuration export from Cuban network infrastructure.",
+    "Historical before/after deployment timing showing a censorship-mechanism change coincident with a documented PROTEI DPI installation."
+  ],
+  "anti_overclaim_rules": [
+    "ETECSA customer of PROTEI != ETECSA customer of PROTEI_DPI.",
+    "Cuba likely has PROTEI SORM != PROTEI caused censorship resets.",
+    "PROTEI_DPI can block traffic != PROTEI_DPI is deployed in Cuba.",
+    "Temporal overlap != device attribution.",
+    "Russian vendor != Russian remote operation."
+  ],
+  "sources": [
+    "https://ooni.org/post/cuba-internet-censorship-2017/",
+    "https://protei.ru/clients",
+    "https://protei.ru/news/resheniya-protey-dlya-private-lte-na-informatica-2022",
+    "https://protei.ru/products/traffic-managenent-aaa-policy-control/dpi",
+    "https://protei.ru/sites/default/files/2020-04/DPI_TechDescription.pdf",
+    "https://protei.ru/products/oborudovanie-sorm/semnik-trafika-s-kolcevym-buferom",
+    "https://protei.ru/products/oborudovanie-sorm/passivnye-sistemy-perekhvata-lis-i-lis-ims",
+    "https://assets.recordedfuture.com/insikt-report-pdfs/2025/ta-ru-2025-0107.pdf",
+    "https://inss.ndu.edu/Portals/68/Documents/stratperspective/inss/strategic-perspectives-41.pdf",
+    "https://protei.ru/news/protey-podpisal-soglashenie-na-kube"
+  ],
+  "final_rule": "The hunt produced a real capability-and-timeline bridge from PROTEI to Cuba, but not the required device-level causal bridge. The correct next target is evidence of PROTEI_DPI deployment or a vendor-specific packet/control fingerprint, not further general SORM evidence."
+}
