@@ -1,0 +1,123 @@
+{
+  "schema": "hawkar.topa.spider.tspu_external.country_protest_network_correlation.v1",
+  "artifact_id": "GEORGIA-PROTEST-DAY-NETWORK-CORRELATION-v1.0",
+  "generated_date_utc": "2026-08-31",
+  "country": "Georgia",
+  "purpose": "Evaluate whether protest periods in Georgia correlate with state-attributable network restrictions, and whether any observed behavior is relevant to the CISA external technical-trigger gate.",
+  "claim_ceiling": {
+    "protest_conditioned_network_shutdown": "NOT_ESTABLISHED",
+    "domestic_lawful_interception_control_surface": "ESTABLISHED_IN_LAW",
+    "domestic_protest_repression": "STRONGLY_SUPPORTED",
+    "russian_tspu_or_sorm_vendor_presence": "NOT_ESTABLISHED",
+    "russian_remote_control": "NOT_ESTABLISHED",
+    "cisa_trigger": "HOLD"
+  },
+  "historical_baseline": [
+    {
+      "period": "2018-2019",
+      "finding": "Freedom House reported that Georgia did not block communications or social-media platforms during the coverage period; isolated platform-wide blocks were historical 2015-2016 cases rather than protest-conditioned shutdowns.",
+      "role": "NEGATIVE_CONTROL"
+    },
+    {
+      "period": "March 2023 foreign-agents-law protests",
+      "finding": "Large street protests were organized effectively through online platforms; no major protest-linked connectivity shutdown was documented in Freedom House's 2023 report.",
+      "role": "NEGATIVE_CONTROL"
+    },
+    {
+      "period": "April-May 2024 foreign-agents-law protests",
+      "finding": "Freedom House documented intimidation, doxxing, threatening calls, cyberattacks, and progovernment influence activity, while also stating that the government did not impose connectivity restrictions and that social-media restrictions had not been imposed for nearly a decade.",
+      "role": "NEGATIVE_CONTROL_WITH_NON_NETWORK_REPRESSION"
+    },
+    {
+      "period": "Nov 28 2024-2026 continuous pro-EU protest movement",
+      "finding": "Human-rights reporting documents sustained physical, legal, financial, and informational repression, but public reporting does not establish a Kazakhstan-style protest-conditioned national or local internet shutdown pattern.",
+      "role": "NEGATIVE_CONTROL_WITH_HIGH_REPRESSION"
+    }
+  ],
+  "technical_capability_surface": {
+    "finding": "Georgia's Electronic Communications law provides for a lawful interception management system and allows an authorised body to install hardware/software and obtain real-time communications directly without provider operational participation, subject to Georgian legal procedures.",
+    "interpretation": "This establishes a domestic lawful-interception control surface, not proof of DPI censorship, protest-day blocking, TSPU-equivalent operation, or Russian control.",
+    "agency_context": "The Operative-Technical Agency operates under the State Security Service of Georgia.",
+    "vendor_lineage": "UNKNOWN"
+  },
+  "2026_signals": [
+    {
+      "date": "2026-07-18",
+      "protest_context": "The 598th day of continuous anti-government protest was publicly documented in Tbilisi on this date.",
+      "network_signal": "A Voidly summary of OONI data reported anomalous tests involving chat.openai.com, chatgpt.com, and claude.ai during a July 18-30 window, including July 18 measurements.",
+      "sample_quality": "VERY_LOW",
+      "known_limitations": [
+        "Only three OONI-derived measurements were cited in the incident summary.",
+        "No ASN or ISP was identified.",
+        "No blocking mechanism was established.",
+        "No sub-national localization was available.",
+        "OpenAI had narrow Enterprise/Codex incidents on July 18, creating a provider-side confound for the OpenAI targets.",
+        "The simultaneous Claude anomaly is interesting but insufficient on its own to exclude measurement noise or unrelated service/network causes."
+      ],
+      "status": "YELLOW_CANDIDATE"
+    },
+    {
+      "date": "2026-08-20",
+      "protest_context": "Daily anti-government protests were still ongoing in Tbilisi during August 2026.",
+      "network_signal": "A Voidly summary reported OONI http_invalid_request_line anomalies consistent with possible middlebox presence/interference.",
+      "sample_quality": "LOW",
+      "known_limitations": [
+        "No ASN or ISP attribution.",
+        "No target-specific censorship mechanism established.",
+        "Single-source aggregation.",
+        "Because protests were daily, temporal overlap alone has little attribution value."
+      ],
+      "status": "YELLOW_CANDIDATE"
+    },
+    {
+      "date": "2026-07-24_to_2026-07-25_and_2026-08-05",
+      "network_signal": "Nationwide electricity blackouts also disrupted internet access.",
+      "role": "NEGATIVE_CONTROL",
+      "interpretation": "Power failures must be excluded before classifying 2026 reachability anomalies as censorship or policy intervention."
+    }
+  ],
+  "russian_linkage_checks": {
+    "confirmed": [
+      "Russia-linked cyber operations have targeted Georgian infrastructure historically, including the 2019 mass website attack attributed by Georgia and partners to Russia's GRU.",
+      "Russian hackers were reported to have targeted Georgian media and the president's website in January 2024."
+    ],
+    "not_established": [
+      "Russian TSPU deployment inside Georgian public networks.",
+      "Russian SORM vendor deployment inside Georgian public networks.",
+      "Russian remote command of Georgian lawful-interception systems.",
+      "Use of Georgia's lawful-interception architecture for protest-day blocking."
+    ],
+    "rule": "External Russian cyberattack history must not be conflated with domestic telecom control-plane ownership."
+  },
+  "comparison_with_kazakhstan": {
+    "kazakhstan": "Repeated protest-conditioned connectivity degradation/shutdown is strongly supported historically.",
+    "georgia": "Repeated protest-conditioned connectivity shutdown is not established; repression has primarily appeared through policing, law, financial penalties, intimidation, surveillance concerns, influence operations, and cyberattacks rather than broad connectivity denial.",
+    "value": "Georgia is a useful negative control showing that severe protest repression does not by itself imply network shutdown policy."
+  },
+  "cisa_gate_assessment": {
+    "current_level": "HOLD_YELLOW_WATCH",
+    "why_not_orange_or_red": [
+      "No protest-day ASN/path localization.",
+      "No matched alternate-path or VPN bypass control.",
+      "No independent replication of the July 18 or August 20 anomalies.",
+      "No confirmed selective deny/allowlist pattern.",
+      "No Russian/vendor/control-plane bridge.",
+      "Known power outages and provider-side incidents create important false-positive controls."
+    ],
+    "next_tests": [
+      "Resolve OONI raw measurements for July 18 and August 20 to probe_asn / ISP.",
+      "Compare Magti, Silknet, Caucasus Online and other Georgian networks during the same windows.",
+      "Check OONI Web Connectivity, HTTP Invalid Request Line, DNS, Telegram/Signal/WhatsApp and circumvention tests by ASN.",
+      "Cross-check IODA, Cloudflare Radar, Google traffic and provider status pages.",
+      "Test whether alternate routes or VPN paths remove the anomaly.",
+      "Look for repeated mechanism fingerprints on major protest days rather than relying on temporal coincidence."
+    ]
+  },
+  "epistemic_rules": [
+    "PROTEST + ANOMALY != CENSORSHIP",
+    "LAWFUL_INTERCEPTION_CAPABILITY != BLOCKING_USE",
+    "RUSSIAN_CYBERATTACK_HISTORY != RUSSIAN_TELECOM_CONTROL_PLANE",
+    "SINGLE_SOURCE_OONI_ANOMALY != CISA_TRIGGER",
+    "POWER_OUTAGE MUST BE EXCLUDED BEFORE POLICY ATTRIBUTION"
+  ]
+}
