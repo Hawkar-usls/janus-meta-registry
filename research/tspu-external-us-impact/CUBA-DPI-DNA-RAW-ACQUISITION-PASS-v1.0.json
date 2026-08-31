@@ -1,0 +1,152 @@
+{
+  "schema": "hawkar.topa.spider.tspu_external.dpi_dna_acquisition.v1",
+  "artifact_id": "CUBA-DPI-DNA-RAW-ACQUISITION-PASS-v1.0",
+  "generated_date_utc": "2026-08-31",
+  "objective": "Acquire primary measurement handles and packet/parser traits capable of discriminating Cuba's active filtering implementation from PROTEI_DPI, RDP/EcoDPI/TSPU, and generic DPI controls.",
+  "acquisition_status": {
+    "public_raw_pcap_found": false,
+    "public_pcapng_found": false,
+    "ooni_measurement_handles_found": true,
+    "ooni_report_ids_found": true,
+    "wireshark_packet_traits_from_independent_cuban_monitor": true,
+    "longitudinal_device_family_marker_found": true,
+    "device_model_proven": false
+  },
+  "diktyon_public_archive": {
+    "repository": "diktyoncuba/public",
+    "branch": "main",
+    "tree_sha_observed": "b1ad361328d66b8ce6393a25af4ed4456e3363d4",
+    "role": "Independent Cuba Internet-health/censorship monitor publishing technical reports and historical censored-site data.",
+    "inventory_observed": [
+      "Informes/Informe-1_Mar-May-2023.pdf",
+      "Informes/Informe-2_Jun-Ago-2023.pdf",
+      "Informes/Informe-3_Sep-Nov-2023.pdf",
+      "Informes/Informe-4_Ene-Mar-2024.pdf",
+      "Informes/Informe-5_Abr-Jun-2024.pdf",
+      "Informes/Informe-6_Jul-Sept-2024.pdf",
+      "Informes/Informe-7_Oct-Dic-2024.pdf",
+      "Informes/Informe-8_Ene-Mar-2026.pdf",
+      "Informes/Informe-9_Abr-Jun-2026.pdf",
+      "Extras/20260225-Supuesto_Evento_21_feb_2026.pdf",
+      "censored_web_sites/2024/septiembre/websites.csv"
+    ],
+    "raw_capture_inventory_result": "No .pcap or .pcapng objects were present in the recursively enumerated public repository tree. The reports contain packet-capture screenshots/analysis, but raw capture files were not publicly exposed in this repository during this pass."
+  },
+  "ooni_primary_handles": {
+    "kyrgyzstan_known_protei_environment": [
+      {
+        "measurement_uid": "20240423234901.802380_KG_webconnectivity_59d833460e69b8db",
+        "context": "OONI finding uses this measurement to illustrate TLS session timeout after ClientHello during Kyrgyzstan TikTok blocking; AS50223 MegaCom is one of five affected networks. Exact probe ASN for this single UID must be confirmed from raw JSON before treating it as an AS50223 reference specimen."
+      }
+    ],
+    "cuba_signal_2024": [
+      {
+        "measurement_uid": "20240429174320.434112_CU_signal_ba8189a8dd612838",
+        "context": "Linked by Diktyon report #5 as a concrete Signal measurement used to inspect DNS/TCP/HTTP failures. Raw JSON retrieval remains pending."
+      }
+    ],
+    "cuba_2017_report_ids": [
+      "20170601T231223Z_AS27725_ygIsEMfMEK55ILBkcvkJ4mMt647xFCgDJWJeoUoiIxEX6d9A5W",
+      "20170601T235618Z_AS27725_SpZcfWCu3e17GPv8jpXSOIQucnRNNPolNnG2OODcGQC8H70cbe"
+    ],
+    "2017_report_id_traits": {
+      "20170601T231223Z_AS27725_ygIsEMfMEK55ILBkcvkJ4mMt647xFCgDJWJeoUoiIxEX6d9A5W": "Multiple AS27725 Web Connectivity tests include HTTP-diff and response_never_received outcomes for Cuba-related blocked domains.",
+      "20170601T235618Z_AS27725_SpZcfWCu3e17GPv8jpXSOIQucnRNNPolNnG2OODcGQC8H70cbe": "Contains connection_reset outcomes for cibercuba.com and cubanet.org HTTP/HTTPS while other targets in the same report show HTTP-diff."
+    },
+    "ooni_data_access": {
+      "api_route": "/api/v1/measurement/<measurement_id>",
+      "api_behavior": "OONI API source shows the endpoint resolves measurement_uid to S3 path+line and returns the complete JSON measurement body.",
+      "bulk_bucket": "ooni-data-eu-fra",
+      "new_format_path": "raw/<YYYYMMDD>/<HH>/<CC>/<testname>/<YYYYMMDDHH>_<CC>_<testname>.n<batch>.<seq>.jsonl.gz",
+      "note": "Raw JSONL acquisition from S3/API is the preferred next extraction route; the current research interface exposed handles and documentation but did not return the complete measurement body."
+    }
+  },
+  "cuba_longitudinal_active_filter_fingerprint": {
+    "time_span_publicly_observed": "2017 through at least Q3 2024",
+    "marker": "Server: V2R2C00-IAE/1.0",
+    "association": "Huawei-associated middlebox family / eSight-associated fingerprint in OONI, Qurium, Open Technology Fund research and Diktyon reporting",
+    "exact_appliance_model": "NOT_PROVEN",
+    "nip6000_claim": "HYPOTHESIS/ASSOCIATION_ONLY; do not state as established appliance model",
+    "packet_behavior": [
+      "For blocked HTTPS domains, client sends TLS ClientHello but normal ServerHello is not received.",
+      "An in-path device sends an HTTP response into the HTTPS/TLS flow, commonly HTTP 503, while appearing to use the destination server IP.",
+      "Injected response exposes Server: V2R2C00-IAE/1.0.",
+      "Diktyon reports the same identifier across approximately 30 HTTPS domains in Apr-Jun 2024 and across dozens of domains in prior quarters.",
+      "When selected domains became temporarily reachable in 2024, the V2R2C00-IAE/1.0 injection disappeared and TLS completed normally, providing a strong within-path negative control.",
+      "Removing SNI from ClientHello allowed TLS to complete for tested DPI-censored sites such as cubasindical.org, while including blocked SNI triggered interception. This establishes SNI-dependent parser behavior for that observed filtering path."
+    ],
+    "2017_parser_quirk": [
+      "OONI's Cuba 2017 experiments found blocking could be triggered by a payload containing ': ' followed by a blocked domain and CRLF.",
+      "The blocked domain followed by newline without the colon-space pattern did not trigger in the reported experiment.",
+      "A blocked domain appearing in an arbitrary HTTP header could trigger censorship, implying comparatively simple string/pattern parsing rather than strict Host-header semantic parsing."
+    ],
+    "2017_rst_traits": [
+      "Injected resets arrived sooner than expected legitimate server responses in latency comparisons.",
+      "RST TTL differed from legitimate traffic in the reported tests, supporting in-path injection rather than origin-server reset.",
+      "Server-side capture controls indicated blocked requests did not reach the origin in tested cases."
+    ]
+  },
+  "cross_country_uniqueness_check": {
+    "V2R2C00_is_cuba_unique": false,
+    "reason": "OONI pipeline and independent research have recorded the same Server header in other countries including Italy, Mexico and Pakistan, with broader Huawei-middlebox observations reported internationally.",
+    "value": "The marker is useful as a Huawei-associated implementation-family clue but cannot by itself attribute a Cuban filtering device, command source, or operator to Huawei.",
+    "megacom_protei_match_found": false,
+    "megacom_search_result": "No public indexed evidence was found in this pass linking MegaCom/PROTEI_DPI to V2R2C00-IAE/1.0. Absence of indexed evidence is not a negative device test."
+  },
+  "updated_hypotheses": {
+    "H1": {
+      "claim": "A Huawei-associated middlebox family performs at least part of Cuba's active HTTP/HTTPS censorship.",
+      "status": "STRONGLY_SUPPORTED_AT_FAMILY_LEVEL",
+      "ceiling": "Exact Huawei product/appliance and contractual operator remain unproven."
+    },
+    "H2": {
+      "claim": "Cuba operates multiple interception/control stacks: a Huawei-associated active filtering layer plus Russian-origin SORM/PROTEI surveillance or telecom components.",
+      "status": "PLAUSIBLE_AND_COMPATIBLE_WITH_CURRENT_EVIDENCE",
+      "ceiling": "Coexistence does not establish technical integration between stacks."
+    },
+    "H3": {
+      "claim": "The publicly measured Cuban HTTP/TLS censorship mechanism is PROTEI_DPI.",
+      "status": "WEAKENED",
+      "reason": "A persistent Huawei-associated active-filter marker now has direct packet-path evidence, while PROTEI remains vendor/customer/procurement evidence without a matching public packet fingerprint."
+    },
+    "H4": {
+      "claim": "The Cuban active censorship device is TSPU/RDP EcoDPI or remotely controlled from Russia.",
+      "status": "NOT_ESTABLISHED",
+      "reason": "No TSPU-specific fragment/state DNA or Russian control channel has been observed in Cuban public measurements."
+    }
+  },
+  "killer_tests_next": [
+    "Retrieve complete raw JSON for the exact OONI UIDs/report IDs and extract all network_events, tls_handshakes, TCP failures, timing, resolved IPs and probe ASN.",
+    "Acquire original Diktyon PCAPs if maintainers make them public; screenshots alone cannot expose IPID, initial TTL, TCP options, checksum, seq/ack and precise inter-packet timing.",
+    "Run/locate equivalent SNI-present versus no-SNI tests on a known PROTEI_DPI deployment; compare response type, marker, parser semantics and state behavior.",
+    "Search known Huawei V2R2C00 deployments in Italy/Mexico/Pakistan for the same HTTP-into-TLS 503 behavior and compare packet morphology. This can establish implementation-family consistency without relying on Cuba alone.",
+    "Test Cuba for published TSPU fragment DNA: fragment-0 TTL inheritance, ~45-fragment limit, duplicate/overlap queue behavior. A clean negative would materially weaken Cuba↔TSPU implementation identity.",
+    "Use TTL-limited trigger/localization measurements to distinguish an ETECSA-local appliance from upstream/international-path interference."
+  ],
+  "claim_ceiling": {
+    "allowed": [
+      "Cuba has independently observed, persistent active DPI behavior with Huawei-associated V2R2C00-IAE/1.0 marker.",
+      "The observed mechanism includes SNI-dependent HTTPS interception and injected HTTP responses into an attempted TLS connection.",
+      "Russian PROTEI/SORM relationships remain separately relevant to surveillance/vendor-lineage analysis."
+    ],
+    "forbidden_without_new_evidence": [
+      "Huawei definitely supplied the exact censorship appliance.",
+      "The exact device is Huawei NIP6000.",
+      "PROTEI performs the measured V2R2C00 censorship.",
+      "TSPU performs the measured Cuban censorship.",
+      "Russia remotely controls Cuba's filtering."
+    ]
+  },
+  "sources": [
+    "https://ooni.org/documents/cuba-internet-censorship-2017.pdf",
+    "https://gist.github.com/hellais/da29896916c61e3fc00a005c1b89ce26",
+    "https://guardianesdigitales.blogspot.com/2024/07/informe-5-sobre-la-salud-del-internet.html",
+    "https://guardianesdigitales.blogspot.com/2024/10/informe-6-sobre-la-salud-del-internet.html",
+    "https://guardianesdigitales.blogspot.com/2023/12/estudio-trimestral-sobre-la-salud-de.html",
+    "https://www.qurium.org/alerts/cuba/internet-blocking-in-cuba-silencing-dissent-in-the-name-of-moral-and-good-manners",
+    "https://github.com/ooni/pipeline/blob/master/af/fastpath/fastpath/utils.py",
+    "https://github.com/ooni/data",
+    "https://github.com/diktyoncuba/public"
+  ],
+  "verdict": "RAW PCAP NOT PUBLICLY ACQUIRED, BUT PRIMARY MEASUREMENT HANDLES + LONGITUDINAL CUBA PARSER/INJECTION DNA ACQUIRED. ACTIVE-CENSORSHIP EVIDENCE NOW FAVORS A HUAWEI-ASSOCIATED IMPLEMENTATION FAMILY OVER THE PREVIOUS PROTEI ACTIVE-FILTER HYPOTHESIS; PROTEI/SORM REMAINS A SEPARATE SURVEILLANCE/VENDOR-LINEAGE BRIDGE."
+}
