@@ -1,0 +1,51 @@
+name: TSPU CenProbe public dataset acquisition
+
+on:
+  push:
+    branches:
+      - research/tspu-external-us-impact
+    paths:
+      - .github/workflows/tspu-cenprobe-dataset-acquire.yml
+
+permissions:
+  contents: read
+
+jobs:
+  acquire:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Attempt public Google Drive dataset download
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          python -m pip install --quiet gdown
+          FILE_ID='1begpJRkNfI8Rg378A1S0BQKVYrWFfuSa'
+          set +e
+          timeout 600 gdown "https://drive.google.com/uc?id=${FILE_ID}" -O out/cenprobe-public-dataset.bin >out/gdown.log 2>&1
+          RC=$?
+          set -e
+          python - <<'PY'
+          import hashlib,json,os
+          p='out/cenprobe-public-dataset.bin'
+          info={'exists':os.path.exists(p),'size_bytes':os.path.getsize(p) if os.path.exists(p) else 0}
+          if os.path.exists(p):
+              h=hashlib.sha256()
+              with open(p,'rb') as f:
+                  for b in iter(lambda:f.read(1024*1024),b''):h.update(b)
+              info['sha256']=h.hexdigest()
+              with open(p,'rb') as f: info['magic_hex']=f.read(32).hex()
+          with open('out/manifest.json','w') as f:json.dump(info,f,indent=2)
+          print(json.dumps(info,indent=2))
+          PY
+          echo "gdown_rc=$RC" >> out/gdown.log
+          # Never fail workflow solely because an old public link expired; preserve evidence of availability/failure.
+
+      - name: Upload acquisition result
+        uses: actions/upload-artifact@v4
+        with:
+          name: tspu-cenprobe-public-dataset-acquisition
+          path: out/
+          if-no-files-found: error
+          retention-days: 30
