@@ -1,0 +1,101 @@
+{
+  "schema": "hawkar.topa.spider.cuba_huawei_associated_dpi_fingerprint.v1",
+  "artifact_id": "CUBA-HUAWEI-ASSOCIATED-DPI-FINGERPRINT-v1.0",
+  "generated_date_utc": "2026-08-31",
+  "purpose": "Freeze the strongest device-family-associated fingerprint found during the raw Cuba DPI-DNA pass while preserving attribution limits.",
+  "raw_ooni_2017": {
+    "probe_asn": "AS27725",
+    "selected_measurements": 28,
+    "domains": {
+      "http://www.cubaencuentro.com": 15,
+      "http://martinoticias.com": 13
+    },
+    "fingerprint": {
+      "http_status": 503,
+      "http_status_count": "28/28",
+      "server_header": "V2R2C00-IAE/1.0",
+      "server_header_count": "28/28",
+      "body": "<html><head></head><body></body></html>",
+      "body_count": "28/28"
+    },
+    "negative_control": "OONI control requests reached normal origin service and returned HTTP 200/content rather than the injected 503/blank response.",
+    "packet_capture_derived_behavior_from_ooni_report": [
+      "The client request did not reach OONI's control server; the path middlebox reset the flow.",
+      "The client side was reset after the injected blockpage.",
+      "Blocking could be triggered by a packet containing colon + space + blocked-domain + CRLF.",
+      "The blocked domain followed by CRLF without colon-space did not trigger the reset.",
+      "This indicates header-like string matching without requiring the blocked hostname to occupy the actual HTTP Host field."
+    ]
+  },
+  "vendor_association_chain": {
+    "V2R2C00": {
+      "evidence": "Huawei's eSight ordering guide identifies eSight V200R001/V2R2C00 as the second eSight version.",
+      "strength": "STRONG VENDOR ASSOCIATION FOR THIS VERSION TOKEN"
+    },
+    "IAE": {
+      "evidence": "Huawei NIP6000 documentation describes an Intelligent Awareness Engine (IAE) that reassembles traffic by session, decodes protocols, performs signature matching and executes policy responses.",
+      "strength": "STRONG HUAWEI PRODUCT-FAMILY CONTEXT FOR THE IAE TOKEN; NOT A PROOF THAT THE CUBAN HEADER IS SPECIFICALLY NIP6000"
+    },
+    "ooni_2017": {
+      "evidence": "OONI explicitly noted V2R2C00-IAE/1.0 on blocked Cuban sites and said the version string appeared associated with Huawei eSight.",
+      "caution": "OONI also explicitly stated that it remained unclear whether and to what extent Huawei equipment itself was implementing censorship."
+    },
+    "qurium_2020": {
+      "evidence": "Qurium identified V2R2C00-IAE/1.x as a Huawei-associated blocking fingerprint and suggested a Huawei NIP-family inline device, while distinguishing injected blockpage behavior from silent-drop DPI behavior.",
+      "strength": "INDEPENDENT SUPPORT / PRODUCT MODEL STILL INFERENTIAL"
+    },
+    "diktyon_guardianes_2023_2024": {
+      "evidence": "Later Cuban monitoring reports describe Wireshark captures in which HTTPS ClientHello is followed by an injected HTTP response carrying V2R2C00-IAE/1.0; they report the same pattern across multiple censored HTTPS domains.",
+      "strength": "TEMPORAL CONTINUITY SIGNAL; ORIGINAL DOWNLOADABLE PCAPS NOT ACQUIRED IN THIS PASS"
+    }
+  },
+  "relation_to_protei": {
+    "protei_presence_in_cuba": "SEPARATELY SUPPORTED BY PROCUREMENT/CUSTOMER-LINEAGE EVIDENCE",
+    "protei_marker_in_observed_2017_filter": "NONE FOUND",
+    "huawei_associated_marker_in_observed_2017_filter": "PRESENT AND REPEATED 28/28 IN SELECTED RAW MEASUREMENTS",
+    "conclusion": "The measured 2017 Cuban HTTP filtering mechanism should not be used as evidence of PROTEI. The leading device-family signal in this observed mechanism is Huawei-associated.",
+    "does_not_exclude": [
+      "PROTEI SORM or other PROTEI systems coexisting elsewhere in ETECSA",
+      "a different filtering stack for later services/events",
+      "multiple vendor layers operating simultaneously"
+    ]
+  },
+  "relation_to_2021_signal": {
+    "raw_result": "27/30 sampled AS27725 Signal measurements were blocked; 161 TLS handshakes ended in reset-like failures after a ClientHello-sized write, spanning Signal endpoints hosted across Amazon, Google, Microsoft and Cloudflare.",
+    "vendor_marker": "NONE IN RAW SIGNAL MEASUREMENTS",
+    "bridge_to_2017_or_2023_2024_huawei_associated_filter": "NOT DIRECTLY ESTABLISHED",
+    "status": "MECHANISM CONTINUITY PLAUSIBLE, DEVICE CONTINUITY UNPROVED"
+  },
+  "fingerprint_strength": {
+    "single_rst": "LOW",
+    "post_clienthello_reset": "LOW_TO_MEDIUM FAMILY SIGNATURE",
+    "503_plus_blank_body": "MEDIUM",
+    "V2R2C00_IAE_1_0_banner": "HIGH DEVICE-FAMILY ASSOCIATION",
+    "banner_plus_503_plus_exact_blank_body_plus_parser_trigger": "VERY_HIGH DISCRIMINATING COMPOSITE FOR THIS BLOCKING IMPLEMENTATION",
+    "vendor_product_serial_or_management_channel": "NOT FOUND"
+  },
+  "verdict": {
+    "CUBA_2017_FILTER_FINGERPRINT": "STRONGLY CHARACTERIZED",
+    "HUAWEI_ASSOCIATED_DEVICE_FAMILY": "STRONGLY SUPPORTED",
+    "SPECIFIC_HUAWEI_MODEL": "NOT PROVED",
+    "HUAWEI_OPERATION_OR_COMMAND": "NOT PROVED",
+    "PROTEI_CAUSALITY_FOR_2017_FILTER": "NO EVIDENCE / DISFAVORED BY OBSERVED MARKER",
+    "RUSSIAN_REMOTE_CONTROL": "NOT ESTABLISHED"
+  },
+  "next_tests": [
+    "Acquire original 2017/2023/2024 PCAPs to extract source TTL, IPID, TCP seq/ack, window/options, checksums and injection timing.",
+    "Search Cuban raw OONI HTTP measurements from 2018-2026 for persistence/change points of V2R2C00-IAE/1.0.",
+    "Search the same marker in non-Cuban networks to build a Huawei-associated positive-control fingerprint family and estimate false-positive/vendor-specificity rate.",
+    "Compare 2021 Signal reset timing/topology to later Cuban HTTPS captures only after packet-level data is obtained."
+  ],
+  "sources": [
+    "OONI raw public measurements harvested in GitHub Actions run 33365847014",
+    "https://ooni.org/documents/cuba-internet-censorship-2017.pdf",
+    "https://enterprise.huawei.com/ucmf/groups/entpublic/documents/enterprise_en_webasset/hw_124627.pdf",
+    "Huawei NIP6300/6600/NIP6000 product documentation describing Intelligent Awareness Engine",
+    "https://www.qurium.org/alerts/cuba/internet-blocking-in-cuba-silencing-dissent-in-the-name-of-moral-and-good-manners",
+    "https://guardianesdigitales.blogspot.com/2024/04/informe-4-sobre-la-salud-del-internet.html",
+    "https://guardianesdigitales.blogspot.com/2024/07/informe-5-sobre-la-salud-del-internet.html"
+  ],
+  "epistemic_firewall": "VENDOR-ASSOCIATED FINGERPRINT != SPECIFIC PRODUCT SERIAL != OPERATOR IDENTITY != FOREIGN REMOTE COMMAND"
+}
