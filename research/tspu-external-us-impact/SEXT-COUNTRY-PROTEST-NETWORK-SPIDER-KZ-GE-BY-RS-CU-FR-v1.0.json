@@ -1,0 +1,32 @@
+{
+  "schema": "hawkar.topa.spider.tspu_external.multi_country_comparison.v1",
+  "artifact_id": "SEXT-COUNTRY-PROTEST-NETWORK-SPIDER-KZ-GE-BY-RS-CU-FR-v1.0",
+  "generated_date_utc": "2026-08-31",
+  "countries": ["Kazakhstan", "Georgia", "Belarus", "Serbia", "Cuba", "France/New Caledonia"],
+  "purpose": "Add France/New Caledonia as a mechanism-control case to the existing protest/network comparison and reduce false attribution by distinguishing DNS blocking from DPI/TLS/RST interference.",
+  "roles": {
+    "Belarus": "STRONG_POSITIVE_PROTEST_NETWORK_CONTROL",
+    "Cuba": "STRONG_POSITIVE_PLUS_RUSSIAN_VENDOR_BRIDGE",
+    "Kazakhstan": "ORANGE_PATH_CONTROL_CANDIDATE",
+    "Georgia": "NEGATIVE_PROTEST_SHUTDOWN_CONTROL",
+    "Serbia": "NEGATIVE_INTERNET_CONTROL_PLUS_SEPARATE_RF_SIGNAL",
+    "France/New Caledonia": "NEGATIVE_MAINLAND_CONTROL_PLUS_CONFIRMED_DNS_SELECTIVE_BLOCK_CONTROL"
+  },
+  "new_france_contribution": [
+    "Mainland France 2023 demonstrates severe unrest without a confirmed Internet shutdown.",
+    "New Caledonia 2024 demonstrates state-ordered protest-era selective platform blocking through a documented, comparatively simple DNS mechanism on Mobilis/OPT-NC.",
+    "The case proves that political timing plus platform unreachability is insufficient to infer DPI, TSPU, PROTEI or foreign control.",
+    "The later Conseil d'Etat ruling provides a legal-accountability layer absent from several other comparison cases.",
+    "PROTEI client-list entry 'Orange BS' remains a lead only and is not counted as French public-network deployment evidence."
+  ],
+  "mechanism_separation": {
+    "DNS_POLICY_BLOCK": ["France/New Caledonia"],
+    "RST_TLS_SNI_DPI": ["Cuba", "Russia/TSPU reference"],
+    "POST_CLIENTHELLO_TIMEOUT_INTERFERENCE": ["MegaCom/Kyrgyzstan reference", "Russia/TSPU reference"],
+    "NATIONAL_OR_MOBILE_SHUTDOWN": ["Belarus", "Kazakhstan historical", "Cuba"],
+    "NO_STABLE_PROTEST_SHUTDOWN": ["Georgia", "Serbia", "France mainland"]
+  },
+  "updated_spider_rule": "A protest-correlated service failure gets no vendor/control-plane attribution weight until the mechanism is identified. DNS manipulation, TCP RST injection, TLS timeout, BGP/routing withdrawal, radio interference and physical power loss are separate evidence classes.",
+  "cisa_status": "HOLD",
+  "reason": "France adds a powerful false-positive control but does not supply the missing current cross-border path-specific or vendor-control-channel bridge."
+}
