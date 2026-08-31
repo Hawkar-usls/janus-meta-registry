@@ -1,0 +1,140 @@
+{
+  "schema": "hawkar.topa.spider.tspu_external.cisa_global_trigger_gate.v1",
+  "artifact_id": "CISA-GLOBAL-EXTERNAL-TECHNICAL-TRIGGER-GATE-v1.0",
+  "generated_date_utc": "2026-08-31",
+  "status": "HOLD",
+  "purpose": "Prevent premature CISA outreach while continuously watching for a reproducible foreign technical event with a concrete U.S. communications-resilience nexus.",
+  "gate_law": "CISA opens on technical evidence, not on censorship prevalence, propaganda content, vendor nationality, or geopolitical suspicion.",
+  "required_dimensions": {
+    "TECHNICAL_REPRODUCIBILITY": "At least two independent foreign vantage points or networks reproduce a path/protocol-specific effect.",
+    "NEGATIVE_CONTROL": "The destination service is healthy from unaffected networks and/or provider-side status confirms no provider-local outage.",
+    "PATH_OR_POLICY_LOCALIZATION": "Traceroute, ASN, DNS, TLS, QUIC, reset/drop, routing, or allowlist evidence localizes the event to a foreign network/control segment.",
+    "US_NEXUS": "The event materially affects access to U.S.-hosted/U.S.-operated communications, cloud, software, financial, media, diplomatic, humanitarian, commercial, or partner-critical services.",
+    "ATTRIBUTION_DISCIPLINE": "Any claim of Russian/TSPU involvement requires device, operator, vendor-control-channel, configuration, or other direct control-plane evidence."
+  },
+  "trigger_classes": [
+    {
+      "id": "T1_FOREIGN_VANTAGE_REACHABILITY_COLLAPSE",
+      "opens_gate_if": [
+        "A stable basket of U.S./open services becomes unreachable or sharply degraded from multiple foreign networks.",
+        "Local/approved services on those same networks remain normally reachable.",
+        "Matched external controls show the U.S. services themselves are healthy."
+      ],
+      "weight": 4
+    },
+    {
+      "id": "T2_PATH_LOCALIZED_DPI_FINGERPRINT",
+      "opens_gate_if": [
+        "TLS/QUIC/DNS/HTTP interference is reproducible and localized to the same foreign AS, border segment, middlebox, or operator domain.",
+        "The behavior differs on a matched alternate route or network.",
+        "Packet/protocol behavior is specific enough to distinguish policy interference from generic congestion or outage."
+      ],
+      "weight": 4
+    },
+    {
+      "id": "T3_SYNCHRONIZED_DENY_ALLOWLIST",
+      "opens_gate_if": [
+        "Two or more countries or independent foreign operator groups enter a materially similar deny/allowlist state within a narrow time window.",
+        "The same U.S./open-service basket is disproportionately affected.",
+        "Independent technical evidence shows a shared vendor/control/configuration or other bridge beyond timing alone."
+      ],
+      "weight": 5
+    },
+    {
+      "id": "T4_EXTERNAL_CONTROL_PLANE_BRIDGE",
+      "opens_gate_if": [
+        "Public or lawfully obtained evidence identifies remote-management/control channels, shared orchestrator infrastructure, synchronized configuration delivery, or direct operator/vendor linkage across borders.",
+        "The bridge temporally precedes or coincides with the observed network policy change."
+      ],
+      "weight": 6
+    },
+    {
+      "id": "T5_ROUTE_OR_TRANSIT_CAPTURE",
+      "opens_gate_if": [
+        "Foreign traffic unexpectedly shifts through a new transit jurisdiction/AS or route origin and the shift coincides with selective service loss.",
+        "Matched bypass paths restore reachability or remove the censorship fingerprint.",
+        "RPKI/BGP history supports the path-change interpretation."
+      ],
+      "weight": 5
+    },
+    {
+      "id": "T6_CROSS_LAYER_TECH_PLUS_FIMI",
+      "opens_gate_if": [
+        "A frozen technical event is followed by a measurable source-substitution or information-manipulation burst.",
+        "The technical event is independently sufficient to satisfy T1, T2, T3, T4 or T5.",
+        "The information layer is treated as impact/context, not as proof of the network actor."
+      ],
+      "weight": 2
+    }
+  ],
+  "fresh_global_calibration": [
+    {
+      "case": "Uganda 2026",
+      "finding": "Internet shutdown followed by selective social-media blocking and service whitelisting.",
+      "classification": "FUNCTIONAL_ALLOWLIST_ANALOGUE",
+      "cisa_effect": "DOES_NOT_OPEN_GATE",
+      "reason": "No U.S.-specific impact, multi-country synchronization, or shared external control-plane bridge established.",
+      "source": "https://explorer.ooni.org/findings/2026-uganda-blocked-social-media-following-2026-general-election"
+    },
+    {
+      "case": "Saudi Arabia 2026",
+      "finding": "OONI measured TLS interference with RST injection after ClientHello on one tested mobile network while other websites remained accessible.",
+      "classification": "FRESH_DPI_FINGERPRINT",
+      "cisa_effect": "DOES_NOT_OPEN_GATE",
+      "reason": "Useful protocol baseline but no U.S.-resilience nexus or cross-border control bridge.",
+      "source": "https://explorer.ooni.org/findings/2026-saudi-arabia-just-blocked-tinder"
+    },
+    {
+      "case": "Russia and Türkiye Discord 2024",
+      "finding": "Both countries began blocking Discord on the same day, while OONI documented Türkiye-specific censorship fingerprints.",
+      "classification": "TEMPORAL_SYNCHRONY_NEGATIVE_CONTROL",
+      "cisa_effect": "DOES_NOT_OPEN_GATE",
+      "reason": "Temporal coincidence alone has zero attribution weight.",
+      "source": "https://explorer.ooni.org/findings/2025-turkiye-blocked-discord"
+    },
+    {
+      "case": "Citizen Lab global telecom interconnect 2026",
+      "finding": "Live SS7/Diameter surveillance attack telemetry was mapped to operator signalling infrastructure across multiple jurisdictions.",
+      "classification": "CROSS_BORDER_TELECOM_ABUSE_PROOF_OF_CONCEPT",
+      "cisa_effect": "WATCH_HIGH",
+      "reason": "Demonstrates that foreign telecom interconnect can create transnational technical exposure, but it is surveillance signaling abuse rather than a TSPU-like public-internet denial event.",
+      "source": "https://citizenlab.ca/research/uncovering-global-telecom-exploitation-by-covert-surveillance-actors/"
+    }
+  ],
+  "decision_logic": {
+    "GREEN_HOLD": "Background censorship/shutdown/DPI evidence only; collect and calibrate.",
+    "YELLOW_INTENSIFY": "One strong technical trigger dimension or multiple weak independent signals; freeze baseline and increase OONI/RIPE/BGP measurements.",
+    "ORANGE_PREPARE_CISA": "At least two independent technical trigger classes, including T1/T2/T3/T4/T5, plus a clear U.S. nexus; preserve evidence and prepare submission.",
+    "RED_SEND_CISA": "Reproducible foreign path/policy interference with negative controls, U.S. service/communications impact, and at least one cross-border or control-plane bridge. Attribution can remain UNKNOWN if the resilience event itself is real."
+  },
+  "anti_false_positive_rules": [
+    "Domestic censorship alone never opens CISA.",
+    "Single-country shutdown alone never opens CISA.",
+    "Shared vendor alone never opens CISA.",
+    "Russian-origin SORM equipment alone never opens CISA.",
+    "Same-day blocking in two countries alone never opens CISA.",
+    "FIMI/social-media activity alone never opens CISA.",
+    "Provider-side outage or cloud RCA closes the external-network hypothesis unless independent residual evidence remains.",
+    "VPN success is a useful clue but not sufficient attribution because route, resolver, protocol and egress all change simultaneously."
+  ],
+  "measurement_stack": [
+    "OONI Probe / OONI Explorer",
+    "RIPE Atlas DNS, ping and traceroute",
+    "RIPE RIS / RouteViews / BGPStream route history",
+    "RPKI validation",
+    "controlled DNS/TLS/QUIC/HTTP test basket",
+    "matched local-service and U.S.-service controls",
+    "provider status and public RCA negative controls",
+    "lawful packet captures from consenting controlled endpoints",
+    "independent replication from different ASNs and countries"
+  ],
+  "current_state": {
+    "GLOBAL_FUNCTIONAL_ANALOGUES": "CONFIRMED",
+    "FRESH_ALLOWLIST_ANALOGUE_OUTSIDE_RUSSIA": "CONFIRMED_UGANDA_2026",
+    "FRESH_DPI_PATTERN_OUTSIDE_RUSSIA": "CONFIRMED_SAUDI_ARABIA_2026",
+    "CROSS_BORDER_TELECOM_TECHNICAL_ABUSE": "CONFIRMED_AS_GENERAL_PHENOMENON",
+    "SYNCHRONIZED_MULTI_COUNTRY_TSPU_LIKE_ACTIVATION": "NOT_ESTABLISHED",
+    "RUSSIAN_REMOTE_CONTROL_OF_FOREIGN_FILTERING": "NOT_ESTABLISHED",
+    "CISA": "HOLD"
+  }
+}
