@@ -1,0 +1,99 @@
+{
+  "schema": "hawkar.topa.spider.tspu_external.country_protest_network.v1",
+  "artifact_id": "SERBIA-PROTEST-DAY-NETWORK-CORRELATION-v1.0",
+  "generated_date_utc": "2026-08-31",
+  "country": "Serbia",
+  "purpose": "Defensive evidence map separating internet shutdown behavior from targeted digital repression and RF/GNSS interference during protest periods.",
+  "verdict": {
+    "protest_conditioned_internet_shutdown": "NOT_ESTABLISHED",
+    "internet_architecture_centralization": "LOW_TO_MODERATE_STATE_LEVERAGE_BUT_DECENTRALIZED",
+    "targeted_digital_repression": "STRONGLY_SUPPORTED",
+    "protest_conditioned_rf_gnss_interference": "PLAUSIBLE_HIGH_VALUE_SIGNAL",
+    "russian_tspu_or_sorm_control_plane": "NOT_ESTABLISHED",
+    "cisa_tspu_trigger_status": "HOLD",
+    "cross_domain_rf_watch": "ORANGE_CANDIDATE_SEPARATE_FROM_TSPU"
+  },
+  "network_structure": {
+    "summary": "Freedom House reports Serbia has no past record of internet shutdowns amid elections or national events; ISP infrastructure is not centralized, Serbian Open eXchange is private/decentralized, though state-owned Telekom Serbia is the largest operator.",
+    "implication": "Serbia is a strong negative control against any simple theory that large anti-government protests automatically produce national internet shutdowns.",
+    "source": "https://freedomhouse.org/country/serbia/freedom-net/2024"
+  },
+  "protest_windows": [
+    {
+      "window": "2023-05 onward",
+      "event": "Large Serbia Against Violence demonstrations",
+      "internet_effect": "No established shutdown pattern; online mobilization remained available.",
+      "source": "https://freedomhouse.org/country/serbia/freedom-net/2024"
+    },
+    {
+      "window": "2024-11 through 2025",
+      "event": "Nationwide student-led anti-corruption protest wave after Novi Sad station canopy collapse",
+      "internet_effect": "No confirmed broad internet shutdown despite extremely large and persistent demonstrations.",
+      "digital_repression": "Detentions over protest-related online content, confiscation/search of phones, spyware targeting, harassment of online journalists and activists.",
+      "sources": [
+        "https://freedomhouse.org/country/serbia/freedom-net/2025",
+        "https://www.amnesty.org/en/documents/eur70/8813/2024/en/"
+      ]
+    },
+    {
+      "window": "2025-03-15",
+      "event": "15 for 15 mass protest in Belgrade",
+      "internet_effect": "A public rumor claimed all communications networks would be shut off at 16:00, but no credible evidence of a citywide/nationwide internet shutdown was found in the reviewed sources; major live coverage and online reporting continued.",
+      "rf_gnss_effect": "BIRN reported GPS jamming and spoofing in the Belgrade area between approximately 13:00 and 17:00, supported by GPSWise/GPSJam data and reports from pilots; later reporting described drone losses/spoofing at protest events.",
+      "attribution_ceiling": "GNSS interference is technically corroborated at the signal level; actor attribution and intent remain unproven in this artifact. It must not be merged with DPI/TSPU evidence.",
+      "sources": [
+        "https://n1info.rs/vesti/fdu-u-blokadi-u-16-casova-gase-sve-mreze-u-beogradu/",
+        "https://birn.rs/gps-ometanje-srbija-dronovi-avioni/",
+        "https://www.rts.rs/lat/vesti/drustvo/5673685/studenti-protesti-blokade-15-za-15-beograd-skup-veliki.html"
+      ]
+    }
+  ],
+  "technology_and_surveillance": [
+    {
+      "technology": "NoviSpy / Cellebrite UFED / Pegasus",
+      "status": "DOCUMENTED_TARGETED_DIGITAL_REPRESSION",
+      "scope": "Device compromise, extraction and surveillance of activists/journalists; not network shutdown or DPI censorship.",
+      "source": "https://www.amnesty.org/en/documents/eur70/8813/2024/en/"
+    },
+    {
+      "technology": "Huawei-linked telecom/smart-city infrastructure",
+      "status": "DOCUMENTED_STRATEGIC_PARTNERSHIP",
+      "scope": "Chinese technology relationship and surveillance concerns; not Russian SORM/TSPU lineage.",
+      "source": "https://freedomhouse.org/country/serbia/freedom-net/2024"
+    }
+  ],
+  "2026_watch": [
+    {
+      "date": "2026-08-20",
+      "signal": "OONI-derived middlebox-detection anomaly (http_invalid_request_line), 1 record / very small sample.",
+      "status": "YELLOW_SINGLE_SOURCE",
+      "source": "https://voidly.ai/incident/53d6761fae2e"
+    },
+    {
+      "date_range": "2026-08",
+      "signal": "IODA-derived regional connectivity disruptions in several Serbian districts.",
+      "status": "YELLOW_INFRASTRUCTURE_OUTAGE_CLASS_UNATTRIBUTED",
+      "sources": [
+        "https://voidly.ai/incident/RS-2026-0035",
+        "https://voidly.ai/incident/d485284d8397"
+      ]
+    }
+  ],
+  "negative_controls_and_corrections": [
+    "Large protests in Serbia repeatedly occurred without confirmed national internet shutdowns.",
+    "A rumor of an imminent network shutdown on 2025-03-15 is not evidence that a shutdown occurred.",
+    "GNSS jamming/spoofing is a different technical layer from DPI, routing manipulation, DNS filtering or TSPU-like control.",
+    "Targeted spyware/device extraction is digital repression but must not be counted as path-level network filtering.",
+    "Chinese telecom/surveillance relationships do not support Russian control-plane attribution."
+  ],
+  "cisa_relevance": {
+    "internet_path_gate": "NOT_MET",
+    "rf_gnss_gate": "HIGH_VALUE_SEPARATE_SIGNAL",
+    "next_required_evidence": [
+      "Independent ASN/operator-localized OONI or IODA evidence during a protest window.",
+      "Matched alternate-network controls showing path-specific interference.",
+      "Direct RF attribution or official technical records for GNSS jamming/spoofing if cross-domain resilience is evaluated.",
+      "Any documented Russian-origin network-control equipment must be proven separately; none is established here."
+    ]
+  }
+}
