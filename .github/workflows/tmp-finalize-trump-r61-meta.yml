@@ -1,0 +1,63 @@
+name: TMP Finalize TRUMP R6.1 Exact Meta PR
+
+on:
+  push:
+    branches:
+      - research/tmp-r61-meta-generator-2026-08-31
+    paths:
+      - '.github/workflows/tmp-finalize-trump-r61-meta.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: read
+  checks: read
+
+jobs:
+  validate-watch-merge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      GH_TOKEN: ${{ github.token }}
+      CLEAN_BRANCH: research/trump-r6-1-scoped-pass-meta-2026-08-31
+      TARGET: data/JANUS-TRUMP-R6-1-REGRET-BOUNDED-EXPLORATION-SCOPED-PASS-2026-08-31-v1.0.json
+    steps:
+      - uses: actions/checkout@v4
+      - name: Resolve meta PR and validate one-file diff
+        id: pr
+        run: |
+          PR="$(gh pr list --repo "$GITHUB_REPOSITORY" --head "$CLEAN_BRANCH" --state open --json number --jq '.[0].number')"
+          test -n "$PR"
+          echo "number=$PR" >> "$GITHUB_OUTPUT"
+          FILES="$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${PR}/files" --jq '.[].filename')"
+          test "$(printf '%s\n' "$FILES" | sed '/^$/d' | wc -l)" -eq 1
+          test "$FILES" = "$TARGET"
+      - name: Validate generated meta record
+        run: |
+          gh api "repos/${GITHUB_REPOSITORY}/contents/${TARGET}?ref=${CLEAN_BRANCH}" --jq '.content' | tr -d '\n' | base64 -d > /tmp/meta.json
+          python - <<'PY'
+          import json
+          r=json.load(open('/tmp/meta.json'))
+          assert r['status']=='CANONICAL_FROZEN_SCOPED_PASS__REGRET_BOUNDED_M2R_ONLINE_WORK_REDUCTION__P_VS_NP_OPEN'
+          assert r['runtime_receipt']['status']=='CANONICAL_FROZEN_SCOPED_PASS_RECEIPT'
+          assert r['runtime_receipt']['P_VS_NP']=='OPEN'
+          assert all(r['frozen_result']['gate'].values())
+          assert r['supported_interpretation']['decisive_coverage_preserved'] is True
+          assert r['scientific_boundary']['P_VS_NP']=='OPEN'
+          assert r['explicit_nonclaims']['P_equals_NP'] is False
+          print('PASS exact R6.1 meta receipt')
+          PY
+      - name: Wait for native meta-registry checks
+        run: |
+          PR='${{ steps.pr.outputs.number }}'
+          gh pr checks "$PR" --repo "$GITHUB_REPOSITORY" --watch --interval 10 --fail-fast
+      - name: Merge meta PR only after GREEN
+        run: |
+          PR='${{ steps.pr.outputs.number }}'
+          HEAD_SHA="$(gh pr view "$PR" --repo "$GITHUB_REPOSITORY" --json headRefOid --jq '.headRefOid')"
+          gh api --method PUT "repos/${GITHUB_REPOSITORY}/pulls/${PR}/merge" \
+            -f merge_method=squash \
+            -f sha="$HEAD_SHA" \
+            -f commit_title='meta: preserve exact TRUMP R6.1 regret-bounded scoped frozen PASS' \
+            -f commit_message='Canonical artifact-derived R6.1 meta receipt merged only after native registry checks were GREEN. Scoped online work reduction with decisive coverage preserved; calibration remains separate and P_VS_NP remains OPEN.'
