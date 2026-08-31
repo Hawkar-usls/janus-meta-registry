@@ -1,0 +1,97 @@
+{
+  "schema": "hawkar.topa.spider.tspu_external.country_protest_network.v1",
+  "artifact_id": "BELARUS-PROTEST-DAY-NETWORK-CORRELATION-v1.0",
+  "generated_date_utc": "2026-08-31",
+  "country": "Belarus",
+  "purpose": "Defensive evidence map for protest/election-conditioned network controls, infrastructure centralization, technology lineage, and CISA-grade trigger comparison.",
+  "verdict": {
+    "protest_conditioned_network_control": "STRONGLY_CONFIRMED",
+    "centralized_national_control_surface": "STRONGLY_SUPPORTED",
+    "russian_sorm_lineage": "CONFIRMED_AS_ARCHITECTURE_DEPLOYMENT",
+    "russian_remote_control": "NOT_ESTABLISHED",
+    "tspu_equivalence": "NOT_ESTABLISHED",
+    "cisa_trigger_status": "ORANGE_BASELINE_NOT_CURRENT_RED"
+  },
+  "high_value_events": [
+    {
+      "window": "2020-08-09/2020-08-12",
+      "event": "Presidential election and mass post-election protests",
+      "network_effect": "Severe nationwide disruption for roughly 61 hours; social media and independent information sources inaccessible; repeated evening drops corroborated across independent telemetry.",
+      "independent_measurement": ["IODA", "Mozilla telemetry", "Google traffic", "RIPE/RIPE Atlas", "NetBlocks"],
+      "mechanism_assessment": "DPI plus centralized upstream/gateway control strongly supported.",
+      "sources": [
+        "https://ooni.github.io/post/2021-investigating-internet-shutdowns-mozilla-telemetry/",
+        "https://www.hrw.org/news/2020/08/28/belarus-internet-disruptions-online-censorship",
+        "https://pulse.internetsociety.org/en/shutdowns/internet-suspended-in-belarus-9-august-2020/"
+      ]
+    },
+    {
+      "window": "2020-08-14/2020-11-08",
+      "event": "Recurring protest Sundays and protest-linked police actions",
+      "network_effect": "Localized and national mobile/internet restrictions repeatedly coincided with large demonstrations, marches toward the presidential residence, arrests, and recurring Sunday protests.",
+      "examples": [
+        "2020-08-23: mobile internet disrupted for more than three hours as >100,000 protesters moved toward presidential palace.",
+        "2020-09-27: approximately five-hour restriction during the 50th day of protests.",
+        "2020-10-04: restrictions again during Sunday protest.",
+        "2020-11-08: roughly seven-hour restriction during thirteenth consecutive protest week."
+      ],
+      "sources": [
+        "https://www.hrw.org/news/2020/08/28/belarus-internet-disruptions-online-censorship",
+        "https://netblocks.org/reports/internet-disruption-hits-belarus-on-election-day-YAE2jKB3"
+      ]
+    },
+    {
+      "window": "2025-01-25/2025-01-27",
+      "event": "Presidential election",
+      "network_effect": "Authorities ordered ISPs to restrict access to websites hosted outside the .by domain; multiple foreign platforms were blocked or throttled around election day.",
+      "significance": "This is a strong functional analogue of a deny-external/preserve-domestic information-isolation regime, though not proof of TSPU technology.",
+      "sources": [
+        "https://freedomhouse.org/country/belarus/freedom-net/2025",
+        "https://www.accessnow.org/press-release/breaking-records-breaking-connections-internet-shutdowns-in-eeca-in-2025/"
+      ]
+    }
+  ],
+  "infrastructure": {
+    "international_gateway_structure": "Freedom House reports only state-run NTEC and Beltelecom are permitted to handle connections with ISPs outside Belarus; Beltelecom operates the backbone upon which other ISPs depend.",
+    "implication": "High centralization makes nationwide or cross-provider policy enforcement technically easier than in decentralized markets.",
+    "source": "https://freedomhouse.org/country/belarus/freedom-net/2024"
+  },
+  "technology_lineage": [
+    {
+      "technology": "SORM",
+      "lineage": "Russian-developed lawful-interception architecture",
+      "status": "CONFIRMED_DEPLOYMENT_SINCE_2010",
+      "claim_ceiling": "Deployment of Russian-developed SORM architecture does not establish FSB/Moscow remote control of Belarusian networks.",
+      "source": "https://freedomhouse.org/country/belarus/freedom-net/2020"
+    },
+    {
+      "technology": "Sandvine DPI",
+      "lineage": "Canadian/US-linked commercial DPI supplied through Russian technology integrator Jet Infosystems",
+      "status": "STRONGLY_SUPPORTED_FOR_2020_CENSORSHIP",
+      "claim_ceiling": "Sandvine deployment is not Russian TSPU. Russian integrator involvement is a supply-chain bridge, not evidence of Russian command.",
+      "sources": [
+        "https://www.accessnow.org/francisco-partners-owned-sandvine-profits-from-shutdowns-and-oppression-in-belarus/",
+        "https://www.business-humanrights.org/en/latest-news/sandvines-response-allegations-its-technology-has-been-used-facilitate-human-rights-violations-repressive-governments-including-censorship-through-recent-internet-shutdown-belarus/"
+      ]
+    }
+  ],
+  "negative_controls_and_corrections": [
+    "Crowd-induced mobile congestion must be separated from ordered shutdowns. A Belarus Net Observatory analysis of 2020-08-16 reported mobile problems concentrated at crowded locations and recovery when moving to other base stations, supporting congestion as an alternative explanation for that specific event.",
+    "Government claims of foreign cyberattacks are not accepted as causal evidence without independent network support; multiple independent datasets instead corroborated deliberate restriction patterns in key 2020 windows.",
+    "Russian SORM lineage != Russian TSPU != Russian remote activation."
+  ],
+  "current_watch": {
+    "2026": "OONI-derived reporting shows sustained Tor anomalies in July 2026, but no protest-day or ASN-specific attribution is established in this artifact.",
+    "source": "https://voidly.ai/incident/BY-2026-0474"
+  },
+  "cisa_relevance": {
+    "why_high_value": "Belarus demonstrates repeated event-conditioned, cross-provider network restriction on a highly centralized national gateway architecture, plus documented Russian surveillance-technology lineage and a separate DPI supply-chain bridge.",
+    "why_not_red_now": "The strongest evidence is historical/domestic Belarusian control. No current foreign-vantage U.S.-service incident requiring CISA response and no proof of Moscow-operated external TSPU control plane are established."
+  },
+  "hard_stops": [
+    "Do not claim Belarusian shutdowns prove Russian command.",
+    "Do not equate Sandvine with TSPU.",
+    "Do not treat every protest-day connectivity loss as deliberate; preserve congestion and ordinary outage controls.",
+    "Do not infer current 2026 activation from historical 2020 behavior alone."
+  ]
+}
