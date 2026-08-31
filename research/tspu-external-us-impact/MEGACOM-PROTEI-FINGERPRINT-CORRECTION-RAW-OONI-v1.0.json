@@ -1,0 +1,47 @@
+{
+  "schema": "hawkar.topa.spider.correction.v1",
+  "artifact_id": "MEGACOM-PROTEI-FINGERPRINT-CORRECTION-RAW-OONI-v1.0",
+  "generated_date_utc": "2026-08-31",
+  "supersedes_interpretation_in": "MEGACOM-PROTEI-DPI-FINGERPRINT-COMPARISON-v1.0.json",
+  "correction_scope": "The earlier interpretation used the Kyrgyzstan April 2024 TikTok TLS-timeout finding as mechanism-compatible evidence for the historically known PROTEI_DPI network MegaCom/AS50223. Raw ASN-resolved OONI measurements show this attribution of the TLS-timeout mechanism to AS50223 was incorrect.",
+  "raw_evidence": {
+    "AS50223_MegaCom": {
+      "selected_www_tiktok_measurements": 18,
+      "dns_blocking": 17,
+      "dominant_failure": "dns_nxdomain_error",
+      "tls_handshakes": 0,
+      "additional_root_tiktok_measurement": "DNS android_dns_cache_no_data for A and AAAA"
+    },
+    "AS47237": {
+      "selected_www_tiktok_measurements": 18,
+      "dns": "legitimate-looking CDN addresses",
+      "tls_handshakes": 162,
+      "tls_failures": 162,
+      "dominant_failure": "generic_timeout_error"
+    },
+    "other_ASNs": {
+      "AS206351": "127.0.0.1 DNS answer then connection_refused",
+      "AS29061": "127.0.0.1 DNS answer then connection_refused",
+      "AS41750": "127.0.0.1 DNS answer then connection_refused"
+    }
+  },
+  "corrected_claims": [
+    "April 2024 Kyrgyzstan TikTok blocking was implemented heterogeneously across measured ASNs.",
+    "The post-ClientHello/TLS-timeout measurements in the acquired sample belong to AS47237, not MegaCom/AS50223.",
+    "AS50223 therefore cannot be used from this event as a PROTEI TLS-timeout reference.",
+    "AS50223 DNS blocking must not be labeled a PROTEI fingerprint because the measurement does not identify the enforcement product and the documented PROTEI deployment is historical (2014-2015)."
+  ],
+  "rejected_claims": [
+    "KNOWN PROTEI DPI network AS50223 -> 2024 measured TLS timeout",
+    "The 2024 TikTok TLS timeout provides a MegaCom/PROTEI reference fingerprint",
+    "Similarity between Cuba RST and Kyrgyzstan TLS timeout supports Cuba->PROTEI through AS50223"
+  ],
+  "surviving_claims": [
+    "MegaCom/AS50223 is an independently documented historical PROTEI_DPI deployment.",
+    "PROTEI_DPI is technically capable of filtering and policy enforcement.",
+    "Cuba/AS27725 has raw OONI evidence of rapid reset-like TLS failures after ClientHello during the July 2021 Signal restriction window.",
+    "The Cuba->PROTEI device bridge remains open and requires a genuinely discriminating PROTEI reference or direct device/deployment evidence."
+  ],
+  "epistemic_lesson": "National censorship policy and generic DPI failure type are insufficient for vendor attribution. ASN-resolved raw measurements are mandatory before using a network as a vendor fingerprint reference.",
+  "status": "CORRECTION_FROZEN"
+}
