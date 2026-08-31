@@ -1,0 +1,95 @@
+{
+  "schema": "hawkar.topa.spider.tspu_external.kazakhstan_protest_day_network_correlation.v1",
+  "artifact_id": "KAZAKHSTAN-PROTEST-DAY-NETWORK-CORRELATION-v1.0",
+  "generated_date_utc": "2026-08-31",
+  "purpose": "Use protest/assembly dates in Kazakhstan as natural experiments for testing whether network restrictions are event-conditioned, geographically localized, and reproducible. This artifact does not attribute Russian command or Russian equipment.",
+  "core_rule": "PROTEST_CORRELATION strengthens evidence of deliberate domestic network control, but does not establish Russian control-plane attribution.",
+  "timeline": [
+    {
+      "date": "2019-05-09",
+      "event": "Opposition protests",
+      "network_observation": "RSF reported multiple news sites inaccessible from dawn; Facebook, Telegram, YouTube and Instagram disconnected around midday; some mobile users also reported Internet problems.",
+      "evidence_level": "STRONG_EVENT_CORRELATION",
+      "source": "RSF — Heavy Internet censorship in Kazakhstan"
+    },
+    {
+      "date": "2021-02-28",
+      "event": "Anti-government protests in multiple cities calling for release of political prisoners",
+      "network_observation": "Access Now reported shutdowns in Almaty and Nur-Sultan approximately 14:00-17:00 local time; IODA measurements independently indicated disruptions in the same period. Reports also existed for Atyrau but lacked confirming measurements.",
+      "evidence_level": "STRONG_INDEPENDENT_REPLICATION",
+      "source": "Access Now + IODA"
+    },
+    {
+      "date_range": "2022-01-02/2022-01-11",
+      "event": "Nationwide January protests and unrest",
+      "network_observation": "Localized mobile throttling began in western Kazakhstan on Jan 2 as protests started; messenger access problems followed; by Jan 4-5 disruptions escalated to nationwide blackout. NetBlocks measured national connectivity near 5% of ordinary levels. Access Now recorded corroboration from Cloudflare, IODA and Google traffic data. Restoration was selective/intermittent, with government-controlled news and banking among early restored services.",
+      "evidence_level": "VERY_STRONG_MULTI_SOURCE_EVENT_CORRELATION",
+      "source": "Freedom House + NetBlocks + Access Now + Cloudflare/IODA/Google references"
+    },
+    {
+      "date": "2023-01-05",
+      "event": "Almaty rally marking first anniversary of January 2022 events",
+      "network_observation": "Freedom House reports local throttling during the rally.",
+      "evidence_level": "STRONG_EVENT_CORRELATION",
+      "source": "Freedom House 2023"
+    },
+    {
+      "date_range": "2023-04-11/2023-04-12",
+      "event": "Oil-worker protests / solidarity mobilization in Zhanaozen and Astana",
+      "network_observation": "Local reporting documented Internet shutdown and degraded phone service in Zhanaozen as crowds gathered; reports placed shutdown near the central square and noted weak/VPN-only access in some areas.",
+      "evidence_level": "STRONG_GEOGRAPHIC_CORRELATION",
+      "source": "KIBHR/Exclusive/Vlast/Eurasianet; also summarized by Freedom House"
+    },
+    {
+      "date_range": "2024-05-15/2024-05-22",
+      "event": "Kulsary flood-compensation protests",
+      "network_observation": "Internet/mobile problems appeared during the protest, especially among Activ/Kcell users; regional complaints followed. Local reporting states connectivity stabilized after the protest ended on May 22. Freedom House records throttling during the Kulsary rallies.",
+      "evidence_level": "STRONG_TEMPORAL_AND_GEOGRAPHIC_CORRELATION",
+      "source": "Freedom House 2024 + Orda.kz + Vlast + Adil Soz"
+    },
+    {
+      "date_range": "2026-02/2026-03",
+      "event": "Constitutional reform/referendum period",
+      "network_observation": "KazTAG reported provider blocking after critical constitutional-reform coverage; HRW/ODIHR documented pressure on critics. A later OONI-derived signal showed elevated interference around March 24, after the March 15 referendum, but this is not yet tied to a specific protest event or ASN/path.",
+      "evidence_level": "PARTIAL_2026_CORRELATION_NOT_YET_PROTEST_LOCKED",
+      "source": "HRW + OSCE/ODIHR + OONI-derived reporting"
+    },
+    {
+      "date": "2026-08-13",
+      "event": "Pre-election period before Aug 23 parliamentary election",
+      "network_observation": "Large Kazakhstan-specific Telegram outage was reported across several regions while no global Telegram outage was reported. No verified protest-day correlation has yet been found for this date.",
+      "evidence_level": "ANOMALY_NOT_PROTEST_ATTRIBUTED",
+      "source": "Kazpravda / local outage reports"
+    }
+  ],
+  "2022_dpi_correction": {
+    "previous_risk": "Some secondary reporting describes the January 2022 attempted selective filtering as use of Russian DPI technology.",
+    "corrected_claim": "Available technical reporting indicates Kazakhstan attempted DPI-based selective blocking analogous to Russia's sovereign-Internet method, but the installed DPI equipment identified in reporting was from Israeli vendor Allot. Russian equipment deployment for this specific event is NOT established.",
+    "epistemic_rule": "RUSSIAN_METHOD_ANALOGY != RUSSIAN_EQUIPMENT != RUSSIAN_REMOTE_CONTROL",
+    "status": "CORRECTED"
+  },
+  "cisa_gate_assessment": {
+    "status": "ORANGE_HISTORICAL_PRECEDENT_NOT_RED",
+    "satisfied": [
+      "repeat protest-conditioned network restrictions across multiple years",
+      "independent measurement for 2021 and 2022 events",
+      "geographic localization in multiple local protest cases",
+      "selective restoration/allowlist-like behavior during January 2022",
+      "clear foreign-service reachability impact during nationwide blackout"
+    ],
+    "missing_for_red": [
+      "current 2026 ASN/path localization for the same event",
+      "matched alternate-path/bypass control for a current incident",
+      "specific US-service nexus demonstrated at measurement level rather than inferred from broad outage",
+      "device/vendor/control-plane linkage for the current event",
+      "cross-border or Russian-command bridge"
+    ]
+  },
+  "next_pass": [
+    "Search OONI raw measurements around 2026 protest/referendum/election windows by ASN and test_name.",
+    "Search RIPE Atlas/IODA/Cloudflare Radar for matching localized anomalies on the same dates.",
+    "Compare protest locations with operator footprints (Kcell/Activ, Tele2/Altel, Beeline, Kazakhtelecom) and ASN-level behavior.",
+    "Separate DNS blocking, TCP/TLS interference, mobile throttling and full route withdrawal into distinct mechanisms.",
+    "Do not upgrade CISA gate solely from political-event timing."
+  ]
+}
