@@ -1,0 +1,103 @@
+name: PROTEI known-network raw OONI sweep
+
+on:
+  push:
+    branches:
+      - research/tspu-external-us-impact
+    paths:
+      - .github/workflows/tspu-protei-known-network-ooni-sweep.yml
+
+permissions:
+  contents: read
+
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Collect anomaly measurements from known PROTEI DPI networks
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p out/raw out/index
+          cat > /tmp/sweep.py <<'PY'
+          import concurrent.futures as cf
+          import json, os, time, urllib.parse, urllib.request
+          from collections import defaultdict
+          API='https://api.ooni.io/api/v1'
+          UA='janus-protei-known-network-sweep/1.0'
+
+          def get(url,retries=3):
+              err=None
+              for i in range(retries):
+                  try:
+                      req=urllib.request.Request(url,headers={'User-Agent':UA,'Accept':'application/json'})
+                      with urllib.request.urlopen(req,timeout=20) as r:
+                          return json.loads(r.read().decode())
+                  except Exception as e:
+                      err=e; time.sleep(i+1)
+              raise err
+
+          def list_rows(asn,status_key,pages=3):
+              p={'probe_asn':asn,'test_name':'web_connectivity','since':'2015-01-01','until':'2026-08-31','order':'desc','limit':100,status_key:'true'}
+              url=API+'/measurements?'+urllib.parse.urlencode(p); rows=[]
+              for _ in range(pages):
+                  d=get(url); b=d.get('results',[]); rows += b
+                  nxt=(d.get('metadata') or {}).get('next_url')
+                  if not nxt or not b: break
+                  url=nxt
+              return p,rows
+
+          def safe(s): return ''.join(c if c.isalnum() or c in '._-' else '_' for c in str(s))[:170]
+          def fetch_one(asn,row):
+              try:
+                  m=get(row['measurement_url']); rid=row.get('report_id') or m.get('report_id') or 'unknown'; inp=row.get('input') or m.get('input') or ''
+                  os.makedirs('out/raw/'+asn,exist_ok=True)
+                  fn=safe(rid+'__'+inp)+'.json'
+                  with open('out/raw/'+asn+'/'+fn,'w') as f: json.dump(m,f,ensure_ascii=False,indent=2)
+                  return {'ok':True,'file':fn,'report_id':rid,'input':inp,'time':row.get('measurement_start_time'),'anomaly':row.get('anomaly'),'confirmed':row.get('confirmed')}
+              except Exception as e: return {'ok':False,'error':repr(e),'report_id':row.get('report_id'),'input':row.get('input')}
+
+          networks={'AS50223':'MegaCom_Kyrgyzstan','AS36939':'Comores_Telecom','AS37385':'Niger_Telecom'}
+          summary={}
+          jobs=[]
+          for asn,name in networks.items():
+              combined=[]; qlog=[]
+              for status in ['anomaly','confirmed']:
+                  try:
+                      p,rs=list_rows(asn,status); combined += rs; qlog.append({'params':p,'rows':len(rs)})
+                  except Exception as e: qlog.append({'status':status,'error':repr(e)})
+              # dedupe, then prioritize anomalous/confirmed and diversify inputs (<=3/input)
+              dedup={}
+              for r in combined:
+                  key=(r.get('report_id'),r.get('input'),r.get('measurement_start_time')); dedup[key]=r
+              rs=list(dedup.values()); rs.sort(key=lambda r:r.get('measurement_start_time') or '',reverse=True)
+              by_input=defaultdict(int); chosen=[]
+              for r in rs:
+                  inp=r.get('input') or ''
+                  if by_input[inp] >= 3: continue
+                  chosen.append(r); by_input[inp]+=1
+                  if len(chosen)>=75: break
+              with open(f'out/index/{asn}-LIST.json','w') as f: json.dump({'network':name,'queries':qlog,'dedup_rows':len(rs),'selected':chosen},f,ensure_ascii=False,indent=2)
+              summary[asn]={'name':name,'queries':qlog,'dedup_rows':len(rs),'selected':len(chosen),'distinct_inputs':len(by_input)}
+              jobs += [(asn,r) for r in chosen]
+
+          results=defaultdict(list)
+          with cf.ThreadPoolExecutor(max_workers=12) as ex:
+              fs=[ex.submit(fetch_one,a,r) for a,r in jobs]
+              for (a,_),f in zip(jobs,fs): results[a].append(f.result())
+          for a,rs in results.items():
+              with open(f'out/index/{a}-RAW-MANIFEST.json','w') as f: json.dump(rs,f,ensure_ascii=False,indent=2)
+              summary[a]['raw_ok']=sum(x.get('ok',False) for x in rs); summary[a]['raw_failed']=sum(not x.get('ok',False) for x in rs)
+          with open('out/index/SUMMARY.json','w') as f: json.dump(summary,f,ensure_ascii=False,indent=2)
+          print(json.dumps(summary,indent=2))
+          PY
+          python /tmp/sweep.py
+
+      - name: Upload PROTEI network sweep
+        uses: actions/upload-artifact@v4
+        with:
+          name: protei-known-network-ooni-sweep
+          path: out/
+          if-no-files-found: error
+          retention-days: 30
