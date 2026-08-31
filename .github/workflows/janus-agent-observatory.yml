@@ -1,0 +1,47 @@
+name: JANUS Agent Observatory
+
+on:
+  pull_request:
+    paths:
+      - "agent-observatory/**"
+      - "tools/janus_agent_observer.py"
+      - ".github/workflows/janus-agent-observatory.yml"
+  push:
+    branches: [main]
+    paths:
+      - "agent-observatory/**"
+      - "tools/janus_agent_observer.py"
+      - ".github/workflows/janus-agent-observatory.yml"
+  issue_comment:
+    types: [created, edited, deleted]
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Python syntax
+        run: python3 -m py_compile tools/janus_agent_observer.py
+      - name: Observatory self-test
+        run: python3 tools/janus_agent_observer.py --self-test
+
+  refresh-observatory:
+    if: >-
+      github.event_name != 'pull_request' &&
+      (github.event_name != 'issue_comment' || github.event.issue.number == 197)
+    needs: validate
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      JANUS_AGENT_OBSERVATORY_ISSUE: "197"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Refresh confirmed-agent counters
+        run: python3 tools/janus_agent_observer.py
