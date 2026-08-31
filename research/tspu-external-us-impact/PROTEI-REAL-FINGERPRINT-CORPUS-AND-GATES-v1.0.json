@@ -1,0 +1,192 @@
+{
+  "schema": "hawkar.topa.spider.protei_fingerprint_corpus.v1",
+  "artifact_id": "PROTEI-REAL-FINGERPRINT-CORPUS-AND-GATES-v1.0",
+  "generated_date_utc": "2026-08-31",
+  "purpose": "Build a PROTEI fingerprint corpus independently of Cuba using confirmed or strongly documented deployments, public product documentation, and passive third-party network measurements. Separate software identity, control-plane capability, packet behavior, deployment association, and vendor attribution.",
+  "epistemic_firewall": [
+    "PROTEI present in an operator network != a measured censorship event was produced by PROTEI",
+    "same RST/timeout behavior != same DPI vendor",
+    "same national policy != same packet implementation",
+    "operator deployment evidence != exact inline location of the DPI",
+    "customer relationship != DPI deployment unless DPI is specifically documented",
+    "Censys/Shodan vendor fingerprint mention != packet-level fingerprint",
+    "passive/public-source research only; no probing of management interfaces or exploitation"
+  ],
+  "headline_verdict": {
+    "PROTEI_SOFTWARE_IDENTITY_FINGERPRINT": "CONFIRMED",
+    "PROTEI_CONTROL_PLANE_CAPABILITY_FINGERPRINT": "CONFIRMED",
+    "PROTEI_PACKET_LEVEL_UNIQUE_FINGERPRINT": "NOT_YET_ESTABLISHED",
+    "BEST_CONFIRMED_DEPLOYMENT_FOR_PACKET_WORK": "MEGACOM_KYRGYZSTAN_AS50223",
+    "BEST_HISTORICAL_BEHAVIORAL_CANDIDATE": "AFRICELL_UGANDA_AS36991",
+    "BEST_NEGATIVE_CONTROL": "COMORES_TELECOM_AS36939_2024_BGP_SHUTDOWN",
+    "CUBA": "EXCLUDED_FROM_PROTEI_PACKET_FINGERPRINT_CORPUS; KNOWN CENSORSHIP DNA CURRENTLY HUAWEI-FAMILY",
+    "claim_ceiling": "PROTEI has identifiable software/control-plane DNA and multiple independently documented deployments. A vendor-unique remote packet fingerprint has not yet been established."
+  },
+  "fingerprint_tiers": {
+    "TIER_1_SOFTWARE_IDENTITY": {
+      "strength": "HIGH / PRODUCT-SPECIFIC",
+      "public_identifiers": [
+        "RPM package family protei-dpi-*.x86_64.rpm",
+        "data-proc-*.noarch.rpm",
+        "PROTEI-DPI utility tree under /usr/protei/Protei-DPI/",
+        "DPI firmware/update utility family",
+        "web application DPI.war under PROTEI OM/Tomcat deployment",
+        "Oracle schema/user naming dpi_cdr",
+        "PROTEI OM / Apache Tomcat management stack"
+      ],
+      "interpretation": "If these identifiers are observed in an authorized configuration export, inventory, support artifact, banner, package list, or forensic image, they are strong product identity evidence. They are not remotely inferable from ordinary user traffic by default.",
+      "source": "PROTEI DPI Technical Description"
+    },
+    "TIER_2_ARCHITECTURE_AND_CONTROL_PLANE": {
+      "strength": "MEDIUM-HIGH / PRODUCT-FAMILY CHARACTERISTIC",
+      "characteristics": [
+        "traffic-processing element groups packets into flows using IPs, ports and transport protocol",
+        "control component analyzes initial packets of a flow to classify service/application/subscriber before policy application",
+        "subscriber-aware policies via RADIUS and Diameter/Gx",
+        "Gy Diameter real-time per-service charging",
+        "policy integration with PCRF/Policy Controller",
+        "URL/domain black/white-list support and external content-classification integration",
+        "SNMP monitoring; CDR/statistics export through standard management interfaces"
+      ],
+      "interpretation": "Useful for architecture matching but many carrier DPI/PCEF platforms share parts of this design. A combination is more informative than any single feature."
+    },
+    "TIER_3_BEHAVIORAL_CONTROL_SIGNATURE": {
+      "strength": "MEDIUM / NOT VENDOR-UNIQUE",
+      "citizen_lab_acceptance_test_capabilities": [
+        "per-user bandwidth restriction for selected apps/websites",
+        "per-user block of selected apps/websites",
+        "block all data for one user",
+        "block all data for all users"
+      ],
+      "interpretation": "Citizen Lab reviewed a PROTEI acceptance-test document demonstrating these controls. This validates what the system can do, but these capabilities are not unique enough to identify PROTEI from the outside."
+    },
+    "TIER_4_PACKET_BEHAVIOR": {
+      "strength": "OPEN",
+      "known_state": "No public, independently validated PROTEI-specific packet quirk comparable to the published TSPU fragment-DNA or Huawei V2R2C00-IAE marker has been found in this pass.",
+      "generic_behaviors_rejected_as_unique": [
+        "RST after HTTP request",
+        "RST after TLS ClientHello",
+        "TLS timeout after ClientHello",
+        "generic SNI-dependent blocking",
+        "generic per-service throttling"
+      ]
+    }
+  },
+  "deployment_corpus": [
+    {
+      "operator": "MegaCom / Alfa Telecom",
+      "country": "Kyrgyzstan",
+      "asn": "AS50223",
+      "deployment_confidence": "CONFIRMED_PRIMARY_SOURCE",
+      "evidence": "PROTEI announced commercial launch of its DPI platform in June 2014; in 2015 PROTEI and Entensys described production content filtering in which Entensys/UserGate classified the requested site and PROTEI_DPI applied the resulting policy.",
+      "measurement_evidence": "OONI 2024 TikTok measurements on AS50223 showed TLS interference, commonly timeout immediately after ClientHello.",
+      "attribution_problem": "The same event/mechanism occurred across several Kyrgyz networks; later path data also creates an upstream Rostelecom confound. Therefore the observed TLS timeout is not a PROTEI fingerprint.",
+      "role": "PRIMARY POSITIVE DEPLOYMENT / PACKET TEST TARGET"
+    },
+    {
+      "operator": "Africell Uganda",
+      "country": "Uganda",
+      "asn": "AS36991",
+      "deployment_confidence": "STRONGLY_DOCUMENTED_SECONDARY_DEPLOYMENT_LIST",
+      "evidence": "Russian software catalog/compatibility sources list Africell deployments including Uganda in 2016; PROTEI publicly lists Africell as a customer, but the public page does not identify the installed product per country.",
+      "measurement_evidence": "OONI 2018 found a distinctive policy profile on AS36991: WhatsApp endpoints remained reachable while registration/web paths were reset; Telegram TCP access points were reachable while HTTP requests and web.telegram.org were blocked/reset; Facebook Messenger remained reachable; Tor Project and Psiphon sites were accessible while some VPN/circumvention sites failed.",
+      "important_control": "OONI also observed connection-reset censorship on MTN and Airtel, so reset behavior itself is not PROTEI-specific.",
+      "role": "HIGH-VALUE HISTORICAL BEHAVIORAL CANDIDATE"
+    },
+    {
+      "operator": "Comores Telecom",
+      "country": "Comoros",
+      "asn": "AS36939",
+      "deployment_confidence": "CONFIRMED_PRIMARY_SOURCE",
+      "evidence": "PROTEI publicly states it launched DPI and PCRF across Comores Telecom network segments.",
+      "measurement_evidence": "January 2024 post-election unrest produced severe connectivity disruption and repeated BGP visibility collapse/near-zero traffic at AS36939.",
+      "interpretation": "This is not a packet-DPI fingerprint. BGP/full-connectivity failure demonstrates that PROTEI presence cannot be used to attribute every network-control event to the DPI platform.",
+      "role": "NEGATIVE CONTROL FOR CAUSAL OVERREACH"
+    },
+    {
+      "operator": "Niger Telecoms",
+      "country": "Niger",
+      "asn": "TO_RESOLVE_PER_MEASUREMENT_WINDOW",
+      "deployment_confidence": "CONFIRMED_PRIMARY_SOURCE",
+      "evidence": "PROTEI states installation/configuration/testing in Niamey in 2019 and commercial migration completed in 2020; DPI integrated with BRAS and EPC.",
+      "measurement_evidence": "No high-quality public packet-level censorship fingerprint tied to a controlled event was identified in this pass.",
+      "role": "CLEAN DEPLOYMENT TARGET FOR FUTURE PASSIVE MEASUREMENT SEARCH"
+    },
+    {
+      "operator": "MegaFon Tajikistan / TT-Mobile",
+      "country": "Tajikistan",
+      "asn": "REQUIRES PERIOD-CORRECT ASN/PATH RESOLUTION",
+      "deployment_confidence": "CONFIRMED/STRONGLY_DOCUMENTED",
+      "evidence": "PROTEI publicly announced deployment of its DPI platform in Tajikistan; multiple Tajik networks share centralized/upstream constraints, creating strong path confounds.",
+      "measurement_evidence": "Historical multi-ISP censorship exists, but no packet-level vendor discriminator was established in this pass.",
+      "role": "SECONDARY TARGET WITH HEAVY TOPOLOGY CONFOUND"
+    },
+    {
+      "operator": "Sky Mobile",
+      "country": "Kyrgyzstan",
+      "asn": "AS41329",
+      "deployment_confidence": "SECONDARY_CATALOG_LIST",
+      "evidence": "PROTEI_DPI deployment listed for 2019 in Russian software catalog sources.",
+      "measurement_evidence": "AS41329 was not among the five networks in the specific OONI 2024 Kyrgyz TikTok finding used for MegaCom comparison.",
+      "role": "CRITICAL SAME-COUNTRY SECOND-POSITIVE TARGET"
+    }
+  ],
+  "external_identity_lead": {
+    "source": "Citizen Lab 2023",
+    "finding": "Citizen Lab states that Censys and Shodan searches on 2022-11-30 showed fingerprints of PROTEI equipment in Kazakhstan, Uzbekistan and Russia.",
+    "limitation": "The public report does not disclose the exact search signature/banner/query used, so this cannot yet be independently reproduced from the report alone.",
+    "importance": "If the exact passive infrastructure-search signature can be recovered from a public methodological source, it could provide device/software identity independent of packet censorship behavior.",
+    "rule": "Do not scan or probe management interfaces; use already-public passive infrastructure datasets/research only."
+  },
+  "proposed_discriminating_tests": [
+    {
+      "test": "TWO-POSITIVE-SAME-COUNTRY",
+      "target": "MegaCom AS50223 vs Sky Mobile AS41329",
+      "logic": "Two independently documented PROTEI deployments in Kyrgyzstan reduce country-policy confounding. Search historical passive/OONI measurements for the same destinations and time windows and compare low-level failure morphology."
+    },
+    {
+      "test": "AFRICELL_POLICY_MICROPROFILE",
+      "target": "Africell Uganda AS36991",
+      "logic": "Reconstruct per-service decision boundaries: app endpoint TCP vs HTTP registration/web, Messenger, Telegram, VPN sites. Compare with non-PROTEI Ugandan operators from the same period. A feature shared only by the PROTEI-associated network would be a candidate discriminator, not final attribution."
+    },
+    {
+      "test": "CLASSIFICATION_THRESHOLD",
+      "target": "authorized lab reproduction or archived packet captures from known deployments",
+      "logic": "PROTEI documentation describes classification from the initial packets of a flow. Measure whether policy changes at a reproducible packet/byte threshold, and whether segmenting application identifiers across packets changes enforcement. This must be performed only in authorized or archival environments."
+    },
+    {
+      "test": "FLOW_STATE_DNA",
+      "target": "known deployment measurements",
+      "logic": "Compare state retention by 5-tuple, source-port changes, flow restart, and idle timers. Repeated stable quirks across independent PROTEI deployments would carry more attribution weight than RST/timeout alone."
+    },
+    {
+      "test": "PROTOCOL_CROSSOVER",
+      "target": "same service over HTTP, TLS and QUIC",
+      "logic": "Determine whether classification/policy signatures stay synchronized across protocols and whether one parser lags or fails systematically."
+    },
+    {
+      "test": "SOFTWARE_IDENTITY_PASSIVE_CORROBORATION",
+      "target": "public inventories, vendor support documents, certificates, archived screenshots, infrastructure-search publications",
+      "logic": "Seek exact PROTEI product identifiers such as package/application naming or explicit product/version banners without actively touching exposed systems."
+    }
+  ],
+  "priority_order": [
+    "1. Search raw/historical OONI data for Sky Mobile AS41329 and compare directly with MegaCom AS50223 on matched dates/destinations.",
+    "2. Reconstruct Africell Uganda AS36991 low-level reset/failure morphology from surviving OONI measurements and compare to Airtel/MTN controls.",
+    "3. Search passive/public infrastructure-research literature for Citizen Lab's undisclosed PROTEI Censys/Shodan signature.",
+    "4. Search Niger Telecom and Comores Telecom OONI archives for selective filtering windows; treat full BGP shutdowns separately.",
+    "5. Resolve period-correct Tajik ASNs/paths before comparing MegaFon/Tcell behavior, because national upstream centralization is a major confound."
+  ],
+  "sources": [
+    "https://protei.ru/news/dpi-platforma-protey-upravlyaet-trafikom-v-seti-megacom",
+    "https://protei.ru/news/ntc-protey-i-entensys-porabotali-dlya-megacom",
+    "https://protei.ru/sites/default/files/2020-04/DPI_TechDescription.pdf",
+    "https://protei.ru/news/dpi-niger",
+    "https://www.protei.me/protei-has-launched-dpi-platform-and-pcrf-for-comores-telecom/",
+    "https://catalog.arppsoft.ru/product/6039137",
+    "https://citizenlab.ca/research/uncovering-irans-mobile-legal-intercept-system/",
+    "https://ooni.org/post/uganda-social-media-tax/",
+    "https://pulse.internetsociety.org/en/shutdowns/internet-suspended-in-comoros-17-january-2024/"
+  ],
+  "final_rule": "Do not call a remote packet behavior PROTEI-specific until the same unusual multi-feature behavior appears in at least two independently documented PROTEI deployments and is absent or materially different in matched non-PROTEI controls. Software/product identifiers may establish device identity separately from packet behavior."
+}
