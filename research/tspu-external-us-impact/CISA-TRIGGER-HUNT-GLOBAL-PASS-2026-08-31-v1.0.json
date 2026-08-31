@@ -1,0 +1,90 @@
+{
+  "schema": "hawkar.topa.spider.cisa_trigger_hunt.global_pass.v1",
+  "artifact_id": "CISA-TRIGGER-HUNT-GLOBAL-PASS-2026-08-31-v1.0",
+  "generated_date_utc": "2026-08-31",
+  "scope": "Defensive OSINT search for a CISA-grade external technical trigger outside Russia. No attribution is made without path/device/operator evidence.",
+  "global_verdict": "NO_RED_TRIGGER_YET",
+  "highest_priority_candidate": {
+    "country": "Kazakhstan",
+    "status": "ORANGE_CANDIDATE_NOT_SEND_READY",
+    "why_it_is_high_value": [
+      "Censored Planet-derived incident records in 2026 repeatedly report DNS-blocking signatures against a broad basket of US/open services, including chat.openai.com, chatgpt.com, facebook.com, google.com, instagram.com, whatsapp.com, youtube.com, reddit.com, and other services.",
+      "The pattern recurs on multiple 2026 dates, including 2026-06-03, 2026-06-10, 2026-06-24, 2026-06-28, and 2026-08-09, which is more interesting than a one-off outage.",
+      "Historical Censored Planet work on Kazakhstan demonstrated path-dependent HTTPS interception in KazTelecom AS9198 using the Kazakhstan root CA and transparent-proxy behavior, establishing that path-specific national interception capability has existed there.",
+      "Recorded Future/Insikt Group assesses that Kazakhstan almost certainly purchased Russian-origin SORM technology; Kazakhstan has also raised concerns about backdoors/continued manufacturer access in SORM equipment. This is a Russian-technology lineage signal, not proof of Moscow command.",
+      "The affected-service basket includes US companies and US-hosted/open services, satisfying the US-service nexus requirement at the service level."
+    ],
+    "negative_controls_and_caveats": [
+      "The 2026 Kazakhstan blocking records currently surfaced through a Censored Planet-derived feed do not identify the responsible ASN/operator for the event.",
+      "The mechanism is reported as DNS blocking in the incident feed, but device/vendor identity for the active 2026 filter is not established.",
+      "Russian-origin SORM presence does not establish that the filtering function is implemented by that equipment, and does not establish Russian remote command.",
+      "Independent replication of the exact same 2026 event by RIPE Atlas/OONI/Cloudflare with path localization has not yet been established.",
+      "Provider-side health must be matched to the exact event window before escalation."
+    ],
+    "missing_bridge_for_red": [
+      "ASN/path localization of the same selective failure",
+      "matched bypass/alternate-path control",
+      "independent replication of the same event window",
+      "device/vendor/control-plane linkage for the active filtering event"
+    ]
+  },
+  "secondary_candidate": {
+    "country": "Uzbekistan",
+    "status": "YELLOW_TO_ORANGE_CANDIDATE_NOT_SEND_READY",
+    "evidence": [
+      "On 2026-08-22, OONI-derived incident data showed elevated web-connectivity anomalies, HTTP invalid-request-line middlebox anomalies, and WhatsApp/Facebook Messenger anomalies.",
+      "On 2026-08-29, repeated HTTP invalid-request-line anomalies were again observed.",
+      "Recorded Future reports that Uzbekistan has almost certainly procured SORM hardware/software from Russian companies including MFI Soft, Protei, and VAS Experts; Uzbektelecom was reportedly a customer of MFI Soft/SORMovich.",
+      "Citizen Lab reported PROTEI equipment fingerprints in Uzbekistan in prior infrastructure research.",
+      "Global outage checks surfaced no broad WhatsApp/Facebook Messenger outage on 2026-08-22, which is a weak negative control but not a substitute for provider telemetry."
+    ],
+    "caveats": [
+      "The surfaced 2026 incident evidence is primarily OONI-derived and explicitly lacks independent corroboration.",
+      "No responsible ASN/operator is identified in the surfaced incident record.",
+      "No active Russian vendor/control-plane link is established for the 2026 interference.",
+      "Uzbekistan has been partially liberalizing international gateway access since 2025, so the old single-gateway model must not be treated as current universal topology."
+    ]
+  },
+  "functional_analogs_not_russian_lineage": [
+    {
+      "country": "Guinea",
+      "status": "FUNCTIONAL_DPI_ANALOG",
+      "evidence": "OONI documented TLS interference after ClientHello for Facebook, TikTok and YouTube in July-August 2026, with Google Transparency data independently showing a correlated YouTube traffic drop.",
+      "why_not_cisa_trigger": "No Russian vendor/control-plane bridge is established."
+    },
+    {
+      "country": "Uganda",
+      "status": "FUNCTIONAL_ALLOWLIST_ANALOG",
+      "evidence": "After the January 2026 shutdown, some services were restored/whitelisted while major social and messaging services remained blocked on multiple networks.",
+      "why_not_cisa_trigger": "No Russian vendor/control-plane bridge is established."
+    }
+  ],
+  "hard_claim_ceiling": {
+    "foreign_russian_control_plane": "NOT_ESTABLISHED",
+    "remote_moscow_command": "NOT_ESTABLISHED",
+    "synchronized_multi_country_activation": "NOT_ESTABLISHED",
+    "active_tspu_outside_russia": "NOT_ESTABLISHED",
+    "cisa_send_gate": "CLOSED"
+  },
+  "next_measurement_priority": [
+    "Kazakhstan: obtain same-window ASN-level localization for the recurring DNS-blocking basket.",
+    "Kazakhstan: compare affected path with alternate transit/VPN/Starlink or other lawful alternate-path controls where public measurements exist.",
+    "Kazakhstan: look for RIPE Atlas, OONI, Cloudflare or IODA evidence overlapping the exact Censored Planet event windows.",
+    "Uzbekistan: identify ASNs behind the August 22/29 OONI middlebox anomalies and compare them against known Russian-origin SORM/vendor relationships.",
+    "For both countries: freeze provider-side health for ChatGPT/Meta/Google/YouTube at exact event timestamps to exclude destination-side incidents."
+  ],
+  "sources": [
+    "https://voidly.ai/incident/KZ-2026-0188",
+    "https://voidly.ai/incident/KZ-2026-0190",
+    "https://voidly.ai/incident/KZ-2026-0228",
+    "https://voidly.ai/incident/KZ-2026-0246",
+    "https://voidly.ai/incident/KZ-2026-0422",
+    "https://censoredplanet.org/kazakhstan",
+    "https://www.recordedfuture.com/research/tracking-deployment-russian-surveillance-technologies-central-asia-latin-america",
+    "https://citizenlab.ca/research/uncovering-irans-mobile-legal-intercept-system/",
+    "https://voidly.ai/incident/5db0ec12e14b",
+    "https://voidly.ai/incident/ce180292646b",
+    "https://explorer.ooni.org/findings/2026-guinea-blocked-facebook-tiktok-and-youtube",
+    "https://explorer.ooni.org/findings/2026-uganda-blocked-social-media-following-2026-general-election"
+  ]
+}
