@@ -1,0 +1,118 @@
+{
+  "schema": "hawkar.topa.spider.tspu_external.country_protest_network_correlation.v1",
+  "artifact_id": "CUBA-PROTEST-DAY-NETWORK-CORRELATION-v1.0",
+  "generated_date_utc": "2026-08-31",
+  "country": "Cuba",
+  "purpose": "Assess whether protest/sensitive-event timing correlates with network restrictions and whether observed mechanisms can be causally connected to Russian-origin SORM/DPI technology. Preserve strict separation between confirmed network behavior, vendor lineage, and remote-control attribution.",
+  "headline_assessment": {
+    "protest_conditioned_network_control": "STRONGLY_SUPPORTED",
+    "state_network_control_surface": "CONFIRMED",
+    "state_monopoly_asn": "AS27725 / ETECSA",
+    "historical_dpi_rst_fingerprint": "CONFIRMED",
+    "russian_sorm_vendor_lineage": "STRONGLY_SUPPORTED / VERY_LIKELY",
+    "specific_blocking_device_is_protei_sorm": "NOT_ESTABLISHED",
+    "russian_remote_control": "NOT_ESTABLISHED",
+    "literal_single_box_shipment_claim": "NOT_VERIFIED",
+    "cisa_gate_status": "HISTORICAL_ORANGE_HIGH; CURRENT_RED_NOT_REACHED"
+  },
+  "network_structure": {
+    "operator": "Empresa de Telecomunicaciones de Cuba S.A. (ETECSA)",
+    "asn": "AS27725",
+    "structure": "state-owned telecommunications monopoly / overwhelmingly dominant public connectivity provider",
+    "2026_apnic_estimate": "AS27725 approximately 97.9% of estimated Cuban Internet users in July 2026",
+    "implication": "A restriction implemented at or through ETECSA can have near-national effect without cross-ISP coordination. This is a centralized-control positive control, not evidence of Russian command."
+  },
+  "technical_baseline": [
+    {
+      "window": "2017",
+      "event": "OONI censorship study in Cuban public-access ParkNets",
+      "finding": "41 websites confirmed blocked. DPI middlebox reset connections and served blank block pages; latency localized blocking infrastructure most likely to Havana. Skype blocking used injected TCP RST packets. Other services such as WhatsApp and Facebook Messenger remained accessible in that measurement period.",
+      "value": "CONFIRMED_PATH_MIDDLEBOX_FINGERPRINT"
+    },
+    {
+      "window": "2020-11-26 onward",
+      "event": "Movimiento San Isidro protest / artistic-freedom mobilization",
+      "finding": "NetBlocks measured social-media disruptions on ETECSA/AS27725; Freedom House reports widespread mobile and home connectivity interruptions and many localized mobile-service disruptions after the protest.",
+      "value": "PROTEST_CORRELATED_SELECTIVE_RESTRICTION"
+    },
+    {
+      "window": "2021-07-11 to mid-July",
+      "event": "11J nationwide anti-government protests",
+      "finding": "ETECSA cut island-wide Internet service for about 30 minutes on the first major protest day, followed by intermittent outages and prolonged restoration. OONI detected WhatsApp/Telegram/Signal blocking; reported mechanism included TCP RST injection during TLS handshake. NetBlocks localized restrictions to ETECSA/AS27725 and Cubacel, including WhatsApp, Facebook, Instagram, Telegram servers, YouTube and Google Video. IODA, Cloudflare/Fastly traffic and Google traffic data independently showed disruption.",
+      "value": "STRONGEST_CONFIRMED_PROTEST_DAY_NETWORK_CONTROL"
+    },
+    {
+      "window": "2022-09-29 to 2022-09-30",
+      "event": "protests following Hurricane Ian and prolonged power failures",
+      "finding": "Freedom House and US State reporting describe overnight Internet cuts lasting about seven hours on two successive nights, while authorities also used regional/individual restrictions during protests.",
+      "value": "REPEATED_PROTEST_CORRELATION_WITH_POWER_OUTAGE_CONFOUND"
+    },
+    {
+      "window": "2023-05",
+      "event": "Caimanera, Guantánamo anti-government protest",
+      "finding": "Livestreams of protests circulated before mobile connectivity was reportedly disrupted nationwide. US State and Freedom House describe ETECSA as regularly cutting or restricting connections during protests.",
+      "value": "REPEATED_EVENT_CONDITIONED_CONTROL"
+    },
+    {
+      "window": "2024-03-17",
+      "event": "protests in Santiago de Cuba and other eastern localities over electricity and food shortages",
+      "finding": "Internet Society Pulse records a regional shutdown in at least two regions from 15:20 to 20:30 UTC, about five hours, with measured traffic dip during the protest window.",
+      "value": "REGIONAL_PROTEST_DAY_SHUTDOWN"
+    },
+    {
+      "window": "2026-06-19 to 2026-06-20",
+      "event": "Havana-area protests over blackouts and water shortages",
+      "finding": "Independent Cuban media reported mobile/data outages beginning around protest gatherings. IODA-derived reporting detected significant connectivity drops across multiple provinces on June 20, but the incident lacks ASN-specific mechanism attribution and power-grid instability is a major confound.",
+      "value": "CURRENT_YELLOW_ORANGE_CANDIDATE_NOT_ATTRIBUTED"
+    }
+  ],
+  "russian_lineage": {
+    "recorded_future_2025": "Insikt Group assessed Cuba very likely procured SORM hardware and software from Russian companies, most notably Protei.",
+    "customer_bridge": "Protei company materials identify ETECSA as a customer; Recorded Future Appendix B lists ETECSA Cuba as a Protei customer.",
+    "2024_bridge": "Protei signed an agreement with Cuban state-owned Movitel in March 2024 to facilitate construction of private network systems following Informática 2024 in Havana.",
+    "protections_against_overclaim": [
+      "Protei sells products unrelated to SORM, so ETECSA customer status does not prove which product was installed.",
+      "Recorded Future's assessment of SORM procurement is high-value vendor-lineage evidence, not proof that the protest-day blocking middlebox was Protei.",
+      "No verified public evidence currently links a specific 2017/2020/2021/2024 RST or shutdown event to a Protei device serial, management server, firmware image, or Russian control point.",
+      "No verified public evidence establishes Moscow remote command of Cuban filtering.",
+      "The user's remembered 'one box' shipment may correspond to prior trade/vendor evidence, but the literal count of one shipped device was not verified in this pass."
+    ]
+  },
+  "non_russian_lineage_and_controls": {
+    "china": "Cuban telecommunications infrastructure has substantial Chinese vendor presence, including Huawei and ZTE; this is a major alternative technology lineage and prevents simplistic attribution to Russia.",
+    "avila_link": "Cuba has reportedly used Ávila Link monitoring software at ETECSA/public access points; provenance and relation to specific blocking events require separate validation.",
+    "power_grid": "Cuba's chronic grid failures and nationwide electricity collapses can independently reduce Internet traffic and must be treated as a primary negative control, especially in 2022, 2024 and 2026 protest windows.",
+    "monopoly_effect": "Because ETECSA dominates national access, nationwide effects can result from domestic centralized policy without any foreign control-plane involvement."
+  },
+  "cisa_trigger_evaluation": {
+    "foreign_path_specific_failure": "PASS_HISTORICAL",
+    "us_service_nexus": "PASS_HISTORICAL: US-origin/global platforms such as WhatsApp/Facebook/Instagram/YouTube/Google were selectively disrupted during protest windows",
+    "negative_controls": "PARTIAL_PASS: independent measurement and service selectivity exist, but some event windows have power-grid confounds",
+    "independent_replication": "PASS_HISTORICAL: OONI, NetBlocks, IODA, traffic telemetry, Freedom House/State documentation",
+    "vendor_control_plane_bridge": "PARTIAL_PASS: Russian SORM/Protei procurement/customer relationship is strongly supported, but causal connection to blocking devices is not established",
+    "current_event_reproducibility_2026": "FAIL_PENDING",
+    "red_gate": "NOT_OPEN"
+  },
+  "next_measurements": [
+    "Obtain raw OONI measurements for July 2021 and March 2024 and cluster by test_name, failure type, ASN and protocol phase.",
+    "Compare TCP RST TTL/IPID/timing characteristics from 2017 and July 2021 to test whether the same middlebox family persisted.",
+    "For June 19-20 2026, align IODA provincial drops with protest timestamps and electricity-restoration timestamps to separate policy restriction from power loss.",
+    "Inspect AS27725 BGP/traffic telemetry during protest windows and matched non-protest blackout controls.",
+    "Search archived Protei/ETECSA/Movitel technical materials for exact product names, deployments, lawful-intercept interfaces, maintenance/control architecture, and dates.",
+    "Do not elevate to Russian-control attribution without device/operator/control-channel evidence."
+  ],
+  "sources": [
+    "https://ooni.org/post/cuba-internet-censorship-2017/",
+    "https://blog.torproject.org/measuring-internet-censorship-cubas-parknets/",
+    "https://netblocks.org/reports/social-media-restricted-in-cuba-amid-widening-anti-government-protests-QAdrmwyl",
+    "https://pulse.internetsociety.org/en/shutdowns/internet-suspended-in-cuba-11-july-2021/",
+    "https://freedomhouse.org/country/cuba/freedom-net/2024",
+    "https://pulse.internetsociety.org/en/shutdowns/internet-services-limited-in-cuba-march/",
+    "https://assets.recordedfuture.com/insikt-report-pdfs/2025/ta-ru-2025-0107.pdf",
+    "https://protei.ru/clients",
+    "https://protei.ru/news/protey-podpisal-soglashenie-na-kube",
+    "https://stats.labs.apnic.net/cgi-bin/aspop?c=CU&d=13%2F07%2F2026",
+    "https://voidly.ai/incident/CU-2026-0181"
+  ],
+  "final_rule": "Cuba is a strong positive control for protest-conditioned centralized network restriction and a high-value Russian SORM vendor-lineage case. It is not public proof that Russian SORM performed the observed blocking and is not evidence of Russian remote control."
+}
