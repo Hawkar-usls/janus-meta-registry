@@ -1,0 +1,127 @@
+{
+  "schema": "hawkar.topa.spider.tspu_external.cross_environment.v1",
+  "artifact_id": "GLOBAL-CROSS-ENVIRONMENT-SPIDER-PASS-2026-08-31-v1.0",
+  "generated_date_utc": "2026-08-31",
+  "purpose": "Cross-environment defensive comparison of censorship/control mechanisms across DNS, TLS/SNI, TCP RST, throttling, full shutdown, allowlist, routing capture, and RF/GNSS. Distinguish generic mechanism families from vendor-specific fingerprints and from foreign control-plane attribution.",
+  "headline": {
+    "main_result": "Post-ClientHello timeout/RST behavior is a DPI-family signature, not a vendor-unique signature.",
+    "cisa_gate": "HOLD",
+    "reason": "No current foreign event yet combines reproducible path-specific interference, provider-side negative controls, ASN/hop localization, independent replication, and a specific device/vendor/control-channel causal bridge."
+  },
+  "mechanism_layers": {
+    "DNS_BLOCKING": {
+      "examples": [
+        "France/New Caledonia 2024: selective TikTok restriction through local operator context; politically targeted restriction without TSPU-like packet fingerprint.",
+        "Türkiye 2024-2025: censorship IP 195.175.254.2 returned on multiple networks for Instagram/Boykotyap/Discord-related blocking.",
+        "India 2026: Telegram blocking on some networks via censorship-associated DNS answers.",
+        "Albania 2025: TikTok DNS tampering via NXDOMAIN on Vodafone networks."
+      ],
+      "inference": "DNS manipulation is common and technologically non-specific. Similar political outcomes can arise with no DPI/RST involvement."
+    },
+    "TLS_POST_CLIENTHELLO_INTERFERENCE": {
+      "examples": [
+        "Kyrgyzstan/MegaCom AS50223 2024: TikTok blocking observed with TLS session timeout after ClientHello; PROTEI DPI deployment is historically confirmed on MegaCom, but interference occurred on multiple Kyrgyz networks and AS50223 had Rostelecom upstream dependency.",
+        "Russia 2024-2026: Discord commonly times out after first TLS write; Bluesky shows either TLS timeout or injected RST immediately after ClientHello across many networks.",
+        "Saudi Arabia/Mobily AS35819 2026: Tinder selectively blocked by injected RST after ClientHello while DNS and initial TCP connection succeed.",
+        "Türkiye 2024: Discord measurements include connection resets after first TLS write, alongside independent DNS censorship fingerprints."
+      ],
+      "inference": "timeout/RST after ClientHello is a broad SNI/DPI mechanism family and cannot identify PROTEI, RDP/TSPU, or any other vendor by itself."
+    },
+    "RST_INJECTION": {
+      "examples": [
+        "Cuba 2017: OONI measured injected TCP RST and used latency/TTL behavior to infer a middlebox path for blocked services.",
+        "Cuba 2021: Signal/TLS connection-reset behavior consistent with SNI-targeting DPI during protest-period restrictions.",
+        "Russia 2026: Bluesky sometimes receives RST immediately after ClientHello.",
+        "Saudi Arabia 2026: Mobily/Tinder receives RST after ClientHello."
+      ],
+      "inference": "RST alone is generic. Vendor attribution requires lower-level distinguishing properties such as reproducible TTL/IPID/sequence/timing/source characteristics plus known-device controls."
+    },
+    "THROTTLING": {
+      "examples": [
+        "Türkiye 2023: Twitter restriction showed TLS handshake latency rising from roughly tens of milliseconds to multiple seconds on several ASNs, while control endpoints did not show the same pattern.",
+        "Russia: TSPU-related censorship history includes centrally coordinated throttling and newer selective transfer disruption patterns."
+      ],
+      "inference": "Performance degradation needs matched endpoint and path controls; generic packet loss or congestion is insufficient."
+    },
+    "FULL_SHUTDOWN_AND_ALLOWLIST": {
+      "examples": [
+        "Uganda 2026 election: nationwide Internet shutdown from 13-18 January confirmed by IODA, Cloudflare Radar and Google traffic; regulator directive contained an exclusion list for essential healthcare, banking and government systems. After restoration, social-media blocking remained.",
+        "Belarus 2025 election: order to restrict websites hosted outside .by effectively blocked most foreign websites while domestic namespace remained available.",
+        "Cuba: repeated event-conditioned national/regional outages occur in a highly centralized state-monopoly access environment."
+      ],
+      "inference": "deny-except-allowlist is an important functional analog to Russian whitelist modes but does not imply shared technology or foreign control."
+    },
+    "ROUTING_AND_TRANSIT_CAPTURE": {
+      "examples": [
+        "Occupied Ukraine 2022: Cloudflare tracked more than 20 Ukrainian networks whose routing shifted to Russian ISPs; affected traffic became subject to Russian controls, surveillance and censorship.",
+        "MegaCom AS50223 2024: Cloudflare listed Rostelecom AS12389 as the sole upstream, creating a strong localization confound for censorship measurements observed from inside AS50223."
+      ],
+      "inference": "An OONI probe ASN is not automatically the physical location of interference. Upstream path localization is mandatory before vendor attribution."
+    },
+    "RF_GNSS": {
+      "examples": [
+        "Serbia 15 March 2025 and 23 May 2026 protest-related periods: BIRN identified GNSS jamming/spoofing signals using GPSWise/GPSJam and aviation/drone observations."
+      ],
+      "inference": "RF/GNSS interference is a separate physical-layer mechanism and must never be merged into DPI/TSPU attribution without direct evidence."
+    }
+  },
+  "country_core_matrix": {
+    "Belarus": "STRONG_POSITIVE_CONTROL for centralized protest/election-conditioned restrictions and external-vs-domestic selective access.",
+    "Cuba": "STRONG_POSITIVE_CONTROL plus Russian SORM/PROTEI vendor-lineage bridge; measured RST/DPI exists but causal link to specific PROTEI DPI device remains open.",
+    "Kazakhstan": "ORANGE path-control candidate; historical interception and protest-conditioned degradation are strong, 2026 ASN/path mechanism still incomplete.",
+    "Georgia": "NEGATIVE protest-shutdown control; severe protest repression without stable shutdown pattern.",
+    "Serbia": "NEGATIVE Internet-shutdown control plus separate RF/GNSS signal.",
+    "France/New Caledonia": "DNS/selective-block negative technology control: political selective restriction can occur without RST/TLS/TSPU-like fingerprint."
+  },
+  "global_external_controls": {
+    "Uganda": "Full shutdown plus explicit exclusion list/allowlist; proves functional deny-except-allowlist is not uniquely Russian.",
+    "Türkiye": "Independent DNS, RST, and throttling mechanisms; same-day Discord blocking with Russia is a negative control against timing-only attribution.",
+    "Saudi_Arabia": "Clean independent example of RST-after-ClientHello DPI on one ASN; destroys vendor uniqueness of that broad fingerprint.",
+    "India_Albania": "DNS manipulation controls showing distinct blocking implementations.",
+    "Occupied_Ukraine": "Positive routing-control example where path jurisdiction change directly altered censorship/control environment."
+  },
+  "fingerprint_hierarchy": {
+    "LEVEL_0_POLITICAL_TIMING": "No attribution value alone.",
+    "LEVEL_1_SERVICE_FAILURE": "Weak; requires provider-side health control.",
+    "LEVEL_2_GENERIC_MECHANISM": "DNS tamper / TLS timeout / RST / throttling / shutdown. Identifies mechanism family only.",
+    "LEVEL_3_PATH_LOCALIZATION": "ASN/hop localization with matched bypass or alternate-path control. Stronger but still not vendor identity.",
+    "LEVEL_4_LOW_LEVEL_PACKET_SIGNATURE": "Stable RST TTL, IPID, seq/ack behavior, timing, direction, handshake phase, QUIC-vs-TCP behavior, and repeatability across known deployments.",
+    "LEVEL_5_VENDOR_CAUSAL_BRIDGE": "Known device/product on the path plus matching signature or configuration/management evidence.",
+    "LEVEL_6_CONTROL_CHANNEL": "Specific operator/vendor management or remote-control channel tied to the event. Required for foreign remote-control attribution."
+  },
+  "current_best_tests": [
+    "MegaCom: compare raw OONI measurements across AS50223 and other Kyrgyz ASNs for the same TikTok endpoints to determine whether AS50223 has a distinct packet/error profile.",
+    "Cuba: compare 2017 and 2021 reset behavior by TTL/IPID/latency/handshake phase to test whether the same middlebox family persisted.",
+    "Russia: use known TSPU measurements as a mechanism reference, not a vendor identity template; include QUIC SNI behavior as an additional dimension because TSPU has documented SNI-dependent QUIC censorship.",
+    "Kazakhstan: prioritize route/ASN localization of current anomalies and alternate-path controls.",
+    "Belarus/Uganda/France: preserve as functional and mechanism-specific negative/positive controls to prevent over-attribution.",
+    "Serbia: keep GNSS completely separated from Internet-control scoring."
+  ],
+  "epistemic_firewall": [
+    "same political timing != same mechanism",
+    "same mechanism != same vendor",
+    "same vendor != same product",
+    "same product family != same device instance",
+    "same device family != same control channel",
+    "Russian-origin vendor presence != Russian remote command",
+    "probe ASN != interference location",
+    "temporal coincidence alone = zero attribution weight"
+  ],
+  "sources": [
+    "https://explorer.ooni.org/findings/2024-kyrgyzstan-blocked-tiktok",
+    "https://explorer.ooni.org/findings/2026-russia-blocked-bluesky",
+    "https://explorer.ooni.org/findings/2026-russia-blocked-telegram",
+    "https://explorer.ooni.org/findings/2026-saudi-arabia-just-blocked-tinder",
+    "https://explorer.ooni.org/findings/2025-turkiye-blocked-discord",
+    "https://explorer.ooni.org/findings/2023-turkey-blocked-twitter-following-deadly-earthquake",
+    "https://explorer.ooni.org/findings/2026-uganda-blocked-social-media-following-2026-general-election",
+    "https://freedomhouse.org/country/belarus/freedom-net/2025",
+    "https://censoredplanet.org/tspu",
+    "https://www.petsymposium.org/foci/2026/foci-2026-0010.php",
+    "https://blog.cloudflare.com/q3-2024-internet-disruption-summary/",
+    "https://blog.cloudflare.com/ukraine-update/",
+    "https://blog.cloudflare.com/one-year-of-war-in-ukraine/",
+    "https://birn.rs/gps-ometanje-srbija-dronovi-avioni/",
+    "https://www.conseil-etat.fr/actualites/tiktok-en-nouvelle-caledonie-le-blocage-du-reseau-social-n-est-pas-suspendu"
+  ]
+}
