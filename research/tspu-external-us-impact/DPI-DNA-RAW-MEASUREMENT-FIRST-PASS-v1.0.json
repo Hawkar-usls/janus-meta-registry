@@ -1,0 +1,183 @@
+{
+  "schema": "hawkar.topa.spider.dpi_dna.raw_measurement_pass.v1",
+  "artifact_id": "DPI-DNA-RAW-MEASUREMENT-FIRST-PASS-v1.0",
+  "generated_date_utc": "2026-08-31",
+  "mode": "PASSIVE_OPEN_DATA_RAW_MEASUREMENT_ANALYSIS",
+  "claim_ceiling": "RAW_MEASUREMENT_SUPPORTED; DEVICE ATTRIBUTION ONLY WHERE A DEVICE-ASSOCIATED MARKER EXISTS; NO REMOTE-CONTROL CLAIM",
+  "inputs": {
+    "github_actions_run_id": 33365847014,
+    "github_actions_artifact_id": 9748300792,
+    "artifact_name": "tspu-dpi-dna-raw-harvest",
+    "artifact_sha256": "259fb778f5d2df0ff0b72873411d9144797a65cb8c5a374626ac5cf3bb8b4f7a",
+    "harvester_commit": "68bfb873ea8ae21d35c6b65fdf404f493bf8792f",
+    "workflow_commit": "58435f541704dcc18d2126750a7e52c9dfa4facf",
+    "manifest_sha256": "9e4ed7344f3105d072d2b45fca002374b3caaa907c5b5b6df50a5838e149bc7a",
+    "normalized_hashes": {
+      "cuba_2017": "4a383f3f5c1fe86a7059ab5883e98278c97bfa2bfab46e390262502bd83dd64b",
+      "cuba_signal_2021": "fcda45b4b1e0f6ae84ceca4aff0d982d8e18d8cce5bd4d3b9dd57eb5370b4b04",
+      "cuba_web_2021": "7f5005f249cbebc6c5cf9ece57eb1678136bff7a8cd272ce736ea94c6acb4137",
+      "megacom_2024": "acda89c68a4d71c0d9e0e48c15497c9612f554be06b00825b8aff134cb3a7ec9"
+    }
+  },
+  "headline": {
+    "megaCom_protei_reference_result": "THE SELECTED RAW AS50223 WWW.TIKTOK.COM SAMPLE IS DNS-LEVEL, NOT A TLS FINGERPRINT",
+    "cuba_2017_result": "A HIGHLY REPEATABLE HTTP BLOCKPAGE FINGERPRINT IS PRESENT: HTTP 503 + EMPTY HTML + SERVER V2R2C00-IAE/1.0",
+    "cuba_2021_signal_result": "REPEATED POST-CLIENTHELLO CONNECTION RESETS ARE DIRECTLY VISIBLE IN RAW OONI EVENT STREAMS, BUT NO DEVICE/VENDOR MARKER IS PRESENT",
+    "protei_bridge_status": "DOWNGRADED FOR THE OBSERVED CUBAN HTTP FILTER; STILL OPEN FOR OTHER CUBAN SYSTEMS/ERAS",
+    "huawei_associated_cuba_filter_status": "STRONGLY ELEVATED AS THE LEADING DEVICE-FAMILY HYPOTHESIS FOR THE OBSERVED CUBAN HTTP FILTER, WITH OONI'S ORIGINAL ATTRIBUTION CAUTION PRESERVED"
+  },
+  "case_results": {
+    "kg_as50223_megacom_tiktok_2024": {
+      "role": "KNOWN NETWORK WITH DOCUMENTED PROTEI DPI DEPLOYMENT",
+      "raw_measurements": 18,
+      "input": "https://www.tiktok.com/",
+      "period": "2024-04-22 to 2024-04-28 in harvested sample",
+      "probe_asn": "AS50223",
+      "results": {
+        "dns_nxdomain_error": 17,
+        "dns_generic_timeout_error": 1,
+        "dns_consistency_inconsistent": 18,
+        "tls_handshakes_observed": 0,
+        "network_events_observed": 0,
+        "control_dns_success": 18,
+        "control_example_address_count": 9
+      },
+      "raw_behavior": "The local/system DNS experiment failed before TCP/TLS. In the representative raw measurement, both A and AAAA for www.tiktok.com returned dns_nxdomain_error while the OONI control returned nine routable addresses.",
+      "interpretation": [
+        "This exact AS50223/www.tiktok.com sample cannot provide a PROTEI TLS/RST fingerprint because no TLS exchange occurred.",
+        "OONI's country-level Kyrgyzstan finding states that most TikTok measurements across multiple endpoints/networks showed timeout after ClientHello; that broader statement must not be projected onto this exact AS50223 endpoint sample.",
+        "DNS blocking in a network known to contain PROTEI DPI does not establish that PROTEI generated the DNS result. Resolver policy, a separate national component, upstream policy, or another filtering layer remain alternatives."
+      ],
+      "verdict": "NEGATIVE_FOR_PROTEI_TLS_FINGERPRINT_EXTRACTION; POSITIVE_FOR_DNS_POLICY_OBSERVATION"
+    },
+    "cu_as27725_2017_http_filter": {
+      "role": "CUBA HISTORICAL DPI REFERENCE",
+      "raw_measurements": 28,
+      "inputs": {
+        "http://www.cubaencuentro.com": 15,
+        "http://martinoticias.com": 13
+      },
+      "probe_asn": "AS27725",
+      "repeatable_response_fingerprint": {
+        "server_header_V2R2C00_IAE_1_0": "28/28",
+        "http_status_503": "28/28",
+        "response_body_exact": "<html><head></head><body></body></html>",
+        "response_body_exact_count": "28/28",
+        "tcp_connect_to_origin_ips_succeeded": true,
+        "control_fetch_status": 200,
+        "control_returned_normal_origin_content": true
+      },
+      "ooni_packet_level_reference": {
+        "status": "PAPER_EMBEDDED_PACKET_CAPTURE / NOT A PUBLIC RAW PCAP FILE IN THIS PASS",
+        "reported_behavior": [
+          "server-side packet capture showed the client request did not reach the control server and the connection was reset by the middlebox",
+          "client side was also reset after the injected blockpage",
+          "custom parser test found that ': ' + blocked-domain + CRLF was sufficient to trigger blocking, while domain + CRLF without the colon-space prefix did not",
+          "the parser therefore reacted to a header-like string pattern without verifying that the domain was specifically the HTTP Host header"
+        ],
+        "discriminating_value": "HIGH: response banner + exact fake response + unusual parser trigger is substantially stronger than a generic RST"
+      },
+      "vendor_interpretation": {
+        "raw_marker": "V2R2C00-IAE/1.0",
+        "ooni_2017_statement": "OONI stated that the version string appeared associated with Huawei eSight, while explicitly preserving uncertainty over whether/how Huawei equipment implemented censorship.",
+        "later_independent_interpretation": "Qurium and later Cuban monitoring work associate the marker with Huawei eSight/NIP-family equipment; later Wireshark observations report the same marker in injected HTTP responses that interrupt HTTPS handshakes.",
+        "claim_ceiling": "HUAWEI_ASSOCIATED_DEVICE_FAMILY_SIGNAL; NOT PRODUCT SERIAL PROOF; NOT PROOF HUAWEI OPERATED THE FILTER"
+      },
+      "verdict": "STRONG_DISCRIMINATING_CUBA_FILTER_FINGERPRINT_FOUND"
+    },
+    "cu_as27725_signal_11j_2021": {
+      "role": "CUBA PROTEST-ERA TLS/SNI INTERFERENCE",
+      "raw_measurements": 30,
+      "period": "2021-07-11 20:32:33 through 2021-07-14 09:33:56",
+      "probe_asn": "AS27725",
+      "backend_status": {
+        "ok": 3,
+        "blocked": 27,
+        "blocked_connection_reset": 23,
+        "blocked_windows_forcibly_closed_equivalent": 3,
+        "blocked_dns_failure_api_directory_signal_org": 1
+      },
+      "tls_handshakes": {
+        "total": 179,
+        "success": 18,
+        "connection_reset": 143,
+        "windows_forcibly_closed_equivalent": 18,
+        "reset_like_failures_total": 161
+      },
+      "six_signal_names_tested": [
+        "textsecure-service.whispersystems.org",
+        "storage.signal.org",
+        "api.directory.signal.org",
+        "cdn2.signal.org",
+        "cdn.signal.org",
+        "sfu.voip.signal.org"
+      ],
+      "destination_network_diversity_in_blocked_measurements": [
+        "Amazon AS16509",
+        "Google AS15169",
+        "Microsoft AS8075",
+        "Cloudflare AS13335",
+        "Amazon AS14618"
+      ],
+      "event_sequence": "TCP connect succeeds -> tls_handshake_start -> one ClientHello-sized write (~284-307 bytes in the observed resets) -> read fails/reset -> tls_handshake_done fails",
+      "write_to_reset_like_read_timing_ms": {
+        "n": 161,
+        "median": 37.8835,
+        "p25": 26.0737,
+        "p75": 53.3192,
+        "min": 0.5988,
+        "max": 391.6795
+      },
+      "pure_connection_reset_subset_timing_ms": {
+        "n": 143,
+        "median": 40.3923,
+        "p25": 25.8947,
+        "p75": 55.1877
+      },
+      "important_temporal_control": [
+        "2021-07-11 20:32:33: Signal backend OK",
+        "2021-07-11 21:06:31: Signal backend OK",
+        "from early 2021-07-12 repeated reset-like blocking dominates",
+        "2021-07-13 17:45:51: Signal backend OK again",
+        "subsequent measurements return to reset-like blocking"
+      ],
+      "interpretation": [
+        "The same reset-like failure affects Signal hostnames distributed across multiple unrelated destination ASNs, which is inconsistent with a single destination-provider outage explanation.",
+        "The event stream directly supports post-ClientHello path interference but does not expose raw IP TTL, IPID, TCP sequence/ack fields or the source packet of the reset.",
+        "No V2R2C00-IAE/1.0 or PROTEI marker is present in these Signal raw measurements, so vendor attribution remains open for this 2021 mechanism."
+      ],
+      "verdict": "STRONG_PATH_LEVEL_TLS_INTERFERENCE; VENDOR_UNKNOWN"
+    }
+  },
+  "cross_case_correction": {
+    "previous_working_model": "KNOWN PROTEI NETWORK (MegaCom) -> post-ClientHello TLS timeout could serve as a PROTEI reference fingerprint",
+    "raw_measurement_correction": "The exact harvested AS50223/www.tiktok.com measurements are DNS-blocked and never enter TLS; they cannot serve as a PROTEI TLS fingerprint reference.",
+    "cuba_correction": "The strongest directly observable Cuban device-like marker in the harvested data is V2R2C00-IAE/1.0, historically associated with Huawei equipment, not a PROTEI marker.",
+    "new_model": "CUBA_2017_HTTP_FILTER -> HUAWEI-ASSOCIATED MARKER; CUBA_2021_SIGNAL -> RESET-LIKE TLS INTERFERENCE / VENDOR OPEN; PROTEI IN CUBA -> SEPARATE PROCUREMENT/PRESENCE HYPOTHESIS UNTIL DEVICE-LEVEL CAUSAL BRIDGE EXISTS"
+  },
+  "pcap_gate": {
+    "ooni_public_raw_measurements": "RAW JSON YES; ordinary measurement bodies do not provide full packet headers/PCAP",
+    "cuba_2017": "OONI report contains packet-capture-derived evidence and screenshots, but a downloadable original PCAP was not found in this pass",
+    "cuba_2023_2024": "Diktyon/Guardianes Digitales describe Wireshark captures with V2R2C00-IAE/1.0 interrupting TLS ClientHello, but original downloadable PCAP was not found in this pass",
+    "megaCom_protei": "PUBLIC PROTEI-SPECIFIC PCAP NOT FOUND",
+    "tspu_reference": "PUBLISHED PACKET-LEVEL EXPERIMENTAL FINGERPRINT EXISTS; PUBLIC ORIGINAL PCAP NOT CONFIRMED",
+    "status": "RAW_PACKET_GAP_REMAINS_FOR_VENDOR-LEVEL TTL/IPID/SEQ/ACK COMPARISON"
+  },
+  "next_killer_tests": [
+    "Harvest AS50223 raw measurements for multiple TikTok app endpoints, not only www.tiktok.com, and isolate any cases that actually reach TLS.",
+    "For each AS50223 endpoint, compare local DNS result, TCP reachability, TLS event sequence and control result; do not label the result PROTEI unless filtering can be localized to the PROTEI enforcement layer.",
+    "Use the Cuba V2R2C00-IAE/1.0 + HTTP503 + blank-body + parser-trigger tuple as a distinct Huawei-associated reference family and search for it across 2021-2026 Cuban OONI data.",
+    "Seek original packet captures from OONI 2017 and Diktyon/Guardianes Digitales 2023-2024; if acquired, extract injected packet TTL/IPID/seq/ack/window/options/checksum and hop-distance estimates.",
+    "Keep PROTEI SORM/procurement evidence separate from the measured Cuban censorship appliance until a product/config/banner/control-channel bridge is found."
+  ],
+  "sources": [
+    "OONI public raw Measurements API",
+    "https://ooni.org/documents/cuba-internet-censorship-2017.pdf",
+    "https://explorer.ooni.org/findings/2024-kyrgyzstan-blocked-tiktok",
+    "https://protei.ru/news/dpi-platforma-protey-upravlyaet-trafikom-v-seti-megacom",
+    "https://protei.ru/news/ntc-protey-i-entensys-porabotali-dlya-megacom",
+    "https://www.qurium.org/alerts/cuba/internet-blocking-in-cuba-silencing-dissent-in-the-name-of-moral-and-good-manners",
+    "https://guardianesdigitales.blogspot.com/2024/04/informe-4-sobre-la-salud-del-internet.html"
+  ],
+  "final_rule": "THE FIRST RAW PASS DOES NOT CLOSE CUBA↔PROTEI. INSTEAD, IT IDENTIFIES A STRONG HUAWEI-ASSOCIATED CUBAN HTTP FILTER FINGERPRINT AND INVALIDATES THE SELECTED MEGACOM WWW.TIKTOK.COM SAMPLE AS A PROTEI TLS FINGERPRINT REFERENCE."
+}
