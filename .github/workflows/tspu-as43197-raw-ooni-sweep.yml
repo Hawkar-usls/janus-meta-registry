@@ -1,0 +1,82 @@
+name: TT-Mobile AS43197 raw OONI sweep
+
+on:
+  push:
+    branches:
+      - research/tspu-external-us-impact
+    paths:
+      - .github/workflows/tspu-as43197-raw-ooni-sweep.yml
+
+permissions:
+  contents: read
+
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Collect year-sliced OONI anomalies from AS43197
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p out/raw out/index
+          cat > /tmp/sweep.py <<'PY'
+          import concurrent.futures as cf
+          import json, os, time, urllib.parse, urllib.request
+          from collections import defaultdict
+          API='https://api.ooni.io/api/v1'
+          ASN='AS43197'
+          UA='janus-as43197-protei-reference/1.0'
+          def get(url,retries=3):
+              err=None
+              for i in range(retries):
+                  try:
+                      req=urllib.request.Request(url,headers={'User-Agent':UA,'Accept':'application/json'})
+                      with urllib.request.urlopen(req,timeout=20) as r:return json.loads(r.read().decode())
+                  except Exception as e:err=e;time.sleep(i+1)
+              raise err
+          def query(year,status='anomaly'):
+              p={'probe_asn':ASN,'test_name':'web_connectivity','since':f'{year}-01-01','until':f'{year}-12-31','order':'desc','limit':100,status:'true'}
+              u=API+'/measurements?'+urllib.parse.urlencode(p)
+              d=get(u);return p,d.get('results',[])
+          def safe(s):return ''.join(c if c.isalnum() or c in '._-' else '_' for c in str(s))[:170]
+          years=range(2015,2027)
+          allrows=[];ql=[]
+          for y in years:
+              for status in ('anomaly','confirmed'):
+                  try:
+                      p,rs=query(y,status);ql.append({'year':y,'status':status,'rows':len(rs),'query':p});allrows+=rs
+                  except Exception as e:ql.append({'year':y,'status':status,'error':repr(e)})
+          dedup={}
+          for r in allrows:dedup[(r.get('report_id'),r.get('input'),r.get('measurement_start_time'))]=r
+          rows=list(dedup.values());rows.sort(key=lambda r:r.get('measurement_start_time') or '',reverse=True)
+          # diversify domains: max 3 raw files per exact input, max 120 total
+          cnt=defaultdict(int);sel=[]
+          for r in rows:
+              inp=r.get('input') or ''
+              if cnt[inp]>=3:continue
+              sel.append(r);cnt[inp]+=1
+              if len(sel)>=120:break
+          with open('out/index/AS43197-LIST.json','w') as f:json.dump({'queries':ql,'dedup_rows':len(rows),'selected':sel},f,ensure_ascii=False,indent=2)
+          def fetch(r):
+              try:
+                  m=get(r['measurement_url']);rid=r.get('report_id') or m.get('report_id') or 'unknown';inp=r.get('input') or m.get('input') or ''
+                  fn=safe(rid+'__'+inp)+'.json'
+                  with open('out/raw/'+fn,'w') as f:json.dump(m,f,ensure_ascii=False,indent=2)
+                  return {'ok':True,'file':fn,'report_id':rid,'input':inp,'time':r.get('measurement_start_time'),'anomaly':r.get('anomaly'),'confirmed':r.get('confirmed')}
+              except Exception as e:return {'ok':False,'error':repr(e),'report_id':r.get('report_id'),'input':r.get('input')}
+          with cf.ThreadPoolExecutor(max_workers=12) as ex:res=list(ex.map(fetch,sel))
+          summary={'asn':ASN,'network':'TT-Mobile / MegaFon Tajikistan','query_log':ql,'dedup_rows':len(rows),'selected':len(sel),'distinct_inputs':len(cnt),'raw_ok':sum(x.get('ok',False) for x in res),'raw_failed':sum(not x.get('ok',False) for x in res)}
+          with open('out/index/RAW-MANIFEST.json','w') as f:json.dump(res,f,ensure_ascii=False,indent=2)
+          with open('out/index/SUMMARY.json','w') as f:json.dump(summary,f,ensure_ascii=False,indent=2)
+          print(json.dumps(summary,indent=2))
+          PY
+          python /tmp/sweep.py
+
+      - name: Upload AS43197 raw bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: as43197-known-protei-raw-ooni
+          path: out/
+          if-no-files-found: error
+          retention-days: 30
