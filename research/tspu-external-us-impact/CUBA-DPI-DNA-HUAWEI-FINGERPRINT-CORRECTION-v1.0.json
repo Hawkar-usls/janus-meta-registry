@@ -1,0 +1,84 @@
+{
+  "schema": "hawkar.topa.spider.tspu_external.cuba_dpi_vendor_fingerprint_correction.v1",
+  "artifact_id": "CUBA-DPI-DNA-HUAWEI-FINGERPRINT-CORRECTION-v1.0",
+  "generated_date_utc": "2026-08-31",
+  "status": "SUPERSEDING_EVIDENCE_CORRECTION",
+  "purpose": "Correct the Cuba DPI attribution branch using discriminating vendor-level fingerprints rather than generic RST/TLS behavior.",
+  "headline_verdict": {
+    "cuba_measured_dpi_to_protei": "NOT_ESTABLISHED_AND_CURRENTLY_DISFAVORED_FOR_THE_OBSERVED_WEB_FILTERING_STACK",
+    "cuba_measured_dpi_to_huawei_family": "STRONGLY_SUPPORTED_BY_REPEATED_VENDOR_LEVEL_FINGERPRINT",
+    "protei_presence_in_cuba": "SEPARATELY_SUPPORTED",
+    "protei_role_in_observed_censorship": "NOT_ESTABLISHED",
+    "tspu_equivalence": "NOT_ESTABLISHED",
+    "russian_remote_control": "NOT_ESTABLISHED"
+  },
+  "discriminating_fingerprint": {
+    "primary_marker": "HTTP Server header V2R2C00-IAE/1.0",
+    "vendor_association": "Huawei middlebox/eSight-family fingerprint; independent research also links the IAE marker to Huawei Intelligent Awareness Engine and potentially NIP6000-family inline security products",
+    "why_stronger_than_rst": "The marker identifies a specific implementation family across independent measurements, whereas RST/timeout after ClientHello is common to many unrelated DPI systems.",
+    "cross_country_validation": "Open Technology Fund research using OONI Explorer and Censys detected the same V2R2C00-IAE/1.0 Huawei middlebox fingerprint in multiple countries including Cuba, Colombia, Italy, Mexico, Nigeria, Pakistan, Spain and Turkey."
+  },
+  "cuba_2017_dna": {
+    "network": "ETECSA AS27725",
+    "period": "2017-05-29 to 2017-06-10",
+    "observations": [
+      "OONI confirmed DPI-based blocking and RST injection across eight Cuban vantage points.",
+      "Injected RST arrived faster than legitimate SYN-ACK round-trip timing and carried a TTL inconsistent with legitimate server packets, proving local/middlebox injection.",
+      "Latency-to-blocked testing was lowest in Havana, higher in Santa Clara and higher again in Santiago de Cuba, localizing the censorship equipment most likely to Havana and in any event inside Cuba.",
+      "Server-side packet capture showed the blocked client request never reached the destination server and was reset by the DPI middlebox.",
+      "The parser behavior was weak/non-semantic: blocking could be triggered by a packet containing colon + space + blocked domain + CRLF, while the domain plus newline without colon-space did not trigger. This means the device searched for a string pattern resembling an HTTP header rather than validating a real Host header/message.",
+      "Blocked-site responses exposed Server: V2R2C00-IAE/1.0, associated in OONI's report with Huawei equipment; the ETECSA captive portal also exposed OpenAS, another Huawei-associated marker."
+    ],
+    "claim_ceiling": "2017 evidence strongly supports a Huawei-family middlebox being present in the exact censorship path, but the original OONI report conservatively did not prove which Huawei product performed every censorship action."
+  },
+  "cuba_2023_2024_revalidation": {
+    "observations": [
+      "Independent Cuban network-health monitoring using OONI plus Wireshark repeatedly observed V2R2C00-IAE/1.0 on blocked HTTP/HTTPS domains in 2023 and 2024.",
+      "For HTTPS targets, ClientHello was sent and the legitimate TLS handshake did not continue; an injected HTTP response (commonly 503 Service Unavailable) appeared instead with V2R2C00-IAE/1.0 in the headers.",
+      "The same fingerprint was reported across dozens of blocked domains, including reports covering 27-30+ HTTPS domains in a quarter.",
+      "A 2024 temporary-unblocking observation acted as a natural negative control: when the domain became reachable, the injected V2R2C00-IAE/1.0 response disappeared and normal TLS completed; when filtering applied, the marker returned."
+    ],
+    "importance": "This longitudinal recurrence from 2017 through 2024 is much stronger evidence of implementation continuity than generic RST/TLS interference."
+  },
+  "candidate_huawei_product_family": {
+    "confirmed": "Huawei NIP6300/6600/NIP6000-family documentation describes an Intelligent Awareness Engine (IAE), context/application/content awareness and inline threat-prevention capabilities.",
+    "research_assessment": "Qurium assessed the V2R2C00-IAE/1.0 fingerprint as suggesting Huawei eSight/NIP-family technology and noted that NIP6000-class systems support session disconnects.",
+    "caution": "Do not collapse the fingerprint directly to one exact model/serial without device-specific evidence. The strongest safe claim is Huawei implementation family / Huawei-associated inline middlebox."
+  },
+  "effect_on_protei_hypothesis": {
+    "previous_path": "ETECSA -> PROTEI customer/procurement -> PROTEI DPI capabilities -> generic measured RST/TLS -> possible causal bridge",
+    "corrected_path": "ETECSA -> measured censorship -> repeated V2R2C00-IAE/1.0 Huawei fingerprint -> Huawei-family middlebox strongly implicated",
+    "protei_remainder": [
+      "Recorded Future's assessment that Cuba very likely procured Russian SORM/PROTEI remains relevant to surveillance/vendor-lineage research.",
+      "PROTEI may coexist in the Cuban telecom stack for SORM, lawful interception, traffic management or other functions.",
+      "No current public evidence shows PROTEI_DPI generated the V2R2C00-IAE/1.0 censorship responses.",
+      "Generic RST/TLS similarity between Cuba and PROTEI-known MegaCom is insufficient because a stronger Cuba-specific vendor fingerprint points elsewhere."
+    ]
+  },
+  "effect_on_tspu_hypothesis": {
+    "verdict": "NO_DEVICE_LEVEL_MATCH",
+    "reason": "The discriminating Cuban marker is Huawei-associated and does not match known RDP/EcoDPI/TSPU product lineage. Generic TLS/RST mechanics remain non-discriminating.",
+    "remaining_test": "Only revive a direct Cuba<->TSPU implementation hypothesis if Cuba reproduces rare TSPU DNA such as distinctive fragmentation/state-machine behavior and the Huawei marker can be shown to be a front-end/proxy over a separate TSPU-like engine."
+  },
+  "cisa_implication": {
+    "status": "HOLD",
+    "reason": "Cuba is a strong foreign centralized censorship case, but the strongest observed device-level fingerprint currently supports Chinese Huawei-family technology rather than Russian TSPU/PROTEI control. Russian vendor presence remains a separate surveillance/stack-lineage fact, not a causal censorship bridge."
+  },
+  "epistemic_firewall": [
+    "PROTEI present in national telecom stack != PROTEI caused measured censorship",
+    "RST/TLS similarity != same vendor",
+    "Huawei fingerprint on censorship response strongly shifts device attribution but exact hardware model remains unproven",
+    "coexisting Russian and Chinese telecom products != shared control plane",
+    "foreign vendor technology != foreign-state remote command"
+  ],
+  "sources": [
+    "https://ooni.org/documents/cuba-internet-censorship-2017.pdf",
+    "https://www.qurium.org/alerts/cuba/internet-blocking-in-cuba-silencing-dissent-in-the-name-of-moral-and-good-manners",
+    "https://guardianesdigitales.blogspot.com/2024/04/informe-4-sobre-la-salud-del-internet.html",
+    "https://guardianesdigitales.blogspot.com/2024/07/informe-5-sobre-la-salud-del-internet.html",
+    "https://guardianesdigitales.blogspot.com/2024/10/informe-6-sobre-la-salud-del-internet.html",
+    "https://public.opentech.fund/documents/English_Weber_WWW_of_Information_Controls_Final.pdf",
+    "https://carrier.huawei.com/~/media/CNBG/Downloads/Product/Fixed%20Network/carrier%2012700/pdf/NIP6300%20And%206600%20Series%20Next-Generation%20Intrusion%20Prevention%20System%20Brochure.pdf"
+  ],
+  "final_rule": "For the observed Cuban web-filtering path, vendor-level evidence currently favors a Huawei-family inline middlebox. Preserve PROTEI/SORM as a separate Cuban telecom-stack lineage unless a direct device or control-channel bridge is found."
+}
