@@ -1,0 +1,265 @@
+{
+  "schema": "hawkar.topa.spider.dpi_discriminating_fingerprint.audit.v1",
+  "artifact_id": "DPI-DISCRIMINATING-FINGERPRINT-MAX-AUDIT-v1.0",
+  "generated_date_utc": "2026-08-31",
+  "objective": "Build a multivariate forensic fingerprint capable of distinguishing implementations of the same censorship/DPI mechanism, with priority comparison Cuba vs MegaCom/known-PROTEI environment vs Russia/TSPU and multiple non-PROTEI controls.",
+  "headline_verdict": {
+    "rst_after_clienthello": "LOW_SPECIFICITY_DPI_FAMILY_SIGNAL",
+    "timeout_after_clienthello": "LOW_SPECIFICITY_DPI_FAMILY_SIGNAL",
+    "single_protocol_match": "INSUFFICIENT_FOR_VENDOR_ATTRIBUTION",
+    "multivariate_state_parser_topology_fingerprint": "HIGH_VALUE",
+    "specific_device_or_control_channel": "GOLD_STANDARD",
+    "current_cuba_protei_causal_bridge": "NOT_CLOSED"
+  },
+  "evidence_hierarchy": [
+    {"level": 0, "name": "POLITICAL_EVENT_COINCIDENCE", "weight": 0, "meaning": "Protest/election timing alone has zero vendor-attribution value."},
+    {"level": 1, "name": "SERVICE_FAILURE", "weight": 1, "meaning": "Selective outage is useful operationally but not implementation-specific."},
+    {"level": 2, "name": "GENERIC_MECHANISM", "weight": 2, "meaning": "DNS poison, TLS timeout, RST after ClientHello, packet drop, throttling. Often shared by unrelated systems."},
+    {"level": 3, "name": "NETWORK_LOCALIZATION", "weight": 4, "meaning": "ASN/hop/on-path vs upstream localization. Necessary to avoid attributing upstream censorship to the access ISP."},
+    {"level": 4, "name": "STATE_MACHINE_AND_PARSER_DNA", "weight": 7, "meaning": "Residual timers, tuple scope, reset semantics, fragmentation, checksum/sequence validation, protocol-version/parser quirks."},
+    {"level": 5, "name": "MULTI_PROTOCOL_COHERENCE", "weight": 8, "meaning": "Same unusual behavior across TLS, QUIC, HTTP, IP fragmentation and/or certificate parsing."},
+    {"level": 6, "name": "DEVICE_OR_SOFTWARE_IDENTITY", "weight": 12, "meaning": "Banner, package name, process name, management interface, config syntax, unique TLS client fingerprint from middlebox, firmware/product artifact."},
+    {"level": 7, "name": "CONTROL_CHANNEL", "weight": 16, "meaning": "Observed management/update path or authoritative deployment evidence tying device to operator/vendor/control plane."}
+  ],
+  "dpi_dna_vector": {
+    "packet_injection_morphology": [
+      "Initial TTL of injected RST/SYN-ACK/block response",
+      "IP ID pattern: constant, monotonic, random, zero, per-flow",
+      "DF/MF bits and IP options",
+      "TCP flags and flag combinations",
+      "Sequence-number relation to triggering packet",
+      "ACK-number relation to client/server state",
+      "TCP window size",
+      "TCP options ordering/presence",
+      "Timestamp option behavior",
+      "Checksum validity",
+      "RST direction: client-only, server-only, bidirectional",
+      "Number of injected packets per trigger",
+      "Inter-packet timing distribution"
+    ],
+    "state_machine": [
+      "Residual-censorship duration",
+      "Whether additional blocked packets reset the timer",
+      "State key: 3-tuple vs 4-tuple vs 5-tuple",
+      "Whether source-port rotation escapes residual state",
+      "Whether destination-port rotation escapes residual state",
+      "Whether state survives FIN/RST",
+      "Packet-count limits before parser disengages",
+      "Per-direction state asymmetry",
+      "State timeout before first application payload"
+    ],
+    "parser_semantics": [
+      "TCP stream reassembly vs single-packet parsing",
+      "IP fragment reassembly/buffering behavior",
+      "Duplicate/overlapping fragment handling",
+      "Maximum fragment count",
+      "Malformed checksum handling",
+      "Malformed seq/ack handling",
+      "Invalid TCP flags handling",
+      "TLS version sensitivity",
+      "TLS ciphersuite sensitivity",
+      "SNI fragmentation sensitivity",
+      "No-SNI behavior",
+      "Certificate-CN/SAN inspection behavior",
+      "ECH/ESNI behavior",
+      "QUIC v1 vs v2 behavior",
+      "QUIC Initial reassembly across datagrams",
+      "HTTP path/Host parser quirks"
+    ],
+    "topology": [
+      "In-path vs on-path injection",
+      "Hop localization using TTL-limited trigger packets",
+      "Distance from subscriber edge",
+      "Presence at upstream/transit AS",
+      "Cross-border path dependence",
+      "Symmetry of inbound/outbound censorship"
+    ],
+    "cross_protocol_policy": [
+      "TLS-SNI and QUIC-SNI blocklist overlap",
+      "HTTP Host and TLS SNI overlap",
+      "DNS and DPI policy synchronization",
+      "Throttle-vs-block action per same domain",
+      "Port-specific vs all-port behavior",
+      "IPv4 vs IPv6 differences"
+    ],
+    "control_plane_dynamics": [
+      "Simultaneous policy activation across ASes",
+      "Update propagation latency",
+      "Identical rule changes across independent networks",
+      "Maintenance-window synchronization",
+      "Common management endpoint/config artifact",
+      "Firmware/version transition correlated with behavior change"
+    ]
+  },
+  "reference_fingerprints": {
+    "RUSSIA_TSPU": {
+      "confidence": "HIGH",
+      "discriminators": [
+        "Unique IP-fragment state management: buffers incomplete fragments but forwards fragments individually rather than normalizing them into one packet.",
+        "Subsequent fragments inherit/are rewritten to the TTL of fragment zero.",
+        "Maximum of 45 fragments for one IP packet; duplicate or overlapping fragments can cause the whole queue to be dropped.",
+        "TSPU is in-path and stateful; large-scale measurement placed many devices close to subscribers, often within two hops.",
+        "Current QUIC censorship is SNI-dependent and packet-drop based; public 2026 work reports residual state lasting about 420 seconds on a 4-tuple and retriggering/restarting on another blocked QUIC Initial.",
+        "Current QUIC parser behavior distinguishes QUIC v1 from v2 and differs from the GFW under crafted payload layouts.",
+        "Public research reports near-complete correspondence of TLS-SNI and QUIC-SNI blocklists, a useful cross-protocol coherence signal."
+      ],
+      "high_value_tests": ["fragmentation_45_limit", "fragment0_ttl_propagation", "overlap_queue_drop", "quic_420s_4tuple_resettable", "quic_v1_vs_v2", "tls_quic_blocklist_correlation"]
+    },
+    "CHINA_GFW": {
+      "confidence": "HIGH",
+      "discriminators": [
+        "TCP/ESNI and fully encrypted traffic residual censorship commonly 120 or 180 seconds.",
+        "Additional packets generally do not reset the residual timer.",
+        "QUIC SNI censorship uses about 180 seconds of residual blocking and a 3-tuple keyed on source IP, destination IP and destination port; source-port changes do not trivially escape it.",
+        "QUIC filter does not reassemble Initial data split across multiple UDP datagrams in the documented implementation.",
+        "Geneva experiments show distinctive parser laxity such as accepting malformed checksums/sequence semantics in some censorship paths."
+      ],
+      "high_value_tests": ["residual_120_180_nonreset", "quic_3tuple_sourceport_insensitive", "quic_no_udp_reassembly", "malformed_checksum_parser"]
+    },
+    "IRAN_PROTOCOL_FILTER": {
+      "confidence": "HIGH",
+      "discriminators": [
+        "Residual/protocol-state window about 60 seconds in studied filter.",
+        "Additional nonconforming traffic resets the timer.",
+        "No TCP reassembly in the documented protocol filter.",
+        "Does not verify packet checksums in the studied path.",
+        "Unidirectional behavior for flows originating in Iran.",
+        "Per-flow packet-count behavior can be exhausted by crafted repeated handshake packets."
+      ],
+      "high_value_tests": ["residual_60_resettable", "no_tcp_reassembly", "bad_checksum_accepted", "packet_count_exhaustion", "outbound_only"]
+    },
+    "TURKMENISTAN": {
+      "confidence": "HIGH",
+      "discriminators": [
+        "HTTP/TLS censorship persists roughly 30 seconds on the same 4-tuple in published measurement.",
+        "Injected responses show distinctive IP-ID and initial-TTL patterns.",
+        "Repeated probes may trigger anti-measurement behavior from the censor, which is itself a behavioral fingerprint."
+      ],
+      "high_value_tests": ["residual_30s_4tuple", "rst_ipid_pattern", "rst_initial_ttl", "anti_probe_rate_behavior"]
+    },
+    "KAZAKHSTAN_HTTPS_INTERCEPT": {
+      "confidence": "HIGH_FOR_HISTORICAL_DEVICE",
+      "discriminators": [
+        "When interception is triggered, the middlebox itself connects to the origin server and exposes a TLS ClientHello fingerprint distinct from the RIPE Atlas probe.",
+        "Researchers reported the intercepting middlebox TLS fingerprint as virtually unseen in ordinary Internet traffic, making outbound-middlebox TLS fingerprinting a high-specificity technique."
+      ],
+      "high_value_tests": ["middlebox_origin_tls_fingerprint", "triggered_vs_control_clienthello_diff"]
+    },
+    "RDP_ECODPI_PUBLIC_BEHAVIOR": {
+      "confidence": "MEDIUM_HIGH_FOR_DOCUMENTED_PRODUCT_SEMANTICS",
+      "discriminators": [
+        "Public EcoSGE/EcoDPI documentation states HTTPS URL filtering uses SNI to break/drop a connection to a forbidden resource.",
+        "If SNI is absent, the documented behavior passes the request transparently.",
+        "Documentation also describes checking the incoming server certificate and dropping the connection when denied content is identified in the certificate."
+      ],
+      "high_value_tests": ["no_sni_passthrough", "certificate_san_cn_policy", "sni_vs_cert_disagreement"]
+    },
+    "PROTEI_DPI_PUBLIC_BEHAVIOR": {
+      "confidence": "MEDIUM_FOR_CAPABILITY_LOW_FOR_PACKET_FINGERPRINT",
+      "discriminators": [
+        "Public product material confirms signature/statistical application detection, URL categorization/blocking, redirect capability, bandwidth policy and integration with external policy applications.",
+        "MegaCom is a confirmed historical PROTEI_DPI deployment; later content filtering combined Entensys classification with PROTEI_DPI policy enforcement.",
+        "Public material located in this audit does not disclose a vendor-unique packet injection/state-machine signature comparable to TSPU fragmentation or GFW residual semantics."
+      ],
+      "high_value_tests": ["megacom_raw_pcap", "policy_action_rst_vs_drop", "state_timer", "parser_fuzz_matrix", "origin_tls_fingerprint_if_proxying"]
+    }
+  },
+  "specificity_ranking": [
+    {"feature": "RST after ClientHello", "specificity": 1, "reason": "Observed across unrelated countries/vendors."},
+    {"feature": "TLS timeout after ClientHello", "specificity": 1, "reason": "Generic DPI/drop behavior."},
+    {"feature": "SNI-based blocking", "specificity": 1, "reason": "Common DPI feature."},
+    {"feature": "Unique injected RST TTL/IPID/seq-ack tuple", "specificity": 3, "reason": "Useful when stable across many flows and networks, but implementations/configurations can change."},
+    {"feature": "Residual timer + tuple scope + reset semantics", "specificity": 4, "reason": "Encodes internal state-machine design and is more discriminating."},
+    {"feature": "Malformed packet/parser acceptance matrix", "specificity": 4, "reason": "Reveals implementation quirks difficult to match accidentally."},
+    {"feature": "Cross-protocol parser/version behavior", "specificity": 4, "reason": "Strong when combined across TLS/QUIC/HTTP."},
+    {"feature": "TSPU 45-fragment limit + TTL inheritance + overlap behavior", "specificity": 5, "reason": "Published as a fairly unique remote TSPU fingerprint."},
+    {"feature": "Middlebox-origin TLS ClientHello fingerprint", "specificity": 5, "reason": "Can directly fingerprint the software stack if censor actively proxies to origin."},
+    {"feature": "Banner/package/process/config/firmware identity", "specificity": 5, "reason": "Direct implementation evidence."},
+    {"feature": "Observed management/control channel", "specificity": 6, "reason": "Direct control-plane evidence; strongest attribution bridge."}
+  ],
+  "cuba_megacom_tspu_killer_test": {
+    "phase_0_controls": [
+      "Use identical controlled destination servers and identical client payloads from each vantage point.",
+      "Collect matched nonblocked-domain controls before and after every trigger.",
+      "Record traceroute/AS path and provider status to exclude routing/service incidents."
+    ],
+    "phase_1_packet_morphology": [
+      "Capture full bidirectional PCAP around blocked and control handshakes.",
+      "Measure RST TTL, IPID, flags, seq, ack, window, TCP options, checksum, timestamps and trigger-to-RST latency.",
+      "Repeat at least 100 times per vantage/domain to distinguish stable fingerprint from network noise."
+    ],
+    "phase_2_state_machine": [
+      "After one censorship trigger, probe at 1, 5, 10, 30, 60, 120, 180, 300, 420 and 600 seconds.",
+      "Rotate source port, destination port, destination IP and source IP independently to infer tuple scope.",
+      "Send repeated blocked triggers to test whether the timer restarts."
+    ],
+    "phase_3_parser_fuzz": [
+      "Split ClientHello across TCP segments at controlled offsets.",
+      "Send IP fragments including duplicates and overlaps under a lawful controlled test server.",
+      "Vary fragment count up to and beyond 45 to test the known TSPU boundary.",
+      "Vary TTL across fragment zero and later fragments to test TSPU TTL inheritance.",
+      "Test invalid checksum, seq/ack, unusual flags and TCP data-offset where lawful and safe.",
+      "Vary TLS 1.2/1.3, SNI presence, ciphersuite ordering and extensions.",
+      "Test SNI absent but certificate SAN/CN containing a blocked name to probe EcoDPI-documented certificate behavior."
+    ],
+    "phase_4_quic": [
+      "Compare QUIC v1 and v2.",
+      "Split QUIC Initial across datagrams where implementation allows.",
+      "Test residual state duration and tuple scope.",
+      "Test whether another blocked Initial resets residual state.",
+      "Compare TLS-SNI and QUIC-SNI blocklists on an identical domain corpus."
+    ],
+    "phase_5_localization": [
+      "Use TTL-limited trigger packets/CenTrace-style methods to identify the first hop at which behavior changes.",
+      "For MegaCom, explicitly distinguish local AS50223 enforcement from AS12389 Rostelecom upstream enforcement.",
+      "For Cuba, localize AS27725 behavior and compare geography/hop placement across provinces/vantage points."
+    ],
+    "phase_6_identity": [
+      "Probe only publicly exposed lawful management/banner surfaces for vendor/software identifiers.",
+      "Search operator/vendor deployment documents, tender records, archived manuals, engineer CVs and integration material for exact product/version names.",
+      "If the censor performs origin-side proxy connections, derive its TLS ClientHello/JA3/JA4-style implementation fingerprint from a controlled server."
+    ]
+  },
+  "decision_logic": {
+    "CUBA_PROTEI_WEAK_SUPPORT": "Cuba and known-PROTEI vantage share only generic RST/timeout/SNI behavior.",
+    "CUBA_PROTEI_MODERATE_SUPPORT": "They additionally share stable packet morphology AND residual-state semantics that differ from non-PROTEI controls.",
+    "CUBA_PROTEI_STRONG_SUPPORT": "They additionally share parser-fuzz quirks, tuple/timer behavior and topology-localized implementation fingerprint across repeated tests.",
+    "CUBA_PROTEI_DEVICE_LEVEL": "A direct product/banner/config/package/origin-TLS fingerprint or deployment record identifies PROTEI_DPI at the Cuban censorship point.",
+    "TSPU_LIKE_STRONG_SUPPORT": "A foreign network reproduces the composite TSPU fragmentation fingerprint (45-fragment ceiling, overlap/duplicate queue behavior, fragment-zero TTL inheritance) plus compatible state/topology behavior.",
+    "REMOTE_RUSSIAN_CONTROL": "Still NOT established without an observed/authoritative control-channel bridge. Device similarity or Russian vendor origin is insufficient."
+  },
+  "audit_conclusions": [
+    "The current strongest remote fingerprint for TSPU is not RST behavior but its unusual IP-fragment state management combined with TTL rewriting and topology localization.",
+    "Residual-censorship timers and keying semantics are high-value differentiators: TSPU (~420 s/resettable/4-tuple in current QUIC study), GFW (~120/180 s generally non-resetting; QUIC ~180 s/3-tuple), Iran (~60 s resettable in studied protocol filter), Turkmenistan (~30 s/4-tuple in published study).",
+    "Parser-fuzz response matrices can classify censorship devices because commercial devices from the same vendor exhibit strongly correlated behavior; published CenFuzz work found same-vendor devices clustering tightly.",
+    "A single packet-level mechanism should never be treated as vendor identity. Attribution should require a vector of independent features from state, parser, topology and identity layers.",
+    "The Cuba↔PROTEI hypothesis remains scientifically open, but the next evidence should come from low-level state/parser fingerprints or direct product identity, not more reports of SNI/RST blocking."
+  ],
+  "sources": [
+    "https://censoredplanet.org/tspu",
+    "https://censoredplanet.org/assets/tspu-imc22-slides.pdf",
+    "https://censorbib.nymity.ch/pdf/Xue2022b.pdf",
+    "https://www.petsymposium.org/foci/2026/foci-2026-0010.php",
+    "https://github.com/UPB-SysSec/RussiaQuicResults",
+    "https://gfw.report/publications/usenixsecurity25/en/",
+    "https://gfw.report/blog/gfw_esni_blocking/en/",
+    "https://gfw.report/publications/usenixsecurity23/en/",
+    "https://geneva.cs.umd.edu/papers/2020-foci-protocol-filter.pdf",
+    "https://github.com/net4people/bbs/issues/273",
+    "https://censoredplanet.org/censorship-devices",
+    "https://censoredplanet.org/papers/censorship_devices_network_measurement.pdf",
+    "https://censoredplanet.org/kazakhstan",
+    "https://rdp.ru/wp-content/uploads/ENAT_UserGuide_EN.pdf",
+    "https://protei.ru/products/traffic-managenent-aaa-policy-control/dpi",
+    "https://protei.ru/sites/default/files/2020-04/DPI_TechDescription.pdf",
+    "https://protei.ru/news/ntc-protey-i-entensys-porabotali-dlya-megacom"
+  ],
+  "epistemic_firewall": [
+    "same RST != same vendor",
+    "same parser behavior != same product unless multivariate and independently replicated",
+    "same vendor != same deployment",
+    "same deployment != foreign control plane",
+    "Russian-origin product != Moscow remote command",
+    "UNVERIFIABLE ATTRIBUTION -> TEST REQUEST, NOT CLAIM"
+  ]
+}
