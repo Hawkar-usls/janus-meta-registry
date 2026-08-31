@@ -1,0 +1,52 @@
+name: TSPU DPI-DNA Raw Harvest
+
+on:
+  push:
+    branches:
+      - research/tspu-external-us-impact
+    paths:
+      - '.github/workflows/tspu-dpi-dna-raw-harvest.yml'
+      - 'research/tspu-external-us-impact/tools/ooni_dpi_dna_raw_harvester.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  harvest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Harvest targeted raw OONI measurements
+        env:
+          DPI_DNA_OUT: dpi-dna-raw-harvest
+          MAX_RAW_PER_CASE: '30'
+          OONI_REQUEST_DELAY: '0.40'
+        run: |
+          python research/tspu-external-us-impact/tools/ooni_dpi_dna_raw_harvester.py \
+            | tee dpi-dna-raw-harvest-run.log
+
+      - name: Freeze artifact checksums
+        run: |
+          find dpi-dna-raw-harvest -type f -print0 \
+            | sort -z \
+            | xargs -0 sha256sum \
+            > dpi-dna-raw-harvest/SHA256SUMS.txt
+
+      - name: Upload raw measurement artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tspu-dpi-dna-raw-harvest
+          path: |
+            dpi-dna-raw-harvest/
+            dpi-dna-raw-harvest-run.log
+          if-no-files-found: error
+          retention-days: 30
