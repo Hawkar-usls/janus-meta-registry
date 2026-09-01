@@ -7,6 +7,7 @@ on:
     paths:
       - '**'
       - '!EYE/generated/**'
+      - '!assets/hrain-full-memory/**'
 
 permissions:
   contents: write
@@ -30,12 +31,18 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Sync source-bearing snapshot
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+          rm -rf assets/hrain-full-memory
+
       - name: Compile EYE trainer
         run: python -m py_compile EYE/training/train_eye_registry.py
 
-      - name: Train EYE on complete registry snapshot
+      - name: Train EYE on complete source-bearing registry snapshot
         run: |
-          python EYE/training/train_eye_registry.py \
+          GITHUB_SHA="$(git rev-parse HEAD)" python EYE/training/train_eye_registry.py \
             --root . \
             --output-dir EYE/generated \
             --semantic-byte-limit 2000000 \
@@ -62,21 +69,74 @@ jobs:
           print(json.dumps(receipt['counts'], sort_keys=True))
           PY
 
+      - name: Commit rebuildable EYE state conflict-safely
+        run: |
+          set -euo pipefail
+          git config user.name 'EYE Registry Trainer'
+          git config user.email 'actions@users.noreply.github.com'
+
+          rebuild() {
+            rm -rf assets/hrain-full-memory
+            rm -rf EYE/generated
+            GITHUB_SHA="$(git rev-parse HEAD)" python EYE/training/train_eye_registry.py \
+              --root . \
+              --output-dir EYE/generated \
+              --semantic-byte-limit 2000000 \
+              --max-clusters 1000
+            python - <<'PY'
+          import json
+          from pathlib import Path
+          required = [
+              Path('EYE/generated/EYE-REGISTRY-INDEX.json'),
+              Path('EYE/generated/EYE-SLIME-ASSOCIATIVE-MEMORY.json'),
+              Path('EYE/generated/EYE-TRUMP-ROUTING-INDEX.json'),
+              Path('EYE/generated/EYE-TRAINING-RECEIPT.json'),
+          ]
+          for p in required:
+              if not p.is_file():
+                  raise SystemExit(f'MISSING_GENERATED_FILE:{p}')
+              json.loads(p.read_text(encoding='utf-8'))
+          receipt = json.loads(required[-1].read_text(encoding='utf-8'))
+          if receipt['counts']['files_indexed'] <= 0:
+              raise SystemExit('EYE_EMPTY_CORPUS')
+          print(json.dumps(receipt['counts'], sort_keys=True))
+          PY
+          }
+
+          for attempt in 1 2 3; do
+            git fetch origin main
+            current="$(git rev-parse HEAD)"
+            remote="$(git rev-parse origin/main)"
+            if [ "$current" != "$remote" ]; then
+              echo "EYE_SOURCE_DRIFT_BEFORE_COMMIT attempt=$attempt current=$current remote=$remote"
+              git reset --hard origin/main
+              rebuild
+            fi
+
+            git add EYE/generated/*.json
+            if git diff --cached --quiet; then
+              echo 'EYE generated state already matches the latest source-bearing snapshot.'
+              exit 0
+            fi
+
+            git commit -m '[eye-train] Refresh EYE registry learning state'
+            if git push origin HEAD:main; then
+              echo 'EYE_GENERATED_STATE_PUSH=SUCCESS'
+              exit 0
+            fi
+
+            echo "EYE_PUSH_RACE_RETRY attempt=$attempt"
+            git fetch origin main
+            git reset --hard origin/main
+            rebuild
+          done
+
+          echo 'EYE_GENERATED_STATE_PUSH=FAILED_AFTER_RETRIES'
+          exit 1
+
       - name: Upload EYE training state
         uses: actions/upload-artifact@v4
         with:
           name: eye-meta-registry-training-${{ github.run_id }}
           path: EYE/generated/*.json
           if-no-files-found: error
-
-      - name: Commit rebuildable EYE state
-        run: |
-          git config user.name 'EYE Registry Trainer'
-          git config user.email 'actions@users.noreply.github.com'
-          git add EYE/generated/*.json
-          if git diff --cached --quiet; then
-            echo 'EYE generated state already matches this source snapshot.'
-          else
-            git commit -m '[eye-train] Refresh EYE registry learning state'
-            git push origin HEAD:main
-          fi
