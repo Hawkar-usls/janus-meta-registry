@@ -1,0 +1,132 @@
+name: JANUS Native Reflection Pull
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '43 */6 * * *'
+
+concurrency:
+  group: janus-native-reflection-pull
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  pull:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout meta-registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fetch JANUS native reflection outbox
+        run: |
+          rm -rf runtime/janus-demiurge
+          mkdir -p runtime
+          git clone --depth 1 https://github.com/Hawkar-usls/Janus-Demiurge.git runtime/janus-demiurge
+
+      - name: Validate and ingest non-authoritative reflection memory
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          import re
+          import shutil
+          from pathlib import Path
+
+          src = Path('runtime/janus-demiurge/janus_model/outbox')
+          dst = Path('EYE/generated/native_model_reflections')
+          dst.mkdir(parents=True, exist_ok=True)
+          rows = []
+          pattern = re.compile(r'^reflection-jnr-[0-9a-f]{24}\.json$')
+          if src.exists():
+              for path in sorted(src.glob('reflection-*.json')):
+                  if not pattern.fullmatch(path.name):
+                      raise SystemExit(f'REFLECTION_FILENAME_REJECTED:{path.name}')
+                  raw = path.read_bytes()
+                  obj = json.loads(raw.decode('utf-8'))
+                  if obj.get('schema') != 'janus.model.reflection_proposal.v1':
+                      raise SystemExit(f'REFLECTION_SCHEMA_REJECTED:{path.name}')
+                  if obj.get('status') != 'UNVERIFIED_MODEL_REFLECTION':
+                      raise SystemExit(f'REFLECTION_STATUS_REJECTED:{path.name}')
+                  authority = obj.get('authority') or {}
+                  required_false = ('truth','evidence','execution','repository_mutation','eligible_for_training','eligible_for_truth_promotion')
+                  if any(authority.get(k) is not False for k in required_false):
+                      raise SystemExit(f'REFLECTION_AUTHORITY_REJECTED:{path.name}')
+                  if authority.get('independent_verifier_required') is not True:
+                      raise SystemExit(f'REFLECTION_VERIFIER_GATE_REJECTED:{path.name}')
+                  prov = obj.get('provenance') or {}
+                  if prov.get('source_repository') != 'Hawkar-usls/Janus-Demiurge':
+                      raise SystemExit(f'REFLECTION_SOURCE_REJECTED:{path.name}')
+                  for key in ('workflow_run_id','checkpoint_sha256','meta_registry_source_commit','meta_registry_source_digest','organ_context_sha256','hrain_commit','inaihr_commit','inference_sha256'):
+                      if not prov.get(key):
+                          raise SystemExit(f'REFLECTION_PROVENANCE_MISSING:{path.name}:{key}')
+                  target = dst / path.name
+                  if target.exists() and target.read_bytes() != raw:
+                      raise SystemExit(f'REFLECTION_CREATE_ONLY_COLLISION:{path.name}')
+                  if not target.exists():
+                      shutil.copyfile(path, target)
+                  rows.append({
+                      'path': target.as_posix(),
+                      'reflection_id': obj.get('reflection_id'),
+                      'sha256': hashlib.sha256(raw).hexdigest(),
+                      'workflow_run_id': prov.get('workflow_run_id'),
+                      'checkpoint_sha256': prov.get('checkpoint_sha256'),
+                      'hrain_commit': prov.get('hrain_commit'),
+                      'inaihr_commit': prov.get('inaihr_commit'),
+                      'status': obj.get('status'),
+                      'eligible_for_training': False,
+                  })
+          index = {
+              'schema': 'janus.native_model.reflection_memory_index.v1',
+              'status': 'DERIVED_NON_AUTHORITATIVE_MEMORY',
+              'source_repository': 'Hawkar-usls/Janus-Demiurge',
+              'reflection_count': len(rows),
+              'reflections': rows,
+              'eligible_for_training': False,
+              'truth_authority': False,
+              'terminal_authority': 'VERIFY',
+              'law': 'RAW_MODEL_REFLECTION_MUST_NOT_REENTER_TRAINING'
+          }
+          (dst / 'INDEX.json').write_text(json.dumps(index, ensure_ascii=False, indent=2, sort_keys=True), encoding='utf-8')
+          print(json.dumps({'reflection_count': len(rows), 'status': index['status']}, indent=2))
+          PY
+
+      - name: Verify generated-plane exclusion
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          manifest=json.loads(Path('EYE/training/EYE-META-REGISTRY-TRAINING-MANIFEST-v1.0.json').read_text(encoding='utf-8'))
+          prefixes=manifest['corpus_contract']['excluded_generated_prefixes']
+          if 'EYE/generated/' not in prefixes:
+              raise SystemExit('EYE_GENERATED_EXCLUSION_MISSING')
+          trainer=Path('EYE/training/train_eye_registry.py').read_text(encoding='utf-8')
+          if 'EYE/generated/' not in trainer:
+              raise SystemExit('EYE_TRAINER_GENERATED_EXCLUSION_MISSING')
+          print('RAW_NATIVE_REFLECTION_SELF_TRAINING_FIREWALL=PASS')
+          PY
+
+      - name: Persist derived reflection memory
+        run: |
+          git config user.name 'janus-native-memory-pull'
+          git config user.email 'janus-native-memory-pull@users.noreply.github.com'
+          git add EYE/generated/native_model_reflections
+          if git diff --cached --quiet; then
+            echo 'JANUS_NATIVE_REFLECTION_MEMORY_NO_CHANGE'
+            exit 0
+          fi
+          git commit -m 'JANUS memory: ingest native reflection proposals'
+          for attempt in 1 2 3; do
+            git pull --rebase origin main
+            if git push origin HEAD:main; then
+              echo 'JANUS_NATIVE_REFLECTION_MEMORY_PERSIST=PASS'
+              exit 0
+            fi
+            sleep $((attempt * 2))
+          done
+          echo 'JANUS_NATIVE_REFLECTION_MEMORY_PERSIST=FAIL'
+          exit 1
