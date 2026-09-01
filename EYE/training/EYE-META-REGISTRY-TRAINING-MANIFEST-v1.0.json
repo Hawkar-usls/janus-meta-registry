@@ -2,10 +2,10 @@
   "schema": "janus.eye.meta_registry_training_manifest.v1",
   "artifact_id": "JANUS-EYE-META-REGISTRY-TRAINING-MANIFEST-v1.0",
   "date": "2026-09-01",
-  "status": "FROZEN_BEFORE_FIRST_OFFICIAL_EYE_CORPUS_RUN",
+  "status": "FROZEN_FOR_CONFLICT_SAFE_OFFICIAL_EYE_CORPUS_RUN",
   "root": ".",
   "primary_workspace": "EYE/",
-  "purpose": "Train EYE on the entire janus-meta-registry in the precise JANUS sense of deterministic corpus ingestion, hashing, provenance/relation graph construction, bridge indexing, non-authoritative associative memory and guarded routing. This is not LLM/foundation-model weight training.",
+  "purpose": "Train EYE on the source-bearing janus-meta-registry in the precise JANUS sense of deterministic corpus ingestion, hashing, provenance/relation graph construction, bridge indexing, non-authoritative associative memory and guarded routing. This is not LLM/foundation-model weight training.",
   "bindings": {
     "eye": "data/JANUS-EYE-CONTEXTUAL-SEMANTIC-RECOVERY-METHOD-2026-09-01-v1.0.json",
     "representation_contract": "data/JANUS-REPRESENTATION-CONTRACT-v1.0.json",
@@ -13,13 +13,25 @@
     "trump": "EYE/bindings/EYE-TRUMP-BINDING-v1.0.json",
     "root_constitution": "EYE/EYE-ROOT-CONSTITUTION-v1.0.json"
   },
+  "first_attempt_observation": {
+    "run_id": 33523221797,
+    "source_head": "5c531d74c2ce424ebfe6803b3f9c9c2db5a24732",
+    "trainer": "SUCCESS",
+    "generated_json_validation": "SUCCESS",
+    "artifact_upload": "SUCCESS",
+    "generated_state_commit": "FAILED_NONFASTFORWARD_CONCURRENCY",
+    "concurrent_commit": "22e44a0741cbc4a8da726de582e707db85e3107d",
+    "concurrent_actor": "JANUS HRAiN Memory",
+    "lesson": "A full-registry learner and an existing full-memory exporter can form a generated-state feedback/concurrency loop. Derivative self-exports must not be treated as fresh source evidence for one another."
+  },
   "corpus_contract": {
-    "include": "all repository files recursively",
+    "include": "all source-bearing repository files recursively",
     "hash_every_included_file": true,
     "semantic_extensions": [".json", ".md", ".markdown", ".txt", ".py", ".yml", ".yaml", ".toml", ".ini", ".cfg", ".csv", ".tsv", ".html", ".htm", ".js", ".ts", ".tsx", ".jsx", ".css", ".scss", ".sh", ".ps1", ".xml", ".jsonl", ".ndjson"],
     "excluded_directories": [".git", "node_modules", "__pycache__", ".venv", "venv", ".mypy_cache", ".pytest_cache"],
-    "excluded_generated_prefix": "EYE/generated/",
-    "reason_generated_excluded": "Prevent self-ingestion recursion; generated artifacts are derivative and rebuilt from the source snapshot.",
+    "excluded_generated_prefixes": ["EYE/generated/", "assets/hrain-full-memory/"],
+    "reason_generated_excluded": "Prevent self-ingestion and cross-generated feedback recursion. EYE outputs and HRAiN full-memory shards are derivative rebuildable views, not fresh source authority.",
+    "workflow_enforcement": "The official workflow removes assets/hrain-full-memory from the ephemeral checkout before EYE corpus derivation; EYE/generated is excluded by the trainer itself.",
     "text_semantic_byte_limit": 2000000,
     "json_parse_byte_limit": 10000000,
     "oversize_json_policy": "HASH_AND_INDEX_METADATA_ONLY_WITHOUT_FABRICATED_SEMANTICS",
@@ -49,21 +61,23 @@
   },
   "determinism": {
     "sorted_paths": true,
-    "source_digest": "SHA-256 of path + file SHA-256 + size over the sorted corpus",
+    "source_digest": "SHA-256 of path + file SHA-256 + size over the sorted source corpus",
     "network_calls_during_trainer": false,
     "source_git_commit_recorded": true,
-    "output_json_sort_keys": true
+    "output_json_sort_keys": true,
+    "conflict_rule": "If main advances before commit, reset the ephemeral checkout to current origin/main, rebuild EYE from that new snapshot, revalidate, then retry the generated-state commit. Never rebase stale generated state onto a newer corpus."
   },
   "gates": [
     "EVERY_INCLUDED_FILE_HAS_SHA256",
-    "GENERATED_OUTPUT_EXCLUDED_FROM_SOURCE_DIGEST",
+    "DERIVATIVE_SELF_EXPORTS_EXCLUDED_FROM_SOURCE_DIGEST",
     "PARSE_FAILURES_ARE_VISIBLE",
     "SLIME_ASSOCIATION_NEVER_BECOMES_EVIDENCE",
     "TRUMP_ROUTE_NEVER_BECOMES_TRUTH",
     "SEMANTIC_REGION_NEVER_BECOMES_EXACT_PLAINTEXT_WITHOUT_VERIFICATION",
     "UNKNOWN_NEVER_BECOMES_NEGATIVE",
     "NO_NETWORK_REQUIRED",
-    "NO_FOUNDATION_MODEL_WEIGHT_TRAINING_CLAIM"
+    "NO_FOUNDATION_MODEL_WEIGHT_TRAINING_CLAIM",
+    "STALE_GENERATED_STATE_MUST_NOT_BE_REBASED_ACROSS_SOURCE_DRIFT"
   ],
   "seal": "TRAIN ON THE REGISTRY WITHOUT TEACHING THE REGISTRY TO LIE ABOUT WHAT IT KNOWS."
 }
