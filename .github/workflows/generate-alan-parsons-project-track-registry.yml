@@ -1,0 +1,50 @@
+name: Generate Alan Parsons Project Track Registry
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/generate_alan_parsons_project_track_registry.py'
+      - '.github/workflows/generate-alan-parsons-project-track-registry.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Generate per-track JSON corpus
+        run: python tools/generate_alan_parsons_project_track_registry.py
+      - name: Validate count and schemas
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('data/music/the-alan-parsons-project')
+          idx=json.loads((root/'INDEX.json').read_text(encoding='utf-8'))
+          assert idx['track_json_count']==92, idx['track_json_count']
+          files=[p for p in root.rglob('*.json') if p.name!='INDEX.json']
+          assert len(files)==92, len(files)
+          for p in files:
+              x=json.loads(p.read_text(encoding='utf-8'))
+              assert x['schema']=='janus.music.track_semantic_analysis.v1'
+              assert x['epistemic_status']['authorial_intent_for_this_exact_formula']=='NOT_CLAIMED'
+          print('PASS: 92 track JSON files + INDEX')
+          PY
+      - name: Commit generated registry corpus
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/music/the-alan-parsons-project
+          if git diff --cached --quiet; then
+            echo 'No generated changes.'
+            exit 0
+          fi
+          git commit -m 'music: add Alan Parsons Project 92-track semantic JSON corpus'
+          git push
