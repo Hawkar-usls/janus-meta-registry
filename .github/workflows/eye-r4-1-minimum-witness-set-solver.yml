@@ -1,0 +1,126 @@
+name: EYE R4.1 Minimum Witness Set Solver
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - 'EYE/r4_1/**'
+      - 'data/EYE-R4.1-MINIMUM-WITNESS-SET-SOLVER-CONTRACT-2026-09-01-v1.0.json'
+      - '.github/workflows/eye-r4-1-minimum-witness-set-solver.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: eye-r4-1-main
+  cancel-in-progress: true
+
+jobs:
+  solve-and-verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout current main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Compile solver and tests
+        run: |
+          python -m py_compile EYE/r4_1/eye_r4_1_minimum_witness_set_solver.py
+          python -m py_compile EYE/r4_1/test_eye_r4_1_solver.py
+
+      - name: Run adversarial unit tests
+        run: python -m unittest EYE.r4_1.test_eye_r4_1_solver -v
+
+      - name: Replay synthetic known minimum
+        run: |
+          rm -rf EYE/r4_1/generated/synthetic_known_minimum
+          GITHUB_SHA="$(git rev-parse HEAD)" python EYE/r4_1/eye_r4_1_minimum_witness_set_solver.py \
+            --input EYE/r4_1/benchmarks/synthetic_known_minimum.json \
+            --output-dir EYE/r4_1/generated/synthetic_known_minimum
+
+      - name: Replay Palomar remaining-origin model
+        run: |
+          rm -rf EYE/r4_1/generated/palomar_xe325_remaining_origin
+          GITHUB_SHA="$(git rev-parse HEAD)" python EYE/r4_1/eye_r4_1_minimum_witness_set_solver.py \
+            --input EYE/r4_1/benchmarks/palomar_xe325_remaining_origin.json \
+            --output-dir EYE/r4_1/generated/palomar_xe325_remaining_origin
+
+      - name: Replay search-proof cross-domain model
+        run: |
+          rm -rf EYE/r4_1/generated/search_proof_cross_domain
+          GITHUB_SHA="$(git rev-parse HEAD)" python EYE/r4_1/eye_r4_1_minimum_witness_set_solver.py \
+            --input EYE/r4_1/benchmarks/search_proof_cross_domain.json \
+            --output-dir EYE/r4_1/generated/search_proof_cross_domain
+
+      - name: Validate predeclared benchmark outcomes
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root=Path('.')
+          cases=[
+            ('synthetic_known_minimum', ['t_geometry','t_temporal'], 3.0, 'IDENTIFIABILITY_CANDIDATE'),
+            ('search_proof_cross_domain', ['independent_verifier','provenance_hash_audit'], 4.0, 'IDENTIFIABILITY_CANDIDATE'),
+          ]
+          for name, expected_set, expected_cost, expected_status in cases:
+              r=json.loads((root/'EYE/r4_1/generated'/name/'solver_receipt.json').read_text())
+              assert r['status']==expected_status, (name,r)
+              assert r['search_status']=='EXACT_MINIMUM_FOUND', (name,r)
+              assert r['chosen_additional_tests']==expected_set, (name,r)
+              assert r['chosen_incremental_cost']==expected_cost, (name,r)
+              loo=json.loads((root/'EYE/r4_1/generated'/name/'leave_one_out_receipt.json').read_text())
+              assert loo['status']=='SUBSET_MINIMAL', (name,loo)
+
+          p=json.loads((root/'EYE/r4_1/generated/palomar_xe325_remaining_origin/solver_receipt.json').read_text())
+          assert p['status']=='NON_IDENTIFIABLE_UNDER_CURRENT_MEASUREMENT_MODEL', p
+          assert p['search_status']=='NON_IDENTIFIABLE_UNDER_CURRENT_MEASUREMENT_MODEL', p
+          assert len(p['remaining_unresolved_pairs']) > 0, p
+          assert p['exact_minimum_proved_under_declared_measurement_model'] is False, p
+
+          receipt={
+            'schema':'janus.eye.r4_1.validation_receipt.v1',
+            'source_git_commit': __import__('subprocess').check_output(['git','rev-parse','HEAD'], text=True).strip(),
+            'status':'PASS_WITH_EPISTEMIC_CEILING',
+            'unit_tests':'PASS_5_OF_5',
+            'synthetic_known_minimum':'PASS_EXACT_MINIMUM_COST_3',
+            'search_proof_cross_domain':'PASS_EXACT_MINIMUM_COST_4',
+            'palomar_real_world_structured_replay':'PASS_EXPECTED_NON_IDENTIFIABLE',
+            'ceiling':'SOLVER_LOGIC_VALIDATED_ON_SYNTHETIC_AND_STRUCTURED_CROSS_DOMAIN_REPLAYS__EMPIRICAL_DISCRIMINATION_CALIBRATION_STILL_REQUIRED',
+            'firewalls':[
+              'NON_IDENTIFIABLE != FALSE',
+              'EXACT_UNDER_MODEL != TRUE_IN_WORLD',
+              'SILENCE != NEGATIVE_EVIDENCE'
+            ]
+          }
+          out=root/'EYE/r4_1/generated/EYE-R4.1-VALIDATION-RECEIPT.json'
+          out.parent.mkdir(parents=True, exist_ok=True)
+          out.write_text(json.dumps(receipt,indent=2,sort_keys=True)+'\n')
+          print(json.dumps(receipt,sort_keys=True))
+          PY
+
+      - name: Commit JSON receipts
+        run: |
+          set -euo pipefail
+          git config user.name 'EYE R4.1 Witness Solver'
+          git config user.email 'actions@users.noreply.github.com'
+          git add EYE/r4_1/generated
+          git diff --cached --quiet && exit 0
+          git commit -m '[eye-r4.1] Preserve minimum-witness solver receipts [skip ci]'
+          git pull --rebase origin main
+          git push
+
+      - name: Upload R4.1 receipts
+        uses: actions/upload-artifact@v4
+        with:
+          name: eye-r4-1-${{ github.run_id }}
+          path: EYE/r4_1/generated/**/*.json
+          if-no-files-found: error
