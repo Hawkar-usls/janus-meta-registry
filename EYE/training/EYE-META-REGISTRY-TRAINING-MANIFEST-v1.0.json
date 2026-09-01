@@ -1,0 +1,69 @@
+{
+  "schema": "janus.eye.meta_registry_training_manifest.v1",
+  "artifact_id": "JANUS-EYE-META-REGISTRY-TRAINING-MANIFEST-v1.0",
+  "date": "2026-09-01",
+  "status": "FROZEN_BEFORE_FIRST_OFFICIAL_EYE_CORPUS_RUN",
+  "root": ".",
+  "primary_workspace": "EYE/",
+  "purpose": "Train EYE on the entire janus-meta-registry in the precise JANUS sense of deterministic corpus ingestion, hashing, provenance/relation graph construction, bridge indexing, non-authoritative associative memory and guarded routing. This is not LLM/foundation-model weight training.",
+  "bindings": {
+    "eye": "data/JANUS-EYE-CONTEXTUAL-SEMANTIC-RECOVERY-METHOD-2026-09-01-v1.0.json",
+    "representation_contract": "data/JANUS-REPRESENTATION-CONTRACT-v1.0.json",
+    "slime": "EYE/bindings/EYE-SLIME-BINDING-v1.0.json",
+    "trump": "EYE/bindings/EYE-TRUMP-BINDING-v1.0.json",
+    "root_constitution": "EYE/EYE-ROOT-CONSTITUTION-v1.0.json"
+  },
+  "corpus_contract": {
+    "include": "all repository files recursively",
+    "hash_every_included_file": true,
+    "semantic_extensions": [".json", ".md", ".markdown", ".txt", ".py", ".yml", ".yaml", ".toml", ".ini", ".cfg", ".csv", ".tsv", ".html", ".htm", ".js", ".ts", ".tsx", ".jsx", ".css", ".scss", ".sh", ".ps1", ".xml", ".jsonl", ".ndjson"],
+    "excluded_directories": [".git", "node_modules", "__pycache__", ".venv", "venv", ".mypy_cache", ".pytest_cache"],
+    "excluded_generated_prefix": "EYE/generated/",
+    "reason_generated_excluded": "Prevent self-ingestion recursion; generated artifacts are derivative and rebuilt from the source snapshot.",
+    "text_semantic_byte_limit": 2000000,
+    "json_parse_byte_limit": 10000000,
+    "oversize_json_policy": "HASH_AND_INDEX_METADATA_ONLY_WITHOUT_FABRICATED_SEMANTICS",
+    "unsupported_or_binary_policy": "HASH_AND_INDEX_ONLY"
+  },
+  "derived_planes": {
+    "registry_index": "EYE/generated/EYE-REGISTRY-INDEX.json",
+    "slime_associative_memory": "EYE/generated/EYE-SLIME-ASSOCIATIVE-MEMORY.json",
+    "trump_routing_index": "EYE/generated/EYE-TRUMP-ROUTING-INDEX.json",
+    "training_receipt": "EYE/generated/EYE-TRAINING-RECEIPT.json"
+  },
+  "learning_contract": {
+    "ordinary_document_learning": "NON_AUTHORITATIVE_ASSOCIATION_ONLY",
+    "promotable_slime_route_learning": "NO AUTOMATIC WRITE DURING CORPUS INGEST",
+    "receipt_discovery": "The trainer may identify documents whose top-level field shape resembles a SLIME verified route receipt, but actual promotable admission still requires the external constitution's schema, semantic and hash verification.",
+    "same_holdout_learning": false,
+    "failed_or_unknown_records_preserved": true,
+    "parse_failures_preserved": true,
+    "training_cost_free": false
+  },
+  "routing_contract": {
+    "EXACT_OR_PROVENANCE_CANDIDATE": "Direct source identity/provenance material exists; still requires an appropriate verifier before exact claim promotion.",
+    "M2R_CONTEXT_CANDIDATE": "Context bridges exist and may be ranked by Slime and interpreted by EYE; advisory only.",
+    "RAW_INDEX_ONLY": "File is indexed by path/hash/size without semantic inference.",
+    "OPEN_PARSE_ERROR": "Semantic parsing failed and the failure is preserved.",
+    "OPEN_CONTEXT": "Insufficient contextual structure for a stronger lane."
+  },
+  "determinism": {
+    "sorted_paths": true,
+    "source_digest": "SHA-256 of path + file SHA-256 + size over the sorted corpus",
+    "network_calls_during_trainer": false,
+    "source_git_commit_recorded": true,
+    "output_json_sort_keys": true
+  },
+  "gates": [
+    "EVERY_INCLUDED_FILE_HAS_SHA256",
+    "GENERATED_OUTPUT_EXCLUDED_FROM_SOURCE_DIGEST",
+    "PARSE_FAILURES_ARE_VISIBLE",
+    "SLIME_ASSOCIATION_NEVER_BECOMES_EVIDENCE",
+    "TRUMP_ROUTE_NEVER_BECOMES_TRUTH",
+    "SEMANTIC_REGION_NEVER_BECOMES_EXACT_PLAINTEXT_WITHOUT_VERIFICATION",
+    "UNKNOWN_NEVER_BECOMES_NEGATIVE",
+    "NO_NETWORK_REQUIRED",
+    "NO_FOUNDATION_MODEL_WEIGHT_TRAINING_CLAIM"
+  ],
+  "seal": "TRAIN ON THE REGISTRY WITHOUT TEACHING THE REGISTRY TO LIE ABOUT WHAT IT KNOWS."
+}
