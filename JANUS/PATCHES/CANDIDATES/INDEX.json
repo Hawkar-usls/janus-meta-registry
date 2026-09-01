@@ -1,8 +1,41 @@
 {
   "schema": "janus.native_repair_candidates.index.v1",
-  "status": "ACTIVE_EMPTY_CANDIDATE_INBOX",
-  "candidate_count": 0,
-  "candidates": [],
+  "status": "ACTIVE_WITH_BOUNDED_CANDIDATE",
+  "candidate_count": 1,
+  "candidates": [
+    {
+      "candidate_id": "HRAIN_PROTECT_MODULE_AUTHORITY_CONTRACT",
+      "action": "PATCH_MODULE",
+      "score_text": "PROTECT_MODULE_AUTHORITY_CONTRACT",
+      "producer": "DETERMINISTIC_MODULE_AUDIT",
+      "problem_statement": "HRAiN actuator forbids workflow/secrets/credential mutation but does not forbid a repair proposal from rewriting .janus/JANUS_MODULE.json, the descriptor that defines actuator limits and authority. A module must not heal itself by changing the rules that authorize healing.",
+      "risk_lane": "LOW",
+      "target": {
+        "module_id": "LEFT_HRAIN",
+        "repository": "Hawkar-usls/Hrain",
+        "ref": "main",
+        "expected_target_commit": "15bf327ed3ca11e08e872666501d884fb3f6ccc2"
+      },
+      "verification_profile": "INTERHEMISPHERE_BRIDGE_TEST",
+      "proposal_template": {
+        "proposal_class": "DETERMINISTIC_GOVERNANCE_FIREWALL_REPAIR",
+        "files": [
+          {
+            "path": ".janus/JANUS_MODULE.json",
+            "expected_before_sha256": "875e66fa711ede5a32cd09753bb2c249e67144dc99394ab0fd08a06a97085ddd",
+            "content_utf8": "{\n  \"schema\": \"janus.repository_module.descriptor.v1\",\n  \"module_id\": \"LEFT_HRAIN\",\n  \"repository\": \"Hawkar-usls/Hrain\",\n  \"default_ref\": \"main\",\n  \"role\": \"STRUCTURAL_CONTEXT_GROUNDING_MEDIATOR\",\n  \"organ_channel\": \"STRUCTURAL_CONTEXT\",\n  \"scout_agent_id\": \"SCOUT_HRAIN_02\",\n  \"actuator\": {\n    \"enabled\": true,\n    \"authority_lane\": \"BRANCH_AND_VERIFY\",\n    \"proposal_source_repository\": \"Hawkar-usls/janus-meta-registry\",\n    \"proposal_source_branch\": \"janus/native-self-memory-modular-organism-v1\",\n    \"proposal_directory\": \"JANUS/PATCHES/PROPOSALS\",\n    \"branch_prefix\": \"janus-self/\",\n    \"max_files\": 3,\n    \"max_changed_bytes\": 50000,\n    \"max_attempts\": 2,\n    \"direct_main_write\": false,\n    \"autonomous_merge\": false\n  },\n  \"verification_profiles\": {\n    \"INTERHEMISPHERE_BRIDGE_TEST\": [\"node\", \"tools/test-eye-interhemisphere-bridge.js\"]\n  },\n  \"forbidden_paths\": [\n    \".github/workflows/\",\n    \".janus/JANUS_MODULE.json\",\n    \".git/\",\n    \"secrets/\",\n    \"credentials/\"\n  ],\n  \"epistemic_firewalls\": [\n    \"HRAIN_GROUNDING != TRUTH\",\n    \"MODEL_PATCH_PROPOSAL != VERIFIED_FIX\",\n    \"NO_VERIFY => NO_PASS\"\n  ],\n  \"bound_from_commit\": \"10ba1ac1e8cd6c01d66e499bd2011aae39273834\"\n}\n"
+          }
+        ],
+        "limits": {
+          "max_files": 1,
+          "max_changed_bytes": 2000,
+          "max_attempts": 2
+        },
+        "rollback_rule": "Delete the janus-self proposal branch; HRAiN main remains untouched until an explicit later merge decision.",
+        "claim_ceiling": "FIXES_SELF_GOVERNANCE_DESCRIPTOR_MUTABILITY_ON_VERIFIED_BRANCH_ONLY"
+      }
+    }
+  ],
   "producer_contract": {
     "allowed_producers": [
       "DETERMINISTIC_MODULE_AUDIT",
