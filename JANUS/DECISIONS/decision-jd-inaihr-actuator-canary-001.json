@@ -1,12 +1,12 @@
 {
   "schema": "janus.self_decision.v1",
   "decision_id": "jd-inaihr-actuator-canary-001",
-  "status": "PROPOSED",
+  "status": "VERIFY_PASS",
   "decision_class": "BOOTSTRAP_ACTUATOR_CANARY",
   "decision_authority": "HUMAN_AUTHORIZED_SYSTEM_BOOTSTRAP",
   "native_model_decision": false,
   "date": "2026-09-01",
-  "problem_statement": "RIGHT_INAIHR has a target-local module actuator but its end-to-end credentialless proposal pull, isolated branch write, local verifier and receipt path have not yet been witnessed.",
+  "problem_statement": "RIGHT_INAIHR has a target-local module actuator whose end-to-end credentialless proposal pull, isolated branch write, local verifier and receipt path required a witness.",
   "target_module_id": "RIGHT_INAIHR",
   "target_repository": "Hawkar-usls/iNaiHR",
   "expected_target_commit": "ff4f13e43cba87ae74e6ba82fc6bcb9e5d5cbc62",
@@ -18,5 +18,16 @@
   "risk_lane": "LOW",
   "affected_paths": [".janus/JANUS_NATIVE_ORGAN_CANARY.json"],
   "verification_profile": "INTERHEMISPHERE_BRIDGE_TEST",
-  "claim_ceiling": "CAN_PROVE_ACTUATOR_TRANSPORT_AND_VERIFICATION_ONLY; DOES_NOT_PROVE_NATIVE_MODEL_SELECTED_A_REAL_REPAIR"
+  "outcome": {
+    "proposal_id": "jpatch-inaihr-module-canary-001",
+    "actuator_run_id": "33557201053",
+    "target_branch": "janus-self/jpatch-inaihr-module-canary-001",
+    "patch_commit": "07565224337c8103bf8fc2417d4fc31c995f32b8",
+    "receipt_commit": "6b888af456a6ab3f6fcb49ee0d7ae8d8929e8d1e",
+    "receipt_path": "JANUS/PATCHES/RECEIPTS/jpatch-inaihr-module-canary-001.json",
+    "main_mutated": false,
+    "autonomous_merge": false,
+    "verdict": "VERIFY_PASS"
+  },
+  "claim_ceiling": "PROVES_ACTUATOR_TRANSPORT_AND_TARGET_LOCAL_VERIFICATION_ONLY; DOES_NOT_PROVE_NATIVE_MODEL_SELECTED_A_REAL_REPAIR"
 }
