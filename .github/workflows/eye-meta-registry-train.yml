@@ -8,6 +8,7 @@ on:
       - '**'
       - '!EYE/generated/**'
       - '!assets/hrain-full-memory/**'
+      - '!assets/hrain-registry-index.json'
 
 permissions:
   contents: write
@@ -36,6 +37,7 @@ jobs:
           git fetch origin main
           git reset --hard origin/main
           rm -rf assets/hrain-full-memory
+          rm -f assets/hrain-registry-index.json
 
       - name: Compile EYE trainer
         run: python -m py_compile EYE/training/train_eye_registry.py
@@ -48,7 +50,7 @@ jobs:
             --semantic-byte-limit 2000000 \
             --max-clusters 1000
 
-      - name: Validate generated JSON
+      - name: Validate generated JSON and derivative-memory firewall
         run: |
           python - <<'PY'
           import json
@@ -64,9 +66,20 @@ jobs:
                   raise SystemExit(f'MISSING_GENERATED_FILE:{p}')
               json.loads(p.read_text(encoding='utf-8'))
           receipt = json.loads(required[-1].read_text(encoding='utf-8'))
+          index = json.loads(required[0].read_text(encoding='utf-8'))
           if receipt['counts']['files_indexed'] <= 0:
               raise SystemExit('EYE_EMPTY_CORPUS')
+          forbidden_exact = {'assets/hrain-registry-index.json'}
+          forbidden_prefixes = ('assets/hrain-full-memory/', 'EYE/generated/')
+          leaked = [
+              r.get('path') for r in index.get('records', [])
+              if r.get('path') in forbidden_exact
+              or any(str(r.get('path', '')).startswith(prefix) for prefix in forbidden_prefixes)
+          ]
+          if leaked:
+              raise SystemExit(f'DERIVATIVE_MEMORY_FIREWALL_BREACH:{leaked[:20]}')
           print(json.dumps(receipt['counts'], sort_keys=True))
+          print('DERIVATIVE_MEMORY_FIREWALL=PASS')
           PY
 
       - name: Commit rebuildable EYE state conflict-safely
@@ -77,6 +90,7 @@ jobs:
 
           rebuild() {
             rm -rf assets/hrain-full-memory
+            rm -f assets/hrain-registry-index.json
             rm -rf EYE/generated
             GITHUB_SHA="$(git rev-parse HEAD)" python EYE/training/train_eye_registry.py \
               --root . \
@@ -97,9 +111,20 @@ jobs:
                   raise SystemExit(f'MISSING_GENERATED_FILE:{p}')
               json.loads(p.read_text(encoding='utf-8'))
           receipt = json.loads(required[-1].read_text(encoding='utf-8'))
+          index = json.loads(required[0].read_text(encoding='utf-8'))
           if receipt['counts']['files_indexed'] <= 0:
               raise SystemExit('EYE_EMPTY_CORPUS')
+          forbidden_exact = {'assets/hrain-registry-index.json'}
+          forbidden_prefixes = ('assets/hrain-full-memory/', 'EYE/generated/')
+          leaked = [
+              r.get('path') for r in index.get('records', [])
+              if r.get('path') in forbidden_exact
+              or any(str(r.get('path', '')).startswith(prefix) for prefix in forbidden_prefixes)
+          ]
+          if leaked:
+              raise SystemExit(f'DERIVATIVE_MEMORY_FIREWALL_BREACH:{leaked[:20]}')
           print(json.dumps(receipt['counts'], sort_keys=True))
+          print('DERIVATIVE_MEMORY_FIREWALL=PASS')
           PY
           }
 
