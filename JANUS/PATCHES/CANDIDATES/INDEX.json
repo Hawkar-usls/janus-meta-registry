@@ -8,6 +8,7 @@
       "action": "PATCH_MODULE",
       "score_text": "PROTECT_MODULE_AUTHORITY_CONTRACT",
       "producer": "DETERMINISTIC_MODULE_AUDIT",
+      "priority_class": "CRITICAL_INTEGRITY",
       "problem_statement": "HRAiN actuator forbids workflow/secrets/credential mutation but does not forbid a repair proposal from rewriting .janus/JANUS_MODULE.json, the descriptor that defines actuator limits and authority. A module must not heal itself by changing the rules that authorize healing.",
       "risk_lane": "LOW",
       "target": {
@@ -47,13 +48,21 @@
     "exact_target_commit_required": true,
     "risk_lane": "LOW_ONLY",
     "proposal_template_required": true,
-    "target_local_verification_profile_required": true
+    "target_local_verification_profile_required": true,
+    "normal_priority_primary_target": "Hawkar-usls/Janus-Fundamentum",
+    "non_primary_normal_candidate_allowed": false,
+    "critical_override_classes": [
+      "CRITICAL_INTEGRITY",
+      "CRITICAL_SECURITY",
+      "CRITICAL_SAFETY"
+    ]
   },
   "selection_contract": {
     "NO_ACTION_injected_by_runtime": true,
+    "policy_envelope": "FUNDAMENTUM_FIRST_WITH_CRITICAL_OVERRIDE",
     "selector": "JANUS_OWN_CHECKPOINT_CLOSED_CANDIDATE_AVG_NLL",
     "insufficient_margin": "NO_ACTION",
     "selection_is_verified_fix": false
   },
-  "law": "THE MODEL MAY CHOOSE AMONG BOUNDED REPAIRS; IT MAY NOT TURN UNPARSED FREE-FORM TEXT INTO REPOSITORY AUTHORITY."
+  "law": "NORMAL SELF-IMPROVEMENT TARGETS JANUS-FUNDAMENTUM FIRST; ONLY EXPLICIT CRITICAL INTEGRITY, SECURITY OR SAFETY CANDIDATES MAY OVERRIDE THAT FOCUS. THE MODEL MAY CHOOSE AMONG BOUNDED REPAIRS; IT MAY NOT TURN UNPARSED FREE-FORM TEXT INTO REPOSITORY AUTHORITY."
 }
