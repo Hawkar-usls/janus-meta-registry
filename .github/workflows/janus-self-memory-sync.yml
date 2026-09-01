@@ -1,0 +1,227 @@
+name: JANUS Native Self Memory Sync
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '49 */6 * * *'
+  workflow_run:
+    workflows: ['JANUS Native Reflection Pull']
+    types: [completed]
+
+concurrency:
+  group: janus-native-self-memory-sync
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout JANUS self-memory branch
+        uses: actions/checkout@v4
+        with:
+          ref: janus/native-self-memory-modular-organism-v1
+          fetch-depth: 0
+
+      - name: Fetch current native brain and organs
+        run: |
+          rm -rf runtime/janus-demiurge
+          mkdir -p runtime
+          git clone --depth 1 https://github.com/Hawkar-usls/Janus-Demiurge.git runtime/janus-demiurge
+
+      - name: Synchronize typed JANUS self memory
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          import shutil
+          from pathlib import Path
+
+          src = Path('runtime/janus-demiurge')
+          root = Path('JANUS')
+          if not (root / 'JANUS-SELF-REGISTRY-MANIFEST-v1.0.json').exists():
+              raise SystemExit('JANUS_SELF_REGISTRY_MANIFEST_MISSING')
+
+          state_path = src / 'janus_model/state/JANUS_MODEL_STATE.json'
+          state = json.loads(state_path.read_text(encoding='utf-8'))
+          if state.get('schema') != 'janus.model.state.v1':
+              raise SystemExit('JANUS_MODEL_STATE_SCHEMA_REJECTED')
+
+          weights = root / 'WEIGHTS'
+          weights.mkdir(parents=True, exist_ok=True)
+          shutil.copyfile(state_path, weights / 'SOURCE-JANUS_MODEL_STATE.json')
+
+          history = state.get('history') or []
+          lineage = []
+          parent = None
+          for generation, row in enumerate(history, start=1):
+              checkpoint = row.get('checkpoint_sha256')
+              lineage.append({
+                  'generation': generation,
+                  'run_id': row.get('run_id'),
+                  'event': row.get('event'),
+                  'parent_checkpoint_sha256': parent,
+                  'checkpoint_sha256': checkpoint,
+                  'source_commit': row.get('source_commit'),
+                  'source_digest': row.get('source_digest'),
+                  'incumbent_eval_loss': row.get('incumbent_eval_loss'),
+                  'candidate_eval_loss': row.get('candidate_eval_loss'),
+                  'status': row.get('status'),
+              })
+              if row.get('status') == 'PROMOTED' and checkpoint:
+                  parent = checkpoint
+          live_lineage = {
+              'schema': 'janus.weight_lineage.live.v1',
+              'status': 'MIRRORED_FROM_AUTHORITATIVE_NATIVE_MODEL_STATE',
+              'source_repository': 'Hawkar-usls/Janus-Demiurge',
+              'source_path': 'janus_model/state/JANUS_MODEL_STATE.json',
+              'attempt_count': state.get('attempt_count'),
+              'promotion_count': state.get('promotion_count'),
+              'rejection_count': state.get('rejection_count'),
+              'current_checkpoint_sha256': state.get('checkpoint_sha256'),
+              'last_source_commit': state.get('last_source_commit'),
+              'last_source_digest': state.get('last_source_digest'),
+              'lineage': lineage,
+              'law': 'WEIGHT_CHANGE_HAS_PARENT_SOURCE_EVALUATION_AND_OUTCOME'
+          }
+          (weights / 'JANUS-WEIGHT-LINEAGE-LIVE.json').write_text(
+              json.dumps(live_lineage, ensure_ascii=False, indent=2, sort_keys=True), encoding='utf-8')
+
+          outbox = src / 'janus_model/outbox'
+          reflections_dir = root / 'SELF/REFLECTIONS'
+          reflections_dir.mkdir(parents=True, exist_ok=True)
+          reflection_rows = []
+          if outbox.exists():
+              for path in sorted(outbox.glob('reflection-*.json')):
+                  obj = json.loads(path.read_text(encoding='utf-8'))
+                  if obj.get('schema') != 'janus.model.reflection_proposal.v1' or obj.get('status') != 'UNVERIFIED_MODEL_REFLECTION':
+                      raise SystemExit(f'JANUS_REFLECTION_REJECTED:{path.name}')
+                  authority = obj.get('authority') or {}
+                  if authority.get('eligible_for_training') is not False or authority.get('truth') is not False:
+                      raise SystemExit(f'JANUS_REFLECTION_AUTHORITY_REJECTED:{path.name}')
+                  target = reflections_dir / path.name
+                  raw = path.read_bytes()
+                  if target.exists() and target.read_bytes() != raw:
+                      raise SystemExit(f'JANUS_REFLECTION_CREATE_ONLY_COLLISION:{path.name}')
+                  if not target.exists():
+                      shutil.copyfile(path, target)
+                  reflection_rows.append({
+                      'reflection_id': obj.get('reflection_id'),
+                      'path': target.as_posix(),
+                      'sha256': hashlib.sha256(raw).hexdigest(),
+                      'workflow_run_id': (obj.get('provenance') or {}).get('workflow_run_id'),
+                      'checkpoint_sha256': (obj.get('provenance') or {}).get('checkpoint_sha256'),
+                      'status': obj.get('status'),
+                      'eligible_for_training': False,
+                  })
+          (reflections_dir / 'INDEX.json').write_text(json.dumps({
+              'schema': 'janus.self_reflections.index.v1',
+              'status': 'NON_AUTHORITATIVE_SELF_MEMORY',
+              'reflection_count': len(reflection_rows),
+              'reflections': reflection_rows,
+              'truth_authority': False,
+              'eligible_for_training': False,
+              'law': 'RAW_SELF_REFLECTION_IS_REMEMBERED_BUT_NOT_SELF_TRAINED'
+          }, ensure_ascii=False, indent=2, sort_keys=True), encoding='utf-8')
+
+          agents_root = src / 'scout_swarm/state/agents'
+          module_rows = []
+          seen_repos = set()
+          for path in sorted(agents_root.glob('SCOUT_*.json')):
+              raw = path.read_bytes()
+              obj = json.loads(raw.decode('utf-8'))
+              if obj.get('status') != 'OBSERVED_REPOSITORY_STATE':
+                  continue
+              target = obj.get('target') or {}
+              snap = obj.get('repository_snapshot') or {}
+              repo = target.get('repository')
+              if not repo or snap.get('target_repo') != repo:
+                  raise SystemExit(f'MODULE_REPOSITORY_MISMATCH:{path.name}')
+              if repo in seen_repos:
+                  raise SystemExit(f'DUPLICATE_MODULE_REPOSITORY:{repo}')
+              seen_repos.add(repo)
+              module_rows.append({
+                  'module_id': f'REPO::{repo}',
+                  'agent_id': obj.get('agent_id'),
+                  'scout_role': obj.get('role'),
+                  'repository': repo,
+                  'ref': target.get('ref'),
+                  'target_commit': snap.get('target_commit'),
+                  'focus': obj.get('focus'),
+                  'scout_state_sha256': hashlib.sha256(raw).hexdigest(),
+                  'authority_lane': 'READ_ONLY_UNLESS_TARGET_ACTUATOR_BOUND'
+              })
+          modules_dir = root / 'MODULES'
+          modules_dir.mkdir(parents=True, exist_ok=True)
+          (modules_dir / 'OBSERVED-MODULE-STATE.json').write_text(json.dumps({
+              'schema': 'janus.repository_modules.observed_state.v1',
+              'status': 'OBSERVED_READ_ONLY_MODULE_MAP',
+              'module_count': len(module_rows),
+              'modules': module_rows,
+              'mutation_authority_from_observation': False
+          }, ensure_ascii=False, indent=2, sort_keys=True), encoding='utf-8')
+
+          self_state_path = root / 'SELF/JANUS-SELF-MEMORY-STATE-v1.0.json'
+          self_state = json.loads(self_state_path.read_text(encoding='utf-8'))
+          self_state['current_brain'] = {
+              'checkpoint_sha256': state.get('checkpoint_sha256'),
+              'generation': state.get('promotion_count'),
+              'training_attempts': state.get('attempt_count'),
+              'promotions': state.get('promotion_count'),
+              'rejections': state.get('rejection_count'),
+              'last_eval_loss': history[-1].get('candidate_eval_loss') if history else None,
+              'last_source_commit': state.get('last_source_commit'),
+              'last_source_digest': state.get('last_source_digest')
+          }
+          self_state['self_produced']['reflection_count_observed'] = len(reflection_rows)
+          if reflection_rows:
+              self_state['self_produced']['latest_reflection_id'] = reflection_rows[-1]['reflection_id']
+              self_state['self_produced']['latest_reflection_source_run_id'] = reflection_rows[-1]['workflow_run_id']
+          self_state['organism']['repository_modules_discovered'] = len(module_rows)
+          self_state_path.write_text(json.dumps(self_state, ensure_ascii=False, indent=2, sort_keys=True), encoding='utf-8')
+
+          print(json.dumps({
+              'checkpoint_sha256': state.get('checkpoint_sha256'),
+              'reflections': len(reflection_rows),
+              'modules': len(module_rows)
+          }, indent=2))
+          PY
+
+      - name: Validate self-training firewall
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          idx=json.loads(Path('JANUS/SELF/REFLECTIONS/INDEX.json').read_text())
+          if idx.get('eligible_for_training') is not False or idx.get('truth_authority') is not False:
+              raise SystemExit('JANUS_SELF_REFLECTION_FIREWALL_FAIL')
+          modules=json.loads(Path('JANUS/MODULES/OBSERVED-MODULE-STATE.json').read_text())
+          if modules.get('mutation_authority_from_observation') is not False:
+              raise SystemExit('JANUS_MODULE_OBSERVATION_AUTHORITY_FAIL')
+          print('JANUS_SELF_MEMORY_FIREWALL=PASS')
+          PY
+
+      - name: Persist JANUS self memory
+        run: |
+          git config user.name 'janus-self-memory'
+          git config user.email 'janus-self-memory@users.noreply.github.com'
+          git add JANUS/SELF JANUS/WEIGHTS JANUS/MODULES/OBSERVED-MODULE-STATE.json
+          if git diff --cached --quiet; then
+            echo 'JANUS_SELF_MEMORY_NO_CHANGE'
+            exit 0
+          fi
+          git commit -m "JANUS self memory: synchronize brain organs and reflections"
+          for attempt in 1 2 3; do
+            git pull --rebase origin janus/native-self-memory-modular-organism-v1
+            if git push origin HEAD:janus/native-self-memory-modular-organism-v1; then
+              echo 'JANUS_SELF_MEMORY_SYNC=PASS'
+              exit 0
+            fi
+            sleep $((attempt * 2))
+          done
+          echo 'JANUS_SELF_MEMORY_SYNC=FAIL'
+          exit 1
