@@ -1,0 +1,86 @@
+name: EYE R3 Strict Order Verifier
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - 'EYE/r3/eye_r3_strict_order_verifier.py'
+      - 'EYE/r3/generated/EYE-R3-PALOMAR-MUSIC-GENESIS-CONSTELLATION.json'
+      - '.github/workflows/eye-r3-strict-order-verifier.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: eye-r3-strict-order-main
+  cancel-in-progress: true
+
+jobs:
+  strict-order:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout current main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Compile strict verifier
+        run: python -m py_compile EYE/r3/eye_r3_strict_order_verifier.py
+
+      - name: Run strict order and shared-signal gate
+        run: |
+          GITHUB_SHA="$(git rev-parse HEAD)" python EYE/r3/eye_r3_strict_order_verifier.py \
+            --root . \
+            --target EYE/r3/generated/EYE-R3-PALOMAR-MUSIC-GENESIS-CONSTELLATION.json \
+            --output EYE/r3/generated/EYE-R3-STRICT-ORDER-VERIFICATION.json \
+            --max-signal-owners 1 \
+            --min-distinctive-signals 2 \
+            --min-lineages-per-domain 2
+
+      - name: Validate strict verifier epistemic firewall
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('EYE/r3/generated/EYE-R3-STRICT-ORDER-VERIFICATION.json')
+          d=json.loads(p.read_text(encoding='utf-8'))
+          assert d['method']['shared_signal_decontamination'] is True
+          assert d['method']['equal_or_nonincreasing_anchors_allowed'] is False
+          assert d['method']['reordered_permutation_controls'] is True
+          assert d['authority']=='STRICT_ORDER_SURVIVAL_IS_NOT_SEMANTIC_MACHINE_PROOF__MANUAL_INPUT_STATE_OUTPUT_VERIFY_STILL_REQUIRED'
+          for c in d['candidates']:
+              for domain, v in c['per_domain'].items():
+                  if v['strict_domain_pass']:
+                      assert v['actual_order_unique_lineage_support'] >= d['method']['minimum_unique_lineages_per_domain']
+                      assert v['actual_order_unique_lineage_support'] > v['max_reordered_control_support']
+                  for doc in v['documents']:
+                      if doc['strict_actual_order_pass']:
+                          anchors=[doc['operator_anchors'][op]['median_anchor'] for op in c['machine']]
+                          assert all(a < b for a,b in zip(anchors,anchors[1:]))
+          print(json.dumps({'status':d['status'],'survivors':d['survivor_ids']},sort_keys=True))
+          PY
+
+      - name: Commit strict verification receipt
+        run: |
+          set -euo pipefail
+          git config user.name 'EYE R3 Strict Order Verifier'
+          git config user.email 'actions@users.noreply.github.com'
+          git add EYE/r3/generated/EYE-R3-STRICT-ORDER-VERIFICATION.json
+          git diff --cached --quiet && exit 0
+          git commit -m '[eye-r3] Strict-order verify target constellation [skip ci]'
+          git pull --rebase origin main
+          git push
+
+      - name: Upload strict verification
+        uses: actions/upload-artifact@v4
+        with:
+          name: eye-r3-strict-order-${{ github.run_id }}
+          path: EYE/r3/generated/EYE-R3-STRICT-ORDER-VERIFICATION.json
+          if-no-files-found: error
