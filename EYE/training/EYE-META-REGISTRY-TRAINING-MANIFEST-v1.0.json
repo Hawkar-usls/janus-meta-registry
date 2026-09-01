@@ -2,7 +2,7 @@
   "schema": "janus.eye.meta_registry_training_manifest.v1",
   "artifact_id": "JANUS-EYE-META-REGISTRY-TRAINING-MANIFEST-v1.0",
   "date": "2026-09-01",
-  "status": "FROZEN_FOR_CONFLICT_SAFE_OFFICIAL_EYE_CORPUS_RUN",
+  "status": "FROZEN_FOR_CONFLICT_SAFE_DERIVATIVE_CLEAN_OFFICIAL_EYE_CORPUS_RUN",
   "root": ".",
   "primary_workspace": "EYE/",
   "purpose": "Train EYE on the source-bearing janus-meta-registry in the precise JANUS sense of deterministic corpus ingestion, hashing, provenance/relation graph construction, bridge indexing, non-authoritative associative memory and guarded routing. This is not LLM/foundation-model weight training.",
@@ -11,7 +11,8 @@
     "representation_contract": "data/JANUS-REPRESENTATION-CONTRACT-v1.0.json",
     "slime": "EYE/bindings/EYE-SLIME-BINDING-v1.0.json",
     "trump": "EYE/bindings/EYE-TRUMP-BINDING-v1.0.json",
-    "root_constitution": "EYE/EYE-ROOT-CONSTITUTION-v1.0.json"
+    "root_constitution": "EYE/EYE-ROOT-CONSTITUTION-v1.0.json",
+    "interhemisphere_contract": "EYE/integration/EYE-HRAIN-INAIHR-INTERHEMISPHERE-CONTRACT-v1.0.json"
   },
   "first_attempt_observation": {
     "run_id": 33523221797,
@@ -24,14 +25,24 @@
     "concurrent_actor": "JANUS HRAiN Memory",
     "lesson": "A full-registry learner and an existing full-memory exporter can form a generated-state feedback/concurrency loop. Derivative self-exports must not be treated as fresh source evidence for one another."
   },
+  "interhemisphere_firewall_audit": {
+    "observed_run_id": 33535600600,
+    "generated_commit": "4b306b1d3e89a46293f39838ddb49dd1d48a16e1",
+    "source_git_commit": "7011a030d2951b9b1cfb0727b47a4d339c6ba6d3",
+    "observed_status_field": "PASS",
+    "audit_verdict": "INVALID_FOR_INTERHEMISPHERE_PROMOTION__DERIVATIVE_HRAIN_REGISTRY_INDEX_WAS_INGESTED",
+    "evidence": "EYE/generated/EYE-REGISTRY-INDEX.json contained assets/hrain-registry-index.json as a corpus record despite the interhemisphere contract forbidding that derivative export as fresh source evidence.",
+    "response": "Preserve the run as an implementation-gap witness, add exact-path exclusion, add fail-closed generated-index validation, then require a fresh EYE run before declaring the HRAiN/EYE/iNaiHR integration GREEN."
+  },
   "corpus_contract": {
     "include": "all source-bearing repository files recursively",
     "hash_every_included_file": true,
     "semantic_extensions": [".json", ".md", ".markdown", ".txt", ".py", ".yml", ".yaml", ".toml", ".ini", ".cfg", ".csv", ".tsv", ".html", ".htm", ".js", ".ts", ".tsx", ".jsx", ".css", ".scss", ".sh", ".ps1", ".xml", ".jsonl", ".ndjson"],
     "excluded_directories": [".git", "node_modules", "__pycache__", ".venv", "venv", ".mypy_cache", ".pytest_cache"],
     "excluded_generated_prefixes": ["EYE/generated/", "assets/hrain-full-memory/"],
-    "reason_generated_excluded": "Prevent self-ingestion and cross-generated feedback recursion. EYE outputs and HRAiN full-memory shards are derivative rebuildable views, not fresh source authority.",
-    "workflow_enforcement": "The official workflow removes assets/hrain-full-memory from the ephemeral checkout before EYE corpus derivation; EYE/generated is excluded by the trainer itself.",
+    "excluded_generated_exact_paths": ["assets/hrain-registry-index.json"],
+    "reason_generated_excluded": "Prevent self-ingestion and cross-generated feedback recursion. EYE outputs, HRAiN full-memory shards and the HRAiN registry index are derivative rebuildable views, not fresh source authority.",
+    "workflow_enforcement": "The official workflow removes assets/hrain-full-memory and assets/hrain-registry-index.json from the ephemeral checkout before every EYE corpus derivation/rebuild; EYE/generated is excluded by the trainer itself. Validation fails closed if any of those derivative paths appear in the generated index.",
     "text_semantic_byte_limit": 2000000,
     "json_parse_byte_limit": 10000000,
     "oversize_json_policy": "HASH_AND_INDEX_METADATA_ONLY_WITHOUT_FABRICATED_SEMANTICS",
@@ -70,6 +81,7 @@
   "gates": [
     "EVERY_INCLUDED_FILE_HAS_SHA256",
     "DERIVATIVE_SELF_EXPORTS_EXCLUDED_FROM_SOURCE_DIGEST",
+    "HRAIN_REGISTRY_INDEX_EXCLUDED_FROM_EYE_SOURCE_CORPUS",
     "PARSE_FAILURES_ARE_VISIBLE",
     "SLIME_ASSOCIATION_NEVER_BECOMES_EVIDENCE",
     "TRUMP_ROUTE_NEVER_BECOMES_TRUTH",
