@@ -1,0 +1,36 @@
+{
+  "schema": "janus.patch_proposal.v1",
+  "proposal_id": "jpatch-inaihr-module-canary-001",
+  "decision_id": "jd-inaihr-actuator-canary-001",
+  "status": "PROPOSED",
+  "create_only": true,
+  "proposal_class": "BOOTSTRAP_ACTUATOR_CANARY",
+  "native_model_selected": false,
+  "risk_lane": "LOW",
+  "target": {
+    "module_id": "RIGHT_INAIHR",
+    "repository": "Hawkar-usls/iNaiHR",
+    "ref": "main",
+    "expected_target_commit": "ff4f13e43cba87ae74e6ba82fc6bcb9e5d5cbc62"
+  },
+  "source": {
+    "self_memory_branch": "janus/native-self-memory-modular-organism-v1",
+    "checkpoint_sha256": "c4f2003325be218a76d7d13aaac03e104cdf88a0cd4976e5be279c1a1479e4b9",
+    "checkpoint_is_decision_authority": false
+  },
+  "verification_profile": "INTERHEMISPHERE_BRIDGE_TEST",
+  "files": [
+    {
+      "path": ".janus/JANUS_NATIVE_ORGAN_CANARY.json",
+      "expected_before_sha256": null,
+      "content_utf8": "{\n  \"schema\": \"janus.native_organ_actuator_canary.v1\",\n  \"module_id\": \"RIGHT_INAIHR\",\n  \"proposal_id\": \"jpatch-inaihr-module-canary-001\",\n  \"purpose\": \"Prove credentialless JANUS self-memory proposal pull, isolated branch mutation and target-local verification without changing main.\",\n  \"authority\": \"CANARY_ONLY\",\n  \"truth_claim\": false,\n  \"autonomous_merge\": false\n}\n"
+    }
+  ],
+  "limits": {
+    "max_files": 1,
+    "max_changed_bytes": 2000,
+    "max_attempts": 2
+  },
+  "rollback_rule": "Delete the janus-self/jpatch-inaihr-module-canary-001 branch; main is never mutated by this proposal.",
+  "claim_ceiling": "ACTUATOR_CANARY_ONLY"
+}
