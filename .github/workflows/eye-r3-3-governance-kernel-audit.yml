@@ -1,0 +1,122 @@
+name: EYE R3.3 Governance Kernel Audit
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - 'EYE/r3_3/eye_r3_3_governance_kernel_audit.py'
+      - 'data/EYE-R3.3-INDEPENDENT-ORIGIN-GOVERNANCE-KERNEL-MANIFEST-2026-09-01-v1.0.json'
+      - '.github/workflows/eye-r3-3-governance-kernel-audit.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: eye-r3-3-governance-kernel-main
+  cancel-in-progress: true
+
+jobs:
+  audit-kernel:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout source history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Compile R3.3
+        run: python -m py_compile EYE/r3_3/eye_r3_3_governance_kernel_audit.py
+
+      - name: Build derivative-clean audit and commit conflict-safely
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'EYE R3.3 Governance Kernel Audit'
+          git config user.email 'actions@users.noreply.github.com'
+
+          run_audit() {
+            rm -rf /tmp/r33-clean /tmp/r33-index /tmp/r33-result.json /tmp/r33-catalog.json
+            cp EYE/r3/generated/EYE-R3-MACHINE-CATALOG.json /tmp/r33-catalog.json
+            git clone --no-hardlinks . /tmp/r33-clean >/dev/null
+            cd /tmp/r33-clean
+            rm -rf EYE/generated EYE/r2/generated EYE/r3/generated EYE/r3_1/generated EYE/r3_3/generated assets/hrain-full-memory
+            rm -f assets/hrain-registry-index.json
+            python EYE/training/train_eye_registry.py \
+              --root . \
+              --output-dir /tmp/r33-index \
+              --semantic-byte-limit 2000000 \
+              --max-clusters 1000
+            GITHUB_SHA="$(git rev-parse HEAD)" python EYE/r3_3/eye_r3_3_governance_kernel_audit.py \
+              --root . \
+              --index /tmp/r33-index/EYE-REGISTRY-INDEX.json \
+              --catalog /tmp/r33-catalog.json \
+              --output /tmp/r33-result.json \
+              --min-lineages 2 \
+              --max-support-docs 8
+            cd - >/dev/null
+            mkdir -p EYE/r3_3/generated
+            cp /tmp/r33-result.json EYE/r3_3/generated/EYE-R3.3-GOVERNANCE-KERNEL-AUDIT.json
+          }
+
+          for attempt in 1 2 3; do
+            git fetch origin main
+            current="$(git rev-parse HEAD)"
+            remote="$(git rev-parse origin/main)"
+            if [ "$current" != "$remote" ]; then
+              echo "R3_3_SOURCE_DRIFT attempt=$attempt current=$current remote=$remote"
+              git reset --hard origin/main
+            fi
+
+            run_audit
+
+            python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('EYE/r3_3/generated/EYE-R3.3-GOVERNANCE-KERNEL-AUDIT.json')
+          d=json.loads(p.read_text(encoding='utf-8'))
+          assert d['machine_id']=='EYE-R3-MACHINE-8d7ae222084e2017'
+          assert d['catalog_domain_count']==len(d['catalog_domains'])
+          assert d['method']['all_catalog_domains_enumerated'] is True
+          assert d['method']['r3_1_strict_distinct_order_reapplied_to_all_catalog_domains'] is True
+          assert d['method']['all_alternate_permutations_used_as_controls'] is True
+          assert d['origin_classification']['conceptual_independence']=='OPEN'
+          assert 'ARTIFACT_LINEAGE_INDEPENDENCE != CONCEPTUAL_INDEPENDENCE' in d['authority_firewall']
+          print(json.dumps({
+              'status':d['status'],
+              'catalog_domains':d['catalog_domains'],
+              'strict_survivors':d['strict_order_surviving_domains'],
+              'non_target_strict':d['non_target_strict_domains'],
+              'special_trio_exclusive':d['special_palomar_music_genesis_exclusivity_under_strict_order'],
+          },ensure_ascii=False,sort_keys=True))
+          PY
+
+            git add EYE/r3_3/generated/EYE-R3.3-GOVERNANCE-KERNEL-AUDIT.json
+            if git diff --cached --quiet; then
+              echo 'R3.3 audit already matches current source.'
+              exit 0
+            fi
+            git commit -m '[eye-r3.3] Audit governance-kernel origin [skip ci]'
+            if git push origin HEAD:main; then
+              echo 'EYE_R3_3_PUSH=SUCCESS'
+              exit 0
+            fi
+            echo "EYE_R3_3_PUSH_RACE_RETRY attempt=$attempt"
+            git fetch origin main
+            git reset --hard origin/main
+          done
+          echo 'EYE_R3_3_PUSH=FAILED_AFTER_RETRIES'
+          exit 1
+
+      - name: Upload R3.3 receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: eye-r3-3-governance-kernel-${{ github.run_id }}
+          path: EYE/r3_3/generated/EYE-R3.3-GOVERNANCE-KERNEL-AUDIT.json
+          if-no-files-found: error
