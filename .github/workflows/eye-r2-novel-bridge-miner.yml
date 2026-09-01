@@ -1,0 +1,164 @@
+name: EYE R2 Novel Bridge Miner
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - '**'
+      - '!EYE/generated/**'
+      - '!EYE/r2/generated/**'
+      - '!assets/hrain-full-memory/**'
+      - '!assets/hrain-registry-index.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: eye-r2-novel-bridge-main
+  cancel-in-progress: true
+
+jobs:
+  mine:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout source snapshot
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Sync latest source-bearing main
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+
+      - name: Compile R1 and R2
+        run: |
+          python -m py_compile EYE/training/train_eye_registry.py
+          python -m py_compile EYE/r2/eye_r2_novel_bridge_miner.py
+
+      - name: Build fresh derivative-clean EYE R1 index
+        run: |
+          GITHUB_SHA="$(git rev-parse HEAD)" python EYE/training/train_eye_registry.py \
+            --root . \
+            --output-dir EYE/generated \
+            --semantic-byte-limit 2000000 \
+            --max-clusters 1000
+
+      - name: Mine cross-domain operator bridges
+        run: |
+          GITHUB_SHA="$(git rev-parse HEAD)" python EYE/r2/eye_r2_novel_bridge_miner.py \
+            --root . \
+            --index EYE/generated/EYE-REGISTRY-INDEX.json \
+            --output-dir EYE/r2/generated \
+            --min-operator-signals 2 \
+            --min-lineages-per-domain 2 \
+            --top-pairs 100 \
+            --top-triples 40
+
+      - name: Validate R2 epistemic gates
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          out = Path('EYE/r2/generated')
+          c = json.loads((out/'EYE-R2-NOVEL-BRIDGE-CANDIDATES.json').read_text(encoding='utf-8'))
+          b = json.loads((out/'EYE-R2-OPERATOR-BACKBONE.json').read_text(encoding='utf-8'))
+          r = json.loads((out/'EYE-R2-RECEIPT.json').read_text(encoding='utf-8'))
+          forbidden_prefixes = ('EYE/generated/', 'EYE/r2/generated/', 'assets/hrain-full-memory/')
+          forbidden_exact = {'assets/hrain-registry-index.json'}
+
+          if r['status'] not in {'PASS', 'OPEN_NO_NOVEL_PAIR_CANDIDATES'}:
+              raise SystemExit('R2_BAD_STATUS')
+          if c['method']['named_target_bonus'] is not False:
+              raise SystemExit('R2_TARGET_WAS_BOOSTED')
+          if c['method']['same_lineage_repetition_counts_as_independent'] is not False:
+              raise SystemExit('R2_SAME_LINEAGE_LEAK')
+
+          all_candidates = c['top_pair_candidates'] + c['top_triple_candidates']
+          for cand in all_candidates:
+              if cand['authority'] != 'CANDIDATE_ONLY__INDEPENDENT_VERIFY_REQUIRED':
+                  raise SystemExit('R2_AUTHORITY_ESCALATION:' + cand['candidate_id'])
+              if len(set(cand['domains'])) != len(cand['domains']):
+                  raise SystemExit('R2_NON_CROSS_DOMAIN:' + cand['candidate_id'])
+              if min(cand['independent_lineage_support'].values()) < 2:
+                  raise SystemExit('R2_INDEPENDENCE_GATE_FAIL:' + cand['candidate_id'])
+              for docs in cand['provenance'].values():
+                  lineages = set()
+                  for d in docs:
+                      p = d['path']
+                      if p in forbidden_exact or any(p.startswith(x) for x in forbidden_prefixes):
+                          raise SystemExit('R2_DERIVATIVE_MEMORY_LEAK:' + p)
+                      lineages.add(d['lineage'])
+                  if len(lineages) < 2:
+                      raise SystemExit('R2_PROVENANCE_NOT_INDEPENDENT:' + cand['candidate_id'])
+
+          if b['status'] != 'DESCRIPTIVE_OPERATOR_MAP__NOT_DISCOVERY':
+              raise SystemExit('R2_BACKBONE_AUTHORITY_FAIL')
+          print(json.dumps({
+              'status': r['status'],
+              'pairs': len(c['top_pair_candidates']),
+              'triples': len(c['top_triple_candidates']),
+              'target': c['target_hunt']['status']
+          }, sort_keys=True))
+          PY
+
+      - name: Commit R2 state conflict-safely
+        run: |
+          set -euo pipefail
+          git config user.name 'EYE R2 Bridge Miner'
+          git config user.email 'actions@users.noreply.github.com'
+
+          rebuild() {
+            rm -rf EYE/generated EYE/r2/generated
+            GITHUB_SHA="$(git rev-parse HEAD)" python EYE/training/train_eye_registry.py \
+              --root . --output-dir EYE/generated --semantic-byte-limit 2000000 --max-clusters 1000
+            GITHUB_SHA="$(git rev-parse HEAD)" python EYE/r2/eye_r2_novel_bridge_miner.py \
+              --root . --index EYE/generated/EYE-REGISTRY-INDEX.json --output-dir EYE/r2/generated \
+              --min-operator-signals 2 --min-lineages-per-domain 2 --top-pairs 100 --top-triples 40
+          }
+
+          for attempt in 1 2 3; do
+            git fetch origin main
+            current="$(git rev-parse HEAD)"
+            remote="$(git rev-parse origin/main)"
+            if [ "$current" != "$remote" ]; then
+              echo "EYE_R2_SOURCE_DRIFT attempt=$attempt current=$current remote=$remote"
+              git reset --hard origin/main
+              rebuild
+            fi
+
+            git add EYE/r2/generated/*.json
+            if git diff --cached --quiet; then
+              echo 'EYE R2 state already matches current source snapshot.'
+              exit 0
+            fi
+
+            git commit -m '[eye-r2] Refresh novel bridge candidates'
+            if git push origin HEAD:main; then
+              echo 'EYE_R2_PUSH=SUCCESS'
+              exit 0
+            fi
+
+            echo "EYE_R2_PUSH_RACE_RETRY attempt=$attempt"
+            git fetch origin main
+            git reset --hard origin/main
+            rebuild
+          done
+
+          echo 'EYE_R2_PUSH=FAILED_AFTER_RETRIES'
+          exit 1
+
+      - name: Upload R2 evidence bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: eye-r2-novel-bridge-${{ github.run_id }}
+          path: EYE/r2/generated/*.json
+          if-no-files-found: error
