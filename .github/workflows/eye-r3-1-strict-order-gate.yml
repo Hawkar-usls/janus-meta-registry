@@ -1,0 +1,102 @@
+name: EYE R3.1 Strict Order Gate
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - 'EYE/r3_1/**'
+      - 'EYE/r3/generated/EYE-R3-PALOMAR-MUSIC-GENESIS-CONSTELLATION.json'
+      - '.github/workflows/eye-r3-1-strict-order-gate.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: eye-r3-1-strict-order-main
+  cancel-in-progress: true
+
+jobs:
+  verify-strict-order:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout source snapshot
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Sync latest main
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+
+      - name: Compile verifier
+        run: |
+          python -m py_compile EYE/r2/eye_r2_novel_bridge_miner.py
+          python -m py_compile EYE/r3_1/eye_r3_1_strict_order_gate.py
+
+      - name: Run source-grounded strict-order controls
+        run: |
+          GITHUB_SHA="$(git rev-parse HEAD)" python EYE/r3_1/eye_r3_1_strict_order_gate.py \
+            --root . \
+            --target EYE/r3/generated/EYE-R3-PALOMAR-MUSIC-GENESIS-CONSTELLATION.json \
+            --output EYE/r3_1/generated/EYE-R3.1-STRICT-ORDER-GATE-RECEIPT.json \
+            --min-lineages 2
+
+      - name: Validate claim ceiling and controls
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('EYE/r3_1/generated/EYE-R3.1-STRICT-ORDER-GATE-RECEIPT.json')
+          r = json.loads(p.read_text(encoding='utf-8'))
+          if r['named_target_bonus'] is not False:
+              raise SystemExit('R3_1_TARGET_BOOSTED')
+          if not r['requirements']['candidate_order_must_beat_every_alternate_permutation_in_each_domain']:
+              raise SystemExit('R3_1_ALTERNATE_CONTROL_DISABLED')
+          for result in r['results']:
+              if 'MECHANISM_PROOF' not in result['claim_ceiling']:
+                  raise SystemExit('R3_1_CLAIM_CEILING_MISSING:' + result['candidate_id'])
+              if result['r3_1_verdict'] == 'STRICT_ORDER_PASS__MECHANISM_VERIFY_STILL_REQUIRED':
+                  for domain, d in result['domains'].items():
+                      if d['candidate_strict_independent_lineages'] < 2:
+                          raise SystemExit('R3_1_FALSE_PASS_SUPPORT:' + result['candidate_id'] + ':' + domain)
+                      if not d['candidate_order_beats_all_alternates']:
+                          raise SystemExit('R3_1_FALSE_PASS_CONTROL:' + result['candidate_id'] + ':' + domain)
+          print(json.dumps({'status': r['status'], 'survivors': r['surviving_candidate_ids'], 'verdict_counts': r['verdict_counts']}, sort_keys=True))
+          PY
+
+      - name: Commit R3.1 receipt conflict-safely
+        run: |
+          set -euo pipefail
+          git config user.name 'EYE R3.1 Order Verifier'
+          git config user.email 'actions@users.noreply.github.com'
+          git fetch origin main
+          if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
+            git reset --hard origin/main
+            GITHUB_SHA="$(git rev-parse HEAD)" python EYE/r3_1/eye_r3_1_strict_order_gate.py \
+              --root . \
+              --target EYE/r3/generated/EYE-R3-PALOMAR-MUSIC-GENESIS-CONSTELLATION.json \
+              --output EYE/r3_1/generated/EYE-R3.1-STRICT-ORDER-GATE-RECEIPT.json \
+              --min-lineages 2
+          fi
+          git add EYE/r3_1/generated/EYE-R3.1-STRICT-ORDER-GATE-RECEIPT.json
+          if git diff --cached --quiet; then
+            echo 'R3.1 receipt already current.'
+            exit 0
+          fi
+          git commit -m '[eye-r3.1] Verify hidden-machine strict order'
+          git push origin HEAD:main
+
+      - name: Upload R3.1 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: eye-r3-1-strict-order-${{ github.run_id }}
+          path: EYE/r3_1/generated/EYE-R3.1-STRICT-ORDER-GATE-RECEIPT.json
+          if-no-files-found: error
