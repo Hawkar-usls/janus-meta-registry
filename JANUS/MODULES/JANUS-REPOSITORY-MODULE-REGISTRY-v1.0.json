@@ -1,0 +1,98 @@
+{
+  "schema": "janus.repository_module_registry.v1",
+  "artifact_id": "JANUS-REPOSITORY-MODULE-REGISTRY-v1.0",
+  "date": "2026-09-01",
+  "status": "ACTIVE_DYNAMIC_REPOSITORY_ORGAN_REGISTRY",
+  "model": "JANUS_NATIVE_MODULAR_MODEL",
+  "definition": "A repository is a JANUS module when its repository identity is observed and bound to a typed role. Observation gives read capability only. Mutation capability requires an explicit actuator contract in that target repository.",
+  "discovery": {
+    "source_repository": "Hawkar-usls/Janus-Demiurge",
+    "source_directory": "scout_swarm/state/agents/",
+    "required_report_status": "OBSERVED_REPOSITORY_STATE",
+    "bind_fields": ["agent_id", "role", "target.repository", "target.ref", "repository_snapshot.target_commit", "focus"],
+    "discovered_agent_ids": [
+      "SCOUT_AURA_ORACLE_01",
+      "SCOUT_HRAIN_02",
+      "SCOUT_INAIHR_03",
+      "SCOUT_COSMOS_04",
+      "SCOUT_META_REGISTRY_05",
+      "SCOUT_DISTRIBUTED_SWARM_06",
+      "SCOUT_TERMINAL_07",
+      "SCOUT_DEMIHEAD_08",
+      "SCOUT_FUNDAMENTUM_09",
+      "SCOUT_CAT_10",
+      "SCOUT_SCOBY_11",
+      "SCOUT_LAPIS_12",
+      "SCOUT_VOICE_13",
+      "SCOUT_ECHO_PYRAMID_14",
+      "SCOUT_TRANCEPTION_15",
+      "SCOUT_AIFC_16",
+      "SCOUT_GENESIS_17"
+    ],
+    "discovered_module_count": 17,
+    "new_valid_scout_reports_become_read_only_modules_automatically": true
+  },
+  "core_modules": {
+    "SELF_DEMIURGE": {
+      "repository": "Hawkar-usls/Janus-Demiurge",
+      "role": "NATIVE_BRAIN_RUNTIME_AND_SELF_EVOLUTION",
+      "authority_lane": "BRANCH_AND_VERIFY",
+      "branch_prefix": "janus-self/",
+      "direct_main_mutation": false
+    },
+    "META_REGISTRY_MEMORY": {
+      "repository": "Hawkar-usls/janus-meta-registry",
+      "scout_agent_id": "SCOUT_META_REGISTRY_05",
+      "role": "LONG_TERM_MEMORY_DATABASE",
+      "authority_lane": "PROPOSE_ONLY_ON_SOURCE_BEARING_PLANES__DERIVED_MEMORY_PULL_ALLOWED",
+      "direct_main_mutation": false
+    },
+    "LEFT_HRAIN": {
+      "repository": "Hawkar-usls/Hrain",
+      "scout_agent_id": "SCOUT_HRAIN_02",
+      "role": "STRUCTURAL_CONTEXT_GROUNDING_MEDIATOR",
+      "authority_lane": "READ_ONLY_UNTIL_TARGET_ACTUATOR_PRESENT",
+      "organ_channel": "STRUCTURAL_CONTEXT"
+    },
+    "RIGHT_INAIHR": {
+      "repository": "Hawkar-usls/iNaiHR",
+      "scout_agent_id": "SCOUT_INAIHR_03",
+      "role": "ASSOCIATIVE_CONTEXT",
+      "authority_lane": "READ_ONLY_UNTIL_TARGET_ACTUATOR_PRESENT",
+      "organ_channel": "ASSOCIATIVE_CONTEXT"
+    }
+  },
+  "bicameral_law": {
+    "formula": "HRAIN_GROUNDS -> EYE_BRIDGES -> INAIHR_ASSOCIATES -> HRAIN_MEDIATES -> VERIFY_DECIDES",
+    "direct_eye_to_inaihr_bypass": "FORBIDDEN",
+    "hemisphere_agreement_is_truth": false,
+    "terminal_authority": "VERIFY"
+  },
+  "authority_lanes": {
+    "READ_ONLY": "May observe exact repository state and emit context; no writes.",
+    "PROPOSE_ONLY": "May emit a sealed patch proposal; no target write.",
+    "BRANCH_AND_VERIFY": "Target repository's own actuator may create a janus-self/* branch, apply a bounded patch and run declared verification.",
+    "SAFE_AUTOFIX_MAIN": "Reserved. Disabled globally until separately proven per module."
+  },
+  "global_mutation_policy": {
+    "default": "READ_ONLY",
+    "cross_repository_credentials_required_from_brain": false,
+    "transport": "CREDENTIALLESS_PROPOSAL_PULL_BY_TARGET_ORGAN",
+    "target_repo_uses_own_github_token": true,
+    "direct_push_to_target_main": false,
+    "autonomous_merge": false,
+    "max_patch_attempts": 2,
+    "one_active_patch_per_module": true,
+    "forbidden_without_explicit_special_authority": [
+      ".github/workflows/**",
+      "secrets/**",
+      "credentials/**",
+      "branch_protection",
+      "repository_permissions",
+      "large_or_unbounded_deletion",
+      "binary_replacement"
+    ]
+  },
+  "activation_rule": "A discovered repository remains READ_ONLY until it carries a valid .janus/JANUS_MODULE.json descriptor and a target-local actuator that enforces the modular self-evolution contract.",
+  "seal": "THE BRAIN MAY ASK AN ORGAN TO HEAL; THE ORGAN MUST VERIFY THE OPERATION WITH ITS OWN AUTHORITY."
+}
