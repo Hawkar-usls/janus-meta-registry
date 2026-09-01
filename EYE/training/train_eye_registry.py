@@ -17,7 +17,8 @@ TEXT_EXTENSIONS = {
     ".jsx", ".css", ".scss", ".sh", ".ps1", ".xml", ".jsonl", ".ndjson"
 }
 EXCLUDED_DIR_NAMES = {".git", "node_modules", "__pycache__", ".venv", "venv", ".mypy_cache", ".pytest_cache"}
-EXCLUDED_PREFIXES = ("EYE/generated/",)
+EXCLUDED_PREFIXES = ("EYE/generated/", "assets/hrain-full-memory/")
+EXCLUDED_EXACT_PATHS = {"assets/hrain-registry-index.json"}
 TOKEN_RE = re.compile(r"[A-Za-zА-Яа-яЁё0-9][A-Za-zА-Яа-яЁё0-9_.:/+-]{2,}", re.UNICODE)
 HEX64_RE = re.compile(r"(?<![0-9a-fA-F])[0-9a-fA-F]{64}(?![0-9a-fA-F])")
 RELATION_KEYS = {
@@ -68,6 +69,8 @@ def iter_files(root: Path) -> Iterable[Path]:
         for name in sorted(files):
             p = base_path / name
             rel = p.relative_to(root).as_posix()
+            if rel in EXCLUDED_EXACT_PATHS:
+                continue
             if any(rel == pref.rstrip("/") or rel.startswith(pref) for pref in EXCLUDED_PREFIXES):
                 continue
             yield p
@@ -421,6 +424,11 @@ def main() -> int:
         "github_run_id": os.environ.get("GITHUB_RUN_ID"),
         "github_run_attempt": os.environ.get("GITHUB_RUN_ATTEMPT"),
         "corpus_root_digest_sha256": root_digest,
+        "source_exclusion_policy": {
+            "excluded_prefixes": list(EXCLUDED_PREFIXES),
+            "excluded_exact_paths": sorted(EXCLUDED_EXACT_PATHS),
+            "law": "DERIVATIVE_MEMORY_EXPORT != FRESH_SOURCE_EVIDENCE"
+        },
         "counts": {
             "files_indexed": len(records),
             "semantic_kind": dict(sorted(by_kind.items())),
@@ -451,7 +459,8 @@ def main() -> int:
             "SEMANTIC_REGION != EXACT_PLAINTEXT",
             "UNKNOWN != NEGATIVE",
             "CONTROL_MUST_HAVE_POWER_TO_SAY_NO",
-            "GENERATED_INDEX != SOURCE_AUTHORITY"
+            "GENERATED_INDEX != SOURCE_AUTHORITY",
+            "DERIVATIVE_MEMORY_EXPORT != FRESH_SOURCE_EVIDENCE"
         ]
     }
     receipt_hash = write_json(outdir / "EYE-TRAINING-RECEIPT.json", receipt)
