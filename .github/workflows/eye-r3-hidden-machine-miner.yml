@@ -1,0 +1,187 @@
+name: EYE R3 Hidden Machine Miner
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - '**'
+      - '!EYE/generated/**'
+      - '!EYE/r2/generated/**'
+      - '!EYE/r3/generated/**'
+      - '!assets/hrain-full-memory/**'
+      - '!assets/hrain-registry-index.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: eye-r3-hidden-machine-main
+  cancel-in-progress: true
+
+jobs:
+  mine-hidden-machines:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout source snapshot
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Sync latest source-bearing main
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+          rm -rf EYE/generated EYE/r2/generated EYE/r3/generated assets/hrain-full-memory
+          rm -f assets/hrain-registry-index.json
+
+      - name: Compile EYE R1 R2 R3
+        run: |
+          python -m py_compile EYE/training/train_eye_registry.py
+          python -m py_compile EYE/r2/eye_r2_novel_bridge_miner.py
+          python -m py_compile EYE/r3/eye_r3_hidden_machine_miner.py
+
+      - name: Build fresh derivative-clean EYE R1 index
+        run: |
+          GITHUB_SHA="$(git rev-parse HEAD)" python EYE/training/train_eye_registry.py \
+            --root . \
+            --output-dir EYE/generated \
+            --semantic-byte-limit 2000000 \
+            --max-clusters 1000
+
+      - name: Mine ordered hidden machines
+        run: |
+          GITHUB_SHA="$(git rev-parse HEAD)" python EYE/r3/eye_r3_hidden_machine_miner.py \
+            --root . \
+            --index EYE/generated/EYE-REGISTRY-INDEX.json \
+            --output-dir EYE/r3/generated \
+            --min-operator-signals 2 \
+            --min-machine-length 3 \
+            --max-machine-length 5 \
+            --min-lineages-per-domain 2 \
+            --top-pairs 100 \
+            --top-triples 50 \
+            --catalog-limit 1000
+
+      - name: Validate R3 epistemic gates
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          out = Path('EYE/r3/generated')
+          required = [
+              out/'EYE-R3-HIDDEN-MACHINE-CANDIDATES.json',
+              out/'EYE-R3-MACHINE-CATALOG.json',
+              out/'EYE-R3-PALOMAR-MUSIC-GENESIS-CONSTELLATION.json',
+              out/'EYE-R3-RECEIPT.json',
+          ]
+          for p in required:
+              if not p.is_file():
+                  raise SystemExit('R3_MISSING_OUTPUT:' + str(p))
+              json.loads(p.read_text(encoding='utf-8'))
+
+          candidates = json.loads(required[0].read_text(encoding='utf-8'))
+          receipt = json.loads(required[-1].read_text(encoding='utf-8'))
+          forbidden_prefixes = ('EYE/generated/', 'EYE/r2/generated/', 'EYE/r3/generated/', 'assets/hrain-full-memory/')
+          forbidden_exact = {'assets/hrain-registry-index.json'}
+
+          if candidates['method']['named_target_bonus'] is not False:
+              raise SystemExit('R3_TARGET_WAS_BOOSTED')
+          if candidates['method']['operator_order_required'] is not True:
+              raise SystemExit('R3_ORDER_NOT_REQUIRED')
+          if candidates['method']['same_lineage_repetition_counts_as_independent'] is not False:
+              raise SystemExit('R3_SAME_LINEAGE_LEAK')
+          if receipt['gates']['derivative_memory_input_absent'] is not True:
+              raise SystemExit('R3_DERIVATIVE_MEMORY_GATE_NOT_CLOSED')
+
+          all_candidates = candidates['top_pair_candidates'] + candidates['top_triple_candidates'] + candidates['target_hunt']['top_matching_machines']
+          for cand in all_candidates:
+              if cand['authority'] != 'CANDIDATE_ONLY__INDEPENDENT_VERIFY_REQUIRED':
+                  raise SystemExit('R3_AUTHORITY_ESCALATION:' + cand['candidate_id'])
+              if len(cand['machine']) < 3:
+                  raise SystemExit('R3_MACHINE_TOO_SHORT:' + cand['candidate_id'])
+              if len(set(cand['domains'])) != len(cand['domains']):
+                  raise SystemExit('R3_NON_CROSS_DOMAIN:' + cand['candidate_id'])
+              if min(cand['independent_lineage_support'].values()) < 2:
+                  raise SystemExit('R3_INDEPENDENCE_GATE_FAIL:' + cand['candidate_id'])
+              for docs in cand['provenance'].values():
+                  lineages = set()
+                  for d in docs:
+                      p = d['path']
+                      if p in forbidden_exact or any(p.startswith(prefix) for prefix in forbidden_prefixes):
+                          raise SystemExit('R3_DERIVATIVE_MEMORY_LEAK:' + p)
+                      lineages.add(d['lineage'])
+                  if len(lineages) < 2:
+                      raise SystemExit('R3_PROVENANCE_NOT_INDEPENDENT:' + cand['candidate_id'])
+
+          print(json.dumps({
+              'status': receipt['status'],
+              'eligible_ordered_machines': receipt['counts']['eligible_ordered_machines'],
+              'pairs': receipt['counts']['novel_pairs_emitted'],
+              'triples': receipt['counts']['novel_triples_emitted'],
+              'target': receipt['target_hunt']['status'],
+              'target_matching_machines': receipt['counts']['palomar_music_genesis_matching_machines'],
+          }, sort_keys=True))
+          PY
+
+      - name: Commit R3 state conflict-safely
+        run: |
+          set -euo pipefail
+          git config user.name 'EYE R3 Hidden Machine Miner'
+          git config user.email 'actions@users.noreply.github.com'
+
+          rebuild() {
+            rm -rf EYE/generated EYE/r2/generated EYE/r3/generated assets/hrain-full-memory
+            rm -f assets/hrain-registry-index.json
+            GITHUB_SHA="$(git rev-parse HEAD)" python EYE/training/train_eye_registry.py \
+              --root . --output-dir EYE/generated --semantic-byte-limit 2000000 --max-clusters 1000
+            GITHUB_SHA="$(git rev-parse HEAD)" python EYE/r3/eye_r3_hidden_machine_miner.py \
+              --root . --index EYE/generated/EYE-REGISTRY-INDEX.json --output-dir EYE/r3/generated \
+              --min-operator-signals 2 --min-machine-length 3 --max-machine-length 5 \
+              --min-lineages-per-domain 2 --top-pairs 100 --top-triples 50 --catalog-limit 1000
+          }
+
+          for attempt in 1 2 3; do
+            git fetch origin main
+            current="$(git rev-parse HEAD)"
+            remote="$(git rev-parse origin/main)"
+            if [ "$current" != "$remote" ]; then
+              echo "EYE_R3_SOURCE_DRIFT attempt=$attempt current=$current remote=$remote"
+              git reset --hard origin/main
+              rebuild
+            fi
+
+            git add EYE/r3/generated/*.json
+            if git diff --cached --quiet; then
+              echo 'EYE R3 state already matches current source snapshot.'
+              exit 0
+            fi
+
+            git commit -m '[eye-r3] Refresh hidden machine candidates'
+            if git push origin HEAD:main; then
+              echo 'EYE_R3_PUSH=SUCCESS'
+              exit 0
+            fi
+
+            echo "EYE_R3_PUSH_RACE_RETRY attempt=$attempt"
+            git fetch origin main
+            git reset --hard origin/main
+            rebuild
+          done
+
+          echo 'EYE_R3_PUSH=FAILED_AFTER_RETRIES'
+          exit 1
+
+      - name: Upload R3 evidence bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: eye-r3-hidden-machine-${{ github.run_id }}
+          path: EYE/r3/generated/*.json
+          if-no-files-found: error
