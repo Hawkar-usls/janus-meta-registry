@@ -24,8 +24,8 @@
     "ubiquitous_operator_usage_penalized": true
   },
   "schema": "janus.eye.r3.hidden_machine_miner.v1",
-  "source_git_commit": "79024aa9e2ac3d608cafbe204ad18baed0530ade",
-  "source_index_corpus_digest_sha256": "aa570e88ee690ba9cea95e671d319e32c63541dd67aaeecdc2498bfbb8aa78fb",
+  "source_git_commit": "0c04e2467b3ca85cae74223fb8963999198a134e",
+  "source_index_corpus_digest_sha256": "03b063e0b5a1a549b40a7966f2dca501c41ddde7b1330d6c1683bda0fef27994",
   "status": "CANDIDATE_MINING_COMPLETE__VERIFY_REQUIRED",
   "target_hunt": {
     "domains": [
@@ -7069,6 +7069,266 @@
         "epistemic state identity under unsuccessful execution"
       ],
       "score": 77.891709,
+      "verify_next": "Freeze the candidate; manually map input, state transition, output and verifier for each supporting lineage; then compare against lexically similar reordered negative controls.",
+      "why": "The same ordered operator machine appears in both domains despite penalized surface vocabulary overlap and lineage reuse."
+    },
+    {
+      "already_explicit_relation_detected": false,
+      "authority": "CANDIDATE_ONLY__INDEPENDENT_VERIFY_REQUIRED",
+      "candidate_id": "EYE-R3-PAIR-794122b94e2c7d54",
+      "candidate_type": "CROSS_DOMAIN_HIDDEN_MACHINE",
+      "confidence_class": "STRONG_HIDDEN_MACHINE_CANDIDATE__VERIFY_REQUIRED",
+      "counterexample": "The sequence is caused by shared JSON/workflow template order or generic JANUS governance boilerplate rather than the same operational mechanism.",
+      "domains": [
+        "EYE",
+        "LINEAR_A"
+      ],
+      "falsifier": "On held-out/manual verification, the claimed operator order or input-state-output semantics fail to align in either domain, or matched controls recover the same score without the mechanism.",
+      "formula": "EYE --[STATE_TRANSITION -> COST_REGRET_ROUTING -> PRESERVE_FAILURE -> FREEZE_COMPARE]--> LINEAR_A",
+      "independent_lineage_support": {
+        "EYE": 3,
+        "LINEAR_A": 3
+      },
+      "lexical_distance": 0.972464,
+      "lexical_overlap": 0.027536,
+      "lineage_overlap": 0.0,
+      "machine": [
+        "STATE_TRANSITION",
+        "COST_REGRET_ROUTING",
+        "PRESERVE_FAILURE",
+        "FREEZE_COMPARE"
+      ],
+      "machine_domain_rarity": 0.894737,
+      "machine_id": "EYE-R3-MACHINE-266e9b9df46c9ba6",
+      "operator_specificity": 0.0,
+      "provenance": {
+        "EYE": [
+          {
+            "artifact_id": null,
+            "lineage": "eye-r4-3-stochastic-witness-planner",
+            "machine_normalized_positions": [
+              0.00852148,
+              0.06616387,
+              0.09373623,
+              0.12449189
+            ],
+            "machine_signal_strength": 15,
+            "operator_hits": {
+              "COST_REGRET_ROUTING": [
+                "cost",
+                "resource"
+              ],
+              "FREEZE_COMPARE": [
+                "baseline",
+                "frozen"
+              ],
+              "PRESERVE_FAILURE": [
+                "blocked",
+                "failure",
+                "mismatch",
+                "resource_limit",
+                "unknown"
+              ],
+              "STATE_TRANSITION": [
+                "blocked",
+                "match",
+                "mismatch",
+                "pass",
+                "state",
+                "terminal"
+              ]
+            },
+            "path": "EYE/r4_3/eye_r4_3_stochastic_witness_planner.py",
+            "sha256": "431458934161ef27bf56b460a83a9f9327454590ad150b7e14e959756b042af6"
+          },
+          {
+            "artifact_id": null,
+            "lineage": "eye-r4-2-adaptive-witness-planner",
+            "machine_normalized_positions": [
+              0.01361195,
+              0.06445442,
+              0.09763814,
+              0.10918991
+            ],
+            "machine_signal_strength": 13,
+            "operator_hits": {
+              "COST_REGRET_ROUTING": [
+                "cost",
+                "resource"
+              ],
+              "FREEZE_COMPARE": [
+                "baseline",
+                "frozen"
+              ],
+              "PRESERVE_FAILURE": [
+                "failure",
+                "mismatch",
+                "resource_limit",
+                "unknown"
+              ],
+              "STATE_TRANSITION": [
+                "match",
+                "mismatch",
+                "pass",
+                "state",
+                "terminal"
+              ]
+            },
+            "path": "EYE/r4_2/eye_r4_2_adaptive_witness_planner.py",
+            "sha256": "bc550c70d519e4e90579e3adad8b4d8c905eec460211f6285d0f7cc39b19f598"
+          },
+          {
+            "artifact_id": null,
+            "lineage": "eye-r4-1-minimum-witness-set-solver",
+            "machine_normalized_positions": [
+              0.01199269,
+              0.06250496,
+              0.10094512,
+              0.10229529
+            ],
+            "machine_signal_strength": 11,
+            "operator_hits": {
+              "COST_REGRET_ROUTING": [
+                "cost",
+                "resource"
+              ],
+              "FREEZE_COMPARE": [
+                "baseline",
+                "frozen"
+              ],
+              "PRESERVE_FAILURE": [
+                "failure",
+                "resource_limit",
+                "unknown"
+              ],
+              "STATE_TRANSITION": [
+                "after",
+                "change",
+                "pass",
+                "verdict"
+              ]
+            },
+            "path": "EYE/r4_1/eye_r4_1_minimum_witness_set_solver.py",
+            "sha256": "aa17bf408f9e4187d1d679cde86972d6f5ba40e97f5393dfe276bb1097a301c6"
+          }
+        ],
+        "LINEAR_A": [
+          {
+            "artifact_id": null,
+            "lineage": "janus-linear-a-canonical-state-v2-9-conditional",
+            "machine_normalized_positions": [
+              0.00314719,
+              0.01310108,
+              0.02620215,
+              0.06491986
+            ],
+            "machine_signal_strength": 19,
+            "operator_hits": {
+              "COST_REGRET_ROUTING": [
+                "timeout",
+                "work"
+              ],
+              "FREEZE_COMPARE": [
+                "freeze",
+                "frozen"
+              ],
+              "PRESERVE_FAILURE": [
+                "blocked",
+                "mismatch",
+                "open",
+                "preserve",
+                "timeout"
+              ],
+              "STATE_TRANSITION": [
+                "after",
+                "before",
+                "blocked",
+                "change",
+                "match",
+                "mismatch",
+                "open",
+                "pass",
+                "state",
+                "transition"
+              ]
+            },
+            "path": ".github/workflows/janus-linear-a-canonical-state-v2-9-conditional.yml",
+            "sha256": "dd2280e5f287839d3ff2e6d24619bd9a147a6b278d5e944cf61ee6e9db541581"
+          },
+          {
+            "artifact_id": null,
+            "lineage": "janus-linear-a-long-formula",
+            "machine_normalized_positions": [
+              0.04313253,
+              0.09975904,
+              0.13686747,
+              0.16674699
+            ],
+            "machine_signal_strength": 10,
+            "operator_hits": {
+              "COST_REGRET_ROUTING": [
+                "timeout",
+                "work"
+              ],
+              "FREEZE_COMPARE": [
+                "freeze",
+                "frozen"
+              ],
+              "PRESERVE_FAILURE": [
+                "null",
+                "open",
+                "timeout"
+              ],
+              "STATE_TRANSITION": [
+                "after",
+                "open",
+                "transition"
+              ]
+            },
+            "path": ".github/workflows/janus-linear-a-long-formula-v0-8.yml",
+            "sha256": "0dd4a77d579205f2a3e4958876c2dc78fd7b61d1b4a4744a37853713f92d4c02"
+          },
+          {
+            "artifact_id": null,
+            "lineage": "janus-linear-a-formula-transition",
+            "machine_normalized_positions": [
+              0.00875604,
+              0.10688406,
+              0.15700483,
+              0.19444444
+            ],
+            "machine_signal_strength": 9,
+            "operator_hits": {
+              "COST_REGRET_ROUTING": [
+                "timeout",
+                "work"
+              ],
+              "FREEZE_COMPARE": [
+                "frozen",
+                "holdout"
+              ],
+              "PRESERVE_FAILURE": [
+                "null",
+                "open",
+                "timeout"
+              ],
+              "STATE_TRANSITION": [
+                "open",
+                "transition"
+              ]
+            },
+            "path": ".github/workflows/janus-linear-a-formula-transition-v0-7.yml",
+            "sha256": "1c88c2e6c8eba633a72e31b1237b9f80f72697b306b1a6ccc2e287cfb6e4806b"
+          }
+        ]
+      },
+      "representation_invariants": [
+        "typed transition semantics between epistemic states",
+        "resource-aware routing without authority escalation",
+        "epistemic state identity under unsuccessful execution",
+        "precommitted reference frame before comparison"
+      ],
+      "score": 77.870328,
       "verify_next": "Freeze the candidate; manually map input, state transition, output and verifier for each supporting lineage; then compare against lexically similar reordered negative controls.",
       "why": "The same ordered operator machine appears in both domains despite penalized surface vocabulary overlap and lineage reuse."
     },
@@ -21953,6 +22213,236 @@
     {
       "already_explicit_relation_detected": false,
       "authority": "CANDIDATE_ONLY__INDEPENDENT_VERIFY_REQUIRED",
+      "candidate_id": "EYE-R3-PAIR-493470b91a4cc9e6",
+      "candidate_type": "CROSS_DOMAIN_HIDDEN_MACHINE",
+      "confidence_class": "MEDIUM_HIDDEN_MACHINE_CANDIDATE__VERIFY_REQUIRED",
+      "counterexample": "The sequence is caused by shared JSON/workflow template order or generic JANUS governance boilerplate rather than the same operational mechanism.",
+      "domains": [
+        "EYE",
+        "FALLOUT"
+      ],
+      "falsifier": "On held-out/manual verification, the claimed operator order or input-state-output semantics fail to align in either domain, or matched controls recover the same score without the mechanism.",
+      "formula": "EYE --[BOUNDED_CANDIDATE_SEARCH -> PROVENANCE_CHAIN -> EXACT_VS_SEMANTIC_IDENTITY -> EXTERNAL_WITNESS]--> FALLOUT",
+      "independent_lineage_support": {
+        "EYE": 2,
+        "FALLOUT": 3
+      },
+      "lexical_distance": 0.998288,
+      "lexical_overlap": 0.001712,
+      "lineage_overlap": 0.0,
+      "machine": [
+        "BOUNDED_CANDIDATE_SEARCH",
+        "PROVENANCE_CHAIN",
+        "EXACT_VS_SEMANTIC_IDENTITY",
+        "EXTERNAL_WITNESS"
+      ],
+      "machine_domain_rarity": 0.894737,
+      "machine_id": "EYE-R3-MACHINE-113626d0ce5472ce",
+      "operator_specificity": 0.013158,
+      "provenance": {
+        "EYE": [
+          {
+            "artifact_id": "EYE-R4.2-SEARCH-PROOF-ADAPTIVE-v1",
+            "lineage": "eye-r4-2-search-proof-adaptive",
+            "machine_normalized_positions": [
+              0.06413302,
+              0.22248614,
+              0.26920032,
+              0.75138559
+            ],
+            "machine_signal_strength": 11,
+            "operator_hits": {
+              "BOUNDED_CANDIDATE_SEARCH": [
+                "rank",
+                "ranking"
+              ],
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "exact",
+                "hash"
+              ],
+              "EXTERNAL_WITNESS": [
+                "control",
+                "independent",
+                "verifier"
+              ],
+              "PROVENANCE_CHAIN": [
+                "commit",
+                "hash",
+                "provenance",
+                "source"
+              ]
+            },
+            "path": "EYE/r4_2/generated/search_proof_adaptive/next_test_ranking.json",
+            "sha256": "9c8f18d906cf4a291347b27318a38956f4e66ea498a6e4acd235e0637956ef71"
+          },
+          {
+            "artifact_id": "EYE-R4.3-SEARCH-PROOF-STOCHASTIC-v1",
+            "lineage": "eye-r4-3-search-proof-stochastic",
+            "machine_normalized_positions": [
+              0.06217228,
+              0.24194757,
+              0.28689139,
+              0.517603
+            ],
+            "machine_signal_strength": 11,
+            "operator_hits": {
+              "BOUNDED_CANDIDATE_SEARCH": [
+                "rank",
+                "ranking"
+              ],
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "exact",
+                "hash"
+              ],
+              "EXTERNAL_WITNESS": [
+                "control",
+                "independent",
+                "verifier"
+              ],
+              "PROVENANCE_CHAIN": [
+                "commit",
+                "hash",
+                "provenance",
+                "source"
+              ]
+            },
+            "path": "EYE/r4_3/generated/search_proof_stochastic/next_test_ranking.json",
+            "sha256": "83efe8ea08a8a37d3ffd5d5372501a85017deaae8a8a6a69674747828d62c10a"
+          }
+        ],
+        "FALLOUT": [
+          {
+            "artifact_id": "JANUS-FALLOUT-ATOMIC-INTEGRATED-CURRENT-AUTHORITY-v2.0",
+            "lineage": "janus-fallout-atomic-integrated-current-authority",
+            "machine_normalized_positions": [
+              0.00950967,
+              0.01238577,
+              0.02472515,
+              0.02514265
+            ],
+            "machine_signal_strength": 25,
+            "operator_hits": {
+              "BOUNDED_CANDIDATE_SEARCH": [
+                "admission",
+                "candidate",
+                "gate",
+                "route"
+              ],
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "byte",
+                "bytes",
+                "continuity",
+                "exact",
+                "hash",
+                "identity",
+                "semantic",
+                "sha256"
+              ],
+              "EXTERNAL_WITNESS": [
+                "control",
+                "external",
+                "independent",
+                "verifier",
+                "witness"
+              ],
+              "PROVENANCE_CHAIN": [
+                "canonical",
+                "hash",
+                "lineage",
+                "parent",
+                "provenance",
+                "receipt",
+                "sha256",
+                "source"
+              ]
+            },
+            "path": "registry/cosmology/JANUS-FALLOUT-ATOMIC-INTEGRATED-CURRENT-AUTHORITY-v2.0.json",
+            "sha256": "8393144690d6b8ca026b0d5555f5a9a322d519a775e08d26a002a8722b126566"
+          },
+          {
+            "artifact_id": "FALLOUT-3-JAMES-150-DEGREE-SPOKE-BACKEND-STATE-CARRIER-REFERENCE-AUDIT-v2.5",
+            "lineage": "fallout-3-james-150-degree-spoke-backend-state-carrier-reference-audit",
+            "machine_normalized_positions": [
+              0.06312997,
+              0.08143236,
+              0.10026525,
+              0.25543767
+            ],
+            "machine_signal_strength": 13,
+            "operator_hits": {
+              "BOUNDED_CANDIDATE_SEARCH": [
+                "admission",
+                "candidate",
+                "gate"
+              ],
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "exact",
+                "identity",
+                "semantic",
+                "sha256"
+              ],
+              "EXTERNAL_WITNESS": [
+                "control",
+                "external",
+                "independent"
+              ],
+              "PROVENANCE_CHAIN": [
+                "parent",
+                "sha256",
+                "source"
+              ]
+            },
+            "path": "registry/myth_busted/FALLOUT-3-JAMES-150-DEGREE-SPOKE-BACKEND-STATE-CARRIER-REFERENCE-AUDIT-v2.5.json",
+            "sha256": "082b0e9a1ffb4f0fba3eb2647b81d8646eead97069b9c56a14b871391f87c035"
+          },
+          {
+            "artifact_id": "FALLOUT-3-JAMES-VAULT112-LIVE-STATE-EXPORT-ADMISSION-GATE-v1.0",
+            "lineage": "fallout-3-james-vault112-live-state-export-admission-gate",
+            "machine_normalized_positions": [
+              0.0112837,
+              0.07268464,
+              0.12793083,
+              0.1887456
+            ],
+            "machine_signal_strength": 10,
+            "operator_hits": {
+              "BOUNDED_CANDIDATE_SEARCH": [
+                "admission",
+                "gate"
+              ],
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "continuity",
+                "identity"
+              ],
+              "EXTERNAL_WITNESS": [
+                "control",
+                "external",
+                "independent"
+              ],
+              "PROVENANCE_CHAIN": [
+                "canonical",
+                "parent",
+                "source"
+              ]
+            },
+            "path": "registry/myth_busted/FALLOUT-3-JAMES-VAULT112-LIVE-STATE-EXPORT-ADMISSION-GATE-v1.0.json",
+            "sha256": "171bec60ee52e10a6372cf5192b316c9a2fda266b86d015ba1d8cb87d43648fc"
+          }
+        ]
+      },
+      "representation_invariants": [
+        "candidate set plus admission constraints",
+        "source-to-result identity chain",
+        "identity type is explicit and not silently upgraded",
+        "independent falsifiability of a local claim"
+      ],
+      "score": 75.584174,
+      "verify_next": "Freeze the candidate; manually map input, state transition, output and verifier for each supporting lineage; then compare against lexically similar reordered negative controls.",
+      "why": "The same ordered operator machine appears in both domains despite penalized surface vocabulary overlap and lineage reuse."
+    },
+    {
+      "already_explicit_relation_detected": false,
+      "authority": "CANDIDATE_ONLY__INDEPENDENT_VERIFY_REQUIRED",
       "candidate_id": "EYE-R3-PAIR-17d532314df7ef98",
       "candidate_type": "CROSS_DOMAIN_HIDDEN_MACHINE",
       "confidence_class": "MEDIUM_HIDDEN_MACHINE_CANDIDATE__VERIFY_REQUIRED",
@@ -34154,834 +34644,6 @@
       "score": 74.888102,
       "verify_next": "Freeze the candidate; manually map input, state transition, output and verifier for each supporting lineage; then compare against lexically similar reordered negative controls.",
       "why": "The same ordered operator machine appears in both domains despite penalized surface vocabulary overlap and lineage reuse."
-    },
-    {
-      "already_explicit_relation_detected": false,
-      "authority": "CANDIDATE_ONLY__INDEPENDENT_VERIFY_REQUIRED",
-      "candidate_id": "EYE-R3-PAIR-2bc560c0dea2956b",
-      "candidate_type": "CROSS_DOMAIN_HIDDEN_MACHINE",
-      "confidence_class": "MEDIUM_HIDDEN_MACHINE_CANDIDATE__VERIFY_REQUIRED",
-      "counterexample": "The sequence is caused by shared JSON/workflow template order or generic JANUS governance boilerplate rather than the same operational mechanism.",
-      "domains": [
-        "LINEAR_A",
-        "PALOMAR"
-      ],
-      "falsifier": "On held-out/manual verification, the claimed operator order or input-state-output semantics fail to align in either domain, or matched controls recover the same score without the mechanism.",
-      "formula": "LINEAR_A --[PROVENANCE_CHAIN -> SEALED_CONTEXT_RECOVERY -> STATE_TRANSITION]--> PALOMAR",
-      "independent_lineage_support": {
-        "LINEAR_A": 6,
-        "PALOMAR": 4
-      },
-      "lexical_distance": 0.951702,
-      "lexical_overlap": 0.048298,
-      "lineage_overlap": 0.0,
-      "machine": [
-        "PROVENANCE_CHAIN",
-        "SEALED_CONTEXT_RECOVERY",
-        "STATE_TRANSITION"
-      ],
-      "machine_domain_rarity": 0.789474,
-      "machine_id": "EYE-R3-MACHINE-ffb7a2725f19ecc3",
-      "operator_specificity": 0.0,
-      "provenance": {
-        "LINEAR_A": [
-          {
-            "artifact_id": "JANUS-LINEAR-A-PARSER-BOUNDARY-CANARY-AUDIT-2026-08-14-v1.0",
-            "lineage": "janus-linear-a-parser-boundary-canary-audit",
-            "machine_normalized_positions": [
-              0.05814213,
-              0.10692805,
-              0.13744709
-            ],
-            "machine_signal_strength": 18,
-            "operator_hits": {
-              "PROVENANCE_CHAIN": [
-                "canonical",
-                "commit",
-                "digest",
-                "hash",
-                "parent",
-                "provenance",
-                "receipt",
-                "sha256",
-                "source"
-              ],
-              "SEALED_CONTEXT_RECOVERY": [
-                "hash",
-                "sha256"
-              ],
-              "STATE_TRANSITION": [
-                "after",
-                "before",
-                "blocked",
-                "delta",
-                "pass",
-                "state",
-                "transition"
-              ]
-            },
-            "path": "data/JANUS-LINEAR-A-PARSER-BOUNDARY-CANARY-AUDIT-2026-08-14-v1.0.json",
-            "sha256": "51bf4fe865add31122bbb817e9b5adac03a2a9f60df7624b739cb3a3f1ef2ff0"
-          },
-          {
-            "artifact_id": null,
-            "lineage": "janus-linear-a-canonical-state",
-            "machine_normalized_positions": [
-              0.00551331,
-              0.00551331,
-              0.0134981
-            ],
-            "machine_signal_strength": 15,
-            "operator_hits": {
-              "PROVENANCE_CHAIN": [
-                "canonical",
-                "digest",
-                "hash",
-                "parent",
-                "sha256",
-                "source"
-              ],
-              "SEALED_CONTEXT_RECOVERY": [
-                "hash",
-                "sha256"
-              ],
-              "STATE_TRANSITION": [
-                "after",
-                "change",
-                "delta",
-                "open",
-                "pass",
-                "state",
-                "terminal"
-              ]
-            },
-            "path": "research/linear_a/janus_linear_a_canonical_state_v2_31.py",
-            "sha256": "f7977d59329fd3b0db633b244f53a9201604ea52e11237d123b87ac325628581"
-          },
-          {
-            "artifact_id": "JANUS-LINEAR-A-SIGLA-DOCUMENT-IDENTITY-BRIDGE-RESULT-2026-08-14-v0.1",
-            "lineage": "janus-linear-a-sigla-document-identity-bridge-result",
-            "machine_normalized_positions": [
-              0.08140093,
-              0.17767472,
-              0.3495922
-            ],
-            "machine_signal_strength": 14,
-            "operator_hits": {
-              "PROVENANCE_CHAIN": [
-                "commit",
-                "digest",
-                "hash",
-                "receipt",
-                "sha256",
-                "source"
-              ],
-              "SEALED_CONTEXT_RECOVERY": [
-                "hash",
-                "recover",
-                "sha256"
-              ],
-              "STATE_TRANSITION": [
-                "after",
-                "before",
-                "blocked",
-                "match",
-                "state"
-              ]
-            },
-            "path": "data/JANUS-LINEAR-A-SIGLA-DOCUMENT-IDENTITY-BRIDGE-RESULT-2026-08-14-v0.1.json",
-            "sha256": "521944d0a44a04546a1c43cff148111dcd8995e552fbdc50f02fc548845bab92"
-          },
-          {
-            "artifact_id": null,
-            "lineage": "janus-linear-a-r3c3-current-source-method-differential",
-            "machine_normalized_positions": [
-              0.04117109,
-              0.04117109,
-              0.1042086
-            ],
-            "machine_signal_strength": 12,
-            "operator_hits": {
-              "PROVENANCE_CHAIN": [
-                "digest",
-                "hash",
-                "receipt",
-                "sha256",
-                "source"
-              ],
-              "SEALED_CONTEXT_RECOVERY": [
-                "hash",
-                "plaintext",
-                "sha256"
-              ],
-              "STATE_TRANSITION": [
-                "before",
-                "change",
-                "match",
-                "open"
-              ]
-            },
-            "path": "research/linear_a/janus_linear_a_r3c3_current_source_method_differential_v0_1.py",
-            "sha256": "83f0ebeec09761f1ddaf1a91ab8e27e1bef2f6592f1ce4f9b6779d704d5b69ec"
-          },
-          {
-            "artifact_id": null,
-            "lineage": "janus-linear-a-r3c-annotation-source-identity-reconciliation",
-            "machine_normalized_positions": [
-              0.01096835,
-              0.01096835,
-              0.19602006
-            ],
-            "machine_signal_strength": 12,
-            "operator_hits": {
-              "PROVENANCE_CHAIN": [
-                "commit",
-                "digest",
-                "hash",
-                "lineage",
-                "receipt",
-                "sha256",
-                "source"
-              ],
-              "SEALED_CONTEXT_RECOVERY": [
-                "hash",
-                "sha256"
-              ],
-              "STATE_TRANSITION": [
-                "before",
-                "change",
-                "match"
-              ]
-            },
-            "path": "research/linear_a/janus_linear_a_r3c_annotation_source_identity_reconciliation_v0_1.py",
-            "sha256": "5fefe9cb30b06ac6ed5e558fd6ee290225b992de274cecfbac6d2666e942fbd2"
-          },
-          {
-            "artifact_id": null,
-            "lineage": "janus-linear-a-r3c-real-ir-projection-diagnostic",
-            "machine_normalized_positions": [
-              0.03067805,
-              0.06536517,
-              0.46993202
-            ],
-            "machine_signal_strength": 12,
-            "operator_hits": {
-              "PROVENANCE_CHAIN": [
-                "digest",
-                "hash",
-                "parent",
-                "receipt",
-                "sha256",
-                "source"
-              ],
-              "SEALED_CONTEXT_RECOVERY": [
-                "hash",
-                "sha256"
-              ],
-              "STATE_TRANSITION": [
-                "change",
-                "match",
-                "mismatch",
-                "pass"
-              ]
-            },
-            "path": "research/linear_a/janus_linear_a_r3c_real_ir_projection_diagnostic_v0_1.py",
-            "sha256": "98002433f43b1e8c327be0a6d9d9046ac1729c29fb2c39cc04ad5a6fd98c84ae"
-          }
-        ],
-        "PALOMAR": [
-          {
-            "artifact_id": null,
-            "lineage": "jpfm-2f-b3s-aggregate",
-            "machine_normalized_positions": [
-              0.01192146,
-              0.01192146,
-              0.10614561
-            ],
-            "machine_signal_strength": 20,
-            "operator_hits": {
-              "PROVENANCE_CHAIN": [
-                "canonical",
-                "commit",
-                "digest",
-                "hash",
-                "lineage",
-                "parent",
-                "receipt",
-                "sha256",
-                "source"
-              ],
-              "SEALED_CONTEXT_RECOVERY": [
-                "hash",
-                "recover",
-                "sealed",
-                "sha256"
-              ],
-              "STATE_TRANSITION": [
-                "after",
-                "before",
-                "change",
-                "match",
-                "mismatch",
-                "open",
-                "pass"
-              ]
-            },
-            "path": "tools/palomar/jpfm_2f_b3s_aggregate.py",
-            "sha256": "c58187b25b50a9ba29d93890281194c16485a710582edc03de3658c72829f467"
-          },
-          {
-            "artifact_id": null,
-            "lineage": "jpfm-2f-c0h-header-only-wcs-equivalence",
-            "machine_normalized_positions": [
-              0.01376079,
-              0.01376079,
-              0.14720321
-            ],
-            "machine_signal_strength": 16,
-            "operator_hits": {
-              "PROVENANCE_CHAIN": [
-                "canonical",
-                "commit",
-                "digest",
-                "hash",
-                "lineage",
-                "parent",
-                "sha256",
-                "source"
-              ],
-              "SEALED_CONTEXT_RECOVERY": [
-                "hash",
-                "sealed",
-                "sha256"
-              ],
-              "STATE_TRANSITION": [
-                "delta",
-                "match",
-                "mismatch",
-                "open",
-                "pass"
-              ]
-            },
-            "path": "tools/palomar/jpfm_2f_c0h_header_only_wcs_equivalence.py",
-            "sha256": "c425a4c8eda7f28e0beae41f5de596b387ddfb9ce8afe98ea8d4522a24cd6682"
-          },
-          {
-            "artifact_id": null,
-            "lineage": "jpfm-5a-local-weather-source-intake",
-            "machine_normalized_positions": [
-              0.01571118,
-              0.01571118,
-              0.18118001
-            ],
-            "machine_signal_strength": 9,
-            "operator_hits": {
-              "PROVENANCE_CHAIN": [
-                "digest",
-                "hash",
-                "parent",
-                "sha256",
-                "source"
-              ],
-              "SEALED_CONTEXT_RECOVERY": [
-                "hash",
-                "sha256"
-              ],
-              "STATE_TRANSITION": [
-                "change",
-                "state"
-              ]
-            },
-            "path": "tools/palomar/jpfm_5a_local_weather_source_intake.py",
-            "sha256": "230d9e2aff9d08ff1200218756eaf486245aca19d3ba7192f573b8320d29d3a3"
-          },
-          {
-            "artifact_id": "JANUS-PALOMAR-JPFM-2F-C1A2-MOMENT-SURROGATE-NEGATIVE-CERTIFICATE-v1.0",
-            "lineage": "janus-palomar-jpfm-2f-c1a2-moment-surrogate-negative-certificate",
-            "machine_normalized_positions": [
-              0.12264564,
-              0.23959702,
-              0.3760403
-            ],
-            "machine_signal_strength": 8,
-            "operator_hits": {
-              "PROVENANCE_CHAIN": [
-                "canonical",
-                "parent",
-                "sha256",
-                "source"
-              ],
-              "SEALED_CONTEXT_RECOVERY": [
-                "sealed",
-                "sha256"
-              ],
-              "STATE_TRANSITION": [
-                "pass",
-                "verdict"
-              ]
-            },
-            "path": "data/JANUS-PALOMAR-JPFM-2F-C1A2-MOMENT-SURROGATE-NEGATIVE-CERTIFICATE-v1.0.json",
-            "sha256": "cc69317fb1c7afa1fdc2733d7408b6d71d909057f2ec8e8c9015cff23e7d883b"
-          }
-        ]
-      },
-      "representation_invariants": [
-        "source-to-result identity chain",
-        "surviving contextual constraints around an irreversible identity token",
-        "typed transition semantics between epistemic states"
-      ],
-      "score": 74.876151,
-      "verify_next": "Freeze the candidate; manually map input, state transition, output and verifier for each supporting lineage; then compare against lexically similar reordered negative controls.",
-      "why": "The same ordered operator machine appears in both domains despite penalized surface vocabulary overlap and lineage reuse."
-    },
-    {
-      "already_explicit_relation_detected": false,
-      "authority": "CANDIDATE_ONLY__INDEPENDENT_VERIFY_REQUIRED",
-      "candidate_id": "EYE-R3-PAIR-20bf18608ae5625a",
-      "candidate_type": "CROSS_DOMAIN_HIDDEN_MACHINE",
-      "confidence_class": "MEDIUM_HIDDEN_MACHINE_CANDIDATE__VERIFY_REQUIRED",
-      "counterexample": "The sequence is caused by shared JSON/workflow template order or generic JANUS governance boilerplate rather than the same operational mechanism.",
-      "domains": [
-        "CONNECTION",
-        "PALOMAR"
-      ],
-      "falsifier": "On held-out/manual verification, the claimed operator order or input-state-output semantics fail to align in either domain, or matched controls recover the same score without the mechanism.",
-      "formula": "CONNECTION --[FREEZE_COMPARE -> STATE_TRANSITION -> PROVENANCE_CHAIN]--> PALOMAR",
-      "independent_lineage_support": {
-        "CONNECTION": 6,
-        "PALOMAR": 6
-      },
-      "lexical_distance": 0.951538,
-      "lexical_overlap": 0.048462,
-      "lineage_overlap": 0.0,
-      "machine": [
-        "FREEZE_COMPARE",
-        "STATE_TRANSITION",
-        "PROVENANCE_CHAIN"
-      ],
-      "machine_domain_rarity": 0.789474,
-      "machine_id": "EYE-R3-MACHINE-9943ed9caffb4a73",
-      "operator_specificity": 0.0,
-      "provenance": {
-        "CONNECTION": [
-          {
-            "artifact_id": null,
-            "lineage": "janus-connection-hidden-pattern-heldout-rewire",
-            "machine_normalized_positions": [
-              0.01511962,
-              0.01578947,
-              0.01645933
-            ],
-            "machine_signal_strength": 17,
-            "operator_hits": {
-              "FREEZE_COMPARE": [
-                "freeze",
-                "frozen",
-                "heldout",
-                "preregister"
-              ],
-              "PROVENANCE_CHAIN": [
-                "canonical",
-                "commit",
-                "digest",
-                "hash",
-                "parent",
-                "provenance",
-                "sha256",
-                "source"
-              ],
-              "STATE_TRANSITION": [
-                "after",
-                "before",
-                "change",
-                "match",
-                "pass"
-              ]
-            },
-            "path": "tools/connection/janus_connection_hidden_pattern_heldout_rewire_v0_1.py",
-            "sha256": "caec0bc63bdb85b5f6572502e17a1979d690f0c90c9a0677481bc65b90368ba6"
-          },
-          {
-            "artifact_id": "JANUS-CONNECTION-HIDDEN-PATTERN-HELDOUT-CLASSIFICATION-RUBRIC-2026-08-14-V0.1",
-            "lineage": "janus-connection-hidden-pattern-heldout-classification-rubric",
-            "machine_normalized_positions": [
-              0.00633338,
-              0.02748956,
-              0.02951085
-            ],
-            "machine_signal_strength": 16,
-            "operator_hits": {
-              "FREEZE_COMPARE": [
-                "freeze",
-                "frozen",
-                "heldout",
-                "preregister"
-              ],
-              "PROVENANCE_CHAIN": [
-                "commit",
-                "lineage",
-                "parent",
-                "source"
-              ],
-              "STATE_TRANSITION": [
-                "after",
-                "before",
-                "blocked",
-                "change",
-                "match",
-                "open",
-                "pass",
-                "state"
-              ]
-            },
-            "path": "data/JANUS-CONNECTION-HIDDEN-PATTERN-HELDOUT-CLASSIFICATION-RUBRIC-2026-08-14-v0.1.json",
-            "sha256": "65879a5a9b7ee69e3135452057f817030613ae9a2f7e15e3165311d44aa2d446"
-          },
-          {
-            "artifact_id": "JANUS-CONNECTION-HIDDEN-PATTERN-HELDOUT-REWIRE-RESULT-2026-08-14-V0.1",
-            "lineage": "janus-connection-hidden-pattern-heldout-rewire-result",
-            "machine_normalized_positions": [
-              0.00459523,
-              0.01701212,
-              0.02229175
-            ],
-            "machine_signal_strength": 16,
-            "operator_hits": {
-              "FREEZE_COMPARE": [
-                "freeze",
-                "frozen",
-                "heldout",
-                "preregister"
-              ],
-              "PROVENANCE_CHAIN": [
-                "canonical",
-                "commit",
-                "provenance",
-                "receipt",
-                "sha256",
-                "source"
-              ],
-              "STATE_TRANSITION": [
-                "after",
-                "before",
-                "match",
-                "open",
-                "pass",
-                "state"
-              ]
-            },
-            "path": "data/JANUS-CONNECTION-HIDDEN-PATTERN-HELDOUT-REWIRE-RESULT-2026-08-14-v0.1.json",
-            "sha256": "ef9699b157d23e6369edb6baddf240d1f516d6e22ccea734abbd74a7937186cd"
-          },
-          {
-            "artifact_id": "JANUS-CONNECTION-HIDDEN-PATTERN-HELDOUT-GRAPH-FIXTURE-2026-08-14-V0.1",
-            "lineage": "janus-connection-hidden-pattern-heldout-graph-fixture",
-            "machine_normalized_positions": [
-              0.00363103,
-              0.0145241,
-              0.01753708
-            ],
-            "machine_signal_strength": 14,
-            "operator_hits": {
-              "FREEZE_COMPARE": [
-                "frozen",
-                "heldout",
-                "preregister"
-              ],
-              "PROVENANCE_CHAIN": [
-                "canonical",
-                "lineage",
-                "parent",
-                "provenance",
-                "source"
-              ],
-              "STATE_TRANSITION": [
-                "after",
-                "before",
-                "open",
-                "pass",
-                "state",
-                "terminal"
-              ]
-            },
-            "path": "data/JANUS-CONNECTION-HIDDEN-PATTERN-HELDOUT-GRAPH-FIXTURE-2026-08-14-v0.1.json",
-            "sha256": "46431761d57e96fde22de0dc756d81ceb4149f61cde8fa55e33abca6d960a68d"
-          },
-          {
-            "artifact_id": "JANUS-CONNECTION-EXTERNAL-PANEL-B-RESULT-RECORDS-SELECTION-2026-08-14-v0.1",
-            "lineage": "janus-connection-external-panel-b-result-records-selection",
-            "machine_normalized_positions": [
-              0.01887738,
-              0.02672903,
-              0.04193117
-            ],
-            "machine_signal_strength": 13,
-            "operator_hits": {
-              "FREEZE_COMPARE": [
-                "freeze",
-                "frozen"
-              ],
-              "PROVENANCE_CHAIN": [
-                "canonical",
-                "commit",
-                "provenance",
-                "sha256",
-                "source"
-              ],
-              "STATE_TRANSITION": [
-                "after",
-                "before",
-                "change",
-                "match",
-                "open",
-                "pass"
-              ]
-            },
-            "path": "data/JANUS-CONNECTION-EXTERNAL-PANEL-B-RESULT-RECORDS-SELECTION-2026-08-14-v0.1.json",
-            "sha256": "4eebff9469e3e7ce5a34ce6c0de3289665cf7aea11c775cbbb3f90b1ef2dba84"
-          },
-          {
-            "artifact_id": "JANUS-CONNECTION-HIDDEN006-HELDOUT-RUBRIC-2026-08-14-V0.1",
-            "lineage": "janus-connection-hidden006-heldout-rubric",
-            "machine_normalized_positions": [
-              0.01417004,
-              0.05533063,
-              0.06072874
-            ],
-            "machine_signal_strength": 11,
-            "operator_hits": {
-              "FREEZE_COMPARE": [
-                "frozen",
-                "heldout"
-              ],
-              "PROVENANCE_CHAIN": [
-                "receipt",
-                "source"
-              ],
-              "STATE_TRANSITION": [
-                "after",
-                "before",
-                "blocked",
-                "change",
-                "open",
-                "state",
-                "verdict"
-              ]
-            },
-            "path": "data/JANUS-CONNECTION-HIDDEN006-HELDOUT-RUBRIC-2026-08-14-v0.1.json",
-            "sha256": "15bf0d8642055bf687169f82787a5e5c67cf47deb4181b96befb7165a38a2e21"
-          }
-        ],
-        "PALOMAR": [
-          {
-            "artifact_id": null,
-            "lineage": "jpfm-2f-c1a-sparse-stamp-direct-morphology",
-            "machine_normalized_positions": [
-              0.00402014,
-              0.00808447,
-              0.01599222
-            ],
-            "machine_signal_strength": 15,
-            "operator_hits": {
-              "FREEZE_COMPARE": [
-                "freeze",
-                "frozen"
-              ],
-              "PROVENANCE_CHAIN": [
-                "canonical",
-                "commit",
-                "digest",
-                "hash",
-                "parent",
-                "sha256",
-                "source"
-              ],
-              "STATE_TRANSITION": [
-                "before",
-                "blocked",
-                "match",
-                "mismatch",
-                "open",
-                "pass"
-              ]
-            },
-            "path": "tools/palomar/jpfm_2f_c1a_sparse_stamp_direct_morphology.py",
-            "sha256": "c66f0b17f521bc44e697b2fd965ea626a37c3fdc732e9481007ffb812b2266f7"
-          },
-          {
-            "artifact_id": "JANUS-PALOMAR-JPFM-2E-SCHEDULE-CONFOUND-DECOMPOSITION-ADMISSION-v1.0",
-            "lineage": "janus-palomar-jpfm-2e-schedule-confound-decomposition-admission",
-            "machine_normalized_positions": [
-              0.02775694,
-              0.02985746,
-              0.03810953
-            ],
-            "machine_signal_strength": 14,
-            "operator_hits": {
-              "FREEZE_COMPARE": [
-                "delta",
-                "frozen",
-                "preregister"
-              ],
-              "PROVENANCE_CHAIN": [
-                "canonical",
-                "commit",
-                "parent",
-                "sha256",
-                "source"
-              ],
-              "STATE_TRANSITION": [
-                "before",
-                "delta",
-                "match",
-                "open",
-                "pass",
-                "state"
-              ]
-            },
-            "path": "data/JANUS-PALOMAR-JPFM-2E-SCHEDULE-CONFOUND-DECOMPOSITION-ADMISSION-v1.0.json",
-            "sha256": "6901ef271cfc6a5c5f257947cb4ec44663a0a3ccb49a3afdf0fbd63cd914c8e2"
-          },
-          {
-            "artifact_id": "JANUS-PALOMAR-JPFM-2F-C1A-NAMED-PLATE-SPARSE-STAMP-DIRECT-MORPHOLOGY-ADMISSION-v1.0",
-            "lineage": "janus-palomar-jpfm-2f-c1a-named-plate-sparse-stamp-direct-morphology-admission",
-            "machine_normalized_positions": [
-              0.02366589,
-              0.02529002,
-              0.04709977
-            ],
-            "machine_signal_strength": 13,
-            "operator_hits": {
-              "FREEZE_COMPARE": [
-                "comparison",
-                "difference",
-                "frozen",
-                "preregister"
-              ],
-              "PROVENANCE_CHAIN": [
-                "parent",
-                "source"
-              ],
-              "STATE_TRANSITION": [
-                "after",
-                "before",
-                "blocked",
-                "change",
-                "match",
-                "open",
-                "pass"
-              ]
-            },
-            "path": "data/JANUS-PALOMAR-JPFM-2F-C1A-NAMED-PLATE-SPARSE-STAMP-DIRECT-MORPHOLOGY-ADMISSION-v1.0.json",
-            "sha256": "ab753d41ef6c1ee7ed52b00d5a98e077c9689012498b4a6c2df0faa25a055bda"
-          },
-          {
-            "artifact_id": "JANUS-PALOMAR-JPFM-3C-HALPHA-CROSS-CHANNEL-ADMISSION-v1.0",
-            "lineage": "janus-palomar-jpfm-3c-halpha-cross-channel-admission",
-            "machine_normalized_positions": [
-              0.02922465,
-              0.03200795,
-              0.09860835
-            ],
-            "machine_signal_strength": 13,
-            "operator_hits": {
-              "FREEZE_COMPARE": [
-                "baseline",
-                "freeze",
-                "frozen",
-                "preregister",
-                "preregistration"
-              ],
-              "PROVENANCE_CHAIN": [
-                "commit",
-                "lineage",
-                "source"
-              ],
-              "STATE_TRANSITION": [
-                "after",
-                "before",
-                "blocked",
-                "change",
-                "pass"
-              ]
-            },
-            "path": "data/JANUS-PALOMAR-JPFM-3C-HALPHA-CROSS-CHANNEL-ADMISSION-v1.0.json",
-            "sha256": "3015a2cf4e23615fc50277ed44fc0e5c2a77263dfac56dc12d522fa8879f72de"
-          },
-          {
-            "artifact_id": null,
-            "lineage": "palomar-jpfm-2f-c1a-sparse-stamp-morphology",
-            "machine_normalized_positions": [
-              0.0726979,
-              0.0970774,
-              0.11352622
-            ],
-            "machine_signal_strength": 12,
-            "operator_hits": {
-              "FREEZE_COMPARE": [
-                "frozen",
-                "preregister",
-                "preregistration"
-              ],
-              "PROVENANCE_CHAIN": [
-                "commit",
-                "digest",
-                "hash",
-                "parent",
-                "sha256",
-                "source"
-              ],
-              "STATE_TRANSITION": [
-                "before",
-                "open",
-                "pass"
-              ]
-            },
-            "path": ".github/workflows/palomar-jpfm-2f-c1a-sparse-stamp-morphology.yml",
-            "sha256": "7d02318159131e6f658b632c366c3873025363d2acceee1732445ed0aacf4d60"
-          },
-          {
-            "artifact_id": "JANUS-PALOMAR-JPFM-2F-B3-SHAPE-COMPATIBILITY-REPLAY-ADMISSION-v1.0",
-            "lineage": "janus-palomar-jpfm-2f-b3-shape-compatibility-replay-admission",
-            "machine_normalized_positions": [
-              0.04078947,
-              0.04385965,
-              0.06337719
-            ],
-            "machine_signal_strength": 12,
-            "operator_hits": {
-              "FREEZE_COMPARE": [
-                "frozen",
-                "preregister"
-              ],
-              "PROVENANCE_CHAIN": [
-                "commit",
-                "lineage",
-                "parent",
-                "sha256",
-                "source"
-              ],
-              "STATE_TRANSITION": [
-                "after",
-                "before",
-                "change",
-                "open",
-                "pass"
-              ]
-            },
-            "path": "data/JANUS-PALOMAR-JPFM-2F-B3-SHAPE-COMPATIBILITY-REPLAY-ADMISSION-v1.0.json",
-            "sha256": "fea9c8b58cdf37d95531170970b89345a4098eda16fcca4289be0b2fb5c78c3a"
-          }
-        ]
-      },
-      "representation_invariants": [
-        "precommitted reference frame before comparison",
-        "typed transition semantics between epistemic states",
-        "source-to-result identity chain"
-      ],
-      "score": 74.872874,
-      "verify_next": "Freeze the candidate; manually map input, state transition, output and verifier for each supporting lineage; then compare against lexically similar reordered negative controls.",
-      "why": "The same ordered operator machine appears in both domains despite penalized surface vocabulary overlap and lineage reuse."
     }
   ],
   "top_triple_candidates": [
@@ -39602,559 +39264,6 @@
         "typed transition semantics between epistemic states"
       ],
       "score": 80.409538,
-      "verify_next": "Freeze the three-domain candidate and run explicit sequence-order controls plus manual input/state/output mapping in at least two independent lineages per domain.",
-      "why": "Three distant domains independently instantiate the same ordered operator machine while lexical and lineage overlap are penalized."
-    },
-    {
-      "authority": "CANDIDATE_ONLY__INDEPENDENT_VERIFY_REQUIRED",
-      "average_lineage_overlap": 0.0,
-      "candidate_id": "EYE-R3-TRIPLE-2ec5b025b1f7c58c",
-      "candidate_type": "THREE_DOMAIN_HIDDEN_MACHINE_CONSTELLATION",
-      "confidence_class": "STRONG_HIDDEN_MACHINE_CANDIDATE__VERIFY_REQUIRED",
-      "counterexample": "A shared authoring template, generic governance skeleton, or ubiquitous operator ordering explains the apparent constellation.",
-      "domains": [
-        "FALLOUT",
-        "LINEAR_A",
-        "PALOMAR"
-      ],
-      "explicit_pair_count": 0,
-      "falsifier": "Held-out/manual sequence verification fails in one domain, or shuffled/reordered controls score equivalently.",
-      "formula": "FALLOUT <--> LINEAR_A <--> PALOMAR via BOUNDED_CANDIDATE_SEARCH -> PROVENANCE_CHAIN -> EXACT_VS_SEMANTIC_IDENTITY",
-      "independent_lineage_support": {
-        "FALLOUT": 4,
-        "LINEAR_A": 6,
-        "PALOMAR": 6
-      },
-      "lexical_distance": 0.989269,
-      "machine": [
-        "BOUNDED_CANDIDATE_SEARCH",
-        "PROVENANCE_CHAIN",
-        "EXACT_VS_SEMANTIC_IDENTITY"
-      ],
-      "machine_domain_rarity": 0.684211,
-      "machine_id": "EYE-R3-MACHINE-4535e14c08e7fe47",
-      "operator_specificity": 0.017544,
-      "provenance": {
-        "FALLOUT": [
-          {
-            "artifact_id": "JANUS-FALLOUT-ATOMIC-INTEGRATED-CURRENT-AUTHORITY-v2.0",
-            "lineage": "janus-fallout-atomic-integrated-current-authority",
-            "machine_normalized_positions": [
-              0.00950967,
-              0.01238577,
-              0.02472515
-            ],
-            "machine_signal_strength": 20,
-            "operator_hits": {
-              "BOUNDED_CANDIDATE_SEARCH": [
-                "admission",
-                "candidate",
-                "gate",
-                "route"
-              ],
-              "EXACT_VS_SEMANTIC_IDENTITY": [
-                "byte",
-                "bytes",
-                "continuity",
-                "exact",
-                "hash",
-                "identity",
-                "semantic",
-                "sha256"
-              ],
-              "PROVENANCE_CHAIN": [
-                "canonical",
-                "hash",
-                "lineage",
-                "parent",
-                "provenance",
-                "receipt",
-                "sha256",
-                "source"
-              ]
-            },
-            "path": "registry/cosmology/JANUS-FALLOUT-ATOMIC-INTEGRATED-CURRENT-AUTHORITY-v2.0.json",
-            "sha256": "8393144690d6b8ca026b0d5555f5a9a322d519a775e08d26a002a8722b126566"
-          },
-          {
-            "artifact_id": "FALLOUT-3-MQ04-INFO-SELECTOR-BOUNDARY-CI-MERGE-RECEIPT-v1.6",
-            "lineage": "fallout-3-mq04-info-selector-boundary-ci-merge-receipt",
-            "machine_normalized_positions": [
-              0.01398601,
-              0.02097902,
-              0.0971251
-            ],
-            "machine_signal_strength": 12,
-            "operator_hits": {
-              "BOUNDED_CANDIDATE_SEARCH": [
-                "candidate",
-                "gate",
-                "selector"
-              ],
-              "EXACT_VS_SEMANTIC_IDENTITY": [
-                "byte",
-                "bytes",
-                "exact",
-                "hash",
-                "semantic"
-              ],
-              "PROVENANCE_CHAIN": [
-                "hash",
-                "parent",
-                "receipt",
-                "source"
-              ]
-            },
-            "path": "registry/myth_busted/FALLOUT-3-MQ04-INFO-SELECTOR-BOUNDARY-CI-MERGE-RECEIPT-v1.6.json",
-            "sha256": "906962bd6bbb5a61d397cb16248afc5cf41eaf1638379e0d83793ce70fec3b1b"
-          },
-          {
-            "artifact_id": "FALLOUT-3-JAMES-150-DEGREE-SPOKE-BACKEND-STATE-CARRIER-REFERENCE-AUDIT-v2.5",
-            "lineage": "fallout-3-james-150-degree-spoke-backend-state-carrier-reference-audit",
-            "machine_normalized_positions": [
-              0.06312997,
-              0.08143236,
-              0.10026525
-            ],
-            "machine_signal_strength": 10,
-            "operator_hits": {
-              "BOUNDED_CANDIDATE_SEARCH": [
-                "admission",
-                "candidate",
-                "gate"
-              ],
-              "EXACT_VS_SEMANTIC_IDENTITY": [
-                "exact",
-                "identity",
-                "semantic",
-                "sha256"
-              ],
-              "PROVENANCE_CHAIN": [
-                "parent",
-                "sha256",
-                "source"
-              ]
-            },
-            "path": "registry/myth_busted/FALLOUT-3-JAMES-150-DEGREE-SPOKE-BACKEND-STATE-CARRIER-REFERENCE-AUDIT-v2.5.json",
-            "sha256": "082b0e9a1ffb4f0fba3eb2647b81d8646eead97069b9c56a14b871391f87c035"
-          },
-          {
-            "artifact_id": "FALLOUT-3-JAMES-VAULT112-LIVE-STATE-EXPORT-ADMISSION-GATE-v1.0",
-            "lineage": "fallout-3-james-vault112-live-state-export-admission-gate",
-            "machine_normalized_positions": [
-              0.0112837,
-              0.07268464,
-              0.12793083
-            ],
-            "machine_signal_strength": 7,
-            "operator_hits": {
-              "BOUNDED_CANDIDATE_SEARCH": [
-                "admission",
-                "gate"
-              ],
-              "EXACT_VS_SEMANTIC_IDENTITY": [
-                "continuity",
-                "identity"
-              ],
-              "PROVENANCE_CHAIN": [
-                "canonical",
-                "parent",
-                "source"
-              ]
-            },
-            "path": "registry/myth_busted/FALLOUT-3-JAMES-VAULT112-LIVE-STATE-EXPORT-ADMISSION-GATE-v1.0.json",
-            "sha256": "171bec60ee52e10a6372cf5192b316c9a2fda266b86d015ba1d8cb87d43648fc"
-          }
-        ],
-        "LINEAR_A": [
-          {
-            "artifact_id": "JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.9-CANDIDATE",
-            "lineage": "janus-linear-a-research-state-v2-9-candidate",
-            "machine_normalized_positions": [
-              0.00407992,
-              0.01091978,
-              0.01247975
-            ],
-            "machine_signal_strength": 19,
-            "operator_hits": {
-              "BOUNDED_CANDIDATE_SEARCH": [
-                "admission",
-                "candidate"
-              ],
-              "EXACT_VS_SEMANTIC_IDENTITY": [
-                "byte",
-                "bytes",
-                "exact",
-                "fingerprint",
-                "hash",
-                "identity",
-                "semantic",
-                "sha256"
-              ],
-              "PROVENANCE_CHAIN": [
-                "canonical",
-                "commit",
-                "hash",
-                "lineage",
-                "parent",
-                "provenance",
-                "receipt",
-                "sha256",
-                "source"
-              ]
-            },
-            "path": "data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.9-CANDIDATE.json",
-            "sha256": "4e5541a63a609af2ccf78e95cab5f3025c83d1afbfb84f32688f5aaf1d35ca05"
-          },
-          {
-            "artifact_id": "JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.8-CANDIDATE",
-            "lineage": "janus-linear-a-research-state-v2-8-candidate",
-            "machine_normalized_positions": [
-              0.00512859,
-              0.01372653,
-              0.01568746
-            ],
-            "machine_signal_strength": 18,
-            "operator_hits": {
-              "BOUNDED_CANDIDATE_SEARCH": [
-                "admission",
-                "candidate",
-                "gate"
-              ],
-              "EXACT_VS_SEMANTIC_IDENTITY": [
-                "byte",
-                "bytes",
-                "exact",
-                "fingerprint",
-                "identity",
-                "semantic",
-                "sha256"
-              ],
-              "PROVENANCE_CHAIN": [
-                "canonical",
-                "commit",
-                "lineage",
-                "parent",
-                "provenance",
-                "receipt",
-                "sha256",
-                "source"
-              ]
-            },
-            "path": "data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.8-CANDIDATE.json",
-            "sha256": "db04a2139c4fe29480668299d39725a968e660800ebe635029a1aabd5fc7f2a2"
-          },
-          {
-            "artifact_id": null,
-            "lineage": "janus-linear-a-r3b-overlap-freeze",
-            "machine_normalized_positions": [
-              0.00358573,
-              0.00656113,
-              0.00793439
-            ],
-            "machine_signal_strength": 17,
-            "operator_hits": {
-              "BOUNDED_CANDIDATE_SEARCH": [
-                "candidate",
-                "gate",
-                "route"
-              ],
-              "EXACT_VS_SEMANTIC_IDENTITY": [
-                "byte",
-                "bytes",
-                "exact",
-                "hash",
-                "identity",
-                "sha256"
-              ],
-              "PROVENANCE_CHAIN": [
-                "canonical",
-                "commit",
-                "digest",
-                "hash",
-                "provenance",
-                "receipt",
-                "sha256",
-                "source"
-              ]
-            },
-            "path": "research/linear_a/janus_linear_a_r3b_overlap_freeze_v0_1.py",
-            "sha256": "2ef3ad90e04926bf8b87cfdf7df18e85d10a5cff9e3008bc59dd543e4d5a9ea1"
-          },
-          {
-            "artifact_id": null,
-            "lineage": "janus-linear-a-sigla-word-view-interface-probe",
-            "machine_normalized_positions": [
-              0.24855967,
-              0.49032922,
-              0.51213992
-            ],
-            "machine_signal_strength": 13,
-            "operator_hits": {
-              "BOUNDED_CANDIDATE_SEARCH": [
-                "gate",
-                "route"
-              ],
-              "EXACT_VS_SEMANTIC_IDENTITY": [
-                "byte",
-                "bytes",
-                "exact",
-                "hash",
-                "sha256"
-              ],
-              "PROVENANCE_CHAIN": [
-                "commit",
-                "hash",
-                "parent",
-                "receipt",
-                "sha256",
-                "source"
-              ]
-            },
-            "path": ".github/workflows/janus-linear-a-sigla-word-view-interface-probe-v0-1.yml",
-            "sha256": "c69c58d4c8c7e6b692bad23e5b7e72e3f0546262c2ca55cd1177092ddd62e57e"
-          },
-          {
-            "artifact_id": null,
-            "lineage": "janus-linear-a-r3b-p0-acquisition-readiness",
-            "machine_normalized_positions": [
-              0.00743363,
-              0.0119174,
-              0.03256637
-            ],
-            "machine_signal_strength": 9,
-            "operator_hits": {
-              "BOUNDED_CANDIDATE_SEARCH": [
-                "admission",
-                "gate",
-                "rank",
-                "ranking",
-                "route"
-              ],
-              "EXACT_VS_SEMANTIC_IDENTITY": [
-                "byte",
-                "bytes"
-              ],
-              "PROVENANCE_CHAIN": [
-                "receipt",
-                "source"
-              ]
-            },
-            "path": "research/linear_a/janus_linear_a_r3b_p0_acquisition_readiness_v1_0.py",
-            "sha256": "139e42aff3f409a21e029264dacb7ad81a06bd16cd79d71d54957aa011890026"
-          },
-          {
-            "artifact_id": "JANUS-LINEAR-A-R3B-0-RILA-S1-CURRENT-AUTHOR-CONTACT-ROUTES-2026-08-14-v0.1",
-            "lineage": "janus-linear-a-r3b-0-rila-s1-current-author-contact-routes",
-            "machine_normalized_positions": [
-              0.03562831,
-              0.1006259,
-              0.91381801
-            ],
-            "machine_signal_strength": 7,
-            "operator_hits": {
-              "BOUNDED_CANDIDATE_SEARCH": [
-                "candidate",
-                "route"
-              ],
-              "EXACT_VS_SEMANTIC_IDENTITY": [
-                "byte",
-                "bytes"
-              ],
-              "PROVENANCE_CHAIN": [
-                "parent",
-                "receipt",
-                "source"
-              ]
-            },
-            "path": "data/JANUS-LINEAR-A-R3B-0-RILA-S1-CURRENT-AUTHOR-CONTACT-ROUTES-2026-08-14-v0.1.json",
-            "sha256": "4f4899e5f9b0a2b146bc9ccb418cbf06644619bb6263490573fc2bb6f0ceb1b7"
-          }
-        ],
-        "PALOMAR": [
-          {
-            "artifact_id": "JANUS-PALOMAR-JPFM-2F-A-BLIND-STRUCTURAL-STRATIFICATION-RUN-001",
-            "lineage": "janus-palomar-jpfm-2f-a-blind-structural-stratification-run",
-            "machine_normalized_positions": [
-              0.00834153,
-              0.01194203,
-              0.01446909
-            ],
-            "machine_signal_strength": 12,
-            "operator_hits": {
-              "BOUNDED_CANDIDATE_SEARCH": [
-                "admission",
-                "candidate",
-                "gate",
-                "rank"
-              ],
-              "EXACT_VS_SEMANTIC_IDENTITY": [
-                "hash",
-                "semantic",
-                "sha256"
-              ],
-              "PROVENANCE_CHAIN": [
-                "canonical",
-                "commit",
-                "hash",
-                "sha256",
-                "source"
-              ]
-            },
-            "path": "data/JANUS-PALOMAR-JPFM-2F-A-BLIND-STRUCTURAL-STRATIFICATION-RUN-001.json",
-            "sha256": "79d35314321b635ad72900d06c11aecd6f94436afdc5ef488bebfc3489a02f9d"
-          },
-          {
-            "artifact_id": "JANUS-PALOMAR-JPFM-2F-B3-SHAPE-COMPATIBILITY-REPLAY-RUN-001",
-            "lineage": "janus-palomar-jpfm-2f-b3-shape-compatibility-replay-run",
-            "machine_normalized_positions": [
-              0.08596918,
-              0.1283455,
-              0.14497161
-            ],
-            "machine_signal_strength": 10,
-            "operator_hits": {
-              "BOUNDED_CANDIDATE_SEARCH": [
-                "admission",
-                "gate"
-              ],
-              "EXACT_VS_SEMANTIC_IDENTITY": [
-                "exact",
-                "identity",
-                "semantic",
-                "sha256"
-              ],
-              "PROVENANCE_CHAIN": [
-                "canonical",
-                "commit",
-                "lineage",
-                "sha256"
-              ]
-            },
-            "path": "data/JANUS-PALOMAR-JPFM-2F-B3-SHAPE-COMPATIBILITY-REPLAY-RUN-001.json",
-            "sha256": "cd8a772e9718eb53a74c884ffde0d488cf0d2bcc8fe8aba0522cd458107a2670"
-          },
-          {
-            "artifact_id": "JANUS-PALOMAR-JPFM-2F-C0-CORRECTED-TILE-WCS-LOCATOR-RUN-001",
-            "lineage": "janus-palomar-jpfm-2f-c0-corrected-tile-wcs-locator-run",
-            "machine_normalized_positions": [
-              0.0475555,
-              0.05992964,
-              0.07303166
-            ],
-            "machine_signal_strength": 10,
-            "operator_hits": {
-              "BOUNDED_CANDIDATE_SEARCH": [
-                "admission",
-                "gate"
-              ],
-              "EXACT_VS_SEMANTIC_IDENTITY": [
-                "exact",
-                "sha256"
-              ],
-              "PROVENANCE_CHAIN": [
-                "canonical",
-                "commit",
-                "lineage",
-                "parent",
-                "sha256",
-                "source"
-              ]
-            },
-            "path": "data/JANUS-PALOMAR-JPFM-2F-C0-CORRECTED-TILE-WCS-LOCATOR-RUN-001.json",
-            "sha256": "f4d00ff8c6651b4cab43fc18e3b6826bdbcb245139495a1bc2102a162aba708a"
-          },
-          {
-            "artifact_id": "JANUS-PALOMAR-JPFM-2F-C2B0-REFERENCE-SUPPORT-DECOMPOSITION-RUN-001",
-            "lineage": "janus-palomar-jpfm-2f-c2b0-reference-support-decomposition-run",
-            "machine_normalized_positions": [
-              0.01458978,
-              0.01488998,
-              0.01519018
-            ],
-            "machine_signal_strength": 9,
-            "operator_hits": {
-              "BOUNDED_CANDIDATE_SEARCH": [
-                "admission",
-                "candidate",
-                "gate",
-                "rank",
-                "ranking"
-              ],
-              "EXACT_VS_SEMANTIC_IDENTITY": [
-                "semantic",
-                "sha256"
-              ],
-              "PROVENANCE_CHAIN": [
-                "canonical",
-                "sha256"
-              ]
-            },
-            "path": "data/JANUS-PALOMAR-JPFM-2F-C2B0-REFERENCE-SUPPORT-DECOMPOSITION-RUN-001.json",
-            "sha256": "6ac59abaced9e943843dadd740c3ca95a3c18071b3c26ce54e0099d85aebba1a"
-          },
-          {
-            "artifact_id": "JANUS-PALOMAR-JPFM-2F-C1A2-RAW-POLARITY-EDGE-AWARE-DIRECT-MORPHOLOGY-RUN-001",
-            "lineage": "janus-palomar-jpfm-2f-c1a2-raw-polarity-edge-aware-direct-morphology-run",
-            "machine_normalized_positions": [
-              0.0729055,
-              0.10660132,
-              0.10813295
-            ],
-            "machine_signal_strength": 7,
-            "operator_hits": {
-              "BOUNDED_CANDIDATE_SEARCH": [
-                "admission",
-                "gate"
-              ],
-              "EXACT_VS_SEMANTIC_IDENTITY": [
-                "exact",
-                "sha256"
-              ],
-              "PROVENANCE_CHAIN": [
-                "canonical",
-                "sha256",
-                "source"
-              ]
-            },
-            "path": "data/JANUS-PALOMAR-JPFM-2F-C1A2-RAW-POLARITY-EDGE-AWARE-DIRECT-MORPHOLOGY-RUN-001.json",
-            "sha256": "9e5bfe94e784c67bea2d01afbdb2c5182d5cc5a7c4de87115b4458510be35cb8"
-          },
-          {
-            "artifact_id": "JANUS-PALOMAR-JPFM-3C-IDENTIFIABILITY-CORRECTIVE-AUDIT-v1.0",
-            "lineage": "janus-palomar-jpfm-3c-identifiability-corrective-audit",
-            "machine_normalized_positions": [
-              0.06115026,
-              0.11570812,
-              0.15526256
-            ],
-            "machine_signal_strength": 7,
-            "operator_hits": {
-              "BOUNDED_CANDIDATE_SEARCH": [
-                "admission",
-                "gate"
-              ],
-              "EXACT_VS_SEMANTIC_IDENTITY": [
-                "exact",
-                "sha256"
-              ],
-              "PROVENANCE_CHAIN": [
-                "commit",
-                "digest",
-                "sha256"
-              ]
-            },
-            "path": "data/JANUS-PALOMAR-JPFM-3C-IDENTIFIABILITY-CORRECTIVE-AUDIT-v1.0.json",
-            "sha256": "937aff33ebf5a8ae60ed8648daf310ea36d5a9c0f8d333e9e7a8c2cd4b6d268a"
-          }
-        ]
-      },
-      "representation_invariants": [
-        "candidate set plus admission constraints",
-        "source-to-result identity chain",
-        "identity type is explicit and not silently upgraded"
-      ],
-      "score": 80.290229,
       "verify_next": "Freeze the three-domain candidate and run explicit sequence-order controls plus manual input/state/output mapping in at least two independent lineages per domain.",
       "why": "Three distant domains independently instantiate the same ordered operator machine while lexical and lineage overlap are penalized."
     },
@@ -47170,6 +46279,559 @@
     {
       "authority": "CANDIDATE_ONLY__INDEPENDENT_VERIFY_REQUIRED",
       "average_lineage_overlap": 0.0,
+      "candidate_id": "EYE-R3-TRIPLE-2ec5b025b1f7c58c",
+      "candidate_type": "THREE_DOMAIN_HIDDEN_MACHINE_CONSTELLATION",
+      "confidence_class": "STRONG_HIDDEN_MACHINE_CANDIDATE__VERIFY_REQUIRED",
+      "counterexample": "A shared authoring template, generic governance skeleton, or ubiquitous operator ordering explains the apparent constellation.",
+      "domains": [
+        "FALLOUT",
+        "LINEAR_A",
+        "PALOMAR"
+      ],
+      "explicit_pair_count": 0,
+      "falsifier": "Held-out/manual sequence verification fails in one domain, or shuffled/reordered controls score equivalently.",
+      "formula": "FALLOUT <--> LINEAR_A <--> PALOMAR via BOUNDED_CANDIDATE_SEARCH -> PROVENANCE_CHAIN -> EXACT_VS_SEMANTIC_IDENTITY",
+      "independent_lineage_support": {
+        "FALLOUT": 4,
+        "LINEAR_A": 6,
+        "PALOMAR": 6
+      },
+      "lexical_distance": 0.989269,
+      "machine": [
+        "BOUNDED_CANDIDATE_SEARCH",
+        "PROVENANCE_CHAIN",
+        "EXACT_VS_SEMANTIC_IDENTITY"
+      ],
+      "machine_domain_rarity": 0.631579,
+      "machine_id": "EYE-R3-MACHINE-4535e14c08e7fe47",
+      "operator_specificity": 0.017544,
+      "provenance": {
+        "FALLOUT": [
+          {
+            "artifact_id": "JANUS-FALLOUT-ATOMIC-INTEGRATED-CURRENT-AUTHORITY-v2.0",
+            "lineage": "janus-fallout-atomic-integrated-current-authority",
+            "machine_normalized_positions": [
+              0.00950967,
+              0.01238577,
+              0.02472515
+            ],
+            "machine_signal_strength": 20,
+            "operator_hits": {
+              "BOUNDED_CANDIDATE_SEARCH": [
+                "admission",
+                "candidate",
+                "gate",
+                "route"
+              ],
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "byte",
+                "bytes",
+                "continuity",
+                "exact",
+                "hash",
+                "identity",
+                "semantic",
+                "sha256"
+              ],
+              "PROVENANCE_CHAIN": [
+                "canonical",
+                "hash",
+                "lineage",
+                "parent",
+                "provenance",
+                "receipt",
+                "sha256",
+                "source"
+              ]
+            },
+            "path": "registry/cosmology/JANUS-FALLOUT-ATOMIC-INTEGRATED-CURRENT-AUTHORITY-v2.0.json",
+            "sha256": "8393144690d6b8ca026b0d5555f5a9a322d519a775e08d26a002a8722b126566"
+          },
+          {
+            "artifact_id": "FALLOUT-3-MQ04-INFO-SELECTOR-BOUNDARY-CI-MERGE-RECEIPT-v1.6",
+            "lineage": "fallout-3-mq04-info-selector-boundary-ci-merge-receipt",
+            "machine_normalized_positions": [
+              0.01398601,
+              0.02097902,
+              0.0971251
+            ],
+            "machine_signal_strength": 12,
+            "operator_hits": {
+              "BOUNDED_CANDIDATE_SEARCH": [
+                "candidate",
+                "gate",
+                "selector"
+              ],
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "byte",
+                "bytes",
+                "exact",
+                "hash",
+                "semantic"
+              ],
+              "PROVENANCE_CHAIN": [
+                "hash",
+                "parent",
+                "receipt",
+                "source"
+              ]
+            },
+            "path": "registry/myth_busted/FALLOUT-3-MQ04-INFO-SELECTOR-BOUNDARY-CI-MERGE-RECEIPT-v1.6.json",
+            "sha256": "906962bd6bbb5a61d397cb16248afc5cf41eaf1638379e0d83793ce70fec3b1b"
+          },
+          {
+            "artifact_id": "FALLOUT-3-JAMES-150-DEGREE-SPOKE-BACKEND-STATE-CARRIER-REFERENCE-AUDIT-v2.5",
+            "lineage": "fallout-3-james-150-degree-spoke-backend-state-carrier-reference-audit",
+            "machine_normalized_positions": [
+              0.06312997,
+              0.08143236,
+              0.10026525
+            ],
+            "machine_signal_strength": 10,
+            "operator_hits": {
+              "BOUNDED_CANDIDATE_SEARCH": [
+                "admission",
+                "candidate",
+                "gate"
+              ],
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "exact",
+                "identity",
+                "semantic",
+                "sha256"
+              ],
+              "PROVENANCE_CHAIN": [
+                "parent",
+                "sha256",
+                "source"
+              ]
+            },
+            "path": "registry/myth_busted/FALLOUT-3-JAMES-150-DEGREE-SPOKE-BACKEND-STATE-CARRIER-REFERENCE-AUDIT-v2.5.json",
+            "sha256": "082b0e9a1ffb4f0fba3eb2647b81d8646eead97069b9c56a14b871391f87c035"
+          },
+          {
+            "artifact_id": "FALLOUT-3-JAMES-VAULT112-LIVE-STATE-EXPORT-ADMISSION-GATE-v1.0",
+            "lineage": "fallout-3-james-vault112-live-state-export-admission-gate",
+            "machine_normalized_positions": [
+              0.0112837,
+              0.07268464,
+              0.12793083
+            ],
+            "machine_signal_strength": 7,
+            "operator_hits": {
+              "BOUNDED_CANDIDATE_SEARCH": [
+                "admission",
+                "gate"
+              ],
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "continuity",
+                "identity"
+              ],
+              "PROVENANCE_CHAIN": [
+                "canonical",
+                "parent",
+                "source"
+              ]
+            },
+            "path": "registry/myth_busted/FALLOUT-3-JAMES-VAULT112-LIVE-STATE-EXPORT-ADMISSION-GATE-v1.0.json",
+            "sha256": "171bec60ee52e10a6372cf5192b316c9a2fda266b86d015ba1d8cb87d43648fc"
+          }
+        ],
+        "LINEAR_A": [
+          {
+            "artifact_id": "JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.9-CANDIDATE",
+            "lineage": "janus-linear-a-research-state-v2-9-candidate",
+            "machine_normalized_positions": [
+              0.00407992,
+              0.01091978,
+              0.01247975
+            ],
+            "machine_signal_strength": 19,
+            "operator_hits": {
+              "BOUNDED_CANDIDATE_SEARCH": [
+                "admission",
+                "candidate"
+              ],
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "byte",
+                "bytes",
+                "exact",
+                "fingerprint",
+                "hash",
+                "identity",
+                "semantic",
+                "sha256"
+              ],
+              "PROVENANCE_CHAIN": [
+                "canonical",
+                "commit",
+                "hash",
+                "lineage",
+                "parent",
+                "provenance",
+                "receipt",
+                "sha256",
+                "source"
+              ]
+            },
+            "path": "data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.9-CANDIDATE.json",
+            "sha256": "4e5541a63a609af2ccf78e95cab5f3025c83d1afbfb84f32688f5aaf1d35ca05"
+          },
+          {
+            "artifact_id": "JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.8-CANDIDATE",
+            "lineage": "janus-linear-a-research-state-v2-8-candidate",
+            "machine_normalized_positions": [
+              0.00512859,
+              0.01372653,
+              0.01568746
+            ],
+            "machine_signal_strength": 18,
+            "operator_hits": {
+              "BOUNDED_CANDIDATE_SEARCH": [
+                "admission",
+                "candidate",
+                "gate"
+              ],
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "byte",
+                "bytes",
+                "exact",
+                "fingerprint",
+                "identity",
+                "semantic",
+                "sha256"
+              ],
+              "PROVENANCE_CHAIN": [
+                "canonical",
+                "commit",
+                "lineage",
+                "parent",
+                "provenance",
+                "receipt",
+                "sha256",
+                "source"
+              ]
+            },
+            "path": "data/JANUS-LINEAR-A-RESEARCH-STATE-2026-08-14-v2.8-CANDIDATE.json",
+            "sha256": "db04a2139c4fe29480668299d39725a968e660800ebe635029a1aabd5fc7f2a2"
+          },
+          {
+            "artifact_id": null,
+            "lineage": "janus-linear-a-r3b-overlap-freeze",
+            "machine_normalized_positions": [
+              0.00358573,
+              0.00656113,
+              0.00793439
+            ],
+            "machine_signal_strength": 17,
+            "operator_hits": {
+              "BOUNDED_CANDIDATE_SEARCH": [
+                "candidate",
+                "gate",
+                "route"
+              ],
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "byte",
+                "bytes",
+                "exact",
+                "hash",
+                "identity",
+                "sha256"
+              ],
+              "PROVENANCE_CHAIN": [
+                "canonical",
+                "commit",
+                "digest",
+                "hash",
+                "provenance",
+                "receipt",
+                "sha256",
+                "source"
+              ]
+            },
+            "path": "research/linear_a/janus_linear_a_r3b_overlap_freeze_v0_1.py",
+            "sha256": "2ef3ad90e04926bf8b87cfdf7df18e85d10a5cff9e3008bc59dd543e4d5a9ea1"
+          },
+          {
+            "artifact_id": null,
+            "lineage": "janus-linear-a-sigla-word-view-interface-probe",
+            "machine_normalized_positions": [
+              0.24855967,
+              0.49032922,
+              0.51213992
+            ],
+            "machine_signal_strength": 13,
+            "operator_hits": {
+              "BOUNDED_CANDIDATE_SEARCH": [
+                "gate",
+                "route"
+              ],
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "byte",
+                "bytes",
+                "exact",
+                "hash",
+                "sha256"
+              ],
+              "PROVENANCE_CHAIN": [
+                "commit",
+                "hash",
+                "parent",
+                "receipt",
+                "sha256",
+                "source"
+              ]
+            },
+            "path": ".github/workflows/janus-linear-a-sigla-word-view-interface-probe-v0-1.yml",
+            "sha256": "c69c58d4c8c7e6b692bad23e5b7e72e3f0546262c2ca55cd1177092ddd62e57e"
+          },
+          {
+            "artifact_id": null,
+            "lineage": "janus-linear-a-r3b-p0-acquisition-readiness",
+            "machine_normalized_positions": [
+              0.00743363,
+              0.0119174,
+              0.03256637
+            ],
+            "machine_signal_strength": 9,
+            "operator_hits": {
+              "BOUNDED_CANDIDATE_SEARCH": [
+                "admission",
+                "gate",
+                "rank",
+                "ranking",
+                "route"
+              ],
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "byte",
+                "bytes"
+              ],
+              "PROVENANCE_CHAIN": [
+                "receipt",
+                "source"
+              ]
+            },
+            "path": "research/linear_a/janus_linear_a_r3b_p0_acquisition_readiness_v1_0.py",
+            "sha256": "139e42aff3f409a21e029264dacb7ad81a06bd16cd79d71d54957aa011890026"
+          },
+          {
+            "artifact_id": "JANUS-LINEAR-A-R3B-0-RILA-S1-CURRENT-AUTHOR-CONTACT-ROUTES-2026-08-14-v0.1",
+            "lineage": "janus-linear-a-r3b-0-rila-s1-current-author-contact-routes",
+            "machine_normalized_positions": [
+              0.03562831,
+              0.1006259,
+              0.91381801
+            ],
+            "machine_signal_strength": 7,
+            "operator_hits": {
+              "BOUNDED_CANDIDATE_SEARCH": [
+                "candidate",
+                "route"
+              ],
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "byte",
+                "bytes"
+              ],
+              "PROVENANCE_CHAIN": [
+                "parent",
+                "receipt",
+                "source"
+              ]
+            },
+            "path": "data/JANUS-LINEAR-A-R3B-0-RILA-S1-CURRENT-AUTHOR-CONTACT-ROUTES-2026-08-14-v0.1.json",
+            "sha256": "4f4899e5f9b0a2b146bc9ccb418cbf06644619bb6263490573fc2bb6f0ceb1b7"
+          }
+        ],
+        "PALOMAR": [
+          {
+            "artifact_id": "JANUS-PALOMAR-JPFM-2F-A-BLIND-STRUCTURAL-STRATIFICATION-RUN-001",
+            "lineage": "janus-palomar-jpfm-2f-a-blind-structural-stratification-run",
+            "machine_normalized_positions": [
+              0.00834153,
+              0.01194203,
+              0.01446909
+            ],
+            "machine_signal_strength": 12,
+            "operator_hits": {
+              "BOUNDED_CANDIDATE_SEARCH": [
+                "admission",
+                "candidate",
+                "gate",
+                "rank"
+              ],
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "hash",
+                "semantic",
+                "sha256"
+              ],
+              "PROVENANCE_CHAIN": [
+                "canonical",
+                "commit",
+                "hash",
+                "sha256",
+                "source"
+              ]
+            },
+            "path": "data/JANUS-PALOMAR-JPFM-2F-A-BLIND-STRUCTURAL-STRATIFICATION-RUN-001.json",
+            "sha256": "79d35314321b635ad72900d06c11aecd6f94436afdc5ef488bebfc3489a02f9d"
+          },
+          {
+            "artifact_id": "JANUS-PALOMAR-JPFM-2F-B3-SHAPE-COMPATIBILITY-REPLAY-RUN-001",
+            "lineage": "janus-palomar-jpfm-2f-b3-shape-compatibility-replay-run",
+            "machine_normalized_positions": [
+              0.08596918,
+              0.1283455,
+              0.14497161
+            ],
+            "machine_signal_strength": 10,
+            "operator_hits": {
+              "BOUNDED_CANDIDATE_SEARCH": [
+                "admission",
+                "gate"
+              ],
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "exact",
+                "identity",
+                "semantic",
+                "sha256"
+              ],
+              "PROVENANCE_CHAIN": [
+                "canonical",
+                "commit",
+                "lineage",
+                "sha256"
+              ]
+            },
+            "path": "data/JANUS-PALOMAR-JPFM-2F-B3-SHAPE-COMPATIBILITY-REPLAY-RUN-001.json",
+            "sha256": "cd8a772e9718eb53a74c884ffde0d488cf0d2bcc8fe8aba0522cd458107a2670"
+          },
+          {
+            "artifact_id": "JANUS-PALOMAR-JPFM-2F-C0-CORRECTED-TILE-WCS-LOCATOR-RUN-001",
+            "lineage": "janus-palomar-jpfm-2f-c0-corrected-tile-wcs-locator-run",
+            "machine_normalized_positions": [
+              0.0475555,
+              0.05992964,
+              0.07303166
+            ],
+            "machine_signal_strength": 10,
+            "operator_hits": {
+              "BOUNDED_CANDIDATE_SEARCH": [
+                "admission",
+                "gate"
+              ],
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "exact",
+                "sha256"
+              ],
+              "PROVENANCE_CHAIN": [
+                "canonical",
+                "commit",
+                "lineage",
+                "parent",
+                "sha256",
+                "source"
+              ]
+            },
+            "path": "data/JANUS-PALOMAR-JPFM-2F-C0-CORRECTED-TILE-WCS-LOCATOR-RUN-001.json",
+            "sha256": "f4d00ff8c6651b4cab43fc18e3b6826bdbcb245139495a1bc2102a162aba708a"
+          },
+          {
+            "artifact_id": "JANUS-PALOMAR-JPFM-2F-C2B0-REFERENCE-SUPPORT-DECOMPOSITION-RUN-001",
+            "lineage": "janus-palomar-jpfm-2f-c2b0-reference-support-decomposition-run",
+            "machine_normalized_positions": [
+              0.01458978,
+              0.01488998,
+              0.01519018
+            ],
+            "machine_signal_strength": 9,
+            "operator_hits": {
+              "BOUNDED_CANDIDATE_SEARCH": [
+                "admission",
+                "candidate",
+                "gate",
+                "rank",
+                "ranking"
+              ],
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "semantic",
+                "sha256"
+              ],
+              "PROVENANCE_CHAIN": [
+                "canonical",
+                "sha256"
+              ]
+            },
+            "path": "data/JANUS-PALOMAR-JPFM-2F-C2B0-REFERENCE-SUPPORT-DECOMPOSITION-RUN-001.json",
+            "sha256": "6ac59abaced9e943843dadd740c3ca95a3c18071b3c26ce54e0099d85aebba1a"
+          },
+          {
+            "artifact_id": "JANUS-PALOMAR-JPFM-2F-C1A2-RAW-POLARITY-EDGE-AWARE-DIRECT-MORPHOLOGY-RUN-001",
+            "lineage": "janus-palomar-jpfm-2f-c1a2-raw-polarity-edge-aware-direct-morphology-run",
+            "machine_normalized_positions": [
+              0.0729055,
+              0.10660132,
+              0.10813295
+            ],
+            "machine_signal_strength": 7,
+            "operator_hits": {
+              "BOUNDED_CANDIDATE_SEARCH": [
+                "admission",
+                "gate"
+              ],
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "exact",
+                "sha256"
+              ],
+              "PROVENANCE_CHAIN": [
+                "canonical",
+                "sha256",
+                "source"
+              ]
+            },
+            "path": "data/JANUS-PALOMAR-JPFM-2F-C1A2-RAW-POLARITY-EDGE-AWARE-DIRECT-MORPHOLOGY-RUN-001.json",
+            "sha256": "9e5bfe94e784c67bea2d01afbdb2c5182d5cc5a7c4de87115b4458510be35cb8"
+          },
+          {
+            "artifact_id": "JANUS-PALOMAR-JPFM-3C-IDENTIFIABILITY-CORRECTIVE-AUDIT-v1.0",
+            "lineage": "janus-palomar-jpfm-3c-identifiability-corrective-audit",
+            "machine_normalized_positions": [
+              0.06115026,
+              0.11570812,
+              0.15526256
+            ],
+            "machine_signal_strength": 7,
+            "operator_hits": {
+              "BOUNDED_CANDIDATE_SEARCH": [
+                "admission",
+                "gate"
+              ],
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "exact",
+                "sha256"
+              ],
+              "PROVENANCE_CHAIN": [
+                "commit",
+                "digest",
+                "sha256"
+              ]
+            },
+            "path": "data/JANUS-PALOMAR-JPFM-3C-IDENTIFIABILITY-CORRECTIVE-AUDIT-v1.0.json",
+            "sha256": "937aff33ebf5a8ae60ed8648daf310ea36d5a9c0f8d333e9e7a8c2cd4b6d268a"
+          }
+        ]
+      },
+      "representation_invariants": [
+        "candidate set plus admission constraints",
+        "source-to-result identity chain",
+        "identity type is explicit and not silently upgraded"
+      ],
+      "score": 79.500755,
+      "verify_next": "Freeze the three-domain candidate and run explicit sequence-order controls plus manual input/state/output mapping in at least two independent lineages per domain.",
+      "why": "Three distant domains independently instantiate the same ordered operator machine while lexical and lineage overlap are penalized."
+    },
+    {
+      "authority": "CANDIDATE_ONLY__INDEPENDENT_VERIFY_REQUIRED",
+      "average_lineage_overlap": 0.0,
       "candidate_id": "EYE-R3-TRIPLE-f7fbf25bbdee1ce4",
       "candidate_type": "THREE_DOMAIN_HIDDEN_MACHINE_CONSTELLATION",
       "confidence_class": "STRONG_HIDDEN_MACHINE_CANDIDATE__VERIFY_REQUIRED",
@@ -48131,6 +47793,483 @@
         "surviving contextual constraints around an irreversible identity token"
       ],
       "score": 79.387244,
+      "verify_next": "Freeze the three-domain candidate and run explicit sequence-order controls plus manual input/state/output mapping in at least two independent lineages per domain.",
+      "why": "Three distant domains independently instantiate the same ordered operator machine while lexical and lineage overlap are penalized."
+    },
+    {
+      "authority": "CANDIDATE_ONLY__INDEPENDENT_VERIFY_REQUIRED",
+      "average_lineage_overlap": 0.0,
+      "candidate_id": "EYE-R3-TRIPLE-b0731c9169cb52fd",
+      "candidate_type": "THREE_DOMAIN_HIDDEN_MACHINE_CONSTELLATION",
+      "confidence_class": "STRONG_HIDDEN_MACHINE_CANDIDATE__VERIFY_REQUIRED",
+      "counterexample": "A shared authoring template, generic governance skeleton, or ubiquitous operator ordering explains the apparent constellation.",
+      "domains": [
+        "EYE",
+        "FALLOUT",
+        "LINEAR_A"
+      ],
+      "explicit_pair_count": 0,
+      "falsifier": "Held-out/manual sequence verification fails in one domain, or shuffled/reordered controls score equivalently.",
+      "formula": "EYE <--> FALLOUT <--> LINEAR_A via PROVENANCE_CHAIN -> EXACT_VS_SEMANTIC_IDENTITY -> EXTERNAL_WITNESS",
+      "independent_lineage_support": {
+        "EYE": 3,
+        "FALLOUT": 5,
+        "LINEAR_A": 6
+      },
+      "lexical_distance": 0.974803,
+      "machine": [
+        "PROVENANCE_CHAIN",
+        "EXACT_VS_SEMANTIC_IDENTITY",
+        "EXTERNAL_WITNESS"
+      ],
+      "machine_domain_rarity": 0.842105,
+      "machine_id": "EYE-R3-MACHINE-7445857a061febaa",
+      "operator_specificity": 0.017544,
+      "provenance": {
+        "EYE": [
+          {
+            "artifact_id": "JANUS-EYE-R3.1-STRICT-ORDER-CONSTELLATION-GATE-MANIFEST-v1.0",
+            "lineage": "janus-eye-r3-1-strict-order-constellation-gate-manifest",
+            "machine_normalized_positions": [
+              0.07864756,
+              0.24807056,
+              0.30540243
+            ],
+            "machine_signal_strength": 12,
+            "operator_hits": {
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "identity",
+                "sha256"
+              ],
+              "EXTERNAL_WITNESS": [
+                "control",
+                "independent",
+                "verify",
+                "witness"
+              ],
+              "PROVENANCE_CHAIN": [
+                "lineage",
+                "parent",
+                "provenance",
+                "receipt",
+                "sha256",
+                "source"
+              ]
+            },
+            "path": "EYE/r3_1/EYE-R3.1-STRICT-ORDER-CONSTELLATION-GATE-MANIFEST-v1.0.json",
+            "sha256": "b82f46747bffa3af6727d96bf2a23eb724af1cb7bc9aed89f0f9e8bea85aed2c"
+          },
+          {
+            "artifact_id": "EYE-R4.2-SEARCH-PROOF-ADAPTIVE-v1",
+            "lineage": "eye-r4-2-search-proof-adaptive",
+            "machine_normalized_positions": [
+              0.22248614,
+              0.26920032,
+              0.75138559
+            ],
+            "machine_signal_strength": 9,
+            "operator_hits": {
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "exact",
+                "hash"
+              ],
+              "EXTERNAL_WITNESS": [
+                "control",
+                "independent",
+                "verifier"
+              ],
+              "PROVENANCE_CHAIN": [
+                "commit",
+                "hash",
+                "provenance",
+                "source"
+              ]
+            },
+            "path": "EYE/r4_2/generated/search_proof_adaptive/next_test_ranking.json",
+            "sha256": "9c8f18d906cf4a291347b27318a38956f4e66ea498a6e4acd235e0637956ef71"
+          },
+          {
+            "artifact_id": "EYE-R4.3-SEARCH-PROOF-STOCHASTIC-v1",
+            "lineage": "eye-r4-3-search-proof-stochastic",
+            "machine_normalized_positions": [
+              0.24194757,
+              0.28689139,
+              0.517603
+            ],
+            "machine_signal_strength": 9,
+            "operator_hits": {
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "exact",
+                "hash"
+              ],
+              "EXTERNAL_WITNESS": [
+                "control",
+                "independent",
+                "verifier"
+              ],
+              "PROVENANCE_CHAIN": [
+                "commit",
+                "hash",
+                "provenance",
+                "source"
+              ]
+            },
+            "path": "EYE/r4_3/generated/search_proof_stochastic/next_test_ranking.json",
+            "sha256": "83efe8ea08a8a37d3ffd5d5372501a85017deaae8a8a6a69674747828d62c10a"
+          }
+        ],
+        "FALLOUT": [
+          {
+            "artifact_id": "JANUS-FALLOUT-ATOMIC-INTEGRATED-CURRENT-AUTHORITY-v2.0",
+            "lineage": "janus-fallout-atomic-integrated-current-authority",
+            "machine_normalized_positions": [
+              0.01238577,
+              0.02472515,
+              0.02514265
+            ],
+            "machine_signal_strength": 21,
+            "operator_hits": {
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "byte",
+                "bytes",
+                "continuity",
+                "exact",
+                "hash",
+                "identity",
+                "semantic",
+                "sha256"
+              ],
+              "EXTERNAL_WITNESS": [
+                "control",
+                "external",
+                "independent",
+                "verifier",
+                "witness"
+              ],
+              "PROVENANCE_CHAIN": [
+                "canonical",
+                "hash",
+                "lineage",
+                "parent",
+                "provenance",
+                "receipt",
+                "sha256",
+                "source"
+              ]
+            },
+            "path": "registry/cosmology/JANUS-FALLOUT-ATOMIC-INTEGRATED-CURRENT-AUTHORITY-v2.0.json",
+            "sha256": "8393144690d6b8ca026b0d5555f5a9a322d519a775e08d26a002a8722b126566"
+          },
+          {
+            "artifact_id": "FALLOUT-3-MS08-EVIDENCE-CLAIM-ADMISSION-GATE-v2.6",
+            "lineage": "fallout-3-ms08-evidence-claim-admission-gate",
+            "machine_normalized_positions": [
+              0.05117133,
+              0.06822844,
+              0.44942243
+            ],
+            "machine_signal_strength": 14,
+            "operator_hits": {
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "byte",
+                "exact",
+                "hash",
+                "identity",
+                "semantic"
+              ],
+              "EXTERNAL_WITNESS": [
+                "outside",
+                "verifier",
+                "witness"
+              ],
+              "PROVENANCE_CHAIN": [
+                "hash",
+                "lineage",
+                "parent",
+                "provenance",
+                "receipt",
+                "source"
+              ]
+            },
+            "path": "registry/myth_busted/FALLOUT-3-MS08-EVIDENCE-CLAIM-ADMISSION-GATE-v2.6.json",
+            "sha256": "7b6cd364bb536749c682ab59cb1fd277f0249dd2d52ba37cf7a16674bff7f74b"
+          },
+          {
+            "artifact_id": "FALLOUT-3-F3DAD-SMOKING-CIGARETTE-NPC-PLAYER-USE-PATH-AUDIT-v1.10S",
+            "lineage": "fallout-3-f3dad-smoking-cigarette-npc-player-use-path-audit-v1-10s",
+            "machine_normalized_positions": [
+              0.05823312,
+              0.06533472,
+              0.84035603
+            ],
+            "machine_signal_strength": 11,
+            "operator_hits": {
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "byte",
+                "bytes",
+                "exact",
+                "semantic",
+                "sha256"
+              ],
+              "EXTERNAL_WITNESS": [
+                "control",
+                "independent"
+              ],
+              "PROVENANCE_CHAIN": [
+                "lineage",
+                "receipt",
+                "sha256",
+                "source"
+              ]
+            },
+            "path": "data/FALLOUT-3-F3DAD-SMOKING-CIGARETTE-NPC-PLAYER-USE-PATH-AUDIT-v1.10S.json",
+            "sha256": "6142b9d82afdfd6ba2c37cd9f274e36ed1651de86fb8199eb9935c0bcd6a579a"
+          },
+          {
+            "artifact_id": "FALLOUT-3-JAMES-150-DEGREE-SPOKE-BACKEND-STATE-CARRIER-REFERENCE-AUDIT-v2.5",
+            "lineage": "fallout-3-james-150-degree-spoke-backend-state-carrier-reference-audit",
+            "machine_normalized_positions": [
+              0.08143236,
+              0.10026525,
+              0.25543767
+            ],
+            "machine_signal_strength": 10,
+            "operator_hits": {
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "exact",
+                "identity",
+                "semantic",
+                "sha256"
+              ],
+              "EXTERNAL_WITNESS": [
+                "control",
+                "external",
+                "independent"
+              ],
+              "PROVENANCE_CHAIN": [
+                "parent",
+                "sha256",
+                "source"
+              ]
+            },
+            "path": "registry/myth_busted/FALLOUT-3-JAMES-150-DEGREE-SPOKE-BACKEND-STATE-CARRIER-REFERENCE-AUDIT-v2.5.json",
+            "sha256": "082b0e9a1ffb4f0fba3eb2647b81d8646eead97069b9c56a14b871391f87c035"
+          },
+          {
+            "artifact_id": "FALLOUT-3-JAMES-VAULT112-LIVE-STATE-EXPORT-ADMISSION-GATE-v1.0",
+            "lineage": "fallout-3-james-vault112-live-state-export-admission-gate",
+            "machine_normalized_positions": [
+              0.07268464,
+              0.12793083,
+              0.1887456
+            ],
+            "machine_signal_strength": 8,
+            "operator_hits": {
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "continuity",
+                "identity"
+              ],
+              "EXTERNAL_WITNESS": [
+                "control",
+                "external",
+                "independent"
+              ],
+              "PROVENANCE_CHAIN": [
+                "canonical",
+                "parent",
+                "source"
+              ]
+            },
+            "path": "registry/myth_busted/FALLOUT-3-JAMES-VAULT112-LIVE-STATE-EXPORT-ADMISSION-GATE-v1.0.json",
+            "sha256": "171bec60ee52e10a6372cf5192b316c9a2fda266b86d015ba1d8cb87d43648fc"
+          }
+        ],
+        "LINEAR_A": [
+          {
+            "artifact_id": "JANUS-LINEAR-A-R3B-0-NOTTI-2018-OPEN-PUBLISHER-RESCUE-ACQUISITION-RESULT-2026-08-14-v0.1.1",
+            "lineage": "janus-linear-a-r3b-0-notti-2018-open-publisher-rescue-acquisition-result",
+            "machine_normalized_positions": [
+              0.05430712,
+              0.06928839,
+              0.09051186
+            ],
+            "machine_signal_strength": 11,
+            "operator_hits": {
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "byte",
+                "bytes",
+                "continuity",
+                "exact",
+                "sha256"
+              ],
+              "EXTERNAL_WITNESS": [
+                "control",
+                "witness"
+              ],
+              "PROVENANCE_CHAIN": [
+                "parent",
+                "receipt",
+                "sha256",
+                "source"
+              ]
+            },
+            "path": "data/JANUS-LINEAR-A-R3B-0-NOTTI-2018-OPEN-PUBLISHER-RESCUE-ACQUISITION-RESULT-2026-08-14-v0.1.1.json",
+            "sha256": "62f35626f8d3b39d798b75b8ea003be74079d6208c0173baa82d8976c71fc549"
+          },
+          {
+            "artifact_id": "JANUS-LINEAR-A-R3C-1A-JS-LITERAL-SUBSET-PARSER-CORRECTION-SPEC-2026-08-14-v0.2",
+            "lineage": "janus-linear-a-r3c-1a-js-literal-subset-parser-correction-spec",
+            "machine_normalized_positions": [
+              0.09049479,
+              0.23242188,
+              0.41080729
+            ],
+            "machine_signal_strength": 11,
+            "operator_hits": {
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "byte",
+                "bytes",
+                "exact",
+                "semantic",
+                "sha256"
+              ],
+              "EXTERNAL_WITNESS": [
+                "independent",
+                "outside"
+              ],
+              "PROVENANCE_CHAIN": [
+                "parent",
+                "receipt",
+                "sha256",
+                "source"
+              ]
+            },
+            "path": "data/JANUS-LINEAR-A-R3C-1A-JS-LITERAL-SUBSET-PARSER-CORRECTION-SPEC-2026-08-14-v0.2.json",
+            "sha256": "1de0473e6d4e37bea43d5bd946fdca2d9215907af1b3ce79a3eb1b0d315aeb93"
+          },
+          {
+            "artifact_id": "JANUS-LINEAR-A-TRANSCRIPTION-IR-HARDENING-SPEC-2026-08-14-v1.2.1",
+            "lineage": "janus-linear-a-transcription-ir-hardening-spec",
+            "machine_normalized_positions": [
+              0.08609694,
+              0.24202806,
+              0.28778699
+            ],
+            "machine_signal_strength": 10,
+            "operator_hits": {
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "exact",
+                "identity",
+                "semantic"
+              ],
+              "EXTERNAL_WITNESS": [
+                "independent",
+                "witness"
+              ],
+              "PROVENANCE_CHAIN": [
+                "lineage",
+                "parent",
+                "provenance",
+                "receipt",
+                "source"
+              ]
+            },
+            "path": "data/JANUS-LINEAR-A-TRANSCRIPTION-IR-HARDENING-SPEC-2026-08-14-v1.2.1.json",
+            "sha256": "2cd3c629bcf615a4e3c876d71548b5d91242088b29359d563a0d015852ed3acb"
+          },
+          {
+            "artifact_id": "JANUS-LINEAR-A-R3C-0-BRIAKOS-METADATA-PDF-CORRECTIVE-2026-08-14-v0.1",
+            "lineage": "janus-linear-a-r3c-0-briakos-metadata-pdf-corrective",
+            "machine_normalized_positions": [
+              0.06196508,
+              0.22766176,
+              0.35296131
+            ],
+            "machine_signal_strength": 9,
+            "operator_hits": {
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "fingerprint",
+                "identity",
+                "sha256"
+              ],
+              "EXTERNAL_WITNESS": [
+                "independent",
+                "witness"
+              ],
+              "PROVENANCE_CHAIN": [
+                "provenance",
+                "receipt",
+                "sha256",
+                "source"
+              ]
+            },
+            "path": "data/JANUS-LINEAR-A-R3C-0-BRIAKOS-METADATA-PDF-CORRECTIVE-2026-08-14-v0.1.json",
+            "sha256": "be73c462735a9cd6e8052b0519f13ed4241d0b720429635cc0ffc801988e27dc"
+          },
+          {
+            "artifact_id": null,
+            "lineage": "janus-linear-a-r3c-map-duplicate-key-inventory",
+            "machine_normalized_positions": [
+              0.15636728,
+              0.18964223,
+              0.23592695
+            ],
+            "machine_signal_strength": 8,
+            "operator_hits": {
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "exact",
+                "semantic",
+                "sha256"
+              ],
+              "EXTERNAL_WITNESS": [
+                "external",
+                "verify"
+              ],
+              "PROVENANCE_CHAIN": [
+                "commit",
+                "sha256",
+                "source"
+              ]
+            },
+            "path": ".github/workflows/janus-linear-a-r3c-map-duplicate-key-inventory-v0-1.yml",
+            "sha256": "37f16942ebcc2f39173d2a4aba14a3667066fce54d6ca07cc63a88574189853e"
+          },
+          {
+            "artifact_id": null,
+            "lineage": "janus-linear-a-r7-f0-ku-ro-downstream-slot",
+            "machine_normalized_positions": [
+              0.05507901,
+              0.07243542,
+              0.08527715
+            ],
+            "machine_signal_strength": 8,
+            "operator_hits": {
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "exact",
+                "semantic"
+              ],
+              "EXTERNAL_WITNESS": [
+                "external",
+                "outside"
+              ],
+              "PROVENANCE_CHAIN": [
+                "canonical",
+                "commit",
+                "parent",
+                "source"
+              ]
+            },
+            "path": "research/linear_a/janus_linear_a_r7_f0_ku_ro_downstream_slot_v0_1.py",
+            "sha256": "606952b3e1c28417258ac0105a5fabf390fea5f5ab05e8777730012a5fed906e"
+          }
+        ]
+      },
+      "representation_invariants": [
+        "source-to-result identity chain",
+        "identity type is explicit and not silently upgraded",
+        "independent falsifiability of a local claim"
+      ],
+      "score": 79.340399,
       "verify_next": "Freeze the three-domain candidate and run explicit sequence-order controls plus manual input/state/output mapping in at least two independent lineages per domain.",
       "why": "Three distant domains independently instantiate the same ordered operator machine while lexical and lineage overlap are penalized."
     },
@@ -52092,6 +52231,472 @@
         "candidate set plus admission constraints"
       ],
       "score": 78.764183,
+      "verify_next": "Freeze the three-domain candidate and run explicit sequence-order controls plus manual input/state/output mapping in at least two independent lineages per domain.",
+      "why": "Three distant domains independently instantiate the same ordered operator machine while lexical and lineage overlap are penalized."
+    },
+    {
+      "authority": "CANDIDATE_ONLY__INDEPENDENT_VERIFY_REQUIRED",
+      "average_lineage_overlap": 0.0,
+      "candidate_id": "EYE-R3-TRIPLE-c054769fa9d5dc63",
+      "candidate_type": "THREE_DOMAIN_HIDDEN_MACHINE_CONSTELLATION",
+      "confidence_class": "STRONG_HIDDEN_MACHINE_CANDIDATE__VERIFY_REQUIRED",
+      "counterexample": "A shared authoring template, generic governance skeleton, or ubiquitous operator ordering explains the apparent constellation.",
+      "domains": [
+        "EYE",
+        "LINEAR_A",
+        "PALOMAR"
+      ],
+      "explicit_pair_count": 0,
+      "falsifier": "Held-out/manual sequence verification fails in one domain, or shuffled/reordered controls score equivalently.",
+      "formula": "EYE <--> LINEAR_A <--> PALOMAR via COST_REGRET_ROUTING -> PRESERVE_FAILURE -> FREEZE_COMPARE",
+      "independent_lineage_support": {
+        "EYE": 3,
+        "LINEAR_A": 6,
+        "PALOMAR": 6
+      },
+      "lexical_distance": 0.960442,
+      "machine": [
+        "COST_REGRET_ROUTING",
+        "PRESERVE_FAILURE",
+        "FREEZE_COMPARE"
+      ],
+      "machine_domain_rarity": 0.842105,
+      "machine_id": "EYE-R3-MACHINE-4b4ac08b466eea91",
+      "operator_specificity": 0.0,
+      "provenance": {
+        "EYE": [
+          {
+            "artifact_id": null,
+            "lineage": "eye-r4-3-stochastic-witness-planner",
+            "machine_normalized_positions": [
+              0.06616387,
+              0.09373623,
+              0.12449189
+            ],
+            "machine_signal_strength": 9,
+            "operator_hits": {
+              "COST_REGRET_ROUTING": [
+                "cost",
+                "resource"
+              ],
+              "FREEZE_COMPARE": [
+                "baseline",
+                "frozen"
+              ],
+              "PRESERVE_FAILURE": [
+                "blocked",
+                "failure",
+                "mismatch",
+                "resource_limit",
+                "unknown"
+              ]
+            },
+            "path": "EYE/r4_3/eye_r4_3_stochastic_witness_planner.py",
+            "sha256": "431458934161ef27bf56b460a83a9f9327454590ad150b7e14e959756b042af6"
+          },
+          {
+            "artifact_id": null,
+            "lineage": "eye-r4-2-adaptive-witness-planner",
+            "machine_normalized_positions": [
+              0.06445442,
+              0.09763814,
+              0.10918991
+            ],
+            "machine_signal_strength": 8,
+            "operator_hits": {
+              "COST_REGRET_ROUTING": [
+                "cost",
+                "resource"
+              ],
+              "FREEZE_COMPARE": [
+                "baseline",
+                "frozen"
+              ],
+              "PRESERVE_FAILURE": [
+                "failure",
+                "mismatch",
+                "resource_limit",
+                "unknown"
+              ]
+            },
+            "path": "EYE/r4_2/eye_r4_2_adaptive_witness_planner.py",
+            "sha256": "bc550c70d519e4e90579e3adad8b4d8c905eec460211f6285d0f7cc39b19f598"
+          },
+          {
+            "artifact_id": null,
+            "lineage": "eye-r4-1-minimum-witness-set-solver",
+            "machine_normalized_positions": [
+              0.06250496,
+              0.10094512,
+              0.10229529
+            ],
+            "machine_signal_strength": 7,
+            "operator_hits": {
+              "COST_REGRET_ROUTING": [
+                "cost",
+                "resource"
+              ],
+              "FREEZE_COMPARE": [
+                "baseline",
+                "frozen"
+              ],
+              "PRESERVE_FAILURE": [
+                "failure",
+                "resource_limit",
+                "unknown"
+              ]
+            },
+            "path": "EYE/r4_1/eye_r4_1_minimum_witness_set_solver.py",
+            "sha256": "aa17bf408f9e4187d1d679cde86972d6f5ba40e97f5393dfe276bb1097a301c6"
+          }
+        ],
+        "LINEAR_A": [
+          {
+            "artifact_id": null,
+            "lineage": "janus-linear-a-canonical-state-v2-9-conditional",
+            "machine_normalized_positions": [
+              0.01310108,
+              0.02620215,
+              0.06491986
+            ],
+            "machine_signal_strength": 9,
+            "operator_hits": {
+              "COST_REGRET_ROUTING": [
+                "timeout",
+                "work"
+              ],
+              "FREEZE_COMPARE": [
+                "freeze",
+                "frozen"
+              ],
+              "PRESERVE_FAILURE": [
+                "blocked",
+                "mismatch",
+                "open",
+                "preserve",
+                "timeout"
+              ]
+            },
+            "path": ".github/workflows/janus-linear-a-canonical-state-v2-9-conditional.yml",
+            "sha256": "dd2280e5f287839d3ff2e6d24619bd9a147a6b278d5e944cf61ee6e9db541581"
+          },
+          {
+            "artifact_id": null,
+            "lineage": "janus-linear-a-sigla-word-view-interface-probe",
+            "machine_normalized_positions": [
+              0.06954733,
+              0.1090535,
+              0.13518519
+            ],
+            "machine_signal_strength": 8,
+            "operator_hits": {
+              "COST_REGRET_ROUTING": [
+                "route",
+                "timeout",
+                "work"
+              ],
+              "FREEZE_COMPARE": [
+                "freeze",
+                "frozen"
+              ],
+              "PRESERVE_FAILURE": [
+                "blocked",
+                "open",
+                "timeout"
+              ]
+            },
+            "path": ".github/workflows/janus-linear-a-sigla-word-view-interface-probe-v0-1.yml",
+            "sha256": "c69c58d4c8c7e6b692bad23e5b7e72e3f0546262c2ca55cd1177092ddd62e57e"
+          },
+          {
+            "artifact_id": null,
+            "lineage": "janus-linear-a-formula-transition",
+            "machine_normalized_positions": [
+              0.10688406,
+              0.15700483,
+              0.19444444
+            ],
+            "machine_signal_strength": 7,
+            "operator_hits": {
+              "COST_REGRET_ROUTING": [
+                "timeout",
+                "work"
+              ],
+              "FREEZE_COMPARE": [
+                "frozen",
+                "holdout"
+              ],
+              "PRESERVE_FAILURE": [
+                "null",
+                "open",
+                "timeout"
+              ]
+            },
+            "path": ".github/workflows/janus-linear-a-formula-transition-v0-7.yml",
+            "sha256": "1c88c2e6c8eba633a72e31b1237b9f80f72697b306b1a6ccc2e287cfb6e4806b"
+          },
+          {
+            "artifact_id": null,
+            "lineage": "janus-linear-a-long-formula",
+            "machine_normalized_positions": [
+              0.09975904,
+              0.13686747,
+              0.16674699
+            ],
+            "machine_signal_strength": 7,
+            "operator_hits": {
+              "COST_REGRET_ROUTING": [
+                "timeout",
+                "work"
+              ],
+              "FREEZE_COMPARE": [
+                "freeze",
+                "frozen"
+              ],
+              "PRESERVE_FAILURE": [
+                "null",
+                "open",
+                "timeout"
+              ]
+            },
+            "path": ".github/workflows/janus-linear-a-long-formula-v0-8.yml",
+            "sha256": "0dd4a77d579205f2a3e4958876c2dc78fd7b61d1b4a4744a37853713f92d4c02"
+          },
+          {
+            "artifact_id": null,
+            "lineage": "janus-linear-a-r3b0-notti-2018-identity-bridge",
+            "machine_normalized_positions": [
+              0.10269891,
+              0.1615843,
+              0.28566421
+            ],
+            "machine_signal_strength": 7,
+            "operator_hits": {
+              "COST_REGRET_ROUTING": [
+                "timeout",
+                "work"
+              ],
+              "FREEZE_COMPARE": [
+                "comparison",
+                "frozen"
+              ],
+              "PRESERVE_FAILURE": [
+                "open",
+                "preserve",
+                "timeout"
+              ]
+            },
+            "path": ".github/workflows/janus-linear-a-r3b0-notti-2018-identity-bridge-v0-1.yml",
+            "sha256": "8b71129272bfc567caad79cd9ad1fb2a1ad06d3ef0b7360a1892df7472d14838"
+          },
+          {
+            "artifact_id": null,
+            "lineage": "janus-linear-a-sigla-document-bridge",
+            "machine_normalized_positions": [
+              0.06928962,
+              0.10688525,
+              0.13464481
+            ],
+            "machine_signal_strength": 7,
+            "operator_hits": {
+              "COST_REGRET_ROUTING": [
+                "timeout",
+                "work"
+              ],
+              "FREEZE_COMPARE": [
+                "baseline",
+                "freeze",
+                "frozen"
+              ],
+              "PRESERVE_FAILURE": [
+                "open",
+                "timeout"
+              ]
+            },
+            "path": ".github/workflows/janus-linear-a-sigla-document-bridge-v0-1.yml",
+            "sha256": "3f13e86f7019ac75555e06a361c621055ff0c1439f6dd9d07a20aee6fc4b88cc"
+          }
+        ],
+        "PALOMAR": [
+          {
+            "artifact_id": null,
+            "lineage": "palomar-jpfm-2f-b2-tile-lineage",
+            "machine_normalized_positions": [
+              0.01734479,
+              0.04182201,
+              0.07634949
+            ],
+            "machine_signal_strength": 9,
+            "operator_hits": {
+              "COST_REGRET_ROUTING": [
+                "timeout",
+                "work"
+              ],
+              "FREEZE_COMPARE": [
+                "freeze",
+                "frozen",
+                "preregister"
+              ],
+              "PRESERVE_FAILURE": [
+                "failure",
+                "null",
+                "open",
+                "timeout"
+              ]
+            },
+            "path": ".github/workflows/palomar-jpfm-2f-b2-tile-lineage.yml",
+            "sha256": "dd2a9d4680b9c816e2f3cc02118e04537bff7e21aa56fc5100c6b985dbd2b288"
+          },
+          {
+            "artifact_id": null,
+            "lineage": "palomar-jpfm-2f-b3s-sharded",
+            "machine_normalized_positions": [
+              0.01333333,
+              0.03407407,
+              0.06529915
+            ],
+            "machine_signal_strength": 9,
+            "operator_hits": {
+              "COST_REGRET_ROUTING": [
+                "timeout",
+                "work"
+              ],
+              "FREEZE_COMPARE": [
+                "frozen",
+                "preregister",
+                "preregistration"
+              ],
+              "PRESERVE_FAILURE": [
+                "null",
+                "open",
+                "preserve",
+                "timeout"
+              ]
+            },
+            "path": ".github/workflows/palomar-jpfm-2f-b3s-sharded.yml",
+            "sha256": "44071e261a89427d4cc5023b7670d7286c5303fe5e0576049c0a45d0760ee07e"
+          },
+          {
+            "artifact_id": null,
+            "lineage": "palomar-jpfm-2f-c2a-upstream-morphology",
+            "machine_normalized_positions": [
+              0.01100689,
+              0.02957504,
+              0.05991577
+            ],
+            "machine_signal_strength": 9,
+            "operator_hits": {
+              "COST_REGRET_ROUTING": [
+                "timeout",
+                "work"
+              ],
+              "FREEZE_COMPARE": [
+                "freeze",
+                "frozen",
+                "preregister"
+              ],
+              "PRESERVE_FAILURE": [
+                "null",
+                "open",
+                "preserve",
+                "timeout"
+              ]
+            },
+            "path": ".github/workflows/palomar-jpfm-2f-c2a-upstream-morphology.yml",
+            "sha256": "a10aaeb34a66dca7aba8281b3f88a7de3b0b6e4275148e490315e66c4ec37fef"
+          },
+          {
+            "artifact_id": null,
+            "lineage": "palomar-jpfm-2f-b3-shape-compat",
+            "machine_normalized_positions": [
+              0.01922104,
+              0.04468049,
+              0.08042489
+            ],
+            "machine_signal_strength": 8,
+            "operator_hits": {
+              "COST_REGRET_ROUTING": [
+                "timeout",
+                "work"
+              ],
+              "FREEZE_COMPARE": [
+                "freeze",
+                "frozen",
+                "preregister"
+              ],
+              "PRESERVE_FAILURE": [
+                "null",
+                "open",
+                "timeout"
+              ]
+            },
+            "path": ".github/workflows/palomar-jpfm-2f-b3-shape-compat.yml",
+            "sha256": "b3db495c27b5aa5be2101bdd0d839dee3932bd06cd2f52853f211c0d6f7eba5d"
+          },
+          {
+            "artifact_id": null,
+            "lineage": "palomar-jpfm-2f-c0m-full-s0-header-map",
+            "machine_normalized_positions": [
+              0.01347973,
+              0.03446027,
+              0.06892053
+            ],
+            "machine_signal_strength": 8,
+            "operator_hits": {
+              "COST_REGRET_ROUTING": [
+                "timeout",
+                "work"
+              ],
+              "FREEZE_COMPARE": [
+                "frozen",
+                "preregister",
+                "preregistration"
+              ],
+              "PRESERVE_FAILURE": [
+                "failure",
+                "preserve",
+                "timeout"
+              ]
+            },
+            "path": ".github/workflows/palomar-jpfm-2f-c0m-full-s0-header-map.yml",
+            "sha256": "d779f432ac2119dec7f2c603c0c807bc5e3d394fe623bddc988f400ee1b71a5f"
+          },
+          {
+            "artifact_id": null,
+            "lineage": "palomar-jpfm-2f-c1a2-raw-polarity-edge-aware",
+            "machine_normalized_positions": [
+              0.0180154,
+              0.04213279,
+              0.07293331
+            ],
+            "machine_signal_strength": 8,
+            "operator_hits": {
+              "COST_REGRET_ROUTING": [
+                "timeout",
+                "work"
+              ],
+              "FREEZE_COMPARE": [
+                "frozen",
+                "preregister"
+              ],
+              "PRESERVE_FAILURE": [
+                "failure",
+                "open",
+                "preserve",
+                "timeout"
+              ]
+            },
+            "path": ".github/workflows/palomar-jpfm-2f-c1a2-raw-polarity-edge-aware.yml",
+            "sha256": "9b7ab1950f02392d970f9706d8a08ffc527dfaa5502a3122ccdf13eb3779ec52"
+          }
+        ]
+      },
+      "representation_invariants": [
+        "resource-aware routing without authority escalation",
+        "epistemic state identity under unsuccessful execution",
+        "precommitted reference frame before comparison"
+      ],
+      "score": 78.761297,
       "verify_next": "Freeze the three-domain candidate and run explicit sequence-order controls plus manual input/state/output mapping in at least two independent lineages per domain.",
       "why": "Three distant domains independently instantiate the same ordered operator machine while lexical and lineage overlap are penalized."
     },
@@ -57274,769 +57879,6 @@
         "typed transition semantics between epistemic states"
       ],
       "score": 77.595037,
-      "verify_next": "Freeze the three-domain candidate and run explicit sequence-order controls plus manual input/state/output mapping in at least two independent lineages per domain.",
-      "why": "Three distant domains independently instantiate the same ordered operator machine while lexical and lineage overlap are penalized."
-    },
-    {
-      "authority": "CANDIDATE_ONLY__INDEPENDENT_VERIFY_REQUIRED",
-      "average_lineage_overlap": 0.0,
-      "candidate_id": "EYE-R3-TRIPLE-1e6be71c0ee4cc07",
-      "candidate_type": "THREE_DOMAIN_HIDDEN_MACHINE_CONSTELLATION",
-      "confidence_class": "STRONG_HIDDEN_MACHINE_CANDIDATE__VERIFY_REQUIRED",
-      "counterexample": "A shared authoring template, generic governance skeleton, or ubiquitous operator ordering explains the apparent constellation.",
-      "domains": [
-        "FALLOUT",
-        "LINEAR_A",
-        "PALOMAR"
-      ],
-      "explicit_pair_count": 0,
-      "falsifier": "Held-out/manual sequence verification fails in one domain, or shuffled/reordered controls score equivalently.",
-      "formula": "FALLOUT <--> LINEAR_A <--> PALOMAR via PROVENANCE_CHAIN -> BOUNDED_CANDIDATE_SEARCH -> STATE_TRANSITION",
-      "independent_lineage_support": {
-        "FALLOUT": 4,
-        "LINEAR_A": 4,
-        "PALOMAR": 3
-      },
-      "lexical_distance": 0.979012,
-      "machine": [
-        "PROVENANCE_CHAIN",
-        "BOUNDED_CANDIDATE_SEARCH",
-        "STATE_TRANSITION"
-      ],
-      "machine_domain_rarity": 0.736842,
-      "machine_id": "EYE-R3-MACHINE-db6f984eb1bf4eea",
-      "operator_specificity": 0.0,
-      "provenance": {
-        "FALLOUT": [
-          {
-            "artifact_id": "FALLOUT-3-JANUS-VAULT-87-DUAL-WITNESS-THRESHOLD-FORENSICS-v1.2",
-            "lineage": "fallout-3-janus-vault-87-dual-witness-threshold-forensics",
-            "machine_normalized_positions": [
-              0.03311622,
-              0.05279397,
-              0.07857388
-            ],
-            "machine_signal_strength": 15,
-            "operator_hits": {
-              "BOUNDED_CANDIDATE_SEARCH": [
-                "admission",
-                "candidate",
-                "gate",
-                "route"
-              ],
-              "PROVENANCE_CHAIN": [
-                "parent",
-                "provenance",
-                "source"
-              ],
-              "STATE_TRANSITION": [
-                "after",
-                "before",
-                "change",
-                "match",
-                "pass",
-                "state",
-                "terminal",
-                "transition"
-              ]
-            },
-            "path": "registry/myth_busted/FALLOUT-3-JANUS-VAULT-87-DUAL-WITNESS-THRESHOLD-FORENSICS-v1.2.json",
-            "sha256": "adb9a800ed201d3298aa7f1390988b92da7129db8f9e7122962939cf93d72907"
-          },
-          {
-            "artifact_id": "FALLOUT-3-JAMES-RUNTIME-T0-T3-SAVEGAME-DIFFERENTIAL-PROTOCOL-v3.1",
-            "lineage": "fallout-3-james-runtime-t0-t3-savegame-differential-protocol",
-            "machine_normalized_positions": [
-              0.07329175,
-              0.08803516,
-              0.11411965
-            ],
-            "machine_signal_strength": 13,
-            "operator_hits": {
-              "BOUNDED_CANDIDATE_SEARCH": [
-                "candidate",
-                "gate"
-              ],
-              "PROVENANCE_CHAIN": [
-                "lineage",
-                "parent",
-                "receipt"
-              ],
-              "STATE_TRANSITION": [
-                "after",
-                "before",
-                "blocked",
-                "change",
-                "open",
-                "pass",
-                "state",
-                "terminal"
-              ]
-            },
-            "path": "registry/myth_busted/FALLOUT-3-JAMES-RUNTIME-T0-T3-SAVEGAME-DIFFERENTIAL-PROTOCOL-v3.1.json",
-            "sha256": "3be9a9106a8958e540805918e7290a8b104480020927b54e9aacd4ed7a4aae27"
-          },
-          {
-            "artifact_id": "FALLOUT-3-SAVE-JAMES-BRAUN-ADMIN-MEDIATED-CAPTURE-v1.1",
-            "lineage": "fallout-3-save-james-braun-admin-mediated-capture",
-            "machine_normalized_positions": [
-              0.09406295,
-              0.1269671,
-              0.14270386
-            ],
-            "machine_signal_strength": 10,
-            "operator_hits": {
-              "BOUNDED_CANDIDATE_SEARCH": [
-                "candidate",
-                "gate"
-              ],
-              "PROVENANCE_CHAIN": [
-                "parent",
-                "source"
-              ],
-              "STATE_TRANSITION": [
-                "before",
-                "change",
-                "open",
-                "pass",
-                "state",
-                "terminal"
-              ]
-            },
-            "path": "registry/experimental/FALLOUT-3-SAVE-JAMES-BRAUN-ADMIN-MEDIATED-CAPTURE-v1.1.json",
-            "sha256": "84b93168ce17277c61ae109451eecb0d85e96e7fa374e931588b1664d999484b"
-          },
-          {
-            "artifact_id": "FALLOUT-3-TRANQUILITY-LANE-GNOME-FAILSAFE-CHILD-JAMES-MOTIF-v4.5",
-            "lineage": "fallout-3-tranquility-lane-gnome-failsafe-child-james-motif",
-            "machine_normalized_positions": [
-              0.12038304,
-              0.13679891,
-              0.16728552
-            ],
-            "machine_signal_strength": 9,
-            "operator_hits": {
-              "BOUNDED_CANDIDATE_SEARCH": [
-                "admission",
-                "candidate",
-                "gate"
-              ],
-              "PROVENANCE_CHAIN": [
-                "canonical",
-                "parent"
-              ],
-              "STATE_TRANSITION": [
-                "after",
-                "open",
-                "state",
-                "terminal"
-              ]
-            },
-            "path": "registry/myth_busted/FALLOUT-3-TRANQUILITY-LANE-GNOME-FAILSAFE-CHILD-JAMES-MOTIF-v4.5.json",
-            "sha256": "24f838bc8855656e4fd8c99c8c2c3aa544df74d30118b277492d19274f8ada3f"
-          }
-        ],
-        "LINEAR_A": [
-          {
-            "artifact_id": null,
-            "lineage": "janus-linear-a-sigla-structural-schema-probe",
-            "machine_normalized_positions": [
-              0.06677206,
-              0.07158988,
-              0.20641373
-            ],
-            "machine_signal_strength": 11,
-            "operator_hits": {
-              "BOUNDED_CANDIDATE_SEARCH": [
-                "candidate",
-                "gate",
-                "rank",
-                "selector"
-              ],
-              "PROVENANCE_CHAIN": [
-                "hash",
-                "parent",
-                "source"
-              ],
-              "STATE_TRANSITION": [
-                "before",
-                "blocked",
-                "match",
-                "state"
-              ]
-            },
-            "path": "research/linear_a/janus_linear_a_sigla_structural_schema_probe_v0_1.py",
-            "sha256": "6047fe13a923deaf675ffd64b6f8e8316e76b1ad6e4612110b6b13a6fc520c78"
-          },
-          {
-            "artifact_id": "JANUS-LINEAR-A-SIGLA-SOURCE-ADAPTER-CONTRACT-CANDIDATE-2026-08-14-v0.1",
-            "lineage": "janus-linear-a-sigla-source-adapter-contract-candidate",
-            "machine_normalized_positions": [
-              0.01147585,
-              0.01788097,
-              0.10248199
-            ],
-            "machine_signal_strength": 10,
-            "operator_hits": {
-              "BOUNDED_CANDIDATE_SEARCH": [
-                "candidate",
-                "fallback",
-                "gate",
-                "route"
-              ],
-              "PROVENANCE_CHAIN": [
-                "digest",
-                "hash",
-                "sha256",
-                "source"
-              ],
-              "STATE_TRANSITION": [
-                "after",
-                "blocked"
-              ]
-            },
-            "path": "data/JANUS-LINEAR-A-SIGLA-SOURCE-ADAPTER-CONTRACT-CANDIDATE-2026-08-14-v0.1.json",
-            "sha256": "3b29f36ed681e6a0ec44484a830fc4185728f66e6655304cab247e89d56a3904"
-          },
-          {
-            "artifact_id": "JANUS-LINEAR-A-R7-C2-STRUCTURE-DESTROYING-NULL-RESULT-2026-08-15-v0.1",
-            "lineage": "janus-linear-a-r7-c2-structure-destroying-null-result",
-            "machine_normalized_positions": [
-              0.01615258,
-              0.0302975,
-              0.03403906
-            ],
-            "machine_signal_strength": 8,
-            "operator_hits": {
-              "BOUNDED_CANDIDATE_SEARCH": [
-                "candidate",
-                "gate"
-              ],
-              "PROVENANCE_CHAIN": [
-                "commit",
-                "source"
-              ],
-              "STATE_TRANSITION": [
-                "after",
-                "change",
-                "match",
-                "pass"
-              ]
-            },
-            "path": "data/JANUS-LINEAR-A-R7-C2-STRUCTURE-DESTROYING-NULL-RESULT-2026-08-15-v0.1.json",
-            "sha256": "a775a3364994fcd3b7e934d313297284f3ddcc5109bfa27697e542e8d39cbaa9"
-          },
-          {
-            "artifact_id": "JANUS-LINEAR-A-R7-C0-5-NONSINGLETON-BOUNDARY-CONFOUND-AUDIT-SPEC-2026-08-16-v0.1",
-            "lineage": "janus-linear-a-r7-c0-5-nonsingleton-boundary-confound-audit-spec",
-            "machine_normalized_positions": [
-              0.06943967,
-              0.071846,
-              0.17531798
-            ],
-            "machine_signal_strength": 7,
-            "operator_hits": {
-              "BOUNDED_CANDIDATE_SEARCH": [
-                "candidate",
-                "gate"
-              ],
-              "PROVENANCE_CHAIN": [
-                "parent",
-                "source"
-              ],
-              "STATE_TRANSITION": [
-                "after",
-                "before",
-                "change"
-              ]
-            },
-            "path": "data/JANUS-LINEAR-A-R7-C0-5-NONSINGLETON-BOUNDARY-CONFOUND-AUDIT-SPEC-2026-08-16-v0.1.json",
-            "sha256": "4e9ac06677e33aca2424101b3f8201ccb35847447df5c1f8b0c3d92794479a60"
-          }
-        ],
-        "PALOMAR": [
-          {
-            "artifact_id": null,
-            "lineage": "palomar-jpfm-2f-c2b0-reference-support",
-            "machine_normalized_positions": [
-              0.12133891,
-              0.1755503,
-              0.19465163
-            ],
-            "machine_signal_strength": 15,
-            "operator_hits": {
-              "BOUNDED_CANDIDATE_SEARCH": [
-                "admission",
-                "gate",
-                "rank",
-                "ranking"
-              ],
-              "PROVENANCE_CHAIN": [
-                "commit",
-                "digest",
-                "hash",
-                "parent",
-                "sha256",
-                "source"
-              ],
-              "STATE_TRANSITION": [
-                "after",
-                "before",
-                "change",
-                "delta",
-                "pass"
-              ]
-            },
-            "path": ".github/workflows/palomar-jpfm-2f-c2b0-reference-support.yml",
-            "sha256": "ace1a0310733ae63740e5e081b174f9d5543e4fcd0748d77c44aac558f387e4f"
-          },
-          {
-            "artifact_id": null,
-            "lineage": "palomar-jpfm-2f-c0m-full-s0-header-map",
-            "machine_normalized_positions": [
-              0.12697032,
-              0.12914447,
-              0.17621481
-            ],
-            "machine_signal_strength": 12,
-            "operator_hits": {
-              "BOUNDED_CANDIDATE_SEARCH": [
-                "admission",
-                "gate"
-              ],
-              "PROVENANCE_CHAIN": [
-                "commit",
-                "digest",
-                "hash",
-                "parent",
-                "receipt",
-                "sha256",
-                "source"
-              ],
-              "STATE_TRANSITION": [
-                "after",
-                "before",
-                "pass"
-              ]
-            },
-            "path": ".github/workflows/palomar-jpfm-2f-c0m-full-s0-header-map.yml",
-            "sha256": "d779f432ac2119dec7f2c603c0c807bc5e3d394fe623bddc988f400ee1b71a5f"
-          },
-          {
-            "artifact_id": null,
-            "lineage": "palomar-jpfm-2f-c0-corrected-tile-locator",
-            "machine_normalized_positions": [
-              0.17236989,
-              0.17555308,
-              0.24144517
-            ],
-            "machine_signal_strength": 11,
-            "operator_hits": {
-              "BOUNDED_CANDIDATE_SEARCH": [
-                "admission",
-                "gate"
-              ],
-              "PROVENANCE_CHAIN": [
-                "commit",
-                "digest",
-                "hash",
-                "lineage",
-                "parent",
-                "sha256",
-                "source"
-              ],
-              "STATE_TRANSITION": [
-                "before",
-                "pass"
-              ]
-            },
-            "path": ".github/workflows/palomar-jpfm-2f-c0-corrected-tile-locator.yml",
-            "sha256": "d147f8a4338dfd942b235621aa982f4bb8a204797e67b08505f764706232dce0"
-          }
-        ]
-      },
-      "representation_invariants": [
-        "source-to-result identity chain",
-        "candidate set plus admission constraints",
-        "typed transition semantics between epistemic states"
-      ],
-      "score": 77.590905,
-      "verify_next": "Freeze the three-domain candidate and run explicit sequence-order controls plus manual input/state/output mapping in at least two independent lineages per domain.",
-      "why": "Three distant domains independently instantiate the same ordered operator machine while lexical and lineage overlap are penalized."
-    },
-    {
-      "authority": "CANDIDATE_ONLY__INDEPENDENT_VERIFY_REQUIRED",
-      "average_lineage_overlap": 0.0,
-      "candidate_id": "EYE-R3-TRIPLE-d3f01c1f3210611e",
-      "candidate_type": "THREE_DOMAIN_HIDDEN_MACHINE_CONSTELLATION",
-      "confidence_class": "STRONG_HIDDEN_MACHINE_CANDIDATE__VERIFY_REQUIRED",
-      "counterexample": "A shared authoring template, generic governance skeleton, or ubiquitous operator ordering explains the apparent constellation.",
-      "domains": [
-        "LINEAR_A",
-        "OSIRIS_MYTH",
-        "PALOMAR"
-      ],
-      "explicit_pair_count": 0,
-      "falsifier": "Held-out/manual sequence verification fails in one domain, or shuffled/reordered controls score equivalently.",
-      "formula": "LINEAR_A <--> OSIRIS_MYTH <--> PALOMAR via PROVENANCE_CHAIN -> BOUNDED_CANDIDATE_SEARCH -> STATE_TRANSITION",
-      "independent_lineage_support": {
-        "LINEAR_A": 4,
-        "OSIRIS_MYTH": 4,
-        "PALOMAR": 3
-      },
-      "lexical_distance": 0.977956,
-      "machine": [
-        "PROVENANCE_CHAIN",
-        "BOUNDED_CANDIDATE_SEARCH",
-        "STATE_TRANSITION"
-      ],
-      "machine_domain_rarity": 0.736842,
-      "machine_id": "EYE-R3-MACHINE-db6f984eb1bf4eea",
-      "operator_specificity": 0.0,
-      "provenance": {
-        "LINEAR_A": [
-          {
-            "artifact_id": null,
-            "lineage": "janus-linear-a-sigla-structural-schema-probe",
-            "machine_normalized_positions": [
-              0.06677206,
-              0.07158988,
-              0.20641373
-            ],
-            "machine_signal_strength": 11,
-            "operator_hits": {
-              "BOUNDED_CANDIDATE_SEARCH": [
-                "candidate",
-                "gate",
-                "rank",
-                "selector"
-              ],
-              "PROVENANCE_CHAIN": [
-                "hash",
-                "parent",
-                "source"
-              ],
-              "STATE_TRANSITION": [
-                "before",
-                "blocked",
-                "match",
-                "state"
-              ]
-            },
-            "path": "research/linear_a/janus_linear_a_sigla_structural_schema_probe_v0_1.py",
-            "sha256": "6047fe13a923deaf675ffd64b6f8e8316e76b1ad6e4612110b6b13a6fc520c78"
-          },
-          {
-            "artifact_id": "JANUS-LINEAR-A-SIGLA-SOURCE-ADAPTER-CONTRACT-CANDIDATE-2026-08-14-v0.1",
-            "lineage": "janus-linear-a-sigla-source-adapter-contract-candidate",
-            "machine_normalized_positions": [
-              0.01147585,
-              0.01788097,
-              0.10248199
-            ],
-            "machine_signal_strength": 10,
-            "operator_hits": {
-              "BOUNDED_CANDIDATE_SEARCH": [
-                "candidate",
-                "fallback",
-                "gate",
-                "route"
-              ],
-              "PROVENANCE_CHAIN": [
-                "digest",
-                "hash",
-                "sha256",
-                "source"
-              ],
-              "STATE_TRANSITION": [
-                "after",
-                "blocked"
-              ]
-            },
-            "path": "data/JANUS-LINEAR-A-SIGLA-SOURCE-ADAPTER-CONTRACT-CANDIDATE-2026-08-14-v0.1.json",
-            "sha256": "3b29f36ed681e6a0ec44484a830fc4185728f66e6655304cab247e89d56a3904"
-          },
-          {
-            "artifact_id": "JANUS-LINEAR-A-R7-C2-STRUCTURE-DESTROYING-NULL-RESULT-2026-08-15-v0.1",
-            "lineage": "janus-linear-a-r7-c2-structure-destroying-null-result",
-            "machine_normalized_positions": [
-              0.01615258,
-              0.0302975,
-              0.03403906
-            ],
-            "machine_signal_strength": 8,
-            "operator_hits": {
-              "BOUNDED_CANDIDATE_SEARCH": [
-                "candidate",
-                "gate"
-              ],
-              "PROVENANCE_CHAIN": [
-                "commit",
-                "source"
-              ],
-              "STATE_TRANSITION": [
-                "after",
-                "change",
-                "match",
-                "pass"
-              ]
-            },
-            "path": "data/JANUS-LINEAR-A-R7-C2-STRUCTURE-DESTROYING-NULL-RESULT-2026-08-15-v0.1.json",
-            "sha256": "a775a3364994fcd3b7e934d313297284f3ddcc5109bfa27697e542e8d39cbaa9"
-          },
-          {
-            "artifact_id": "JANUS-LINEAR-A-R7-C0-5-NONSINGLETON-BOUNDARY-CONFOUND-AUDIT-SPEC-2026-08-16-v0.1",
-            "lineage": "janus-linear-a-r7-c0-5-nonsingleton-boundary-confound-audit-spec",
-            "machine_normalized_positions": [
-              0.06943967,
-              0.071846,
-              0.17531798
-            ],
-            "machine_signal_strength": 7,
-            "operator_hits": {
-              "BOUNDED_CANDIDATE_SEARCH": [
-                "candidate",
-                "gate"
-              ],
-              "PROVENANCE_CHAIN": [
-                "parent",
-                "source"
-              ],
-              "STATE_TRANSITION": [
-                "after",
-                "before",
-                "change"
-              ]
-            },
-            "path": "data/JANUS-LINEAR-A-R7-C0-5-NONSINGLETON-BOUNDARY-CONFOUND-AUDIT-SPEC-2026-08-16-v0.1.json",
-            "sha256": "4e9ac06677e33aca2424101b3f8201ccb35847447df5c1f8b0c3d92794479a60"
-          }
-        ],
-        "OSIRIS_MYTH": [
-          {
-            "artifact_id": "JANUS-WEDJAT-FRACTION-ORIGIN-PALEOGRAPHY-DEEPENING-2026-08-15-v0.1",
-            "lineage": "janus-wedjat-fraction-origin-paleography-deepening",
-            "machine_normalized_positions": [
-              0.0367235,
-              0.05115059,
-              0.0597353
-            ],
-            "machine_signal_strength": 10,
-            "operator_hits": {
-              "BOUNDED_CANDIDATE_SEARCH": [
-                "admission",
-                "gate"
-              ],
-              "PROVENANCE_CHAIN": [
-                "parent",
-                "provenance",
-                "source"
-              ],
-              "STATE_TRANSITION": [
-                "after",
-                "before",
-                "match",
-                "open",
-                "state"
-              ]
-            },
-            "path": "data/JANUS-WEDJAT-FRACTION-ORIGIN-PALEOGRAPHY-DEEPENING-2026-08-15-v0.1.json",
-            "sha256": "e0bfd2a41a4dc042b65e64c3eacd4c8877900ddbaeb313d7d3e754ddc2c11198"
-          },
-          {
-            "artifact_id": "JANUS-WEDJAT-PALEOGRAPHY-PRIMARY-SOURCE-LEDGER-2026-08-15-v0.1",
-            "lineage": "janus-wedjat-paleography-primary-source-ledger",
-            "machine_normalized_positions": [
-              0.00512057,
-              0.01889954,
-              0.02048226
-            ],
-            "machine_signal_strength": 10,
-            "operator_hits": {
-              "BOUNDED_CANDIDATE_SEARCH": [
-                "admission",
-                "candidate",
-                "gate"
-              ],
-              "PROVENANCE_CHAIN": [
-                "lineage",
-                "parent",
-                "sha256",
-                "source"
-              ],
-              "STATE_TRANSITION": [
-                "before",
-                "match",
-                "pass"
-              ]
-            },
-            "path": "data/JANUS-WEDJAT-PALEOGRAPHY-PRIMARY-SOURCE-LEDGER-2026-08-15-v0.1.json",
-            "sha256": "2492fe4afa085207787fcfb2b7ff741c8047dc90429cc33e994af4ba786eea81"
-          },
-          {
-            "artifact_id": "OSIRIS-SEMANTIC-TEXT-CORE-FOR-THE-VOICE-OF-JANUS-2026-08-19-v1.1",
-            "lineage": "osiris-semantic-text-core-for-the-voice-of-janus",
-            "machine_normalized_positions": [
-              0.06379668,
-              0.21939834,
-              0.52385892
-            ],
-            "machine_signal_strength": 9,
-            "operator_hits": {
-              "BOUNDED_CANDIDATE_SEARCH": [
-                "fallback",
-                "gate"
-              ],
-              "PROVENANCE_CHAIN": [
-                "canonical",
-                "parent",
-                "provenance",
-                "source"
-              ],
-              "STATE_TRANSITION": [
-                "change",
-                "state",
-                "transition"
-              ]
-            },
-            "path": "data/OSIRIS_SEMANTIC_TEXT_CORE_FOR_THE_VOICE_OF_JANUS_2026-08-19_v1.1.json",
-            "sha256": "94d45aa851e510be9b8d961dd3aa506674594144630306089fc633c1bbaee191"
-          },
-          {
-            "artifact_id": "JANUS-HORUS-RESTORATION-PROCEDURE-DEVICE-SIGNATURE-PILOT-2026-08-16-v0.1",
-            "lineage": "janus-horus-restoration-procedure-device-signature-pilot",
-            "machine_normalized_positions": [
-              0.0357386,
-              0.04753801,
-              0.09031087
-            ],
-            "machine_signal_strength": 7,
-            "operator_hits": {
-              "BOUNDED_CANDIDATE_SEARCH": [
-                "candidate",
-                "gate"
-              ],
-              "PROVENANCE_CHAIN": [
-                "parent",
-                "source"
-              ],
-              "STATE_TRANSITION": [
-                "blocked",
-                "open",
-                "state"
-              ]
-            },
-            "path": "data/JANUS-HORUS-RESTORATION-PROCEDURE-DEVICE-SIGNATURE-PILOT-2026-08-16-v0.1.json",
-            "sha256": "ad8e9a35d4fa7d9e2880d7ef540258b966ab659d8cdf96361cbbf32cab3a758d"
-          }
-        ],
-        "PALOMAR": [
-          {
-            "artifact_id": null,
-            "lineage": "palomar-jpfm-2f-c2b0-reference-support",
-            "machine_normalized_positions": [
-              0.12133891,
-              0.1755503,
-              0.19465163
-            ],
-            "machine_signal_strength": 15,
-            "operator_hits": {
-              "BOUNDED_CANDIDATE_SEARCH": [
-                "admission",
-                "gate",
-                "rank",
-                "ranking"
-              ],
-              "PROVENANCE_CHAIN": [
-                "commit",
-                "digest",
-                "hash",
-                "parent",
-                "sha256",
-                "source"
-              ],
-              "STATE_TRANSITION": [
-                "after",
-                "before",
-                "change",
-                "delta",
-                "pass"
-              ]
-            },
-            "path": ".github/workflows/palomar-jpfm-2f-c2b0-reference-support.yml",
-            "sha256": "ace1a0310733ae63740e5e081b174f9d5543e4fcd0748d77c44aac558f387e4f"
-          },
-          {
-            "artifact_id": null,
-            "lineage": "palomar-jpfm-2f-c0m-full-s0-header-map",
-            "machine_normalized_positions": [
-              0.12697032,
-              0.12914447,
-              0.17621481
-            ],
-            "machine_signal_strength": 12,
-            "operator_hits": {
-              "BOUNDED_CANDIDATE_SEARCH": [
-                "admission",
-                "gate"
-              ],
-              "PROVENANCE_CHAIN": [
-                "commit",
-                "digest",
-                "hash",
-                "parent",
-                "receipt",
-                "sha256",
-                "source"
-              ],
-              "STATE_TRANSITION": [
-                "after",
-                "before",
-                "pass"
-              ]
-            },
-            "path": ".github/workflows/palomar-jpfm-2f-c0m-full-s0-header-map.yml",
-            "sha256": "d779f432ac2119dec7f2c603c0c807bc5e3d394fe623bddc988f400ee1b71a5f"
-          },
-          {
-            "artifact_id": null,
-            "lineage": "palomar-jpfm-2f-c0-corrected-tile-locator",
-            "machine_normalized_positions": [
-              0.17236989,
-              0.17555308,
-              0.24144517
-            ],
-            "machine_signal_strength": 11,
-            "operator_hits": {
-              "BOUNDED_CANDIDATE_SEARCH": [
-                "admission",
-                "gate"
-              ],
-              "PROVENANCE_CHAIN": [
-                "commit",
-                "digest",
-                "hash",
-                "lineage",
-                "parent",
-                "sha256",
-                "source"
-              ],
-              "STATE_TRANSITION": [
-                "before",
-                "pass"
-              ]
-            },
-            "path": ".github/workflows/palomar-jpfm-2f-c0-corrected-tile-locator.yml",
-            "sha256": "d147f8a4338dfd942b235621aa982f4bb8a204797e67b08505f764706232dce0"
-          }
-        ]
-      },
-      "representation_invariants": [
-        "source-to-result identity chain",
-        "candidate set plus admission constraints",
-        "typed transition semantics between epistemic states"
-      ],
-      "score": 77.56767,
       "verify_next": "Freeze the three-domain candidate and run explicit sequence-order controls plus manual input/state/output mapping in at least two independent lineages per domain.",
       "why": "Three distant domains independently instantiate the same ordered operator machine while lexical and lineage overlap are penalized."
     }
