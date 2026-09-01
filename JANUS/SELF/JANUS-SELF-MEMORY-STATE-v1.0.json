@@ -34,27 +34,40 @@
     "mutation_default": "READ_ONLY",
     "repair_lane": "BRANCH_AND_VERIFY_WHEN_ACTUATOR_BOUND",
     "actuator_bound_modules": ["LEFT_HRAIN", "RIGHT_INAIHR"],
-    "verified_actuator_modules": ["LEFT_HRAIN"]
+    "verified_actuator_modules": ["LEFT_HRAIN", "RIGHT_INAIHR"]
   },
   "counters": {
-    "decision_count": 1,
-    "patch_proposal_count": 1,
-    "verified_patch_count": 1,
+    "decision_count": 2,
+    "patch_proposal_count": 2,
+    "verified_patch_count": 2,
     "blocked_patch_count": 0,
     "autonomous_merge_count": 0,
     "native_model_selected_patch_count": 0
   },
-  "latest_verified_actuation": {
-    "proposal_id": "jpatch-hrain-module-canary-001",
-    "module_id": "LEFT_HRAIN",
-    "target_repository": "Hawkar-usls/Hrain",
-    "target_branch": "janus-self/jpatch-hrain-module-canary-001",
-    "patch_commit": "715e89144cca005f27f5ad1ee68b59d16f624821",
-    "receipt_commit": "80fc1760c32c0ba86d23358d08e23d8744b1581c",
-    "verdict": "VERIFY_PASS",
-    "native_model_selected": false,
-    "main_mutated": false
-  },
-  "claim_ceiling": "SELF_MEMORY_AND_TARGET_LOCAL_REPAIR_ACTUATOR_ARE_WITNESSED; NATIVE_MODEL_SELECTED_REAL_REPAIR_IS_NOT_YET_WITNESSED",
+  "verified_actuations": [
+    {
+      "proposal_id": "jpatch-hrain-module-canary-001",
+      "module_id": "LEFT_HRAIN",
+      "target_repository": "Hawkar-usls/Hrain",
+      "target_branch": "janus-self/jpatch-hrain-module-canary-001",
+      "patch_commit": "715e89144cca005f27f5ad1ee68b59d16f624821",
+      "receipt_commit": "80fc1760c32c0ba86d23358d08e23d8744b1581c",
+      "verdict": "VERIFY_PASS",
+      "native_model_selected": false,
+      "main_mutated": false
+    },
+    {
+      "proposal_id": "jpatch-inaihr-module-canary-001",
+      "module_id": "RIGHT_INAIHR",
+      "target_repository": "Hawkar-usls/iNaiHR",
+      "target_branch": "janus-self/jpatch-inaihr-module-canary-001",
+      "patch_commit": "07565224337c8103bf8fc2417d4fc31c995f32b8",
+      "receipt_commit": "6b888af456a6ab3f6fcb49ee0d7ae8d8929e8d1e",
+      "verdict": "VERIFY_PASS",
+      "native_model_selected": false,
+      "main_mutated": false
+    }
+  ],
+  "claim_ceiling": "SELF_MEMORY_AND_BOTH_CORE_TARGET_LOCAL_REPAIR_ACTUATORS_ARE_WITNESSED; NATIVE_MODEL_SELECTED_REAL_REPAIR_IS_NOT_YET_WITNESSED",
   "law": "SELF_MEMORY RECORDS WHAT JANUS DID AND BELIEVED WITHOUT PRETENDING THAT BELIEF WAS TRUE."
 }
