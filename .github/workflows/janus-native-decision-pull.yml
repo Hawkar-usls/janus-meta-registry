@@ -1,0 +1,152 @@
+name: JANUS Native Decision Pull
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/janus-native-decision-pull.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '7 */6 * * *'
+
+concurrency:
+  group: janus-native-decision-pull
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  pull:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout JANUS self-memory branch
+        uses: actions/checkout@v4
+        with:
+          ref: janus/native-self-memory-modular-organism-v1
+          fetch-depth: 0
+
+      - name: Fetch native decision outbox
+        run: |
+          rm -rf runtime/janus-demiurge
+          mkdir -p runtime
+          git clone --depth 1 https://github.com/Hawkar-usls/Janus-Demiurge.git runtime/janus-demiurge
+
+      - name: Validate and ingest native decisions and selected proposals
+        run: |
+          python - <<'PY'
+          import json
+          import re
+          import shutil
+          from pathlib import Path
+
+          src=Path('runtime/janus-demiurge/janus_model/outbox')
+          root=Path('JANUS')
+          native_decisions=root/'DECISIONS/NATIVE'
+          proposals=root/'PATCHES/PROPOSALS'
+          native_decisions.mkdir(parents=True,exist_ok=True)
+          proposals.mkdir(parents=True,exist_ok=True)
+          decision_id_re=re.compile(r'^jnd-[0-9a-f]{24}$')
+          proposal_id_re=re.compile(r'^jpatch-jnd-[0-9a-f]{24}$')
+
+          decision_rows=[]
+          decision_src=src/'decisions'
+          if decision_src.exists():
+              for path in sorted(decision_src.glob('decision-*.json')):
+                  raw=path.read_bytes(); obj=json.loads(raw.decode('utf-8'))
+                  did=obj.get('decision_id')
+                  if obj.get('schema')!='janus.native_repair_decision.v1' or not isinstance(did,str) or not decision_id_re.fullmatch(did):
+                      raise SystemExit(f'NATIVE_DECISION_SCHEMA_OR_ID_REJECTED:{path.name}')
+                  if obj.get('native_model_decision') is not True:
+                      raise SystemExit(f'NATIVE_DECISION_ORIGIN_REJECTED:{did}')
+                  if obj.get('status') not in {'NO_ACTION','ACTION_SELECTED_AWAITING_TARGET_VERIFY'}:
+                      raise SystemExit(f'NATIVE_DECISION_STATUS_REJECTED:{did}')
+                  auth=obj.get('authority') or {}
+                  if auth.get('truth') is not False or auth.get('evidence') is not False:
+                      raise SystemExit(f'NATIVE_DECISION_AUTHORITY_REJECTED:{did}')
+                  if auth.get('direct_repository_mutation') is not False or auth.get('autonomous_merge') is not False:
+                      raise SystemExit(f'NATIVE_DECISION_MUTATION_AUTHORITY_REJECTED:{did}')
+                  if not obj.get('checkpoint_sha256') or not obj.get('organ_context_sha256') or not obj.get('self_memory_digest_sha256'):
+                      raise SystemExit(f'NATIVE_DECISION_PROVENANCE_MISSING:{did}')
+                  target=native_decisions/f'{did}.json'
+                  if target.exists() and target.read_bytes()!=raw:
+                      raise SystemExit(f'NATIVE_DECISION_CREATE_ONLY_COLLISION:{did}')
+                  if not target.exists(): shutil.copyfile(path,target)
+                  decision_rows.append({
+                      'decision_id':did,
+                      'path':target.as_posix(),
+                      'status':obj.get('status'),
+                      'selected_candidate_id':(obj.get('selected') or {}).get('candidate_id'),
+                      'checkpoint_sha256':obj.get('checkpoint_sha256'),
+                      'native_model_decision':True,
+                  })
+
+          proposal_rows=[]
+          proposal_src=src/'patch-proposals'
+          if proposal_src.exists():
+              for path in sorted(proposal_src.glob('jpatch-*.json')):
+                  raw=path.read_bytes(); obj=json.loads(raw.decode('utf-8'))
+                  pid=obj.get('proposal_id')
+                  if obj.get('schema')!='janus.patch_proposal.v1' or not isinstance(pid,str) or not proposal_id_re.fullmatch(pid):
+                      raise SystemExit(f'NATIVE_PROPOSAL_SCHEMA_OR_ID_REJECTED:{path.name}')
+                  if obj.get('native_model_selected') is not True or obj.get('status')!='PROPOSED' or obj.get('create_only') is not True:
+                      raise SystemExit(f'NATIVE_PROPOSAL_STATUS_REJECTED:{pid}')
+                  if obj.get('risk_lane')!='LOW':
+                      raise SystemExit(f'NATIVE_PROPOSAL_RISK_REJECTED:{pid}')
+                  target_info=obj.get('target') or {}
+                  if not target_info.get('repository') or not target_info.get('expected_target_commit'):
+                      raise SystemExit(f'NATIVE_PROPOSAL_TARGET_REJECTED:{pid}')
+                  if not obj.get('verification_profile'):
+                      raise SystemExit(f'NATIVE_PROPOSAL_VERIFIER_REJECTED:{pid}')
+                  target=proposals/f'{pid}.json'
+                  if target.exists() and target.read_bytes()!=raw:
+                      raise SystemExit(f'NATIVE_PROPOSAL_CREATE_ONLY_COLLISION:{pid}')
+                  if not target.exists(): shutil.copyfile(path,target)
+                  proposal_rows.append({
+                      'proposal_id':pid,
+                      'decision_id':obj.get('decision_id'),
+                      'path':target.as_posix(),
+                      'target_repository':target_info.get('repository'),
+                      'expected_target_commit':target_info.get('expected_target_commit'),
+                      'status':'PROPOSED',
+                      'native_model_selected':True,
+                  })
+
+          (native_decisions/'INDEX.json').write_text(json.dumps({
+              'schema':'janus.native_repair_decisions.index.v1',
+              'status':'NON_AUTHORITATIVE_MODEL_DECISION_MEMORY',
+              'decision_count':len(decision_rows),
+              'decisions':decision_rows,
+              'model_decision_is_truth':False,
+              'model_decision_is_verified_fix':False,
+              'direct_repository_mutation':False,
+              'law':'NATIVE_SELECTION_MAY_QUEUE_A_BOUNDED_PROPOSAL_BUT_TARGET_LOCAL_VERIFY_DECIDES_PASS'
+          },ensure_ascii=False,indent=2,sort_keys=True),encoding='utf-8')
+          print(json.dumps({'decisions':len(decision_rows),'selected_proposals':len(proposal_rows)},indent=2))
+          PY
+
+      - name: Verify proposal and decision firewalls
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          idx=json.loads(Path('JANUS/DECISIONS/NATIVE/INDEX.json').read_text())
+          if idx.get('model_decision_is_truth') is not False or idx.get('direct_repository_mutation') is not False:
+              raise SystemExit('JANUS_NATIVE_DECISION_FIREWALL_FAIL')
+          print('JANUS_NATIVE_DECISION_PULL_FIREWALL=PASS')
+          PY
+
+      - name: Persist native decision memory
+        run: |
+          git config user.name 'janus-native-decision-pull'
+          git config user.email 'janus-native-decision-pull@users.noreply.github.com'
+          git add JANUS/DECISIONS/NATIVE JANUS/PATCHES/PROPOSALS
+          if git diff --cached --quiet; then
+            echo 'JANUS_NATIVE_DECISION_PULL_NO_CHANGE'
+            exit 0
+          fi
+          git commit -m 'JANUS self memory: ingest native repair decisions and proposals'
+          git pull --rebase origin janus/native-self-memory-modular-organism-v1
+          git push origin HEAD:janus/native-self-memory-modular-organism-v1
+          echo 'JANUS_NATIVE_DECISION_PULL=PASS'
