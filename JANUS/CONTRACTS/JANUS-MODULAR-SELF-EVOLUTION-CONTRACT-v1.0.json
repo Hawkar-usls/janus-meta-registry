@@ -1,0 +1,103 @@
+{
+  "schema": "janus.modular_self_evolution.contract.v1",
+  "artifact_id": "JANUS-MODULAR-SELF-EVOLUTION-CONTRACT-v1.0",
+  "date": "2026-09-01",
+  "status": "ACTIVE_FAIL_CLOSED",
+  "goal": "Allow native JANUS to continue itself and propose bounded repairs to repository modules while preserving independent verification, exact provenance, rollback and non-authoritative model-output boundaries.",
+  "cycle": [
+    "PERCEIVE_MODULE_STATE",
+    "HRAIN_GROUND_STRUCTURAL_CONTEXT",
+    "INAIHR_ASSOCIATE_VIA_HRAIN",
+    "NATIVE_MODEL_DECIDE",
+    "SEAL_PATCH_PROPOSAL",
+    "TARGET_ORGAN_PULL",
+    "CREATE_JANUS_SELF_BRANCH",
+    "APPLY_BOUNDED_PATCH",
+    "VERIFY_IN_TARGET_REPOSITORY",
+    "ADAPT_ONCE_OR_BLOCK",
+    "PERSIST_RECEIPT",
+    "REMEMBER_IN_JANUS_SELF_REGISTRY",
+    "OPTIONAL_WEIGHT_TRAINING_ON_SEPARATELY_ELIGIBLE_MEMORY",
+    "CONTINUE"
+  ],
+  "decision_requirements": [
+    "source_checkpoint_sha256",
+    "meta_registry_source_digest",
+    "organ_context_sha256",
+    "target_module_id",
+    "target_repository",
+    "target_ref",
+    "expected_target_commit",
+    "problem_statement",
+    "bounded_rationale",
+    "affected_paths",
+    "verification_contract",
+    "risk_lane"
+  ],
+  "patch_proposal_requirements": [
+    "proposal_id",
+    "decision_id",
+    "create_only",
+    "expected_before_sha_per_existing_path",
+    "exact_new_content_or_patch",
+    "max_files",
+    "max_changed_bytes",
+    "branch_prefix",
+    "tests",
+    "rollback_rule"
+  ],
+  "limits": {
+    "default_max_files": 3,
+    "default_max_changed_bytes": 50000,
+    "max_attempts": 2,
+    "third_attempt": "FORBIDDEN",
+    "autonomous_merge": false,
+    "autonomous_direct_main_write": false,
+    "workflow_mutation": false,
+    "secret_mutation": false,
+    "external_world_effect": false
+  },
+  "target_actuator_gate": {
+    "must_exist_in_target_repo": [
+      ".janus/JANUS_MODULE.json",
+      "target-local actuator implementation"
+    ],
+    "must_validate": [
+      "proposal schema",
+      "proposal target repository equals SELF",
+      "expected target commit still matches",
+      "path allowlist and denylist",
+      "existing file before SHA",
+      "file and byte budgets",
+      "attempt count",
+      "verification command allowlist"
+    ],
+    "execution_branch": "janus-self/<proposal_id>",
+    "merge_after_pass": "NO_AUTONOMOUS_MERGE"
+  },
+  "verification_laws": [
+    "MODEL_OUTPUT_IS_NOT_A_TEST",
+    "HRAIN_CONTEXT_IS_NOT_A_TEST",
+    "INAIHR_ASSOCIATION_IS_NOT_A_TEST",
+    "PATCH_APPLIED != PATCH_CORRECT",
+    "NO_VERIFY => NO_PASS",
+    "A_VERIFIER_MUST_BE_ABLE_TO_SAY_NO",
+    "UNKNOWN_OR_RESOURCE_LIMIT_MUST_NOT_BECOME_NEGATIVE_EVIDENCE"
+  ],
+  "self_training_firewall": {
+    "raw_self_reflection_eligible_for_training": false,
+    "raw_patch_proposal_eligible_for_training": false,
+    "failed_patch_receipt_preserved": true,
+    "verified_patch_receipt_may_become_training_context": "ONLY_AFTER_EXPLICIT_PROMOTION_TO_SOURCE_BEARING_MEMORY",
+    "reason": "Prevent model->output->training feedback loops from manufacturing confidence."
+  },
+  "self_continuation": {
+    "may_train_new_candidate_from_registry": true,
+    "must_load_current_promoted_checkpoint_as_parent_when_present": true,
+    "must_compare_candidate_against_incumbent": true,
+    "candidate_may_replace_incumbent_only_after_acceptance_gate": true,
+    "rejected_candidate_is_remembered": true,
+    "architecture_mutation": "PROPOSE_ONLY_UNTIL_SEPARATE_ARCHITECTURE_VERIFIER_EXISTS"
+  },
+  "seal": "JANUS MAY CHANGE ITSELF AND ASK ITS ORGANS TO CHANGE, BUT EVERY CHANGE MUST HAVE A PARENT, A BOUNDARY, A VERIFIER, AND A MEMORY."
+}
