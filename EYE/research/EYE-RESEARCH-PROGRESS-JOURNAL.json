@@ -73,6 +73,69 @@
       "target_diagnostic": ["PALOMAR", "MUSIC", "GENESIS"],
       "target_bonus": false,
       "next_gate": "Implement executable miner and CI, run complete derivative-clean registry snapshot, preserve receipt and ranked candidates, then update this journal with the observed result."
+    },
+    {
+      "entry_id": "EYE-JOURNAL-006",
+      "stage": "EYE R3 — FIRST FULL RUN",
+      "status": "COMPUTATIONAL_PASS__ORDER_SEMANTICS_PARTIALLY_DOWNGRADED_POST_RUN",
+      "summary": "The first full R3 run completed successfully and found 370 eligible ordered-machine signatures across 19 recognized domains. PALOMAR/MUSIC/GENESIS produced four candidate machines with zero named-target score bonus. A post-run audit then found that three of the four target sequences were dominated by tied earliest textual anchors, so their ordered-machine interpretation was explicitly downgraded rather than rescued.",
+      "workflow_run_id": 33544812530,
+      "job_id": 99979580758,
+      "generated_commit": "607e124a855f1874604b821fee407483c8664e95",
+      "artifact_id": 9815027131,
+      "artifact_sha256": "1b81e727857e5a6254d67d09b99f7c69db6caaf9e91a3d879567b6767936ccae",
+      "receipt": "EYE/r3/generated/EYE-R3-RECEIPT.json",
+      "research_receipt": "EYE/r3/EYE-R3-FIRST-RUN-RESEARCH-RECEIPT-2026-09-01-v1.0.json",
+      "counts": {
+        "input_records": 3543,
+        "document_operator_profiles": 1697,
+        "machine_window_supports": 26091,
+        "eligible_ordered_machines": 370,
+        "all_pair_candidates": 1046,
+        "all_triple_candidates": 848,
+        "novel_pairs_emitted": 100,
+        "novel_triples_emitted": 50,
+        "palomar_music_genesis_matching_machines": 4
+      },
+      "target_candidates": [
+        "EXACT_VS_SEMANTIC_IDENTITY -> PROVENANCE_CHAIN -> SEALED_CONTEXT_RECOVERY",
+        "CONTINUITY_CONTRAST -> SEALED_CONTEXT_RECOVERY -> STATE_TRANSITION",
+        "PROVENANCE_CHAIN -> EXACT_VS_SEMANTIC_IDENTITY -> SEALED_CONTEXT_RECOVERY",
+        "PROVENANCE_CHAIN -> STATE_TRANSITION -> EXACT_VS_SEMANTIC_IDENTITY"
+      ],
+      "post_run_audit": {
+        "first_candidate_strict_docs": "1/16",
+        "second_candidate_strict_docs": "0/6",
+        "third_candidate_strict_docs": "1/14",
+        "fourth_candidate_strict_docs": "8/8"
+      },
+      "epistemic_lesson": "DETERMINISTIC TEXTUAL ORDER != VERIFIED MECHANISM ORDER",
+      "next_gate": "R3.1 strict source-grounded order verification with distinct anchors and every alternate permutation as a negative control."
+    },
+    {
+      "entry_id": "EYE-JOURNAL-007",
+      "stage": "EYE R3.1 — STRICT ORDER CONSTELLATION GATE",
+      "status": "PASS_WITH_ONE_SURVIVING_STRICT_ORDER_CANDIDATE__MECHANISM_VERIFY_STILL_REQUIRED",
+      "summary": "R3.1 re-read the frozen source files, required source SHA-256 agreement, strictly increasing and distinct operator anchors, two independent lineages per domain, and required the candidate order to beat every alternate permutation in every domain. Three R3 target candidates failed for insufficient strict-order support. Exactly one survived the textual-order control gate.",
+      "manifest": "EYE/r3_1/EYE-R3.1-STRICT-ORDER-CONSTELLATION-GATE-MANIFEST-v1.0.json",
+      "workflow_run_id": 33545214675,
+      "job_id": 99980909778,
+      "generated_commit": "113b5ac373e00a1e8f118912d73018f404f3a305",
+      "artifact_id": 9815175558,
+      "artifact_sha256": "a26e09351f9af78cf8f49e24b7af90ceeadb9e1bce3c625e9decd92b67ba715b",
+      "receipt": "EYE/r3_1/generated/EYE-R3.1-STRICT-ORDER-GATE-RECEIPT.json",
+      "verdict_counts": {
+        "INSUFFICIENT_STRICT_ORDER_SUPPORT": 3,
+        "STRICT_ORDER_PASS__MECHANISM_VERIFY_STILL_REQUIRED": 1
+      },
+      "survivor": {
+        "candidate_id": "EYE-R3-TRIPLE-deea70afb1512e33",
+        "machine": "PROVENANCE_CHAIN -> STATE_TRANSITION -> EXACT_VS_SEMANTIC_IDENTITY",
+        "domains": ["GENESIS", "MUSIC", "PALOMAR"],
+        "claim_ceiling": "SOURCE_GROUNDED_DISCRIMINATING_TEXTUAL_ORDER_ONLY__NOT_CAUSAL_MECHANISM_PROOF"
+      },
+      "epistemic_lesson": "UNTIE THE STARS BEFORE CALLING THEM A CONSTELLATION.",
+      "next_gate": "R3.2 semantic mechanism verifier: independently map input state -> transformation -> output state for the surviving machine in at least two lineages per domain, then test held-out domain-specific controls. Textual order alone must not be promoted to causal or mechanistic identity."
     }
   ],
   "seal": "THE JOURNAL REMEMBERS BOTH THE STARS WE FOUND AND THE SKIES THAT STAYED DARK."
