@@ -1,0 +1,104 @@
+name: EYE R4.3 Stochastic Witness Planner
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - 'eye/r4-3-*'
+    paths:
+      - 'EYE/r4_3/**'
+      - 'data/EYE-R4.3-STOCHASTIC-WITNESS-PLANNER-CONTRACT-2026-09-02-v1.0.json'
+      - '.github/workflows/eye-r4-3-stochastic-witness-planner.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: eye-r4-3-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  stochastic-plan-and-verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile planner and tests
+        run: |
+          python -m py_compile EYE/r4_3/eye_r4_3_stochastic_witness_planner.py
+          python -m py_compile EYE/r4_3/test_eye_r4_3_planner.py
+      - name: Run adversarial unit tests
+        run: python -m unittest EYE.r4_3.test_eye_r4_3_planner -v
+      - name: Replay predeclared benchmarks
+        run: |
+          rm -rf EYE/r4_3/generated
+          for name in synthetic_noisy_adaptive search_proof_stochastic palomar_xe325_stochastic; do
+            GITHUB_SHA="$(git rev-parse HEAD)" python EYE/r4_3/eye_r4_3_stochastic_witness_planner.py \
+              --input "EYE/r4_3/benchmarks/${name}.json" \
+              --output-dir "EYE/r4_3/generated/${name}"
+          done
+      - name: Validate predeclared outcomes
+        run: |
+          python - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          root=Path('EYE/r4_3/generated')
+          syn=json.loads((root/'synthetic_noisy_adaptive/stochastic_policy_receipt.json').read_text())
+          assert syn['status']=='EXACT_STOCHASTIC_POLICY_FOUND', syn
+          assert syn['root_next_test']=='t_root', syn
+          assert abs(syn['expected_cost_to_confident_identification']-2.445)<1e-9, syn
+          assert syn['worst_case_cost_to_confident_identification']==8.0, syn
+          assert syn['stress_test']['status']=='MODEL_UNCERTAIN_UNDER_DECLARED_STRESS_SCENARIOS', syn
+          stress=syn['stress_test']['scenarios'][0]
+          assert abs(stress['success_probability']-0.84)<1e-9, stress
+          assert abs(stress['unresolved_probability']-0.16)<1e-9, stress
+          assert stress['wrong_confident_probability']==0.0, stress
+          sp=json.loads((root/'search_proof_stochastic/stochastic_policy_receipt.json').read_text())
+          assert sp['status']=='EXACT_STOCHASTIC_POLICY_FOUND', sp
+          assert sp['root_next_test']=='provenance_hash_audit', sp
+          assert abs(sp['expected_cost_to_confident_identification']-2.83)<1e-9, sp
+          assert sp['worst_case_cost_to_confident_identification']==4.0, sp
+          pal=json.loads((root/'palomar_xe325_stochastic/stochastic_policy_receipt.json').read_text())
+          assert pal['status']=='NON_IDENTIFIABLE_UNDER_CURRENT_STOCHASTIC_MODEL', pal
+          assert pal['exact_policy_search_completed'] is True, pal
+          assert pal['root_greedy_next_test_ranking']==[], pal
+          receipt={
+            'schema':'janus.eye.r4_3.validation_receipt.v1',
+            'status':'PASS_WITH_EPISTEMIC_CEILING',
+            'source_git_commit':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),
+            'unit_tests':'PASS_8_OF_8',
+            'synthetic':'PASS_EXACT_STOCHASTIC_EXPECTED_2.445_WORST_8',
+            'synthetic_stress':'PASS_EXPECTED_MODEL_UNCERTAIN_SUCCESS_0.84_UNRESOLVED_0.16',
+            'search_proof':'PASS_EXACT_STOCHASTIC_EXPECTED_2.83_WORST_4',
+            'palomar':'PASS_EXPECTED_NON_IDENTIFIABLE',
+            'ceiling':'EXACT_POLICY_ONLY_UNDER_DECLARED_CALIBRATED_LIKELIHOOD_PRIOR_THRESHOLD_MODEL__EMPIRICAL_CALIBRATION_REMAINS_OPEN',
+            'firewalls':['STOCHASTIC_POLICY != CAUSAL_TRUTH','PRIOR != EVIDENCE','POSTERIOR_CONFIDENCE != FREQUENTIST_GUARANTEE','STRESS_PASS != TRUE_WORLD_CALIBRATION','NON_IDENTIFIABLE != FALSE','UNKNOWN_RESOURCE_LIMIT != NON_IDENTIFIABLE']
+          }
+          (root/'EYE-R4.3-VALIDATION-RECEIPT.json').write_text(json.dumps(receipt,indent=2,sort_keys=True)+'\n')
+          print(json.dumps(receipt,sort_keys=True))
+          PY
+      - name: Commit JSON receipts on main only
+        if: github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          git config user.name 'EYE R4.3 Stochastic Witness Planner'
+          git config user.email 'actions@users.noreply.github.com'
+          git add EYE/r4_3/generated
+          git diff --cached --quiet && exit 0
+          git commit -m '[eye-r4.3] Preserve stochastic witness policy receipts [skip ci]'
+          git pull --rebase origin main
+          git push
+      - name: Upload R4.3 receipts
+        uses: actions/upload-artifact@v4
+        with:
+          name: eye-r4-3-${{ github.run_id }}
+          path: EYE/r4_3/generated/**/*.json
+          if-no-files-found: error
