@@ -1,0 +1,82 @@
+name: EYE Meta Registry Training
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - '**'
+      - '!EYE/generated/**'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: eye-meta-registry-training-main
+  cancel-in-progress: true
+
+jobs:
+  train-eye:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout registry snapshot
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Compile EYE trainer
+        run: python -m py_compile EYE/training/train_eye_registry.py
+
+      - name: Train EYE on complete registry snapshot
+        run: |
+          python EYE/training/train_eye_registry.py \
+            --root . \
+            --output-dir EYE/generated \
+            --semantic-byte-limit 2000000 \
+            --max-clusters 1000
+
+      - name: Validate generated JSON
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          required = [
+              Path('EYE/generated/EYE-REGISTRY-INDEX.json'),
+              Path('EYE/generated/EYE-SLIME-ASSOCIATIVE-MEMORY.json'),
+              Path('EYE/generated/EYE-TRUMP-ROUTING-INDEX.json'),
+              Path('EYE/generated/EYE-TRAINING-RECEIPT.json'),
+          ]
+          for p in required:
+              if not p.is_file():
+                  raise SystemExit(f'MISSING_GENERATED_FILE:{p}')
+              json.loads(p.read_text(encoding='utf-8'))
+          receipt = json.loads(required[-1].read_text(encoding='utf-8'))
+          if receipt['counts']['files_indexed'] <= 0:
+              raise SystemExit('EYE_EMPTY_CORPUS')
+          print(json.dumps(receipt['counts'], sort_keys=True))
+          PY
+
+      - name: Upload EYE training state
+        uses: actions/upload-artifact@v4
+        with:
+          name: eye-meta-registry-training-${{ github.run_id }}
+          path: EYE/generated/*.json
+          if-no-files-found: error
+
+      - name: Commit rebuildable EYE state
+        run: |
+          git config user.name 'EYE Registry Trainer'
+          git config user.email 'actions@users.noreply.github.com'
+          git add EYE/generated/*.json
+          if git diff --cached --quiet; then
+            echo 'EYE generated state already matches this source snapshot.'
+          else
+            git commit -m '[eye-train] Refresh EYE registry learning state'
+            git push origin HEAD:main
+          fi
