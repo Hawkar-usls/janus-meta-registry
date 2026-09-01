@@ -19,6 +19,10 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Sync main before generation
+        run: |
+          git fetch origin main
+          git rebase origin/main || true
       - name: Generate per-track JSON corpus
         run: python tools/generate_alan_parsons_project_track_registry.py
       - name: Validate count and schemas
@@ -37,7 +41,7 @@ jobs:
               assert x['epistemic_status']['authorial_intent_for_this_exact_formula']=='NOT_CLAIMED'
           print('PASS: 92 track JSON files + INDEX')
           PY
-      - name: Commit generated registry corpus
+      - name: Commit and push generated registry corpus
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
@@ -47,4 +51,13 @@ jobs:
             exit 0
           fi
           git commit -m 'music: add Alan Parsons Project 92-track semantic JSON corpus'
-          git push
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            echo "Push race on attempt $attempt; rebasing on latest main"
+            git fetch origin main
+            git rebase origin/main
+          done
+          echo 'Failed to push generated corpus after retries' >&2
+          exit 1
