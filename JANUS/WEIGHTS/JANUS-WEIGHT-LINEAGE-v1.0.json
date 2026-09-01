@@ -1,0 +1,86 @@
+{
+  "schema": "janus.weight_lineage.v1",
+  "artifact_id": "JANUS-WEIGHT-LINEAGE-v1.0",
+  "date": "2026-09-01",
+  "status": "OBSERVED_PROMOTED_LINEAGE",
+  "source": {
+    "repository": "Hawkar-usls/Janus-Demiurge",
+    "path": "janus_model/state/JANUS_MODEL_STATE.json",
+    "observed_blob_sha": "b3b4d0e5fae697f7f7d2fca277bcee2a02c2a83e"
+  },
+  "model_config": {
+    "vocab_size": 258,
+    "context_length": 128,
+    "d_model": 128,
+    "n_heads": 4,
+    "n_layers": 2,
+    "ff_mult": 4,
+    "dropout": 0.1
+  },
+  "summary": {
+    "attempt_count": 5,
+    "promotion_count": 5,
+    "rejection_count": 0,
+    "current_checkpoint_sha256": "c4f2003325be218a76d7d13aaac03e104cdf88a0cd4976e5be279c1a1479e4b9",
+    "current_eval_loss": 2.439802577098211
+  },
+  "lineage": [
+    {
+      "generation": 1,
+      "run_id": "33554064389",
+      "parent_checkpoint_sha256": null,
+      "checkpoint_sha256": "1c3588a91ea8c63248b59637e3c436cb06dfc74373c33dd001c7bd0ab33d9ec7",
+      "source_commit": "aae9c70fd201bcbb14194c11d23dae259086c7bc",
+      "source_digest": "a112f41065484b50841bca6b617d70efbeb6e9dcfc6d500080f6d86e37a6cff1",
+      "incumbent_eval_loss": null,
+      "candidate_eval_loss": 2.9112451473871865,
+      "status": "PROMOTED"
+    },
+    {
+      "generation": 2,
+      "run_id": "33554589865",
+      "parent_checkpoint_sha256": "1c3588a91ea8c63248b59637e3c436cb06dfc74373c33dd001c7bd0ab33d9ec7",
+      "checkpoint_sha256": "80e29211f62de74b82bc59ce70a36f46745c182f31f05ec278dae0e3c1bca42d",
+      "source_commit": "abf7e18704ab34addbbde60da9904cf1121b354d",
+      "source_digest": "54a747b57ac500bc146173c04b140e075fce2d02d160f4c3c0a93bb62bb91748",
+      "incumbent_eval_loss": 2.9182339161634445,
+      "candidate_eval_loss": 2.718029002348582,
+      "status": "PROMOTED"
+    },
+    {
+      "generation": 3,
+      "run_id": "33554788347",
+      "parent_checkpoint_sha256": "80e29211f62de74b82bc59ce70a36f46745c182f31f05ec278dae0e3c1bca42d",
+      "checkpoint_sha256": "2ec266d2aeed64c7901a5a723c6a4bb606db8b79beeb30d0bb0ba7a1dab28b62",
+      "source_commit": "6b0d9bc1122754453d3841a0d1e285c42079389f",
+      "source_digest": "ee21a53fe8d00c66d37d7f99656b0db43e8032d9826911d08b7bec306a503083",
+      "incumbent_eval_loss": 2.742975503206253,
+      "candidate_eval_loss": 2.6139340500036874,
+      "status": "PROMOTED"
+    },
+    {
+      "generation": 4,
+      "run_id": "33554956362",
+      "parent_checkpoint_sha256": "2ec266d2aeed64c7901a5a723c6a4bb606db8b79beeb30d0bb0ba7a1dab28b62",
+      "checkpoint_sha256": "9e83e58955b4b149be18b6157cff317cac386756f18a8793ac9516001f455754",
+      "source_commit": "747d9c7911214bcc8493ddbb5ff30e2b03a3c7ef",
+      "source_digest": "4a81541bf5b9ab53965b1e6c12c947492c522cd7df6d9c4cb56ce61c75949a3c",
+      "incumbent_eval_loss": 2.6467449367046356,
+      "candidate_eval_loss": 2.521624426047007,
+      "status": "PROMOTED"
+    },
+    {
+      "generation": 5,
+      "run_id": "33555596207",
+      "parent_checkpoint_sha256": "9e83e58955b4b149be18b6157cff317cac386756f18a8793ac9516001f455754",
+      "checkpoint_sha256": "c4f2003325be218a76d7d13aaac03e104cdf88a0cd4976e5be279c1a1479e4b9",
+      "source_commit": "d2a5da3443df10dca383f3f414e1369ef378be9b",
+      "source_digest": "c5c5b26064c2c3f39ce9d181b2d9ea0051f7e20edf35ee1c3c248819c7f39085",
+      "incumbent_eval_loss": 2.561233714222908,
+      "candidate_eval_loss": 2.439802577098211,
+      "status": "PROMOTED"
+    }
+  ],
+  "append_rule": "Every future train attempt is appended with parent checkpoint, candidate checkpoint or rejection, source digest, evaluator result and run provenance. Rejected generations are never erased.",
+  "law": "A CHANGE IN WEIGHTS IS AN EVENT WITH ANCESTRY, NOT A SILENT OVERWRITE."
+}
