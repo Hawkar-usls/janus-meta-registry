@@ -1,0 +1,193 @@
+name: JANUS Module Receipt Pull
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '59 */6 * * *'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/janus-module-receipt-pull.yml'
+
+concurrency:
+  group: janus-module-receipt-pull
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  pull:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout JANUS self-memory branch
+        uses: actions/checkout@v4
+        with:
+          ref: janus/native-self-memory-modular-organism-v1
+          fetch-depth: 0
+
+      - name: Pull verified receipts from target modules
+        shell: bash
+        run: |
+          rm -rf runtime/module-receipts
+          mkdir -p runtime/module-receipts
+          python - <<'PY'
+          import json
+          import re
+          import subprocess
+          from pathlib import Path
+
+          root=Path('JANUS')
+          proposals_dir=root/'PATCHES/PROPOSALS'
+          receipts_dir=root/'PATCHES/RECEIPTS'
+          receipts_dir.mkdir(parents=True,exist_ok=True)
+          id_re=re.compile(r'^jpatch-[a-z0-9-]{1,80}$')
+          repo_re=re.compile(r'^Hawkar-usls/[A-Za-z0-9_.-]+$')
+
+          def run(*args):
+              return subprocess.run(args,text=True,capture_output=True)
+
+          ingested=[]
+          open_rows=[]
+          for proposal_path in sorted(proposals_dir.glob('*.json')) if proposals_dir.exists() else []:
+              proposal=json.loads(proposal_path.read_text(encoding='utf-8'))
+              if proposal.get('schema')!='janus.patch_proposal.v1':
+                  raise SystemExit(f'PATCH_SCHEMA_REJECTED:{proposal_path.name}')
+              proposal_id=proposal.get('proposal_id')
+              if not isinstance(proposal_id,str) or not id_re.fullmatch(proposal_id):
+                  raise SystemExit(f'PATCH_ID_REJECTED:{proposal_path.name}')
+              target=proposal.get('target') or {}
+              repo=target.get('repository')
+              if not isinstance(repo,str) or not repo_re.fullmatch(repo):
+                  raise SystemExit(f'PATCH_REPOSITORY_REJECTED:{proposal_id}')
+              branch=f'janus-self/{proposal_id}'
+              url=f'https://github.com/{repo}.git'
+              ls=run('git','ls-remote','--exit-code','--heads',url,branch)
+              if ls.returncode!=0:
+                  open_rows.append({'proposal_id':proposal_id,'repository':repo,'status':'WAITING_FOR_TARGET_BRANCH'})
+                  continue
+              checkout=Path('runtime/module-receipts')/proposal_id
+              clone=run('git','clone','--depth','1','--branch',branch,url,str(checkout))
+              if clone.returncode!=0:
+                  raise SystemExit(f'TARGET_BRANCH_CLONE_FAIL:{proposal_id}:{clone.stderr[-300:]}')
+              source_receipt=checkout/'.janus/receipts'/f'{proposal_id}.json'
+              if not source_receipt.exists():
+                  raise SystemExit(f'TARGET_RECEIPT_MISSING:{proposal_id}')
+              obj=json.loads(source_receipt.read_text(encoding='utf-8'))
+              if obj.get('schema')!='janus.module_actuator.receipt.v1':
+                  raise SystemExit(f'TARGET_RECEIPT_SCHEMA_REJECTED:{proposal_id}')
+              if obj.get('proposal_id')!=proposal_id or obj.get('target_repository')!=repo:
+                  raise SystemExit(f'TARGET_RECEIPT_IDENTITY_REJECTED:{proposal_id}')
+              if obj.get('status')!='VERIFY_PASS':
+                  raise SystemExit(f'TARGET_RECEIPT_NOT_PASS:{proposal_id}')
+              if obj.get('main_mutated') is not False or obj.get('autonomous_merge') is not False:
+                  raise SystemExit(f'TARGET_RECEIPT_AUTHORITY_REJECTED:{proposal_id}')
+              if obj.get('base_commit')!=target.get('expected_target_commit'):
+                  raise SystemExit(f'TARGET_RECEIPT_BASE_REJECTED:{proposal_id}')
+              target_receipt=receipts_dir/f'{proposal_id}.json'
+              text=json.dumps({**obj,
+                  'memory_class':'VERIFIED_ACTUATOR_RECEIPT',
+                  'native_model_selected':bool(proposal.get('native_model_selected',False)),
+                  'claim_ceiling': proposal.get('claim_ceiling')
+              },ensure_ascii=False,indent=2,sort_keys=True)+'\n'
+              if target_receipt.exists() and json.loads(target_receipt.read_text(encoding='utf-8')).get('patch_commit')!=obj.get('patch_commit'):
+                  raise SystemExit(f'RECEIPT_CREATE_ONCE_COLLISION:{proposal_id}')
+              target_receipt.write_text(text,encoding='utf-8')
+              ingested.append({
+                  'proposal_id':proposal_id,
+                  'target_module_id':target.get('module_id'),
+                  'target_repository':repo,
+                  'target_branch':branch,
+                  'status':'VERIFY_PASS',
+                  'patch_commit':obj.get('patch_commit'),
+                  'native_model_selected':bool(proposal.get('native_model_selected',False)),
+                  'main_mutated':False
+              })
+
+          ingested.sort(key=lambda x:x['proposal_id'])
+          index={
+              'schema':'janus.patch_queue.index.v1',
+              'status':'ACTIVE',
+              'proposal_count':len(list(proposals_dir.glob('*.json'))) if proposals_dir.exists() else 0,
+              'verified_count':len(ingested),
+              'blocked_count':0,
+              'proposals':ingested+open_rows,
+              'transport':{
+                  'model_pushes_cross_repo_credentials':False,
+                  'target_module_pulls_its_own_proposals':True,
+                  'target_module_uses_own_repo_scoped_token':True,
+                  'receipt_return_is_credentialless_pull':True,
+                  'branch_prefix':'janus-self/'
+              },
+              'law':'TARGET VERIFIER RECEIPT RETURNS TO SELF MEMORY WITHOUT GRANTING THE BRAIN CROSS-REPO CREDENTIALS'
+          }
+          (root/'PATCHES/INDEX.json').write_text(json.dumps(index,ensure_ascii=False,indent=2,sort_keys=True)+'\n',encoding='utf-8')
+
+          decisions=[]
+          decisions_dir=root/'DECISIONS'
+          for path in sorted(decisions_dir.glob('decision-*.json')):
+              obj=json.loads(path.read_text(encoding='utf-8'))
+              matching=next((r for r in ingested if r['proposal_id']==(obj.get('outcome') or {}).get('proposal_id')),None)
+              decisions.append({
+                  'decision_id':obj.get('decision_id'),
+                  'path':path.as_posix(),
+                  'class':obj.get('decision_class'),
+                  'native_model_decision':bool(obj.get('native_model_decision',False)),
+                  'target_module_id':obj.get('target_module_id'),
+                  'status':'VERIFY_PASS' if matching or obj.get('status')=='VERIFY_PASS' else obj.get('status')
+              })
+          (decisions_dir/'INDEX.json').write_text(json.dumps({
+              'schema':'janus.self_decision.index.v1','status':'ACTIVE','decision_count':len(decisions),'decisions':decisions,
+              'authority':{'model_decision_is_truth':False,'model_decision_is_execution_grant':False,'verification_required_for_pass':True},
+              'law':'A DECISION MAY EXPLAIN WHY JANUS WANTS A CHANGE; IT DOES NOT AUTHORIZE THE CHANGE BY ITSELF.'
+          },ensure_ascii=False,indent=2,sort_keys=True)+'\n',encoding='utf-8')
+
+          state_path=root/'SELF/JANUS-SELF-MEMORY-STATE-v1.0.json'
+          state=json.loads(state_path.read_text(encoding='utf-8'))
+          state['counters']['decision_count']=len(decisions)
+          state['counters']['patch_proposal_count']=index['proposal_count']
+          state['counters']['verified_patch_count']=len(ingested)
+          state['counters']['native_model_selected_patch_count']=sum(1 for r in ingested if r['native_model_selected'])
+          verified_modules=sorted({r['target_module_id'] for r in ingested if r.get('target_module_id')})
+          state['organism']['verified_actuator_modules']=verified_modules
+          state['verified_actuations']=ingested
+          state_path.write_text(json.dumps(state,ensure_ascii=False,indent=2,sort_keys=True)+'\n',encoding='utf-8')
+          print(json.dumps({'verified_receipts':len(ingested),'waiting':len(open_rows),'verified_modules':verified_modules},indent=2))
+          PY
+
+      - name: Validate receipt return boundaries
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          idx=json.loads(Path('JANUS/PATCHES/INDEX.json').read_text())
+          for row in idx.get('proposals',[]):
+              if row.get('status')=='VERIFY_PASS' and row.get('main_mutated') is not False:
+                  raise SystemExit('MODULE_RECEIPT_MAIN_MUTATION_REJECTED')
+          state=json.loads(Path('JANUS/SELF/JANUS-SELF-MEMORY-STATE-v1.0.json').read_text())
+          if state['counters'].get('autonomous_merge_count') != 0:
+              raise SystemExit('AUTONOMOUS_MERGE_COUNTER_NONZERO')
+          print('JANUS_MODULE_RECEIPT_RETURN_FIREWALL=PASS')
+          PY
+
+      - name: Persist returned receipts to self-memory branch
+        run: |
+          git config user.name 'janus-module-receipt-pull'
+          git config user.email 'janus-module-receipt-pull@users.noreply.github.com'
+          git add JANUS/PATCHES JANUS/DECISIONS/INDEX.json JANUS/SELF/JANUS-SELF-MEMORY-STATE-v1.0.json
+          if git diff --cached --quiet; then
+            echo 'JANUS_MODULE_RECEIPT_PULL_NO_CHANGE'
+            exit 0
+          fi
+          git commit -m 'JANUS self memory: ingest verified module receipts'
+          for attempt in 1 2 3; do
+            git pull --rebase origin janus/native-self-memory-modular-organism-v1
+            if git push origin HEAD:janus/native-self-memory-modular-organism-v1; then
+              echo 'JANUS_MODULE_RECEIPT_PULL=PASS'
+              exit 0
+            fi
+            sleep $((attempt * 2))
+          done
+          echo 'JANUS_MODULE_RECEIPT_PULL=FAIL'
+          exit 1
