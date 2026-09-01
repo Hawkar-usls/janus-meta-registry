@@ -1,0 +1,46 @@
+name: JANUS Causal Difference Test
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/janus-causal-difference-test.yml'
+      - 'tools/janus_causal_difference_test.py'
+      - 'data/JANUS-INDEPENDENT-FUTURE-DRAND-BENCH-PREREG-2026-09-01-v1.0.json'
+      - 'data/JANUS-INDEPENDENT-FUTURE-DRAND-PREREG-ORDERING-CORRECTION-2026-09-01-v1.0.json'
+  schedule:
+    - cron: '2 2-16 1 9 *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: janus-causal-difference-test
+  cancel-in-progress: false
+
+jobs:
+  causal-difference:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run frozen causal difference bench
+        run: python3 tools/janus_causal_difference_test.py
+
+      - name: Persist additive receipts
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'JANUS Causal Difference Bot'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/independent_future_bench data/JANUS-INDEPENDENT-FUTURE-DRAND-BENCH-SUMMARY-2026-09-01-v1.0.json 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo 'No new due receipts.'
+            exit 0
+          fi
+          git commit -m 'experiment: persist JANUS causal difference receipt'
+          git push
