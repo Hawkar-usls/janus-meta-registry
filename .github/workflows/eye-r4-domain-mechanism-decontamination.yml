@@ -1,0 +1,183 @@
+name: EYE R4 Domain Mechanism Decontamination
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - 'EYE/r4/EYE-R4-DOMAIN-MECHANISM-DECONTAMINATION-MANIFEST-v1.0.json'
+      - 'EYE/r4/EYE-R4-JANUS-RECORD-COMMIT-NEGATIVE-CONTROL-v1.0.json'
+      - 'EYE/r4/eye_r4_domain_mechanism_decontamination.py'
+      - 'EYE/r3_2/EYE-R3.2-PALOMAR-MUSIC-GENESIS-SEMANTIC-MECHANISM-AUDIT-2026-09-01-v1.0.json'
+      - '.github/workflows/eye-r4-domain-mechanism-decontamination.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: eye-r4-domain-mechanism-decontamination-main
+  cancel-in-progress: true
+
+jobs:
+  mine-domain-machines:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout source snapshot
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Sync latest main and remove derivative memory surfaces
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git reset --hard origin/main
+          rm -rf EYE/generated EYE/r4/generated assets/hrain-full-memory
+          rm -f assets/hrain-registry-index.json
+
+      - name: Compile R4 and registry trainer
+        run: |
+          python -m py_compile EYE/training/train_eye_registry.py
+          python -m py_compile EYE/r4/eye_r4_domain_mechanism_decontamination.py
+
+      - name: Build fresh derivative-clean EYE source index
+        run: |
+          GITHUB_SHA="$(git rev-parse HEAD)" python EYE/training/train_eye_registry.py \
+            --root . \
+            --output-dir EYE/generated \
+            --semantic-byte-limit 2000000 \
+            --max-clusters 1000
+
+      - name: Run R4 subject-level decontamination miner
+        run: |
+          GITHUB_SHA="$(git rev-parse HEAD)" python EYE/r4/eye_r4_domain_mechanism_decontamination.py \
+            --root . \
+            --index EYE/generated/EYE-REGISTRY-INDEX.json \
+            --output-dir EYE/r4/generated \
+            --min-operator-signals 2 \
+            --top-candidates 80 \
+            --top-contamination 120
+
+      - name: Validate R4 firewalls and negative control
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          out = Path('EYE/r4/generated')
+          names = [
+              'EYE-R4-DOMAIN-MACHINE-CANDIDATES.json',
+              'EYE-R4-CONTAMINATION-LEDGER.json',
+              'EYE-R4-PALOMAR-MUSIC-GENESIS-DIAGNOSTIC.json',
+              'EYE-R4-RECEIPT.json',
+          ]
+          docs = {name: json.loads((out / name).read_text(encoding='utf-8')) for name in names}
+          receipt = docs['EYE-R4-RECEIPT.json']
+          cand = docs['EYE-R4-DOMAIN-MACHINE-CANDIDATES.json']
+          ledger = docs['EYE-R4-CONTAMINATION-LEDGER.json']
+          target = docs['EYE-R4-PALOMAR-MUSIC-GENESIS-DIAGNOSTIC.json']
+
+          assert receipt['negative_control_calibration'] == 'PASS', receipt
+          assert receipt['named_target_bonus'] is False
+          assert cand['named_target_bonus'] is False
+          assert target['named_target_bonus'] is False
+          cal = ledger['negative_control_calibration']
+          assert cal['status'] == 'PASS'
+          assert cal['total'] == 8
+          assert cal['record_control_dominates_count'] >= 5
+
+          forbidden = ('EYE/', 'assets/hrain-full-memory/')
+          for c in cand.get('top_candidates', []):
+              assert c['authority'] == 'CANDIDATE_ONLY__INDEPENDENT_SEMANTIC_MECHANISM_VERIFY_REQUIRED'
+              assert c['verdict'] == 'DOMAIN_MACHINE_CANDIDATE__VERIFY_REQUIRED'
+              assert c['heldout_pass'] is True
+              assert c['field_order_shuffle_pass'] is True
+              assert c['subject_over_record_margin'] > 0
+              assert c['explicit_pair_count'] == 0
+              for side in ('discovery_support', 'heldout_support'):
+                  for rows in c[side].values():
+                      for row in rows:
+                          assert not row['path'].startswith(forbidden), row['path']
+
+          assert 'DISCOVERY' not in receipt['status']
+          print(json.dumps(receipt['counts'], sort_keys=True))
+          print('R4_NEGATIVE_CONTROL', cal['record_control_dominates_count'], '/', cal['total'])
+          PY
+
+      - name: Commit R4 results conflict-safely
+        run: |
+          set -euo pipefail
+          git config user.name 'EYE R4 Domain Mechanism Miner'
+          git config user.email 'actions@users.noreply.github.com'
+
+          validate() {
+            python - <<'PY'
+          import json
+          from pathlib import Path
+          out=Path('EYE/r4/generated')
+          receipt=json.loads((out/'EYE-R4-RECEIPT.json').read_text())
+          ledger=json.loads((out/'EYE-R4-CONTAMINATION-LEDGER.json').read_text())
+          cand=json.loads((out/'EYE-R4-DOMAIN-MACHINE-CANDIDATES.json').read_text())
+          target=json.loads((out/'EYE-R4-PALOMAR-MUSIC-GENESIS-DIAGNOSTIC.json').read_text())
+          assert receipt['negative_control_calibration']=='PASS'
+          assert ledger['negative_control_calibration']['status']=='PASS'
+          assert receipt['named_target_bonus'] is False and cand['named_target_bonus'] is False and target['named_target_bonus'] is False
+          assert ledger['negative_control_calibration']['record_control_dominates_count'] >= 5
+          PY
+          }
+
+          rebuild() {
+            rm -rf EYE/generated EYE/r4/generated assets/hrain-full-memory
+            rm -f assets/hrain-registry-index.json
+            GITHUB_SHA="$(git rev-parse HEAD)" python EYE/training/train_eye_registry.py \
+              --root . --output-dir EYE/generated --semantic-byte-limit 2000000 --max-clusters 1000
+            GITHUB_SHA="$(git rev-parse HEAD)" python EYE/r4/eye_r4_domain_mechanism_decontamination.py \
+              --root . --index EYE/generated/EYE-REGISTRY-INDEX.json --output-dir EYE/r4/generated \
+              --min-operator-signals 2 --top-candidates 80 --top-contamination 120
+            validate
+          }
+
+          for attempt in 1 2 3; do
+            git fetch origin main
+            current="$(git rev-parse HEAD)"
+            remote="$(git rev-parse origin/main)"
+            if [ "$current" != "$remote" ]; then
+              echo "R4_SOURCE_DRIFT attempt=$attempt current=$current remote=$remote"
+              git reset --hard origin/main
+              rebuild
+            fi
+
+            git add EYE/r4/generated/*.json
+            if git diff --cached --quiet; then
+              echo 'R4 generated state already matches latest source snapshot.'
+              exit 0
+            fi
+
+            git commit -m '[eye-r4] Refresh subject-level domain machine candidates'
+            if git push origin HEAD:main; then
+              echo 'EYE_R4_RESULT_PUSH=SUCCESS'
+              exit 0
+            fi
+
+            echo "EYE_R4_PUSH_RACE_RETRY attempt=$attempt"
+            git fetch origin main
+            git reset --hard origin/main
+            rebuild
+          done
+
+          echo 'EYE_R4_RESULT_PUSH=FAILED_AFTER_RETRIES'
+          exit 1
+
+      - name: Upload R4 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: eye-r4-domain-mechanism-${{ github.run_id }}
+          path: EYE/r4/generated/*.json
+          if-no-files-found: error
+          retention-days: 90
