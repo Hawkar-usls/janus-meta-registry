@@ -38,7 +38,12 @@ jobs:
           set -euo pipefail
           git config user.name 'JANUS Causal Difference Bot'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add data/independent_future_bench data/JANUS-INDEPENDENT-FUTURE-DRAND-BENCH-SUMMARY-2026-09-01-v1.0.json 2>/dev/null || true
+          if [[ -d data/independent_future_bench ]]; then
+            git add data/independent_future_bench
+          fi
+          if [[ -f data/JANUS-INDEPENDENT-FUTURE-DRAND-BENCH-SUMMARY-2026-09-01-v1.0.json ]]; then
+            git add data/JANUS-INDEPENDENT-FUTURE-DRAND-BENCH-SUMMARY-2026-09-01-v1.0.json
+          fi
           if git diff --cached --quiet; then
             echo 'No new due receipts.'
             exit 0
