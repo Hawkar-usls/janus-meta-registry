@@ -1,0 +1,167 @@
+name: JANUS Native Proposal Relay
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '29 * * * *'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/janus-native-proposal-relay.yml'
+
+concurrency:
+  group: janus-native-proposal-relay
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  relay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout canonical JANUS self-memory branch
+        uses: actions/checkout@v4
+        with:
+          ref: janus/native-self-memory-modular-organism-v1
+          fetch-depth: 0
+
+      - name: Fetch public Demiurge proposal outbox read-only
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf runtime/demiurge
+          mkdir -p runtime
+          git clone --quiet --depth 1 https://github.com/Hawkar-usls/Janus-Demiurge.git runtime/demiurge
+          test -f runtime/demiurge/janus_model/state/JANUS_LATEST_DECISION.json
+          echo 'JANUS_NATIVE_PROPOSAL_SOURCE=READ_ONLY_PASS'
+
+      - name: Validate and stage exactly the current native proposal
+        id: stage
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib,json,os,subprocess
+          from pathlib import Path
+
+          source=Path('runtime/demiurge')
+          decision=json.loads((source/'janus_model/state/JANUS_LATEST_DECISION.json').read_text(encoding='utf-8'))
+          out=Path(os.environ['GITHUB_OUTPUT'])
+          if decision.get('schema')!='janus.native_repair_decision.v1' or decision.get('native_model_decision') is not True:
+              raise SystemExit('JANUS_RELAY_DECISION_SCHEMA_REJECTED')
+          authority=decision.get('authority') or {}
+          for key in ('truth','evidence','direct_repository_mutation','autonomous_merge'):
+              if authority.get(key) is not False:
+                  raise SystemExit(f'JANUS_RELAY_DECISION_AUTHORITY_REJECTED:{key}')
+          if decision.get('status')=='NO_ACTION':
+              out.open('a').write('has_proposal=false\nreason=NO_ACTION\n')
+              print('JANUS_NATIVE_RELAY=NO_ACTION')
+              raise SystemExit(0)
+          if decision.get('status')!='ACTION_SELECTED_AWAITING_TARGET_VERIFY':
+              raise SystemExit('JANUS_RELAY_DECISION_STATUS_REJECTED')
+          if authority.get('target_local_verifier_required') is not True:
+              raise SystemExit('JANUS_RELAY_TARGET_VERIFY_FIREWALL_REJECTED')
+          decision_id=decision.get('decision_id')
+          if not isinstance(decision_id,str) or not decision_id.startswith('jnd-'):
+              raise SystemExit('JANUS_RELAY_DECISION_ID_REJECTED')
+          proposal_id=f'jpatch-{decision_id}'
+          proposal_path=source/'janus_model/outbox/patch-proposals'/f'{proposal_id}.json'
+          if not proposal_path.is_file():
+              out.open('a').write('has_proposal=false\nreason=CURRENT_PROPOSAL_NOT_DURABLE_YET\n')
+              print('JANUS_NATIVE_RELAY=CURRENT_PROPOSAL_NOT_DURABLE_YET')
+              raise SystemExit(0)
+          proposal=json.loads(proposal_path.read_text(encoding='utf-8'))
+          if proposal.get('schema')!='janus.patch_proposal.v1' or proposal.get('status')!='PROPOSED':
+              raise SystemExit('JANUS_RELAY_PROPOSAL_SCHEMA_REJECTED')
+          if proposal.get('proposal_id')!=proposal_id or proposal.get('decision_id')!=decision_id:
+              raise SystemExit('JANUS_RELAY_PROPOSAL_IDENTITY_REJECTED')
+          if proposal.get('native_model_selected') is not True or proposal.get('create_only') is not True:
+              raise SystemExit('JANUS_RELAY_PROPOSAL_ORIGIN_REJECTED')
+          if proposal.get('risk_lane')!='LOW':
+              raise SystemExit('JANUS_RELAY_PROPOSAL_RISK_REJECTED')
+          selected=decision.get('selected') or {}
+          if proposal.get('target') != selected.get('target'):
+              raise SystemExit('JANUS_RELAY_TARGET_BINDING_REJECTED')
+          if proposal.get('verification_profile') != selected.get('verification_profile'):
+              raise SystemExit('JANUS_RELAY_VERIFIER_BINDING_REJECTED')
+          source_meta=proposal.get('source') or {}
+          if source_meta.get('source_repository')!='Hawkar-usls/Janus-Demiurge':
+              raise SystemExit('JANUS_RELAY_SOURCE_REPOSITORY_REJECTED')
+          if source_meta.get('decision_id')!=decision_id or source_meta.get('checkpoint_sha256')!=decision.get('checkpoint_sha256'):
+              raise SystemExit('JANUS_RELAY_CHECKPOINT_BINDING_REJECTED')
+          target=proposal.get('target') or {}
+          target_repo=target.get('repository'); target_base=target.get('expected_target_commit')
+          if not isinstance(target_repo,str) or not target_repo.startswith('Hawkar-usls/'):
+              raise SystemExit('JANUS_RELAY_TARGET_REPOSITORY_REJECTED')
+          if not isinstance(target_base,str) or len(target_base)!=40 or any(c not in '0123456789abcdef' for c in target_base):
+              raise SystemExit('JANUS_RELAY_TARGET_BASE_REJECTED')
+          if not isinstance(proposal.get('files'),list) or not proposal['files']:
+              raise SystemExit('JANUS_RELAY_EMPTY_PATCH_REJECTED')
+
+          root=Path('JANUS/PATCHES/PROPOSALS'); root.mkdir(parents=True,exist_ok=True)
+          canonical=json.dumps(proposal,ensure_ascii=False,indent=2,sort_keys=True)
+          conflicts=[]
+          for path in sorted(root.glob('*.json')):
+              obj=json.loads(path.read_text(encoding='utf-8'))
+              if obj.get('schema')!='janus.patch_proposal.v1' or obj.get('status')!='PROPOSED':
+                  continue
+              t=obj.get('target') or {}
+              if t.get('repository')==target_repo and t.get('expected_target_commit')==target_base and obj.get('proposal_id')!=proposal_id:
+                  conflicts.append(obj.get('proposal_id'))
+          if conflicts:
+              out.open('a').write('has_proposal=false\nreason=ACTIVE_EXACT_BASE_PROPOSAL_EXISTS\n')
+              print(json.dumps({'status':'HOLD_EXISTING_EXACT_BASE_PROPOSAL','conflicts':conflicts,'target':target_repo,'base':target_base},indent=2))
+              raise SystemExit(0)
+
+          dest=root/f'{proposal_id}.json'
+          if dest.exists():
+              existing=json.loads(dest.read_text(encoding='utf-8'))
+              if json.dumps(existing,ensure_ascii=False,sort_keys=True,separators=(',',':')) != json.dumps(proposal,ensure_ascii=False,sort_keys=True,separators=(',',':')):
+                  raise SystemExit('JANUS_RELAY_EXISTING_PROPOSAL_DRIFT')
+              changed=False
+          else:
+              dest.write_text(canonical+'\n',encoding='utf-8')
+              changed=True
+
+          source_commit=subprocess.check_output(['git','-C',str(source),'rev-parse','HEAD'],text=True).strip()
+          receipt={
+              'schema':'janus.native_proposal_relay.receipt.v1',
+              'status':'STAGED' if changed else 'ALREADY_PRESENT',
+              'source_repository':'Hawkar-usls/Janus-Demiurge',
+              'source_commit':source_commit,
+              'decision_id':decision_id,
+              'proposal_id':proposal_id,
+              'proposal_sha256':hashlib.sha256(canonical.encode('utf-8')).hexdigest(),
+              'target_repository':target_repo,
+              'target_base_commit':target_base,
+              'credentialless_pull':True,
+              'cross_repo_write_authority':False,
+              'target_local_verifier_required':True,
+              'world_truth':False,
+              'natural_git_life_witness':False,
+          }
+          receipt_path=Path('JANUS/PATCHES/RELAY/JANUS_NATIVE_PROPOSAL_RELAY_LATEST.json')
+          receipt_path.parent.mkdir(parents=True,exist_ok=True)
+          receipt_path.write_text(json.dumps(receipt,ensure_ascii=False,indent=2,sort_keys=True)+'\n',encoding='utf-8')
+          out.open('a').write(f'has_proposal=true\nproposal_id={proposal_id}\ntarget_repository={target_repo}\ntarget_base={target_base}\n')
+          print(json.dumps(receipt,indent=2,sort_keys=True))
+          PY
+
+      - name: Persist canonical relay state
+        if: steps.stage.outputs.has_proposal == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'janus-native-proposal-relay'
+          git config user.email 'janus-native-proposal-relay@users.noreply.github.com'
+          git add JANUS/PATCHES/PROPOSALS JANUS/PATCHES/RELAY
+          if git diff --cached --quiet; then
+            echo 'JANUS_NATIVE_PROPOSAL_RELAY=NO_CHANGE'
+            exit 0
+          fi
+          git commit -m "JANUS native proposal relay: ${{ steps.stage.outputs.proposal_id }}"
+          git pull --rebase origin janus/native-self-memory-modular-organism-v1
+          git push origin HEAD:janus/native-self-memory-modular-organism-v1
+          echo 'JANUS_NATIVE_PROPOSAL_RELAY=PERSISTED'
