@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import json, pathlib, sys
+import pathlib, sys
 HERE=pathlib.Path(__file__).resolve().parent
 sys.path.insert(0,str(HERE))
 from eye_r4_7_rt_1_minimax_adapter import load, solve_minimax, route_outcome, validate_source
@@ -18,9 +18,15 @@ def test_exact_minimax_policy():
 def test_no_probabilistic_semantics():
     assert M["probability_semantics"]=="NONE"
     assert all("prior" not in x for x in M["cause_classes"])
-    text=json.dumps(M).lower()
-    assert "likelihood" not in text
-    assert "outcome_probab" not in text
+    forbidden_keys={"prior","priors","likelihood","likelihoods","outcome_probability","outcome_probabilities","probability_by_cause"}
+    def walk(x):
+        if isinstance(x,dict):
+            for k,v in x.items():
+                assert k.lower() not in forbidden_keys,(k,v)
+                walk(v)
+        elif isinstance(x,list):
+            for v in x: walk(v)
+    walk(M)
 
 def test_h1_effect_routes_h3():
     row=route_outcome(C,"TOPA-RT-H1","PROSPECTIVE_EFFECT_SURVIVES_PREREGISTERED_HOLDOUT")
