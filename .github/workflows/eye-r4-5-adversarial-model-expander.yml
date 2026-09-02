@@ -1,0 +1,87 @@
+name: EYE R4.5 Adversarial Model Expander
+
+on:
+  push:
+    branches: [main, 'eye/r4-5-*']
+    paths:
+      - 'EYE/r4_5/**'
+      - 'EYE/r4_4/**'
+      - 'data/EYE-R4.5-ADVERSARIAL-MODEL-EXPANDER-2026-09-02-v1.0.json'
+      - '.github/workflows/eye-r4-5-adversarial-model-expander.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  adversarial-expand-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile expander and tests
+        run: python -m py_compile EYE/r4_5/eye_r4_5_adversarial_model_expander.py EYE/r4_5/test_eye_r4_5_adversarial_model_expander.py
+      - name: Run adversarial unit tests
+        run: python EYE/r4_5/test_eye_r4_5_adversarial_model_expander.py
+      - name: Replay predeclared adversarial benchmarks
+        run: |
+          rm -rf EYE/r4_5/generated
+          python EYE/r4_5/eye_r4_5_adversarial_model_expander.py --input EYE/r4_5/benchmarks/synthetic_adversarial_expansion.json --output-dir EYE/r4_5/generated/synthetic_adversarial_expansion
+          python EYE/r4_5/eye_r4_5_adversarial_model_expander.py --input EYE/r4_5/benchmarks/search_proof_adversarial_expansion.json --output-dir EYE/r4_5/generated/search_proof_adversarial_expansion
+          python EYE/r4_5/eye_r4_5_adversarial_model_expander.py --input EYE/r4_5/benchmarks/palomar_xe325_adversarial_expansion.json --output-dir EYE/r4_5/generated/palomar_xe325_adversarial_expansion
+      - name: Validate predeclared outcomes
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          root=Path('EYE/r4_5/generated')
+          def read(name):
+              return json.loads((root/name/'adversarial_expansion_receipt.json').read_text())
+          s=read('synthetic_adversarial_expansion')
+          q=read('search_proof_adversarial_expansion')
+          p=read('palomar_xe325_adversarial_expansion')
+          assert s['status']=='NO_ADMISSIBLE_BREAKER_FOUND_IN_FINITE_ENVELOPE',s
+          assert s['expanded_model_ids']==['cheap_sensor_joint_breaker'],s
+          assert s['final_root_next_test']=='t_gold',s
+          assert s['rounds'][0]['breaker_evaluation']['hard_failure_probability']>0,s
+          assert q.get('rounds') and q['rounds'][0]['selected_vertex_id']=='joint_audit_verifier_breaker',q
+          assert q['rounds'][0]['breaker_evaluation']['hard_failure_probability']>0,q
+          assert p['status']=='BASELINE_NOT_ROBUSTLY_SOLVABLE',p
+          assert p['baseline_status']=='ROBUST_NON_IDENTIFIABLE_UNDER_DECLARED_MODEL_SET',p
+          receipt={
+            'schema':'janus.eye.r4_5.validation_receipt.v1',
+            'status':'PASS_WITH_EPISTEMIC_CEILING',
+            'unit_tests':'PASS_10_OF_10',
+            'synthetic':'PASS_COUNTERMODEL_FORCES_T_GOLD',
+            'search_proof':'PASS_DECLARED_BREAKER_FOUND_BEFORE_REPLAN',
+            'palomar':'PASS_BASELINE_ROBUST_NON_IDENTIFIABILITY_PRESERVED',
+            'source_git_commit':os.environ.get('GITHUB_SHA','LOCAL_OR_UNKNOWN'),
+            'ceiling':'EXHAUSTIVE_ONLY_OVER_DECLARED_FINITE_VERTEX_SET__CONTINUOUS_UNCERTAINTY_REMAINS_OPEN',
+            'firewalls':['FINITE_VERTEX_COVERAGE != CONTINUOUS_ENVELOPE_COVERAGE','NO_BREAKER_FOUND != TRUE_WORLD_ROBUSTNESS','ADVERSARIAL_VERTEX != OBSERVED_WORLD','UNKNOWN_RESOURCE_LIMIT != CONVERGENCE']
+          }
+          (root/'EYE-R4.5-VALIDATION-RECEIPT.json').write_text(json.dumps(receipt,indent=2,sort_keys=True)+'\n')
+          print(json.dumps(receipt,sort_keys=True))
+          PY
+      - name: Commit JSON receipts on main only
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git config user.name 'EYE R4.5 Adversarial Model Expander'
+          git config user.email 'actions@users.noreply.github.com'
+          git add EYE/r4_5/generated
+          if git diff --cached --quiet; then
+            echo 'No receipt drift.'
+          else
+            git commit -m '[eye-r4.5] Preserve adversarial model expansion receipts [skip ci]'
+            git push
+          fi
+      - name: Upload R4.5 receipts
+        uses: actions/upload-artifact@v4
+        with:
+          name: eye-r4-5-adversarial-model-expansion-receipts
+          path: EYE/r4_5/generated
