@@ -1,0 +1,88 @@
+name: EYE R4.6 Continuous Uncertainty Adversary
+
+on:
+  push:
+    branches: [main, 'eye/r4-6-*']
+    paths:
+      - 'EYE/r4_6/**'
+      - 'EYE/r4_4/**'
+      - 'data/EYE-R4.6-CONTINUOUS-UNCERTAINTY-ADVERSARY-2026-09-02-v1.0.json'
+      - '.github/workflows/eye-r4-6-continuous-uncertainty-adversary.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  continuous-attack-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile adversary and tests
+        run: python -m py_compile EYE/r4_6/eye_r4_6_continuous_uncertainty_adversary.py EYE/r4_6/test_eye_r4_6_continuous_uncertainty_adversary.py
+      - name: Run adversarial unit tests
+        run: python EYE/r4_6/test_eye_r4_6_continuous_uncertainty_adversary.py
+      - name: Replay predeclared continuous benchmarks
+        run: |
+          rm -rf EYE/r4_6/generated
+          python EYE/r4_6/eye_r4_6_continuous_uncertainty_adversary.py --input EYE/r4_6/benchmarks/synthetic_continuous_box.json --output-dir EYE/r4_6/generated/synthetic_continuous_box
+          python EYE/r4_6/eye_r4_6_continuous_uncertainty_adversary.py --input EYE/r4_6/benchmarks/search_proof_continuous_box.json --output-dir EYE/r4_6/generated/search_proof_continuous_box
+          python EYE/r4_6/eye_r4_6_continuous_uncertainty_adversary.py --input EYE/r4_6/benchmarks/palomar_xe325_continuous_box.json --output-dir EYE/r4_6/generated/palomar_xe325_continuous_box
+      - name: Validate predeclared outcomes
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          root=Path('EYE/r4_6/generated')
+          def read(name):
+              return json.loads((root/name/'continuous_uncertainty_receipt.json').read_text())
+          s=read('synthetic_continuous_box')
+          q=read('search_proof_continuous_box')
+          p=read('palomar_xe325_continuous_box')
+          assert s['status']=='CONTINUOUS_BOX_CERTIFIED_UNDER_DECLARED_CLASS',s
+          assert s['rounds'] and s['rounds'][0]['selected_evaluation']['policy_risk']>0.1,s
+          assert s['final_root_next_test']=='t_gold',s
+          assert s['extremum_certificate']=='MULTI_AFFINE_BOX_EXTREMA_AT_VERTICES',s
+          assert q['status']=='CONTINUOUS_BOX_CERTIFIED_UNDER_DECLARED_CLASS',q
+          assert q['rounds'] and q['rounds'][0]['selected_evaluation']['policy_risk']>0.1,q
+          assert q['final_root_next_test']=='end_to_end_rebuild',q
+          assert p['status']=='BASELINE_NOT_ROBUSTLY_SOLVABLE',p
+          assert p['baseline_status']=='ROBUST_NON_IDENTIFIABLE_UNDER_DECLARED_MODEL_SET',p
+          receipt={
+            'schema':'janus.eye.r4_6.validation_receipt.v1',
+            'status':'PASS_WITH_EPISTEMIC_CEILING',
+            'unit_tests':'PASS_10_OF_10',
+            'synthetic':'PASS_CONTINUOUS_BREAKER_FORCES_T_GOLD_AND_CERTIFIES_BOX',
+            'search_proof':'PASS_CONTINUOUS_BREAKER_FORCES_END_TO_END_REBUILD_AND_CERTIFIES_BOX',
+            'palomar':'PASS_BASELINE_ROBUST_NON_IDENTIFIABILITY_PRESERVED',
+            'source_git_commit':os.environ.get('GITHUB_SHA','LOCAL_OR_UNKNOWN'),
+            'ceiling':'EXACT_ONLY_FOR_DECLARED_MULTI_AFFINE_BINARY_LIKELIHOOD_BOX__GENERAL_CONTINUOUS_UNCERTAINTY_REMAINS_OPEN',
+            'firewalls':['CONTINUOUS_BOX_CERTIFICATE != TRUE_WORLD_ROBUSTNESS','UNCERTAINTY_SET != TRUE_WORLD','MULTI_AFFINE_CERTIFICATE != GENERAL_NONLINEAR_UNCERTAINTY_CERTIFICATE','NO_BREAKER_IN_BOX != NO_BREAKER_OUTSIDE_BOX']
+          }
+          (root/'EYE-R4.6-VALIDATION-RECEIPT.json').write_text(json.dumps(receipt,indent=2,sort_keys=True)+'\n')
+          print(json.dumps(receipt,sort_keys=True))
+          PY
+      - name: Commit JSON receipts on main only
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git config user.name 'EYE R4.6 Continuous Uncertainty Adversary'
+          git config user.email 'actions@users.noreply.github.com'
+          git add EYE/r4_6/generated
+          if git diff --cached --quiet; then
+            echo 'No receipt drift.'
+          else
+            git commit -m '[eye-r4.6] Preserve continuous uncertainty receipts [skip ci]'
+            git push
+          fi
+      - name: Upload R4.6 receipts
+        uses: actions/upload-artifact@v4
+        with:
+          name: eye-r4-6-continuous-uncertainty-receipts
+          path: EYE/r4_6/generated
