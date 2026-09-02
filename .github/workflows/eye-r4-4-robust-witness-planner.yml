@@ -1,0 +1,98 @@
+name: EYE R4.4 Robust Witness Planner
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - 'eye/r4-4-*'
+    paths:
+      - 'EYE/r4_4/**'
+      - 'data/EYE-R4.4-ROBUST-WITNESS-PLANNER-CONTRACT-2026-09-02-v1.0.json'
+      - '.github/workflows/eye-r4-4-robust-witness-planner.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: eye-r4-4-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  robust-plan-and-verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile planner and tests
+        run: |
+          python -m py_compile EYE/r4_4/eye_r4_4_robust_witness_planner.py
+          python -m py_compile EYE/r4_4/test_eye_r4_4_planner.py
+      - name: Run adversarial unit tests
+        run: python -m unittest EYE.r4_4.test_eye_r4_4_planner -v
+      - name: Replay predeclared benchmarks
+        run: |
+          rm -rf EYE/r4_4/generated
+          for name in synthetic_robust_advantage search_proof_robust palomar_xe325_robust; do
+            GITHUB_SHA="$(git rev-parse HEAD)" python EYE/r4_4/eye_r4_4_robust_witness_planner.py \
+              --input "EYE/r4_4/benchmarks/${name}.json" \
+              --output-dir "EYE/r4_4/generated/${name}"
+          done
+      - name: Validate predeclared outcomes
+        run: |
+          python - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          root=Path('EYE/r4_4/generated')
+          syn=json.loads((root/'synthetic_robust_advantage/robust_policy_receipt.json').read_text())
+          assert syn['status']=='EXACT_ROBUST_POLICY_FOUND', syn
+          assert syn['root_next_test']=='t_robust', syn
+          assert syn['robust_cost']==2.0, syn
+          assert syn['worst_model_expected_cost']==2.0, syn
+          sp=json.loads((root/'search_proof_robust/robust_policy_receipt.json').read_text())
+          assert sp['status']=='EXACT_ROBUST_POLICY_FOUND', sp
+          assert sp['root_next_test']=='independent_verifier', sp
+          assert abs(sp['robust_cost']-4.024)<1e-9, sp
+          pal=json.loads((root/'palomar_xe325_robust/robust_policy_receipt.json').read_text())
+          assert pal['status']=='ROBUST_NON_IDENTIFIABLE_UNDER_DECLARED_MODEL_SET', pal
+          assert pal['exact_policy_search_completed'] is True, pal
+          assert pal['root_robust_next_test_ranking']==[], pal
+          receipt={
+            'schema':'janus.eye.r4_4.validation_receipt.v1',
+            'status':'PASS_WITH_EPISTEMIC_CEILING',
+            'source_git_commit':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),
+            'unit_tests':'PASS_10_OF_10',
+            'synthetic':'PASS_MINIMAX_T_ROBUST_COST_2',
+            'search_proof':'PASS_ROBUST_ROOT_INDEPENDENT_VERIFIER_COST_4.024',
+            'palomar':'PASS_EXPECTED_ROBUST_NON_IDENTIFIABLE',
+            'objective_support':'MINIMAX_AND_FINITE_MODEL_CVAR',
+            'ceiling':'EXACT_POLICY_ONLY_UNDER_DECLARED_FINITE_MODEL_SET_OBJECTIVE_AND_TEST_SPACE__MODEL_COMPLETENESS_REMAINS_OPEN',
+            'firewalls':['ROBUST_POLICY != CAUSAL_TRUTH','MODEL_SET != TRUE_WORLD','MODEL_PROVENANCE != MODEL_VALIDITY','ROBUST_NON_IDENTIFIABLE != FALSE','UNKNOWN_RESOURCE_LIMIT != ROBUST_NON_IDENTIFIABLE']
+          }
+          (root/'EYE-R4.4-VALIDATION-RECEIPT.json').write_text(json.dumps(receipt,indent=2,sort_keys=True)+'\n')
+          print(json.dumps(receipt,sort_keys=True))
+          PY
+      - name: Commit JSON receipts on main only
+        if: github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          git config user.name 'EYE R4.4 Robust Witness Planner'
+          git config user.email 'actions@users.noreply.github.com'
+          git add EYE/r4_4/generated
+          git diff --cached --quiet && exit 0
+          git commit -m '[eye-r4.4] Preserve robust witness policy receipts [skip ci]'
+          git pull --rebase origin main
+          git push
+      - name: Upload R4.4 receipts
+        uses: actions/upload-artifact@v4
+        with:
+          name: eye-r4-4-${{ github.run_id }}
+          path: EYE/r4_4/generated/**/*.json
+          if-no-files-found: error
