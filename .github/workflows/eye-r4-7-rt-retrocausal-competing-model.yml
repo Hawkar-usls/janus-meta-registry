@@ -1,0 +1,76 @@
+name: EYE R4.7-RT Retrocausal Competing-Model Benchmark
+
+on:
+  push:
+    branches: [main, 'eye/r4-7-rt-*']
+    paths:
+      - 'EYE/r4_7_rt/**'
+      - 'EYE/r4_1/eye_r4_1_minimum_witness_set_solver.py'
+      - 'registry/uap/Retro-Tahyon.json'
+      - 'data/EYE-R4.7-RT-RETROCAUSAL-COMPETING-MODEL-BENCHMARK-2026-09-02-v1.0.json'
+      - '.github/workflows/eye-r4-7-rt-retrocausal-competing-model.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  source-grounded-identifiability-benchmark:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile solver and validator
+        run: python -m py_compile EYE/r4_1/eye_r4_1_minimum_witness_set_solver.py EYE/r4_7_rt/validate_retro_tahyon_competing_model.py
+      - name: Run exact minimum-witness benchmark
+        run: |
+          rm -rf EYE/r4_7_rt/generated
+          python EYE/r4_1/eye_r4_1_minimum_witness_set_solver.py \
+            --input EYE/r4_7_rt/retro_tahyon_competing_model_benchmark.json \
+            --output-dir EYE/r4_7_rt/generated
+      - name: Validate against canonical Retro-Tahyon source
+        run: |
+          python EYE/r4_7_rt/validate_retro_tahyon_competing_model.py \
+            --source registry/uap/Retro-Tahyon.json \
+            --model EYE/r4_7_rt/retro_tahyon_competing_model_benchmark.json \
+            --generated-dir EYE/r4_7_rt/generated
+      - name: Assert frozen expected receipt
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('EYE/r4_7_rt/generated')
+          r=json.loads((root/'solver_receipt.json').read_text())
+          v=json.loads((root/'EYE-R4.7-RT-VALIDATION-RECEIPT.json').read_text())
+          assert r['status']=='IDENTIFIABILITY_CANDIDATE',r
+          assert r['search_status']=='EXACT_MINIMUM_FOUND',r
+          assert r['chosen_additional_tests']==['TOPA-RT-H1','TOPA-RT-H3','TOPA-RT-H4'],r
+          assert r['chosen_incremental_cost']==3.0,r
+          assert r['remaining_unresolved_pairs']==[],r
+          assert v['status']=='PASS_WITH_EPISTEMIC_CEILING',v
+          assert v['uap_firewall']=='PASS_H5_UNAVAILABLE_WHILE_DIRECT_UAP_TACHYON_LINK_FALSE',v
+          print(json.dumps({'solver':r,'validation':v},sort_keys=True))
+          PY
+      - name: Commit JSON receipts on main only
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git config user.name 'EYE R4.7-RT Retrocausal Benchmark'
+          git config user.email 'actions@users.noreply.github.com'
+          git add EYE/r4_7_rt/generated
+          if git diff --cached --quiet; then
+            echo 'No receipt drift.'
+          else
+            git commit -m '[eye-r4.7-rt] Preserve retrocausal competing-model receipts [skip ci]'
+            git push
+          fi
+      - name: Upload R4.7-RT receipts
+        uses: actions/upload-artifact@v4
+        with:
+          name: eye-r4-7-rt-retrocausal-competing-model-receipts
+          path: EYE/r4_7_rt/generated
