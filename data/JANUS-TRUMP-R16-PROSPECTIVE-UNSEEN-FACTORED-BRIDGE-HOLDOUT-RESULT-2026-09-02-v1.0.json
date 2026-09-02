@@ -1,0 +1,77 @@
+{
+  "schema": "janus.trump.r16.prospective_unseen_factored_bridge_holdout.result.v1",
+  "artifact_id": "JANUS-TRUMP-R16-PROSPECTIVE-UNSEEN-FACTORED-BRIDGE-HOLDOUT-RESULT-2026-09-02-v1.0",
+  "created_date": "2026-09-02",
+  "status": "THREE_EXACT_UNSEEN_PASSES__FIVE_ACTIVE_CLAUSE_RESOURCE_OPENS__NO_SEMANTIC_COUNTEREXAMPLE_OBSERVED__P_VS_NP_OPEN",
+  "source_repository": "Hawkar-usls/Janus-Fundamentum",
+  "runtime_branch": "research/janus-trump-r16-prospective-unseen-factored-bridge-holdout-2026-09-02",
+  "runtime_result_summary_commit": "1fae4197c8af801df3f2d762ac4c490a02b0837b",
+  "parents": [
+    {"path": "data/JANUS-TRUMP-R15F-INCREMENTAL-INDEPENDENT-SEMANTIC-CONTROL-RESULT-2026-09-02-v1.0.json", "commit": "043a161d933bf535b0c258755676c744b7b669d9"},
+    {"repository": "Hawkar-usls/Janus-Fundamentum", "path": "research/JANUS_TRUMP_R16_PROSPECTIVE_UNSEEN_WORLD_SET_FREEZE_2026-09-02.json", "commit": "033c7334256cc15f719e0849c205f72a141a7096"},
+    {"repository": "Hawkar-usls/Janus-Fundamentum", "path": "research/JANUS_TRUMP_R16_EXECUTION_RESOURCE_ENVELOPE_FREEZE_2026-09-02.json", "commit": "c31a0e47f521a61a493f3df504548e6e459b0e41"}
+  ],
+  "candidate_freeze": {
+    "path": "experiments/janus_trump_r15d_bounded_observer_equivalent_refactor.py",
+    "blob_sha": "e6def9fef656c8f1af1b9f245bc855081f13a586",
+    "logic_modified_during_R16": false,
+    "physical_clause_width_cap": 3,
+    "active_clause_resource_cap": 150000
+  },
+  "execution_receipt": {
+    "workflow_run_id": 33577999331,
+    "workflow_conclusion": "success",
+    "aggregate_artifact_id": 9827352051,
+    "aggregate_artifact_sha256": "c10f2d34e090c0375a56d57095d4d63086aace790fb262861a9bbb25ba842017",
+    "selector_workflow_run_id": 33577742720,
+    "selector_artifact_id": 9827249711,
+    "selector_artifact_sha256": "c02c674b7ec078af3e15f3312337ca57a6169020a9c550a9b4397335c1f13a5b"
+  },
+  "selection_firewall": {
+    "selected_before_truth": true,
+    "selected_before_candidate": true,
+    "eight_unique_general_cnf_frames": true,
+    "bridge_range": "7..14 observed within frozen 6..16 eligibility",
+    "R13_exposed_frames_excluded": true
+  },
+  "result": {
+    "overall_verdict": "R16_OPEN_CANDIDATE_RESOURCE_LIMIT",
+    "PASS_EXACT_UNSEEN": 3,
+    "OPEN_CANDIDATE_RESOURCE_LIMIT": 5,
+    "MISMATCH_UNSEEN": 0,
+    "OPEN_VERIFIER_RESOURCE_LIMIT": 0,
+    "FAIL_INTEGRITY": 0
+  },
+  "exact_passes": [
+    {"id":"R16-W01","n":24,"suite":"PLANTED","bridge":12,"allowed":194,"false_positive":0,"false_negative":0,"candidate_active_clauses":21855,"auxiliary_variables":208,"pair_attempts":23519},
+    {"id":"R16-W02","n":24,"suite":"UNSAT_CORE","bridge":12,"allowed":25,"false_positive":0,"false_negative":0,"candidate_active_clauses":2481,"auxiliary_variables":68,"pair_attempts":2887},
+    {"id":"R16-W03","n":32,"suite":"PLANTED","bridge":14,"allowed":225,"false_positive":0,"false_negative":0,"candidate_active_clauses":7579,"auxiliary_variables":194,"pair_attempts":8068}
+  ],
+  "resource_opens": [
+    {"id":"R16-W04","n":32,"suite":"UNSAT_CORE","reason":"ACTIVE_CLAUSE_CAP","checkpoint_active_clauses":533525,"eliminated_internal":22,"remaining_internal":0,"auxiliary_variables":663,"pair_attempts":612636},
+    {"id":"R16-W05","n":40,"suite":"PLANTED","reason":"ACTIVE_CLAUSE_CAP","checkpoint_active_clauses":198719,"eliminated_internal":29,"remaining_internal":1,"auxiliary_variables":738,"pair_attempts":211419},
+    {"id":"R16-W06","n":40,"suite":"UNSAT_CORE","reason":"ACTIVE_CLAUSE_CAP","checkpoint_active_clauses":253331,"eliminated_internal":31,"remaining_internal":1,"auxiliary_variables":859,"pair_attempts":284886},
+    {"id":"R16-W07","n":48,"suite":"PLANTED","reason":"ACTIVE_CLAUSE_CAP","checkpoint_active_clauses":160968,"eliminated_internal":33,"remaining_internal":4,"auxiliary_variables":640,"pair_attempts":175457},
+    {"id":"R16-W08","n":48,"suite":"UNSAT_CORE","reason":"ACTIVE_CLAUSE_CAP","checkpoint_active_clauses":200745,"eliminated_internal":31,"remaining_internal":3,"auxiliary_variables":796,"pair_attempts":205173}
+  ],
+  "scientific_interpretation": {
+    "semantic": "Three prospectively unseen worlds reached terminal and matched independent complete bridge-domain witnesses exactly. No semantic mismatch was observed.",
+    "resource": "Five frozen worlds exceeded the preregistered physical active-clause cap before semantic scoring. W04 eliminated every original internal variable but still materialized 533525 width<=3 clauses, sharply localizing the next wall to representation materialization rather than unresolved original search depth for that world.",
+    "epistemic": "Resource OPEN is neither semantic PASS nor semantic FAIL. R16 is therefore not 8/8 and cannot be promoted as generalization success."
+  },
+  "captain_obvious_method_test": {
+    "prediction": "Freeze the machine and exam before grading; let the control return PASS, FAIL, or OPEN without moving rules.",
+    "observed": "3 exact PASS and 5 resource OPEN under unchanged rules.",
+    "assessment": "METHOD_CONFIRMED_SO_FAR__SUPERHERO_JOKE_ALLOWED__NO_THEOREM_AUTHORITY"
+  },
+  "next_gate": "R17_RESOURCE_GROWTH_FORENSICS__DO_NOT_TUNE_R15D_IN_PLACE",
+  "laws": [
+    "UNSEEN_EXACT_MATCH_IS_EVIDENCE__NOT_TOTALITY",
+    "RESOURCE_OPEN_IS_NOT_NEGATIVE_EVIDENCE",
+    "AUXILIARY_NAME_QUOTIENT_CAN_REMOVE_WIDTH_DEBT_WHILE_PHYSICAL_CLAUSE_MATERIALIZATION_STILL_BLOWS_UP",
+    "IF_THE_EXAM_IS_FROZEN__DO_NOT_RAISE_THE_CAP_AFTER_SEEING_THE_SCORE"
+  ],
+  "canonical_seal": "CAPTAIN_OBVIOUS_WAS_RIGHT_ABOUT_THE_METHOD__THREE_WORLDS_SAID_MATCH__FIVE_WORLDS_SAID_THE_CURRENT_REPRESENTATION_IS_TOO_LARGE_TO_FINISH_UNDER_THE_FROZEN_ENVELOPE",
+  "claim_ceiling": "No arbitrary-CNF totality, global polynomial runtime, SAT-in-P, P=NP, or P!=NP claim follows from R16.",
+  "P_VS_NP": "OPEN"
+}
