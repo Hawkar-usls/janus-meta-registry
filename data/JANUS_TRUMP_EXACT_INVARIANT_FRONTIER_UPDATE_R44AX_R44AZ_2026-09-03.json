@@ -1,0 +1,54 @@
+{
+  "id": "JANUS_TRUMP_EXACT_INVARIANT_FRONTIER_UPDATE_R44AX_R44AZ_2026-09-03",
+  "status": "CANONICAL_CANDIDATE_FRONTIER_UPDATE",
+  "parent": "JANUS_TRUMP_EXACT_INVARIANT_FRONTIER_CANONICAL_2026-09-03",
+  "R44AX": {
+    "name": "BINARY_IMPLICATION_CONGRUENCE",
+    "fundamentum_pr": 274,
+    "head": "9c44f66de3f7ab39e54391ece0c4282077e50570",
+    "primitive": "Use SCC equivalence in the explicit width<=2 implication graph to quotient forced-equivalent literals exactly.",
+    "novel_effect": "Can remove variables even when the R44AW sign-flip translation group is trivial.",
+    "universal_barrier": "Exact-width-3 rigid SAT/UNSAT families have empty binary core.",
+    "semantic_completion_firewall": "Complete arbitrary semantic literal-equivalence detection is coNP-hard."
+  },
+  "R44AY": {
+    "name": "LOCAL_AFFINE_CONSEQUENCE_CLOSURE",
+    "fundamentum_pr": 275,
+    "head": "d4cc24433a083287b30c60271d04937e0f85db38",
+    "primitive": "For every <=3-variable support bundle, enumerate the local relation, extract every valid GF(2) affine consequence, close globally by Gaussian elimination, and authorize only forced units/equivalences.",
+    "novel_effect": "Consumes exact-width-3 rigid gadgets that have neither sign-flip symmetry nor binary SCC congruence.",
+    "anti_drift_from_R43A": "R43A exact affine/XOR bundle recognition is distinct from R44AY sound affine-consequence extraction from arbitrary non-affine OR bundles.",
+    "universal_barrier": "Single-support linear exact-3-CNF formulas yield no local affine equations; known unsatisfiable linear 3-CNFs and satisfiable linear families give fixed points."
+  },
+  "R44AZ": {
+    "name": "FAILED_2SAT_COFACTOR_CERTIFICATE",
+    "fundamentum_pr": 276,
+    "head": "d58af4de77e31fee91d7554ff796f09f60cd89d7",
+    "primitive": "Probe one variable value, but grant authority only when the width<=2 subformula of that cofactor is exactly UNSAT by SCC; then choose the opposite value safely.",
+    "novel_effect": "Moves formulas simultaneously fixed by R44AW, R44AX and R44AY, without recursively solving either arbitrary cofactor.",
+    "universal_barrier": "On exact-width-3 linear CNF, all binary clauses created by one cofactor have pairwise disjoint residual supports and are always jointly satisfiable; thus SAT/UNSAT linear families are fixed points.",
+    "firewall": "FAILED_2SAT_CERTIFICATE != BRANCHING_ORACLE"
+  },
+  "current_residual_core": {
+    "name": "QUADRUPLE_RIGID_CORE",
+    "conditions": [
+      "sign-flip translation group H(F) is trivial",
+      "explicit binary implication congruence has reached fixed point",
+      "support-local affine consequence closure forces no unit/equivalence",
+      "no one-variable cofactor exposes an UNSAT width<=2 subformula"
+    ],
+    "next_question": "Find one polynomially computable exact invariant that strictly progresses on the quadruple-rigid core without DP, recursive branching, generic proof search, bounded-local repackaging, or hiding SAT in terminal evaluation."
+  },
+  "hard_firewalls": [
+    "PARTIAL_EXACT_DESCENT != UNIVERSAL_DESCENT",
+    "NO_TRIGGER != NEGATIVE_SAT_EVIDENCE",
+    "NO_2SAT_CONTRADICTION != COFACTOR_SAT",
+    "AFFINE_RELAXATION != EXACT_AFFINE_REPRESENTATION",
+    "EXPLICIT_BINARY_CONSEQUENCE != COMPLETE_SEMANTIC_ORACLE",
+    "P_VS_NP=OPEN"
+  ],
+  "TRUMP_finished": false,
+  "SAT_IN_P": "NOT_PROVED",
+  "P_EQUALS_NP": "NOT_PROVED",
+  "P_VS_NP": "OPEN"
+}
