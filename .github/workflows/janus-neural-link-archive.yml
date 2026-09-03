@@ -1,0 +1,79 @@
+name: JANUS Neural Link Archive
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/neural_link_archive.py'
+      - 'tests/test_neural_link_archive.py'
+      - 'data/JANUS-NEURAL-LINK/MANIFEST.json'
+      - '.github/workflows/janus-neural-link-archive.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: janus-neural-link-archive
+  cancel-in-progress: false
+
+jobs:
+  archive:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install test dependency
+        run: python -m pip install --quiet pytest
+      - name: Verify append-only archive logic
+        run: |
+          python -m compileall -q tools/neural_link_archive.py tests/test_neural_link_archive.py
+          python -m pytest -q tests/test_neural_link_archive.py
+          python -m json.tool data/JANUS-NEURAL-LINK/MANIFEST.json >/dev/null
+      - name: Archive Terminal chat into Meta Registry
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python tools/neural_link_archive.py --root data/JANUS-NEURAL-LINK
+          python -m json.tool data/JANUS-NEURAL-LINK/HEAD.json >/dev/null
+          python -m json.tool data/JANUS-NEURAL-LINK/RECENT.json >/dev/null
+      - name: Prove archive authority ceiling
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          m=json.loads(Path('data/JANUS-NEURAL-LINK/MANIFEST.json').read_text())
+          h=json.loads(Path('data/JANUS-NEURAL-LINK/HEAD.json').read_text())
+          r=json.loads(Path('data/JANUS-NEURAL-LINK/RECENT.json').read_text())
+          assert m['event_model']['create_only_versions'] is True
+          assert m['authority']['chat_event_is_command'] is False
+          assert m['authority']['archive_is_world_truth'] is False
+          assert h['append_only_event_objects'] is True
+          assert h['mutable_head_is_authority'] is False
+          assert h['cross_repo_write_credential_used'] is False
+          assert r['authority']=='OBSERVABILITY_AND_MEMORY_ONLY'
+          print('JANUS_NEURAL_LINK_ARCHIVE_CEILING=PASS')
+          PY
+      - name: Persist new archive objects
+        run: |
+          set -euo pipefail
+          git config user.name 'JANUS Neural Link Archive'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/JANUS-NEURAL-LINK
+          if git diff --cached --quiet; then
+            echo 'JANUS_NEURAL_LINK_ARCHIVE=NO_CHANGE'
+            exit 0
+          fi
+          git commit -m 'JANUS Neural Link: archive conversation events'
+          git pull --rebase origin main
+          git push origin HEAD:main
+          echo 'JANUS_NEURAL_LINK_ARCHIVE=PASS'
