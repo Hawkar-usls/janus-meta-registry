@@ -1,0 +1,45 @@
+{
+  "id": "JANUS_TRUMP_MAXDEF_FRONTIER_R44BC_R44BF_2026-09-03",
+  "status": "CANONICAL_MAXIMUM_DEFICIENCY_FRONTIER",
+  "published_basis": {
+    "author": "Stefan Szeider",
+    "paper": "Minimal unsatisfiable formulas with bounded clause-variable difference are fixed-parameter tractable",
+    "theorem_used": "SAT for maximum deficiency k is decidable in O(2^k n^3); maximum deficiency is polynomially computable by graph matching; SAT/UNSAT output can be certified by an assignment or regular-resolution refutation."
+  },
+  "frontier": {
+    "R44BC-MAXDEF": {
+      "fundamentum_pr": 280,
+      "result": "If delta*(F)<=floor(log2 N), Szeider's exact algorithm is a uniform polynomial terminal gate with O(N^4) charged time under original-input accounting.",
+      "ceiling": "delta*>log N is NO_PROGRESS, not hardness or UNSAT."
+    },
+    "R44BD": {
+      "fundamentum_pr": 281,
+      "status": "TARGET_FROZEN__NOT_PROVED",
+      "missing_operator": "Given delta*-critical G with children G0,G1 of rank <=k-1, construct one exact SAT-OR merged state M with delta*(M)<=k-1, polynomial work/state/certificate lifting, and closure under next normalization.",
+      "effect_if_proved": "Would yield polynomially many polynomial macrosteps and hence P=NP."
+    },
+    "R44BE": {
+      "fundamentum_pr": 282,
+      "result": "For disjoint-copy selector guarding with positive child maxdefs a,b, delta*(M)=a+b-1 exactly. Thus equal children of rank k-1 rebound to 2k-3 and fail R44BD M2 for k>=3.",
+      "scope": "Barrier only for selector-guarded merge family; k=2 special layer not refuted."
+    },
+    "R44BF": {
+      "fundamentum_pr": 283,
+      "result": "Private forced padding C_i -> (C_i OR y_i) AND (not y_i) preserves maximum deficiency exactly for every CNF.",
+      "effect": "Fresh private forced variables cannot repay selector branch deficiency debt.",
+      "scope": "Shared/nonlocal auxiliary gadgets remain open."
+    }
+  },
+  "current_question": "Find or refute one shared/nonlocal exact OR-merge gadget satisfying R44BD M1-M6. Do not return to selector reification, ordinary DP projection, private forced padding, proof-search, or quantifier hiding.",
+  "firewalls": [
+    "FPT != POLYNOMIAL_FOR_UNBOUNDED_PARAMETER",
+    "LOG_MAXDEF_TERMINAL != UNIVERSAL_TERMINAL",
+    "EXACT_OR != MAXDEF_DESCENT",
+    "FRESH_AUXILIARIES != FREE_MAXDEF_CREDIT",
+    "TARGET_INTERFACE != PROVED_OPERATOR",
+    "P_VS_NP=OPEN"
+  ],
+  "TRUMP_finished": false,
+  "SAT_IN_P": "NOT_PROVED",
+  "P_VS_NP": "OPEN"
+}
