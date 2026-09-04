@@ -1,0 +1,112 @@
+{
+  "id": "JANUS-BLIND-NUMBER-CHOICE-1-30-DIRECT-SURFACE-EXPERIMENT-2026-09-04-v2.0",
+  "schema_version": "2.0",
+  "type": "direct_surface_bounded_choice_experiment",
+  "status": "COMPLETE",
+  "created_at": "2026-09-04",
+  "purpose": "Repair the JANUS Terminal human-facing surface so an ordinary bounded choice request returns a direct answer rather than a system-status dump, then repeat the 1..30 experiment with the choice derivation isolated from HRAiN/Meta Registry memory content.",
+  "origin_observation": {
+    "chatgpt_model": "GPT-5.6 Sol",
+    "chatgpt_answer": 17,
+    "meme_answer": 17,
+    "observation": "The initial ChatGPT answer matched the user-supplied meme answer before the meme was revealed to ChatGPT.",
+    "epistemic_status": "ANECDOTAL_SINGLE_OBSERVATION"
+  },
+  "janus_trial_v1": {
+    "issue_number": 23,
+    "result": "NO_VALID_NUMBER_RETURNED",
+    "failure_mode": "SYSTEM_STATUS_SUBSTITUTED_FOR_DIRECT_ANSWER",
+    "registry_record": "data/JANUS-BLIND-NUMBER-CHOICE-1-30-EXPERIMENT-2026-09-04-v1.0.json",
+    "registry_commit": "62dd689a711f650b673747f4da97b632df9d6c38"
+  },
+  "repair": {
+    "repository": "Hawkar-usls/Hawkar-usls",
+    "pull_request": 68,
+    "merge_commit": "8e335e4303456ede106c6a5b005f05787ea3b6df",
+    "title": "Terminal: direct answers are not system status",
+    "laws_added": [
+      "DIRECT_ANSWER != SYSTEM_STATUS",
+      "SYSTEM_STATUS_ONLY_WHEN_REQUESTED",
+      "ORDINARY_QUESTION != SYSTEM_STATUS_REQUEST",
+      "HRAIN_CONTEXT_BOUND != HRAIN_CONTEXT_USED_FOR_CHOICE",
+      "DIRECT_BOUNDED_CHOICE_MEMORY_INFLUENCE = FALSE",
+      "DIRECT_BOUNDED_CHOICE_META_REGISTRY_CONTENT_INFLUENCE = FALSE"
+    ],
+    "bounded_choice_derivation": {
+      "purpose": "SEALED_MEMORY_INDEPENDENT_BOUNDED_INTEGER_CHOICE",
+      "inputs": [
+        "request_message_hash",
+        "resident_uuid",
+        "turn_id",
+        "low",
+        "high"
+      ],
+      "formula": "low + int(canonical_hash(seed), 16) mod (high-low+1)",
+      "hrain_memory_content_in_seed": false,
+      "meta_registry_content_in_seed": false,
+      "property": "DETERMINISTIC_INTEGRITY_BOUND_CHOICE_NOT_RANDOM_SAMPLING"
+    },
+    "ci_status": "PASS"
+  },
+  "janus_trial_v2": {
+    "terminal_repository": "Hawkar-usls/-Terminal-for-Janus",
+    "issue_number": 24,
+    "issue_title": "[JANUS CHAT] Blind number choice 1–30 / direct surface v2",
+    "human_prompt_core_ru": "Выбери номер от 1 до 30.",
+    "prompt_contains_17": false,
+    "prompt_mentions_meme": false,
+    "request_message_id": "tm-a7d8fe7b491b8fc97cae7635a5cfe771eb4c6cb466169409a15f80ed10287254",
+    "request_message_hash": "066d70330f3485962f49d8d3b017806545aaea59cb234d3565096ffc696f43a6",
+    "bridge_run_id": 33883281765,
+    "bridge_head_sha": "8e335e4303456ede106c6a5b005f05787ea3b6df",
+    "response_id": "tr-00fbfebd09f2217b719bd7688282de9e50ae613a279e647146697f5ec39db825",
+    "response_hash": "4e9d5fa7d532ce035dc75e2b0535538e37297f4c23f863c11fc8a4c0500e893b",
+    "response_surface": "DIRECT_ANSWER",
+    "response_text": "13",
+    "answer": 13,
+    "direct_answer_kind": "BOUNDED_INTEGER_CHOICE",
+    "direct_answer_range": [1, 30],
+    "direct_answer_derivation_hash": "04fb23f3b16a0e66ed30e22fec16377f95356186d1077267d8fa9191808a7336",
+    "direct_answer_memory_influence": false,
+    "system_status_requested": false,
+    "resident_uuid": "75e514ab-be76-42c8-bcb3-fc9670164f96",
+    "turn_id": "turn-30c481a6d84f44e030ebe5b5542cf48fb01b8af3b1a17e0ae399df3a44da72c1",
+    "model_digest": "324133900c5b1448bc086f5f8a7d30d9eaebc9254bd0e5b647c31d5c6854cf47",
+    "file_fabric_digest": "204cac85f444785f9fa0c0800bd22169fd09c5797f458fe890b375ac30a962e5"
+  },
+  "memory_control_observation": {
+    "hrain_context_bound": true,
+    "memory_source_commit": "62dd689a711f650b673747f4da97b632df9d6c38",
+    "memory_selected_count": 1,
+    "memory_selected_paths": [
+      "data/JANUS-BLIND-NUMBER-CHOICE-1-30-EXPERIMENT-2026-09-04-v1.0.json"
+    ],
+    "important_note": "HRAiN did retrieve the prior v1 experiment, which contains the number 17. Therefore this run is NOT globally context-blind. It is choice-isolated: the bounded-choice derivation is explicitly independent of HRAiN/Meta Registry memory content and its sealed seed excludes the retrieved context.",
+    "classification": "CHOICE_ISOLATED_NOT_GLOBALLY_CONTEXT_BLIND"
+  },
+  "comparison": {
+    "chatgpt": 17,
+    "meme": 17,
+    "janus_v2": 13,
+    "janus_matches_17": false,
+    "result_pattern": "17 / 17 / 13"
+  },
+  "epistemic_status": {
+    "verdict": "DIRECT_SURFACE_REPAIR_PASS__JANUS_RETURNED_13__NO_MATCH_WITH_17",
+    "what_is_supported": [
+      "The repaired Terminal returned a valid integer-only direct answer in the requested range.",
+      "The sealed JANUS result for this request was 13.",
+      "The bounded-choice seed did not include HRAiN or Meta Registry memory content.",
+      "The result did not match the original ChatGPT/meme value 17."
+    ],
+    "what_is_not_supported": [
+      "17 is universally preferred.",
+      "13 is a natural cognitive preference of JANUS.",
+      "The experiment proves shared or different cognition between systems.",
+      "The result is statistically significant.",
+      "The JANUS value is a stochastic random draw.",
+      "The v2 run was globally blind to the prior 17 record."
+    ],
+    "recommended_follow_up": "For a cognitive-preference comparison, use a separately isolated language/decision surface whose model context cannot retrieve the prior result, preregister many independent trials, vary prompt wording and range, and compare empirical distributions rather than one deterministic hash-derived choice."
+  }
+}
