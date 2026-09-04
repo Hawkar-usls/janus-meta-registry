@@ -41,7 +41,12 @@ jobs:
         run: |
           grep -q "git status --porcelain -- assets/hrain-full-memory" .github/workflows/janus-hrain-full-memory.yml
           ! grep -q "git diff --quiet -- assets/hrain-full-memory" .github/workflows/janus-hrain-full-memory.yml
+          grep -q "git fetch origin main" .github/workflows/janus-hrain-full-memory.yml
+          grep -q "git reset --hard origin/main" .github/workflows/janus-hrain-full-memory.yml
+          grep -q "for attempt in 1 2 3" .github/workflows/janus-hrain-full-memory.yml
+          ! grep -q "git push --force" .github/workflows/janus-hrain-full-memory.yml
           echo 'FIRST_GENERATED_CATALOG_PERSISTENCE=GUARDED'
+          echo 'CONCURRENT_MAIN_WRITER=BOUNDED_REGENERATE_RETRY'
       - name: Build one bounded full-current catalog witness
         run: |
           mkdir -p runtime
@@ -87,12 +92,32 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if [[ -z "$(git status --porcelain -- assets/hrain-full-memory)" ]]; then
-            echo 'HRAIN_FULL_MEMORY=UNCHANGED'
-            exit 0
-          fi
           git config user.name 'JANUS HRAiN Memory'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add assets/hrain-full-memory
-          git commit -m 'chore(hrain): refresh full current Meta Registry memory catalog'
-          git push origin HEAD:main
+
+          # Other trusted workflows also append to main. Never force through them:
+          # on each bounded retry, start from the newest remote main and rebuild
+          # the deterministic catalog so its source_commit cannot become stale.
+          for attempt in 1 2 3; do
+            echo "HRAIN_FULL_MEMORY_WRITE_ATTEMPT=${attempt}"
+            git fetch origin main
+            git reset --hard origin/main
+            python research/site/janus_hrain_full_memory_export.py --validate
+
+            if [[ -z "$(git status --porcelain -- assets/hrain-full-memory)" ]]; then
+              echo 'HRAIN_FULL_MEMORY=UNCHANGED'
+              exit 0
+            fi
+
+            git add assets/hrain-full-memory
+            git commit -m 'chore(hrain): refresh full current Meta Registry memory catalog'
+            if git push origin HEAD:main; then
+              echo 'HRAIN_FULL_MEMORY=PERSISTED'
+              exit 0
+            fi
+
+            echo "HRAIN_FULL_MEMORY_PUSH_RACE=${attempt}; retrying from newest origin/main"
+          done
+
+          echo 'HRAIN_FULL_MEMORY=FAIL_CLOSED_AFTER_BOUNDED_RETRIES' >&2
+          exit 1
