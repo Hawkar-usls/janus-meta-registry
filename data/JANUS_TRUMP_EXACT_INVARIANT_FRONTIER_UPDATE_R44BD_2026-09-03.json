@@ -1,0 +1,47 @@
+{
+  "id": "JANUS_TRUMP_EXACT_INVARIANT_FRONTIER_UPDATE_R44BD_2026-09-03",
+  "status": "CANONICAL_THEOREM_TARGET_V2__POST_REVIEW_REPAIRED",
+  "fundamentum_pr": 281,
+  "head": "a01d0d82dd2ea341b4f946025a85327d8973d85f",
+  "target": "MAXDEF_DESCENT_PRESERVING_OR_MERGE_WITH_RANK_MONOTONE_NORMALIZATION",
+  "premise": "At a critical nonterminal CNF parent G of rank k, each cofactor is first terminally dispatched; every surviving nonterminal child has maximum deficiency at most k-1.",
+  "terminal_dispatch": {
+    "SAT_child": "parent SAT; no merge",
+    "one_UNSAT_one_nonterminal": "continue with the nonterminal child; no merge",
+    "both_UNSAT": "parent UNSAT; no merge",
+    "both_nonterminal": "only this case invokes the missing OR-merge"
+  },
+  "required_operator": {
+    "exact_semantics": "SAT(M(G0,G1)) iff SAT(G0) or SAT(G1) for two nonterminal children",
+    "rank": "merge output Q is terminal or CNF with delta*(Q)<=k-1",
+    "work": "fixed N^b per-macrostep charged work for original input size N, exponent b independent of k",
+    "state": "fixed N^a live-state plus replay/merge metadata envelope, exponent a independent of k",
+    "replay": "polynomial lifting through merge and parent branch split",
+    "closure": "exact Norm returns terminal or next critical CNF G' with delta*(G')<=delta*(Q)<=k-1 and preserves the N^a/N^b envelopes"
+  },
+  "if_proved": "Initial critical rank is at most the N^a clause/state envelope. Every nonterminal macrostep lowers rank by at least one, so at most N^a macrosteps with N^b per-step work give a polynomial SAT decider, hence P=NP.",
+  "review_repairs": [
+    "terminal children are exceptions to branchwise rank descent and are handled before merge",
+    "normalization is explicitly forbidden from increasing maximum deficiency",
+    "polynomial step bound is N^a from the state envelope, not N by default"
+  ],
+  "known_failed_natural_merges": [
+    "selector reification",
+    "ordinary CNF Davis-Putnam merge with maxdef rebound",
+    "auxiliary-free CNF projection with parity size blowup",
+    "quantifier hiding"
+  ],
+  "authority": "TARGET_FROZEN_V2__NOT_PROVED",
+  "firewalls": [
+    "TERMINAL_CHILD != NONTERMINAL_RANKED_CHILD",
+    "BRANCHWISE_DESCENT != SINGLE_STATE_DESCENT",
+    "EXACT_OR != DESCENT_PRESERVING_EXACT_OR",
+    "NORMALIZATION != FREE_RANK_RESET",
+    "TARGET_FROZEN != TARGET_PROVED",
+    "P_VS_NP=OPEN"
+  ],
+  "TRUMP_finished": false,
+  "SAT_IN_P": "NOT_PROVED",
+  "P_EQUALS_NP": "NOT_PROVED",
+  "P_VS_NP": "OPEN"
+}
