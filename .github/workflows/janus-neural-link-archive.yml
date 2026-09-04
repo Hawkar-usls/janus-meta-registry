@@ -4,9 +4,14 @@ on:
   schedule:
     - cron: '*/5 * * * *'
   workflow_dispatch:
-  # Scheduled delivery is best-effort on GitHub. Any unrelated main update is a
-  # safe catch-up opportunity; archive-only commits are excluded to prevent a
-  # self-trigger loop.
+  # GitHub scheduled delivery is best-effort. Re-use completion of an existing
+  # same-repository scheduled observer as a second wake source; this grants no
+  # cross-repository credential and does not change archive authority.
+  workflow_run:
+    workflows: ['JANUS Native Proposal Relay']
+    types: [completed]
+  # Any unrelated main update is also a safe catch-up opportunity; archive-only
+  # commits are excluded to prevent a self-trigger loop.
   push:
     branches: [main]
     paths-ignore:
@@ -42,6 +47,8 @@ jobs:
           from pathlib import Path
           workflow = Path('.github/workflows/janus-neural-link-archive.yml').read_text(encoding='utf-8')
           assert "cron: '*/5 * * * *'" in workflow
+          assert 'workflow_run:' in workflow
+          assert "workflows: ['JANUS Native Proposal Relay']" in workflow
           assert 'paths-ignore:' in workflow
           assert "- 'data/JANUS-NEURAL-LINK/**'" in workflow
           assert 'cancel-in-progress: false' in workflow
