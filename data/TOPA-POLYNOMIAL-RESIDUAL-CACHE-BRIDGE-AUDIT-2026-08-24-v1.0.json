@@ -1,0 +1,103 @@
+{
+  "artifact_id": "TOPA-POLYNOMIAL-RESIDUAL-CACHE-BRIDGE-AUDIT-2026-08-24-v1.0",
+  "created_at_local": "2026-08-24T09:00:00+03:00",
+  "registry_layer": "TOPA",
+  "target": "POLYNOMIAL_RESIDUAL_CACHE_BRIDGE_FOR_CNF_SAT",
+  "status": "CONDITIONAL_BRIDGE_PROVED__TWO_UNIVERSAL_BOUNDS_OPEN",
+  "proof_authority_rule": "TOPA_SELECTS_ATTACKS_ONLY; MATHEMATICAL_PROMOTION_REQUIRES_DEFINITION_LEMMA_THEOREM_OR_COUNTEREXAMPLE",
+  "heuristic_firewall": {
+    "mythological_operator": "ZERO_AUTHORITY",
+    "historical_parallel": "ZERO_AUTHORITY",
+    "symbolic_similarity": "ZERO_AUTHORITY",
+    "finite_curve_fit": "ZERO_ASYMPTOTIC_AUTHORITY",
+    "associative_model_output": "ZERO_PROOF_AUTHORITY"
+  },
+  "proved_components": [
+    "UNIT_PROPAGATION_SAT_EQUIVALENCE",
+    "RESOLUTION_SOUNDNESS_FOR_ADDED_RESOLVENTS",
+    "BOOLEAN_BRANCH_COMPLETENESS",
+    "EXACT_COMPLETED_CACHE_REUSE_SOUNDNESS",
+    "UNCAPPED_POLICY0A_SOUND_AND_COMPLETE_SAT_DECISION",
+    "MAXIMUM_BRANCH_DEPTH_AT_MOST_INPUT_VARIABLE_COUNT",
+    "RECURSIVE_CALLS_AT_MOST_2_TIMES_UNIQUE_STATES_PLUS_1",
+    "LOCAL_RESOLUTION_INFERENCE_COUNT_POLYNOMIAL_IN_CURRENT_STATE_SIZE",
+    "CONDITIONAL_POLYNOMIAL_TOTAL_TIME_THEOREM"
+  ],
+  "newly_exposed_gap": {
+    "id": "UNIVERSAL_POLYNOMIAL_STATE_SIZE",
+    "reason": "Polynomial unique-state count alone does not imply polynomial total time if retained local resolvents make individual residual representations superpolynomial in original input length.",
+    "worst_case_recurrence": "m_(t+1) <= m_t + max(8,floor(m_t/4))",
+    "uniform_envelope": "m_t + 32 <= (5/4)^t * (m_0 + 32)",
+    "interpretation": "This is an upper-envelope weakness, not evidence that exponential state growth must occur. A separate polynomial state-size invariant is required."
+  },
+  "attacks": [
+    {
+      "id": "T1",
+      "claim": "Exact memoization makes arbitrary CNF search polynomial.",
+      "result": "REFUTED_AS_GENERAL_ARGUMENT",
+      "reason": "Known Formula-Caching lower bounds show exact residual caching alone admits exponential hard families."
+    },
+    {
+      "id": "T2",
+      "claim": "Polynomial local Resolution budget per state implies polynomial total runtime.",
+      "result": "REFUTED",
+      "reason": "The number and representation size of states remain unbounded by a polynomial in the original input length."
+    },
+    {
+      "id": "T3",
+      "claim": "A polynomial unique-state bound alone closes the bridge.",
+      "result": "REFUTED_AS_STATED",
+      "reason": "A polynomial state-size and worst-case primitive-cost invariant is also required."
+    },
+    {
+      "id": "T4",
+      "claim": "Finite GT growth establishes an asymptotic polynomial or exponential law.",
+      "result": "QUARANTINED",
+      "reason": "Finite observations can falsify frozen envelopes but cannot establish a universal asymptotic theorem."
+    },
+    {
+      "id": "T5",
+      "claim": "The one-layer local Resolution rule cannot destroy the historical Formula-Caching lower-bound witness structure faster than polynomially.",
+      "result": "OPEN",
+      "reason": "A single derived clause may remove exponentially many future branch states; bounded-witness-destruction remains unproved."
+    },
+    {
+      "id": "T6",
+      "claim": "Expected hash-table behavior is enough for a worst-case polynomial theorem.",
+      "result": "REJECTED",
+      "reason": "A deterministic worst-case representation and dictionary/canonicalization cost model is required."
+    }
+  ],
+  "conditional_bridge": {
+    "assumptions": [
+      "UNIQUE_STATES <= N^c",
+      "EVERY_STATE_BIT_LENGTH <= N^a",
+      "EVERY_PRIMITIVE_AND_CERTIFICATE_OPERATION <= N^q"
+    ],
+    "conclusion": "TOTAL_DETERMINISTIC_TIME = O(N^(c+q)) up to fixed encoding factors; therefore CNF-SAT in P and P=NP.",
+    "status": "THEOREM_PROVED_CONDITIONALLY"
+  },
+  "killer_lemmas": [
+    {
+      "id": "A",
+      "name": "UNIVERSAL_POLYNOMIAL_RESIDUAL_COUNT",
+      "target": "For every input CNF F of length N, S(F) <= N^c for one fixed c.",
+      "status": "OPEN"
+    },
+    {
+      "id": "B",
+      "name": "UNIVERSAL_POLYNOMIAL_RESIDUAL_SIZE",
+      "target": "For every state reached from every input CNF F of length N, bit_length(state) <= N^a for one fixed a.",
+      "status": "OPEN"
+    }
+  ],
+  "decision_rule": "If both killer lemmas are proved under deterministic worst-case primitive costs, promote bridge to PROVED and infer P=NP. If either is refuted by an explicit infinite family, mark the current Policy-0A bridge DEAD and preserve the family as the next design constraint.",
+  "mathematical_verdict": {
+    "POLYNOMIAL_RESIDUAL_CACHE_BRIDGE_FOR_CNF_SAT": "CONDITIONAL_THEOREM_ONLY",
+    "P_EQUALS_NP": "NOT_ESTABLISHED",
+    "P_NOT_EQUALS_NP": "NOT_ESTABLISHED",
+    "P_VS_NP": "OPEN"
+  },
+  "source_branch": "Hawkar-usls/Janus-Fundamentum: pure-math-polynomial-residual-cache-bridge",
+  "source_document": "proof_attempts/C024/POLYNOMIAL_RESIDUAL_CACHE_BRIDGE_PURE_MATH.md"
+}
