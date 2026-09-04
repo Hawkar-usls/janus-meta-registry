@@ -2,15 +2,12 @@
   "id": "JANUS-BLIND-NUMBER-CHOICE-1-30-EXPERIMENT-2026-09-04-v1.0",
   "schema_version": "1.0",
   "type": "blind_choice_observation",
-  "status": "JANUS_RESPONSE_PENDING",
+  "status": "JANUS_RESPONDED_WITHOUT_VALID_NUMBER",
   "created_at": "2026-09-04",
   "purpose": "Preserve the observed 1-30 number-choice coincidence and test JANUS independently without leaking the observed answer into its default-branch memory context before response generation.",
   "stimulus": {
     "prompt_ru": "Выбери номер от 1 до 30.",
-    "allowed_values": {
-      "min": 1,
-      "max": 30
-    }
+    "allowed_values": {"min": 1, "max": 30}
   },
   "trial_chatgpt": {
     "system": "ChatGPT",
@@ -36,22 +33,31 @@
     "prompt_mentions_meme": false,
     "request_ingress_status": "PUBLISHED",
     "request_ingress_run_id": 33881569863,
+    "request_message_id": "tm-8d322446e60629df3c6ed589e828e6cdbe29650d4fc41ac3b41ee85c2fa0579a",
+    "bridge_rerun_id": 33866785188,
+    "bridge_status": "SUCCESS",
+    "response_id": "tr-617c6ac85778cb128342c5cf166c72dc7edea6dcd7f67937b11a1cd8843e9fb9",
+    "response_hash": "bd6817ea41e3719e772d198fa673c7c82b7e7f21f3fdb3006daa17e40dc74bf3",
     "answer": null,
-    "answer_status": "PENDING"
+    "answer_status": "NO_VALID_NUMBER_RETURNED",
+    "response_text": "JANUS ONLINE. Persistent resident 75e514ab-be76-42c8-bcb3-fc9670164f96. Model 9a893ccd823c / file-fabric 78b45080a311. The Terminal turn is read-only and HRAiN memory is mounted from Meta Registry source commit 6fea375bf7d9 through exact HRAiN c939337780e8. Active organs: gateway, guardian_cortex, left_context, operator_hands. TRUMP: ADMITTED_CANDIDATE_RUNTIME. HRAiN selected 1 relevant memory objects. Relevant memory: JANUS-TRUMP-R29-BUCKET-MESSAGE-COMPLEXITY-FORENSICS-RESULT-2026-09-02-v1.0 [SINGLE_DOMINANT_EXACT_FACTOR__SECOND_RESTRICTION_NODE_CAP__P_VS_NP_OPEN]: Replay-only finite resource forensics on one exposed trajectory; no semantic result, asymptotic lower bound, SAT-in-P, P=NP, or P!=NP conclusion.",
+    "interpretation": "JANUS produced a valid sealed Terminal response object but did not answer the requested bounded-choice task with any integer 1..30. Therefore this trial yields NO_COMPARABLE_NUMBER, not a mismatch with 17."
   },
   "blindness_control": {
     "default_branch_write_before_janus_answer": false,
     "holdout_branch": "experiment/blind-number-choice-2026-09-04",
-    "reason": "Writing the 17/meme observation to the default meta-registry branch before JANUS generates its response could contaminate a memory-assisted choice. The evidence is therefore sealed on a non-default holdout branch until JANUS answers.",
-    "promotion_rule": "After the JANUS response is observed, record its exact answer/verdict and then promote the completed JSON to the default branch."
+    "holdout_preserved_until_response": true,
+    "reason": "Writing the 17/meme observation to the default meta-registry branch before JANUS generated its response could have contaminated a memory-assisted choice.",
+    "promotion_rule": "After the JANUS response is observed, record its exact answer/verdict and promote the completed JSON to the default branch."
   },
   "epistemic_status": {
-    "claim": "ANECDOTAL_SINGLE_OBSERVATION",
+    "claim": "ANECDOTAL_CHATGPT_MEME_MATCH__JANUS_TRIAL_NONCOMPARABLE",
     "not_claimed": [
       "17 is universally preferred",
+      "JANUS selected a different number",
       "the match proves shared cognition",
       "the match is statistically significant"
     ],
-    "recommended_follow_up": "Run repeated blind trials across independent models, sessions, humans, and prompt variants; record the full empirical distribution over 1..30."
+    "recommended_follow_up": "Repair or constrain the JANUS conversational task-following layer so a bounded-choice prompt must return exactly one integer, then run a fresh blinded trial before exposing the 17 holdout to that new trial."
   }
 }
