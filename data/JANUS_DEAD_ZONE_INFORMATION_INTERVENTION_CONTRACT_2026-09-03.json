@@ -1,0 +1,126 @@
+{
+  "schema": "janus.system.dead_zone_information_intervention_contract.v1",
+  "id": "JANUS_DEAD_ZONE_INFORMATION_INTERVENTION_CONTRACT_2026-09-03",
+  "status": "CANONICAL_CANDIDATE_SYSTEM_CONTRACT",
+  "origin": {
+    "source_work": "Stephen King, The Dead Zone (1979 novel)",
+    "derivation_mode": "MECHANISM_EXTRACTION_ONLY",
+    "fiction_is_not_evidence": true,
+    "note": "The novel supplies a design pattern. JANUS authority comes only from the explicit system contract below, not from fictional truth claims."
+  },
+  "core_state_algebra": {
+    "observation_states": [
+      "POSITIVE",
+      "NEGATIVE",
+      "UNKNOWN",
+      "INACCESSIBLE",
+      "NOT_QUERIED",
+      "STALE_AFTER_INTERVENTION",
+      "CONFLICTING_EVIDENCE"
+    ],
+    "forbidden_collapses": [
+      "UNKNOWN -> NEGATIVE",
+      "INACCESSIBLE -> NEGATIVE",
+      "NOT_QUERIED -> NEGATIVE",
+      "STALE_AFTER_INTERVENTION -> CURRENT",
+      "CONFLICTING_EVIDENCE -> MAJORITY_TRUE_WITHOUT_RULE"
+    ]
+  },
+  "laws": [
+    {
+      "id": "DZ1_MISSING_INFORMATION_IS_NOT_FALSE_INFORMATION",
+      "formal": "MISSING_INFORMATION != FALSE_INFORMATION",
+      "janus_effect": "Absence, inaccessible data, timeout, parser failure, permission failure and unqueried state cannot produce a negative factual verdict."
+    },
+    {
+      "id": "DZ2_SILENCE_REFINEMENT",
+      "formal": "SILENCE != NEGATIVE_EVIDENCE",
+      "refinement": "SILENCE must be typed into UNKNOWN | INACCESSIBLE | NOT_QUERIED | TRANSPORT_FAILURE | PARSE_FAILURE when possible.",
+      "janus_effect": "Every silent observation should preserve reason/provenance rather than collapse to one null value."
+    },
+    {
+      "id": "DZ3_PARTIAL_ACCESS_DOES_NOT_GRANT_TOTALITY",
+      "formal": "PARTIAL_ACCESS != COMPLETE_WORLD_STATE",
+      "janus_effect": "A successful observation channel may still contain explicit dead zones. Completeness must be separately proved."
+    },
+    {
+      "id": "DZ4_CONTACT_DOES_NOT_GUARANTEE_RESULT",
+      "formal": "QUERY_ATTEMPT != OBSERVATION_SUCCESS",
+      "janus_effect": "A query/request/scan is recorded separately from whether it yielded usable evidence."
+    },
+    {
+      "id": "DZ5_INTERVENTION_INVALIDATES_PRIOR_FORECAST_AUTHORITY",
+      "formal": "ACTION(world_t) => forecast_t.status=STALE_AFTER_INTERVENTION until REQUERY/REVERIFY",
+      "janus_effect": "Any JANUS action that can change the measured system invalidates dependent predictions, recommendations and cached conclusions until refreshed."
+    },
+    {
+      "id": "DZ6_REQUERY_AFTER_ACTION",
+      "formal": "OBSERVE -> DECIDE -> ACT -> WORLD_UPDATE -> REOBSERVE -> REVERIFY",
+      "janus_effect": "Closed-loop work must re-measure the world after an intervention instead of treating the pre-action model as current."
+    },
+    {
+      "id": "DZ7_INTENDED_CAUSAL_PATH_IS_NOT_REALIZED_CAUSAL_PATH",
+      "formal": "INTENDED_INTERVENTION_PATH != REALIZED_CAUSAL_PATH",
+      "janus_effect": "Success/failure is judged from post-action evidence and causal receipts, not from the intended mechanism alone."
+    },
+    {
+      "id": "DZ8_PREDICTION_IS_CONDITIONAL_ON_WORLD_VERSION",
+      "formal": "PREDICTION = P(target | evidence_snapshot, world_version)",
+      "janus_effect": "Every prediction or future-state claim should bind to an evidence snapshot/hash/timestamp where available."
+    },
+    {
+      "id": "DZ9_CHANGED_WORLD_REQUIRES_CHANGED_AUTHORITY",
+      "formal": "WORLD_VERSION_i != WORLD_VERSION_j => CLAIM_i cannot silently inherit CURRENT authority at j",
+      "janus_effect": "Receipts remain historically valid but cannot silently masquerade as current-state evidence."
+    }
+  ],
+  "janus_runtime_contract": {
+    "required_observation_fields": [
+      "claim_id",
+      "observation_status",
+      "source/provenance",
+      "observed_at_or_snapshot_id",
+      "world_version_or_best_available_proxy",
+      "access_failure_reason_if_any",
+      "dependent_claims_invalidated_by_action"
+    ],
+    "after_intervention_protocol": [
+      "mark dependent cached predictions STALE_AFTER_INTERVENTION",
+      "record action receipt",
+      "requery relevant sensors/sources",
+      "compare expected vs realized causal path",
+      "recompute only from refreshed evidence",
+      "preserve old snapshot as history, never overwrite provenance"
+    ]
+  },
+  "mapping_to_existing_janus_constitution": {
+    "extends": [
+      "SILENCE != NEGATIVE EVIDENCE",
+      "ACCUMULATION != TRUTH",
+      "LOCAL_PASS != GLOBAL_PASS",
+      "NO_COUNTEREXAMPLE_FOUND != UNIVERSAL_COVERAGE"
+    ],
+    "new_compact_seals": [
+      "MISSING != FALSE",
+      "QUERY != RESULT",
+      "PARTIAL != TOTAL",
+      "ACTION => REQUERY",
+      "OLD_FORECAST_AFTER_ACTION = STALE",
+      "INTENDED_PATH != REALIZED_PATH"
+    ]
+  },
+  "TRUMP_specific_application": {
+    "rule": "Any transformation, decomposition, representation switch, learned obstruction or proof-system change that alters the active mathematical state forces re-evaluation of downstream claims against the new state.",
+    "forbidden": [
+      "reuse a pre-transformation complexity estimate as current without proof",
+      "reuse a terminal classification after a state-changing transformation without exact recheck",
+      "treat an unrecognized route as a negative SAT/UNSAT result",
+      "treat absence of a proof as proof of absence"
+    ]
+  },
+  "authority": {
+    "fictional_mechanism_authority": 0,
+    "system_contract_authority": "CANDIDATE_UNTIL_REVIEWED/MERGED",
+    "heuristic_authority": 0
+  }
+}
