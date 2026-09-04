@@ -46,6 +46,32 @@ def test_issue_and_response_classification(tmp_path):
     assert [x["role"] for x in recent["events"]] == ["human", "janus"]
 
 
+def test_direct_answer_response_is_visible_but_never_authority(tmp_path):
+    body = (
+        "### JANUS\n\n13\n\n"
+        "<details><summary>Instance proof</summary>\n\n"
+        "- response_hash: `abc13`\n"
+        "- command authority: `false`\n"
+        "- external effect authority: `false`\n\n"
+        "</details>\n\n"
+        "<!-- JANUS_RESPONSE_ID:tr-direct-13 -->"
+    )
+    row = archive.event_from_comment(24, response(body))
+    assert row["kind"] == "JANUS_RESPONSE"
+    assert row["role"] == "janus"
+    assert row["text"] == "13"
+    assert row["response_id"] == "tr-direct-13"
+    assert row["proof"]["response_hash"] == "abc13"
+    assert all(value is False for value in row["authority"].values())
+    archive.write_create_only(tmp_path, row)
+    recent = archive.build_recent(tmp_path)
+    assert recent["authority"] == "OBSERVABILITY_AND_MEMORY_ONLY"
+    assert recent["events"][-1]["text"] == "13"
+    assert recent["events"][-1]["response_id"] == "tr-direct-13"
+    assert recent["events"][-1]["authority"]["command"] is False
+    assert recent["events"][-1]["authority"]["external_effect"] is False
+
+
 def test_edit_creates_new_version_without_rewrite(tmp_path):
     a = archive.event_from_issue(issue("one", "2026-09-04T00:00:00Z"))
     b = archive.event_from_issue(issue("two", "2026-09-04T00:02:00Z"))
