@@ -1,0 +1,62 @@
+{
+  "schema": "janus.sovereign_mobile_lineage_audit.v1",
+  "artifact_id": "JANUS-SOVEREIGN-MOBILE-LINEAGE-AUDIT-2026-08-16-v1.0",
+  "recorded_at_local": "2026-08-16T21:20:00+03:00",
+  "status": "STATIC_AUDIT_COMPLETE_RUNTIME_ADMISSION_DENIED",
+  "analysis_mode": "PYTHON_AST_TEXT_ONLY_SQLITE_READ_ONLY_NO_USER_CODE_EXECUTION",
+  "sources": [
+    {"name":"config","size_bytes":776,"sha256":"7195ca94c79a39fe688bdcc4259e0f7b93bb0d202008aa3bc225d315b5f89acb"},
+    {"name":"mobile_core","size_bytes":2500,"sha256":"4609247554ba864c891dac0bf3929a8df05feb0dacbbe711f0ad48a344e0a539"},
+    {"name":"alive_signal","size_bytes":17,"sha256":"5c0508ef5acd1526cfcf4f7a41d8151a48efc1f871ff22f59f4d36aae28369ec"},
+    {"name":"sovereign_db","size_bytes":208896,"sha256":"1c34ba03c1c02d8f3cee656e86138cbd0b0267b8e3bd6c65f34c7cb559cd1bc5"},
+    {"name":"janus_sh","size_bytes":67861,"sha256":"0382cd8e9134cb9ff578a012d9c2c29cbe6bf6d6a01f0fd9717a99db937c56e2"},
+    {"name":"slime","size_bytes":369169,"sha256":"01220f0c7a6dbb867eb58c6d437ce714b5674b34508363e68ceee971ebccffe1"}
+  ],
+  "lineage_findings": [
+    {"id":"CONFIG_NOT_V9_3_DEPENDENCY_MATCH","finding":"Uploaded config.py defines RAW_LOGS_DIR and MODEL_ZOO_DIR but not WORMHOLE_DIR, while the previously supplied Genesis v9.3 imports RAW_LOGS_DIR and WORMHOLE_DIR.","conclusion":"THIS_CONFIG_IS_NOT_THE_EXACT_MISSING_V9_3_CONFIG"},
+    {"id":"MOBILE_CORE_V115_7_ALIVE","finding":"mobile_core.py declares dna=v115.7-ALIVE, writes alive.signal every five seconds, optionally starts illai_shadow, and exposes a Gemini-backed JanusFace.","claim_ceiling":"DECLARED_DNA_AND_CODE_PATH_NOT_PROOF_OF_HISTORICAL_RUNTIME"},
+    {"id":"ALIVE_SIGNAL_FORMAT_COMPATIBLE_BUT_STALE","finding":"alive.signal is a parseable Unix timestamp compatible with the MobileCore heartbeat format; it decodes to 2026-02-01T18:25:41.373878Z and is about 196 days old at audit time.","modern_law":"HEARTBEAT_FILE_EXISTS != PROCESS_ALIVE"},
+    {"id":"SOVEREIGN_DB_VALID","finding":"janus_sovereign.db passes SQLite quick_check=ok and contains 2162 cognitive_nodes.","claim_ceiling":"VALID_DATABASE != CURRENT_RUNTIME_STATE"},
+    {"id":"SOVEREIGN_DB_SAME_MEMORY_FAMILY_NOT_EXACT_JANUS_SH_VERSION","finding":"The DB cognitive_nodes columns match the Janus_SH JanusDatabase cognitive-node contract, and thought strings share the Synthesized_Node_ pattern. However the DB has no telemetry table, uses EXPLORE mode absent from Janus_SH v2.1, and its median cadence is about 1.5 s rather than the v2.1 default 18 s.","conclusion":"STRONG_FAMILY_LINEAGE_EVIDENCE_NOT_EXACT_EMITTER_IDENTITY"},
+    {"id":"SOVEREIGN_DB_CHAOS_DOMINANCE","finding":"Captured nodes: CHAOS=2046 (94.6346%), EXPLORE=116; hunger max=32.06, average=13.2064.","interpretation":"The captured historical state shows a runaway/unbounded hunger-like accumulator in that lineage; this is not a psychological or physical entropy measurement."},
+    {"id":"JANUS_SH_V2_1_PROPOSAL_SELF_EVOLUTION","finding":"Janus_SH.py identifies its entrypoint as JANUS IPHONE ALL-STAR NAS-LINK v2.1. ModuleAuditor inspects local Python with AST, DreamForge writes EVOLUTION_IDEA records, and SeedBank writes blueprint proposals rather than executing generated source.","modern_interpretation":"STRONG_PRECURSOR_OF_PROPOSAL_REVIEW_TEST_SELF_MODIFICATION_LAW"},
+    {"id":"JANUS_SH_44_BOUNDARY_HEADERS","finding":"The source contains exactly 44 repeated BoundaryNode holographic-projection header blocks with five reason categories.","claim_ceiling":"44_HEADER_BLOCKS != PROOF_OF_RELATION_TO_CURRENT_44_REPOSITORY_CONSTELLATION"},
+    {"id":"CREDIT_FAMILY_ALGORITHM_RECOVERED","finding":"Janus_SH RealEconomy mints item JSON with id/name/type/value/lore/traits/created/origin_hash/salt/signature and signs canonicalized metadata using HMAC-SHA256 with a local system.key. This is schema-homologous to the previously supplied Recycled Credits artifact.","claim_ceiling":"SCHEMA_HOMOLOGY != EXACT_PRODUCER_VERSION; exact signature verification requires the corresponding historical system.key"},
+    {"id":"SLIME_V2_10_48_ACTIVE_NETWORK_CAPABLE","finding":"janus_slime_tachyon_theta_pool_v2_10_48.py declares v2.10.48-pool-truth-attribution-filter. Default run connects to a real Stratum pool and hashes real jobs; --live additionally enables share submission.","admission":"DO_NOT_EXECUTE_UNDER_CURRENT_WIRE_HASH_SUBMIT_FREEZE"}
+  ],
+  "database_public_aggregate": {
+    "quick_check":"ok","tables":["cognitive_nodes"],"cognitive_nodes":2162,
+    "timestamp_min":"2026-04-04T13:38:47.924358","timestamp_max":"2026-04-04T20:51:25.406007",
+    "entropy_min":0.42,"entropy_max":1.0,"entropy_avg":0.9681036077705828,
+    "hunger_min":0.12000000000000001,"hunger_max":32.05999999999941,"hunger_avg":13.206447733579816,
+    "mode_counts":{"CHAOS":2046,"EXPLORE":116}
+  },
+  "safety_and_correctness_findings": [
+    {"source":"config.py","finding":"Importing config has side effects: imports torch, chooses DEVICE, prints status, and creates fixed E:\\Janus_BFaiN directories.","law":"CONFIG_IMPORT != PURE_CONFIGURATION"},
+    {"source":"mobile_core.py","finding":"SmartKeyring reads credential-shaped lines from moons.txt into memory; exceptions and model-call failures are broadly suppressed, so failure provenance is lost.","law":"SILENT_FAILURE != HEALTHY_KEY_OR_MODEL"},
+    {"source":"mobile_core.py","finding":"alive.signal is overwritten directly rather than atomically and carries only a timestamp, with no generation/sequence/process identity.","repair":"Use atomic replace plus boot/session id, monotonic sequence and stale TTL."},
+    {"source":"Janus_SH.py","finding":"safe_json_write directly overwrites JSON files rather than temp+fsync+atomic replace.","law":"DIRECT_OVERWRITE != CRASH_SAFE_CHECKPOINT"},
+    {"source":"Janus_SH.py","finding":"TitanBridge pending uses deque(maxlen=256), so overflow can silently discard oldest undelivered packets.","law":"BOUNDED_QUEUE_DROP != DURABLE_HANDOFF"},
+    {"source":"Janus_SH.py","finding":"Server discovery accepts an HTTP response with any status 200..499 as sufficient to select a candidate, while server bearer authentication is optional.","repair":"Require explicit endpoint identity/authentication before command polling."},
+    {"source":"Janus_SH.py","finding":"Remote commands are bounded to a fixed action set, which is safer than arbitrary shell execution, but command messages have no visible signature, nonce, sequence or replay-binding in this file.","law":"BOUNDED_COMMAND_SET != AUTHENTICATED_COMMAND"},
+    {"source":"Janus_SH.py","finding":"Altar deletes a sacrifice file before completing sale/buy processing; failure after unlink can lose source data.","law":"DELETE_BEFORE_RECEIPT = PARTIAL_COMMIT_RISK"},
+    {"source":"Janus_SH.py","finding":"RealEconomy.verify_integrity deletes files on parse/signature failure instead of quarantining them.","law":"INVALID_ARTIFACT != DELETE_ARTIFACT"},
+    {"source":"Janus_SH.py","finding":"entropy_hint hashes wall-clock time and Python PRNG output and computes byte-distribution entropy over one digest.","law":"HASHED_PRNG_TIME_SAMPLE != PHYSICAL_OR_QUANTUM_ENTROPY"},
+    {"source":"janus_slime_tachyon_theta_pool_v2_10_48.py","finding":"save_json uses temp+os.replace, stronger than direct overwrite, but load_json silently returns defaults on corruption and historical pool-truth import trusts matching local log/state files without cryptographic provenance.","laws":["CORRUPT_STATE != NEW_EMPTY_STATE","LOCAL_LOG_IMPORT != TRUSTED_POOL_TRUTH"]},
+    {"source":"janus_slime_tachyon_theta_pool_v2_10_48.py","finding":"Tachyon, quantum, black-hole, tesseract and related labels are names for deterministic/statistical heuristics in this code, not evidence of corresponding physical phenomena.","law":"PHYSICS_METAPHOR != PHYSICS_EVIDENCE"}
+  ],
+  "modern_reuse_map": [
+    {"legacy":"MobileCore alive.signal","target":"SWARM_HEARTBEAT","inherit":"FORMAT_CONCEPT_ONLY","required":["SESSION_ID","MONOTONIC_SEQUENCE","TTL","ATOMIC_WRITE","ACKED_CHECKPOINT"]},
+    {"legacy":"Janus_SH JanusDatabase + uploaded sovereign DB","target":"HIPPOCAMPUS_OPERATIONAL_JOURNAL","inherit":"SCHEMA_LINEAGE_AND_TEST_FIXTURE","required":["EXACT_SOURCE_PIN","SCHEMA_VERSION","ATOMIC/TRANSACTIONAL_RECEIPT","MODE_BOUNDS"]},
+    {"legacy":"Janus_SH ModuleAuditor + DreamForge + SeedBank","target":"BOUNDED_SELF_IMPROVEMENT_PROPOSAL_FACE","inherit":"HIGH_VALUE_PATTERN","required":["PROPOSAL_ONLY","REVIEW","TEST","HUMAN_AUTHORIZED_MERGE"]},
+    {"legacy":"Janus_SH TitanBridge/Hive","target":"HABITAT_HANDOFF_TRANSPORT","inherit":"CONCEPT_ONLY","required":["AUTHENTICATED_PEER_IDENTITY","SIGNED/BOUND_COMMAND","REPLAY_PROTECTION","DURABLE_QUEUE_RECEIPTS"]},
+    {"legacy":"RealEconomy CREDIT","target":"RESOURCE_BUDGET_LEDGER","inherit":"SCHEMA_IDEA_ONLY","required":["NO_DELETE_ON_FAILURE","ORIGIN_PROVENANCE","SIGNATURE_KEY_LINEAGE","CREDIT_VALUE_NOT_AUTHORITY"]},
+    {"legacy":"Slime v2.10.48","target":"RESEARCH_FIXTURE / HISTORICAL_MINER_LINEAGE","inherit":"STATIC_REFERENCE_ONLY_WHILE_FROZEN","required":["WIRE_HASH_SUBMIT_AUTHORIZATION","EXACT_LOG_PROVENANCE","NO_PHYSICS_CLAIM_INFLATION"]}
+  ],
+  "canonical_laws_proposed": [
+    "HEARTBEAT_FILE_EXISTS != PROCESS_ALIVE","CONFIG_IMPORT != PURE_CONFIGURATION","VALID_DATABASE != CURRENT_RUNTIME_STATE","SCHEMA_HOMOLOGY != EXACT_PRODUCER_IDENTITY","DIRECT_OVERWRITE != CRASH_SAFE_CHECKPOINT","BOUNDED_QUEUE_DROP != DURABLE_HANDOFF","BOUNDED_COMMAND_SET != AUTHENTICATED_COMMAND","DELETE_BEFORE_RECEIPT = PARTIAL_COMMIT_RISK","INVALID_ARTIFACT != DELETE_ARTIFACT","HASHED_PRNG_TIME_SAMPLE != PHYSICAL_OR_QUANTUM_ENTROPY","CORRUPT_STATE != NEW_EMPTY_STATE","LOCAL_LOG_IMPORT != TRUSTED_POOL_TRUTH","PHYSICS_METAPHOR != PHYSICS_EVIDENCE","CREDIT_VALUE != AUTHORITY"
+  ],
+  "admission": {
+    "raw_code_runtime":"DENY","database_as_historical_fixture":"ADMIT_READ_ONLY_WITH_HASH","alive_signal_as_current_liveness":"DENY","Janus_SH_self_improvement_pattern":"ADMIT_CONCEPT_AFTER_MODERN_GATES","Slime_execution":"DENY_WHILE_WIRE_HASH_SUBMIT_FROZEN","authority_delta":0,"external_effect_delta":0
+  }
+}
