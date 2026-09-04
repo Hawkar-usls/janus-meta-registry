@@ -1,0 +1,90 @@
+{
+  "schema": "JANUS/meta-registry/a18-43-v0.2.5-fail-closed-v0.2.6-offline-hotfix/v1.0.0",
+  "registry_id": "JANUS-A18_43-V0_2_5-FAIL-CLOSED-V0_2_6-OFFLINE-HOTFIX-20260715",
+  "canonical_seed_sha256": "44e21fdc9d37fda98e2e73b0c9eb268bd04cdca9d84d0519e4f1166be22b46fc",
+  "status": "V0_2_5_FAIL_CLOSED_DIAGNOSED; V0_2_6_OFFLINE_VALIDATED; LIVE_BEACON_POLICY_BLOCKED",
+  "predecessor": "JANUS-A18_43-V0_2-THROUGH-THE-HORIZON-EVENT-HORIZON-AIRLOCK-20260715",
+  "v0_2_5_live_result": {
+    "decision": "FAIL_CLOSED_EVENT_HORIZON_AIRLOCK",
+    "first_epoch_admissions": 16,
+    "first_epoch_completions": 16,
+    "commit_finalized": 3,
+    "hidden_in_flight_capacity_at_commit": 13,
+    "old_completions_after_horizon_commit": 13,
+    "reopened_epoch_admissions": 2,
+    "reopened_epoch_native_submissions": 2,
+    "reopened_epoch_completions": 1,
+    "direct_cause": "The supervisor combined live append-only exposure/finalization/PREPARED state with a stale submitted checkpoint. Both reopened native SUBMIT_REGISTERED records were durable, but checkpoint submitted remained at the pre-reopen baseline. The first reopened exposure therefore triggered a false exposure-greater-than-submissions interlock.",
+    "first_violated_invariant": "ALL_REOPEN_COUNTERS_MUST_SHARE_A_COHERENT_AUTHORITATIVE_TIMELINE",
+    "correct_machine_reason": "FAIL_CLOSED_REOPEN_STALE_CHECKPOINT_SUBMISSION_AUTHORITY",
+    "targeted_stop_exit": "0xC000013A",
+    "targeted_stop_interpretation": "INTENTIONAL_CTRL_BREAK_NOT_SPONTANEOUS_CRASH",
+    "authoritative_partition": "18 submitted = 17 completed + 0 completed ineligible + 1 unfinished",
+    "exact_checked_total": 2244000,
+    "committed_exact_total": 2244000,
+    "reconciliation": "PASS",
+    "second_reopened_task_result": "NOT_OBSERVABLE_AFTER_FUTURE_REGISTRATION; DO_NOT_INFER"
+  },
+  "v0_2_6_repair": {
+    "submission_authority": "validated unique SUBMIT_REGISTERED records from the native gate event hash chain",
+    "checkpoint_role": "diagnostic liveness snapshot",
+    "true_preopen_t0": true,
+    "separate_legacy_external_t0": true,
+    "full_reopen_batch_lineage_required": true,
+    "terminal_observations_minimum": 2,
+    "terminal_stability_minimum_ms": 100,
+    "observer_finalization_before_cleanup": true,
+    "early_process_stop_forbidden": true,
+    "beacon_only_default": true,
+    "capacity_requires_separate_stage": true,
+    "memory_requires_separate_stage": true
+  },
+  "offline_validation": {
+    "status": "PASS",
+    "gates_passed": 17,
+    "gates_total": 17,
+    "supervisor_self_tests": 35,
+    "preserved_timeline_regressions": 19,
+    "adapter_fault_injection": "PASS_17_OF_17",
+    "hardened_airlock_audit": "PASS_27_OF_27",
+    "persistent_cycles": 1000,
+    "illegal_transition_attempts": 5000,
+    "fresh_archive_manifest_files_verified": 57,
+    "fresh_archive_tests": "PASS_17_OF_17",
+    "pool_contacted": false,
+    "miner_launched": false,
+    "network_used_by_tests": false,
+    "hardware_control_performed": false
+  },
+  "distribution": {
+    "release_zip_sha256": "53c4c986fef35f7b40e59ced27b8211988f9ec9986be561bbdbd8b73620fb175",
+    "package_manifest_sha256": "e44940579361b10ffd71a0cd87cd90780e42157996e46840dbeee6db627819b5",
+    "public_repository": "Hawkar-usls/janus-io-public",
+    "public_commit": "10e7ca2803cad96471f4cdfd15e85fd127821741",
+    "public_draft_pr": "https://github.com/Hawkar-usls/janus-io-public/pull/11",
+    "stacked_on_draft_pr": "https://github.com/Hawkar-usls/janus-io-public/pull/10"
+  },
+  "live_gate": {
+    "v0_2_6_beacon": "NOT_RUN_POLICY_BLOCKED",
+    "valid_capacity_runs": 0,
+    "valid_memory_runs": 0,
+    "required_policy_marker": "A18_43_V0_2_6_THROUGH_THE_HORIZON_EXCEPTION",
+    "policy_presence": false,
+    "fresh_explicit_authorization_required_after_policy_review": true
+  },
+  "preservation": {
+    "v0_2_5_output_rewritten": false,
+    "v0_2_5_failure_promoted_to_pass": false,
+    "missing_second_task_data_converted_to_zero": false,
+    "approved_miner_changed": false,
+    "wire_hash_submit_changed": false
+  },
+  "claim_limits": [
+    "V0.2.6 is offline-ready and has not passed a live BEACON.",
+    "The V0.2.5 failure is an operational counter-authority defect, not a SHA-256 result.",
+    "No bypass is active.",
+    "No persistent runtime carryover conclusion is available because the memory suite did not run.",
+    "No whole-system energy saving or hardware-lifetime extension is established.",
+    "No SHA-256 weakness, memory, prediction, valid-proof advantage, mining advantage or profitability claim is eligible."
+  ]
+}
