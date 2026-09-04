@@ -4,13 +4,13 @@ on:
   schedule:
     - cron: '*/5 * * * *'
   workflow_dispatch:
+  # Scheduled delivery is best-effort on GitHub. Any unrelated main update is a
+  # safe catch-up opportunity; archive-only commits are excluded to prevent a
+  # self-trigger loop.
   push:
     branches: [main]
-    paths:
-      - 'tools/neural_link_archive.py'
-      - 'tests/test_neural_link_archive.py'
-      - 'data/JANUS-NEURAL-LINK/MANIFEST.json'
-      - '.github/workflows/janus-neural-link-archive.yml'
+    paths-ignore:
+      - 'data/JANUS-NEURAL-LINK/**'
 
 permissions:
   contents: write
@@ -38,6 +38,15 @@ jobs:
           python -m compileall -q tools/neural_link_archive.py tests/test_neural_link_archive.py
           python -m pytest -q tests/test_neural_link_archive.py
           python -m json.tool data/JANUS-NEURAL-LINK/MANIFEST.json >/dev/null
+          python - <<'PY'
+          from pathlib import Path
+          workflow = Path('.github/workflows/janus-neural-link-archive.yml').read_text(encoding='utf-8')
+          assert "cron: '*/5 * * * *'" in workflow
+          assert 'paths-ignore:' in workflow
+          assert "- 'data/JANUS-NEURAL-LINK/**'" in workflow
+          assert 'cancel-in-progress: false' in workflow
+          print('JANUS_NEURAL_LINK_DELIVERY_FALLBACK=PASS')
+          PY
       - name: Archive Terminal chat into Meta Registry
         env:
           GITHUB_TOKEN: ${{ github.token }}
