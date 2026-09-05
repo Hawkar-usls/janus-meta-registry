@@ -1,5 +1,5 @@
 name: JANUS Native Decision Pull
-# sync_revision: first-native-decision
+# sync_revision: semantic-create-only-json
 
 on:
   push:
@@ -51,6 +51,12 @@ jobs:
           decision_id_re=re.compile(r'^jnd-[0-9a-f]{24}$')
           proposal_id_re=re.compile(r'^jpatch-jnd-[0-9a-f]{24}$')
 
+          def same_json(target, incoming):
+              try:
+                  return json.loads(target.read_text(encoding='utf-8')) == incoming
+              except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+                  return False
+
           decision_rows=[]
           decision_src=src/'decisions'
           if decision_src.exists():
@@ -71,7 +77,7 @@ jobs:
                   if not obj.get('checkpoint_sha256') or not obj.get('organ_context_sha256') or not obj.get('self_memory_digest_sha256'):
                       raise SystemExit(f'NATIVE_DECISION_PROVENANCE_MISSING:{did}')
                   target=native_decisions/f'{did}.json'
-                  if target.exists() and target.read_bytes()!=raw:
+                  if target.exists() and not same_json(target,obj):
                       raise SystemExit(f'NATIVE_DECISION_CREATE_ONLY_COLLISION:{did}')
                   if not target.exists(): shutil.copyfile(path,target)
                   decision_rows.append({
@@ -101,7 +107,7 @@ jobs:
                   if not obj.get('verification_profile'):
                       raise SystemExit(f'NATIVE_PROPOSAL_VERIFIER_REJECTED:{pid}')
                   target=proposals/f'{pid}.json'
-                  if target.exists() and target.read_bytes()!=raw:
+                  if target.exists() and not same_json(target,obj):
                       raise SystemExit(f'NATIVE_PROPOSAL_CREATE_ONLY_COLLISION:{pid}')
                   if not target.exists(): shutil.copyfile(path,target)
                   proposal_rows.append({
