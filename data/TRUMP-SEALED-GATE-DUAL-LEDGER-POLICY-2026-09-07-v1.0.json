@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0",
+  "policy_id": "TRUMP_SEALED_GATE_DUAL_LEDGER_V1",
+  "effective_date": "2026-09-07",
+  "project": "JANUS/TRUMP",
+  "source_repository": "Hawkar-usls/Janus-Fundamentum",
+  "mirror_repository": "Hawkar-usls/janus-meta-registry",
+  "rule": "Every sealed TRUMP gate is provenance-complete only after its immutable Janus-Fundamentum receipt/journal record is mirrored into janus-meta-registry.",
+  "required_sequence": [
+    "PREREGISTRATION_FROZEN",
+    "IMPLEMENTATION_COMMITTED",
+    "FAIL_CLOSED_RUN_COMPLETED_OR_EXPLICIT_RESOURCE_RECEIPT",
+    "IMMUTABLE_RESULT_RECEIPT_SEALED",
+    "FUNDAMENTUM_CHAIN_JOURNAL_UPDATED",
+    "META_REGISTRY_MIRROR_UPDATED"
+  ],
+  "required_mirror_fields": [
+    "gate",
+    "parent_gate",
+    "status",
+    "scientific_verdict",
+    "source_branch",
+    "preregistration_commit",
+    "implementation_commit",
+    "run_head_commit",
+    "run_id",
+    "artifact",
+    "receipt_commit",
+    "journal_addendum_commit",
+    "key_results",
+    "recommended_next_gate",
+    "firewall"
+  ],
+  "failure_state_when_source_is_sealed_but_mirror_is_not": "META_REGISTRY_SYNC_PENDING",
+  "discipline": {
+    "next_gate_should_not_be_treated_as_provenance_complete_until_mirror_sync": true,
+    "do_not_invent_missing_provenance": true,
+    "missing_historical_fields_must_be_marked_pending_or_omitted": true,
+    "counterexamples_and_resource_limits_are_first_class_results": true,
+    "finite_success_is_not_universal_proof": true
+  },
+  "firewall": {
+    "P_VS_NP": "OPEN",
+    "SAT_IN_P": "NOT_PROVED",
+    "TRUMP_finished": false
+  }
+}
