@@ -45,6 +45,7 @@ jobs:
 
       - name: Build fresh derivative-clean EYE R1 index
         run: |
+          rm -rf EYE/generated EYE/r2/generated
           GITHUB_SHA="$(git rev-parse HEAD)" python EYE/training/train_eye_registry.py \
             --root . \
             --output-dir EYE/generated \
