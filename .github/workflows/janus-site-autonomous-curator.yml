@@ -28,7 +28,7 @@ on:
 
 concurrency:
   group: janus-autonomous-site-curator
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -136,27 +136,41 @@ jobs:
         if: github.event_name != 'pull_request'
         id: refresh
         run: |
-          git fetch origin main
-          git reset --hard origin/main
-          python research/site/janus_site_curator.py --output assets/site-feed.json
-          python research/site/janus_hrain_registry_export.py --output assets/hrain-registry-index.json
-          python -m json.tool assets/site-feed.json >/dev/null
-          python -m json.tool assets/hrain-registry-index.json >/dev/null
-
-          if [ -z "$(git status --porcelain -- assets/site-feed.json assets/hrain-registry-index.json)" ]; then
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-            echo "JANUS_CURATOR_FEED_CHANGE=NONE"
-            exit 0
-          fi
-
+          set -euo pipefail
           git config user.name "JANUS Site Curator"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add assets/site-feed.json assets/hrain-registry-index.json
-          git commit -m "chore(site): JANUS curator refresh"
-          git push origin HEAD:main
-          echo "changed=true" >> "$GITHUB_OUTPUT"
-          echo "commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
-          echo "JANUS_CURATOR_FEED_CHANGE=COMMITTED"
+
+          for attempt in 1 2 3; do
+            echo "JANUS_CURATOR_PUBLISH_ATTEMPT=${attempt}"
+            git fetch origin main
+            git reset --hard origin/main
+
+            python research/site/janus_site_curator.py --output assets/site-feed.json
+            python research/site/janus_hrain_registry_export.py --output assets/hrain-registry-index.json
+            python -m json.tool assets/site-feed.json >/dev/null
+            python -m json.tool assets/hrain-registry-index.json >/dev/null
+
+            if [ -z "$(git status --porcelain -- assets/site-feed.json assets/hrain-registry-index.json)" ]; then
+              echo "changed=false" >> "$GITHUB_OUTPUT"
+              echo "JANUS_CURATOR_FEED_CHANGE=NONE"
+              exit 0
+            fi
+
+            git add assets/site-feed.json assets/hrain-registry-index.json
+            git commit -m "chore(site): JANUS curator refresh"
+
+            if git push origin HEAD:main; then
+              echo "changed=true" >> "$GITHUB_OUTPUT"
+              echo "commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+              echo "JANUS_CURATOR_FEED_CHANGE=COMMITTED"
+              exit 0
+            fi
+
+            echo "JANUS_CURATOR_PUSH_RACE=RETRY"
+          done
+
+          echo "JANUS_CURATOR_PUSH_RACE=EXHAUSTED" >&2
+          exit 1
 
       - name: Request Pages rebuild for curator commit
         if: github.event_name != 'pull_request' && steps.refresh.outputs.changed == 'true'
