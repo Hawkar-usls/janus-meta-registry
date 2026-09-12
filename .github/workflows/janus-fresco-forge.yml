@@ -50,13 +50,14 @@ jobs:
         run: |
           set -euo pipefail
           python -m pip install --upgrade pip
-          python -m pip install --index-url https://download.pytorch.org/whl/cpu torch
+          python -m pip install --index-url https://download.pytorch.org/whl/cpu torch torchvision
           python -m pip install --upgrade diffusers transformers accelerate safetensors pillow
 
       - name: Compile Fresco Forge
         run: |
           python -m py_compile modules/fresco_forge/forge.py
           python -m py_compile modules/fresco_forge/compat_runner.py
+          python -m py_compile modules/fresco_forge/v3_runner.py
 
       - name: Resolve CPU-safe generation budget
         id: budget
@@ -81,20 +82,25 @@ jobs:
           echo "max_images=$MAX_IMAGES" >> "$GITHUB_OUTPUT"
 
       - name: Discover next unique JSON record
+        env:
+          FRESCO_GUIDANCE_SCALE: '7.5'
+          FRESCO_MAX_PROMPT_CHUNKS: '6'
         run: |
-          python modules/fresco_forge/compat_runner.py \
+          python modules/fresco_forge/v3_runner.py \
             --max-images '${{ steps.budget.outputs.max_images }}' \
             --dry-run
 
-      - name: Generate fresco locally with Diffusers
+      - name: Generate fresco locally with full-JSON semantic projection
         env:
           FRESCO_MODEL: dreamlike-art/dreamlike-photoreal-2.0
           FRESCO_STEPS: '20'
           FRESCO_WIDTH: '512'
           FRESCO_HEIGHT: '512'
+          FRESCO_GUIDANCE_SCALE: '7.5'
+          FRESCO_MAX_PROMPT_CHUNKS: '6'
           TOKENIZERS_PARALLELISM: 'false'
         run: |
-          python modules/fresco_forge/compat_runner.py \
+          python modules/fresco_forge/v3_runner.py \
             --max-images '${{ steps.budget.outputs.max_images }}'
 
       - name: Commit generated fresco and receipt
