@@ -1,0 +1,121 @@
+name: JANUS Fresco Forge
+
+on:
+  workflow_dispatch:
+    inputs:
+      max_images:
+        description: 'Maximum number of new unique JSON records to render in this run'
+        required: false
+        default: '1'
+  push:
+    branches: [ main ]
+    paths:
+      - 'registry/**/*.json'
+  schedule:
+    - cron: '17 */6 * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: janus-fresco-forge-main
+  cancel-in-progress: false
+
+jobs:
+  forge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout meta-registry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Fresco Forge dependencies
+        run: python -m pip install --upgrade 'huggingface_hub>=0.34,<2' pillow
+
+      - name: Compile Fresco Forge
+        run: python -m py_compile modules/fresco_forge/forge.py
+
+      - name: Resolve generation budget
+        id: budget
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            MAX_IMAGES="${{ inputs.max_images }}"
+          elif [ "${{ github.event_name }}" = "schedule" ]; then
+            MAX_IMAGES="3"
+          else
+            MAX_IMAGES="1"
+          fi
+          if ! [[ "$MAX_IMAGES" =~ ^[1-9][0-9]*$ ]]; then
+            echo "Invalid max_images: $MAX_IMAGES"
+            exit 2
+          fi
+          echo "max_images=$MAX_IMAGES" >> "$GITHUB_OUTPUT"
+
+      - name: Discover new unique JSON records
+        run: |
+          python modules/fresco_forge/forge.py \
+            --max-images '${{ steps.budget.outputs.max_images }}' \
+            --dry-run
+
+      - name: Generate frescoes through Hugging Face
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          FRESCO_MODEL: black-forest-labs/FLUX.1-schnell
+          FRESCO_PROVIDER: auto
+        run: |
+          python modules/fresco_forge/forge.py \
+            --max-images '${{ steps.budget.outputs.max_images }}'
+
+      - name: Commit generated frescoes and receipts
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'JANUS Fresco Forge'
+          git config user.email 'actions@users.noreply.github.com'
+
+          git add artifacts/janus-fresco-forge/
+          if git diff --cached --quiet; then
+            echo 'FRESCO_FORGE_NO_NEW_OUTPUT'
+            exit 0
+          fi
+
+          git commit -m '[fresco-forge] Render new canonical JSON frescoes'
+
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            if ! git rebase origin/main; then
+              git rebase --abort || true
+              echo 'FRESCO_FORGE_REBASE_CONFLICT'
+              exit 1
+            fi
+            if git push origin HEAD:main; then
+              echo 'FRESCO_FORGE_PUSH=SUCCESS'
+              exit 0
+            fi
+            echo "FRESCO_FORGE_PUSH_RACE_RETRY=$attempt"
+            sleep $((attempt * 2))
+          done
+
+          echo 'FRESCO_FORGE_PUSH=FAILED_AFTER_RETRIES'
+          exit 1
+
+      - name: Upload generated run artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-fresco-forge-${{ github.run_id }}
+          path: |
+            artifacts/janus-fresco-forge/images/*.png
+            artifacts/janus-fresco-forge/receipts/*.json
+            artifacts/janus-fresco-forge/ledger.jsonl
+          if-no-files-found: ignore
