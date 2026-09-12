@@ -186,6 +186,7 @@ def append_ledger(ledger_path: Path, payload: dict) -> None:
 def generate_one(
     client: InferenceClient,
     candidate: Candidate,
+    repo_root: Path,
     output_root: Path,
     model: str,
     provider: str,
@@ -222,7 +223,8 @@ def generate_one(
         "prompt_sha256": prompt_sha256,
         "model": model,
         "provider": provider,
-        "image_path": image_path.as_posix(),
+        "image_path": image_path.relative_to(repo_root).as_posix(),
+        "receipt_path": receipt_path.relative_to(repo_root).as_posix(),
         "image_sha256": image_sha256,
     }
     write_json_atomic(receipt_path, receipt)
@@ -294,6 +296,7 @@ def main() -> int:
         receipt = generate_one(
             client=client,
             candidate=candidate,
+            repo_root=repo_root,
             output_root=output_root,
             model=args.model,
             provider=args.provider,
