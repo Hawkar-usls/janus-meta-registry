@@ -11,6 +11,8 @@ on:
     branches: [ main ]
     paths:
       - 'registry/**/*.json'
+      - 'modules/fresco_forge/**'
+      - '.github/workflows/janus-fresco-forge.yml'
   schedule:
     - cron: '17 */6 * * *'
 
@@ -52,7 +54,9 @@ jobs:
           python -m pip install --upgrade diffusers transformers accelerate safetensors pillow
 
       - name: Compile Fresco Forge
-        run: python -m py_compile modules/fresco_forge/forge.py
+        run: |
+          python -m py_compile modules/fresco_forge/forge.py
+          python -m py_compile modules/fresco_forge/compat_runner.py
 
       - name: Resolve CPU-safe generation budget
         id: budget
@@ -78,7 +82,7 @@ jobs:
 
       - name: Discover next unique JSON record
         run: |
-          python modules/fresco_forge/forge.py \
+          python modules/fresco_forge/compat_runner.py \
             --max-images '${{ steps.budget.outputs.max_images }}' \
             --dry-run
 
@@ -90,7 +94,7 @@ jobs:
           FRESCO_HEIGHT: '512'
           TOKENIZERS_PARALLELISM: 'false'
         run: |
-          python modules/fresco_forge/forge.py \
+          python modules/fresco_forge/compat_runner.py \
             --max-images '${{ steps.budget.outputs.max_images }}'
 
       - name: Commit generated fresco and receipt
