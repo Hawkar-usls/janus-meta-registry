@@ -2,8 +2,9 @@
 """JANUS Fresco Forge.
 
 Turns canonical JSON records from the JANUS meta-registry into fresco images
-through Hugging Face Inference Providers. Dedupe is content-addressed: the
-SHA-256 of canonical JSON is the identity of a generation request.
+with a local Diffusers Stable Diffusion pipeline. No hosted inference token is
+required. Dedupe is content-addressed: SHA-256(canonical JSON) is the identity
+of a generation request.
 """
 
 from __future__ import annotations
@@ -12,41 +13,47 @@ import argparse
 import hashlib
 import json
 import os
+import random
 import re
 import sys
+import time
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterable
 
-from huggingface_hub import InferenceClient
+import torch
+from diffusers import DPMSolverMultistepScheduler, StableDiffusionPipeline
 
 
-GENERATOR_VERSION = "JANUS-FRESCO-FORGE-v1.0"
-DEFAULT_MODEL = "black-forest-labs/FLUX.1-schnell"
-DEFAULT_PROVIDER = "auto"
+GENERATOR_VERSION = "JANUS-FRESCO-FORGE-v2.0-local-diffusers"
+DEFAULT_MODEL = "dreamlike-art/dreamlike-photoreal-2.0"
 DEFAULT_INPUT_ROOTS = ("registry",)
 DEFAULT_OUTPUT_ROOT = "artifacts/janus-fresco-forge"
+DEFAULT_STEPS = 20
+DEFAULT_WIDTH = 512
+DEFAULT_HEIGHT = 512
 
-FRESCO_PREFIX = """Create one museum-grade narrative wall fresco from the JSON record below.
-The JSON is the semantic source of truth: visually translate its entities, events,
-relationships, tensions, symbols, emotions, chronology, and contrasts. Preserve the
-meaning rather than drawing computer interfaces or literal JSON text.
+FRESCO_PREFIX = """Museum-grade narrative wall fresco based on the JSON source below.
+Translate the record into a single coherent visual scene. Use the JSON as the semantic
+source of truth: depict its entities, events, relationships, symbols, emotions,
+chronology, tensions and contrasts rather than drawing software interfaces or text.
 
 Visual language: monumental ancient/medieval fresco, aged lime plaster, mineral pigments,
-subtle cracks and abrasion, hand-painted figures, layered symbolic storytelling,
-architectural framing, solemn cinematic composition, dense small details worth examining,
-strong readable human emotion, natural anatomy, historically plausible material texture.
-No modern UI, no captions, no visible JSON, no logos, no watermark."""
+subtle cracks and abrasion, hand-painted figures, architectural framing, solemn cinematic
+composition, layered symbolic storytelling, dense meaningful details, expressive tears
+and faces where the source implies grief or compassion, natural anatomy, believable hands,
+historical material texture. No modern UI, no captions, no visible JSON, no logos."""
 
-FRESCO_SUFFIX = """The final image must feel like a surviving historical fresco that encodes
-the full conceptual story of the source record in visual form. Prefer meaningful symbolic
-detail over decorative clutter."""
+FRESCO_SUFFIX = """The final image should feel like a surviving historical fresco that
+encodes the conceptual story of the source. Prefer meaningful symbolic detail over
+decorative clutter."""
 
 NEGATIVE_PROMPT = (
     "modern user interface, screenshot, JSON text, caption, watermark, logo, "
-    "glossy 3d render, plastic skin, extra limbs, extra fingers, duplicated people, "
-    "deformed anatomy, malformed hands, illegible typography"
+    "glossy 3d render, plastic skin, extra limbs, extra legs, extra fingers, "
+    "duplicated people, deformed anatomy, malformed hands, illegible typography, "
+    "nude, naked, explicit sexual content"
 )
 
 
@@ -79,13 +86,65 @@ def canonicalize_json(path: Path) -> tuple[str, str]:
     return canonical, digest
 
 
-def build_prompt(canonical_json: str) -> str:
-    return (
+def _scalar_text(value: object) -> str | None:
+    if isinstance(value, str):
+        value = " ".join(value.split())
+        return value if value else None
+    if isinstance(value, bool):
+        return "true" if value else "false"
+    if isinstance(value, (int, float)):
+        return str(value)
+    return None
+
+
+def visual_json_projection(canonical_json: str, max_chars: int = 3200) -> str:
+    """Build a deterministic JSON-shaped visual projection.
+
+    SD 1.5 has a short text encoder context. Feeding a huge registry record verbatim
+    causes the tail to be silently discarded. We therefore keep the JSON-as-prompt
+    contract while extracting scalar-bearing branches into a compact JSON object.
+    The source hash and receipt still refer to the complete canonical JSON.
+    """
+    obj = json.loads(canonical_json)
+    rows: list[tuple[str, str]] = []
+
+    def walk(node: object, path: str) -> None:
+        scalar = _scalar_text(node)
+        if scalar is not None:
+            rows.append((path or "value", scalar))
+            return
+        if isinstance(node, dict):
+            for key, value in node.items():
+                child = f"{path}.{key}" if path else str(key)
+                walk(value, child)
+        elif isinstance(node, list):
+            for idx, value in enumerate(node):
+                walk(value, f"{path}[{idx}]")
+
+    walk(obj, "")
+    projection: dict[str, str] = {}
+    used = 2
+    for path, value in rows:
+        if len(value) > 360:
+            value = value[:357] + "..."
+        prospective = len(path) + len(value) + 8
+        if used + prospective > max_chars:
+            break
+        projection[path] = value
+        used += prospective
+
+    return json.dumps(projection, ensure_ascii=False, separators=(",", ":"))
+
+
+def build_prompt(canonical_json: str) -> tuple[str, str]:
+    projected_json = visual_json_projection(canonical_json)
+    prompt = (
         f"{FRESCO_PREFIX}\n\n"
-        "SOURCE JSON (canonical form):\n"
-        f"{canonical_json}\n\n"
+        "SOURCE JSON VISUAL PROJECTION:\n"
+        f"{projected_json}\n\n"
         f"{FRESCO_SUFFIX}"
     )
+    return prompt, projected_json
 
 
 def safe_stem(path: Path, limit: int = 72) -> str:
@@ -161,7 +220,6 @@ def collect_candidates(
             print(f"SKIP_INVALID_JSON {path}: {exc}", file=sys.stderr)
             continue
 
-        # Content-addressed dedupe also suppresses renamed/copied duplicates in one run.
         if digest in seen_hashes:
             continue
         seen_hashes.add(digest)
@@ -183,16 +241,40 @@ def append_ledger(ledger_path: Path, payload: dict) -> None:
         fh.write(json.dumps(payload, ensure_ascii=False, sort_keys=True) + "\n")
 
 
+def create_pipeline(model: str) -> StableDiffusionPipeline:
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    dtype = torch.float16 if device == "cuda" else torch.float32
+    print(f"FRESCO_FORGE_DEVICE={device}")
+    print(f"FRESCO_FORGE_MODEL={model}")
+
+    pipe = StableDiffusionPipeline.from_pretrained(
+        model,
+        torch_dtype=dtype,
+    )
+    pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
+    pipe = pipe.to(device)
+
+    if device == "cpu":
+        pipe.enable_attention_slicing()
+        pipe.enable_vae_slicing()
+
+    return pipe
+
+
 def generate_one(
-    client: InferenceClient,
+    pipe: StableDiffusionPipeline,
     candidate: Candidate,
     repo_root: Path,
     output_root: Path,
     model: str,
-    provider: str,
+    steps: int,
+    width: int,
+    height: int,
+    seed: int,
 ) -> dict:
-    prompt = build_prompt(candidate.canonical_json)
+    prompt, projected_json = build_prompt(candidate.canonical_json)
     prompt_sha256 = sha256_bytes(prompt.encode("utf-8"))
+    projection_sha256 = sha256_bytes(projected_json.encode("utf-8"))
     basename = f"{candidate.source_sha256[:16]}--{safe_stem(candidate.path)}"
     image_path = output_root / "images" / f"{basename}.png"
     receipt_path = output_root / "receipts" / f"{basename}.json"
@@ -200,29 +282,45 @@ def generate_one(
     image_path.parent.mkdir(parents=True, exist_ok=True)
     receipt_path.parent.mkdir(parents=True, exist_ok=True)
 
-    image = client.text_to_image(
-        prompt,
-        model=model,
-        negative_prompt=NEGATIVE_PROMPT,
-    )
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    generator = torch.Generator(device=device).manual_seed(seed)
+    start = time.monotonic()
+    with torch.inference_mode():
+        image = pipe(
+            prompt=prompt,
+            negative_prompt=NEGATIVE_PROMPT,
+            num_inference_steps=steps,
+            width=width,
+            height=height,
+            generator=generator,
+        ).images[0]
+    elapsed_seconds = round(time.monotonic() - start, 3)
 
     tmp_image = image_path.with_suffix(".tmp.png")
     image.save(tmp_image, format="PNG")
     tmp_image.replace(image_path)
     image_sha256 = sha256_bytes(image_path.read_bytes())
 
-    generated_at = utc_now()
     receipt = {
-        "schema": "janus.fresco_forge.receipt.v1",
+        "schema": "janus.fresco_forge.receipt.v2",
         "generator": GENERATOR_VERSION,
         "status": "generated",
-        "generated_at": generated_at,
+        "generated_at": utc_now(),
         "source_path": candidate.relpath,
         "source_sha256": candidate.source_sha256,
         "canonical_json_bytes": len(candidate.canonical_json.encode("utf-8")),
+        "visual_projection_sha256": projection_sha256,
+        "visual_projection_bytes": len(projected_json.encode("utf-8")),
         "prompt_sha256": prompt_sha256,
         "model": model,
-        "provider": provider,
+        "backend": "local_diffusers",
+        "device": device,
+        "scheduler": pipe.scheduler.__class__.__name__,
+        "steps": steps,
+        "width": width,
+        "height": height,
+        "seed": seed,
+        "elapsed_seconds": elapsed_seconds,
         "image_path": image_path.relative_to(repo_root).as_posix(),
         "receipt_path": receipt_path.relative_to(repo_root).as_posix(),
         "image_sha256": image_sha256,
@@ -238,9 +336,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--source", action="append", help="Generate only this repository-relative JSON; repeatable")
     parser.add_argument("--output-root", default=DEFAULT_OUTPUT_ROOT)
     parser.add_argument("--model", default=os.getenv("FRESCO_MODEL", DEFAULT_MODEL))
-    parser.add_argument("--provider", default=os.getenv("FRESCO_PROVIDER", DEFAULT_PROVIDER))
     parser.add_argument("--max-images", type=int, default=int(os.getenv("FRESCO_MAX_IMAGES", "1")))
-    parser.add_argument("--dry-run", action="store_true", help="Discover/dedupe only; never call Hugging Face")
+    parser.add_argument("--steps", type=int, default=int(os.getenv("FRESCO_STEPS", str(DEFAULT_STEPS))))
+    parser.add_argument("--width", type=int, default=int(os.getenv("FRESCO_WIDTH", str(DEFAULT_WIDTH))))
+    parser.add_argument("--height", type=int, default=int(os.getenv("FRESCO_HEIGHT", str(DEFAULT_HEIGHT))))
+    parser.add_argument("--seed", type=int, default=None)
+    parser.add_argument("--dry-run", action="store_true", help="Discover/dedupe only; do not load the model")
     return parser.parse_args()
 
 
@@ -248,6 +349,10 @@ def main() -> int:
     args = parse_args()
     if args.max_images < 1:
         raise SystemExit("--max-images must be >= 1")
+    if args.steps < 1:
+        raise SystemExit("--steps must be >= 1")
+    if args.width % 8 or args.height % 8:
+        raise SystemExit("--width and --height must be divisible by 8")
 
     auto_root = Path(__file__).resolve().parents[2]
     repo_root = Path(args.repo_root).resolve() if args.repo_root else auto_root
@@ -285,25 +390,30 @@ def main() -> int:
     if args.dry_run or not selected:
         return 0
 
-    token = os.getenv("HF_TOKEN")
-    if not token:
-        raise SystemExit("HF_TOKEN is required for generation; add it as a GitHub Actions secret")
-
-    client = InferenceClient(provider=args.provider, api_key=token)
+    pipe = create_pipeline(args.model)
     generated = 0
-    for candidate in selected:
-        print(f"GENERATING {candidate.relpath} sha256={candidate.source_sha256}")
+    for idx, candidate in enumerate(selected):
+        seed = args.seed if args.seed is not None else random.SystemRandom().randint(0, 2**32 - 1)
+        if args.seed is not None:
+            seed += idx
+        print(f"GENERATING {candidate.relpath} sha256={candidate.source_sha256} seed={seed}")
         receipt = generate_one(
-            client=client,
+            pipe=pipe,
             candidate=candidate,
             repo_root=repo_root,
             output_root=output_root,
             model=args.model,
-            provider=args.provider,
+            steps=args.steps,
+            width=args.width,
+            height=args.height,
+            seed=seed,
         )
         append_ledger(ledger_path, receipt)
         generated += 1
-        print(f"GENERATED {receipt['image_path']} sha256={receipt['image_sha256']}")
+        print(
+            f"GENERATED {receipt['image_path']} "
+            f"sha256={receipt['image_sha256']} elapsed={receipt['elapsed_seconds']}s"
+        )
 
     print(f"FRESCO_FORGE_GENERATED={generated}")
     return 0
