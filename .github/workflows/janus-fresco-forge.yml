@@ -60,6 +60,7 @@ jobs:
           python -m py_compile modules/fresco_forge/v3_runner.py
           python -m py_compile modules/fresco_forge/v4_runner.py
           python -m py_compile modules/fresco_forge/v4_1_runner.py
+          python -m py_compile modules/fresco_forge/v4_1_1_runner.py
 
       - name: Resolve CPU-safe generation budget
         id: budget
@@ -74,7 +75,6 @@ jobs:
             echo "Invalid max_images: $REQUESTED"
             exit 2
           fi
-
           MAX_IMAGES=1
           if [ "$REQUESTED" -gt 1 ]; then
             echo "Requested $REQUESTED images; CPU-safe cap is 1 image per run."
@@ -86,11 +86,11 @@ jobs:
           FRESCO_GUIDANCE_SCALE: '8.0'
           FRESCO_MAX_PROMPT_CHUNKS: '6'
         run: |
-          python modules/fresco_forge/v4_1_runner.py \
+          python modules/fresco_forge/v4_1_1_runner.py \
             --max-images '${{ steps.budget.outputs.max_images }}' \
             --dry-run
 
-      - name: Generate fresco locally with v4.1 semantic-role firewall
+      - name: Generate fresco locally with v4.1.1 semantic-role firewall
         env:
           FRESCO_MODEL: dreamlike-art/dreamlike-photoreal-2.0
           FRESCO_STEPS: '20'
@@ -100,7 +100,7 @@ jobs:
           FRESCO_MAX_PROMPT_CHUNKS: '6'
           TOKENIZERS_PARALLELISM: 'false'
         run: |
-          python modules/fresco_forge/v4_1_runner.py \
+          python modules/fresco_forge/v4_1_1_runner.py \
             --max-images '${{ steps.budget.outputs.max_images }}'
 
       - name: Commit generated fresco and receipt
@@ -109,15 +109,12 @@ jobs:
           set -euo pipefail
           git config user.name 'JANUS Fresco Forge'
           git config user.email 'actions@users.noreply.github.com'
-
           git add artifacts/janus-fresco-forge/
           if git diff --cached --quiet; then
             echo 'FRESCO_FORGE_NO_NEW_OUTPUT'
             exit 0
           fi
-
           git commit -m '[fresco-forge] Render next canonical JSON fresco'
-
           for attempt in 1 2 3 4 5; do
             git fetch origin main
             if ! git rebase origin/main; then
@@ -132,7 +129,6 @@ jobs:
             echo "FRESCO_FORGE_PUSH_RACE_RETRY=$attempt"
             sleep $((attempt * 2))
           done
-
           echo 'FRESCO_FORGE_PUSH=FAILED_AFTER_RETRIES'
           exit 1
 
