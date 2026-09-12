@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       max_images:
-        description: 'Maximum number of new unique JSON records to render in this run'
+        description: 'Requested number of frescoes (GitHub CPU mode currently caps each run at 1)'
         required: false
         default: '1'
   push:
@@ -24,7 +24,7 @@ concurrency:
 jobs:
   forge:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 90
 
     steps:
       - name: Checkout meta-registry
@@ -35,48 +35,65 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: '3.11'
 
-      - name: Install Fresco Forge dependencies
-        run: python -m pip install --upgrade 'huggingface_hub>=0.34,<2' pillow
+      - name: Cache Hugging Face model
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface/hub
+          key: fresco-forge-dreamlike-photoreal-2.0-v1
+
+      - name: Install CPU Diffusers stack
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install --index-url https://download.pytorch.org/whl/cpu torch
+          python -m pip install --upgrade diffusers transformers accelerate safetensors pillow
 
       - name: Compile Fresco Forge
         run: python -m py_compile modules/fresco_forge/forge.py
 
-      - name: Resolve generation budget
+      - name: Resolve CPU-safe generation budget
         id: budget
         shell: bash
         run: |
           set -euo pipefail
+          REQUESTED=1
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            MAX_IMAGES="${{ inputs.max_images }}"
-          elif [ "${{ github.event_name }}" = "schedule" ]; then
-            MAX_IMAGES="3"
-          else
-            MAX_IMAGES="1"
+            REQUESTED="${{ inputs.max_images }}"
           fi
-          if ! [[ "$MAX_IMAGES" =~ ^[1-9][0-9]*$ ]]; then
-            echo "Invalid max_images: $MAX_IMAGES"
+          if ! [[ "$REQUESTED" =~ ^[1-9][0-9]*$ ]]; then
+            echo "Invalid max_images: $REQUESTED"
             exit 2
+          fi
+
+          # Hosted GitHub runners are CPU-only for this job. One render per run keeps
+          # the workflow inside a predictable memory/time envelope.
+          MAX_IMAGES=1
+          if [ "$REQUESTED" -gt 1 ]; then
+            echo "Requested $REQUESTED images; CPU-safe cap is 1 image per run."
           fi
           echo "max_images=$MAX_IMAGES" >> "$GITHUB_OUTPUT"
 
-      - name: Discover new unique JSON records
+      - name: Discover next unique JSON record
         run: |
           python modules/fresco_forge/forge.py \
             --max-images '${{ steps.budget.outputs.max_images }}' \
             --dry-run
 
-      - name: Generate frescoes through Hugging Face
+      - name: Generate fresco locally with Diffusers
         env:
-          HF_TOKEN: ${{ secrets.HF_TOKEN }}
-          FRESCO_MODEL: black-forest-labs/FLUX.1-schnell
-          FRESCO_PROVIDER: auto
+          FRESCO_MODEL: dreamlike-art/dreamlike-photoreal-2.0
+          FRESCO_STEPS: '20'
+          FRESCO_WIDTH: '512'
+          FRESCO_HEIGHT: '512'
+          TOKENIZERS_PARALLELISM: 'false'
         run: |
           python modules/fresco_forge/forge.py \
             --max-images '${{ steps.budget.outputs.max_images }}'
 
-      - name: Commit generated frescoes and receipts
+      - name: Commit generated fresco and receipt
         shell: bash
         run: |
           set -euo pipefail
@@ -89,7 +106,7 @@ jobs:
             exit 0
           fi
 
-          git commit -m '[fresco-forge] Render new canonical JSON frescoes'
+          git commit -m '[fresco-forge] Render next canonical JSON fresco'
 
           for attempt in 1 2 3 4 5; do
             git fetch origin main
