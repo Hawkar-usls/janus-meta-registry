@@ -2,31 +2,67 @@
 
 `JANUS Fresco Forge` is a content-addressed `JSON -> fresco` pipeline for the JANUS meta-registry.
 
-## Current renderer: v4.1 Semantic Role Firewall
+## Current renderer: v4.2 Fresco Style Lock + Ancient Visual Grammar
 
-v4.1 fixes `NAME_COLLISION -> FALSE_PERSONIFICATION`.
+v4.2 preserves the semantic-role and physical-gate firewalls from v4.1.1, then adds a separate artistic compiler layer.
 
-The visual compiler is now explicitly staged:
+The pipeline is explicitly staged:
 
 ```text
-field role -> entity type -> scene archetype -> visual translation
+field role
+    -> entity type
+    -> scene archetype
+    -> semantic visual translation
+    -> fresco visual translator
+    -> ancient visual grammar lock
+    -> image generation
 ```
+
+The v4.1.1 firewall answers **what the source means**. v4.2 answers **how that meaning may be expressed as an ancient wall fresco**.
 
 A name is not a person merely because it resembles a mythic/person name. Fields such as `internal_name`, `protocol_name`, `repository`, `branch`, `path`, `gate`, `adapter`, `controller`, `state_machine`, `mapping`, and other system/provenance fields are never allowed to create a human or deity by name alone.
 
-A person or mythic figure requires explicit role evidence: a person/actor/character/deity field or descriptive narrative that actually establishes a human/mythic entity.
+A workflow/control `gate` is also not physical architecture by itself. `ARCHITECTURAL_EVENT` requires real descriptive architectural evidence such as an airlock, hatch, chamber, threshold, door, decompression, or vacuum context.
 
 ## Scene archetypes
 
-The renderer chooses the visual grammar before composing the prompt:
-
 - `HUMAN_NARRATIVE` — explicit human actors dominate.
 - `MYTHIC_NARRATIVE` — explicit mythic/deity entities dominate.
-- `OBJECT_RITUAL` — a real object/artifact/ritual is central.
-- `SYSTEM_ALLEGORY` — system mechanics become non-human visual mechanisms.
-- `ARCHITECTURAL_EVENT` — gates, chambers, airlocks, thresholds and transitions may be the central scene without inventing a protagonist.
+- `OBJECT_RITUAL` — a source-established object/artifact/ritual is central.
+- `SYSTEM_ALLEGORY` — system mechanics are translated into non-human symbolic fresco imagery.
+- `ARCHITECTURAL_EVENT` — real gates, chambers, airlocks, thresholds and transitions may dominate without inventing a protagonist.
 
-For example, a JSON containing `UNDINA_TIMESHIFT_AIRLOCK` as an `internal_name` is treated as a system identifier. It does not imply a water-spirit woman. If the source is about an airlock protocol, the visual translation is an airlock/chamber event unless the JSON separately establishes a real mythic character.
+## v4.2 ancient visual grammar
+
+Technical semantics are never handed to the image model as modern visual grammar. `SYSTEM_ALLEGORY`, for example, is translated into flat wall-painted thresholds, channels, vessels, compartments, seals and narrative registers rather than a CAD-like mechanism or diagram.
+
+Mandatory style lock:
+
+- full-frame cracked lime-plaster wall surface;
+- mineral pigments absorbed into aged intonaco;
+- worn ochre, iron red, soot black, terre verte and faded blue;
+- visible pigment loss, abrasion, age stains and crack networks;
+- flat hand-painted contours and old mural spatial logic;
+- irregular narrative registers and side scenes rather than modern grids;
+- every visual subject remains embedded in the painted wall surface.
+
+Modern visual grammar is forbidden by prompt and negative prompt, including:
+
+- 3D/product/CAD renders;
+- diagrams, flowcharts and infographics;
+- UI/interface panels and vector graphics;
+- glossy industrial machinery or product photography;
+- isolated floating objects on neutral/studio backgrounds;
+- clean geometric poster or blueprint compositions.
+
+The known failure classes used for calibration are:
+
+```text
+FAIL__3D_MACHINE_COLLAPSE
+FAIL__DIAGRAM_GEOMETRY_COLLAPSE
+FAIL__INFOGRAPHIC_COLLAPSE
+FAIL__FLOATING_OBJECT_COLLAPSE
+```
 
 ## Contract
 
@@ -36,9 +72,10 @@ For example, a JSON containing `UNDINA_TIMESHIFT_AIRLOCK` as an `internal_name` 
 - The complete canonical JSON remains the source of identity/provenance.
 - Full scalar trace and semantic projection are preserved for audit.
 - `semantic_coverage_ratio = 1.0` means the semantic record is traced/interpreted; it does **not** mean every scalar is pasted literally into the generative prompt.
-- v4.1 stores a field-role audit and chosen scene archetype in every receipt.
-- Structural/technical names stay mechanisms/provenance unless explicit person evidence exists.
-- Prompt length is hard-capped to the actual multi-chunk CLIP budget; the recorded prompt cannot exceed the model budget silently.
+- Field-role audit and chosen scene archetype are stored in every receipt.
+- `false_personification_guard = true` and `physical_gate_firewall = true` remain mandatory.
+- v4.2 adds `ancient_visual_grammar_lock = true`, `no_modern_visual_grammar = true`, and `full_frame_plaster_surface = true`.
+- Prompt length is hard-capped to the actual multi-chunk CLIP budget.
 - Rendering runs locally in GitHub Actions with Hugging Face Diffusers.
 - Default model: `dreamlike-art/dreamlike-photoreal-2.0`.
 - Scheduler: `DPMSolverMultistepScheduler`.
@@ -54,7 +91,9 @@ registry JSON
     -> field-role audit
     -> entity typing
     -> scene-archetype inference
-    -> visual translation
+    -> v4.1.1 semantic translation/firewalls
+    -> v4.2 fresco visual translation
+    -> ancient visual grammar lock
     -> hard-capped chunked CLIP prompt
     -> Stable Diffusion
     -> PNG + receipt + ledger
@@ -87,12 +126,12 @@ model              = dreamlike-art/dreamlike-photoreal-2.0
 steps              = 20
 width              = 512
 height             = 512
-guidance_scale     = 8.0
+guidance_scale     = 8.5
 max_prompt_chunks  = 6
 workflow render cap= 1 image/run
 ```
 
-## Receipt v4.1
+## Receipt v4.2
 
 Every successful render records:
 
@@ -101,8 +140,13 @@ Every successful render records:
 - `semantic_coverage_ratio`;
 - field-role audit and role counts;
 - chosen `scene_archetype` and archetype scores;
+- semantic `scene_plan`;
+- `translated_scene` generated by the fresco visual translator;
 - `false_personification_guard = true`;
-- semantic scene plan;
+- `physical_gate_firewall = true`;
+- `ancient_visual_grammar_lock = true`;
+- `no_modern_visual_grammar = true`;
+- `full_frame_plaster_surface = true`;
 - final hard-capped prompt and negative prompt;
 - prompt token/chunk counts and truncation flag;
 - model/backend/device/scheduler;

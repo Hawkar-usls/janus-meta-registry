@@ -61,6 +61,7 @@ jobs:
           python -m py_compile modules/fresco_forge/v4_runner.py
           python -m py_compile modules/fresco_forge/v4_1_runner.py
           python -m py_compile modules/fresco_forge/v4_1_1_runner.py
+          python -m py_compile modules/fresco_forge/v4_2_runner.py
 
       - name: Resolve CPU-safe generation budget
         id: budget
@@ -83,24 +84,24 @@ jobs:
 
       - name: Discover next unique JSON record
         env:
-          FRESCO_GUIDANCE_SCALE: '8.0'
+          FRESCO_GUIDANCE_SCALE: '8.5'
           FRESCO_MAX_PROMPT_CHUNKS: '6'
         run: |
-          python modules/fresco_forge/v4_1_1_runner.py \
+          python modules/fresco_forge/v4_2_runner.py \
             --max-images '${{ steps.budget.outputs.max_images }}' \
             --dry-run
 
-      - name: Generate fresco locally with v4.1.1 semantic-role firewall
+      - name: Generate fresco locally with v4.2 fresco style lock
         env:
           FRESCO_MODEL: dreamlike-art/dreamlike-photoreal-2.0
           FRESCO_STEPS: '20'
           FRESCO_WIDTH: '512'
           FRESCO_HEIGHT: '512'
-          FRESCO_GUIDANCE_SCALE: '8.0'
+          FRESCO_GUIDANCE_SCALE: '8.5'
           FRESCO_MAX_PROMPT_CHUNKS: '6'
           TOKENIZERS_PARALLELISM: 'false'
         run: |
-          python modules/fresco_forge/v4_1_1_runner.py \
+          python modules/fresco_forge/v4_2_runner.py \
             --max-images '${{ steps.budget.outputs.max_images }}'
 
       - name: Commit generated fresco and receipt
