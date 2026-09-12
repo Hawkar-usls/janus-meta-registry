@@ -13,14 +13,12 @@ import os
 import re
 import time
 from collections import Counter
-from copy import deepcopy
 from typing import Iterable
 
 import torch
 
 import forge as base
 import v3_runner as v3
-import v4_runner as v4
 
 GENERATOR_VERSION = "JANUS-FRESCO-FORGE-v4.1-semantic-role-firewall"
 GUIDANCE_SCALE = float(os.getenv("FRESCO_GUIDANCE_SCALE", "8.0"))
@@ -81,12 +79,11 @@ RITUAL_WORDS = {"ritual", "ceremony", "offering", "altar", "sacred", "worship", 
 NEGATIVE_BASE = [
     "false personification", "single classical statue", "marble statue", "bodybuilder statue",
     "male statue when no male person is described", "female deity when no female person is described",
-    "empty hall", "architecture only", "plain interior", "abstract pattern", "striped textile",
-    "decorative fabric", "ornamental bands", "flat tapestry pattern", "non-figurative abstraction",
-    "geometric wallpaper", "pattern-only composition", "woven rug", "modern UI", "screenshot",
-    "JSON text", "caption", "watermark", "logo", "glossy 3d render", "plastic skin",
-    "extra limbs", "extra legs", "extra fingers", "duplicated people", "deformed anatomy",
-    "malformed hands", "illegible typography",
+    "empty hall", "plain interior", "abstract pattern", "striped textile", "decorative fabric",
+    "ornamental bands", "flat tapestry pattern", "non-figurative abstraction", "geometric wallpaper",
+    "pattern-only composition", "woven rug", "modern UI", "screenshot", "JSON text", "caption",
+    "watermark", "logo", "glossy 3d render", "plastic skin", "extra limbs", "extra legs",
+    "extra fingers", "duplicated people", "deformed anatomy", "malformed hands", "illegible typography",
 ]
 
 
@@ -103,6 +100,7 @@ def dedupe(values: Iterable[str]) -> list[str]:
 
 
 def path_tokens(path: str) -> set[str]:
+    # Preserve underscore-bearing canonical field names (e.g. internal_name).
     return {x for x in re.split(r"[^a-z0-9_]+", path.casefold()) if x}
 
 
@@ -153,7 +151,7 @@ def explicit_person_evidence(audit: list[dict]) -> list[str]:
         if role == "PERSON_OR_MYTHIC_ENTITY" and has_any(value, HUMAN_WORDS | MYTHIC_WORDS):
             people.append(value)
         elif role == "DESCRIPTIVE_NARRATIVE" and has_any(value, MYTHIC_WORDS):
-            # A descriptive sentence can establish a mythic person; an identifier cannot.
+            # A descriptive sentence may establish a mythic person; an identifier may not.
             people.append(value)
     return dedupe(people)
 
@@ -188,7 +186,6 @@ def infer_scene_archetype(audit: list[dict]) -> tuple[str, dict]:
         scores["HUMAN_NARRATIVE"] = 0
         scores["MYTHIC_NARRATIVE"] = 0
 
-    # Architectural system events win ties over generic system allegory.
     order = ["MYTHIC_NARRATIVE", "HUMAN_NARRATIVE", "ARCHITECTURAL_EVENT", "SYSTEM_ALLEGORY", "OBJECT_RITUAL"]
     archetype = max(order, key=lambda x: (scores[x], -order.index(x)))
     if scores[archetype] == 0:
@@ -205,13 +202,20 @@ def fact_values(audit: list[dict], path_needles: Iterable[str], limit: int = 8) 
     return dedupe(out)[:limit]
 
 
+def audit_corpus(audit: list[dict]) -> str:
+    return " ".join(str(x.get("value", "")) for x in audit).casefold()
+
+
 def visual_translate_system(audit: list[dict], archetype: str) -> dict:
+    corpus = audit_corpus(audit)
     core = fact_values(audit, ["core_idea", "problem", "canonical_principle"], 5)
-    mapping = fact_values(audit, ["airlock_mapping"], 8)
-    phases = fact_values(audit, ["state_machine", "two_phase_timeshift", "controlled_decompression", "horizon_commit"], 10)
+    mapping = fact_values(audit, ["mapping"], 8)
+    phases = fact_values(audit, ["state_machine", "phase", "controlled", "horizon_commit"], 10)
     limits = fact_values(audit, ["claim_limits", "alternate_terminal_states"], 6)
 
-    if archetype == "ARCHITECTURAL_EVENT":
+    is_airlock = "airlock" in corpus or ("decompression" in corpus and "vacuum" in corpus)
+
+    if archetype == "ARCHITECTURAL_EVENT" and is_airlock:
         visual_subject = "a monumental double-hatch ancient airlock chamber, shown as a sacred engineered threshold rather than a person"
         central_action = (
             "the chamber is first frozen motionless and sealed, the inlet hatch closes, luminous currents drain away through carved channels, "
@@ -219,24 +223,24 @@ def visual_translate_system(audit: list[dict], archetype: str) -> dict:
         )
         supporting = [
             "small side registers show the ordered phases of freeze, seal, close, drain, vacuum and reopen",
-            "three tiny anonymous attendants operate levers only as scale references; no named subsystem is personified",
+            "tiny anonymous attendants may operate mechanisms only as scale references; no named subsystem is personified",
             "a sealed side door represents fail-closed and a halted passage represents too-late abort",
         ]
         symbols = [
-            "two interlocked bronze-and-stone hatches",
-            "a still sealed central chamber",
-            "flowing channels becoming empty",
-            "one reopened illuminated threshold",
+            "two interlocked bronze-and-stone hatches", "a still sealed central chamber",
+            "flowing channels becoming empty", "one reopened illuminated threshold",
             "small carved phase markers without readable text",
         ]
+    elif archetype == "ARCHITECTURAL_EVENT":
+        visual_subject = "an ancient engineered threshold complex of gates, chambers and passages, with no subsystem depicted as a person"
+        central_action = "the architectural mechanism changes state in the exact order described by the source, with one transition clearly dominating the scene"
+        supporting = ["small side-register scenes show earlier and later architectural states", "failed or unresolved paths stay visibly closed"]
+        symbols = ["mechanical gates", "sealed passages", "state-changing chambers", "one visually dominant transition"]
     else:
         visual_subject = "an ancient allegorical mechanism composed of gates, channels, chambers and interlocked controls, with no named software component depicted as a person"
-        central_action = "the mechanism moves through an ordered cycle of freeze, seal, close, drain, verify emptiness and reopen"
-        supporting = [
-            "small side panels show earlier and later machine states",
-            "failed or unresolved states remain closed and visually subdued",
-        ]
-        symbols = ["interlocked gates", "sealed chamber", "draining channels", "single reopening passage"]
+        central_action = "the mechanism visibly executes the ordered system process described by the source"
+        supporting = ["small side panels show earlier and later machine states", "failed or unresolved states remain closed and visually subdued"]
+        symbols = ["interlocked mechanisms", "sealed state", "controlled flow", "validated transition"]
 
     return {
         "core_source": core,
@@ -251,7 +255,7 @@ def visual_translate_system(audit: list[dict], archetype: str) -> dict:
     }
 
 
-def visual_translate_people(audit: list[dict], archetype: str) -> dict:
+def visual_translate_people(audit: list[dict]) -> dict:
     people = explicit_person_evidence(audit)
     core = fact_values(audit, ["core_idea", "description", "narrative", "meaning", "summary"], 6)
     central = people[0] if people else "an explicitly described human or mythic figure"
@@ -268,13 +272,32 @@ def visual_translate_people(audit: list[dict], archetype: str) -> dict:
     }
 
 
+def visual_translate_object(audit: list[dict]) -> dict:
+    objects = [str(x.get("value", "")) for x in audit if x["field_role"] == "OBJECT_OR_ARTIFACT"]
+    core = fact_values(audit, ["core_idea", "description", "meaning", "summary", "purpose"], 6)
+    subject = dedupe(objects)[0] if objects else "the principal non-human object or symbolic mechanism established by the source"
+    return {
+        "core_source": core,
+        "mapping_source": [],
+        "phase_source": [],
+        "claim_limits_source": [],
+        "visual_subject": subject,
+        "central_action": core[0] if core else "the object is shown in the exact functional or ritual relationship described by the source",
+        "supporting_actions": [],
+        "main_symbols": dedupe(objects)[:6],
+        "human_figures": [],
+    }
+
+
 def build_scene_plan(proj: dict) -> dict:
     audit = role_audit(proj)
     archetype, scores = infer_scene_archetype(audit)
     if archetype in {"ARCHITECTURAL_EVENT", "SYSTEM_ALLEGORY"}:
         translated = visual_translate_system(audit, archetype)
+    elif archetype == "OBJECT_RITUAL":
+        translated = visual_translate_object(audit)
     else:
-        translated = visual_translate_people(audit, archetype)
+        translated = visual_translate_people(audit)
 
     role_counts = Counter(x["field_role"] for x in audit)
     return {
@@ -307,9 +330,7 @@ def render_prompt(scene: dict) -> str:
     def join(items: list[str], fallback: str) -> str:
         return "; ".join(dedupe(items)) if items else fallback
 
-    people_clause = (
-        "VISIBLE PEOPLE: " + join(scene.get("human_figures", []), "none required; do not invent a person")
-    )
+    people_clause = "VISIBLE PEOPLE: " + join(scene.get("human_figures", []), "none required; do not invent a person")
     return f"""ANCIENT NARRATIVE FRESCO — SEMANTIC ROLE LOCK.
 SCENE ARCHETYPE: {scene['archetype']}.
 CENTRAL VISUAL SUBJECT: {scene['visual_subject']}.
@@ -325,22 +346,32 @@ Translate the source meaning into a coherent visual scene. Do not personify inte
 
 def render_negative_prompt(scene: dict) -> str:
     extra = []
-    if scene["archetype"] in {"ARCHITECTURAL_EVENT", "SYSTEM_ALLEGORY"} and not scene.get("human_figures"):
+    if not scene.get("human_figures"):
         extra += ["central human hero", "central goddess", "central god", "mythic woman", "mythic man", "heroic statue", "portrait composition"]
+    if scene["archetype"] != "ARCHITECTURAL_EVENT":
+        extra += ["architecture-only composition"]
     return ", ".join(dedupe(NEGATIVE_BASE + extra))
 
 
-def hard_cap_prompt(tokenizer, prompt: str) -> tuple[str, int, int, bool]:
+def hard_cap_prompt(tokenizer, prompt: str) -> tuple[str, int, int, bool, int]:
     max_tokens = max(1, tokenizer.model_max_length - 2) * v3.MAX_PROMPT_CHUNKS
     ids = tokenizer(prompt, add_special_tokens=False, return_tensors=None)["input_ids"]
     if ids and isinstance(ids[0], list):
         ids = ids[0]
     original = len(ids)
     if original <= max_tokens:
-        return prompt, original, max_tokens, False
+        return prompt, original, max_tokens, False, original
     clipped = ids[:max_tokens]
-    text = tokenizer.decode(clipped, skip_special_tokens=True, clean_up_tokenization_spaces=True)
-    return text.strip(), max_tokens, max_tokens, True
+    text = tokenizer.decode(clipped, skip_special_tokens=True, clean_up_tokenization_spaces=True).strip()
+    final_count = v3.token_count(tokenizer, text)
+    # Decode may rarely retokenize a little differently; enforce again if necessary.
+    if final_count > max_tokens:
+        ids2 = tokenizer(text, add_special_tokens=False, return_tensors=None)["input_ids"]
+        if ids2 and isinstance(ids2[0], list):
+            ids2 = ids2[0]
+        text = tokenizer.decode(ids2[:max_tokens], skip_special_tokens=True, clean_up_tokenization_spaces=True).strip()
+        final_count = min(v3.token_count(tokenizer, text), max_tokens)
+    return text, final_count, max_tokens, True, original
 
 
 def generate_one(pipe, candidate, repo_root, output_root, model, steps, width, height, seed) -> dict:
@@ -348,7 +379,7 @@ def generate_one(pipe, candidate, repo_root, output_root, model, steps, width, h
     proj = v3.projection(candidate.canonical_json)
     scene = build_scene_plan(proj)
     raw_prompt = render_prompt(scene)
-    model_prompt, prompt_tokens, max_tokens, hard_truncated = hard_cap_prompt(pipe.tokenizer, raw_prompt)
+    model_prompt, prompt_tokens, max_tokens, hard_truncated, original_prompt_tokens = hard_cap_prompt(pipe.tokenizer, raw_prompt)
     negative_prompt = render_negative_prompt(scene)
     pos, neg, chunks = v3.encode_long(pipe, model_prompt, negative_prompt, device)
 
@@ -390,6 +421,7 @@ def generate_one(pipe, candidate, repo_root, output_root, model, steps, width, h
         "scene_plan_sha256": base.sha256_bytes(scene_json.encode("utf-8")),
         "prompt_sha256": base.sha256_bytes(model_prompt.encode("utf-8")),
         "prompt_mode": "semantic_role_firewall_scene_archetype",
+        "original_prompt_tokens": original_prompt_tokens,
         "prompt_tokens": prompt_tokens,
         "max_prompt_tokens": max_tokens,
         "prompt_hard_truncated": hard_truncated,
