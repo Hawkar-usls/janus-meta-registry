@@ -2,34 +2,47 @@
 
 `JANUS Fresco Forge` is a content-addressed `JSON -> fresco` pipeline for the JANUS meta-registry.
 
-## Current renderer: v4 scene-skeleton-first
+## Current renderer: v4.1 Semantic Role Firewall
 
-v4 preserves the full-JSON provenance and semantic coverage introduced by v3, but changes how visual dominance is assigned.
+v4.1 fixes `NAME_COLLISION -> FALSE_PERSONIFICATION`.
 
-The rule is:
+The visual compiler is now explicitly staged:
 
-> Every non-technical scalar is traced and interpreted, but the image is controlled by a scene skeleton: central figure -> central action -> secondary figures -> main symbols -> background motifs.
+```text
+field role -> entity type -> scene archetype -> visual translation
+```
 
-This prevents structural research vocabulary such as `matrix`, `segmentation`, `replication`, `control`, `epoch`, or `sealed` from collapsing the whole image into a textile, wallpaper, stripe field, or abstract pattern. Those concepts may still appear, but only as subordinate side registers, reliefs, veils, small comparison scenes, or distant symbols.
+A name is not a person merely because it resembles a mythic/person name. Fields such as `internal_name`, `protocol_name`, `repository`, `branch`, `path`, `gate`, `adapter`, `controller`, `state_machine`, `mapping`, and other system/provenance fields are never allowed to create a human or deity by name alone.
+
+A person or mythic figure requires explicit role evidence: a person/actor/character/deity field or descriptive narrative that actually establishes a human/mythic entity.
+
+## Scene archetypes
+
+The renderer chooses the visual grammar before composing the prompt:
+
+- `HUMAN_NARRATIVE` — explicit human actors dominate.
+- `MYTHIC_NARRATIVE` — explicit mythic/deity entities dominate.
+- `OBJECT_RITUAL` — a real object/artifact/ritual is central.
+- `SYSTEM_ALLEGORY` — system mechanics become non-human visual mechanisms.
+- `ARCHITECTURAL_EVENT` — gates, chambers, airlocks, thresholds and transitions may be the central scene without inventing a protagonist.
+
+For example, a JSON containing `UNDINA_TIMESHIFT_AIRLOCK` as an `internal_name` is treated as a system identifier. It does not imply a water-spirit woman. If the source is about an airlock protocol, the visual translation is an airlock/chamber event unless the JSON separately establishes a real mythic character.
 
 ## Contract
 
 - Source corpus: `registry/**/*.json` by default.
-- JSON is parsed and serialized into canonical compact UTF-8 JSON (`sort_keys=True`).
-- Identity is `SHA-256(canonical_json)`, not the filename.
-- Equivalent JSON content is rendered at most once even if renamed, copied, or key order changes.
-- The complete canonical JSON defines identity/provenance.
-- v3 semantic projection traces every scalar and separates technical provenance from visual semantics.
-- v4 keeps `semantic_coverage_ratio = 1.0` for the semantic projection while using a scene skeleton to decide what dominates the picture.
-- The generative prompt is explicitly figurative: a dominant central person/mythic being, a central action, visible secondary figures, gestures, ritual interaction, and story-rich sacred objects.
-- Anti-collapse guards explicitly reject empty halls, architecture-only scenes, abstract patterns, striped textiles, decorative fabrics, ornamental bands, geometric wallpaper, woven rugs, and pattern-only compositions.
-- Rendering runs locally inside GitHub Actions with Hugging Face Diffusers.
+- JSON is canonicalized and identified by `SHA-256(canonical_json)`.
+- Equivalent JSON content is rendered at most once regardless of filename/key order.
+- The complete canonical JSON remains the source of identity/provenance.
+- Full scalar trace and semantic projection are preserved for audit.
+- `semantic_coverage_ratio = 1.0` means the semantic record is traced/interpreted; it does **not** mean every scalar is pasted literally into the generative prompt.
+- v4.1 stores a field-role audit and chosen scene archetype in every receipt.
+- Structural/technical names stay mechanisms/provenance unless explicit person evidence exists.
+- Prompt length is hard-capped to the actual multi-chunk CLIP budget; the recorded prompt cannot exceed the model budget silently.
+- Rendering runs locally in GitHub Actions with Hugging Face Diffusers.
 - Default model: `dreamlike-art/dreamlike-photoreal-2.0`.
 - Scheduler: `DPMSolverMultistepScheduler`.
-- No Hugging Face hosted-inference token is required for the public default model.
-- Images: `artifacts/janus-fresco-forge/images/`.
-- Receipts: `artifacts/janus-fresco-forge/receipts/`.
-- Dedupe ledger: `artifacts/janus-fresco-forge/ledger.jsonl`.
+- No hosted-inference `HF_TOKEN` is required for the public default model.
 
 ## Pipeline
 
@@ -38,11 +51,21 @@ registry JSON
     -> canonical SHA-256 identity
     -> full scalar trace
     -> semantic projection
-    -> v4 scene skeleton
-    -> figurative narrative prompt
-    -> chunked CLIP embeddings
+    -> field-role audit
+    -> entity typing
+    -> scene-archetype inference
+    -> visual translation
+    -> hard-capped chunked CLIP prompt
     -> Stable Diffusion
     -> PNG + receipt + ledger
+```
+
+## Outputs
+
+```text
+artifacts/janus-fresco-forge/images/
+artifacts/janus-fresco-forge/receipts/
+artifacts/janus-fresco-forge/ledger.jsonl
 ```
 
 ## GitHub Actions
@@ -57,45 +80,33 @@ Triggers:
 
 The hosted GitHub job is CPU-only and intentionally caps each run at **one image**.
 
-The Hugging Face model cache is persisted with `actions/cache` so subsequent runs can reuse the public model download.
-
-## No `HF_TOKEN` required
-
-The current renderer uses local Diffusers generation:
-
-```python
-StableDiffusionPipeline.from_pretrained("dreamlike-art/dreamlike-photoreal-2.0")
-```
-
-The model is downloaded to the GitHub runner and executed locally. `HF_TOKEN` is not part of the normal generation path.
-
 ## Runtime defaults
 
 ```text
-model                 = dreamlike-art/dreamlike-photoreal-2.0
-steps                 = 20
-width                 = 512
-height                = 512
-guidance_scale        = 8.0
-max_prompt_chunks     = 6
-workflow render cap   = 1 image/run
+model              = dreamlike-art/dreamlike-photoreal-2.0
+steps              = 20
+width              = 512
+height             = 512
+guidance_scale     = 8.0
+max_prompt_chunks  = 6
+workflow render cap= 1 image/run
 ```
 
-## Provenance receipt v4
+## Receipt v4.1
 
-Every successful render records, among other fields:
+Every successful render records:
 
 - source path and canonical JSON SHA-256;
-- full v3 semantic projection and scalar trace;
+- full semantic projection/scalar trace;
 - `semantic_coverage_ratio`;
-- v4 `scene_skeleton` and its SHA-256;
-- fitted figurative prompt and negative prompt;
-- prompt token/chunk counts;
+- field-role audit and role counts;
+- chosen `scene_archetype` and archetype scores;
+- `false_personification_guard = true`;
+- semantic scene plan;
+- final hard-capped prompt and negative prompt;
+- prompt token/chunk counts and truncation flag;
 - model/backend/device/scheduler;
-- step count, dimensions, guidance scale and random seed;
-- elapsed generation time;
+- steps, dimensions, guidance scale, seed and elapsed time;
 - image path and image SHA-256.
 
 Generated frescoes are visualization artifacts only. They are never evidence, proof, or a replacement for the underlying registry record.
-
-Changing rendering parameters does not automatically regenerate a source already present in the ledger. Rerender/version semantics remain explicit so the no-repeat invariant is not silently weakened.
