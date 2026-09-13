@@ -1,0 +1,51 @@
+{
+  "artifact_id": "TRUMP-EXACT-REACHABLE-BACKDOOR-DEPTH-REDUCTION-IMAGES-PREREGISTRATION-2026-09-14",
+  "gate": "EXACT_TYPED_REACHABLE_BACKDOOR_DEPTH_ON_REDUCTION_IMAGES",
+  "parent_commit": "42635ebd78689b74275764b0e82446d362d2b992",
+  "date": "2026-09-14",
+  "status": "FROZEN_PREREGISTRATION_ONLY",
+  "scientific_status": {"SAT_IN_P":"NOT_PROVED","P_VS_NP":"OPEN","Pi_negative_evidence_weight":0},
+  "source_transform": "C023/C034 linear witness-preserving 3-CNF -> Horn NAND3 + affine NEQ",
+  "measured_object": "minimum worst-case source-orientation decision depth until every residual connected component is certified terminal by the frozen typed grammar",
+  "recurrence": "d(q)=0 if typed-terminal; else min over unassigned source x of 1+max(d(q+x=0),d(q+x=1))",
+  "native_free_propagation": "assigning source x_i simultaneously fixes its NEQ complement c_i=NOT x_i",
+  "candidate_authority": "exact finite dynamic program over partial source assignments; measurement oracle only, not a universal SAT algorithm",
+  "captain_obvious_firewalls": [
+    "FINITE_DEPTH_CENSUS_NE_ASYMPTOTIC_THEOREM",
+    "FPT_OR_SMALL_DEPTH_ON_CORPUS_NE_SAT_IN_P",
+    "LINEAR_PATTERN_ON_FINITE_N_NE_LOWER_BOUND",
+    "AFFINE_PROPAGATION_MUST_BE_CHARGED_AS_NATIVE_POLYNOMIAL_WORK",
+    "NO_POST_HOC_CORPUS_SELECTION",
+    "SAT_IN_P_REMAINS_NOT_PROVED"
+  ],  "frozen_corpus": {
+    "C0372_COMPLETE3_UNSAT": {"n":[3]},
+    "MONOTONE_PATH": {"n":[3,4,5,6,7,8,9], "clauses":"(x_i OR x_{i+1} OR x_{i+2})"},
+    "ALTERNATING_PATH": {"n":[3,4,5,6,7,8,9], "sign_rule":"literal i in window starting s is negated iff (s+i) mod 2 = 1"},
+    "XOR3_CHAIN": {"n":[3,4,5,6,7,8,9], "constraint":"x_i XOR x_{i+1} XOR x_{i+2}=0 encoded by four exact 3-CNF clauses per window"},
+    "DENSE_POSITIVE_TRIPLES": {"n":[4,5,6,7,8], "clauses":"all positive triples i<j<k"},
+    "RANDOM_CONNECTED": {"seed":20260914, "n":[4,5,6,7,8], "densities":[2,4], "instances_per_cell":3, "width":3}
+  },
+  "exact_checks": [
+    "verify every transformed instance preserves source truth on all complete assignments for n<=8",
+    "verify source primal graph connected for corpus entries labeled connected",
+    "compute exact minimum depth with two independent variable-order traversals",
+    "record memo-state count, terminal-state count, optimal first-variable set, SAT label and source size",
+    "replay an optimal strategy tree on every complete source assignment for n<=8"
+  ],
+  "allowed_verdicts": [
+    "PASS_FINITE_CORPUS_DEPTH_CENSUS__NO_ASYMPTOTIC_CLAIM",
+    "PASS_FINITE_LINEAR_DEPTH_PATTERN_FOUND__ASYMPTOTIC_STATUS_OPEN",
+    "FALSIFIED_REDUCTION_OR_DEPTH_REPLAY",
+    "OPEN_RESOURCE_LIMIT"
+  ],  "interpretation_policy": {
+    "small_depth": "discovery evidence that reachable routing may remain compact on that frozen family only",
+    "large_depth": "counterevidence to the current branching route on that frozen family only",
+    "next_if_large": "TYPED_HYPERORDER_MESSAGE_WIDTH",
+    "next_if_small": "seek a proved structural bound explaining the observed depth"
+  },
+  "provenance": {
+    "C034_doc": "docs/C034_AFFINE_AND_CROSS_CLASS_COMPOSITION.md",
+    "C035_encoder": "experiments/direct/janus_c035_certified_interface_congruence.py::encode_nand3_neq",
+    "reachable_guard_parent": "TRUMP_EXACT_REACHABLE_DOMAIN_TYPED_GUARD_C0372_PROOF_OR_FALSIFICATION_2026-09-14.json"
+  }
+}
