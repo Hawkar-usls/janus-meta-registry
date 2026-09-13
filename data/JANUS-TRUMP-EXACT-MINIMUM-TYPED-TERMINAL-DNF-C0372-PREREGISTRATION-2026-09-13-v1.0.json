@@ -1,0 +1,60 @@
+{
+  "artifact_id": "TRUMP-EXACT-MINIMUM-TYPED-TERMINAL-DNF-C0372-PREREGISTRATION-2026-09-13",
+  "date": "2026-09-13",
+  "parent_commit": "7ccc7e6af318e30a74eac6b52f883040774b77b7",
+  "gate": "EXACT_MINIMUM_TYPED_TERMINAL_DNF_FOR_C0372_CORE",
+  "status": "FROZEN_PREREGISTRATION_ONLY",
+  "source_core": "the exact six-variable connected C037.2 Horn+Affine multirow obstruction used by the sealed typed-backdoor gate",
+  "frozen_terminal_grammar": "research/tools/typed_conditional_backdoor/typed_backdoor.py::analyze from parent commit",
+  "term_universe": {
+    "definition": "all partial assignments q in {STAR,0,1}^6 for which frozen analyze(H,A,q) returns terminal=true",
+    "expected_parent_census": 594,
+    "coverage": "a term covers exactly the total assignments extending q",
+    "universe": "all 64 total assignments on variables 1..6"
+  },
+  "objective": "compute the exact minimum number of frozen typed-terminal terms whose coverage union is the full 64-assignment cube",
+  "parent_bounds": {"lower_bound": 4, "known_cover": 6},
+  "search_order": [4,5,6],
+  "scientific_question": "Is the previously found six-term conditional basis minimal, or is there a hidden four- or five-term exact typed-terminal cover?"
+,
+  "exact_search_contract": {
+    "representation": "64-bit coverage masks for terminal partial assignments",
+    "minimality_method": "exact bounded set-cover search for k=4 then k=5; k=6 only if both are exhaustively refuted",
+    "allowed_pruning": [
+      "dominated-term elimination only when one terminal coverage mask is a strict subset of another terminal coverage mask",
+      "choose an uncovered total assignment with the fewest admissible covering terms",
+      "coverage upper-bound pruning from maximum additional uncovered assignments per remaining term",
+      "memoization by (covered_mask, remaining_slots)"
+    ],
+    "forbidden": [
+      "changing the terminal grammar after seeing the result",
+      "using SAT truth to bless a non-terminal term",
+      "heuristic failure as a proof of nonexistence",
+      "reporting the parent 4-term coverage bound as an attained cover"
+    ]
+  },
+  "independent_replay": {
+    "rebuild_all_3_pow_6_partial_assignments": true,
+    "verify_each_returned_term_is_terminal": true,
+    "verify_cover_is_tautological": true,
+    "verify_no_cover_exists_below_reported_minimum": true
+  },
+  "allowed_verdicts": [
+    "PASS_EXACT_MINIMUM_TYPED_TERMINAL_DNF_IS_4",
+    "PASS_EXACT_MINIMUM_TYPED_TERMINAL_DNF_IS_5",
+    "PASS_EXACT_MINIMUM_TYPED_TERMINAL_DNF_IS_6",
+    "FALSIFIED_PARENT_TERMINAL_CENSUS_OR_COVER",
+    "OPEN_IMPLEMENTATION_OR_RESOURCE_LIMIT"
+  ],
+  "firewalls": [
+    "FINITE_C0372_MINIMUM != ASYMPTOTIC_THEOREM",
+    "SMALL_DNF_ON_ONE_CORE != SAT_IN_P",
+    "SET_COVER_ORACLE_IS_CHECKER_ONLY_NOT_CANDIDATE_SOLVER",
+    "P_VS_NP_OPEN"
+  ],
+  "scientific_status": {
+    "SAT_IN_P": "NOT_PROVED",
+    "P_VS_NP": "OPEN",
+    "Pi_negative_evidence_weight": 0
+  }
+}

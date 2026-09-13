@@ -1,0 +1,63 @@
+{
+  "artifact_id": "TRUMP-EXACT-MINIMUM-TYPED-TERMINAL-DNF-C0372-TETRAHEDRAL-STRUCTURE-2026-09-13",
+  "status": "POST_SEAL_EXACT_STRUCTURAL_ENUMERATION__NO_NEW_COMPLEXITY_CLAIM",
+  "base_result_commit": "1d0d096361a6cf0f49ce80a5fc5f96883b1afa48",
+  "frozen_minimum": 6,
+  "maximal_terminal_terms": 18,
+  "all_six_subsets_checked": 18564,
+  "exact_minimum_cover_count": 3,
+  "affine_pairs": [[1,4],[2,5],[3,6]],
+  "cover_orbit": {
+    "count": 3,
+    "rule": "each minimum cover ignores exactly one affine pair and uses only the four variables belonging to the other two pairs",
+    "touched_variable_count": 4,
+    "each_touched_variable_occurs_in_terms": 3
+  },
+  "support_graph": {
+    "type": "K4_COMPLETE_GRAPH",
+    "interpretation": "the six term supports are exactly all six edges of the complete graph on the four retained variables",
+    "geometric_name": "TETRAHEDRON_EDGE_SET"
+  }
+,
+  "representative_cover_ignoring_pair_1_4": [
+    {"2":0,"5":0},
+    {"3":0,"6":0},
+    {"2":1,"3":1},
+    {"2":1,"6":1},
+    {"5":1,"3":1},
+    {"5":1,"6":1}
+  ],
+  "exact_factorization": {
+    "define": {
+      "A": "x2 OR x5",
+      "B": "x3 OR x6"
+    },
+    "six_term_dnf": "(NOT x2 AND NOT x5) OR (NOT x3 AND NOT x6) OR (x2 AND x3) OR (x2 AND x6) OR (x5 AND x3) OR (x5 AND x6)",
+    "factored_form": "NOT A OR NOT B OR (A AND B)",
+    "boolean_identity": "NOT A OR NOT B OR (A AND B) == TRUE",
+    "meaning": "the exact six-leaf literal DNF is the distributive expansion of a three-guard tautological skeleton over two OR-block predicates"
+  },
+  "symmetry": {
+    "action": "permute the three source/complement affine pairs (1,4),(2,5),(3,6)",
+    "orbit_size": 3,
+    "stabilizer_interpretation": "choosing which affine pair is ignored determines the minimum cover uniquely"
+  }
+,
+  "next_hypothesis": {
+    "name": "EXACT_FACTORIZED_TYPED_GUARD_CIRCUIT_FOR_C0372_CORE",
+    "idea": "replace flat conjunction-only partial-assignment guards by a proof-carrying factored guard circuit so the six terminal leaves may be represented through shared predicates A and B without re-expanding all cross terms",
+    "critical_open_obligation": "prove that routing on factored predicates preserves exact typed terminal semantics without hiding SAT search or merely encoding the same six leaves implicitly",
+    "status": "HYPOTHESIS_ONLY_NOT_TESTED"
+  },
+  "firewalls": [
+    "K4_TETRAHEDRAL_PATTERN_IS_EXACT_FOR_THIS_FROZEN_CORE_ONLY",
+    "BOOLEAN_FACTORIZATION_OF_THE_COVER_DOES_NOT_BY_ITSELF_PROVE_A_SMALLER_TYPED_TERMINAL_GRAMMAR",
+    "FINITE_SYMMETRY != ASYMPTOTIC_THEOREM",
+    "P_VS_NP_OPEN"
+  ],
+  "scientific_status": {
+    "SAT_IN_P": "NOT_PROVED",
+    "P_VS_NP": "OPEN",
+    "Pi_negative_evidence_weight": 0
+  }
+}
