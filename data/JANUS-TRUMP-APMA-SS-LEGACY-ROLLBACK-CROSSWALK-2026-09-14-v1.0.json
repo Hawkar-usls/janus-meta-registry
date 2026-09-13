@@ -1,0 +1,49 @@
+{
+  "artifact_id": "JANUS-TRUMP-APMA-SS-LEGACY-ROLLBACK-CROSSWALK-2026-09-14-v1.0",
+  "date": "2026-09-14",
+  "purpose": "Crosswalk pre-TRUMP rollback/checkpoint/counterfactual mechanisms into APMA-SS without inheriting heuristic authority.",
+  "apma_ss_role": "proof-carrying rollback/replay controller",
+  "source_user_json_sha256": "949771c5984de8231b86474068304983cf378b12a61907c040ee61794ab13bf1",
+  "sources": [
+    {
+      "artifact": "JANUS-DEMIURGE-COUNTERFACTUAL-SELF-CYCLE-PASS-2026-08-16-v1.0",
+      "inherit": ["deterministic replay", "failed/no-improvement attempt retains incumbent", "generation receipts"],
+      "reject": ["COUNTERFACTUAL_SCORE authority", "RANK authority", "ADOPT_IF_BETTER heuristic selection"]
+    },
+    {
+      "artifact": "JANUS-DEMIURGE-SUPERVISOR-CHECKPOINT-DURABILITY-PASS-2026-08-16-v1.0",
+      "inherit": ["checkpoint exact source-head binding", "checkpoint receipt replay", "process restart recovery after committed transaction", "idempotent persisted replay"],
+      "reject": ["RECOVERED_CHECKPOINT implies execution permission"]
+    },
+    {
+      "artifact": "JANUS-AUTONOMOUS-CODE-STEWARD-v1.6-BKG-ROLLBACK",
+      "inherit": ["failed candidate preserved", "rollback append-only activation", "compatibility-epoch guard", "no in-place history rewrite"],
+      "reject": ["health score as truth", "weighted ranking as proof authority"]
+    },
+    {
+      "artifact": "JANUS-STORM-TIME-TRAVELER-FINAL-CLOSURE-SAFETY-WITNESS-v1.0",
+      "inherit": ["configuration state and queued/in-flight execution state can diverge", "rollback/revocation requires explicit acknowledgement semantics"],
+      "reject": ["arrival order as causality", "timestamp anomaly as physical retrocausality"]
+    },
+    {
+      "artifact": "JANUS-META-REGISTRY-ALGORITHM-SPIRAL-RESTORATION-CHECKPOINT-2026-08-29-v1.0",
+      "inherit": ["content-addressed proof DAG", "charge discovery cost", "replayable future-state projection", "OPEN receipt on unresolved state", "exact fallback"],
+      "reject": ["fingerprint as identity", "adaptive ranking as proof authority"]
+    }
+  ],  "apma_ss_exact_contract": [
+    "checkpoint is immutable and content-addressed",
+    "each morph attempt starts from the same certified checkpoint unless an exact committed successor is produced",
+    "failed morph cannot mutate checkpoint or future candidate inputs",
+    "rollback must restore byte-identical semantic state and authority binding",
+    "morph ordering cannot depend on hidden SAT outcomes or stochastic reward",
+    "every accepted morph requires independently replayable semantic certificate",
+    "all failed attempts remain append-only evidence",
+    "if all authorized morphs fail, terminal status is OPEN"
+  ],
+  "captain_obvious": "Save-scum contributes rollback structure only. Repeating until a desired answer appears is forbidden; APMA-SS retries representations, never truth values.",
+  "scientific_status": {
+    "SAT_IN_P": "NOT_PROVED",
+    "P_VS_NP": "OPEN",
+    "Pi_negative_evidence_weight": 0
+  }
+}
