@@ -13,6 +13,12 @@ on:
       - 'registry/**/*.json'
       - 'modules/fresco_forge/**'
       - '.github/workflows/janus-fresco-forge.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'registry/**/*.json'
+      - 'modules/fresco_forge/**'
+      - '.github/workflows/janus-fresco-forge.yml'
   schedule:
     - cron: '17 */6 * * *'
 
@@ -64,6 +70,7 @@ jobs:
           python -m py_compile modules/fresco_forge/v4_2_runner.py
           python -m py_compile modules/fresco_forge/v4_3_runner.py
           python -m py_compile modules/fresco_forge/v4_4_runner.py
+          python -m py_compile modules/fresco_forge/v5_story_renderer.py
 
       - name: Resolve CPU-safe generation budget
         id: budget
@@ -86,27 +93,31 @@ jobs:
 
       - name: Discover next unique JSON record
         env:
-          FRESCO_GUIDANCE_SCALE: '7.5'
+          FRESCO_GUIDANCE_SCALE: '7.0'
           FRESCO_MAX_PROMPT_CHUNKS: '6'
+          FRESCO_V5_RECENT_SIGNATURE_WINDOW: '18'
         run: |
-          python modules/fresco_forge/v4_4_runner.py \
+          python modules/fresco_forge/v5_story_renderer.py \
             --max-images '${{ steps.budget.outputs.max_images }}' \
             --dry-run
 
-      - name: Generate fresco locally with v4.4 semantic focus router
+      - name: Generate fresco locally with v5 monumental allegorical story renderer
+        if: github.event_name != 'pull_request'
         env:
           FRESCO_MODEL: dreamlike-art/dreamlike-photoreal-2.0
-          FRESCO_STEPS: '20'
+          FRESCO_STEPS: '24'
           FRESCO_WIDTH: '512'
           FRESCO_HEIGHT: '512'
-          FRESCO_GUIDANCE_SCALE: '7.5'
+          FRESCO_GUIDANCE_SCALE: '7.0'
           FRESCO_MAX_PROMPT_CHUNKS: '6'
+          FRESCO_V5_RECENT_SIGNATURE_WINDOW: '18'
           TOKENIZERS_PARALLELISM: 'false'
         run: |
-          python modules/fresco_forge/v4_4_runner.py \
+          python modules/fresco_forge/v5_story_renderer.py \
             --max-images '${{ steps.budget.outputs.max_images }}'
 
       - name: Commit generated fresco and receipt
+        if: github.event_name != 'pull_request'
         shell: bash
         run: |
           set -euo pipefail
@@ -136,7 +147,7 @@ jobs:
           exit 1
 
       - name: Upload generated run artifacts
-        if: always()
+        if: always() && github.event_name != 'pull_request'
         uses: actions/upload-artifact@v4
         with:
           name: janus-fresco-forge-${{ github.run_id }}
