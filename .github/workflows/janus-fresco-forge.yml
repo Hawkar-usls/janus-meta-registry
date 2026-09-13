@@ -49,7 +49,13 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/huggingface/hub
-          key: fresco-forge-dreamlike-photoreal-2.0-v1
+          key: fresco-forge-dreamshaper-8-v1
+
+      - name: Cache visual gate detector
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/torch/hub/checkpoints
+          key: fresco-forge-coco-fasterrcnn-mobile-v1
 
       - name: Install CPU Diffusers stack
         shell: bash
@@ -72,6 +78,7 @@ jobs:
           python -m py_compile modules/fresco_forge/v4_4_runner.py
           python -m py_compile modules/fresco_forge/v5_story_renderer.py
           python -m py_compile modules/fresco_forge/v5_1_story_renderer.py
+          python -m py_compile modules/fresco_forge/v5_2_story_renderer.py
 
       - name: Resolve CPU-safe generation budget
         id: budget
@@ -92,35 +99,35 @@ jobs:
           fi
           echo "max_images=$MAX_IMAGES" >> "$GITHUB_OUTPUT"
 
-      - name: Discover next unique JSON record
+      - name: Discover next unique JSON record with v5.2
         env:
-          FRESCO_GUIDANCE_SCALE: '7.2'
+          FRESCO_GUIDANCE_SCALE: '7.5'
           FRESCO_MAX_PROMPT_CHUNKS: '6'
           FRESCO_V5_RECENT_SIGNATURE_WINDOW: '18'
           FRESCO_V5_MAX_RENDER_ATTEMPTS: '3'
-          FRESCO_V5_MIN_FIGURE_TARGET: '10'
-          FRESCO_V5_MIN_SECONDARY_GROUPS: '3'
+          FRESCO_V5_MIN_FIGURE_TARGET: '14'
+          FRESCO_V5_MIN_SECONDARY_GROUPS: '4'
         run: |
-          python modules/fresco_forge/v5_1_story_renderer.py \
+          python modules/fresco_forge/v5_2_story_renderer.py \
             --max-images '${{ steps.budget.outputs.max_images }}' \
             --dry-run
 
-      - name: Generate fresco locally with v5.1 monumental density gates
+      - name: Generate fresco locally with v5.2 reference-style monumental gate
         if: github.event_name != 'pull_request'
         env:
-          FRESCO_MODEL: dreamlike-art/dreamlike-photoreal-2.0
-          FRESCO_STEPS: '24'
-          FRESCO_WIDTH: '512'
-          FRESCO_HEIGHT: '512'
-          FRESCO_GUIDANCE_SCALE: '7.2'
+          FRESCO_MODEL: Lykon/dreamshaper-8
+          FRESCO_STEPS: '28'
+          FRESCO_WIDTH: '448'
+          FRESCO_HEIGHT: '640'
+          FRESCO_GUIDANCE_SCALE: '7.5'
           FRESCO_MAX_PROMPT_CHUNKS: '6'
           FRESCO_V5_RECENT_SIGNATURE_WINDOW: '18'
           FRESCO_V5_MAX_RENDER_ATTEMPTS: '3'
-          FRESCO_V5_MIN_FIGURE_TARGET: '10'
-          FRESCO_V5_MIN_SECONDARY_GROUPS: '3'
+          FRESCO_V5_MIN_FIGURE_TARGET: '14'
+          FRESCO_V5_MIN_SECONDARY_GROUPS: '4'
           TOKENIZERS_PARALLELISM: 'false'
         run: |
-          python modules/fresco_forge/v5_1_story_renderer.py \
+          python modules/fresco_forge/v5_2_story_renderer.py \
             --max-images '${{ steps.budget.outputs.max_images }}'
 
       - name: Commit generated fresco and receipt
