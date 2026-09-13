@@ -1,0 +1,54 @@
+{
+  "schema": "JANUS_TRUMP_EXACT_REACHABLE_DOMAIN_TYPED_GUARD_C0372_PREREG_V1",
+  "gate": "EXACT_REACHABLE_DOMAIN_TYPED_GUARD_COVER_C0372",
+  "parent_commit": "eb1e22c55ce2655bf4109363cf36cda5e16d70d8",
+  "frozen_core": "C037.2 six-variable connected Horn+Affine multirow obstruction",
+  "frozen_affine_rows": [
+    "x1 XOR x4 = 1",
+    "x2 XOR x5 = 1",
+    "x3 XOR x6 = 1"
+  ],
+  "reachable_domain": "all total assignments satisfying only the frozen affine subsystem",
+  "domain_size_expected_from_rank": 8,
+  "frozen_terminal_grammar": "same typed-terminal partial-assignment grammar as exact minimum flat-DNF gate",
+  "claims_to_test": [
+    "A solver need only cover assignments consistent with independently certified current-module constraints; it need not branch over states already refuted by that module.",
+    "Restricting coverage to the affine-certified domain may reduce the exact minimum typed-terminal cover below the full-cube minimum six without using SAT(F) or the known UNSAT status.",
+    "Literal decision routing with exact affine propagation may realize the reachable-domain cover with smaller depth than the previous flat full-cube DNF."
+  ],
+  "forbidden_shortcuts": [
+    "using satisfiability or unsatisfiability of the full Horn+Affine core to define reachability",
+    "using brute-force full-core SAT as candidate routing authority",
+    "covering only assignments selected post hoc by the terminal checker",
+    "silently changing the terminal grammar"
+  ],
+  "candidate_domain_authority": "native GF(2) row system only",
+  "exact_checks": [
+    "enumerate the affine-domain independently from the three frozen XOR rows",
+    "recompute the frozen terminal partial-assignment universe",
+    "restrict each terminal term coverage mask to the affine-domain",
+    "solve exact minimum set cover in increasing cardinality with independent replay order",
+    "independently replay every chosen term as typed-terminal",
+    "verify the chosen guards cover every affine-domain assignment",
+    "search minimum literal decision depth when every branch applies exact affine propagation before terminal analysis"
+  ],
+  "allowed_verdicts": [
+    "PASS_EXACT_REACHABLE_DOMAIN_TYPED_COVER_AND_DEPTH",
+    "NO_REACHABLE_DOMAIN_COMPRESSION_BELOW_FULL_CUBE_MINIMUM",
+    "FALSIFIED_DOMAIN_OR_TERMINALITY",
+    "OPEN_IMPLEMENTATION_OR_BINDING_ERROR"
+  ],
+  "captain_obvious": "DO_NOT_BRANCH_ON_STATES_ALREADY_PROVED_IMPOSSIBLE_BY_A_CURRENT_EXACT_MODULE",
+  "firewalls": [
+    "AFFINE_DOMAIN_RESTRICTION != GENERAL_SAT_SOLVING",
+    "FINITE_CORE_COMPRESSION != ASYMPTOTIC_THEOREM",
+    "SMALL_REACHABLE_COVER != POLYNOMIAL_BACKDOOR_FOR_ARBITRARY_3CNF",
+    "SAT_IN_P_NOT_PROVED",
+    "P_VS_NP_OPEN"
+  ],
+  "scientific_status": {
+    "SAT_IN_P": "NOT_PROVED",
+    "P_VS_NP": "OPEN",
+    "Pi_negative_evidence_weight": 0
+  }
+}
