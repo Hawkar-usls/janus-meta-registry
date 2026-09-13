@@ -81,6 +81,7 @@ jobs:
           python -m py_compile modules/fresco_forge/v5_2_story_renderer.py
           python -m py_compile modules/fresco_forge/v5_2_1_story_renderer.py
           python -m py_compile modules/fresco_forge/v5_3_story_renderer.py
+          python -m py_compile modules/fresco_forge/v5_4_story_renderer.py
 
       - name: Resolve CPU-safe generation budget
         id: budget
@@ -101,35 +102,35 @@ jobs:
           fi
           echo "max_images=$MAX_IMAGES" >> "$GITHUB_OUTPUT"
 
-      - name: Discover next unique JSON record with v5.3
+      - name: Discover next unique JSON record with v5.4
         env:
-          FRESCO_GUIDANCE_SCALE: '7.8'
+          FRESCO_GUIDANCE_SCALE: '8.0'
           FRESCO_MAX_PROMPT_CHUNKS: '6'
           FRESCO_V5_RECENT_SIGNATURE_WINDOW: '18'
           FRESCO_V5_MAX_RENDER_ATTEMPTS: '3'
-          FRESCO_V5_MIN_FIGURE_TARGET: '16'
-          FRESCO_V5_MIN_SECONDARY_GROUPS: '4'
+          FRESCO_V5_MIN_FIGURE_TARGET: '18'
+          FRESCO_V5_MIN_SECONDARY_GROUPS: '5'
         run: |
-          python modules/fresco_forge/v5_3_story_renderer.py \
+          python modules/fresco_forge/v5_4_story_renderer.py \
             --max-images '${{ steps.budget.outputs.max_images }}' \
             --dry-run
 
-      - name: Generate fresco locally with v5.3 strict monumental narrative gate
+      - name: Generate fresco locally with v5.4 central narrative anti-architecture gate
         if: github.event_name != 'pull_request'
         env:
           FRESCO_MODEL: Lykon/dreamshaper-8
-          FRESCO_STEPS: '30'
+          FRESCO_STEPS: '32'
           FRESCO_WIDTH: '512'
           FRESCO_HEIGHT: '640'
-          FRESCO_GUIDANCE_SCALE: '7.8'
+          FRESCO_GUIDANCE_SCALE: '8.0'
           FRESCO_MAX_PROMPT_CHUNKS: '6'
           FRESCO_V5_RECENT_SIGNATURE_WINDOW: '18'
           FRESCO_V5_MAX_RENDER_ATTEMPTS: '3'
-          FRESCO_V5_MIN_FIGURE_TARGET: '16'
-          FRESCO_V5_MIN_SECONDARY_GROUPS: '4'
+          FRESCO_V5_MIN_FIGURE_TARGET: '18'
+          FRESCO_V5_MIN_SECONDARY_GROUPS: '5'
           TOKENIZERS_PARALLELISM: 'false'
         run: |
-          python modules/fresco_forge/v5_3_story_renderer.py \
+          python modules/fresco_forge/v5_4_story_renderer.py \
             --max-images '${{ steps.budget.outputs.max_images }}'
 
       - name: Commit generated fresco and receipt
