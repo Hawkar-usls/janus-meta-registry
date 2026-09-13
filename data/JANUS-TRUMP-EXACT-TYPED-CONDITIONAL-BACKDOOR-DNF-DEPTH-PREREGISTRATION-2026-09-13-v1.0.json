@@ -1,0 +1,63 @@
+{
+  "allowed_verdicts": [
+    "PASS_SMALL_TYPED_BACKDOOR_DNF_ON_CONNECTED_MULTIROW_CORE",
+    "PASS_SCOPED_COMPRESSION_BUT_HARD_CORE_REMAINS_EXPONENTIAL",
+    "NO_SMALL_TYPED_DNF_ON_FROZEN_CORE_WITHIN_FROZEN_POLICY",
+    "FALSIFIED_EXACT_TERMINALITY",
+    "OPEN_IMPLEMENTATION_OR_BINDING_ERROR"
+  ],
+  "artifact_id": "TRUMP-EXACT-TYPED-CONDITIONAL-BACKDOOR-DEPTH-AND-DNF-PREREGISTRATION-2026-09-13",
+  "candidate": {
+    "generalization": "greedily remove literals from a terminal leaf term only when the weakened term independently rechecks as typed-terminal; then deduplicate/subsume terms",
+    "leaf_rule": "every residual connected component must be certified HORN_ONLY, AFFINE_ONLY, 2CNF_ONLY, CERTIFIED_CONFLICT, or another already sealed tractable typed terminal",
+    "memoization": "canonical residual typed state only; no semantic SAT oracle",
+    "representation": "component-local tautological DNF / recursive depth forest of partial assignments",
+    "split_rule": "inside one MIXED_OPEN connected core choose an unassigned variable by frozen structural occurrence score; explore both values; never branch independent components jointly"
+  },
+  "captain_obvious_firewalls": [
+    "NO_PREENUMERATION_OF_FULL_ASSIGNMENT_CUBE",
+    "NO_GENERAL_SAT_ORACLE_IN_CANDIDATE",
+    "NO_CARTESIAN_PRODUCT_ACROSS_DISCONNECTED_CORES",
+    "SHORT_CERTIFICATE_NE_POLY_DISCOVERY",
+    "OPEN_FIXPOINT_NE_SAT",
+    "TERM_COUNT_OR_PAID_WORK_2_POW_K_IS_NOT_COMPRESSION"
+  ],
+  "claim_ceiling": "finite/scoped candidate test only; no universal small-backdoor theorem, no polynomial SAT claim",
+  "date": "2026-09-13",
+  "frozen_tests": [
+    "C0372_CONNECTED_MULTIROW_HARD_CORE",
+    "EQUALITY_VS_DISEQUALITY_CERTIFIED_CONFLICT",
+    "SYNTHETIC_DNF_ADVANTAGE_FAMILY",
+    "DISCONNECTED_HARD_CORES_NO_CROSS_PRODUCT",
+    "RANDOM_SMALL_EXACT_TERMINALITY_CONTROLS"
+  ],
+  "gate": "EXACT_TYPED_CONDITIONAL_BACKDOOR_DEPTH_AND_DNF",
+  "metrics": [
+    "split_nodes",
+    "memo_states",
+    "component_local_term_count",
+    "max_term_width",
+    "typed_depth",
+    "paid_discovery_work",
+    "terminal_language_histogram",
+    "candidate_cube_enumeration_guard"
+  ],
+  "motivation": "sealed typed portfolio removes Cartesian products across disconnected cores; remaining blocker is one connected Horn+Affine multirow core whose unconditional affine consequences are exhausted",
+  "parent_commit": "50dcd1d2d032d2c267f5ec5436c28b4cd059646b",
+  "public_basis": [
+    {
+      "doi": "10.1016/j.jcss.2024.103547",
+      "id": "Backdoor_DNFs_2024"
+    },
+    {
+      "doi": "10.1016/j.jcss.2024.103520",
+      "id": "SAT_Backdoors_Depth_Beats_Size_2024"
+    }
+  ],
+  "scientific_status": {
+    "P_VS_NP": "OPEN",
+    "Pi_negative_evidence_weight": 0,
+    "SAT_IN_P": "NOT_PROVED"
+  },
+  "status": "FROZEN_PREREGISTRATION_ONLY"
+}
