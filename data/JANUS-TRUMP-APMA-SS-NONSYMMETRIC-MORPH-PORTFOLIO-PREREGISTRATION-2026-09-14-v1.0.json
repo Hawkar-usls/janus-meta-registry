@@ -1,0 +1,46 @@
+{
+  "artifact_id": "TRUMP-APMA-SS-NONSYMMETRIC-MORPH-PORTFOLIO-PREREGISTRATION-2026-09-14",
+  "parent_scientific_authority": "59c415bcad0ab6d224d70881b7327247b96ebe34",
+  "gate": "APMA_SS_NON_SYMMETRIC_IMAGE_MORPH_PORTFOLIO",
+  "status": "FROZEN_PREREGISTRATION_ONLY_NOT_STARTED",
+  "claim": "A fixed finite catalog of exact morph attempts may be tried from one immutable checkpoint; every nonterminal or failed attempt must roll back hash-identically before the next attempt.",
+  "frozen_attempt_order": [
+    "PROVENANCE_REVERSE_THEN_NATIVE_TRACTABLE",
+    "DIRECT_COMPLETE_NEGATIVE_TRIPLES_TO_AT_MOST_2",
+    "STRUCTURAL_NEQ_REVERSE_THEN_NATIVE_TRACTABLE"
+  ],
+  "structural_reverse_contract": [
+    "affine rows must be exactly n disjoint canonical x_i XOR c_i = 1 pairs",
+    "image clauses must be negative Horn-image clauses of width 1..3 over exactly the two paired halves",
+    "decoded source must re-encode byte/semantic-identically to image horn+affine payload",
+    "no source hash or provenance field may be trusted by this morph",
+    "decoded source may terminate only in frozen 2CNF, Horn, or dual-Horn native solvers"
+  ],
+  "checkpoint_contract": [
+    "all attempts receive a fresh immutable copy of the original checkpoint",
+    "attempt failure or nonterminal result cannot mutate later input",
+    "checkpoint hash before and after every rolled-back attempt must match",
+    "failed attempts remain append-only in ledger"
+  ],  "frozen_controls": [
+    "corrupted-provenance asymmetric Horn SAT image",
+    "corrupted-provenance asymmetric Horn UNSAT image",
+    "corrupted-provenance asymmetric dual-Horn image",
+    "corrupted-provenance asymmetric 2CNF image",
+    "corrupted-provenance dense positive image must terminate via direct AT_MOST_2 before structural reverse",
+    "corrupted-provenance mixed general 3CNF must remain OPEN",
+    "corrupted affine-pair image must remain OPEN",
+    "every rollback hash must equal initial checkpoint hash",
+    "portfolio output must match direct native/reference semantics on exhaustive small controls"
+  ],
+  "captain_obvious_firewalls": [
+    "fixed morph order; no score, ranking, randomization, retry-until-success, or adaptive reordering",
+    "no full assignment cube inside candidate",
+    "no DPLL/general SAT oracle",
+    "portfolio size and discovery work are charged",
+    "PORTFOLIO_PASS != UNIVERSAL_POLYNOMIAL_MORPH_CATALOG",
+    "FINITE_CONTROLS != SAT_IN_P"
+  ],
+  "success_condition": "All exact controls pass, distinct controls exercise distinct portfolio paths, rollback is hash-identical, and unsupported general 3CNF remains OPEN.",
+  "falsifier": "Any semantic mismatch, checkpoint drift, forged terminal, hidden heuristic authority, or unsupported instance promoted from OPEN.",
+  "scientific_status_before": {"SAT_IN_P":"NOT_PROVED","P_VS_NP":"OPEN","Pi_negative_evidence_weight":0}
+}

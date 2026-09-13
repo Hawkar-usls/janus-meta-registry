@@ -1,0 +1,42 @@
+{
+  "artifact_id": "TRUMP-APMA-SS-NONSYMMETRIC-MORPH-PORTFOLIO-PROOF-OR-FALSIFICATION-2026-09-14",
+  "parent_scientific_authority": "59c415bcad0ab6d224d70881b7327247b96ebe34",
+  "preregistration_commit": "a8137fcfd6a89deaef5e000a09b7bc0f33ca608f",
+  "checker_commit": "d207a71c965316213cd418ff07309e9872e76557",
+  "run_id": "20260913T235132.080426Z",
+  "run_result": "PASS",
+  "run_duration_ms": 139,
+  "stdout_sha256": "dfc3f67fd75623da14a4d93ea51e4624da7f66562553e30d0bba9cf467ee192b",
+  "verdict": "PASS_APMA_SS_NONSYMMETRIC_PORTFOLIO__ROLLBACK_EXACT__GENERAL_3CNF_OPEN",
+  "proved_scoped": [
+    "A frozen three-morph portfolio can retry exact representations from one immutable checkpoint without state contamination.",
+    "Corrupted-provenance asymmetric tractable C023 images can reject provenance reverse, reject direct cardinality, then terminate through provenance-free structural NEQ reverse with exact re-encoding.",
+    "Dense positive triples with corrupted provenance terminate through direct AT_MOST_2 on morph two.",
+    "Corrupted affine-pair images are rejected by all authorized morphs and remain OPEN.",
+    "Mixed general 3CNF structurally reverse-morphs exactly but remains OPEN because no authorized native terminal applies.",
+    "Every rolled-back attempt preserves the original checkpoint hash exactly."
+  ],
+  "portfolio_order": [
+    "PROVENANCE_REVERSE_THEN_NATIVE_TRACTABLE",
+    "DIRECT_COMPLETE_NEGATIVE_TRIPLES_TO_AT_MOST_2",
+    "STRUCTURAL_NEQ_REVERSE_THEN_NATIVE_TRACTABLE"
+  ],  "controls": {
+    "asymmetric_horn_sat": "PASS via morph 3",
+    "asymmetric_horn_unsat": "PASS; source also belongs to 2CNF and is classified 2CNF by frozen precedence",
+    "asymmetric_dual_horn": "PASS via morph 3",
+    "asymmetric_2cnf": "PASS via morph 3",
+    "dense_positive": "PASS via morph 2",
+    "general_3cnf": "OPEN_GENERAL_SOURCE_3CNF",
+    "corrupt_affine": "OPEN_NO_AUTHORIZED_MORPH",
+    "captain_guard": "PASS; no randomization, DPLL, best-of scoring, candidate scoring, or full-cube enumeration in candidate"
+  },
+  "firewalls": [
+    "fixed finite portfolio is not a universal morph catalog",
+    "portfolio success on finite controls does not prove polynomial discovery for arbitrary SAT",
+    "rollback does not authorize desired-result search",
+    "exact structural reverse does not make general 3CNF tractable",
+    "FINITE_CONTROLS != SAT_IN_P"
+  ],
+  "next_gate": "APMA_SS_PARTIAL_EXACT_MORPH_COMPOSITION_ON_GENERAL_3CNF",
+  "scientific_status": {"SAT_IN_P":"NOT_PROVED","P_VS_NP":"OPEN","Pi_negative_evidence_weight":0}
+}
