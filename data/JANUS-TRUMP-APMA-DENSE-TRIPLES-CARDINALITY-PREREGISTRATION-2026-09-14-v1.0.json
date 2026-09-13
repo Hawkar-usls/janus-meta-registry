@@ -1,0 +1,48 @@
+{
+  "artifact_id": "TRUMP-APMA-DENSE-TRIPLES-CARDINALITY-PREREGISTRATION-2026-09-14",
+  "parent_commit": "2d6d20460a7d0541d80bfcc32535352717ec8822",
+  "gate": "AMORPHOUS_EXACT_MESSAGE_COMPILER_DENSE_TRIPLES",
+  "candidate_morph": "COMPLETE_NEGATIVE_3_UNIFORM_HORN -> AT_MOST_2_CARDINALITY",
+  "semantic_statement": "AND over all distinct triples (not c_i OR not c_j OR not c_k) is equivalent to sum_i c_i <= 2",
+  "allowed_authority": [
+    "exact clause census",
+    "exact variable-set identity",
+    "native C023/C034 NEQ pair verification",
+    "combinatorial cardinality equivalence"
+  ],
+  "forbidden": [
+    "DPLL or general SAT oracle",
+    "assignment-cube enumeration in candidate construction",
+    "accepting incomplete triple families",
+    "inferring threshold from solver outcomes",
+    "calling finite success a universal APMA theorem"
+  ],
+  "complexity_accounting": {
+    "recognition": "polynomial in explicit input size",
+    "carrier_size": "O(n)",
+    "assignment_update": "O(n) worst-case and reducible to O(1) metadata plus variable removal",
+    "witness_readout": "construct any assignment with at most two true falsity indicators",
+    "certificate_replay": "verify variable list, threshold, complete triple count and exact triple coverage"
+  },  "frozen_controls": [
+    "positive dense source image n=4..64",
+    "missing one triple must be rejected",
+    "duplicate-only corruption must not substitute for a missing triple",
+    "wrong threshold 1 and 3 must fail replay",
+    "nonuniform clause width must be rejected",
+    "small n truth-table equivalence replay",
+    "source witness correspondence through NEQ pairs"
+  ],
+  "pass_condition": "exact morph accepted only for complete negative 3-uniform family and replayed AT_MOST_2 carrier; carrier and construction cost remain polynomial in explicit source size",
+  "scientific_firewalls": [
+    "SCOPED_FAMILY_MORPH_NE_UNIVERSAL_SAT_COMPILER",
+    "O_N_CARRIER_ON_DENSE_TRIPLES_NE_P_EQUALS_NP",
+    "FINITE_REPLAY_NE_ASYMPTOTIC_UNIVERSALITY",
+    "P_VS_NP_OPEN"
+  ],
+  "next_if_pass": "generalize APMA recognition from complete 3-uniform symmetry to detectable threshold/cardinality hypergraph motifs, then attack non-symmetric dense reduction images",
+  "scientific_status": {
+    "SAT_IN_P": "NOT_PROVED",
+    "P_VS_NP": "OPEN",
+    "Pi_negative_evidence_weight": 0
+  }
+}

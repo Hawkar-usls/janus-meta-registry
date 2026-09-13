@@ -1,0 +1,62 @@
+{
+  "artifact_id": "TRUMP-APMA-DENSE-TRIPLES-CARDINALITY-PROOF-OR-FALSIFICATION-2026-09-14",
+  "branch": "research/trump-apma-dense-triples-cardinality-2026-09-14",
+  "parent_commit": "2d6d20460a7d0541d80bfcc32535352717ec8822",
+  "preregistration_commit": "48dd19eea632497ae93e389b322797eba44be9e0",
+  "checker_commit": "49e214c4868d1630594c03af14ab7962c0de0953",
+  "run": {
+    "run_id": "20260913T223516.179067Z",
+    "duration_ms": 270,
+    "exit_code": 0,
+    "authority_head": "43ae976fd4d2bd2b0bfbfa9009390928c2fd6135",
+    "stdout_sha256": "a544a0b04d15df3d3beeab68d76d263f46ffb0a8df6544214235c9a1633ce051",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "verdict": "PASS_APMA_DENSE_TRIPLES_CARDINALITY_MORPH",
+  "proved_scoped": [
+    "For every finite variable set C with |C| >= 3, the conjunction of all clauses (not c_i OR not c_j OR not c_k) over distinct triples is exactly equivalent to SUM(C) <= 2.",
+    "The explicit complete negative 3-uniform Horn family is recognizable in polynomial time in its explicit input size by exact triple census.",
+    "The recognized family compiles to an exact proof-carrying AT_MOST_2 carrier using O(n) variable entries instead of literal branching depth n.",
+    "C023/C034 NEQ source/falsity pairs are independently verified before the morph is authorized."
+  ],  "independent_checks": {
+    "small_truth_table_replay": "PASS for n=4..8",
+    "missing_triple_rejected": true,
+    "duplicate_patch_rejected": true,
+    "nonuniform_width_rejected": true,
+    "missing_NEQ_rejected": true,
+    "wrong_threshold_1_rejected": true,
+    "wrong_threshold_3_rejected": true,
+    "candidate_assignment_cube_enumeration": false,
+    "general_SAT_solver_in_candidate": false
+  },
+  "scaling": {
+    "largest_frozen_n": 64,
+    "source_clause_count_at_n64": 41664,
+    "carrier_variable_entries_at_n64": 64,
+    "carrier_json_bytes_at_n64": 747,
+    "symbolic_family_statement": "valid for arbitrary n under exact complete-triple recognition",
+    "recognition_cost": "polynomial in explicit input size",
+    "carrier_size": "O(n) words"
+  },
+  "interpretation": "APMA removed the previously observed depth-n branching on this exact killer family by morphing the same boundary meaning into a cardinality carrier before branching.",
+  "not_claimed": [
+    "universal APMA compiler",
+    "polynomial representation for arbitrary Horn+affine cores",
+    "SAT_IN_P",
+    "P_EQUALS_NP"
+  ],  "next_gate": {
+    "name": "APMA_THRESHOLD_MOTIF_GENERALIZATION",
+    "goal": "recognize broader proof-carrying cardinality/threshold motifs without requiring complete triple symmetry, then test non-symmetric dense reduction images"
+  },
+  "scientific_status": {
+    "SAT_IN_P": "NOT_PROVED",
+    "P_VS_NP": "OPEN",
+    "Pi_negative_evidence_weight": 0
+  },
+  "firewalls": [
+    "SCOPED_FAMILY_THEOREM_NE_UNIVERSAL_SAT_THEOREM",
+    "MORPH_RECOGNITION_MUST_REMAIN_POLYNOMIAL",
+    "NO_POSTHOC_SOLVER_CLASSIFICATION",
+    "P_VS_NP_OPEN"
+  ]
+}
