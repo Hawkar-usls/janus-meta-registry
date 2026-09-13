@@ -1,0 +1,55 @@
+{
+  "artifact_id": "TRUMP-EXACT-TYPED-AFFINE-OPEN-BOUNDARY-MESSAGE-PROOF-OR-FALSIFICATION-2026-09-13",
+  "date": "2026-09-13",
+  "branch": "research/trump-exact-typed-affine-open-boundary-message-2026-09-13",
+  "parent_commit": "1051011e5bcc21348ad2252be596a2e1712917af",
+  "preregistration_commit": "e1c21d922353fac12bb0e39d185bb4a7ec7e7f9d",
+  "checker_commit": "c3060e2eb7169395ed1590e46837af0ea212cc53",
+  "verdict": "PASS_TYPED_AFFINE_OPEN_MESSAGE__PARITY_BARRIER_COLLAPSES_TO_ONE_GF2_ROW__GENERAL_3CNF_OPEN",
+  "run": {
+    "run_id": "20260913T190314.622492Z",
+    "duration_ms": 592,
+    "exit_code": 0,
+    "source_head": "c3060e2eb7169395ed1590e46837af0ea212cc53",
+    "authority_head": "43ae976fd4d2bd2b0bfbfa9009390928c2fd6135",
+    "stdout_sha256": "7c2ff5e8e427311a8f836e998e8f5d67613ff25a099a7b68422025c82541ba93",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "checks": {
+    "captain_obvious_guard": "PASS: candidate enumerates only local support truth tables of size at most 2^3; no live-boundary cube and no general SAT oracle",
+    "xor_projection": "PASS",
+    "affine_contradiction": "PASS",
+    "non_affine_or3_rejected": "PASS_UNRESOLVED",
+    "random_exactness": "64/64 PASS, seed 20260913",
+    "parity_chain": {
+      "n_max": 128,
+      "source_clauses_at_n128": 512,
+      "auxiliary_free_cnf_lower_bound_at_n128": "2^127 = 170141183460469231731687303715884105728 clauses",
+      "typed_message_rows_at_every_tested_n": 1,
+      "typed_message_coefficients_at_n128": 128,
+      "small_n_bruteforce_profile_match": "PASS through n=8"
+    }
+  },
+  "proved_scoped": [
+    "exact affine-coset support bundles of width at most three can be recognized using constant-size local truth tables",
+    "their conjunction can be carried as a GF(2) linear system and existentially projected to the live boundary by Gaussian elimination",
+    "the R44AR parity-chain family that is exponentially large in equivalent auxiliary-free CNF projects to one GF(2) boundary row in the frozen typed message language",
+    "the candidate refuses a single non-affine 3-OR support bundle rather than silently approximating it"
+  ],
+  "interpretation": {
+    "positive": "The known parity projection blow-up is representation-specific, not semantic: a richer exact typed affine carrier removes that exponential encoding debt on the frozen family.",
+    "limitation": "The carrier is not a general 3-CNF projector. Mixed/non-affine support bundles remain unresolved.",
+    "next": "Build a proof-carrying typed sum-of-languages open-message algebra and test exact interaction/composition between affine factors and non-affine CNF factors without branch-choice reification."
+  },
+  "not_claimed": [
+    "SAT_IN_P",
+    "P_EQUALS_NP",
+    "polynomial message for arbitrary 3-CNF",
+    "polynomial worst-case state bound"
+  ],
+  "scientific_status": {
+    "SAT_IN_P": "NOT_PROVED",
+    "P_VS_NP": "OPEN",
+    "Pi_negative_evidence_weight": 0
+  }
+}
