@@ -1,0 +1,97 @@
+{
+  "artifact_id": "JANUS-TRUMP-ALL-JANUS-ARCHAEOLOGY-SAT-OCCUPANCY-2026-09-13-v1.0",
+  "date": "2026-09-13",
+  "source_root": "D:\\РЎРѕС„С‚\\All Janus",
+  "status": "ARCHAEOLOGY_SYNTHESIS__NO_SCIENTIFIC_PROMOTION",
+  "authority": {
+    "janus_fundamentum_parent": "60580defed553bae09d25a60a70bb399eb98f7c5",
+    "canonical_authority": "43ae976fd4d2bd2b0bfbfa9009390928c2fd6135",
+    "meta_parent": "1aaed71cbcbe4d5530476c8ede519ed2f6afb351"
+  },
+  "findings": [
+    {
+      "kind": "LOST_EXPERIMENT_INDEXED",
+      "name": "experimental_sat_profile.py",
+      "evidence": "All.txt indexed SAT occupancy decomposition: partial clauses -> full assignments -> power sums -> histogram reconstruction",
+      "recovered_source": false,
+      "interpretation": "specific combinatorial transform survives only as index description"
+    },
+    {
+      "kind": "LOST_EXPERIMENT_INDEXED",
+      "name": "Ggolden_slime.py",
+      "evidence": "All.txt indexed Subset Sum deterministic DP / P=NP proof claim",
+      "recovered_source": false,
+      "firewall": "pseudo-polynomial suspicion cannot be adjudicated without source; zero proof authority"
+    },
+    {
+      "kind": "HEURISTIC_ONLY",
+      "name": "NATSolver/HOLO.py",
+      "evidence": "random 3-SAT local flips/restarts; boundary-operator language",
+      "authority": "SAT witness search only; no UNSAT completeness"
+    },
+    {
+      "kind": "HEURISTIC_ONLY",
+      "name": "J/agent.py",
+      "evidence": "population/evolutionary SAT search with timeout",
+      "authority": "SAT witness search only; no UNSAT certificate"
+    },
+    {
+      "kind": "UNSOUND_OLD_DECOMPOSITION",
+      "name": "Addons/np_task.py::split",
+      "bug": "a clause made empty and false by fixed variables is dropped instead of preserved as contradiction",
+      "lesson": "any exact boundary projection must preserve explicit contradiction state"
+    },
+    {
+      "kind": "MISSING_IMPLEMENTATION",
+      "name": "run_sat_swarm_cycle",
+      "evidence": "caller exists but implementation not found in scanned Janus tree"
+    },
+    {
+      "kind": "NEGATIVE_ARCHIVE_CHECK",
+      "evidence": "experimental_sat_profile.py and Ggolden_slime.py absent from unpacked tree, RAR filename headers, late I0, world_memory snapshots, and scanned SQLite wormhole artifacts"
+    },
+    {
+      "kind": "WORMHOLE_DB_CHECK",
+      "path": "E:\\Janus_BFaiN\\raw_logs\\janus.db",
+      "wormhole_artifacts_rows": 0
+    },
+    {
+      "kind": "WORMHOLE_EVENT_CHECK",
+      "path": "E:\\Janus_BFaiN\\janus.db",
+      "janus_events_rows": 615,
+      "wormhole_file_events": 104,
+      "lost_sat_files_found": false
+    }
+  ],
+  "reconstructed_exact_core": {
+    "occupancy": "q(x)=number of satisfied clauses under full assignment x",
+    "histogram": "h_j = number of assignments x with q(x)=j, j=0..m",
+    "sat_criterion": "F is SAT iff h_m > 0",
+    "power_sums": "S_k = sum_x q(x)^k = sum_j h_j*j^k",
+    "moment_recovery": "S_0..S_m uniquely determine h_0..h_m by the Vandermonde system over j=0..m",
+    "generating_function": "P_F(z)=sum_x z^{q(x)}=sum_j h_j z^j; SAT iff coefficient[z^m] > 0",
+    "bottleneck": "computing moments or coefficients globally may encode exponential/#P work; polynomial number of bins does not imply polynomial computation"
+  },
+  "new_route": {
+    "proposal": "replace full assignment space by exact separator-conditioned occupancy generating-function messages",
+    "block_message": "M_B(beta,z)=sum over internal assignments alpha of z^(number of local clauses satisfied by alpha,beta)",
+    "composition": "for a clause partition whose only shared variables are boundary I, P_F(z)=sum_beta product_B M_B(beta,z); multiplication is coefficient convolution",
+    "expected_cost": "message table has 2^|I| boundary rows times polynomial degree; exact but generally exponential in separator width",
+    "connection": [
+      "ENIGMA exact boundary relation",
+      "P-N C035 certified interface congruence",
+      "C039 factor/separator construction",
+      "C047 2^{O(k)} poly(n) trellis",
+      "TRUMP future-relevant exact interface search"
+    ]
+  },
+  "firewalls": [
+    "ARCHAEOLOGY_NE_PROOF",
+    "HEURISTIC_NE_THEOREM",
+    "POLYNOMIAL_OUTPUT_DIMENSION_NE_POLYNOMIAL_COMPUTATION",
+    "FINITE_TEST_NE_ASYMPTOTIC_THEOREM",
+    "SAT_IN_P_NOT_PROVED",
+    "P_VS_NP_OPEN",
+    "PI_NEGATIVE_EVIDENCE_WEIGHT_0"
+  ]
+}
