@@ -1,0 +1,36 @@
+{
+  "artifact_id": "TRUMP-DENSE-POSITIVE-TRIPLES-REACHABLE-DEPTH-THEOREM-PREREGISTRATION-2026-09-14",
+  "gate": "EXACT_DENSE_POSITIVE_TRIPLES_REACHABLE_DEPTH_THEOREM",
+  "parent_commit": "2d6d20460a7d0541d80bfcc32535352717ec8822",
+  "date": "2026-09-14",
+  "status": "FROZEN_PREREGISTRATION_ONLY",
+  "family": "F_n = AND_{1<=i<j<k<=n}(x_i OR x_j OR x_k), n>=3",
+  "claim": "under the frozen C023/C034 reduction-image typed-terminal grammar with exact NEQ propagation and component-parallel depth semantics, d(F_n)=n for every n>=3",
+  "upper_bound_obligation": "after all n source orientations are fixed, the image is terminal",
+  "lower_bound_adversary": "answer FALSE on the first two queried source variables and TRUE on every later query until the final variable",
+  "state_summary": "f=#assigned false, u=#unassigned",
+  "frozen_terminal_characterization": [
+    "UNSAT terminal iff f>=3",
+    "SAT terminal iff f+u<=2",
+    "otherwise mixed OPEN under the frozen grammar"
+  ],  "required_proof_steps": [
+    "prove residual source formula depends on partial assignment only through false set and unassigned set",
+    "prove three assigned false variables create an empty residual clause",
+    "prove no residual clause remains exactly when at most two variables are not assigned true",
+    "prove opposite-unit affine conflict cannot arise in the monotone family",
+    "prove the stated adversary keeps every prefix of length < n nonterminal",
+    "combine lower bound n with trivial upper bound n"
+  ],
+  "red_team": {
+    "source_language": "monotone positive 3-CNF, hence dual-Horn and trivially satisfiable",
+    "extended_grammar_prediction": "with provenance-preserving monotone/dual-Horn recognition, depth becomes 0",
+    "meaning": "the theorem is an obstruction to the frozen reduction-image grammar, not an NP-hardness lower bound"
+  },
+  "checker_scope": "symbolic predicate audit plus exhaustive n=3..12 replay as implementation control",
+  "allowed_verdicts": [
+    "PASS_THEOREM_DENSE_POSITIVE_TRIPLES_DEPTH_EQUALS_N_UNDER_FROZEN_GRAMMAR",
+    "FALSIFIED_THEOREM_OR_TERMINAL_CHARACTERIZATION",
+    "OPEN_PROOF_GAP"
+  ],
+  "scientific_status": {"SAT_IN_P":"NOT_PROVED","P_VS_NP":"OPEN","Pi_negative_evidence_weight":0}
+}
