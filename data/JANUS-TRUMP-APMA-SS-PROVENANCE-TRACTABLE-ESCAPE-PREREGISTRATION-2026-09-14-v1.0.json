@@ -1,0 +1,47 @@
+{
+  "artifact_id": "TRUMP-APMA-SS-PROVENANCE-TRACTABLE-ESCAPE-PREREGISTRATION-2026-09-14",
+  "schema": "JANUS_TRUMP_APMA_SS_GATE_PREREG_V1",
+  "parent_scientific_authority": "2fe6f74add635e5f8f024e9e62b1e0d83732f5ca",
+  "meta_protocol_commit": "d90d581aee9b9b53752aeffa6340ffa8bdff589f",
+  "gate": "EXACT_PROVENANCE_PRESERVING_TRACTABLE_ESCAPE_ON_C023_IMAGES",
+  "claim": "A C023/C034 image may be exact-reversed to its source CNF only when the frozen provenance/re-encoding certificate passes; a tractable source class may then be solved by its exact native algorithm. APMA-SS rollback must restore the original image checkpoint byte-identically after a failed morph.",
+  "fixed_morph_order": [
+    "PROVENANCE_PRESERVING_REVERSE_MORPH",
+    "TRACTABLE_SOURCE_LANGUAGE_RECOGNITION",
+    "COMPLETE_NEGATIVE_3_UNIFORM_HORN_TO_AT_MOST_2",
+    "OPEN_NO_AUTHORIZED_MORPH"
+  ],
+  "no_heuristics": true,
+  "candidate_forbidden": [
+    "general SAT or DPLL oracle",
+    "assignment-cube enumeration",
+    "random retry or ranking",
+    "reordering morphs after observing outcomes",
+    "accepting smaller carriers without an exact certificate",
+    "discarding failed morph attempts"
+  ],
+  "positive_controls": [
+    "dense positive triples source reverses exactly and is recognized as dual-Horn/monotone tractable",
+    "all-negative source reverses exactly and is recognized Horn tractable",
+    "2-CNF source reverses exactly and is recognized 2-SAT tractable"
+  ],
+  "negative_controls": [
+    "general mixed 3-CNF reverses exactly but remains OPEN",
+    "corrupted provenance schema rejects reverse morph",
+    "corrupted re-encoding rejects reverse morph"
+  ],
+  "rollback_killer_control": "Corrupt only reverse-morph provenance on a dense image. The reverse attempt must fail, rollback hash must equal the original checkpoint hash, and the later exact AT_MOST_2 morph must equal a direct AT_MOST_2 morph from the untouched checkpoint.",
+  "independent_checker": [
+    "reconstruct source independently from image encoding",
+    "re-encode and compare canonical image",
+    "truth-table replay only on small controls",
+    "verify rollback byte identity and append-only failed-attempt ledger",
+    "verify no source-hard instance is promoted from OPEN"
+  ],
+  "frozen_verdicts": [
+    "PASS_APMA_SS_PROVENANCE_ESCAPE_AND_ROLLBACK",
+    "FAIL_SEMANTIC_OR_ROLLBACK_MISMATCH",
+    "OPEN_GENERAL_SOURCE_3CNF"
+  ],
+  "scientific_status": {"SAT_IN_P":"NOT_PROVED","P_VS_NP":"OPEN","Pi_negative_evidence_weight":0}
+}
