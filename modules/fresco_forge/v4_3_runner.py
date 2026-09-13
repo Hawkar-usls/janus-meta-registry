@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
-"""JANUS Fresco Forge v4.3: Continuous Mural Composition Lock.
+"""JANUS Fresco Forge v4.3.1: Scene Focus Firewall + Continuous Mural Lock.
 
-Preserves v4.1.1 semantic-role / physical-gate firewalls and the v4.2.1 ancient
-visual grammar. v4.3 specifically blocks the observed tiled-icon/contact-sheet
-collapse and forces non-human system scenes into one continuous asymmetric mural
-field on a landscape canvas.
+Preserves v4.1.1 semantic-role / physical-gate firewalls and the ancient visual
+grammar. v4.3.1 fixes a new calibration defect: incidental `node`/`peer` words
+must not make every SYSTEM_ALLEGORY a swarm scene. The dominant semantic topic
+is scored first, then translated into a compact visual grammar that fits the
+actual multi-CLIP token budget.
 """
 from __future__ import annotations
 
 import json
 import os
+import re
 import time
 from typing import Iterable
 
@@ -18,16 +20,17 @@ import torch
 import forge as base
 import v3_runner as v3
 import v4_1_runner as v41
-import v4_1_1_runner as firewall  # noqa: F401  # preserves role/physical-gate firewall
+import v4_1_1_runner as firewall  # noqa: F401  # preserve semantic/physical-gate patches
 import v4_2_runner as v42
 
-GENERATOR_VERSION = "JANUS-FRESCO-FORGE-v4.3-continuous-mural-lock"
+GENERATOR_VERSION = "JANUS-FRESCO-FORGE-v4.3.1-scene-focus-firewall"
 GUIDANCE_SCALE = float(os.getenv("FRESCO_GUIDANCE_SCALE", "7.5"))
 
 NEGATIVE_CONTROL_CLASSES = [
     "FAIL__3D_MACHINE_COLLAPSE",
     "FAIL__DIAGRAM_GEOMETRY_COLLAPSE",
     "FAIL__TILED_ICON_GRID_COLLAPSE",
+    "FAIL__INCIDENTAL_TERM_SCENE_HIJACK",
 ]
 
 CONTINUOUS_MURAL_NEGATIVE = [
@@ -37,70 +40,183 @@ CONTINUOUS_MURAL_NEGATIVE = [
     "sticker sheet", "white background", "blank background", "equal cells", "repeated badges",
 ]
 
+MEMORY_PATH_TERMS = (
+    "memory", "storage", "archive", "forget", "retention", "deletion", "history", "ring",
+    "episode", "compaction", "persistence", "receipt", "forensic",
+)
+SWARM_PATH_TERMS = (
+    "swarm_contract", "distributed", "topology", "collective", "peer_exchange", "peer_state",
+    "other_nodes", "organism_model", "swarm_level", "node_contract",
+)
+MEMORY_VALUE_TERMS = (
+    "memory", "archive", "retention", "delete", "deletion", "storage", "history", "persist",
+    "rollover", "anomaly", "episode", "compaction",
+)
+SWARM_VALUE_TERMS = (
+    "distributed organism", "distributed swarm", "peer swarm", "collective learning", "swarm",
+    "multiple nodes", "healthy nodes", "peer disagreement",
+)
+
 
 def dedupe(values: Iterable[str]) -> list[str]:
     return v41.dedupe(values)
 
 
-def is_swarm_scene(scene: dict) -> bool:
-    corpus = v42.scene_corpus(scene)
-    return (
-        ("distributed" in corpus or "swarm" in corpus)
-        and any(k in corpus for k in ("peer", "node", "collective", "organism", "local model", "beacon"))
-    )
+def _clean(text: str, limit: int = 145) -> str:
+    text = re.sub(r"[_/]+", " ", str(text))
+    text = re.sub(r"\s+", " ", text).strip(" .;:-")
+    if len(text) > limit:
+        text = text[: limit - 1].rsplit(" ", 1)[0] + "…"
+    return text
 
 
-def continuous_system_translation(scene: dict) -> dict:
-    if is_swarm_scene(scene):
-        return {
-            "central_visual_subject": (
-                "one continuous ancient mural landscape containing several distinct beacon-like peer nodes, "
-                "each different in shape and placement, all belonging to the same living distributed organism"
-            ),
-            "central_action": (
-                "peer nodes keep local knowledge while selective observations and predictions travel between them "
-                "as thin irregular hand-painted ribbons crossing the same cracked plaster field"
-            ),
-            "supporting_motifs": [
-                "one peer may glow slightly brighter as a current candidate but has no throne, crown or central dominance",
-                "stale or missing peers appear as dim gaps or faded places within the same mural landscape",
-                "disagreement remains visible as differently colored ribbons that run beside one another without merging",
-                "learning and rollback appear as small irregular traces embedded in the shared painted terrain",
-            ],
-            "main_symbols": [
-                "unevenly spaced peer beacons", "shared continuous plaster field", "crossing signal ribbons", "faded absent positions",
-            ],
-            "human_presence": "none required; do not invent a ruler, portrait or human protagonist",
-            "composition_bias": [
-                "one continuous asymmetric mural scene across the entire frame",
-                "nodes are irregularly spaced in one shared painted environment, never arranged in rows or columns",
-                "no repeated circles, badges, medallions, tiles or equal compartments",
-                "connections cross open mural space instead of forming a clean network diagram",
-            ],
-            "semantic_anchors": v42.source_semantic_anchors(scene),
-        }
+def scene_focus_scores(scene: dict) -> dict[str, float]:
+    """Score dominant SYSTEM_ALLEGORY topic from semantic paths, not loose tokens."""
+    scores = {"MEMORY_ARCHIVE": 0.0, "DISTRIBUTED_SWARM": 0.0, "GENERIC_SYSTEM": 0.0}
+    for item in scene.get("role_audit", []):
+        path = str(item.get("path", "")).casefold()
+        value = str(item.get("visual_text") or item.get("value") or "").casefold()
+        weight = float(item.get("weight", 1.0) or 1.0)
+        scores["GENERIC_SYSTEM"] += min(weight, 2.0) * 0.08
 
-    translated = v42.translate_system_allegory(scene)
-    translated["composition_bias"] = dedupe(list(translated.get("composition_bias", [])) + [
-        "one continuous asymmetric mural scene across the entire frame",
-        "irregular placement with no rows, columns, equal cells or repeated compartments",
-        "all states share one connected painted plaster field",
-    ])
-    return translated
+        if any(t in path for t in MEMORY_PATH_TERMS):
+            scores["MEMORY_ARCHIVE"] += weight * 2.4
+        elif any(t in value for t in MEMORY_VALUE_TERMS):
+            scores["MEMORY_ARCHIVE"] += weight * 0.35
+
+        if any(t in path for t in SWARM_PATH_TERMS):
+            scores["DISTRIBUTED_SWARM"] += weight * 2.4
+        elif any(t in value for t in SWARM_VALUE_TERMS):
+            scores["DISTRIBUTED_SWARM"] += weight * 0.45
+
+    return {k: round(v, 3) for k, v in scores.items()}
+
+
+def infer_system_focus(scene: dict) -> tuple[str, dict[str, float]]:
+    scores = scene_focus_scores(scene)
+    ranked = sorted(scores.items(), key=lambda kv: kv[1], reverse=True)
+    winner, best = ranked[0]
+    runner_up = ranked[1][1]
+    # Require a real path-weighted signal and a useful margin over generic noise.
+    if winner != "GENERIC_SYSTEM" and best >= 4.0 and best >= runner_up * 1.18:
+        return winner, scores
+    return "GENERIC_SYSTEM", scores
+
+
+def compact_semantic_anchors(scene: dict, focus: str, limit: int = 2) -> list[str]:
+    ranked: list[tuple[float, str]] = []
+    for item in scene.get("role_audit", []):
+        path = str(item.get("path", "")).casefold()
+        value = str(item.get("visual_text") or item.get("value") or "").strip()
+        if not value or value.casefold() in {"true", "false"}:
+            continue
+        weight = float(item.get("weight", 1.0) or 1.0)
+        bonus = 0.0
+        if focus == "MEMORY_ARCHIVE" and any(t in path for t in MEMORY_PATH_TERMS):
+            bonus = 4.0
+        elif focus == "DISTRIBUTED_SWARM" and any(t in path for t in SWARM_PATH_TERMS):
+            bonus = 4.0
+        elif focus == "GENERIC_SYSTEM":
+            bonus = 0.5
+        ranked.append((weight + bonus, _clean(value)))
+    ranked.sort(key=lambda x: x[0], reverse=True)
+    return dedupe([text for _, text in ranked])[:limit]
+
+
+def translate_memory_archive(scene: dict, scores: dict[str, float]) -> dict:
+    return {
+        "focus": "MEMORY_ARCHIVE",
+        "focus_scores": scores,
+        "central_visual_subject": (
+            "one continuous painted river of records crossing an ancient wall, passing through four organically joined memory zones: "
+            "a recent circular ring, a long witness stream, bright rare-event knots, and a distant archive niche"
+        ),
+        "central_action": (
+            "ordinary old traces fade only after their useful essence is carried onward, while anomalies and significant episodes remain bright and pinned"
+        ),
+        "supporting_motifs": [
+            "a broken route temporarily curls back as archival debt, then reconnects to the archive",
+            "durable receipt is shown as a small sealed mark beside the archive",
+            "recent detail is dense near the ring and gradually condenses into fewer enduring symbols",
+        ],
+        "main_symbols": ["record river", "recent ring", "pinned bright anomalies", "archive niche", "fading ordinary traces"],
+        "human_presence": "none; memory is shown as a continuous painted process, not a person",
+        "composition_bias": [
+            "one flowing left-to-right mural path with no panel borders",
+            "irregular transitions between memory zones, never a grid",
+            "all marks share one cracked plaster surface",
+        ],
+        "semantic_anchors": compact_semantic_anchors(scene, "MEMORY_ARCHIVE"),
+    }
+
+
+def translate_distributed_swarm(scene: dict, scores: dict[str, float]) -> dict:
+    return {
+        "focus": "DISTRIBUTED_SWARM",
+        "focus_scores": scores,
+        "central_visual_subject": (
+            "several unequal beacon-like peer nodes scattered across one continuous ancient mural landscape, all parts of one distributed organism"
+        ),
+        "central_action": (
+            "distinct peers keep local knowledge while thin irregular painted ribbons carry selective observations and predictions across the shared plaster field"
+        ),
+        "supporting_motifs": [
+            "one current candidate may glow slightly brighter but has no throne or crown",
+            "missing peers are faded gaps in the same landscape",
+            "disagreement remains as separate colored ribbons instead of merging into one mind",
+        ],
+        "main_symbols": ["uneven peer beacons", "shared plaster field", "crossing signal ribbons", "faded absent positions"],
+        "human_presence": "none; do not invent a ruler, portrait or protagonist",
+        "composition_bias": [
+            "one asymmetric mural scene with irregular spacing",
+            "never arrange nodes in rows, columns, circles or equal cells",
+            "connections cross open painted space, not a clean network diagram",
+        ],
+        "semantic_anchors": compact_semantic_anchors(scene, "DISTRIBUTED_SWARM"),
+    }
+
+
+def translate_generic_system(scene: dict, scores: dict[str, float]) -> dict:
+    return {
+        "focus": "GENERIC_SYSTEM",
+        "focus_scores": scores,
+        "central_visual_subject": (
+            "a continuous ancient allegorical process painted as irregular channels, vessels, thresholds and changing states fused into one wall"
+        ),
+        "central_action": "the source-established process moves through its states across one connected mural without modern machinery or diagram grammar",
+        "supporting_motifs": [
+            "unresolved states remain dim",
+            "confirmed transitions appear clearer without triumphal symbolism",
+            "small source-supported differences are embedded as irregular painted details",
+        ],
+        "main_symbols": ["painted channels", "thresholds", "vessels", "changing states"],
+        "human_presence": "none unless explicit person-role evidence exists",
+        "composition_bias": ["one asymmetric continuous mural", "no repeated equal compartments", "all states share one plaster field"],
+        "semantic_anchors": compact_semantic_anchors(scene, "GENERIC_SYSTEM"),
+    }
 
 
 def build_translated_scene(scene: dict) -> dict:
-    if scene.get("archetype") == "SYSTEM_ALLEGORY":
-        translated = continuous_system_translation(scene)
+    archetype = scene.get("archetype")
+    if archetype == "SYSTEM_ALLEGORY":
+        focus, scores = infer_system_focus(scene)
+        if focus == "MEMORY_ARCHIVE":
+            translated = translate_memory_archive(scene, scores)
+        elif focus == "DISTRIBUTED_SWARM":
+            translated = translate_distributed_swarm(scene, scores)
+        else:
+            translated = translate_generic_system(scene, scores)
     else:
         translated = v42.build_translated_scene(scene)
+        translated["focus"] = archetype
+        translated["focus_scores"] = {}
+        translated["semantic_anchors"] = compact_semantic_anchors(scene, "GENERIC_SYSTEM")
         translated["composition_bias"] = dedupe(list(translated.get("composition_bias", [])) + [
-            "one continuous mural field across the full frame",
-            "asymmetric placement rather than repeated equal panels",
-            "no tiled, contact-sheet or specimen-board composition",
+            "one continuous mural field", "asymmetric placement", "no tiled or contact-sheet composition",
         ])
-    translated["schema"] = "janus.fresco_forge.ancient_visual_translation.v4_3"
+    translated["schema"] = "janus.fresco_forge.ancient_visual_translation.v4_3_1"
     translated["continuous_mural_lock"] = True
+    translated["scene_focus_firewall"] = True
     return translated
 
 
@@ -109,26 +225,27 @@ def render_prompt(scene: dict, translated: dict) -> str:
         vals = dedupe(items)
         return "; ".join(vals) if vals else fallback
 
+    # Deliberately compact: keep the complete prepared prompt below the real 450-token cap.
     style = (
-        "ONE CONTINUOUS ANCIENT WALL FRESCO covering the entire frame. Cracked aged lime plaster painted by hand "
-        "with worn ochre, iron red, soot black, terre verte and faded blue mineral pigments; pigment loss, stains, "
-        "abrasion, irregular cracks, flat contours and imperfect brushwork. The whole frame is one shared plaster wall."
+        "ONE CONTINUOUS ANCIENT WALL FRESCO. Entire frame is cracked aged lime plaster, hand-painted with worn ochre, iron red, "
+        "soot black, terre verte and faded blue mineral pigment; visible abrasion, stains, cracks and imperfect flat brushwork."
     )
-    scene_text = (
-        f"ARCHETYPE: {scene['archetype']}. SUBJECT: {translated['central_visual_subject']}. "
-        f"ACTION: {translated['central_action']}. PEOPLE: {translated['human_presence']}. "
-        f"MOTIFS: {join(translated.get('supporting_motifs', []), 'only source-supported motifs')}. "
-        f"SYMBOLS: {join(translated.get('main_symbols', []), 'only source-supported symbols')}. "
-        f"SOURCE MEANING: {join(translated.get('semantic_anchors', []), 'preserve source meaning without literal labels')}."
+    subject = (
+        f"FOCUS: {translated.get('focus', scene['archetype'])}. SUBJECT: {translated['central_visual_subject']}. "
+        f"ACTION: {translated['central_action']}. PEOPLE: {translated['human_presence']}."
+    )
+    detail = (
+        f"DETAILS: {join(translated.get('supporting_motifs', [])[:3], 'only source-supported details')}. "
+        f"SYMBOLS: {join(translated.get('main_symbols', [])[:5], 'only source-supported symbols')}. "
+        f"MEANING: {join(translated.get('semantic_anchors', [])[:2], 'preserve the dominant source meaning')}."
     )
     composition = (
-        f"COMPOSITION: {join(translated.get('composition_bias', []), 'one asymmetric continuous mural')}. "
-        "No grid, no tiles, no repeated medallions, no icon sheet, no contact sheet, no specimen board, no white background. "
-        "Every subject is embedded in the same continuous cracked plaster field with open irregular space between elements. "
-        "ROLE FIREWALL: internal names, repositories, protocols, workflow gates, adapters and states never become people or gods by name. "
-        "Unresolved claims stay unresolved. No diagram, infographic, CAD, UI, product shot, glossy machine, readable code, JSON or modern labels."
+        f"COMPOSITION: {join(translated.get('composition_bias', [])[:3], 'one asymmetric continuous mural')}. "
+        "No grid, tiles, repeated medallions, icon sheet, contact sheet, specimen board, white background or equal cells. "
+        "Everything shares one plaster field. System labels never become people or gods. Uncertain claims stay uncertain. "
+        "No diagram, infographic, CAD, UI, product shot, glossy machine, readable code, JSON or modern labels."
     )
-    return "\n".join([style, scene_text, composition]).strip()
+    return "\n".join([style, subject, detail, composition]).strip()
 
 
 def render_negative_prompt(scene: dict) -> str:
@@ -193,7 +310,7 @@ def generate_one(pipe, candidate, repo_root, output_root, model, steps, width, h
     scene_json = json.dumps(scene, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
     translated_json = json.dumps(translated, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
     receipt = {
-        "schema": "janus.fresco_forge.receipt.v4_3",
+        "schema": "janus.fresco_forge.receipt.v4_3_1",
         "generator": GENERATOR_VERSION,
         "status": "generated",
         "generated_at": base.utc_now(),
@@ -204,16 +321,19 @@ def generate_one(pipe, candidate, repo_root, output_root, model, steps, width, h
         "scene_plan_sha256": base.sha256_bytes(scene_json.encode("utf-8")),
         "translated_scene_sha256": base.sha256_bytes(translated_json.encode("utf-8")),
         "prompt_sha256": base.sha256_bytes(model_prompt.encode("utf-8")),
-        "prompt_mode": "semantic_role_firewall_plus_continuous_mural_style_lock",
+        "prompt_mode": "semantic_role_plus_scene_focus_plus_continuous_mural_lock",
         "original_prompt_tokens": original_prompt_tokens,
         "prompt_tokens": prompt_tokens,
         "max_prompt_tokens": max_tokens,
         "prompt_hard_truncated": hard_truncated,
         "prompt_chunks": chunks,
         "semantic_coverage_ratio": 1.0,
-        "semantic_model_policy": "ALL_NONTECHNICAL_SCALARS_TRACED__V4_1_1_FIREWALLS_PRESERVED__V4_3_CONTINUOUS_MURAL",
+        "semantic_model_policy": "ALL_NONTECHNICAL_SCALARS_TRACED__ROLE_FIREWALL__SCENE_FOCUS_FIREWALL__CONTINUOUS_MURAL",
         "false_personification_guard": True,
         "physical_gate_firewall": True,
+        "scene_focus_firewall": True,
+        "scene_focus_subtype": translated.get("focus"),
+        "scene_focus_scores": translated.get("focus_scores", {}),
         "ancient_visual_grammar_lock": True,
         "no_modern_visual_grammar": True,
         "full_frame_plaster_surface": True,
@@ -227,7 +347,7 @@ def generate_one(pipe, candidate, repo_root, output_root, model, steps, width, h
         "translated_scene": translated,
         "visual_projection": proj,
         "model": model,
-        "backend": "local_diffusers_v4_3_continuous_mural_chunked_clip",
+        "backend": "local_diffusers_v4_3_1_scene_focus_chunked_clip",
         "device": device,
         "scheduler": pipe.scheduler.__class__.__name__,
         "steps": steps,
