@@ -1,0 +1,205 @@
+{
+  "artifact_id": "JANUS-TRUMP-APMA-SS-PROOF-CARRYING-ROLLBACK-REPLAY-PROTOCOL-2026-09-14-v1.0",
+  "schema": "JANUS_APMA_SAVE_SCUM_PROTOCOL_V1",
+  "date": "2026-09-14",
+  "name": {
+    "short": "APMA-SS",
+    "expanded": "APMA Proof-Carrying Save/Rollback/Replay Protocol",
+    "origin_metaphor": "save scumming",
+    "scientific_role": "exact representation-search control protocol"
+  },
+  "source_provenance": {
+    "user_source_filename": "SS.json",
+    "source_sha256": "949771c5984de8231b86474068304983cf378b12a61907c040ee61794ab13bf1",
+    "source_bytes": 38083,
+    "archive_policy": "preserve source unchanged; this artifact is a derived scientific reinterpretation",
+    "source_core_reused": "checkpoint -> action -> outcome check -> rollback -> alternate attempt"
+  },
+  "semantic_rewrite": {
+    "kept": [
+      "checkpoint before a risky transformation",
+      "return to an exact prior state after a failed attempt",
+      "multiple attempts from the same preserved state",
+      "continue only after an accepted outcome"
+    ],
+    "removed_as_non_scientific": [
+      "desired-outcome optimization",
+      "RNG rerolling",
+      "repeat-until-lucky behavior",
+      "probabilistic preference",
+      "emotional or narrative success criteria",
+      "guide/wiki lookups as decision authority",
+      "human intuition as morph selector",
+      "post-hoc choice of the best-looking result"
+    ],
+    "replacement": "attempt only preregistered exact morphs; accept only independently replayed certificates; otherwise rollback byte-identically and continue the frozen catalog or return OPEN"
+  },
+  "state_model": {
+    "semantic_object": "exact joint boundary relation R(B)=exists_U C(B,U)",
+    "representation_state": [
+      "carrier_kind",
+      "carrier_payload",
+      "boundary_schema",
+      "provenance_links",
+      "certificate_set",
+      "resource_counters"
+    ],
+    "checkpoint_identity": "cryptographic hash over canonical serialization of semantic input + representation + provenance authority",
+    "meaning_invariant": "every committed morph must preserve the frozen claim-scoped relation exactly"
+  },
+  "checkpoint_contract": {
+    "create_when": [
+      "before each morph attempt",
+      "after each independently certified successful morph"
+    ],
+    "must_store": [
+      "canonical input hash",
+      "carrier serialization hash",
+      "boundary variables/order",
+      "source provenance ids",
+      "proof/certificate dependencies",
+      "frozen morph catalog version",
+      "resource counters"
+    ],
+    "rollback_requirement": "restored checkpoint must be byte-identical in canonical serialization and hash-equal before another morph is attempted"
+  },
+  "frozen_morph_catalog": {
+    "selection_rule": "deterministic preregistered order; no score, ranking, ML, randomization or success-conditioned reordering",
+    "initial_order": [
+      "PROVENANCE_PRESERVING_REVERSE_MORPH",
+      "EXACT_TRACTABLE_SOURCE_LANGUAGE_RECOGNITION",
+      "COMPLETE_UNIFORM_NEGATIVE_HYPERGRAPH_TO_AT_MOST_K",
+      "EXACT_AFFINE_BUNDLE_TO_GF2",
+      "EXACT_2CNF_TO_IMPLICATION_GRAPH",
+      "EXACT_COMPONENT_FACTORIZATION",
+      "EXACT_CERTIFIED_QUOTIENT_MERGE",
+      "OPEN_NO_AUTHORIZED_MORPH"
+    ],
+    "catalog_change_policy": "requires a new preregistration child; never mutate catalog during a run"
+  },
+  "attempt_protocol": [
+    {
+      "step": 1,
+      "phase": "SAVE",
+      "action": "freeze checkpoint C_t and append its hash to ledger"
+    },
+    {
+      "step": 2,
+      "phase": "SELECT",
+      "action": "take next unused morph in frozen deterministic catalog whose syntactic/provenance trigger is exactly satisfied"
+    },
+    {
+      "step": 3,
+      "phase": "EXECUTE",
+      "action": "construct candidate carrier M' without SAT/assignment enumeration unless explicitly allowed only in an independent bounded control"
+    },
+    {
+      "step": 4,
+      "phase": "VERIFY",
+      "action": "independent checker validates trigger, certificate, relation preservation, provenance and resource accounting"
+    },
+    {
+      "step": 5,
+      "phase": "COMMIT_OR_ROLLBACK",
+      "accept_if": "all frozen checks PASS",
+      "on_accept": "commit M', create new checkpoint, continue pipeline",
+      "on_fail": "append failure receipt, restore C_t byte-identically, mark morph exhausted"
+    },
+    {
+      "step": 6,
+      "phase": "STOP",
+      "conditions": [
+        "certified terminal SAT/UNSAT under authorized semantics",
+        "no authorized morph remains -> OPEN",
+        "resource budget exhausted -> UNKNOWN_RESOURCE_LIMIT"
+      ]
+    }
+  ],
+  "anti_heuristic_firewall": {
+    "forbidden": [
+      "random retry",
+      "best-of-N candidate choice",
+      "branch scoring",
+      "learned ranking",
+      "morph ordering changed by observed success",
+      "acceptance by smaller size without equivalence proof",
+      "hidden DPLL/SAT oracle",
+      "full live-boundary cube enumeration in candidate",
+      "discarding failed attempts",
+      "rewriting checkpoints after observing downstream results"
+    ],
+    "allowed": [
+      "fixed syntactic trigger recognition",
+      "polynomial-time exact algebra",
+      "proof-carrying provenance inverse",
+      "deterministic canonicalization",
+      "independent small exhaustive controls that have zero candidate authority"
+    ]
+  },
+  "resource_contract": {
+    "count_all": [
+      "trigger discovery work",
+      "morph construction work",
+      "certificate size",
+      "verification work",
+      "rollback serialization work",
+      "checkpoint storage",
+      "number of attempted morphs"
+    ],
+    "universal_goal": "for arbitrary instances, the total discovery+morph+verify+rollback path must be polynomial before any claim of SAT in P",
+    "finite_pass_firewall": "small finite success or bounded catalog success is not an asymptotic theorem"
+  },
+  "ledger_contract": {
+    "append_only": true,
+    "attempt_record_fields": [
+      "checkpoint_hash",
+      "morph_id",
+      "trigger_certificate",
+      "start_representation_hash",
+      "candidate_hash",
+      "verifier_result",
+      "failure_reason",
+      "resource_cost",
+      "rollback_hash",
+      "next_checkpoint_hash"
+    ],
+    "law": "a new PASS cannot erase an old FAIL"
+  },
+  "gate_integration": {
+    "parent_scientific_authority": "2fe6f74add635e5f8f024e9e62b1e0d83732f5ca",
+    "target_gate": "EXACT_PROVENANCE_PRESERVING_TRACTABLE_ESCAPE_ON_C023_IMAGES",
+    "APMA_SS_role": "control representation search across multiple exact morphs while preserving one frozen semantic checkpoint",
+    "primary_test": "C023/C034 reduction images where reverse provenance may expose a tractable source language",
+    "positive_controls": [
+      "dense positive triples -> reverse/source recognition and/or AT_MOST_2",
+      "affine bundle -> GF2",
+      "2CNF residual -> implication graph"
+    ],
+    "negative_controls": [
+      "general source 3-CNF remains OPEN",
+      "corrupted provenance inverse rejected",
+      "missing complete-hypergraph edge rejected by cardinality morph",
+      "certificate corruption forces rollback"
+    ],
+    "killer_control": "a failed earlier morph followed by a later valid morph must end in exactly the same certified semantics as running the later valid morph directly from the original checkpoint"
+  },
+  "captain_obvious": {
+    "principle": "save the exact meaning, not a lucky answer",
+    "question": "can APMA try a different exact representation after failure without changing the problem it is solving?",
+    "required_answer": "yes, only if rollback restores the identical semantic checkpoint and every alternative morph is independently certified"
+  },
+  "status_values": [
+    "MORPH_PASS",
+    "MORPH_FAIL_ROLLED_BACK",
+    "OPEN_NO_AUTHORIZED_MORPH",
+    "UNKNOWN_RESOURCE_LIMIT",
+    "CERTIFIED_SAT",
+    "CERTIFIED_UNSAT"
+  ],
+  "scientific_status": {
+    "SAT_IN_P": "NOT_PROVED",
+    "P_VS_NP": "OPEN",
+    "Pi_negative_evidence_weight": 0
+  },
+  "next_action": "archive source and APMA-SS before preregistration; then freeze and run the provenance-preserving tractable escape gate"
+}
