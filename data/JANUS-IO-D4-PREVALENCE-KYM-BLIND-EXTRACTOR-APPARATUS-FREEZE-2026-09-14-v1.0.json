@@ -1,0 +1,89 @@
+{
+  "schema": "janus.io.d4_prevalence.kym_blind_extractor_apparatus_freeze.v1_0",
+  "artifact_id": "JANUS-IO-D4-PREVALENCE-KYM-BLIND-EXTRACTOR-APPARATUS-FREEZE-2026-09-14-v1.0",
+  "created_date": "2026-09-14",
+  "repository_target": "Hawkar-usls/janus-meta-registry",
+  "parent_prereg": {
+    "artifact_id": "JANUS-IO-D4-PREVALENCE-UNBIASED-ALTERNATIVE-FRAME-PREREG-2026-09-14-v1.0",
+    "commit": "3276adf987d671866092a2c831263a3dbc35f54f"
+  },
+  "frame_manifest": {
+    "artifact_id": "JANUS-IO-D4-PREVALENCE-KYM-SKELETONS-MASTER-FRAME-MANIFEST-2026-09-14-v1.0",
+    "commit": "874815692d43a91b5a32f474faf31fbec5605ed3",
+    "item_count": 832,
+    "ordered_ids_sha256": "97ecfbbc9424297df29e35d0509f47a2b692545eff56cb8a8dbb7e36b28f14ea",
+    "full_ranked_order_sha256": "d3dd94b14cbc4e1d5ffbdfc1cb9821f6aa74d37c8a96b31dd7765c8bd18b583e"
+  },
+  "apparatus": {
+    "source_path": "tools/kym_blind_media_extractor.py",
+    "source_commit": "796ad39a4373d67dc816250591f0447aabe4079d",
+    "source_sha256": "1724bc9c23280fec08cefdb98e057ff759003336804851496e358273919d2f1a",
+    "test_path": "tests/test_kym_blind_media_extractor.py",
+    "test_commit": "2dc0f6eaef6327a2afe0688bc1fd93873456c0a4",
+    "test_sha256": "42414a242b12435181e5f5bd9ed84ba7254354ecc453fec5bc51a7de7a2de181",
+    "runtime": "Python standard library only",
+    "commands": ["prepare", "next", "record", "freeze"]
+  },
+  "frozen_behavior": {
+    "prepare": "Decode and hash-verify the frozen 832-ID manifest, reconstruct the preregistered SHA256(seed + ':' + decimal(photo_id)) rank order, verify the frozen ranked-order checksum and audit prefix, then initialize local state without network access.",
+    "next": "Retrieve exactly one next unscreened hash-ranked KYM photo. Page HTML exists only in memory long enough to extract whitelisted og:image/og:video-style media attributes. Human-facing output contains no page title, description, tags, comments, original media filename, or raw media URL.",
+    "record": "Accept only PASS, FAIL or OPEN with predeclared visual reason codes for the currently active object; skipping the active rank is forbidden.",
+    "freeze": "Available only after exactly 20 PASS decisions. Emits frozen sample IDs in rank order plus sample and ledger SHA256 receipts. Context/LRS/LES/CRI remain locked until the freeze artifact is externally committed/sealed.",
+    "exact_byte_dedupe": "Repeated media SHA256 is automatically excluded as DUPLICATE_MEDIA after its first occurrence.",
+    "retrieval_failure": "A retrieval failure is OPEN/RETRIEVAL_ERROR, never an automatic visual FAIL.",
+    "stop_rule": "Immediate stop at PASS #20. No post-hoc continuation for a prettier distribution."
+  },
+  "security_and_leakage_controls": {
+    "page_scheme": "HTTPS only",
+    "page_hosts": ["knowyourmeme.com", "www.knowyourmeme.com"],
+    "media_host_policy": "kym-cdn.com or subdomain suffix .kym-cdn.com only",
+    "redirects": "Every redirect target is revalidated against HTTPS and host policy.",
+    "page_size_limit_bytes": 4194304,
+    "media_size_limit_bytes": 104857600,
+    "media_type_allowlist": ["image/jpeg", "image/png", "image/gif", "image/webp", "image/avif", "video/mp4", "video/webm"],
+    "raw_media_url_persisted": false,
+    "raw_media_url_printed": false,
+    "page_html_persisted": false,
+    "page_visible_text_retained": false,
+    "neutral_local_filenames": true,
+    "sanitized_error_codes": true
+  },
+  "smoke_test_receipt": {
+    "result": "PASS_5_OF_5",
+    "network_used": false,
+    "fixtures": "synthetic/local only",
+    "real_kym_ranked_photo_ids_fetched": 0,
+    "first_ranked_photo_id_803203_fetched": false,
+    "tests": [
+      "HTML parser retains only whitelisted media URL attributes and discards visible semantic text",
+      "frozen-order reconstruction/checksum verification works on synthetic manifest/prereg fixture",
+      "public receipt excludes raw URL/title/caption/tags",
+      "record path stops exactly at PASS #20",
+      "freeze requires exactly 20 PASS and keeps context coding locked pending external seal"
+    ]
+  },
+  "residual_limitations": [
+    "The apparatus guarantees blindness to KYM page-level title/description/tags/comments and raw media URLs on its human-facing surface; it does not remove text already rasterized or animated inside the media itself.",
+    "Removing pixel-embedded meme text would alter the visual object and could obscure the source substrate, so such removal is not performed by v1.0.",
+    "Eligibility operators must judge source identity only and must not assign or record context semantics during this phase.",
+    "The apparatus does not itself prove that a visual is from The Skeleton Dance; PASS/FAIL/OPEN remains a visual source-identity judgment under the frozen preregistration."
+  ],
+  "development_contamination_audit": {
+    "ranked_frame_touched_during_development": false,
+    "ranked_media_downloads_during_development": 0,
+    "screening_decisions_recorded_during_development": 0,
+    "sample_ids_frozen_during_development": 0
+  },
+  "gate_state_after_apparatus_freeze": {
+    "frame_manifest": "FROZEN",
+    "hash_randomization": "FROZEN",
+    "prereg": "FROZEN",
+    "extractor_apparatus": "FROZEN_V1_0",
+    "visual_eligibility_screen": "NOT_STARTED",
+    "sample_freeze": "NOT_PASSED",
+    "context_coding": "LOCKED",
+    "cri": "FORBIDDEN"
+  },
+  "next_gate": "D4_PREVALENCE_KYM_ELIGIBILITY_SCREEN_AND_SAMPLE_FREEZE_GATE",
+  "canonical_seal": "THE BLIND EXTRACTION APPARATUS IS FROZEN BEFORE THE FIRST RANKED KYM MEDIA OBJECT IS FETCHED. DEVELOPMENT AND SMOKE TESTING USED SYNTHETIC LOCAL FIXTURES ONLY. KYM PAGE-LEVEL SEMANTIC TEXT AND RAW MEDIA URLS ARE NOT EXPOSED BY THE HUMAN-FACING SCREENING SURFACE. THE REAL D4 ELIGIBILITY SCREEN HAS NOT YET STARTED."
+}
