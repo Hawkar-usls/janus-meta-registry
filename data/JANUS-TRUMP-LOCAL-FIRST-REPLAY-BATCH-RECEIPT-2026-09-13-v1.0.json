@@ -1,0 +1,71 @@
+{
+  "schema": "JANUS_TRUMP_LOCAL_FIRST_REPLAY_BATCH_RECEIPT_V1",
+  "version": "1.0",
+  "date": "2026-09-13",
+  "parent_meta_commit": "b1e1547d507e6e14f378fe8b40277a98fd758ff0",
+  "source_head": "c74f8dcd0827e343c0dc35b210231a71ee72c17d",
+  "authority_head": "43ae976fd4d2bd2b0bfbfa9009390928c2fd6135",
+  "journal": "records/TRUMP_LOCAL_FIRST_DEVELOPMENT_JOURNAL_2026-09-13.jsonl",
+  "runs": [
+    {
+      "run_id": "20260913T013238.498235Z",
+      "gate": "EXACT_BERKOWITZ_Q_BOUNDARY_INDEPENDENT_REPLAY",
+      "command": "python q_boundary_independent_checker.py --out C:\\JANUS\\_WORK\\JANUS_RUN_JOURNAL\\tmp\\q_boundary_independent_replay.json",
+      "duration_ms": 3277,
+      "exit_code": 1,
+      "result": "FAIL",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "1db4399396c8f3b5d1c1cff0d061b9ae7e051d439da2acdd03f18d981254e8a9",
+      "stdout_log": "artifacts/trump/local-first/2026-09-13/20260913T013238.498235Z-exact-berkowitz-q-boundary-independent-replay.stdout.log",
+      "stderr_log": "artifacts/trump/local-first/2026-09-13/20260913T013238.498235Z-exact-berkowitz-q-boundary-independent-replay.stderr.log"
+    },
+    {
+      "run_id": "20260913T013309.319222Z",
+      "gate": "EXACT_BERKOWITZ_Q_BOUNDARY_INDEPENDENT_REPLAY",
+      "command": "python q_boundary_independent_checker.py --out C:\\JANUS\\_WORK\\JANUS_RUN_JOURNAL\\tmp\\q_boundary_independent_replay.json",
+      "duration_ms": 3242,
+      "exit_code": 0,
+      "result": "PASS",
+      "stdout_sha256": "76f0ccdb7c5556497265fdeb3e21799efd3c81f31a93dd6dd92b87079a62362c",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "artifacts/trump/local-first/2026-09-13/20260913T013309.319222Z-exact-berkowitz-q-boundary-independent-replay.stdout.log",
+      "stderr_log": "artifacts/trump/local-first/2026-09-13/20260913T013309.319222Z-exact-berkowitz-q-boundary-independent-replay.stderr.log"
+    },
+    {
+      "run_id": "20260913T013338.226619Z",
+      "gate": "EXACT_BERKOWITZ_Q_BOUNDARY_CORRUPTION_TESTS",
+      "command": "python q_boundary_corruption_tests.py",
+      "duration_ms": 15968,
+      "exit_code": 0,
+      "result": "PASS",
+      "stdout_sha256": "2fc985367cfd5d3d1ef74a7314fc2a020cec72625274447e7c2154a72ff52356",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "artifacts/trump/local-first/2026-09-13/20260913T013338.226619Z-exact-berkowitz-q-boundary-corruption-tests.stdout.log",
+      "stderr_log": "artifacts/trump/local-first/2026-09-13/20260913T013338.226619Z-exact-berkowitz-q-boundary-corruption-tests.stderr.log"
+    }
+  ],
+  "preserved_failure_interpretation": {
+    "run_id": "20260913T013238.498235Z",
+    "classification": "INFRASTRUCTURE_OUTPUT_PATH_FAILURE",
+    "reason": "TARGET_TMP_DIRECTORY_DID_NOT_EXIST",
+    "scientific_effect": "NONE",
+    "retry_input_change": "NONE_TO_CERTIFICATE_OR_RECEIPT;_ONLY_OUTPUT_DIRECTORY_CREATED"
+  },
+  "successful_replay": {
+    "run_id": "20260913T013309.319222Z",
+    "status": "PASS_INDEPENDENT_EXACT_Q_BOUNDARY_REPLAY",
+    "checked_q_boundaries": 872,
+    "mismatches": 0
+  },
+  "successful_red_team": {
+    "run_id": "20260913T013338.226619Z",
+    "status": "PASS_ALL_CORRUPTIONS_REJECTED",
+    "cases": 5
+  },
+  "result_artifact": {
+    "path": "artifacts/trump/local-first/2026-09-13/q_boundary_independent_replay.result.json",
+    "sha256": "80316e0fd3c307b7a5295312237be489d4a40f6574f78ac76adcb95862a9a900"
+  },
+  "scientific_status_change": "NONE",
+  "next_gate": "EXACT_K_C_RESIDUAL_COORDINATE_INJECTIVITY_VS_CONGRUENCE_NOT_YET_PREREGISTERED"
+}
