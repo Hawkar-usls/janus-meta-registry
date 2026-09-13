@@ -32,7 +32,7 @@ concurrency:
 jobs:
   forge:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 120
 
     steps:
       - name: Checkout meta-registry
@@ -71,6 +71,7 @@ jobs:
           python -m py_compile modules/fresco_forge/v4_3_runner.py
           python -m py_compile modules/fresco_forge/v4_4_runner.py
           python -m py_compile modules/fresco_forge/v5_story_renderer.py
+          python -m py_compile modules/fresco_forge/v5_1_story_renderer.py
 
       - name: Resolve CPU-safe generation budget
         id: budget
@@ -93,27 +94,33 @@ jobs:
 
       - name: Discover next unique JSON record
         env:
-          FRESCO_GUIDANCE_SCALE: '7.0'
+          FRESCO_GUIDANCE_SCALE: '7.2'
           FRESCO_MAX_PROMPT_CHUNKS: '6'
           FRESCO_V5_RECENT_SIGNATURE_WINDOW: '18'
+          FRESCO_V5_MAX_RENDER_ATTEMPTS: '3'
+          FRESCO_V5_MIN_FIGURE_TARGET: '10'
+          FRESCO_V5_MIN_SECONDARY_GROUPS: '3'
         run: |
-          python modules/fresco_forge/v5_story_renderer.py \
+          python modules/fresco_forge/v5_1_story_renderer.py \
             --max-images '${{ steps.budget.outputs.max_images }}' \
             --dry-run
 
-      - name: Generate fresco locally with v5 monumental allegorical story renderer
+      - name: Generate fresco locally with v5.1 monumental density gates
         if: github.event_name != 'pull_request'
         env:
           FRESCO_MODEL: dreamlike-art/dreamlike-photoreal-2.0
           FRESCO_STEPS: '24'
           FRESCO_WIDTH: '512'
           FRESCO_HEIGHT: '512'
-          FRESCO_GUIDANCE_SCALE: '7.0'
+          FRESCO_GUIDANCE_SCALE: '7.2'
           FRESCO_MAX_PROMPT_CHUNKS: '6'
           FRESCO_V5_RECENT_SIGNATURE_WINDOW: '18'
+          FRESCO_V5_MAX_RENDER_ATTEMPTS: '3'
+          FRESCO_V5_MIN_FIGURE_TARGET: '10'
+          FRESCO_V5_MIN_SECONDARY_GROUPS: '3'
           TOKENIZERS_PARALLELISM: 'false'
         run: |
-          python modules/fresco_forge/v5_story_renderer.py \
+          python modules/fresco_forge/v5_1_story_renderer.py \
             --max-images '${{ steps.budget.outputs.max_images }}'
 
       - name: Commit generated fresco and receipt
@@ -154,5 +161,6 @@ jobs:
           path: |
             artifacts/janus-fresco-forge/images/*.png
             artifacts/janus-fresco-forge/receipts/*.json
+            artifacts/janus-fresco-forge/calibration_failures/*
             artifacts/janus-fresco-forge/ledger.jsonl
           if-no-files-found: ignore
