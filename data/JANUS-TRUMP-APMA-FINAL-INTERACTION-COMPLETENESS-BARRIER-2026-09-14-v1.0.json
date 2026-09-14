@@ -1,0 +1,43 @@
+{
+  "artifact_id": "TRUMP-APMA-FINAL-INTERACTION-COMPLETENESS-BARRIER-PROOF-OR-FALSIFICATION-2026-09-14",
+  "parent_scientific_authority": "feb0aa1a63f2bcb5c51e57259b1c8d0619c75447",
+  "preregistration_commit": "8fa687b3ec75969cdc17c66d39a9daf5c8a4ed56",
+  "checker_commit": "bdefa0ab07333844a3edb6f7aaafc617012b64ca",
+  "gate": "APMA_FINAL_INTERACTION_COMPLETENESS_BARRIER",
+  "verdict": "PASS_APMA_FINAL_INTERACTION_COMPLETENESS_BARRIER__UNRESTRICTED_TYPED_INTERACTION_IS_3SAT_IDENTITY_IMAGE",
+  "run": {
+    "run_id": "20260914T022110.578996Z",
+    "duration_ms": 140,
+    "exit_code": 0,
+    "stdout_sha256": "49e1082af2d6450d76409b948e1ff36e149954ffa52288f9dff443b881e0c111",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "theorem_bridge": [
+    "Every width<=2 clause is a 2CNF carrier clause.",
+    "Every width=3 clause is Horn if it has at most one positive literal, otherwise dual-Horn because it then has at most one negative literal.",
+    "The typed carrier conjunction is exactly the original cleaned 3CNF with linear-size identity partition.",
+    "A Boolean assignment verifies every carrier in linear time, so unrestricted typed interaction is in NP.",
+    "By standard NP-completeness of 3SAT and the identity partition, unrestricted typed interaction is NP-hard."
+  ],
+  "checks": {
+    "all_eight_signed_width3_patterns": true,
+    "width1_width2_route_2cnf": true,
+    "random_recomposition_64_of_64": true,
+    "random_assignment_semantics": true,
+    "linear_size_identity": true,
+    "captain_guard": true
+  },
+  "consequence": "A polynomial universal APMA compiler that closes all remaining unrestricted cycle, hyperedge and high-width shared interactions would imply SAT_IN_P and therefore P_EQUALS_NP. The present work does not provide that compiler.",
+  "firewalls": [
+    "NP_COMPLETENESS_BRIDGE_NE_P_NE_NP_PROOF",
+    "UNIVERSAL_POLY_INTERACTION_COMPILER_WOULD_IMPLY_SAT_IN_P",
+    "STRUCTURED_APMA_PASSES_NE_UNIVERSAL_CLOSURE",
+    "FINITE_CONTROLS_VALIDATE_IMPLEMENTATION_NOT_NP_HARDNESS_THEOREM"
+  ],
+  "next": "STOP_APMA_ROUTE_AND_REPORT_EXACT_FRONTIER",
+  "scientific_status": {
+    "SAT_IN_P": "NOT_PROVED",
+    "P_VS_NP": "OPEN",
+    "Pi_negative_evidence_weight": 0
+  }
+}

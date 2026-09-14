@@ -1,0 +1,42 @@
+{
+  "artifact_id": "TRUMP-APMA-FINAL-INTERACTION-COMPLETENESS-BARRIER-PREREGISTRATION-2026-09-14",
+  "parent_scientific_authority": "feb0aa1a63f2bcb5c51e57259b1c8d0619c75447",
+  "gate": "APMA_FINAL_INTERACTION_COMPLETENESS_BARRIER",
+  "status": "FROZEN_PREREGISTRATION_ONLY",
+  "sealed_dependencies": {
+    "universal_typed_mosaic": "7a47fcad66c29f5cb9889faf45f65addda5bbc9c",
+    "module_forest": "cd2c7fc8675cf07612be04b6eedf00115741b895",
+    "log_cotree_cutset": "4688355d649ce1d73cffa424b87f2b21b8c89879",
+    "canonical_cycle_cut": "a9cb1f86",
+    "symbolic_projection": "c06cefad",
+    "renamable_horn_high_width": "0a82218997096ada4f7489e47f412dd2b480b149",
+    "factor_tree_hyperedge": "feb0aa1a63f2bcb5c51e57259b1c8d0619c75447"
+  },
+  "claim": "The unrestricted shared-interaction decision problem over the exact APMA width<=3 typed mosaic is 3SAT-complete under the identity clause partition; therefore a universal polynomial closure of all remaining cycle, hyperedge and high-width interactions is equivalent to SAT in P.",
+  "proof_plan": [
+    "classify every width<=2 clause into 2CNF and every width=3 clause into Horn or dual-Horn by literal polarity count",
+    "preserve every source clause exactly in one carrier and prove exact recomposition",
+    "show source assignment satisfies the 3CNF iff it satisfies the conjunction of all typed carriers",
+    "use standard 3SAT NP-completeness for hardness and direct assignment verification for NP membership"
+  ],  "frozen_controls": [
+    "ALL_EIGHT_SIGNED_WIDTH3_CLAUSE_PATTERNS_CLASSIFIED_EXACTLY",
+    "WIDTH1_AND_WIDTH2_ROUTE_TO_2CNF",
+    "RANDOM_3CNF_RECOMPOSITION_EXACT",
+    "RANDOM_ASSIGNMENT_SEMANTICS_PRESERVED",
+    "OUTPUT_SIZE_LINEAR_IN_INPUT",
+    "NO_SAT_SOLVER_IN_REDUCTION_OR_CLASSIFIER"
+  ],
+  "firewalls": [
+    "NP_COMPLETENESS_BRIDGE_NE_P_NE_NP_PROOF",
+    "UNIVERSAL_POLY_INTERACTION_COMPILER_WOULD_IMPLY_SAT_IN_P",
+    "STRUCTURED_APMA_PASSES_NE_UNIVERSAL_CLOSURE",
+    "FINITE_CONTROLS_VALIDATE_IMPLEMENTATION_NOT_NP_HARDNESS_THEOREM"
+  ],
+  "scientific_status": {
+    "SAT_IN_P": "NOT_PROVED",
+    "P_VS_NP": "OPEN",
+    "Pi_negative_evidence_weight": 0
+  },
+  "next_if_pass": "STOP_APMA_ROUTE_AND_REPORT_EXACT_FRONTIER",
+  "next_if_fail": "repair only classification/recomposition proof"
+}
