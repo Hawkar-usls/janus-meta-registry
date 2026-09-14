@@ -1,0 +1,46 @@
+{
+  "artifact_id": "TRUMP-APMA-SS-PARTIAL-EXACT-MORPH-COMPOSITION-PREREGISTRATION-2026-09-14",
+  "gate": "APMA_SS_PARTIAL_EXACT_MORPH_COMPOSITION_ON_GENERAL_3CNF",
+  "parent_scientific_authority": "5fb79a2413cb91e47b737a43827f3e26a93eefa6",
+  "status": "FROZEN_PREREGISTRATION_ONLY",
+  "candidate": "Sequential proof-carrying extraction of exact typed clause carriers while preserving an exact residual and immutable checkpoint lineage.",
+  "source_interface": "exact structural reverse of certified C023/C034 NAND3+NEQ image to width<=3 source CNF",
+  "semantic_invariant": "SOURCE_CNF == conjunction(ALL_COMMITTED_TYPED_CARRIERS, EXACT_RESIDUAL)",
+  "morph_sequence": [
+    "EXTRACT_2CNF_CLAUSES",
+    "EXTRACT_HORN3_CLAUSES",
+    "EXTRACT_DUAL_HORN3_CLAUSES"
+  ],
+  "routing": {
+    "2CNF": "clause width <= 2",
+    "HORN3": "width = 3 and positive_literal_count <= 1",
+    "DUAL_HORN3": "remaining width = 3 clauses; therefore negative_literal_count <= 1"
+  },
+  "commit_rule": "A proposal changes state only after exact recomposition and grammar verification.",
+  "rollback_rule": "Rejected proposal leaves committed state hash byte-identical.",
+  "global_status_rule": "UNSAT may lift from any exact carrier contradiction; SAT may not be inferred from individually SAT carriers when variables interact.",
+  "complexity_charge": "routing, canonicalization, verification, commit, native carrier solve, and interaction analysis are all charged.",
+  "frozen_controls": [
+    "mixed SAT source with all three carrier kinds",
+    "all eight signed 3-clauses on three variables: Horn carrier SAT + dual-Horn carrier SAT + conjunction UNSAT",
+    "carrier-local UNSAT safely lifts global UNSAT",
+    "corrupted extraction proposal rejected with hash-identical rollback",
+    "random small width<=3 exact recomposition against brute force"
+  ],
+  "captain_firewalls": [
+    "NO_ASSIGNMENT_ENUMERATION_IN_CANDIDATE",
+    "INDIVIDUAL_CARRIER_SAT_NE_GLOBAL_SAT",
+    "SHARED_VARIABLES_REQUIRE_INTERACTION_REASONING",
+    "PARTIAL_MORPH_NE_SOLVER",
+    "POLYNOMIAL_REPRESENTATION_NE_POLYNOMIAL_DECISION",
+    "FAILED_PROPOSAL_NE_STATE_MUTATION",
+    "FINITE_CONTROLS_NE_ASYMPTOTIC_THEOREM"
+  ],
+  "expected_scientific_status": {
+    "SAT_IN_P": "NOT_PROVED",
+    "P_VS_NP": "OPEN",
+    "Pi_negative_evidence_weight": 0
+  },
+  "success_condition": "Exact universal width<=3 typed mosaic construction passes while the signed-cube interaction killer remains OPEN rather than falsely SAT.",
+  "next_if_pass": "attack exact shared-variable interaction between simultaneously tractable carriers"
+}

@@ -1,0 +1,51 @@
+{
+  "artifact_id": "TRUMP-APMA-SS-PARTIAL-EXACT-MORPH-COMPOSITION-PROOF-OR-FALSIFICATION-2026-09-14",
+  "parent_scientific_authority": "5fb79a2413cb91e47b737a43827f3e26a93eefa6",
+  "preregistration_commit": "1d21246805c4d8d8b432c31b3a433e53218cc965",
+  "checker_commit": "245f1f4ba4524f41b63e41a5367088b31c6083ee",
+  "verdict": "PASS_APMA_SS_PARTIAL_EXACT_MORPH_COMPOSITION__UNIVERSAL_3CNF_MOSAIC__SHARED_INTERACTION_OPEN",
+  "run": {
+    "run_id": "20260914T002124.544815Z",
+    "duration_ms": 169,
+    "exit_code": 0,
+    "stdout_sha256": "d593d00f0513d1766061a14bf3e5037d91a39deb89793d3b3206f8273eb05c0d",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "proved_scoped": [
+    "Every CNF clause of width at most three is routed exactly into 2CNF, Horn3, or dual-Horn3 under the frozen deterministic priority grammar.",
+    "The conjunction of all committed typed carriers plus the exact residual is clause-multiset identical to the source CNF.",
+    "After all three frozen extraction morphs, the raw residual is empty for every width<=3 source CNF.",
+    "Rejected partial-morph proposals do not mutate the committed checkpoint state.",
+    "An UNSAT exact carrier safely lifts global UNSAT.",
+    "Individually SAT carriers with shared variables do not authorize global SAT."
+  ],
+  "interaction_killer": {
+    "formula": "all eight signed 3-clauses on variables x1,x2,x3",
+    "horn3_clause_count": 4,
+    "dual_horn3_clause_count": 4,
+    "horn3_status": "SAT",
+    "dual_horn3_status": "SAT",
+    "global_status": "UNSAT_BY_INDEPENDENT_BRUTE_FORCE",
+    "candidate_status": "OPEN_CROSS_CARRIER_INTERACTION",
+    "interpretation": "Polynomial exact representation of every clause does not imply polynomial decision of shared-variable carrier interaction."
+  },
+  "controls": {
+    "random_exactness": "72/72 PASS, seed 20260914",
+    "disjoint_carrier_sat_composition": "PASS",
+    "carrier_local_unsat_lifting": "PASS",
+    "corrupted_proposal_rollback_identity": "PASS",
+    "captain_guard_hits": []
+  },
+  "scientific_boundary": [
+    "UNIVERSAL_TYPED_MOSAIC_NE_SAT_SOLVER",
+    "POLYNOMIAL_REPRESENTATION_NE_POLYNOMIAL_INTERACTION_DECISION",
+    "INDIVIDUAL_CARRIER_SAT_NE_GLOBAL_SAT",
+    "FINITE_RANDOM_CONTROLS_NE_ASYMPTOTIC_DECISION_THEOREM"
+  ],
+  "next_gate": "APMA_EXACT_SHARED_VARIABLE_INTERACTION_MESSAGE",
+  "scientific_status": {
+    "SAT_IN_P": "NOT_PROVED",
+    "P_VS_NP": "OPEN",
+    "Pi_negative_evidence_weight": 0
+  }
+}
