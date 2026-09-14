@@ -1,0 +1,45 @@
+{
+  "artifact_id": "TRUMP-APMA-EXACT-RENAMABLE-HORN-HIGH-WIDTH-MORPH-PREREGISTRATION-2026-09-14",
+  "parent_scientific_authority": "4688355d649ce1d73cffa424b87f2b21b8c89879",
+  "gate": "APMA_EXACT_RENAMABLE_HORN_HIGH_WIDTH_MORPH",
+  "status": "FROZEN_PREREGISTRATION_ONLY",
+  "theorem_scope": "width<=3 CNF instances for which a global polarity renaming exists that makes every clause Horn",
+  "algorithm": [
+    "remove tautological clauses and duplicate literals exactly",
+    "construct a 2CNF instance over one flip-bit per source variable; each pair of literals in a source clause forbids both renamed literals from being positive",
+    "solve only this flip-bit 2CNF",
+    "if unsatisfiable return OPEN_NOT_RENAMABLE_HORN",
+    "apply the certified polarity flip to the source",
+    "verify every renamed clause is Horn and that inverse renaming reconstructs the cleaned source",
+    "solve the renamed Horn formula with the native Horn solver",
+    "map a SAT witness back through the polarity flip; preserve UNSAT exactly"
+  ],
+  "complexity_contract": "For width<=3, flip-recognition has O(number_of_literal_occurrences) pair constraints, followed by 2SAT plus Horn solving; no boundary-state enumeration.",
+  "external_context_non_authoritative": [
+    "Aspvall-style disguised/renamable Horn recognition",
+    "1994 linear renaming-to-Horn algorithm",
+    "q-Horn is a larger known tractable language reserved for a later APMA morph"
+  ],  "frozen_controls": [
+    "HIGH_WIDTH_RENAMABLE_HORN_FAMILY_MUST_BE_OPEN_IN_PRIOR_CUTSET_GATE_AND_CLOSE_HERE",
+    "RENAMABLE_HORN_UNSAT_CONTROL_MUST_CERTIFY_UNSAT",
+    "DENSE_K6_6_HIGH_CYCLE_RANK_CONTROL_MUST_REMAIN_OPEN_IF_NOT_RENAMABLE_HORN",
+    "SIGNED_CUBE_MUST_REMAIN_OPEN_NOT_RENAMABLE_HORN",
+    "CORRUPTED_FLIP_CERTIFICATE_MUST_BE_REJECTED",
+    "RANDOM_SMALL_RENAMABLE_HORN_64_OF_64_EXACT_REPLAY"
+  ],
+  "firewalls": [
+    "NO_GENERAL_SAT_ORACLE",
+    "NO_BOUNDARY_ASSIGNMENT_ENUMERATION",
+    "NO_HEURISTIC_FLIP_SEARCH",
+    "RENAMABLE_HORN_PASS_NE_UNIVERSAL_3SAT_THEOREM",
+    "OPEN_NOT_RENAMABLE_NE_HARDNESS",
+    "FINITE_REPLAY_NE_ASYMPTOTIC_THEOREM"
+  ],
+  "next_if_pass": "APMA_EXACT_QHORN_OR_OTHER_HIGH_WIDTH_MORPH",
+  "next_if_fail": "preserve exact falsifier and repair only the claimed recognition/renaming theorem",
+  "scientific_status": {
+    "SAT_IN_P": "NOT_PROVED",
+    "P_VS_NP": "OPEN",
+    "Pi_negative_evidence_weight": 0
+  }
+}
