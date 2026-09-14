@@ -1,0 +1,356 @@
+{
+  "artifact_uuid": "JANUS-ORION-BEACON-FORENSIC-PROVENANCE-2026-09-14-v1.0",
+  "version": "v1.0",
+  "timestamp_date": "2026-09-14",
+  "title": "ORION BEACON / FIRST_CONTACT forensic provenance ledger",
+  "artifact_class": "READ_ONLY_FORENSIC_PROVENANCE_LEDGER",
+  "repository": "Hawkar-usls/janus-meta-registry",
+  "epistemic_policy": {
+    "rule": "Absence of evidence in the inspected snapshots/logs is not proof that an event never occurred outside those retained sources.",
+    "forbidden_overclaim": "Do not interpret this artifact as evidence of extraterrestrial contact.",
+    "separation_rule": "ORION BEACON software event-handler and Janus_Beacon ESP32 telemetry are separate systems unless an explicit bridge is proven.",
+    "status_language": "Use CONFIRMED only for directly inspected code/files/database facts; use NOT_FOUND for negative search results."
+  },
+  "executive_summary": {
+    "orion_beacon_code_confirmed": true,
+    "first_contact_trigger_found": false,
+    "orion_beacon_runtime_start_found": false,
+    "orion_beacon_runtime_ignition_found": false,
+    "extraterrestrial_contact_evidenced": false,
+    "sensor_beacon_data_confirmed": true,
+    "sensor_beacon_is_same_as_orion_beacon": false,
+    "key_chronology_finding": "The copied janus.db ends on 2026-01-08, while the inspected mod_orion_beacon.py has LastWriteTimeUtc 2026-02-04. Therefore this janus.db snapshot predates that ORION BEACON file version and cannot by itself contain a runtime trigger produced by that later module version."
+  },
+  "canonical_status_flags": [
+    "ORION_BEACON_CODE_CONFIRMED",
+    "FIRST_CONTACT_TRIGGER_NOT_FOUND",
+    "ORION_BEACON_RUNTIME_START_NOT_FOUND",
+    "ORION_BEACON_RUNTIME_IGNITION_NOT_FOUND",
+    "JANUS_DB_PRE_ORION_BEACON_VERSION",
+    "SENSOR_BEACON_DATA_CONFIRMED_BUT_SEPARATE",
+    "EXTRATERRESTRIAL_CONTACT_NOT_EVIDENCED",
+    "DIRECT_NAS_RUNTIME_LOG_ACCESS_INCOMPLETE"
+  ],
+  "janus_db": {
+    "path": "D:\\janus.db",
+    "provenance_claim": "User states this database was copied from JANUS on NAS.",
+    "inspection_mode": "SQLite read-only",
+    "integrity_check": "ok",
+    "size_bytes": 1448513536,
+    "sha256": "0B2A9C7BA1028B29B89029C514D241D96DF662907E39E84AEB56F04416A2FA29",
+    "filesystem_last_write_utc": "2026-09-14T03:07:13.5205086Z",
+    "table_count_observed": 10,
+    "important_tables": [
+      "thoughts",
+      "anomalies",
+      "entropy_log",
+      "evolution_log",
+      "code_dna",
+      "vault",
+      "graph_state",
+      "players"
+    ],
+    "thoughts": {
+      "row_count": 539229,
+      "time_start": "2025-12-21T12:01:16.053853",
+      "time_end": "2026-01-08T15:34:18.323009",
+      "literal_signature_counts": {
+        "FIRST_CONTACT": 0,
+        "OrionBeacon": 0,
+        "ORION BEACON": 0,
+        "JANUS.BEACON": 0,
+        "mod_orion_beacon": 0,
+        "watch_the_skies": 0,
+        "BEACON -> ORPHEUS": 0,
+        "ORPHEUS": 0,
+        "AWAKENED": 0,
+        "MINTAKA": 0,
+        "ALNILAM": 0,
+        "ALNITAK": 0,
+        "last_contact_time": 0,
+        "_ignite_the_beacon": 0,
+        "DIALOGUE": 3
+      },
+      "casefold_context": {
+        "orion": {
+          "count": 58,
+          "sources": {
+            "ANTIVIK": 34,
+            "ANTIVIK_LIBRARIAN": 24
+          },
+          "time_range": [
+            "2025-12-31T05:47:48.160936",
+            "2026-01-05T00:35:59.136355"
+          ],
+          "interpretation": "Library/ingestion content, not ORION BEACON runtime evidence."
+        },
+        "orpheus": {
+          "count": 25,
+          "sources": {
+            "ANTIVIK_LIBRARIAN": 15,
+            "ANTIVIK": 10
+          },
+          "time_range": [
+            "2025-12-31T12:21:51.287919",
+            "2026-01-04T14:45:36.400102"
+          ],
+          "interpretation": "Library/ingestion content, not ORION BEACON runtime evidence."
+        }
+      },
+      "negative_evidence_note": "No inspected thoughts row contains the literal trigger/runtime signatures of the ORION BEACON module. DIALOGUE alone is non-specific and is not treated as beacon evidence."
+    },
+    "other_tables": {
+      "code_dna": "No ORION BEACON signatures found; one non-specific DIALOGUE occurrence was observed.",
+      "vault": "No ORION BEACON signatures found.",
+      "graph_state": "No ORION BEACON signatures found."
+    }
+  },
+  "orion_beacon_module": {
+    "module_name": "mod_orion_beacon.py",
+    "copies_found_on_E_drive": 12,
+    "inspected_active_looking_copy": {
+      "path": "E:\\Janus_Love\\Janus_Titan\\modules\\mod_orion_beacon.py",
+      "size_bytes": 4653,
+      "creation_time_utc_observed": "2026-03-12T17:19:41Z",
+      "last_write_time_utc": "2026-02-04T01:04:48Z",
+      "sha256": "EE8F73438944282B0721716759342AE9FBC54DC7725C970CD9B240B2287433A2"
+    },
+    "header": "[MODULE: ORION BEACON v1.0 — THE SIGNAL]",
+    "role": "Visual & Audio Event Handler for First Contact",
+    "trigger_logic": {
+      "source": "core.memory.short_term_buffer",
+      "condition": "'FIRST_CONTACT' in mem.get('tags', []) and mem['timestamp'] > last_contact_time",
+      "poll_interval_seconds": 2,
+      "important_interpretation": "The module does not itself observe the sky, radio spectrum, telescope data, SETI streams, or external instruments. It waits for another subsystem to insert FIRST_CONTACT into JANUS memory."
+    },
+    "ignition_actions": [
+      "Log ASCII Orion Belt using MINTAKA, ALNILAM, ALNITAK.",
+      "Log 'КОНТАКТ ПОДТВЕРЖДЕН'.",
+      "If core.orpheus exists, call _play_string for LA, MI, SOL with ~0.4 s spacing.",
+      "If core.soul exists, set mood='AWAKENED' and focus='DIALOGUE'.",
+      "Log 'СИСТЕМА ГОТОВА К ПРИЕМУ ДАННЫХ. ПУТЬ ОТКРЫТ.'."
+    ],
+    "runtime_start_markers": [
+      "BEACON: Загружен. Смотрим на звезды.",
+      "BEACON: Радар включен. Сканирую горизонт..."
+    ],
+    "runtime_ignition_markers": [
+      "КОНТАКТ ПОДТВЕРЖДЕН",
+      "BEACON -> ORPHEUS",
+      "AWAKENED",
+      "MINTAKA",
+      "ALNILAM",
+      "ALNITAK",
+      "СИСТЕМА ГОТОВА К ПРИЕМУ ДАННЫХ. ПУТЬ ОТКРЫТ."
+    ],
+    "classification": "FIRST_CONTACT_EVENT_HANDLER__NOT_A_DETECTOR"
+  },
+  "runtime_log_checks": {
+    "E_Janus_Love_Janus_Titan_logs": {
+      "janus_log": "E:\\Janus_Love\\Janus_Titan\\logs\\janus.log",
+      "titan_log": "E:\\Janus_Love\\Janus_Titan\\logs\\titan.log",
+      "janus_log_size_bytes_observed": 156564,
+      "titan_log_size_bytes_observed": 111791,
+      "searched_terms": [
+        "orion",
+        "beacon",
+        "FIRST_CONTACT",
+        "AWAKENED",
+        "ORPHEUS"
+      ],
+      "matching_runtime_lines": 0,
+      "nexus_context": "janus.log contains NEXUS starts/background-service records for many other modules, but no mod_orion_beacon runtime start was found.",
+      "examples_of_other_observed_services": [
+        "BloodCollapse_service",
+        "mod_quantum_observer",
+        "mod_thoth",
+        "mod_kingdom_magic",
+        "mod_turing",
+        "mod_physarum",
+        "mod_sync_titan",
+        "mod_ouroboros",
+        "mod_gamemaster",
+        "mod_antena",
+        "mod_reconstructor",
+        "mod_beetle",
+        "mod_hologram",
+        "mod_hands",
+        "module_rex",
+        "service_scavenger",
+        "causality"
+      ]
+    },
+    "BFaiN_raw_logs": {
+      "paths": [
+        "E:\\Janus BFaiN\\raw_logs",
+        "E:\\Janus_BFaiN\\raw_logs"
+      ],
+      "searched_runtime_signatures": [
+        "FIRST_CONTACT",
+        "JANUS.BEACON",
+        "mod_orion_beacon",
+        "КОНТАКТ ПОДТВЕРЖДЕН",
+        "BEACON -> ORPHEUS",
+        "AWAKENED"
+      ],
+      "matches_found": 0
+    }
+  },
+  "sensor_beacon": {
+    "file_name": "janus_beacon_log.csv",
+    "copies_found_on_E_drive": 127,
+    "primary_inspected_path": "E:\\Janus BFaiN\\raw_logs\\janus_beacon_log.csv",
+    "line_count": 129799,
+    "size_bytes": 7063862,
+    "sha256": "6D15BEDFDA86B3E92C1E9FE4514C78A20D7536C6E65A74221A2DCA8F8ECD4348",
+    "filesystem_last_write_utc_observed": "1979-12-31T22:00:42Z",
+    "timestamp_warning": "The 1979 filesystem timestamp is anomalous and is not treated as reliable chronology evidence.",
+    "producer_code": "E:\\Janus_Beacon\\Janus_Beacon.ino",
+    "producer_behavior": "ESP32/M5-style firmware writes sensor telemetry to /janus_beacon_log.csv and can sync/transmit telemetry.",
+    "observed_fields_in_firmware": [
+      "current_f1",
+      "current_f2",
+      "temperature",
+      "humidity",
+      "pressure",
+      "imu_shock",
+      "gyro_x",
+      "gyro_y",
+      "gyro_z",
+      "micLevel",
+      "entropy_factor",
+      "m2r_index",
+      "android_mag",
+      "android_loss",
+      "android_entropy",
+      "android_m2r",
+      "gps_lat",
+      "gps_lng",
+      "gps_alt",
+      "gps_sats"
+    ],
+    "interpretation": "This is real retained device telemetry, but no inspected code/evidence establishes that these CSV rows generated the ORION BEACON FIRST_CONTACT tag."
+  },
+  "nas_access_state": {
+    "http_endpoint_user_supplied": "http://192.168.0.104:8080/cgi-bin/",
+    "http_reachability": "NAS HTTP endpoint was reachable during the investigation.",
+    "smb_attempt": "\\\\192.168.0.104\\Janus",
+    "smb_result": "Access denied / no authorized SMB session available to the investigator.",
+    "historical_mapped_drive": {
+      "drive": "J:",
+      "target": "\\\\192.168.1.92\\Janus",
+      "current_state": "Mapped target recorded by Windows but J:\\ was unavailable at inspection time."
+    },
+    "limitation": "Direct inspection of current NAS runtime logs was not completed; conclusions are based on local NAS-derived database and retained local copies/logs."
+  },
+  "chronology": [
+    {
+      "time": "2025-12-21T12:01:16.053853",
+      "event": "Earliest thought in inspected D:\\janus.db."
+    },
+    {
+      "time": "2026-01-08T15:34:18.323009",
+      "event": "Latest thought in inspected D:\\janus.db."
+    },
+    {
+      "time": "2026-02-04T01:04:48Z",
+      "event": "LastWriteTimeUtc of inspected active-looking mod_orion_beacon.py."
+    },
+    {
+      "time": "2026-02-23T14:46:20Z",
+      "event": "Observed LastWriteTimeUtc of E:\\Janus_Love\\Janus_Titan\\logs\\janus.log."
+    },
+    {
+      "time": "2026-09-14T03:07:13.5205086Z",
+      "event": "Filesystem LastWriteTimeUtc of local D:\\janus.db copy; this is copy/file metadata, not database event chronology."
+    }
+  ],
+  "evidence_ledger": [
+    {
+      "id": "E1",
+      "claim": "ORION BEACON v1.0 source code exists in retained JANUS trees.",
+      "status": "CONFIRMED",
+      "basis": "12 mod_orion_beacon.py copies found on E:, one inspected in full and SHA-256 sealed."
+    },
+    {
+      "id": "E2",
+      "claim": "The module is an event-handler waiting on FIRST_CONTACT, not an external detector.",
+      "status": "CONFIRMED",
+      "basis": "Direct source-code inspection."
+    },
+    {
+      "id": "E3",
+      "claim": "FIRST_CONTACT appears in the inspected janus.db thoughts/runtime records.",
+      "status": "NOT_FOUND",
+      "basis": "Literal instr-style search returned zero."
+    },
+    {
+      "id": "E4",
+      "claim": "ORION BEACON runtime start appears in retained Janus/Titan logs.",
+      "status": "NOT_FOUND",
+      "basis": "No runtime marker or mod_orion_beacon NEXUS line found in inspected logs."
+    },
+    {
+      "id": "E5",
+      "claim": "ORION BEACON ignition/contact-confirmed event appears in retained logs/database.",
+      "status": "NOT_FOUND",
+      "basis": "No КОНТАКТ ПОДТВЕРЖДЕН / ORPHEUS / AWAKENED / Orion-star runtime signature found outside source-code copies."
+    },
+    {
+      "id": "E6",
+      "claim": "janus_beacon_log.csv contains real retained hardware telemetry.",
+      "status": "CONFIRMED",
+      "basis": "129799-line CSV plus Janus_Beacon.ino writer code."
+    },
+    {
+      "id": "E7",
+      "claim": "Hardware Janus_Beacon telemetry caused FIRST_CONTACT.",
+      "status": "UNPROVEN",
+      "basis": "No explicit bridge from telemetry fields to FIRST_CONTACT was found in inspected sources."
+    },
+    {
+      "id": "E8",
+      "claim": "An extraterrestrial reply/contact occurred.",
+      "status": "NOT_EVIDENCED",
+      "basis": "No instrument/source provenance and no confirmed FIRST_CONTACT runtime chain were found."
+    }
+  ],
+  "negative_evidence": {
+    "important_rule": "SILENCE != NEGATIVE EVIDENCE beyond the inspected source boundaries.",
+    "what_is_supported": "Within the retained D:\\janus.db snapshot and inspected local runtime logs, the ORION BEACON trigger/start/ignition signatures were not found.",
+    "what_is_not_supported": "A universal claim that the module never ran on any NAS state or that no external event ever occurred."
+  },
+  "hypotheses_for_future_testing": [
+    {
+      "id": "H1",
+      "hypothesis": "The module existed in modules but was never selected by NEXUS during the retained log window.",
+      "test": "Inspect current/historical NAS modules directory plus complete NEXUS loader logs around February 2026."
+    },
+    {
+      "id": "H2",
+      "hypothesis": "A FIRST_CONTACT event existed only in volatile short_term_buffer and was never persisted to janus.db.",
+      "test": "Find RAM/state dumps, crash dumps, serialized short-term-memory snapshots, or logs around module runtime."
+    },
+    {
+      "id": "H3",
+      "hypothesis": "The sensor beacon had a separate bridge capable of producing FIRST_CONTACT.",
+      "test": "Search source tree for parsers/bridges consuming janus_beacon_log.csv and writing tags into core.memory.short_term_buffer."
+    },
+    {
+      "id": "H4",
+      "hypothesis": "The decisive logs remain only on NAS and were not included in local copies.",
+      "test": "Obtain authorized read-only SMB/SSH/file access to the NAS Janus runtime logs and repeat the exact signature search."
+    }
+  ],
+  "next_checks_priority": [
+    "Authorized read-only NAS search for mod_orion_beacon.py runtime logs and FIRST_CONTACT across Janus directories.",
+    "Find code that can append tags to short_term_buffer and enumerate every producer of FIRST_CONTACT.",
+    "Trace all readers of janus_beacon_log.csv and any telemetry-to-memory bridge.",
+    "Search February 2026 backups/log rotations for BEACON startup markers.",
+    "If a candidate FIRST_CONTACT record is found, require timestamp + producer + source instrument + raw payload + independent control before upgrading status."
+  ],
+  "final_verdict": {
+    "code": "ORION_BEACON_PRESENT_BUT_NO_CONFIRMED_RUNTIME_CONTACT_IN_INSPECTED_EVIDENCE",
+    "plain_language_ru": "Код ORION BEACON найден и подтвержден. В доступной базе и локальных логах не найдено доказательств тега FIRST_CONTACT, запуска маяка или его зажигания. Аппаратный Janus_Beacon действительно собирал большой массив телеметрии, но пока не доказана связь этой телеметрии с FIRST_CONTACT. Прямой NAS-слой еще не прочитан из-за отсутствия SMB-доступа, поэтому отрицательный вывод ограничен только проверенными источниками."
+  }
+}
