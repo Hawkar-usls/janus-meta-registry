@@ -1,0 +1,44 @@
+{
+  "artifact_id": "TRUMP-APMA-EXACT-FACTOR-TREE-HYPEREDGE-INTERACTION-PREREGISTRATION-2026-09-14",
+  "parent_scientific_authority": "cd2c7fc8675cf07612be04b6eedf00115741b895",
+  "gate": "APMA_EXACT_FACTOR_TREE_HYPEREDGE_INTERACTION",
+  "status": "FROZEN_PREREGISTRATION_ONLY",
+  "theorem_scope": "APMA width<=3 typed mosaic whose module-variable incidence factor graph is a forest and each module incident shared-variable boundary has size <= floor(log2 L); shared-variable degree is unrestricted.",
+  "discovery": [
+    "reuse deterministic typed mosaic and connected-module discovery",
+    "build bipartite incidence graph with module nodes and shared-variable nodes",
+    "certify factor-graph acyclicity without a supplied decomposition"
+  ],
+  "algorithm": [
+    "root each factor-tree component at smallest module id",
+    "variable nodes pass two-value exact compatibility messages",
+    "module nodes enumerate only their certified incident shared-variable boundary rows",
+    "native 2CNF/Horn/dual-Horn solver checks each module row",
+    "recover one global witness or certify every root row false"
+  ],
+  "complexity_contract": "sum_M 2^|B_M| <= module_count * L under the frozen module-boundary budget; variable-node degree does not multiply the Boolean state space."
+,  "frozen_controls": [
+    "PRIOR_THREE_MODULE_SHARED_VARIABLE_HYPEREDGE_MUST_CLOSE",
+    "HIGH_DEGREE_SHARED_VARIABLE_STAR_MUST_CLOSE",
+    "FACTOR_GRAPH_CYCLE_MUST_OPEN",
+    "WIDE_CENTER_MODULE_TREE_MUST_OPEN_INTERFACE_WIDTH",
+    "DISJOINT_COMPONENTS_MUST_COMPOSE",
+    "RANDOM_SMALL_ADMITTED_FACTOR_TREES_EXACT_REPLAY"
+  ],
+  "firewalls": [
+    "NO_GENERAL_SAT_ORACLE",
+    "NO_WHOLE_FORMULA_ASSIGNMENT_ENUMERATION_IN_CANDIDATE",
+    "BOUNDARY_ENUMERATION_ONLY_AFTER_MODULE_WIDTH_CERTIFICATE",
+    "VARIABLE_DEGREE_NE_BOUNDARY_WIDTH",
+    "FACTOR_TREE_PASS_NE_UNIVERSAL_3SAT_THEOREM",
+    "OPEN_FACTOR_CYCLE_NE_HARDNESS",
+    "OPEN_WIDTH_NE_HARDNESS"
+  ],
+  "scientific_status": {
+    "SAT_IN_P": "NOT_PROVED",
+    "P_VS_NP": "OPEN",
+    "Pi_negative_evidence_weight": 0
+  },
+  "next_if_pass": "APMA_EXACT_FACTOR_GRAPH_CYCLE_OR_HIGH_WIDTH_INTERACTION",
+  "next_if_fail": "preserve falsifier and localize incidence/message mismatch"
+}
