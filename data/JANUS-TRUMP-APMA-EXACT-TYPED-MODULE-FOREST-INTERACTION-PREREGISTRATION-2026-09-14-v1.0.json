@@ -1,0 +1,58 @@
+﻿{
+    "artifact_id":  "TRUMP-APMA-EXACT-TYPED-MODULE-FOREST-INTERACTION-PREREGISTRATION-2026-09-14",
+    "parent_scientific_authority":  "7a47fcad66c29f5cb9889faf45f65addda5bbc9c",
+    "gate":  "APMA_EXACT_TYPED_MODULE_FOREST_INTERACTION_MESSAGE",
+    "status":  "FROZEN_PREREGISTRATION_ONLY",
+    "theorem_scope":  "APMA universal width\u003c=3 CNF typed mosaic, split into native connected modules; exact shared-variable DP only when interaction graph is a forest, each shared variable belongs to at most two modules, and every module incident shared boundary has size \u003c= floor(log2 L).",
+    "carrier_languages":  [
+                              "2CNF",
+                              "HORN3",
+                              "DUAL_HORN3"
+                          ],
+    "discovery":  [
+                      "deterministic clause-to-carrier mosaic from parent gate",
+                      "deterministic connected components inside each carrier",
+                      "deterministic module interaction graph from shared variables"
+                  ],
+    "capability":  {
+                       "L":  "1+n+number_of_clauses+number_of_literal_occurrences",
+                       "boundary_budget":  "floor(log2(max(2,L)))",
+                       "row_bound":  "sum_M 2^|B_M| \u003c= module_count * L under admitted boundary budget"
+                   },
+    "algorithm":  [
+                      "build typed modules",
+                      "reject variable shared by \u003e2 modules",
+                      "reject module interaction cycle",
+                      "reject module boundary above budget",
+                      "root each tree at smallest module id",
+                      "enumerate only certified module incident-boundary rows",
+                      "condition native module and solve with its polynomial native solver",
+                      "bottom-up child-message join",
+                      "recover global witness or exhaustive false boundary certificate"
+                  ],
+    "frozen_controls":  [
+                            "SIGNED_CUBE_8_CLAUSES_MUST_CERTIFY_UNSAT",
+                            "DISJOINT_TYPED_MODULES_MUST_CERTIFY_SAT",
+                            "TRIANGLE_MUST_OPEN_MODULE_CYCLE",
+                            "THREE_MODULE_SHARED_VARIABLE_MUST_OPEN_INTERFACE_HYPEREDGE",
+                            "WIDE_EDGE_MUST_OPEN_INTERFACE_WIDTH",
+                            "LONG_ALTERNATING_CHAIN_MUST_STAY_POLYNOMIAL",
+                            "RANDOM_SMALL_ADMITTED_FORESTS_EXACT_REPLAY"
+                        ],
+    "firewalls":  [
+                      "NO_GENERAL_SAT_ORACLE",
+                      "NO_WHOLE_FORMULA_ASSIGNMENT_ENUMERATION_IN_CANDIDATE",
+                      "BOUNDARY_ENUMERATION_ONLY_AFTER_WIDTH_CERTIFICATE",
+                      "FOREST_PASS_NE_UNIVERSAL_3SAT_THEOREM",
+                      "OPEN_CYCLE_NE_HARDNESS",
+                      "OPEN_WIDTH_NE_HARDNESS",
+                      "FINITE_REPLAY_NE_ASYMPTOTIC_THEOREM"
+                  ],
+    "scientific_status":  {
+                              "SAT_IN_P":  "NOT_PROVED",
+                              "P_VS_NP":  "OPEN",
+                              "Pi_negative_evidence_weight":  0
+                          },
+    "next_if_pass":  "APMA_EXACT_CYCLIC_OR_HIGH_WIDTH_SHARED_INTERACTION",
+    "next_if_fail":  "preserve falsifier and localize mismatch"
+}

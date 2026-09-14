@@ -1,0 +1,46 @@
+{
+  "artifact_id": "TRUMP-APMA-EXACT-TYPED-MODULE-FOREST-INTERACTION-PROOF-OR-FALSIFICATION-2026-09-14",
+  "parent_scientific_authority": "7a47fcad66c29f5cb9889faf45f65addda5bbc9c",
+  "preregistration_commit": "2fd76060",
+  "checker_commit": "bec7abf40274db380719bd4a9e076dd93706206e",
+  "gate": "APMA_EXACT_TYPED_MODULE_FOREST_INTERACTION_MESSAGE",
+  "verdict": "PASS_APMA_EXACT_TYPED_MODULE_FOREST_INTERACTION__SIGNED_CUBE_CLOSED__CYCLE_AND_WIDTH_OPEN",
+  "run": {
+    "run_id": "20260914T005431.914723Z",
+    "duration_ms": 190,
+    "exit_code": 0,
+    "stdout_sha256": "586837689dfc420d4a5a605e6f5543c21b277ab2de04315792dcdb5cf77631db"
+  },
+  "proved_scoped": [
+    "APMA width<=3 typed mosaic can be decomposed into deterministic connected native modules.",
+    "If the module interaction graph is a forest, every shared variable belongs to at most two modules, and every module incident boundary has size <= floor(log2 L), exact bottom-up boundary-message DP is polynomial in the encoded input size.",
+    "Native 2CNF, Horn and dual-Horn solvers suffice for each certified boundary row; no whole-formula assignment enumeration is used by the candidate.",
+    "A global SAT witness can be recovered consistently across a certified module forest, and an empty root message certifies UNSAT."
+  ],
+  "historical_inheritance": [
+    "C038 proof-carrying recursive separator principle",
+    "C040 portfolio-guided module-forest theorem",
+    "APMA universal 3CNF typed mosaic from parent gate"
+  ],  "controls": {
+    "signed_cube": {"status": "CERTIFIED_UNSAT_MODULE_FOREST", "module_count": 2, "row_count": 16, "budget": 5, "shared": [1,2,3]},
+    "long_chain": {"status": "CERTIFIED_SAT_MODULE_FOREST", "module_count": 32, "row_count": 124, "max_boundary": 2, "budget": 7},
+    "random_admitted": "30/30 exact",
+    "triangle": "OPEN_MODULE_CYCLE",
+    "three_module_shared_variable": "OPEN_INTERFACE_HYPEREDGE",
+    "wide_edge": "OPEN_INTERFACE_WIDTH",
+    "captain_guard_hits": []
+  },
+  "firewalls": [
+    "FOREST_PASS_NE_UNIVERSAL_3SAT_THEOREM",
+    "OPEN_CYCLE_NE_HARDNESS",
+    "OPEN_WIDTH_NE_HARDNESS",
+    "BOUNDARY_ENUMERATION_ONLY_AFTER_WIDTH_CERTIFICATE",
+    "FINITE_REPLAY_NE_ASYMPTOTIC_THEOREM"
+  ],
+  "next_gate": "APMA_EXACT_CYCLIC_OR_HIGH_WIDTH_SHARED_INTERACTION",
+  "scientific_status": {
+    "SAT_IN_P": "NOT_PROVED",
+    "P_VS_NP": "OPEN",
+    "Pi_negative_evidence_weight": 0
+  }
+}
