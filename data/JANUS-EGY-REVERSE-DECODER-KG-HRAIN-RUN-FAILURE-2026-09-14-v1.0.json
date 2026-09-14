@@ -1,0 +1,43 @@
+{
+  "schema": "janus.egy.reverse_decoder.kg_harvest.hrain_run_failure.v1_0",
+  "artifact_id": "JANUS-EGY-REVERSE-DECODER-KG-HRAIN-RUN-FAILURE-2026-09-14-v1.0",
+  "created_date": "2026-09-14",
+  "status": "FAIL_CLOSED__NO_KNOWLEDGE_GRAPH_RESULT_PRODUCED",
+  "apparatus_commit": "b19f491ad4be28b2a9f4fea45b460fdf48f76faf",
+  "parser_sha256": "3d98f9d8879c59eb47cc12f329a2cc9466a0a2de8e59f36b39281873b6828e5a",
+  "frozen_inventory_count": 488,
+  "fresh_hrain_full": {
+    "source_commit": "b19f491ad4be28b2a9f4fea45b460fdf48f76faf",
+    "cataloged_blob_count": 4410,
+    "catalog_digest": "3ab3e854c87c7d4e0f272da6de3b30d6e8d65a59e360f1c6d85dcbc370f0bf49",
+    "manifest_sha256": "5683b5968dabf412f4163e5aceb8e092ba8ac4966670c9e2ca771d6821c19d2f",
+    "coverage_complete": true
+  },
+  "fresh_hrain_active": {
+    "source_commit": "b19f491ad4be28b2a9f4fea45b460fdf48f76faf",
+    "object_count": 120,
+    "node_count": 122,
+    "link_count": 121,
+    "index_sha256": "5cb69cde78b62c582b23f25b135746557b1da4372840f23ce6e2a5f21df61a29"
+  },
+  "failure": {
+    "exit_code": 1,
+    "error": "FROZEN_SOURCE_MISSING_FROM_HRAIN:assets/hrain-full-memory/manifest.json",
+    "phase": "FROZEN_SOURCE_TO_HRAIN_COVERAGE_MATCH",
+    "result_file_written": false
+  },
+  "diagnosis": {
+    "cause": "The frozen 488 JSON inventory includes derivative assets/hrain-full-memory self-export objects, while the HRAiN FULL_CURRENT exporter intentionally excludes its generated output prefix to prevent recursive memory-of-memory indexing.",
+    "hrain_self_export_entries_in_inventory": 18,
+    "hrain_active_index_entries_in_inventory": 1,
+    "eye_generated_entries_in_inventory": 6,
+    "scientific_interpretation": "NONE__TECHNICAL_SELF_REFERENCE_FIREWALL_ONLY"
+  },
+  "epistemic_firewall": [
+    "No partial graph was promoted.",
+    "No historical claim was inspected to tune the correction.",
+    "HRAiN self-export exclusion is a pre-existing recursion-prevention contract, not a result-dependent exception.",
+    "Derivative memory/index artifacts must not count as independent evidence for their own source corpus."
+  ],
+  "next_action": "Freeze a representation-only amendment for derivative-memory quarantine and expected HRAiN self-export exclusion before modifying or rerunning the parser."
+}

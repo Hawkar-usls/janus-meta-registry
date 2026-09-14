@@ -1,0 +1,52 @@
+{
+  "schema": "janus.egy.reverse_decoder.kg_harvest.derivative_memory_quarantine_amendment.v1_3",
+  "artifact_id": "JANUS-EGY-REVERSE-DECODER-KG-DERIVATIVE-MEMORY-QUARANTINE-AMENDMENT-2026-09-14-v1.3",
+  "created_date": "2026-09-14",
+  "parent_hrain_amendment": "JANUS-EGY-REVERSE-DECODER-KG-HRAIN-OVERLAY-AMENDMENT-2026-09-14-v1.2",
+  "failure_receipt": "JANUS-EGY-REVERSE-DECODER-KG-HRAIN-RUN-FAILURE-2026-09-14-v1.0",
+  "status": "PREREGISTERED_AFTER_FAIL_BEFORE_PARSER_CHANGE_OR_RERUN",
+  "scope": "Representation and evidence-independence handling only; historical acceptance criteria and scoring locks are unchanged.",
+  "observed_technical_fact": {
+    "frozen_inventory_hrain_self_export_entries": 18,
+    "frozen_inventory_hrain_active_index_entries": 1,
+    "frozen_inventory_eye_generated_entries": 6,
+    "hrain_full_exporter_rule": "assets/hrain-full-memory/* is excluded from FULL_CURRENT to prevent recursive self-indexing."
+  },
+  "source_integrity_rule": "All 488 frozen files still require exact source SHA-256 verification and JSON parse success.",
+  "hrain_coverage_rule": {
+    "ordinary_source": "Must appear in fresh HRAiN FULL_CURRENT with identical SHA-256.",
+    "assets/hrain-full-memory/*": "Absence is expected and recorded as HRAIN_SELF_EXPORT_EXCLUDED_EXPECTED; no catalog-match edge is required."
+  },
+  "derivative_quarantine": {
+    "patterns": [
+      "assets/hrain-full-memory/*",
+      "assets/hrain-registry-index.json",
+      "EYE/generated/*",
+      "EYE/*/generated/*"
+    ],
+    "classification": "DERIVATIVE_MEMORY_OR_INDEX__NOT_INDEPENDENT_EVIDENCE",
+    "graph_behavior": [
+      "Keep SOURCE_FILE node and exact frozen SHA-256.",
+      "Do not create LAYER_EVIDENCE_SUMMARY nodes from derivative-memory contents.",
+      "Do not count derivative contents as provenance anchors or independent confirmations.",
+      "Explicit dependency metadata may be retained only as derivative topology, never cultural lineage."
+    ]
+  },
+  "expected_hrain_full_match_count": 470,
+  "expected_hrain_self_export_exclusion_count": 18,
+  "unchanged_locks": {
+    "LRS": "LOCKED_NOT_COMPUTED",
+    "LES": "LOCKED_NOT_COMPUTED",
+    "CRI": "LOCKED_NOT_COMPUTED",
+    "reverse_prediction": "LOCKED"
+  },
+  "firewalls": [
+    "DERIVATIVE_MEMORY_EXPORT != FRESH_WORLD_EVIDENCE",
+    "MEMORY_OF_MEMORY_NE_INDEPENDENT_CONFIRMATION",
+    "EXPECTED_SELF_EXPORT_EXCLUSION_NE_MISSING_SOURCE_EVIDENCE",
+    "QUARANTINE_CLASSIFICATION_NE_NEGATIVE_EVIDENCE",
+    "NO_CULTURAL_LINEAGE_OR_SCORE_PROMOTION"
+  ],
+  "rerun_rule": "Modify the frozen parser only to implement this source-class handling, commit the successor apparatus, regenerate fresh HRAiN snapshots on that successor commit, then rerun from scratch.",
+  "canonical_seal": "VERIFY EVERY FROZEN FILE, BUT NEVER COUNT A MEMORY EXPORT AS AN INDEPENDENT WITNESS TO THE MEMORY IT COPIES."
+}
