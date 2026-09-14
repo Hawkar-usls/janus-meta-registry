@@ -1,0 +1,55 @@
+{
+  "artifact_id": "TRUMP-APMA-EXACT-LOG-COTREE-CUTSET-INTERACTION-PREREGISTRATION-2026-09-14",
+  "parent_scientific_authority": "cd2c7fc8675cf07612be04b6eedf00115741b895",
+  "gate": "APMA_EXACT_LOG_COTREE_CUTSET_INTERACTION_MESSAGE",
+  "status": "FROZEN_PREREGISTRATION_ONLY",
+  "theorem_scope": "APMA typed module interaction networks with no >2-module shared-variable hyperedge; deterministic cotree cutset conditioning only when the union of shared variables on canonical non-tree edges has size <= floor(log2 L).",
+  "historical_inheritance": [
+    "C038/C040 exact separator and module-forest message principles",
+    "R24 structural cutset evidence is non-authoritative for semantic scheduling",
+    "R25 cutset-first Shannon schedule negative control: graph sensitivity does not imply a good elimination order",
+    "parent APMA module-forest gate"
+  ],
+  "algorithm": [
+    "build APMA typed mosaic and connected native modules",
+    "reject variables shared by more than two modules",
+    "construct canonical lexicographic spanning forest of the module interaction graph",
+    "define cotree edge set E\\T and cutset C as the union of exact shared-variable sets on cotree edges",
+    "reject if |C| > floor(log2 L)",
+    "enumerate only the certified cutset assignments",
+    "condition every native module on the cutset assignment",
+    "verify that the conditioned interaction is a forest",
+    "run the already sealed exact module-forest message solver",
+    "SAT if any cutset branch returns a checked witness; UNSAT only if every branch returns certified UNSAT"
+  ],  "complexity_contract": {
+    "L": "1+n+number_of_clauses+number_of_literal_occurrences",
+    "cutset_budget": "floor(log2(max(2,L)))",
+    "branch_bound": "2^|C| <= L",
+    "forest_row_bound_per_branch": "module_count * L",
+    "total_message_row_bound": "module_count * L^2 for admitted instances, excluding native polynomial solver factors"
+  },
+  "frozen_controls": [
+    "PREVIOUS_TRIANGLE_CASE_MUST_CLOSE",
+    "THREE_MODULE_ALL_INDIVIDUALLY_SAT_TRIANGLE_MUST_CERTIFY_UNSAT",
+    "LONG_SIMPLE_TYPED_RING_MUST_CLOSE_WITH_ONE_COTREE_SHARED_VARIABLE",
+    "DENSE_BIPARTITE_INTERACTION_WITH_LARGE_COTREE_CUTSET_MUST_OPEN",
+    "THREE_MODULE_SHARED_VARIABLE_MUST_OPEN_INTERFACE_HYPEREDGE",
+    "FOREST_INPUT_MUST_REDUCE_TO_PARENT_BEHAVIOR",
+    "RANDOM_SMALL_ADMITTED_CYCLES_EXACT_REPLAY"
+  ],
+  "firewalls": [
+    "NO_CUTSET_AS_HEURISTIC_VARIABLE_ORDER",
+    "NO_MINIMUM_FEEDBACK_SET_ORACLE",
+    "NO_GENERAL_SAT_ORACLE",
+    "NO_WHOLE_FORMULA_ASSIGNMENT_ENUMERATION_IN_CANDIDATE",
+    "CUTSET_ENUMERATION_ONLY_AFTER_LOG_BUDGET_CERTIFICATE",
+    "OPEN_CUTSET_WIDTH_NE_HARDNESS",
+    "PASS_NE_UNIVERSAL_3SAT_THEOREM"
+  ],  "next_if_pass": "APMA_EXACT_HIGH_WIDTH_SHARED_INTERACTION_MESSAGE",
+  "next_if_fail": "preserve exact falsifier and localize topology/message mismatch",
+  "scientific_status": {
+    "SAT_IN_P": "NOT_PROVED",
+    "P_VS_NP": "OPEN",
+    "Pi_negative_evidence_weight": 0
+  }
+}

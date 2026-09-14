@@ -1,0 +1,40 @@
+{
+  "artifact_id": "TRUMP-APMA-EXACT-LOG-COTREE-CUTSET-INTERACTION-PROOF-OR-FALSIFICATION-2026-09-14",
+  "parent_scientific_authority": "cd2c7fc8675cf07612be04b6eedf00115741b895",
+  "preregistration_commit": "6e2f2d30c9bb08a8117be6d9cb74ea3e0dc1c0b8",
+  "checker_commit": "d0818746fe6601985a7c48681c4eceb72806b335",
+  "gate": "APMA_EXACT_LOG_COTREE_CUTSET_INTERACTION_MESSAGE",
+  "verdict": "PASS_APMA_EXACT_LOG_COTREE_CUTSET_INTERACTION__SMALL_CYCLES_CLOSED__HIGH_CYCLE_RANK_OPEN",
+  "run": {
+    "run_id": "20260914T011800.421099Z",
+    "duration_ms": 170,
+    "exit_code": 0,
+    "stdout_sha256": "c551802e08f5aabb309ec76acfb8434fd763129eb5bad1e90fa09a6d49b9a2c1"
+  },
+  "proved_scoped": [
+    "Canonical spanning-forest cotree variables form an exact cycle-breaking conditioning set for the typed module interaction graph.",
+    "When the cotree cutset has size <= floor(log2 L), exhaustive cutset conditioning has at most L branches and every conditioned interaction is checked before the sealed forest message solver is invoked.",
+    "For admitted instances total boundary-message work is bounded by module_count * L^2 up to native polynomial solver factors.",
+    "SAT requires one checked branch witness; UNSAT requires certified UNSAT for every cutset branch."
+  ],  "controls": {
+    "triangle_unsat": {"status": "CERTIFIED_UNSAT_COTREE_CUTSET", "cutset": [2], "cutset_size": 1, "branch_count": 2, "total_rows": 10, "row_bound": 2523, "all_native_carriers_individually_sat": true},
+    "triangle_sat": {"status": "CERTIFIED_SAT_COTREE_CUTSET", "cutset": [1], "cutset_size": 1, "branch_count": 1, "total_rows": 5},
+    "long_ring_64": {"status": "CERTIFIED_SAT_COTREE_CUTSET", "cutset_size": 1, "module_count": 64, "total_rows": 249},
+    "dense_K6_6": {"status": "OPEN_CYCLE_CUTSET_WIDTH", "cutset_size": 25, "budget": 7, "cotree_edge_count": 25, "module_count": 12},
+    "random_admitted_cycles": "30/30 exact",
+    "captain_guard_hits": []
+  },
+  "firewalls": [
+    "NO_CUTSET_AS_HEURISTIC_VARIABLE_ORDER",
+    "NO_MINIMUM_FEEDBACK_SET_ORACLE",
+    "CUTSET_ENUMERATION_ONLY_AFTER_LOG_BUDGET_CERTIFICATE",
+    "OPEN_CUTSET_WIDTH_NE_HARDNESS",
+    "PASS_NE_UNIVERSAL_3SAT_THEOREM"
+  ],
+  "next_gate": "APMA_EXACT_HIGH_WIDTH_SHARED_INTERACTION_MESSAGE",
+  "scientific_status": {
+    "SAT_IN_P": "NOT_PROVED",
+    "P_VS_NP": "OPEN",
+    "Pi_negative_evidence_weight": 0
+  }
+}
