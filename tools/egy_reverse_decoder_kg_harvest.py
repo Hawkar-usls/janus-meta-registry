@@ -20,6 +20,9 @@ INVENTORY_ID = "JANUS-EGY-REVERSE-MEMETIC-DECODER-RELEVANT-JSON-INVENTORY-2026-0
 PREREG_ID = "JANUS-EGY-REVERSE-DECODER-KNOWLEDGE-GRAPH-HARVEST-PREREG-2026-09-14-v1.0"
 AMENDMENT_ID = "JANUS-EGY-REVERSE-DECODER-KNOWLEDGE-GRAPH-HARVEST-AMENDMENT-2026-09-14-v1.1"
 HRAIN_AMENDMENT_ID = "JANUS-EGY-REVERSE-DECODER-KG-HRAIN-OVERLAY-AMENDMENT-2026-09-14-v1.2"
+QUARANTINE_AMENDMENT_ID = "JANUS-EGY-REVERSE-DECODER-KG-DERIVATIVE-MEMORY-QUARANTINE-AMENDMENT-2026-09-14-v1.3"
+EXPECTED_HRAIN_CATALOG_MATCHES = 470
+EXPECTED_HRAIN_SELF_EXPORT_EXCLUSIONS = 18
 SCHEMA = "janus.egy.reverse_decoder.knowledge_graph.v1_0"
 LAYERS = [
     "ANCIENT_ORIGIN_SOURCE",
@@ -349,6 +352,16 @@ def node_id(prefix: str, value: str) -> str:
     return prefix + ":" + sha256_bytes(value.encode("utf-8"))[:24]
 
 
+def independence_class(path: str) -> str:
+    if path.startswith("assets/hrain-full-memory/"):
+        return "DERIVATIVE_HRAIN_SELF_EXPORT"
+    if path == "assets/hrain-registry-index.json":
+        return "DERIVATIVE_HRAIN_ACTIVE_INDEX"
+    if path.startswith("EYE/generated/") or (path.startswith("EYE/") and "/generated/" in path):
+        return "DERIVATIVE_EYE_GENERATED"
+    return "INDEPENDENT_SOURCE_OBJECT"
+
+
 def path_term_hits(path: str, terms: list[str]) -> list[str]:
     low = path.lower().replace("_", " ").replace("-", " ")
     return sorted({term for term in terms if len(term) >= 4 and term.lower() in low})
@@ -412,6 +425,8 @@ def build_graph(
     provenance_status_counts: Counter[str] = Counter()
     dependency_counts: Counter[str] = Counter()
     hrain_catalog_match_count = 0
+    hrain_self_export_exclusion_count = 0
+    derivative_quarantine_count = 0
     hrain_active_match_count = 0
     revival_candidate_count = 0
 
@@ -427,12 +442,20 @@ def build_graph(
             data = json.loads(raw)
         except json.JSONDecodeError as exc:
             raise RuntimeError(f"FROZEN_SOURCE_PARSE_FAIL:{rel}:{exc.__class__.__name__}") from exc
+        source_independence = independence_class(rel)
         hrain_obj = hrain_objects.get(rel)
-        if hrain_obj is None:
-            raise RuntimeError(f"FROZEN_SOURCE_MISSING_FROM_HRAIN:{rel}")
-        if hrain_obj.get("sha256") != observed_sha:
-            raise RuntimeError(f"FROZEN_SOURCE_HRAIN_SHA_MISMATCH:{rel}")
-        hrain_catalog_match_count += 1
+        if source_independence == "DERIVATIVE_HRAIN_SELF_EXPORT":
+            if hrain_obj is not None:
+                raise RuntimeError(f"HRAIN_SELF_EXPORT_UNEXPECTEDLY_CATALOGED:{rel}")
+            hrain_self_export_exclusion_count += 1
+        else:
+            if hrain_obj is None:
+                raise RuntimeError(f"FROZEN_SOURCE_MISSING_FROM_HRAIN:{rel}")
+            if hrain_obj.get("sha256") != observed_sha:
+                raise RuntimeError(f"FROZEN_SOURCE_HRAIN_SHA_MISMATCH:{rel}")
+            hrain_catalog_match_count += 1
+        if source_independence != "INDEPENDENT_SOURCE_OBJECT":
+            derivative_quarantine_count += 1
         src_id = node_id("source", rel)
         graph.add_node(
             src_id, "SOURCE_FILE",
@@ -443,17 +466,24 @@ def build_graph(
             artifact_id=entry.get("artifact_id"),
             schema=entry.get("schema"),
             status=entry.get("status"),
-            hrain_memory_class=hrain_obj.get("memory_class"),
-            hrain_namespace=hrain_obj.get("namespace"),
+            hrain_memory_class=hrain_obj.get("memory_class") if hrain_obj else None,
+            hrain_namespace=hrain_obj.get("namespace") if hrain_obj else None,
+            evidence_independence_class=source_independence,
             scientific_authority="SOURCE_OBJECT_ONLY",
         )
-        graph.add_edge(
-            src_id, full_catalog_node, "HRAIN_CATALOG_MATCH",
-            sha256_match=True,
-            memory_class=hrain_obj.get("memory_class"),
-            namespace=hrain_obj.get("namespace"),
-            authority="COVERAGE_AND_PROVENANCE_ONLY",
-        )
+        if hrain_obj is not None:
+            graph.add_edge(
+                src_id, full_catalog_node, "HRAIN_CATALOG_MATCH",
+                sha256_match=True,
+                memory_class=hrain_obj.get("memory_class"),
+                namespace=hrain_obj.get("namespace"),
+                authority="COVERAGE_AND_PROVENANCE_ONLY",
+            )
+        else:
+            graph.add_edge(
+                src_id, full_catalog_node, "HRAIN_SELF_EXPORT_EXCLUDED_EXPECTED",
+                authority="RECURSION_PREVENTION_ONLY__NOT_MISSING_EVIDENCE",
+            )
         active_obj = hrain_active_by_path.get(rel)
         if active_obj:
             hrain_active_match_count += 1
@@ -488,7 +518,10 @@ def build_graph(
                 src_id, term_id, "MENTIONS_ENTITY",
                 basis_source="FROZEN_INVENTORY_MATCH", authority="LEXICAL_ONLY",
             )
-        layer_summaries, dependencies = summarize_file_layers(data)
+        if source_independence == "INDEPENDENT_SOURCE_OBJECT":
+            layer_summaries, dependencies = summarize_file_layers(data)
+        else:
+            layer_summaries, dependencies = {}, []
         for layer, summary in sorted(layer_summaries.items()):
             summary_id = node_id("summary", rel + "|" + layer)
             graph.add_node(
@@ -510,7 +543,7 @@ def build_graph(
             provenance_status_counts[summary["provenance_status"]] += 1
 
         serialized_low = raw.decode("utf-8", errors="replace").lower()
-        if "egyptian revival" in serialized_low:
+        if source_independence == "INDEPENDENT_SOURCE_OBJECT" and "egyptian revival" in serialized_low:
             revival_candidate_count += 1
             graph.add_edge(
                 src_id, "control:egyptian_revival", "SPURIOUS_REVIVAL_CANDIDATE",
@@ -535,8 +568,10 @@ def build_graph(
             )
             dependency_counts[dep["edge_type"]] += 1
 
-    if hrain_catalog_match_count != EXPECTED_COUNT:
+    if hrain_catalog_match_count != EXPECTED_HRAIN_CATALOG_MATCHES:
         raise RuntimeError("HRAIN_CATALOG_MATCH_COUNT_MISMATCH")
+    if hrain_self_export_exclusion_count != EXPECTED_HRAIN_SELF_EXPORT_EXCLUSIONS:
+        raise RuntimeError("HRAIN_SELF_EXPORT_EXCLUSION_COUNT_MISMATCH")
 
     discovery_candidates: list[dict[str, Any]] = []
     vocabulary = [str(x).lower() for x in inventory.get("scan_vocabulary", [])]
@@ -581,6 +616,8 @@ def build_graph(
         "provenance_status_counts": dict(sorted(provenance_status_counts.items())),
         "dependency_edge_counts": dict(sorted(dependency_counts.items())),
         "hrain_catalog_match_count": hrain_catalog_match_count,
+        "hrain_self_export_exclusion_count": hrain_self_export_exclusion_count,
+        "derivative_quarantine_count": derivative_quarantine_count,
         "hrain_active_projection_match_count": hrain_active_match_count,
         "hrain_path_discovery_candidate_count": len(discovery_candidates),
         "egyptian_revival_candidate_count": revival_candidate_count,
@@ -594,6 +631,7 @@ def build_graph(
             "prereg": PREREG_ID,
             "compact_amendment": AMENDMENT_ID,
             "hrain_overlay_amendment": HRAIN_AMENDMENT_ID,
+            "derivative_memory_quarantine_amendment": QUARANTINE_AMENDMENT_ID,
         },
         "source_inventory": {
             "artifact_id": INVENTORY_ID,
@@ -621,6 +659,7 @@ def build_graph(
             "CATALOG_PRESENCE != SCIENTIFIC_VALIDITY",
             "DERIVATIVE_MEMORY_EXPORT != FRESH_WORLD_EVIDENCE",
             "HRAIN_ASSOCIATION_NE_CULTURAL_LINEAGE",
+            "MEMORY_OF_MEMORY_NE_INDEPENDENT_CONFIRMATION",
             "CO_OCCURRENCE_NE_LINEAGE",
             "EXPLICIT_REFERENCE_NE_HISTORICAL_TRANSMISSION",
         ],
