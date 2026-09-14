@@ -1,0 +1,134 @@
+{
+  "schema": "janus.egy.reverse_decoder.knowledge_graph_harvest.prereg.v1_0",
+  "artifact_id": "JANUS-EGY-REVERSE-DECODER-KNOWLEDGE-GRAPH-HARVEST-PREREG-2026-09-14-v1.0",
+  "created_date": "2026-09-14",
+  "repository_target": "Hawkar-usls/janus-meta-registry",
+  "branch": "research/egy-reverse-memetic-decoder-2026-09-14",
+  "gate_id": "EGY_REVERSE_DECODER_KNOWLEDGE_GRAPH_HARVEST_GATE",
+  "status": "PREREGISTERED_BEFORE_HARVEST__CRI_AND_CULTURAL_LINEAGE_SCORING_LOCKED",
+  "parents": {
+    "validation_protocol_commit": "c376d898517f4ea31dad2275d5ef87373291d9e3",
+    "inventory_commit": "bf45e2aab1073dbe5f91f4e05d05d10352699792",
+    "inventory_artifact": "JANUS-EGY-REVERSE-MEMETIC-DECODER-RELEVANT-JSON-INVENTORY-2026-09-14-v1.0",
+    "frozen_inventory_count": 488,
+    "frozen_inventory_file_sha256": "8bb549471d3fdeefb2c450717083b5f7094167a532d2d1274c88f82dc41a44c2"
+  },
+  "purpose": "Deterministically harvest explicit dependencies and source-carrying evidence fragments from the frozen 488-JSON Egyptian corpus into a provenance-preserving graph without inventing cultural lineage or ancient semantics.",
+  "input_contract": {
+    "allowed_inputs": "Only paths enumerated in the frozen 488-entry inventory.",
+    "sha_rule": "Every source byte stream must match the inventory SHA-256 before parsing.",
+    "parse_rule": "Every frozen source must remain valid JSON; hash mismatch, missing file, or parse failure aborts the gate.",
+    "network": "FORBIDDEN",
+    "external_enrichment": "FORBIDDEN_DURING_HARVEST"
+  },
+  "graph_layers": [
+    "ANCIENT_ORIGIN_SOURCE",
+    "RITUAL_FUNCTION_SEMANTICS",
+    "VISUAL_MATRIX_FORM_GLYPH",
+    "HISTORICAL_MUTATION_LINE",
+    "MODERN_MEME_CONTEXT",
+    "CRI_HASH_METRIC_LAYER",
+    "CONFOUNDER_NEGATIVE_CONTROL"
+  ],
+  "node_classes": [
+    "SOURCE_FILE",
+    "EVIDENCE_FRAGMENT",
+    "ENTITY",
+    "ARTIFACT_REFERENCE",
+    "COMMIT_REFERENCE",
+    "FILE_REFERENCE",
+    "CONTROL_CLASS",
+    "SCHEMA_LAYER"
+  ],
+  "edge_classes": [
+    "HAS_EVIDENCE",
+    "MENTIONS_ENTITY",
+    "REFERENCES_ARTIFACT",
+    "PARENT_ARTIFACT",
+    "SUPERSEDES_ARTIFACT",
+    "DEPENDS_ON_ARTIFACT",
+    "REFERENCES_COMMIT",
+    "REFERENCES_FILE",
+    "SPURIOUS_REVIVAL_EDGE",
+    "LAYER_ORDER_NEXT"
+  ],
+  "provenance_first_rule": {
+    "anchor_keys": [
+      "source", "citation", "reference", "provenance", "museum", "accession",
+      "papyrus", "tomb", "edition", "plate", "page", "publication", "url",
+      "doi", "spell", "utterance", "archive", "excavation"
+    ],
+    "source_bound_label": "SOURCE_BOUND_CANDIDATE",
+    "missing_anchor_label": "UNVERIFIED_SPECULATION",
+    "rule": "Ancient-source/function/form evidence without a same-file provenance anchor cannot be promoted above UNVERIFIED_SPECULATION."
+  },
+  "confounder_isolation": {
+    "egyptian_revival": "Explicit Egyptian Revival/decorative-modern-borrowing evidence is isolated as SPURIOUS_REVIVAL_EDGE and never counted as ancient-to-modern transmission.",
+    "visual_analogy": "Visual resemblance or co-occurrence alone creates no cultural-lineage edge.",
+    "negative_controls": [
+      "Eye of Providence versus Wedjat",
+      "Unicode/modern glyph rendering",
+      "decorative Egyptomania/Egyptian Revival",
+      "independent convergent iconography"
+    ]
+  },
+  "lrs_les_contract": {
+    "LRS": "LOCKED_UNSCORED_PLACEHOLDER_ONLY",
+    "LES": "UNASSESSED_BY_HARVEST",
+    "automated_les_prelabels_allowed": [
+      "DIRECT_CLAIM_PRESENT",
+      "FAMILY_CLAIM_PRESENT",
+      "NEGATED_DIRECT_LINEAGE",
+      "UNASSESSED"
+    ],
+    "authority": "NON_AUTHORITATIVE_LEXICAL_PRELABEL_ONLY"
+  },
+  "evidence_fragment_rule": {
+    "representation": "JSON leaf plus JSON Pointer plus source file SHA-256",
+    "raw_value_policy": "Store selected raw leaf text up to a fixed deterministic display cap and always store full raw-value SHA-256.",
+    "classification": "Layer assignment is lexical/path-based and may be multi-label; it is indexing, not historical interpretation.",
+    "dependency_rule": "Artifact/file/commit edges require explicit string references in source JSON; shared keywords never create dependency edges."
+  },
+  "scoring_locks": {
+    "CRI": "LOCKED_NOT_COMPUTED",
+    "LRS": "LOCKED_NOT_COMPUTED",
+    "LES": "LOCKED_NOT_COMPUTED",
+    "reverse_prediction": "LOCKED_NOT_RUN",
+    "unknown_symbol_decode": "FORBIDDEN"
+  },
+  "determinism": {
+    "node_order": "lexicographic by stable node_id",
+    "edge_order": "lexicographic by canonical edge tuple",
+    "stable_ids": "SHA-256 derived from immutable source identifiers and JSON Pointers",
+    "graph_core_hash": "SHA-256 of canonical JSON containing sorted nodes and edges only"
+  },
+  "pass_conditions": [
+    "all 488 frozen inventory entries exist",
+    "all 488 source SHA-256 values match inventory",
+    "all 488 source files parse as JSON",
+    "graph contains the seven schema layers",
+    "every evidence fragment retains source path, source SHA-256 and JSON Pointer",
+    "no inferred cultural-lineage edge is created from co-occurrence alone",
+    "CRI/LRS/LES remain locked"
+  ],
+  "fail_conditions": [
+    "any missing or hash-drifted frozen source",
+    "any JSON parse failure among frozen 488 inputs",
+    "non-deterministic duplicate node or conflicting stable id",
+    "automatic promotion of resemblance to direct lineage"
+  ],
+  "hard_firewalls": [
+    "KEYWORD_CO_OCCURRENCE_NE_CAUSAL_LINEAGE",
+    "DOCUMENT_DEPENDENCY_NE_CULTURAL_TRANSMISSION",
+    "SOURCE_BOUND_CANDIDATE_NE_VERIFIED_HISTORY",
+    "UNVERIFIED_SPECULATION_MUST_REMAIN_VISIBLE",
+    "SPURIOUS_REVIVAL_EDGE_NE_ANCIENT_CONTINUITY",
+    "LRS_NE_LES",
+    "GRAPH_HARVEST_NE_REVERSE_DECODER_PASS"
+  ],
+  "planned_outputs": [
+    "tools/egy_reverse_decoder_kg_harvest.py",
+    "data/JANUS-EGY-REVERSE-DECODER-KNOWLEDGE-GRAPH-2026-09-14-v1.0.json"
+  ],
+  "canonical_seal": "HARVEST DEPENDENCIES AND EVIDENCE, NOT DESIRED STORIES. EVERY CLAIM CARRIES ITS SOURCE POINTER; RESEMBLANCE NEVER BECOMES LINEAGE BY AUTOMATION."
+}
