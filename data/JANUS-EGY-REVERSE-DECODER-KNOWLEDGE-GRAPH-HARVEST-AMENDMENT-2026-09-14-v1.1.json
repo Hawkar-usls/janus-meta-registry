@@ -1,0 +1,49 @@
+{
+  "schema": "janus.egy.reverse_decoder.knowledge_graph_harvest.amendment.v1_1",
+  "artifact_id": "JANUS-EGY-REVERSE-DECODER-KNOWLEDGE-GRAPH-HARVEST-AMENDMENT-2026-09-14-v1.1",
+  "created_date": "2026-09-14",
+  "parent_prereg": "JANUS-EGY-REVERSE-DECODER-KNOWLEDGE-GRAPH-HARVEST-PREREG-2026-09-14-v1.0",
+  "diagnostic_receipt": "JANUS-EGY-REVERSE-DECODER-KG-HARVEST-DIAGNOSTIC-RUN-001-2026-09-14-v1.0",
+  "status": "RESOURCE_REPRESENTATION_AMENDMENT__SCIENTIFIC_RULES_UNCHANGED__BEFORE_COMPACT_RERUN",
+  "reason": "The first implementation produced 321791 leaf evidence nodes and a 546587740-byte graph. This amendment changes representation granularity only; it does not change historical acceptance criteria, provenance rules, controls, or scoring locks.",
+  "content_inspection_boundary": "Only aggregate counts, file size, hashes and node/edge type counts from diagnostic run 001 were inspected before this amendment; no historical claim was promoted or used to tune inclusion by desired meaning.",
+  "unchanged_rules": [
+    "frozen input remains exactly 488 inventory entries",
+    "every source SHA-256 must match",
+    "no network or external enrichment",
+    "co-occurrence never creates cultural lineage",
+    "explicit document references only for dependency edges",
+    "provenance-first labeling remains fail-closed",
+    "CRI/LRS/LES/reverse prediction remain locked"
+  ],
+  "compact_representation": {
+    "old": "one EVIDENCE_FRAGMENT node per selected scalar JSON leaf",
+    "new": "at most one LAYER_EVIDENCE_SUMMARY node per source file per schema layer",
+    "summary_payload": [
+      "matching_leaf_count",
+      "canonical SHA-256 over all matching pointer/value-hash tuples",
+      "first 20 JSON Pointers in lexical order",
+      "first 5 deterministic representative fragments in lexical pointer order",
+      "provenance anchor count and first 20 provenance pointers",
+      "LRS/LES/CRI lock state"
+    ]
+  },
+  "dependency_filter": {
+    "artifact_commit_file_reference_scan": "Only inspect values whose JSON Pointer contains one of: parent, supersedes, depends, reference, source, artifact, commit, file, receipt, input, output, next_gate, crosslink.",
+    "reason": "Prevent arbitrary prose and embedded memory blobs from generating reference nodes while preserving explicit dependency-bearing fields.",
+    "shared_keywords": "Never create dependency edges."
+  },
+  "lineage_fields": {
+    "lrs": "LOCKED_UNSCORED_PLACEHOLDER_ONLY",
+    "les": "UNASSESSED_BY_HARVEST",
+    "allowed_lexical_prelabels": [
+      "DIRECT_CLAIM_PRESENT",
+      "FAMILY_CLAIM_PRESENT",
+      "NEGATED_DIRECT_LINEAGE",
+      "UNASSESSED"
+    ],
+    "authority": "NON_AUTHORITATIVE_LEXICAL_PRELABEL_ONLY"
+  },
+  "pass_condition": "All 488 frozen files verify and parse; compact graph is deterministic; evidence summaries retain source path, SHA-256 and pointer hashes; scoring remains locked.",
+  "canonical_seal": "COMPACT THE REPRESENTATION, NOT THE EVIDENCE STANDARD. NO CLAIM IS DROPPED OR PROMOTED BECAUSE OF ITS RESULT."
+}
