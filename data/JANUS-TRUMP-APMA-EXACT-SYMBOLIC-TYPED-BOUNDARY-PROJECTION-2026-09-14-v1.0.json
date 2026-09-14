@@ -1,0 +1,44 @@
+{
+  "artifact_id": "TRUMP-APMA-EXACT-SYMBOLIC-TYPED-BOUNDARY-PROJECTION-PROOF-OR-FALSIFICATION-2026-09-14",
+  "parent_scientific_authority": "8486d8fdea3e034acb9acdc9ef2c1d233de75e42",
+  "preregistration_commit": "2c1d1a4e6eba252556843acd5f7ea1fb2cea5056",
+  "checker_commit": "3aaee96c87910e7a13db44ea79d9cb3a2d2f526f",
+  "gate": "APMA_EXACT_SYMBOLIC_TYPED_BOUNDARY_PROJECTION_BEFORE_ENUMERATION",
+  "verdict": "PASS_APMA_EXACT_SYMBOLIC_TYPED_BOUNDARY_PROJECTION__WIDE_UNATE_COLLAPSES__PURE_BOUNDARY_WIDTH_OPEN",
+  "run": {
+    "run_id": "20260914T014511.515399Z",
+    "duration_ms": 216,
+    "exit_code": 0,
+    "stdout_sha256": "93ff6fb9b5e387c23bdce8988c4980403148e3bb5baccae54b8bf31a9e737951",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+  ,"proved_scoped": [
+    "Exact symbolic existential projection may be applied to discovered native modules before any shared-boundary enumeration when the complete module factor matches an already sealed projection language.",
+    "Globally UNATE modules admit exact internal-variable elimination by retaining only boundary-only clauses; exact 2CNF projection is obtained by sealed Davis-Putnam elimination and remains polynomially bounded in distinct width<=2 clauses.",
+    "The rewritten conjunction is existentially equivalent to the original module mosaic, while unsupported modules are preserved unchanged.",
+    "If the parent cycle-cut/forest compiler returns SAT after projection, eliminated internal assignments can be recovered by conditioning each original native module on returned boundary values and invoking its native polynomial solver."
+  ],
+  "controls": {
+    "wide_edge": "12-variable shared interface closed as CERTIFIED_SAT_SYMBOLIC_PROJECTION after both modules projected to TRUE",
+    "pure_boundary_wide": "OPEN_INTERFACE_WIDTH preserved when no eliminable internal variables exist",
+    "two_cnf_chain": "exact internal chain projection produced boundary implication (-1 OR 2)",
+    "projection_unsat": "exact UNSAT projection matched brute force",
+    "unsupported_module": "preserved unchanged",
+    "random_small": "72/72 exact; 52 terminal",
+    "captain_guard_hits": []
+  }
+  ,"firewalls": [
+    "NO_GENERAL_SAT_ORACLE",
+    "NO_WHOLE_FORMULA_ASSIGNMENT_ENUMERATION_IN_CANDIDATE",
+    "NO_APPROXIMATE_PROJECTION",
+    "NO_UNSUPPORTED_HORN_FORGETTING_PROMOTED_TO_EXACT",
+    "SYMBOLIC_PROJECTION_PASS_NE_UNIVERSAL_3SAT_THEOREM",
+    "OPEN_AFTER_PROJECTION_NE_HARDNESS"
+  ],
+  "next_gate": "APMA_EXACT_SHARED_INTERFACE_SYMBOLIC_COMPOSITION_BEYOND_UNATE_2CNF",
+  "scientific_status": {
+    "SAT_IN_P": "NOT_PROVED",
+    "P_VS_NP": "OPEN",
+    "Pi_negative_evidence_weight": 0
+  }
+}

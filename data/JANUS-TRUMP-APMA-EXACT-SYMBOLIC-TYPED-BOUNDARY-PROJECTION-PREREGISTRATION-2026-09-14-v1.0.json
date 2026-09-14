@@ -1,0 +1,55 @@
+{
+  "artifact_id": "TRUMP-APMA-EXACT-SYMBOLIC-TYPED-BOUNDARY-PROJECTION-PREREGISTRATION-2026-09-14",
+  "parent_scientific_authority": "8486d8fdea3e034acb9acdc9ef2c1d233de75e42",
+  "gate": "APMA_EXACT_SYMBOLIC_TYPED_BOUNDARY_PROJECTION_BEFORE_ENUMERATION",
+  "status": "FROZEN_PREREGISTRATION_ONLY",
+  "scope": "Before paying typed module boundary enumeration, exact-project eliminable internal variables from each discovered module using only already sealed UNATE and 2CNF existential projection rules, then delegate the rewritten exact formula to the sealed cycle-cut/forest interaction compiler.",
+  "historical_inheritance": [
+    "sealed open connected query-message UNATE projection",
+    "sealed open connected query-message exact 2CNF Davis-Putnam projection",
+    "sealed APMA typed module forest interaction",
+    "sealed APMA canonical cycle-cut interaction"
+  ],
+  "representation_invariant": "Original source CNF is existentially equivalent to the conjunction of all projected module messages and all untouched unsupported module factors, with eliminated internal variables scoped locally to their original modules."
+  ,"algorithm": [
+    "build the parent APMA width<=3 typed mosaic and deterministic connected native modules",
+    "define each module boundary as variables shared with at least one other module; all remaining module variables are internal",
+    "if a module has internal variables and its complete module factor is UNATE, existentially project internal variables by the sealed UNATE rule",
+    "else if a module has internal variables and is 2CNF, existentially project them by sealed exact Davis-Putnam elimination",
+    "else keep that module factor unchanged",
+    "recompose projected messages plus untouched factors and verify exact source coverage by module provenance",
+    "delegate the rewritten source to the sealed canonical cycle-cut/forest compiler",
+    "for SAT, recover eliminated module-internal witnesses by conditioning each original native module on returned boundary values and calling its native polynomial solver"
+  ],
+  "complexity_contract": {
+    "UNATE_projection": "linear in module encoding",
+    "2CNF_projection": "polynomial; distinct width<=2 clauses bound the projected message polynomially",
+    "no_boundary_enumeration_before_projection": true,
+    "parent_enumeration": "only after parent forest/cycle-cut width certificates"
+  }
+  ,"frozen_controls": [
+    "PREVIOUS_WIDE_EDGE_OPEN_MUST_CLOSE_AFTER_SYMBOLIC_PROJECTION",
+    "PURE_BOUNDARY_WIDE_INTERACTION_WITHOUT_ELIMINABLE_INTERNALS_MUST_REMAIN_OPEN",
+    "2CNF_INTERNAL_CHAIN_MUST_PROJECT_TO_EXACT_BOUNDARY_RELATION",
+    "PROJECTED_SAT_WITNESS_MUST_LIFT_TO_ORIGINAL_SOURCE",
+    "PROJECTED_UNSAT_MUST_MATCH_BRUTE_FORCE_ON_SMALL_CONTROLS",
+    "UNSUPPORTED_MODULE_MUST_BE_PRESERVED_UNCHANGED",
+    "RANDOM_SMALL_EXACT_REPLAY"
+  ],
+  "firewalls": [
+    "NO_GENERAL_SAT_ORACLE",
+    "NO_WHOLE_FORMULA_ASSIGNMENT_ENUMERATION_IN_CANDIDATE",
+    "NO_APPROXIMATE_PROJECTION",
+    "NO_UNSUPPORTED_HORN_FORGETTING_PROMOTED_TO_EXACT",
+    "SYMBOLIC_PROJECTION_PASS_NE_UNIVERSAL_3SAT_THEOREM",
+    "OPEN_AFTER_PROJECTION_NE_HARDNESS",
+    "FINITE_REPLAY_NE_ASYMPTOTIC_THEOREM"
+  ],
+  "next_if_pass": "APMA_EXACT_SHARED_INTERFACE_SYMBOLIC_COMPOSITION_BEYOND_UNATE_2CNF",
+  "next_if_fail": "preserve exact falsifier and localize projection/recomposition/witness-recovery mismatch",
+  "scientific_status": {
+    "SAT_IN_P": "NOT_PROVED",
+    "P_VS_NP": "OPEN",
+    "Pi_negative_evidence_weight": 0
+  }
+}
