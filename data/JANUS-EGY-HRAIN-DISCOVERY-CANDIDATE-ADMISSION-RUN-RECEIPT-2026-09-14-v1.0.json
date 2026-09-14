@@ -1,0 +1,75 @@
+{
+  "schema": "janus.egy.hrain.discovery_candidate_admission.run_receipt.v1_0",
+  "artifact_id": "JANUS-EGY-HRAIN-DISCOVERY-CANDIDATE-ADMISSION-RUN-RECEIPT-2026-09-14-v1.0",
+  "created_date": "2026-09-14",
+  "status": "PASS__DETERMINISTIC_CLASSIFICATION_COMPLETE__ZERO_EVIDENCE_ADMISSIONS",
+  "prereg_commit": "32dcfc03771c770e0d5897657d768b8020dc7798",
+  "apparatus_commit": "c14784b873d29bd7a6cfc8f20fcc40a4d23c835e",
+  "parser_sha256": "36f6e9b4b31beb59932b694e39ccc9e15dbd3549ecd600a735039ddc35eef814",
+  "result": {
+    "path": "data/JANUS-EGY-HRAIN-DISCOVERY-CANDIDATE-ADMISSION-RESULT-2026-09-14-v1.0.json",
+    "sha256": "c116a54efe33decdc75046e432e711fc40d602bf5e7c5a051238c8de4c8aa955",
+    "bytes": 38255,
+    "result_core_sha256": "7c71e64e152a3bf8b266a3da31cc636ab9b90d55b85d321ea3ba4f1bce6a6998"
+  },
+  "determinism_check": {
+    "rerun_sha256": "c116a54efe33decdc75046e432e711fc40d602bf5e7c5a051238c8de4c8aa955",
+    "rerun_bytes": 38255,
+    "byte_identical": true,
+    "same_frozen_apparatus": true,
+    "same_frozen_inputs": true
+  },
+  "stage_counts": {
+    "candidate_total": 57,
+    "boundary_pass": 42,
+    "boundary_fail": 15,
+    "schema_pass": 0,
+    "schema_fail_after_boundary_pass": 42,
+    "provenance_anchor_pass": 0,
+    "admitted_to_evidence_corpus": 0
+  },
+  "final_status_counts": {
+    "DISQUALIFIED_NOISE": 15,
+    "DISCOVERY_ONLY_SCHEMA_MISMATCH": 42,
+    "DISCOVERY_ONLY_NO_CORE_PROVENANCE": 0,
+    "ADMITTED_TO_EVIDENCE_CORPUS": 0
+  },
+  "boundary_fail_breakdown": {
+    "isis_inside_crisis": 6,
+    "inpu_inside_input": 6,
+    "atum_inside_erratum": 1,
+    "hieroglyph_vs_hieroglyphic_exact_token_mismatch": 2
+  },
+  "schema_fail_breakdown": {
+    "NON_JSON_CANDIDATE": 41,
+    "NO_REQUIRED_STRUCTURED_KEY": 1,
+    "extensions": {
+      ".yml": 17,
+      ".py": 18,
+      ".md": 5,
+      ".html": 1,
+      ".json": 1
+    },
+    "json_without_required_structured_key": "data/JANUS-PYRAMID-TEXT-REVERSE-HORIZON-AFTER-PT353-2026-08-18-v1.0.json"
+  },
+  "conservative_false_negative_note": "The preregistered exact-token boundary rule rejects 'hieroglyphic' when the frozen discovery term is 'hieroglyph'. This is recorded as a conservative false-negative class. The rule is not changed retroactively and both files remain DISQUALIFIED_NOISE in this gate.",
+  "interpretation": [
+    "The 57 HRAiN discoveries improved search coverage but none satisfied the frozen three-stage evidence-admission contract.",
+    "Forty-one candidates are workflows, scripts, Markdown or HTML and therefore remain navigation/tooling resources rather than evidence objects in this gate.",
+    "One JSON candidate passed token boundaries but lacked every preregistered evidence-schema key.",
+    "No candidate reached a passing provenance-anchor stage, so no new evidence edge was created and the original 488-file evidence corpus remains unchanged."
+  ],
+  "locked_fields": {
+    "LRS": "LOCKED_NOT_COMPUTED",
+    "LES": "LOCKED_NOT_COMPUTED",
+    "CRI": "LOCKED_NOT_COMPUTED",
+    "reverse_prediction": "LOCKED",
+    "semantic_operator_promotion": "LOCKED"
+  },
+  "next_options": [
+    "Keep the 57 resources as a non-authoritative tooling/navigation overlay.",
+    "If morphology-aware token admission is desired, preregister a successor gate before rerunning; never rewrite this v1.0 result.",
+    "Build dedicated Scarab/Khepri and Psychostasia/Maat corpora independently rather than promoting these rejected candidates post hoc."
+  ],
+  "canonical_seal": "HRAIN FOUND ROUTES, NOT NEW EVIDENCE. THE FROZEN SANITIZATION GATE ADMITTED ZERO OF FIFTY-SEVEN. ZERO IS A VALID RESULT; THE RULES ARE NOT RELAXED AFTER SEEING IT."
+}
