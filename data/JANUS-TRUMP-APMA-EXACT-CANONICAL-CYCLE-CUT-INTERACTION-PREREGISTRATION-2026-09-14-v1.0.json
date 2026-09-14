@@ -1,0 +1,55 @@
+{
+  "artifact_id": "TRUMP-APMA-EXACT-CANONICAL-CYCLE-CUT-INTERACTION-PREREGISTRATION-2026-09-14",
+  "parent_scientific_authority": "cd2c7fc8675cf07612be04b6eedf00115741b895",
+  "gate": "APMA_EXACT_CANONICAL_CYCLE_CUT_INTERACTION_MESSAGE",
+  "status": "FROZEN_PREREGISTRATION_ONLY",
+  "scope": "Extend sealed typed-module-forest interaction to cyclic module graphs by deterministic canonical spanning-forest conditioning only.",
+  "discovery": [
+    "build APMA width<=3 typed mosaic",
+    "discover connected native modules deterministically",
+    "reject shared variable belonging to more than two modules",
+    "build module interaction graph and deterministic DFS spanning forest",
+    "define cycle-cut variable set as union of shared variables on non-tree edges"
+  ],
+  "capability": {
+    "L": "1+n+number_of_clauses+number_of_literal_occurrences",
+    "cycle_cut_budget": "floor(log2(max(2,L)))",
+    "forest_boundary_budget": "floor(log2(max(2,L)))",
+    "work_bound": "2^|C| times sealed forest-DP polynomial work; under |C|<=floor(log2 L), polynomial in L"
+  },
+  "algorithm": [
+    "if interaction already forest, delegate to sealed parent forest solver",
+    "otherwise compute canonical DFS spanning forest without optimization",
+    "reject when union C of non-tree-edge separator variables exceeds budget",
+    "enumerate exactly the 2^|C| assignments only after the budget certificate passes",
+    "condition all modules on C and remove fixed variables from interaction separators",
+    "run exact sealed-style forest DP on every conditioned residual",
+    "SAT if any cut assignment yields certified global witness; UNSAT if every cut assignment yields certified forest UNSAT"
+  ],  "frozen_controls": [
+    "PARENT_FOREST_REGRESSION",
+    "THREE_MODULE_TRIANGLE_MUST_CLOSE_EXACTLY",
+    "FOUR_MODULE_CYCLE_WITH_ONE_VARIABLE_CUT_MUST_CLOSE_EXACTLY",
+    "SIGNED_CUBE_REMAINS_CERTIFIED_UNSAT",
+    "HYPEREDGE_REMAINS_OPEN",
+    "WIDE_FOREST_BOUNDARY_REMAINS_OPEN",
+    "CANONICAL_CUT_OVER_LOG_BUDGET_MUST_OPEN",
+    "RANDOM_SMALL_ADMITTED_CYCLES_EXACT_REPLAY"
+  ],
+  "firewalls": [
+    "NO_MINIMUM_FEEDBACK_SET_ORACLE",
+    "NO_BRANCH_DEPENDENT_CUT_DISCOVERY",
+    "NO_WHOLE_FORMULA_ASSIGNMENT_ENUMERATION",
+    "CUT_ENUMERATION_ONLY_AFTER_LOG_BUDGET_CERTIFICATE",
+    "CYCLE_CUT_PASS_NE_UNIVERSAL_3SAT_THEOREM",
+    "OPEN_CUT_WIDTH_NE_HARDNESS",
+    "OPEN_HYPEREDGE_NE_HARDNESS",
+    "FINITE_REPLAY_NE_ASYMPTOTIC_THEOREM"
+  ],
+  "scientific_status": {
+    "SAT_IN_P": "NOT_PROVED",
+    "P_VS_NP": "OPEN",
+    "Pi_negative_evidence_weight": 0
+  },
+  "next_if_pass": "APMA_EXACT_HIGH_WIDTH_OR_HYPEREDGE_INTERACTION_MESSAGE",
+  "next_if_fail": "preserve exact falsifier and localize cycle-cut mismatch"
+}
