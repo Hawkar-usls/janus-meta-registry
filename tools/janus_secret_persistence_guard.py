@@ -94,7 +94,7 @@ def staged_items() -> Iterable[tuple[str, str]]:
             continue
         try:
             yield name, _git("show", f":{name}")
-        except subprocess.CalledProcessError:
+        except (subprocess.CalledProcessError, UnicodeDecodeError):
             continue
 
 
@@ -105,7 +105,7 @@ def range_items(commit_range: str) -> Iterable[tuple[str, str]]:
             continue
         try:
             yield name, _git("show", f"{head}:{name}")
-        except subprocess.CalledProcessError:
+        except (subprocess.CalledProcessError, UnicodeDecodeError):
             path = Path(name)
             if path.is_file():
                 try:
