@@ -1,0 +1,241 @@
+{
+  "schema": "janus.legacy_genesis_archaeology.v1",
+  "artifact_id": "JANUS-LEGACY-GENESIS-V9_3-CIVILIZATION-MODULES-2026-08-16-v1.0",
+  "recorded_at_local": "2026-08-16T20:50:00+03:00",
+  "status": "ARCHAEOLOGY_COMPLETE_NO_SOURCE_EXECUTION",
+  "source_context": {
+    "observed_internal_version": "JANUS GENESIS PROTOCOL v9.3",
+    "relationship_to_user_supplied_mirror_protocol_v12_2": "VERSION_NUMBER_SUGGESTS_EARLIER_PHASE_BUT_DIRECT_LINEAGE_NOT_PROVEN_BY_THESE_FILES",
+    "uploaded_files": [
+      {
+        "uploaded_name": "memes(1).py",
+        "size_bytes": 2707,
+        "sha256": "4610286de0eb4054cd6a2e9b37a480a6a6dcb11a4f090b76317c3ebf173d03ed",
+        "analysis_mode": "STATIC_READ_AST_ONLY_NO_SOURCE_EXECUTION"
+      },
+      {
+        "uploaded_name": "party(1).py",
+        "size_bytes": 1903,
+        "sha256": "eb3a4628b6ab68a7cb4aded27845671ac5877e892e201d188843fd3c51429260",
+        "analysis_mode": "STATIC_READ_AST_ONLY_NO_SOURCE_EXECUTION"
+      },
+      {
+        "uploaded_name": "meta_civilization_engine(1).py",
+        "size_bytes": 2668,
+        "sha256": "e95b5f330a7bd37d7fb5a4ba9731da13ddca6711d8da97e648504ff3f7a707b7",
+        "analysis_mode": "STATIC_READ_AST_ONLY_NO_SOURCE_EXECUTION"
+      },
+      {
+        "uploaded_name": "agent.py",
+        "size_bytes": 8161,
+        "sha256": "d4adf6c08c1e8c8838fe1de0a1e6ff49a2d75a225680de8e1f57942c9fa85688",
+        "analysis_mode": "STATIC_READ_AST_ONLY_NO_SOURCE_EXECUTION"
+      },
+      {
+        "uploaded_name": "economy.py",
+        "size_bytes": 2922,
+        "sha256": "63e9964b4452acc921ba75e09c891e70d0f93ba2db1012286496c20fd88dd16f",
+        "analysis_mode": "STATIC_READ_AST_ONLY_NO_SOURCE_EXECUTION"
+      },
+      {
+        "uploaded_name": "genesis_protocol.py",
+        "size_bytes": 23250,
+        "sha256": "9cf144770a97d29d988fd51e7a3a771f93319c1db493531c36d471280ec2f3b3",
+        "analysis_mode": "STATIC_READ_AST_ONLY_NO_SOURCE_EXECUTION"
+      }
+    ]
+  },
+  "verified_findings": [
+    {
+      "id": "V9_3_SENSOR_WORLD_LOOP",
+      "finding": "genesis_protocol.py reads a homeostatic/device-derived state and maps telemetry into RPG world mutations.",
+      "modern_interpretation": "EARLY_SENSOR_TO_SIMULATION_BRIDGE",
+      "claim_ceiling": "SIMULATION_CAUSALITY_ONLY_NOT_PHYSICAL_CAUSAL_INFERENCE"
+    },
+    {
+      "id": "V9_3_HRAIN_EVENT_LINK",
+      "finding": "genesis_protocol.py POSTs selected genesis_step events to localhost:1138/api/hrain/event and suppresses delivery errors.",
+      "modern_interpretation": "EARLY_HANDOFF_TO_HRAIN",
+      "claim_ceiling": "SEND_ATTEMPT_NOT_DURABLE_RECEIPT"
+    },
+    {
+      "id": "V9_3_BLOCKING_AUTONOMY",
+      "finding": "The main loop blocks on input(); the nominal 30-second automatic update cannot advance while the prompt remains unanswered.",
+      "modern_interpretation": "RESIDENT_CYCLE_PRECURSOR_NOT_AUTONOMOUS_RESIDENT"
+    },
+    {
+      "id": "V9_3_NON_ATOMIC_STATE_SAVE",
+      "finding": "World state is written directly to the target JSON path using truncating writes; no temp-file/fsync/atomic replace protocol is present.",
+      "modern_interpretation": "PERSISTENCE_PRECURSOR_WITH_CRASH_CORRUPTION_RISK"
+    },
+    {
+      "id": "V9_3_DISPLAYED_NOT_PERSISTED_VOICE",
+      "finding": "For generic user text, the UI says Janus recorded the voice in a diary, but this file does not append user_input to a diary before saving state.",
+      "modern_law": "DISPLAYED_RECEIPT != PERSISTED_RECEIPT"
+    },
+    {
+      "id": "V9_3_SYNTHETIC_ANOMALY_MIXED_WITH_SENSOR_DATA",
+      "finding": "get_current_janus_metrics() injects anomaly=random.random()<0.05 into loaded metrics.",
+      "modern_law": "SYNTHETIC_SIGNAL_MUST_BE_TYPED_SEPARATELY_FROM_OBSERVATION"
+    },
+    {
+      "id": "META_CIV_RANDOM_POLICY",
+      "finding": "MetaCivilizationEngine encodes world state but chooses StrategicExecutor action via random.choice and resets accumulated reward without learning.",
+      "modern_interpretation": "META_POLICY_SCAFFOLD_NOT_RL_OR_PROVEN_META_INTELLIGENCE"
+    },
+    {
+      "id": "META_CIV_DIRECT_WORLD_MUTATION",
+      "finding": "MetaCivilizationEngine directly calls StrategicExecutor.execute(action, world).",
+      "modern_law": "PROPOSED_STRATEGY != AUTHORIZED_WORLD_MUTATION"
+    },
+    {
+      "id": "ECONOMY_MISSING_TIME_IMPORT",
+      "finding": "Market.add_listing() calls time.time() although economy.py imports random only.",
+      "severity": "BUG"
+    },
+    {
+      "id": "ECONOMY_NEGATIVE_SPEND",
+      "finding": "Economy.spend(resource, amount) has no non-negative amount validation; a negative amount increases the resource balance.",
+      "severity": "INVARIANT_BUG"
+    },
+    {
+      "id": "AGENT_NEGATIVE_SPEND",
+      "finding": "JanusAgent.spend(amount) likewise permits negative amounts, increasing gold.",
+      "severity": "INVARIANT_BUG"
+    },
+    {
+      "id": "ECONOMY_CAN_AFFORD_STUB",
+      "finding": "Economy.can_afford() is a pass stub and tax_rate is not applied in this module.",
+      "severity": "INCOMPLETE"
+    },
+    {
+      "id": "AGENT_MUTATION_BONUS_STALE",
+      "finding": "mutation_bonus is multiplicatively changed on item addition/deserialization but is not recomputed when an item is removed.",
+      "severity": "STATE_DERIVATION_BUG"
+    },
+    {
+      "id": "AGENT_REPUTATION_NOT_SERIALIZED",
+      "finding": "JanusAgent initializes reputation but omits it from to_dict()/from_dict(), so that state is lost across persistence.",
+      "severity": "PERSISTENCE_BUG"
+    },
+    {
+      "id": "AGENT_EAGER_RANDOM_DEFAULTS",
+      "finding": "from_dict uses data.get(key, random.choice(...)); Python evaluates the random default even when the key exists, consuming RNG state and harming deterministic replay.",
+      "severity": "DETERMINISM_BUG"
+    },
+    {
+      "id": "MEME_IDENTITY_AND_PROVENANCE",
+      "finding": "Meme holders are raw agent object identities in a set; provenance/source/trust fields are absent and holder persistence is not defined.",
+      "modern_interpretation": "EARLY_INFORMATION_CONTAGION_SIMULATION_ONLY"
+    },
+    {
+      "id": "MEME_MEMORY_INCONSISTENCY",
+      "finding": "Meme.spread appends text to agent.memory, while on_agent_created and spread_meme add holders without appending the same memory payload.",
+      "severity": "SEMANTIC_INCONSISTENCY"
+    },
+    {
+      "id": "PARTY_MULTI_MEMBERSHIP",
+      "finding": "PartySystem does not prevent one agent from being present in multiple parties.",
+      "severity": "DOMAIN_INVARIANT_OPEN"
+    },
+    {
+      "id": "PARTY_CREATED_TIME_UNBOUND",
+      "finding": "Party.created_time defaults to 0 and this module never assigns it.",
+      "severity": "INCOMPLETE"
+    }
+  ],
+  "modern_trait_mapping": [
+    {
+      "legacy_surface": "genesis_protocol auto_update_world",
+      "modern_trait": "RESIDENT_CYCLE / SENSOR_FACE",
+      "inherit": "CONCEPT_ONLY",
+      "repairs_required": [
+        "NONBLOCKING_WAKE",
+        "TYPED_SENSOR_PROVENANCE",
+        "DURABLE_RECEIPT",
+        "ATOMIC_CHECKPOINT"
+      ]
+    },
+    {
+      "legacy_surface": "send_hrain_event",
+      "modern_trait": "FACE_HANDOFF_LEDGER",
+      "inherit": "CONCEPT_ONLY",
+      "repairs_required": [
+        "ACK_RECEIPT",
+        "SOURCE_PIN",
+        "SESSION_ID",
+        "FAIL_CLOSED_OR_EXPLICIT_DEGRADED_STATE"
+      ]
+    },
+    {
+      "legacy_surface": "MetaCivilizationEngine",
+      "modern_trait": "COGNITION_PROPOSAL_POLICY",
+      "inherit": "SCAFFOLD_ONLY",
+      "repairs_required": [
+        "PROPOSAL_ONLY_DEFAULT",
+        "VERIFIER_GATE",
+        "OBJECTIVE_RECEIPT",
+        "DETERMINISTIC_REPLAY"
+      ]
+    },
+    {
+      "legacy_surface": "MemeSystem",
+      "modern_trait": "INFORMATION_ECOLOGY_SIMULATOR",
+      "inherit": "SIMULATION_ONLY",
+      "repairs_required": [
+        "PROVENANCE",
+        "TRUST_CLASS",
+        "BOT/SOURCE_IDENTITY",
+        "EXPOSURE_VS_BELIEF_SEPARATION",
+        "NO_DIRECT_BEHAVIOR_AUTHORITY"
+      ]
+    },
+    {
+      "legacy_surface": "PartySystem",
+      "modern_trait": "BOUNDED_FACE_COALITION / TASK_GROUP",
+      "inherit": "CONCEPT_ONLY",
+      "repairs_required": [
+        "UNIQUE_MEMBERSHIP_POLICY",
+        "LEASE_SCOPE",
+        "NO_VOTING_POWER_FROM_COUNT"
+      ]
+    },
+    {
+      "legacy_surface": "Economy + JanusAgent gold/resources",
+      "modern_trait": "RESOURCE_BUDGET / EFFECT_BUDGET",
+      "inherit": "CONCEPT_ONLY",
+      "repairs_required": [
+        "NONNEGATIVE_AMOUNTS",
+        "LEDGERED_TRANSFERS",
+        "NO_AUTHORITY_PURCHASE",
+        "REPLAYABLE_BALANCES"
+      ]
+    }
+  ],
+  "canonical_modern_laws_proposed": [
+    "DISPLAYED_RECEIPT != PERSISTED_RECEIPT",
+    "SEND_ATTEMPT != DURABLE_HANDOFF",
+    "SYNTHETIC_SIGNAL != SENSOR_OBSERVATION",
+    "SENSOR_INPUT != AUTHORIZED_WORLD_EFFECT",
+    "ENCODED_STATE + RANDOM_ACTION != LEARNED_POLICY",
+    "PROPOSED_STRATEGY != AUTHORIZED_WORLD_MUTATION",
+    "SIMULATED_MEME_EXPOSURE != BELIEF",
+    "GROUP_SIZE != AUTHORITY",
+    "RESOURCE_BALANCE != PERMISSION",
+    "PERSISTENCE_REQUIRES_ATOMIC_CHECKPOINT_OR_EXPLICIT_RECOVERY_STATE"
+  ],
+  "admission_recommendation": {
+    "raw_code_as_active_face": "DENY",
+    "historical_registry_ingest": "ADMIT_WITH_HASHED_PROVENANCE",
+    "reusable_patterns": "ADMIT_AFTER_MODERN_GATES",
+    "source_execution_performed": false,
+    "missing_dependencies_preventing_full_effect_audit": [
+      "config.py",
+      "janus_character.py",
+      "state_encoder.py",
+      "strategic_actions.py",
+      "event_bus implementation",
+      "world implementation"
+    ]
+  }
+}
