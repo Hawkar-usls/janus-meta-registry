@@ -1,0 +1,56 @@
+{
+  "id": "JANUS_TRUMP_EXACT_INVARIANT_FRONTIER_UPDATE_R44BB_R44BC_2026-09-03",
+  "status": "CANONICAL_FRONTIER_UPDATE__POST_REVIEW_REPAIRED",
+  "provenance_aliases": {
+    "R44BB-SURPLUS": {
+      "fundamentum_pr": 278,
+      "head": "125b6a5078e8d1c3be833bddfe7d2c7c39169e70",
+      "meaning": "If fixed-surplus width<=3 F has no R44AT nonexpanding variable, an entire minimum-surplus witness V has |V|<=floor(3s/2) and can be exactly batch-eliminated in polynomial work for each fixed s.",
+      "authority": "STRUCTURAL_FIXED_SURPLUS_BATCH_BOUND__NOT_NEW_UNIFORM_ONE_STEP_FRONTIER",
+      "review_repair": "Removed the invalid implication that unbounded surplus is the next frontier merely because fixed-s batch elimination has an s-dependent exponent; one ordinary DP step is already uniformly polynomial for arbitrary current CNF."
+    },
+    "R44BB-AUTOMORPH": {
+      "fundamentum_pr": 279,
+      "head": "983207ae123cd665fd69cdda3aaa52b1eaedea1f",
+      "meaning": "For fixed occurrence degree, a signed formula automorphism fixing a variable identity while reversing its polarity yields an exact safe assignment and is polynomially detectable by bounded-degree graph isomorphism.",
+      "authority": "PARTIAL_EXACT_SAFE_CHOICE__NOT_UNIVERSAL",
+      "proof_binding": "Finite verifier now loads the canonical JSON witness, validates permutation bijectivity, recomputes all claims, emits JSON SHA-256; fresh workflow 33740102963 SUCCESS."
+    },
+    "R44BC-MAXDEF": {
+      "fundamentum_pr": 280,
+      "head": "78679e4292c481a87946c831b9b3a5cf411d43df",
+      "meaning": "For a current CNF state of encoded size S, Szeider's O(2^k n^3) exact SAT algorithm gives an O(S^4) local terminal when maximum deficiency k<=floor(log2 S).",
+      "authority": "EXACT_UNIFORM_POLYTIME_LOCAL_TERMINAL_ON_CNF_TRIGGER",
+      "review_repairs": [
+        "CNF states only; non-CNF representations need a separately proved exact polynomial conversion",
+        "current-state size S is used for O(S^4); original-N accounting is conditional on an inherited polynomial L4 state envelope",
+        "Szeider output is a local certificate; end-to-end Legend L6 replay requires predecessor reconstruction/derivation metadata"
+      ]
+    }
+  },
+  "anti_drift_rejoin": {
+    "SZEIDER_FPT_STRUCTURE": "Polynomial criticalization gives terminal children or nonterminal children with lower maximum deficiency; the exponential factor is branch multiplicity.",
+    "TRUMP_MAPPING": "This rejoins R44AP branchwise max-deficiency descent plus the unresolved exact OR-merge/safe-choice problem.",
+    "seal": "SZEIDER_FPT != NEW_ESCAPE_FROM_BRANCH_COMPRESSION"
+  },
+  "current_exact_frontier": {
+    "cnf_terminal_gate": "For current CNF size S: delta*(F)<=floor(log2 S) => exact O(S^4) local SAT/UNSAT terminal.",
+    "original_input_ceiling": "Original-N polynomiality additionally requires the constructor's polynomial state envelope; local certificate output does not by itself discharge L6.",
+    "missing_object": "R44BD corrected maxdef descent-preserving OR-merge/normalization on high-delta* critical CNF cores.",
+    "non_cnf_boundary": "R44BC does not constrain non-CNF representation states without an exact polynomial CNF bridge."
+  },
+  "firewalls": [
+    "ONE_CURRENT_DP_STEP_IS_ALREADY_UNIFORMLY_POLYNOMIAL",
+    "FIXED_SURPLUS_BATCH != CLOSED_POLYNOMIAL_TRAJECTORY",
+    "CURRENT_STATE_POLYNOMIAL != ORIGINAL_N_POLYNOMIAL_WITHOUT_STATE_ENVELOPE",
+    "LOCAL_CERTIFICATE != END_TO_END_REPLAY",
+    "FPT != P_FOR_UNBOUNDED_PARAMETER",
+    "BRANCHWISE_PARAMETER_DESCENT != SINGLE_STATE_EXACT_DESCENT",
+    "NO_PROGRESS != NEGATIVE_EVIDENCE",
+    "P_VS_NP=OPEN"
+  ],
+  "TRUMP_finished": false,
+  "SAT_IN_P": "NOT_PROVED",
+  "P_EQUALS_NP": "NOT_PROVED",
+  "P_VS_NP": "OPEN"
+}
