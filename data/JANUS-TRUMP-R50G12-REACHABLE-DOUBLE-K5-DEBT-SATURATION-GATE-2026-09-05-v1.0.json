@@ -1,0 +1,64 @@
+{
+  "schema": "janus.trump.gate_transition_meta.v1",
+  "artifact_id": "JANUS-TRUMP-R50G12-REACHABLE-DOUBLE-K5-DEBT-SATURATION-GATE-2026-09-05-v1.0",
+  "created_date": "2026-09-05",
+  "status": "ACTIVE_FROZEN_GATE_CI_RUNNING",
+  "source_repository": "Hawkar-usls/Janus-Fundamentum",
+  "source_branch": "research/r50g12-reachable-double-k5-debt-saturation-2026-09-05",
+  "source_head": "6784127d9ceaf2d5ec9e0f98379ece9b52c46e04",
+  "source_pr": 426,
+  "workflow_run": 33934727039,
+  "workflow_status_at_record": "IN_PROGRESS",
+  "parent_stage": {
+    "gate": "R50G11_SUPPORT_FRONTIER_DOUBLE_DEBT_CORE",
+    "pr": 424,
+    "run": 33933520774,
+    "fact": "ALL_DOORS_CLOSED => V>=6 AND TWO DEBT DIGRAPHS EACH WITH MIN_OUTDEGREE>=4 AND A DIRECTED CYCLE"
+  },
+  "audit_correction_carried_forward": {
+    "fact": "REACHABLE_SAME_PIVOT_W4_SAFETY=REFUTED",
+    "proof_source_pr": 417,
+    "proof_source_run": 33930214473,
+    "mechanism": "explicit one-step U_mu W3->W4 reachability certificate followed by immediate BVE on dangerous pivot and independently replayed nonterminal width-5 same-pivot R47J",
+    "why_U_mu_not_refuted": "the reached state has existing alternate R49H rescue pivots"
+  },
+  "frozen_target": {
+    "name": "V6_DOUBLE_K5_DEBT_SATURATION",
+    "statement": "For any exactly-six-variable pre-BVE-clean immediate-BVE state whose dangerous same-pivot R47J is wide and whose every alternate R49H/R47J_SAFE door is closed, every alternate CHI_DEBT has chi_star exactly 5 and uses all five other variables, every alternate R47J_DEBT ends nonterminal at width exactly 5 and uses all five other variables, and after excluding x both debt graphs on the five alternates are complete directed K5.",
+    "impossibility_claimed": false
+  },
+  "additional_exact_debt": {
+    "name": "EARLIER_BVE_ORDER_DEBT",
+    "statement": "Any present alternate y<x skipped before the first accepted frozen BVE pivot x must carry an exact BVE-admission rejection receipt under ascending variable order and frozen R33 (C,L,V) acceptance.",
+    "conditional": true,
+    "contradiction_claimed": false
+  },
+  "execution_contract": {
+    "new_corpus": false,
+    "heuristic_authority": false,
+    "learned_selector": false,
+    "probabilistic_authority": false,
+    "new_semantic_inference_rule": false,
+    "current_branch_reseals_reachable_same_pivot_refutation": true,
+    "frozen_400_root_replay_only": true
+  },
+  "expected_decision": {
+    "green_without_counterexample": "V6_DOUBLE_K5_SATURATION_THEOREM_CLOSED__V6_DOUBLE_K5_REALIZABILITY_OR_EXCLUSION_OPEN",
+    "exact_reachable_V6_all_closed": "REACHABLE_ALTERNATE_DOOR_THEOREM_REFUTED_FOR_CURRENT_U_mu; preserve complete witness and explicit OPEN receipt",
+    "symbolic_V6_incompatibility": "V6_ALL_DOORS_CLOSED_EXCLUDED; raise minimal obstruction bound only to >=7"
+  },
+  "epistemic_firewall": {
+    "REACHABLE_SAME_PIVOT_W4_SAFETY": "REFUTED",
+    "V6_DOUBLE_K5_SATURATION": "PENDING_CI",
+    "V6_DOUBLE_K5_IMPOSSIBILITY": "OPEN",
+    "REACHABLE_ALTERNATE_DOOR_THEOREM": "OPEN",
+    "IMMEDIATE_BVE_CASE_ELIMINATED": false,
+    "U_MU": "OPEN",
+    "SAT_IN_P": "NOT_PROVED",
+    "P_EQ_NP": "NOT_PROVED",
+    "P_NE_NP": "NOT_PROVED",
+    "P_VS_NP": "OPEN",
+    "TRUMP_finished": false
+  },
+  "canonical_seal": "AT THE MINIMAL SIX-VARIABLE BOUNDARY, THE ALL-DOORS-CLOSED BIRD MUST CARRY TWO COMPLETE DIRECTED K5 DEBT NETWORKS AT ONCE. R50G12 TESTS AND SEALS THAT NECESSARY SATURATION WITHOUT CALLING IT IMPOSSIBLE."
+}
