@@ -1,0 +1,109 @@
+{
+  "artifact_id": "JANUS-P-VS-NP-POLYNOMIAL-RESIDUAL-CACHE-BRIDGE-CONTINUATION-2026-08-24-v1.0",
+  "created_at_local": "2026-08-24T09:10:00+03:00",
+  "type": "CONTINUATION_AND_GAP_PATCH",
+  "parent_artifacts": [
+    "TOPA-POLYNOMIAL-RESIDUAL-CACHE-BRIDGE-AUDIT-2026-08-24-v1.0",
+    "C024_POLYNOMIAL_RESIDUAL_CACHE_BRIDGE_PURE_MATH"
+  ],
+  "target": "POLYNOMIAL_RESIDUAL_CACHE_BRIDGE_FOR_CNF_SAT",
+  "summary": "The bridge is no longer one vague problem. Its logical implication is proved conditionally; four supporting gaps are closed; one state-size gap was exposed; the remaining P-vs-NP core is split into universal Lemma A (#211) and Lemma B (#212). Work now attacks #211 directly.",
+  "closed_components": [
+    {
+      "id": "C1",
+      "name": "POLICY0A_CORRECTNESS",
+      "status": "PROVED",
+      "statement": "Uncapped Policy-0A is a sound and complete SAT decision procedure."
+    },
+    {
+      "id": "C2",
+      "name": "POLYNOMIAL_BRANCH_DEPTH",
+      "status": "PROVED",
+      "statement": "Maximum branching depth is at most the number of input variables and therefore polynomial in encoded input length."
+    },
+    {
+      "id": "C3",
+      "name": "CALL_GRAPH_FROM_STATE_COUNT",
+      "status": "PROVED",
+      "statement": "recursive_calls <= 2 * unique_states + 1."
+    },
+    {
+      "id": "C4",
+      "name": "LOCAL_INFERENCE_BUDGET",
+      "status": "PROVED",
+      "statement": "The frozen one-layer Resolution work is polynomial in the current state representation size."
+    },
+    {
+      "id": "C5",
+      "name": "CONDITIONAL_BRIDGE_THEOREM",
+      "status": "PROVED_CONDITIONALLY",
+      "statement": "If unique residual count, residual representation size, and deterministic primitive costs are polynomial in original input length, then Policy-0A decides CNF-SAT in polynomial time, hence P=NP."
+    }
+  ],
+  "newly_exposed_gap": {
+    "id": "POLYNOMIAL_RESIDUAL_STATE_SIZE",
+    "issue": 212,
+    "status": "OPEN",
+    "reason": "Polynomial state count alone does not imply polynomial total work because local resolvents may accumulate in individual residual representations.",
+    "worst_case_envelope": "m_t + 32 <= (5/4)^t * (m_0 + 32)",
+    "claim_ceiling": "This envelope shows the missing invariant; it is not a lower bound and does not prove exponential growth."
+  },
+  "remaining_core": [
+    {
+      "issue": 211,
+      "name": "UNIVERSAL_POLYNOMIAL_RESIDUAL_COUNT",
+      "target": "Find fixed c such that S(F) <= N^c for every CNF F of encoded length N, or refute by an explicit infinite family with a rigorous superpolynomial lower bound for exact Policy-0A."
+    },
+    {
+      "issue": 212,
+      "name": "UNIVERSAL_POLYNOMIAL_RESIDUAL_SIZE",
+      "target": "Find fixed a such that every residual encountered from every CNF F of encoded length N has bit_length <= N^a, or refute by an explicit infinite family."
+    }
+  ],
+  "topa_modification": {
+    "mode": "TOPA_MATHEMATICAL_RESEARCH_MODE",
+    "policy": "TOPA is not disabled. It is an active mathematical scout and adversary that may generate conjectures, invariants, counterfamilies, reductions, proof sketches and formal derivations.",
+    "promotion_law": "Authority comes from a checkable derivation or counterexample, not from TOPA identity. A failed attack does not prove the rival claim.",
+    "reusable_for": [
+      "proof complexity",
+      "complexity theory",
+      "combinatorics",
+      "graph theory",
+      "algorithm analysis",
+      "similar theorem/counterexample-driven mathematics"
+    ]
+  },
+  "issue_211_attack_run_0": {
+    "status": "ENCODING_TRANSFER_GAP_FOUND",
+    "finding": "The repository finite graph-tautology probe is not literally the GT_n encoding used in the Beame-Impagliazzo-Pitassi-Segerlind Formula-Caching lower-bound theorem.",
+    "source_theorem_object": {
+      "variables": "directed x_(i,j) for i != j",
+      "variable_count": "n(n-1)",
+      "contains_totality_clauses": "(x_(i,j) OR x_(j,i))",
+      "lower_bound": "Theorem 4.6 gives exponentially many nodes for FCWSR on the original GT_n family."
+    },
+    "repository_proxy_object": {
+      "generator": "janus_tear_policy0a_graph_tautology_probe.py::graph_tautology_cnf",
+      "variables": "one variable per unordered pair",
+      "variable_count": "C(n,2)",
+      "identity": "lt(j,i) is represented as the negation of the same pair variable",
+      "effect": "antisymmetry/totality structure is compiled into the variable representation rather than represented by the original directed-variable clauses"
+    },
+    "consequence": "The historical lower bound cannot be transferred directly to the current smart GT proxy. This is an additional theorem-transfer obligation, separate from local-Resolution robustness.",
+    "new_subgates": [
+      "A0_RESTORE_OR_PROVE_REDUCTION_TO_ORIGINAL_GT_ENCODING",
+      "A1_PROVE_LOCAL_RESOLUTION_ROBUSTNESS_ON_THE_THEOREM_MATCHED_FAMILY",
+      "A2_CONVERT_THE_LOWER_BOUND_PARAMETER_n_TO_ACTUAL_CNF_BIT_LENGTH_N",
+      "A3_ONLY_THEN_USE_THE_FAMILY_TO_REFUTE_OR_CONSTRAIN_ISSUE_211"
+    ]
+  },
+  "status": {
+    "POLYNOMIAL_RESIDUAL_CACHE_BRIDGE": "CONDITIONAL_THEOREM_PROVED",
+    "ISSUE_211": "OPEN_ATTACK_ACTIVE",
+    "ISSUE_212": "OPEN",
+    "P_EQUALS_NP": "NOT_ESTABLISHED",
+    "P_NOT_EQUALS_NP": "NOT_ESTABLISHED",
+    "P_VS_NP": "OPEN"
+  },
+  "next_action": "Attack #211 through A0 first: use the theorem-matched original GT_n encoding or prove a formal reduction from it to the repository proxy; do not import the historical lower bound before this gate passes."
+}
