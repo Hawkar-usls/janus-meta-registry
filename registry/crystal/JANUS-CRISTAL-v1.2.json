@@ -1,0 +1,103 @@
+{
+  "schema": "janus.meta_registry.janus_cristal.v1_2",
+  "artifact_id": "JANUS-CRISTAL-v1.2",
+  "artifact_name": "Janus Cristal",
+  "parent_artifact": "JANUS-CRISTAL-v1.1",
+  "status": "CI_PASS_REGISTERED_VISIBLE_UV_DIFFERENCE_OBSERVED_NO_FRACTAL_PLANNER_ENRICHMENT",
+  "extension_class": "REGISTERED_SAME_SPECIMEN_VISIBLE_UV_DIFFERENCE_AND_FRACTALGPT_NULL_GATE",
+  "sandbox_repository": "Hawkar-usls/Janus_Genesis",
+  "sandbox_result": "experiments/janus_cristal_fractalgpt/GENESIS-JANUS-CRISTAL-SPECTRAL-DIFFERENCE-v0.1.json",
+  "purpose": "Register the first nonsemantic, spatially registered comparison of visible and UV405 photographs of the same petroleum-quartz specimen, and test whether recovered FractalGPT trajectories preferentially sample the strongest modality-difference regions relative to matched random trajectories.",
+  "pair": {
+    "visible": "petroleum_quartz_visible",
+    "uv405": "petroleum_quartz_uv405",
+    "same_specimen": true,
+    "visible_sha256": "5f0dd591aec2c3d8b6eb8c320f8ec373088d5b2a062fe8fc92857d8720d7fd4a",
+    "uv405_sha256": "3e7f574411b9680a316d050e1c8062cfd04cccd087ce730b2c5b63b5a3432ca6"
+  },
+  "semantic_analysis": "DISABLED_BY_DESIGN",
+  "registration": {
+    "method": "EDGE_ECC_TRANSLATION_TO_EUCLIDEAN_TO_AFFINE_WITH_IDENTITY_GUARD",
+    "selected_motion": "AFFINE",
+    "edge_correlation_before": 0.30700636,
+    "edge_correlation_after": 0.32065283,
+    "overlap_fraction": 0.98156113,
+    "affine_determinant": 0.99916162,
+    "translation_pixels_resized_frame": 6.832173,
+    "quality_class": "USABLE_IMAGE_REGISTRATION"
+  },
+  "difference_field": {
+    "definition": "0.40*CLAHE_luminance_absdiff + 0.40*RGB_chromaticity_distance/sqrt(2) + 0.20*normalized_edge_absdiff",
+    "fixed_scales_shared_with_self_control": true,
+    "composite_median": 0.23846602,
+    "composite_p95": 0.39166408,
+    "chromaticity_median": 0.28856058,
+    "luminance_median": 0.19215687,
+    "edge_median": 0.05296119,
+    "hotspot_quantile": 0.95,
+    "hotspot_components_reported": 16
+  },
+  "gamma_self_control": {
+    "transform": "VISIBLE_GAMMA_0.72",
+    "composite_median": 0.03822943,
+    "chromaticity_median": 0.00657876,
+    "pair_to_control_composite_median_ratio": 6.23776028
+  },
+  "physical_result": {
+    "status": "REGISTERED_VISIBLE_UV_DIFFERENCE_FIELD_OBSERVED",
+    "interpretation": "A strong image-level difference exists between the registered visible and UV405 views of this one specimen relative to a monotonic exposure-like self-control.",
+    "universal_quartz_property": "NOT_ESTABLISHED",
+    "chemical_identity_from_image_only": "NOT_ESTABLISHED"
+  },
+  "fractalgpt_test": {
+    "planner_count": 6,
+    "windows_per_planner": 20,
+    "matched_random_trajectories_per_planner": 2048,
+    "familywise_alpha": 0.01,
+    "enriched_planner_count": 0,
+    "result": "NO_PLANNER_ENRICHMENT",
+    "planner_p_values": {
+      "logistic_baseline": {"composite": 0.99121523, "hotspot": 0.9829185},
+      "uniform_random_baseline": {"composite": 0.81649585, "hotspot": 0.73304051},
+      "fractalgpt_koch": {"composite": 0.29575403, "hotspot": 0.21669107},
+      "fractalgpt_sierpinski": {"composite": 0.61981454, "hotspot": 0.68423621},
+      "fractalgpt_fbm": {"composite": 0.76720351, "hotspot": 0.84675451},
+      "fractalgpt_model": {"composite": 0.79648609, "hotspot": 0.43777452}
+    },
+    "interpretation": "None of the tested fractal or baseline trajectories preferentially sampled the strongest visible/UV difference regions under the frozen familywise gate."
+  },
+  "fractalgpt_provenance": {
+    "original_library_sha256": "11e6c97ae7169a0fae4e0ad17f2fb7fb23b10265b04b4b057e3c968d6d0a3662",
+    "executed_vendored_sha256": "1dfc5bb1dabcb256d569de30dbe4431f6901c8dcddbe15fb76634fd57d9146e8",
+    "semantic_authority": "NONE"
+  },
+  "verification": {
+    "workflow_run": 31357171091,
+    "measurement_head_sha": "67b3847fe7546552477e2220e0ae67c4e90eb481",
+    "job_id": 93358926896,
+    "unit_tests": "17_OF_17_PASS",
+    "artifact_id": 9051100335,
+    "artifact_sha256": "25d001b18dc4b0e27171394b3544c8fbfcdf3d5ff0939b2b90aa6442211b9d5f"
+  },
+  "formal_rules": [
+    "REGISTRATION_PRECEDES_DIFFERENCE_FIELD",
+    "DIFFERENCE_FIELD_PRECEDES_FRACTAL_SAMPLING",
+    "NO_OCR_OR_SEMANTIC_SEARCH_IN_SPECTRAL_GATE",
+    "VISIBLE_UV_DIFFERENCE != HIDDEN_MESSAGE",
+    "FRACTALGPT_TRAJECTORY != MATERIAL_DISCOVERY",
+    "NO_PLANNER_ENRICHMENT != NO_PHYSICAL_MODALITY_EFFECT",
+    "SINGLE_SPECIMEN_DIFFERENCE != GENERAL_QUARTZ_PROPERTY"
+  ],
+  "next_gate": {
+    "name": "SPECTRAL_DIFFERENCE_CROSS_SPECIMEN_REPLICATION",
+    "status": "OPEN",
+    "requirements": [
+      "find additional open matched visible/UV observations of the same quartz specimens",
+      "reuse the frozen registration and difference-field definition without outcome-driven retuning",
+      "compare modality-difference channel distributions across specimens",
+      "separate inclusion fluorescence from generic crystal/image modality effects using known-material controls",
+      "keep neon, calibrated sunlight and physical quartz-on-quartz experiments pending direct matched recordings"
+    ]
+  },
+  "claim_ceiling": "JANUS-CRISTAL-v1.2 establishes a registered visible/UV image-level difference for one matched petroleum-quartz specimen and establishes no FractalGPT trajectory enrichment. It does not establish hidden semantics, intelligence, a universal quartz property, chemical identity without spectroscopy, or a supernatural cause."
+}
