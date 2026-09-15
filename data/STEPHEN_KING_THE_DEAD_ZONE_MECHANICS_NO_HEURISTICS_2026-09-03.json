@@ -1,0 +1,234 @@
+{
+  "schema": "janus.literature.formal_mechanism_analysis.v1",
+  "id": "STEPHEN_KING_THE_DEAD_ZONE_MECHANICS_NO_HEURISTICS_2026-09-03",
+  "language": "ru",
+  "source_scope": {
+    "work": "Stephen King, The Dead Zone (1979 novel)",
+    "adaptations_excluded": true,
+    "reason": "Фильм и сериал изменяют отдельные правила способности; роман анализируется отдельно."
+  },
+  "method": {
+    "heuristics_allowed": false,
+    "authority_levels": {
+      "EXPLICIT": "прямо показано или сказано и подтверждено событием романа",
+      "DERIVED": "следует логически из нескольких EXPLICIT наблюдений без добавления новой сущности",
+      "OPEN": "роман не определяет механизм достаточно для строгого вывода"
+    },
+    "authority_rule": "Ни один OPEN или интерпретационный тезис не получает механической authority."
+  },
+  "state_model": {
+    "subject": "JOHNNY_SMITH",
+    "state_variables": [
+      "neural_condition",
+      "contact_or_salience_event",
+      "vision_triggered",
+      "temporal_target in {PAST,PRESENT,FUTURE}",
+      "information_accessible",
+      "information_gap_dead_zone",
+      "future_branch_before_intervention",
+      "future_branch_after_intervention",
+      "physiological_cost"
+    ]
+  },
+  "observed_mechanisms": [
+    {
+      "id": "M01_LATENT_PRECURSOR",
+      "authority": "EXPLICIT",
+      "statement": "Способность не начинается полностью с автомобильной аварии: после детской травмы головы у Джонни уже бывают редкие точные предчувствия.",
+      "formal": "CHILD_HEAD_TRAUMA -> EXISTS sporadic_precognitive_events",
+      "not_proved": "Травма головы является физической причиной способности."
+    },
+    {
+      "id": "M02_POST_COMA_AMPLIFICATION",
+      "authority": "DERIVED",
+      "statement": "После взрослой травмы и длительной комы способность становится значительно более частой, широкой и операционально заметной.",
+      "formal": "POST_COMA_STATE -> higher_observed_frequency_and_scope(psi_events)",
+      "firewall": "AMPLIFICATION != PROVEN_NEUROLOGICAL_CAUSATION"
+    },
+    {
+      "id": "M03_CONTACT_TRIGGER",
+      "authority": "EXPLICIT",
+      "statement": "Физический контакт с человеком или значимым объектом/местом может запускать информационное видение.",
+      "examples": ["Dr. Weizak contact", "bandstand in Dodd case", "Greg Stillson handshake", "Chuck embrace"],
+      "formal": "CONTACT_OR_SALIENCE may_trigger VISION"
+    },
+    {
+      "id": "M04_TRIGGER_NOT_TOTAL",
+      "authority": "EXPLICIT",
+      "statement": "Контакт не является достаточным условием: предмет, связанный с убийцей, может не вызвать видения.",
+      "example": "Cigarette packet in the Dodd investigation produces no vision.",
+      "formal": "CONTACT != GUARANTEED_VISION"
+    },
+    {
+      "id": "M05_TEMPORAL_MULTIPLEX",
+      "authority": "EXPLICIT",
+      "statement": "Канал даёт доступ не только к будущему: Джонни получает сведения о прошлом, текущих удалённых обстоятельствах и будущем.",
+      "formal": "VISION_OUTPUT.time in {PAST,PRESENT,FUTURE}",
+      "firewall": "SAME_CHANNEL != SAME_PRECISION"
+    },
+    {
+      "id": "M06_INFORMATION_GAP_DEAD_ZONE",
+      "authority": "EXPLICIT",
+      "statement": "Некоторая информация недоступна внутри иначе работающего видения; Джонни связывает эти пропуски с повреждённым участком мозга и называет их 'dead zone'.",
+      "formal": "VISION_CONTEXT -> accessible_information UNION inaccessible_gap",
+      "firewall": "GAP_EXISTS is explicit; EXACT_BIOLOGICAL_MAPPING is not fully established."
+    },
+    {
+      "id": "M07_NON_OMNISCIENCE",
+      "authority": "DERIVED",
+      "statement": "Способность не является всеведением: она даёт фрагменты и может оставлять критически важные детали недоступными.",
+      "formal": "VISION != COMPLETE_WORLD_STATE",
+      "basis": ["M04_TRIGGER_NOT_TOTAL", "M06_INFORMATION_GAP_DEAD_ZONE"]
+    },
+    {
+      "id": "M08_FUTURE_IS_ACTION_SENSITIVE",
+      "authority": "EXPLICIT",
+      "statement": "Увиденное будущее может не реализоваться после вмешательства.",
+      "evidence": [
+        "Graduation fire: warning changes attendance and therefore who is harmed.",
+        "Stillson: catastrophic presidential future is later absent after the intervention sequence."
+      ],
+      "formal": "VISION(FUTURE_BRANCH_B) + ACTION_A -> possible FUTURE_BRANCH_B_PRIME where B_PRIME != B",
+      "firewall": "MUTABLE_FUTURE != ARBITRARY_USER_CONTROL"
+    },
+    {
+      "id": "M09_INFORMATION_CAN_CAUSE_ITS_OWN_INVALIDATION",
+      "authority": "DERIVED",
+      "statement": "Получение будущей информации может породить действие, которое делает исходную будущую линию ложной.",
+      "formal": "observe(B) -> choose(A | B) -> transition(B -> B_PRIME)",
+      "name": "SELF_NEGATING_FOREKNOWLEDGE_LOOP",
+      "firewall": "Это логическая схема сюжетных событий, а не доказательство физики времени."
+    },
+    {
+      "id": "M10_CONTROL_CHANNEL_CAN_DIFFER_FROM_INTENDED_CHANNEL",
+      "authority": "EXPLICIT",
+      "statement": "Джонни намеревается остановить Стиллсона прямым убийством, но фактический причинный канал остановки — публичная фиксация поведения Стиллсона с ребёнком.",
+      "formal": "INTENDED_CAUSE != REALIZED_CAUSE; ACTION creates exposure_event -> political_collapse",
+      "significance": "Интервенция может изменить будущее через побочный, но причинно достаточный канал."
+    },
+    {
+      "id": "M11_FINAL_REQUERY",
+      "authority": "EXPLICIT",
+      "statement": "После вмешательства повторный контакт со Стиллсоном служит новым запросом к изменившейся будущей траектории.",
+      "formal": "TOUCH_AFTER_INTERVENTION -> QUERY(updated_future_state)",
+      "firewall": "Не доказывает, что каждое касание возвращает полный новый прогноз."
+    },
+    {
+      "id": "M12_PHYSIOLOGICAL_COUPLING",
+      "authority": "EXPLICIT",
+      "statement": "Способность сосуществует с серьёзными неврологическими проблемами и ухудшением здоровья; в эпилоге выявляется опухоль мозга.",
+      "formal": "PSI_USE_AND_TIME correlate_with neurological_burden",
+      "firewall": "CORRELATION_IN_NARRATIVE != PROVEN_CAUSATION; TUMOR != PROVEN_SOURCE_OF_ABILITY"
+    }
+  ],
+  "formal_machine": {
+    "name": "DEAD_ZONE_INFORMATION_INTERVENTION_MACHINE_V1",
+    "transition_system": [
+      "S0 ORDINARY_OR_LATENT_STATE",
+      "S1 INJURY_COMA_POST_COMA_ALTERED_STATE",
+      "S2 TRIGGER_CANDIDATE_ENCOUNTERED",
+      "S3 EITHER_NO_VISION_OR_VISION_WITH_FRAGMENTARY_INFORMATION",
+      "S4 IF_INFORMATION_CONTAINS_FUTURE_THREAT_THEN_DECISION_PROBLEM",
+      "S5 INTERVENTION_OR_NON_INTERVENTION",
+      "S6 WORLD_EVOLVES",
+      "S7 OPTIONAL_RECONTACT_OR_REOBSERVATION",
+      "S8 UPDATED_FUTURE_INFORMATION_MAY_DIFFER_FROM_PRIOR_FUTURE_INFORMATION"
+    ],
+    "equations": [
+      "TRIGGER != SUFFICIENT_FOR_VISION",
+      "VISION -> ACCESSIBLE_INFORMATION + DEAD_ZONE_GAP",
+      "FUTURE_INFORMATION(B) + ACTION(A) -> B_PRIME_IS_PERMITTED",
+      "B_PRIME != B IS_NARRATIVELY_DEMONSTRATED",
+      "KNOW(B) != CONTROL(B)",
+      "MISSING_INFORMATION != FALSE_INFORMATION",
+      "ACTION_SUCCESS != INTENDED_MECHANISM_SUCCESS"
+    ]
+  },
+  "invariants": [
+    {"id": "I1_PARTIAL_ACCESS", "authority": "DERIVED", "formula": "INFORMATION_ACCESS < OMNISCIENCE"},
+    {"id": "I2_TRIGGER_NON_TOTALITY", "authority": "EXPLICIT", "formula": "same broad class of CONTACT can yield {VISION, NO_VISION}"},
+    {"id": "I3_BRANCH_MUTABILITY", "authority": "EXPLICIT", "formula": "FORESEEN_FUTURE != NECESSARILY_FIXED_FUTURE"},
+    {"id": "I4_CAUSAL_ACTION_REQUIREMENT", "authority": "DERIVED", "formula": "FUTURE_CHANGE shown in novel is mediated by concrete actions/events, not observation alone"},
+    {"id": "I5_DEAD_ZONE_AS_ABSENCE_NOT_ALTERNATIVE_TRUTH", "authority": "DERIVED", "formula": "DEAD_ZONE = INACCESSIBLE_INFORMATION_REGION, not a second prediction engine"}
+  ],
+  "counterexamples_to_overclaims": [
+    {
+      "overclaim": "Every touch yields a vision.",
+      "counterexample": "Dodd-associated cigarette packet yields no vision.",
+      "verdict": "REFUTED"
+    },
+    {
+      "overclaim": "Johnny sees complete information.",
+      "counterexample": "Gaps in the Weizak-family vision and neurological visualization gaps.",
+      "verdict": "REFUTED"
+    },
+    {
+      "overclaim": "A future vision is immutable destiny.",
+      "counterexample": "Stillson future changes after intervention; graduation warning changes who attends.",
+      "verdict": "REFUTED"
+    },
+    {
+      "overclaim": "Johnny can directly choose the exact replacement future.",
+      "counterexample": "Stillson is stopped through an unplanned photograph/public-reputation channel.",
+      "verdict": "NOT_SUPPORTED"
+    },
+    {
+      "overclaim": "The brain tumor causes the psychic ability.",
+      "counterexample": "Ability exists before tumor diagnosis and childhood precursor predates adult coma.",
+      "verdict": "NOT_ESTABLISHED"
+    }
+  ],
+  "open_questions": [
+    {
+      "id": "O1_TRIGGER_FUNCTION",
+      "status": "OPEN",
+      "question": "Что точно определяет, когда контакт запускает видение, а когда нет?",
+      "reason": "Роман демонстрирует оба исхода, но не даёт полного детерминированного правила."
+    },
+    {
+      "id": "O2_DEAD_ZONE_TO_NEUROANATOMY",
+      "status": "OPEN",
+      "question": "Есть ли точное соответствие между каждым информационным пробелом и конкретным повреждённым нейронным субстратом?",
+      "reason": "Джонни связывает их, но полного нейрофизиологического доказательства внутри романа нет."
+    },
+    {
+      "id": "O3_FUTURE_SEMANTICS",
+      "status": "OPEN",
+      "question": "Видение показывает единственную условную ветку, наиболее вероятную ветку или иной объект?",
+      "reason": "Изменяемость будущего показана, но функция выбора отображаемой ветки не определена."
+    },
+    {
+      "id": "O4_RANGE_AND_RESOLUTION",
+      "status": "OPEN",
+      "question": "Какова формальная дальность по времени и точность канала?",
+      "reason": "Есть локальные и дальние видения, но универсальная граница не задана."
+    }
+  ],
+  "no_heuristics_contract": [
+    "PATTERN != LAW_UNLESS_LOGICALLY_DERIVED_FROM_EXPLICIT_EVENTS",
+    "CHARACTER_THEORY != MECHANISM",
+    "FILM_RULE != NOVEL_RULE",
+    "PSYCHIC_LABEL != EXPLANATORY_MECHANISM",
+    "CORRELATION != CAUSATION",
+    "MUTABLE_FUTURE != MANY_WORLDS_THEORY",
+    "DEAD_ZONE != QUANTUM_MECHANISM",
+    "NO_REAL_WORLD_CLAIM_FROM_FICTION"
+  ],
+  "janus_bridge": {
+    "authoritative_for_real_world": false,
+    "usable_as_formal_pattern": true,
+    "patterns": [
+      "PARTIAL_INFORMATION_WITH_STRUCTURAL_BLIND_SPOTS",
+      "QUERY -> ACTION -> WORLD_UPDATE -> REQUERY",
+      "FORECAST_CAN_BE_SELF_NEGATING",
+      "MISSING_INFORMATION_MUST_NOT_BE_TREATED_AS_FALSE",
+      "INTENDED_INTERVENTION_PATH != REALIZED_CAUSAL_PATH"
+    ],
+    "firewall": "FICTIONAL_MECHANISM_PATTERN != EMPIRICAL_WORLD_MODEL"
+  },
+  "final_mechanical_summary": {
+    "one_line": "Мёртвая зона в романе — не всеведение и не свободное управление будущим, а частичный информационный канал с реальными пропусками, не-гарантированными триггерами и будущим, которое может измениться через действия, вызванные самим предвидением.",
+    "canonical_equation": "PARTIAL_FOREKNOWLEDGE + ACTION -> UPDATED_WORLD -> UPDATED_FOREKNOWLEDGE",
+    "status": "FORMALIZED_FROM_NOVEL_EVENTS_WITH_OPEN_GAPS_PRESERVED"
+  }
+}
