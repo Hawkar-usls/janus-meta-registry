@@ -1,0 +1,80 @@
+{
+  "artifact_id": "JANUS-TRUMP-U-PAIR-1E-FACTORIZED-AFFINE-OR-ELIMINATION-RESULT-2026-09-17-v1.0",
+  "version": "v1.0",
+  "date": "2026-09-17",
+  "authority": "SCOPED_PROOF_ATTACK_RESULT__NO_P_EQ_NP_PROMOTION",
+  "parent_gate": "U-PAIR-1E__FACTORIZED_AFFINE_OR_SYMBOLIC_ELIMINATION",
+  "frozen_candidate_class": {
+    "representation": "factor graph with affine relations and bounded-arity OR relations",
+    "operations": [
+      "exact conjunction",
+      "exact existential elimination"
+    ],
+    "must_not_expand_full_truth_table": true,
+    "must_not_materialize_exponentially_many_affine_components": true,
+    "all_intermediate_description_sizes_must_be_polynomial": true
+  },
+  "result": {
+    "verdict": "SPLIT_GATE__QUANTIFIER_FREE_CLOSURE_FALSIFIED__AUXILIARY_FACTOR_GRAPH_COMPACTNESS_SURVIVES_BUT_IS_NOT_AN_ALGORITHM",
+    "why_split_is_required": [
+      "If elimination output must be quantifier-free over the surviving variables using only affine factors and bounded-arity OR factors, the class is not closed under exact existential elimination.",
+      "If fresh existential auxiliaries may be introduced or retained, compact factorization can remain polynomial by re-factorizing projected relations, but compactness alone does not perform SAT decision or guarantee terminal progress."
+    ]
+  },
+  "killer_1_wide_or_projection": {
+    "name": "WIDE_OR_PROJECTION",
+    "visible_relation": "OR_n(x_1,...,x_n), n>3",
+    "source_size": "O(n)",
+    "source_construction": [
+      "introduce prefix variables q_i",
+      "encode q_i <-> (q_{i-1} OR x_i) with three width<=3 clauses",
+      "require q_n=1",
+      "compile signed clauses into positive PAIR+OR_3 selectors"
+    ],
+    "projection": "existentially eliminate all q_i; exact visible relation is OR_n",
+    "quantifier_free_impossibility": {
+      "bounded_OR_argument": "Any <=3 positive selector clause false on the all-false x assignment can use only t_i selectors. For n>3 choose a nonzero assignment outside its support; that assignment also falsifies the clause. Hence no such factor is valid on all OR_n models.",
+      "affine_argument": "Inside the PAIR affine subspace P, the affine hull of P minus the all-false codeword equals P for n>=2. Therefore any affine factor containing every OR_n model also contains the excluded all-false model.",
+      "conclusion": "No conjunction of affine factors plus bounded-arity positive OR factors over only surviving selector variables represents OR_n."
+    },
+    "verdict": "FAIL_QUANTIFIER_FREE_AFFINE_PLUS_BOUNDED_OR_CLOSURE_UNDER_EXISTENTIAL_ELIMINATION"
+  },
+  "killer_2_elimination_scope": {
+    "hostile_family": "CONNECTED_MIXED_AFFINE_OR3_EXPANDER_INTERLEAVE",
+    "scoped_claim": "standard exact local factor elimination that explicitly combines scopes cannot keep bounded/polylog scope on every elimination order",
+    "reason": [
+      "variable elimination induced width minimized over orders equals treewidth",
+      "bounded-degree expander families have linear-size balanced separators and therefore treewidth Omega(n)",
+      "adding bounded-arity OR3 interleaves does not remove the expander backbone"
+    ],
+    "consequence": "every elimination order creates an intermediate scope of Omega(n); a tabular Boolean factor on that scope has 2^Omega(n) entries",
+    "verdict": "FAIL_STANDARD_TABULAR_FACTOR_ELIMINATION_ON_EXPANDER_INTERLEAVE",
+    "claim_ceiling": "scope/treewidth lower bound does not rule out a compact symbolic high-arity factor such as a linear equation system"
+  },
+  "auxiliary_escape": {
+    "status": "SURVIVES_REPRESENTATION_SIZE_ONLY_GATE",
+    "observation": "OR_n itself can be re-factorized with O(n) fresh prefix auxiliaries, so allowing fresh existential auxiliaries defeats a raw quantifier-free representation-size lower bound.",
+    "critical_issue": "If eliminated semantic state may simply be reintroduced under fresh existential names, description size can stay small without making progress toward a variable-free SAT/UNSAT terminal.",
+    "lesson": "U-PAIR-1E as originally phrased is too broad to separate compact encoding from polynomial-time solving."
+  },
+  "next_gate": {
+    "name": "U-PAIR-1F__AUXILIARY_SAFE_SYMBOLIC_PROGRESS_AND_TERMINALIZATION",
+    "frozen_requirements": [
+      "one exact symbolic representation language is specified before hostile testing",
+      "fresh auxiliaries are permitted only with a polynomially bounded, auditable progress potential",
+      "eliminated semantic degrees of freedom may not be reintroduced under aliases without decreasing the progress potential",
+      "each conjunction/elimination/normalization step is polynomial",
+      "every intermediate description is polynomial in original input length",
+      "the process reaches a variable-free TRUE/FALSE terminal in polynomially many steps",
+      "SAT terminals reconstruct an original assignment",
+      "UNSAT terminals have independently replayable exact certificates"
+    ],
+    "candidate_progress_potential": "Phi = (# unresolved original semantic variables, auxiliary-dependency rank, symbolic DAG size/depth) with a lexicographically strict decrease rule to be frozen before execution",
+    "next_attack": "test a concrete representation, not an unrestricted 'symbolic factorization' umbrella; first candidate should combine GF(2) affine row-space normalization with shared-DAG OR factors and forbid truth-table expansion."
+  },
+  "firewall": {
+    "GENERAL_SAT_IN_P": "NOT_PROVED",
+    "P_VS_NP": "OPEN",
+    "P_EQ_NP": "NOT_PROVED"
+  }
+}
