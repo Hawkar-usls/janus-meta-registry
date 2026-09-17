@@ -1,0 +1,38 @@
+{
+  "artifact_id": "JANUS-TRUMP-U-PAIR-1G-ANTI-ALIAS-CYCLE-RESULT-2026-09-17-v1.0",
+  "date": "2026-09-17",
+  "authority": "SCOPED_PROOF_ATTACK_RESULT__NO_P_EQ_NP_PROMOTION",
+  "scientific_source": {
+    "repository": "Hawkar-usls/Janus-Fundamentum",
+    "branch": "research/general-sat-universal-closure-v1",
+    "pr": 489,
+    "scientific_result_path": "research/TRUMP_U_PAIR_1G_ANTI_ALIAS_CYCLE_RESULT_2026-09-17.json",
+    "proof_path": "proof_attempts/U_PAIR_1G_ANTI_ALIAS_CYCLE_KILLER_2026-09-17.md",
+    "checker_path": "research/tools/general_sat_universal/u_pair_1g_anti_alias_cycle_checker.py"
+  },
+  "parent_gate": "U-PAIR-1G__GF2_RREF_PLUS_SHARED_BOOLEAN_DAG_WITH_FROZEN_PROGRESS_ACCOUNTING",
+  "verdict": "FAIL_STRICT_PER_MACROSTEP_ANTI_ALIAS_PROGRESS_FOR_REVERSIBLE_DEFINITIONAL_REENCODINGS",
+  "killer": {
+    "name": "INVERTIBLE_XOR_REENCODING_CYCLE",
+    "forward": "y1=x1 XOR x2; y2=x2",
+    "inverse": "x1=y1 XOR y2; x2=y2",
+    "semantic_control": "R(X,Z)=[Z=X]",
+    "continuation_classes_before": 4,
+    "continuation_classes_after": 4,
+    "conclusion": "reversible definitional re-encoding changes representation but removes zero unresolved semantic information"
+  },
+  "anti_alias_theorem": "Any progress potential invariant under exact bijective definitional re-encoding is constant on a reversible re-encoding cycle; therefore it cannot strictly decrease at every macro-step if those re-encodings are admitted as macro-steps.",
+  "semantic_reference": {
+    "N_R": "number of distinct residual continuation relations after fixing the live interface",
+    "mu": "ceil(log2 N_R)",
+    "invariance": "bijective live-interface reparameterization preserves N_R and mu",
+    "authority": "checker/reference only; no polynomial-time computability claim"
+  },
+  "successor_gate": "U-PAIR-1H__QUOTIENTED_SEMANTIC_PROGRESS_OVER_REVERSIBLE_REENCODINGS",
+  "successor_rule": "reversible normalization/re-encoding steps live inside one quotient class and may claim zero progress; strict decrease is reserved for certified irreversible quotient transitions",
+  "firewall": {
+    "GENERAL_SAT_IN_P": "NOT_PROVED",
+    "P_VS_NP": "OPEN",
+    "P_EQ_NP": "NOT_PROVED"
+  }
+}
