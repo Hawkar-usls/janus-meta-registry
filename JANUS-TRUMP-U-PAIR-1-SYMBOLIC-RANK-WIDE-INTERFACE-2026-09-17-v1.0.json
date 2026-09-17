@@ -1,0 +1,169 @@
+{
+  "artifact_id": "JANUS-TRUMP-U-PAIR-1-SYMBOLIC-RANK-WIDE-INTERFACE-2026-09-17-v1.0",
+  "version": "v1.0",
+  "date": "2026-09-17",
+  "title": "U-PAIR-1 exact wide-interface merge — pair-selector core, Pass A + symbolic-rank Pass B",
+  "repository_targets": {
+    "meta_registry": "Hawkar-usls/janus-meta-registry",
+    "scientific_repo": "Hawkar-usls/Janus-Fundamentum",
+    "scientific_line": "research/general-sat-universal-closure-v1",
+    "scientific_pr": 489
+  },
+  "authority": "RESEARCH_LEDGER__NO_P_EQ_NP_PROMOTION",
+  "global_target": {
+    "problem": "P_vs_NP",
+    "route": "SAT -> 3SAT -> PAIR_SELECTOR_HITTING_3 -> exact polynomial backend",
+    "required_terminal": "ONE_UNIFORM_DETERMINISTIC_EXACT_POLYNOMIAL_TIME_ALGORITHM_FOR_ARBITRARY_SAT",
+    "current_status": {
+      "GENERAL_SAT_IN_P": "NOT_PROVED",
+      "P_VS_NP": "OPEN"
+    }
+  },
+  "universal_pair_selector_core": {
+    "name": "PAIR_SELECTOR_HITTING_3",
+    "input": "disjoint selector pairs {t_i,f_i} plus positive hyperedges of size <=3",
+    "decision": "choose exactly one selector from every pair so every hyperedge is hit",
+    "compiler": {
+      "variable_map": "x_i -> selector pair (t_i,f_i)",
+      "pair_module": [
+        "(t_i OR f_i)",
+        "(NOT t_i OR NOT f_i)"
+      ],
+      "clause_map": "x_i -> t_i; NOT x_i -> f_i",
+      "second_module": "MONOTONE_CNF_WIDTH_LE_3",
+      "semantic_theorem": "F in 3SAT iff Q(F) in PAIR_SELECTOR_HITTING_3",
+      "witness_map": "x_i=1 iff t_i=1; x_i=0 iff f_i=1",
+      "construction": "linear in literal-occurrence representation"
+    },
+    "meaning": "a polynomial exact backend for PAIR_SELECTOR_HITTING_3 would yield SAT in P and hence P=NP"
+  },
+  "pass_A_exact_wide_interface_attack": {
+    "status": "COMPLETE_SCOPED_FALSIFICATION_PASS",
+    "falsified_routes": [
+      {
+        "candidate": "LOCAL_PAIR_UNIT_FIXPOINT",
+        "verdict": "FAIL_LOCAL_PAIR_UNIT_FIXPOINT_NOT_COMPLETE",
+        "killer": "two selector pairs with four edges {tx,ty},{tx,fy},{fx,ty},{fx,fy}",
+        "reason": "instance is UNSAT but has no initial unit/forced/empty edge and reaches a non-contradictory local fixed point"
+      },
+      {
+        "candidate": "BOUNDED_WIDTH_RESOLUTION_SATURATION",
+        "verdict": "FAIL_BOUNDED_WIDTH_RESOLUTION_AS_UNIVERSAL_U_PAIR_1_BACKEND",
+        "claim_ceiling": "proof-system-specific obstruction; not a lower bound against all algorithms"
+      },
+      {
+        "candidate": "BOUNDED_DEGREE_PC_PCR_GROEBNER_SATURATION",
+        "verdict": "FAIL_BOUNDED_DEGREE_ALGEBRAIC_CLOSURE_AS_UNIVERSAL_BACKEND",
+        "exact_encoding": [
+          "z^2-z=0 for Boolean selectors",
+          "t_i+f_i-1=0",
+          "t_i*f_i=0",
+          "product_{z in E}(1-z)=0 for every positive edge E"
+        ],
+        "claim_ceiling": "bounded-degree closure route only"
+      },
+      {
+        "candidate": "ONE_EXPLICIT_STATE_PER_EXACT_CONTINUATION_CLASS",
+        "verdict": "FAIL_EXPLICIT_EXACT_RESIDUAL_EQUIVALENCE_CLASS_ENUMERATION",
+        "killer": "equality zipper y_i=x_i",
+        "reason": "conditioning k x-bits induces 2^k distinct singleton continuation relations on y"
+      },
+      {
+        "candidate": "GENERIC_DNNF_AS_GUARANTEED_POLY_COMPILATION",
+        "verdict": "FAIL_GENERIC_DNNF_COMPILATION_AS_A_GUARANTEED_POLYTIME_BACKEND",
+        "claim_ceiling": "representation-specific"
+      }
+    ],
+    "survivor": "U-PAIR-1B__STRUCTURAL_SYMBOLIC_WIDE_INTERFACE_ELIMINATION"
+  },
+  "pass_B_symbolic_rank_attack": {
+    "status": "RIGOROUS_KILLER_FOR_GLOBAL_LOW_RANK__STRUCTURE_ADAPTIVE_FACTORIZATION_SURVIVES",
+    "continuation_operator": {
+      "family": "EQUALITY_ZIPPER_Z_k",
+      "constraints": [
+        "(NOT x_i OR y_i)",
+        "(x_i OR NOT y_i)"
+      ],
+      "pair_selector_edges": [
+        "{f_x_i,t_y_i}",
+        "{t_x_i,f_y_i}"
+      ],
+      "semantics": "Z_k(x,y)=1 iff y=x"
+    },
+    "matrix_theorem": {
+      "definition": "M_k[a,b]=1 iff Z_k is satisfied by x=a,y=b",
+      "identity": "M_k = I_(2^k)",
+      "ordinary_rank": "rank_K(M_k)=2^k over every field K",
+      "boolean_rank": "Boolean-rank(M_k)=2^k",
+      "nonnegative_rank": "nonnegative-rank(M_k)=2^k",
+      "consequence": "no universal polynomial bound on a single global exact matrix-rank factorization"
+    },
+    "tensor_theorem": {
+      "tensor": "T_k(x_1,...,x_k,y_1,...,y_k)=delta_{x,y}",
+      "cp_rank": "exactly 2^k",
+      "lower_bound_proof": "flatten X|Y gives I_(2^k); a CP decomposition with R terms induces a matrix decomposition of rank at most R",
+      "upper_bound_proof": "sum of the 2^k diagonal basis tensors"
+    },
+    "fixed_order_TT": {
+      "grouped_order": "[x_1,...,x_k,y_1,...,y_k]",
+      "middle_bond_rank": "2^k",
+      "verdict": "FAIL_FIXED_GROUPED_ORDER_TT_POLYBOND"
+    },
+    "structure_adaptive_escape": {
+      "kronecker_identity": "M_k = tensor_product_{i=1}^k I_2",
+      "description_size": "O(k) factors",
+      "interleaved_order": "[x_1,y_1,x_2,y_2,...,x_k,y_k]",
+      "max_local_TT_bond_for_equality": "<=2",
+      "meaning": "full global rank is not by itself a universal killer for decomposition-aware tensor networks"
+    },
+    "frozen_verdicts": [
+      "FAIL_GLOBAL_MATRIX_POLYRANK_INVARIANT",
+      "FAIL_GLOBAL_BOOLEAN_RANK_POLYBOUND",
+      "FAIL_GLOBAL_CP_TENSOR_POLYRANK_INVARIANT",
+      "FAIL_FIXED_GROUPED_ORDER_TT_POLYBOND",
+      "SURVIVES_STRUCTURE_ADAPTIVE_FACTORIZED_CONTINUATION_OPERATOR"
+    ],
+    "finite_checker": {
+      "checked_k": [1,2,3,4,5,6,7,8],
+      "observations": [
+        {"k":1,"matrix_dimension":2,"ordinary_rank":2},
+        {"k":2,"matrix_dimension":4,"ordinary_rank":4},
+        {"k":3,"matrix_dimension":8,"ordinary_rank":8},
+        {"k":4,"matrix_dimension":16,"ordinary_rank":16},
+        {"k":5,"matrix_dimension":32,"ordinary_rank":32},
+        {"k":6,"matrix_dimension":64,"ordinary_rank":64},
+        {"k":7,"matrix_dimension":128,"ordinary_rank":128},
+        {"k":8,"matrix_dimension":256,"ordinary_rank":256}
+      ],
+      "role": "regression only; theorem follows from identity-matrix argument, not finite runs"
+    }
+  },
+  "next_gate": {
+    "gate": "U-PAIR-1C__STRUCTURE_ADAPTIVE_FACTORIZED_CONTINUATION_OPERATOR",
+    "question": "Does there exist one polynomial-time discoverable contraction/decomposition scheme for every OR_3+PAIR instance whose exact intermediate bond/state ranks and total contraction/reconstruction/verification cost are polynomial?",
+    "required_success": [
+      "exact SAT iff preservation",
+      "uniform for all input lengths",
+      "polynomial-time decomposition discovery",
+      "polynomial bound on every intermediate factor/bond representation",
+      "polynomial total contraction time",
+      "SAT witness reconstruction",
+      "independently replayable exact UNSAT certification",
+      "blindness to expected verdict/provenance"
+    ],
+    "falsifier_strategy": [
+      "freeze the factor/operator model before testing",
+      "attack high-width linear-code/Tseitin-derived pair-selector families",
+      "measure cut ranks under candidate contraction trees",
+      "if every admissible tree requires superpolynomial bond rank, freeze as killer",
+      "if a canonical polynomial-bond scheme survives, promote only to candidate and attack adversarially"
+    ],
+    "important_model_warning": "Every CNF already has a polynomial-size local factor graph. The missing theorem is not compact input factorization; it is polynomial exact elimination/contraction without exponential intermediate complexity."
+  },
+  "epistemic_firewall": {
+    "finite_experiments_are_not_asymptotic_proof": true,
+    "proof_system_lower_bound_is_not_problem_lower_bound": true,
+    "representation_specific_rank_lower_bound_is_not_general_algorithm_lower_bound": true,
+    "no_P_eq_NP_promotion_before_universal_backend": true
+  }
+}
