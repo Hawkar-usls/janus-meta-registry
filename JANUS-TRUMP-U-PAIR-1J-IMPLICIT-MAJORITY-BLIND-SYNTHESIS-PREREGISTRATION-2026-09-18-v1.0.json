@@ -1,0 +1,114 @@
+{
+  "artifact_id": "JANUS-TRUMP-U-PAIR-1J-IMPLICIT-MAJORITY-BLIND-SYNTHESIS-PREREGISTRATION-2026-09-18-v1.0",
+  "date": "2026-09-18",
+  "parent_bridge_head": "44bf300c1b7886fe4f00de256dfd167039159c4c",
+  "branch": "research/U-PAIR-1J-majority-blind-synthesis-2026-09-18",
+  "target": "IMPLICIT_MAJORITY_SKOL_RELATION_WITHOUT_EXPLICIT_OUTPUT_NODE",
+  "finite_series": {
+    "n_values": [
+      5,
+      9,
+      17,
+      33,
+      65
+    ],
+    "order": "strictly increasing",
+    "all_instances_mandatory": true,
+    "optional_stopping": false
+  },
+  "hostile_input_contract": {
+    "domain": "D_n(Y)=TRUE",
+    "witness_variable": "x",
+    "semantics": "R_n(x,Y) iff x = MAJ_n(Y)",
+    "structural_representation": "Deterministic layered exact-count transition relation with count-state definitions and terminal force constraints for x; no existing DAG node is designated or defined as MAJ_n(Y).",
+    "explicit_majority_output_node_forbidden": true,
+    "direct_majority_operator_forbidden": true
+  },
+  "frozen_constructor": {
+    "name": "GENERIC_LAYERED_GUARDED_BACKWARD_SYNTHESIS_V1",
+    "allowed_proof_rules": [
+      "CONST(c)",
+      "AFFINE_XOR(c,support)",
+      "EXISTING_DAG_NODE(node_id)",
+      "GUARDED_ITE(guard, child_true, child_false)",
+      "INTERNAL_COVER_WITNESS(alpha)"
+    ],
+    "algorithm": "Starting only from terminal locally forced x constants, propagate witness proofs backward through the input's deterministic layered complementary guard transitions; hash-cons identical proof nodes. No special test for majority, threshold, or reference shape is permitted.",
+    "allowed_structural_read": [
+      "declared layer order",
+      "state ids",
+      "complementary input guard literal on each binary transition",
+      "terminal local UNIT_OR_CONSTANT_FORCE constraints"
+    ],
+    "forbidden": [
+      "reference branch/path/commit/DAG import",
+      "reference-size-driven search",
+      "recognize MAJORITY and emit a counting DAG",
+      "threshold-specific synthesis rule",
+      "SAT solver",
+      "generic SKOLEM_VALID",
+      "generic Boolean-DAG tautology validation",
+      "truth-table enumeration",
+      "semantic equivalence comparison against reference",
+      "resource increase after observing any earlier n"
+    ],
+    "proof_DAG_sharing": "hash-consed by (guard, true_child, false_child), with reduction when children are identical",
+    "resource_policy": {
+      "per_instance_timeout_seconds": 120,
+      "total_series_timeout_seconds": 600,
+      "memory_budget_mb": 1024,
+      "verdict_on_exhaustion": "UNKNOWN_RESOURCE_LIMIT",
+      "retry_with_more_resources": false
+    }
+  },
+  "independent_verifier": {
+    "candidate_import_forbidden": true,
+    "reference_DAG_import_forbidden": true,
+    "verification": "Check each proof node from frozen input transition/terminal authorities and already checked children; root must cover initial state by construction.",
+    "semantic_reference_comparison": false
+  },
+  "metrics": [
+    "S_synth_DAG_nodes",
+    "S_synth_DAG_bytes",
+    "T_synth_ns",
+    "T_verify_ns",
+    "max_live_shared_nodes",
+    "constructor_state_visits",
+    "verifier_node_visits"
+  ],
+  "postfreeze_reconciliation": {
+    "reference_sizes_read_only_after_candidate_and_independent_verifier_freeze": true,
+    "diagnostic_ratio": "rho(n)=S_synth(n)/S_ref(n)",
+    "rho_is_empirical_not_theorem": true
+  },
+  "frozen_verdict_taxonomy": [
+    "PASS_SCOPED_HOSTILE_SYNTHESIS",
+    "FAIL_CALCULUS_EXPRESSIVITY",
+    "FAIL_SYNTHESIS_ACCESS",
+    "FAIL_PROOF_DAG_BLOWUP",
+    "UNKNOWN_RESOURCE_LIMIT",
+    "FAIL_DOMAIN_DROPPED",
+    "FAIL_HIDDEN_GENERIC_VALIDATION"
+  ],
+  "verdict_rules": {
+    "PASS_SCOPED_HOSTILE_SYNTHESIS": "Candidate is independently accepted for every n in the finite series with exact total domain, valid witness proof, and frozen resource accounting.",
+    "FAIL_CALCULUS_EXPRESSIVITY": "A separately supplied admissible compact candidate can be shown to exist but the frozen verifier/rule forms cannot certify it. This test requires a separate preregistered witness-injection control before use.",
+    "FAIL_SYNTHESIS_ACCESS": "After candidate freeze, reconciliation confirms a compact certificate accepted by the same frozen verifier exists, but blind constructor failed to synthesize one without forbidden machinery.",
+    "FAIL_PROOF_DAG_BLOWUP": "Observed frozen construction grows beyond the preregistered resource/size criterion while a successful finite run may exist at smaller n; this is not a lower bound on all proof DAGs.",
+    "UNKNOWN_RESOURCE_LIMIT": "Run fails solely because the frozen resource budget is exhausted before a classified proof outcome.",
+    "FAIL_DOMAIN_DROPPED": "Candidate omits or totalizes a nontrivial exact domain. Not expected for total majority control, but retained for bridge taxonomy.",
+    "FAIL_HIDDEN_GENERIC_VALIDATION": "Audit detects forbidden solver/oracle/truth-table/reference use."
+  },
+  "promotion_firewall": {
+    "empirical_series_pass_not_polynomial_synthesis_proof": true,
+    "symbolic_bounds_required_for_scoped_theorem": [
+      "T_synth(n) <= p(n)",
+      "|Pi_n| <= p(n)",
+      "T_verify(n) <= p(n)"
+    ],
+    "GENERAL_SAT_IN_P": "NOT_PROVED",
+    "P_EQ_NP": "NOT_PROVED",
+    "P_VS_NP": "OPEN"
+  },
+  "repository_role": "JANUS_META_REGISTRY_HOSTILE_PREREGISTRATION"
+}
