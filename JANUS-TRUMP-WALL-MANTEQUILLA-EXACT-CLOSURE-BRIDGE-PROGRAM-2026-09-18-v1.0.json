@@ -1,0 +1,223 @@
+{
+  "artifact_id": "JANUS-TRUMP-WALL-MANTEQUILLA-EXACT-CLOSURE-BRIDGE-PROGRAM-2026-09-18-v1.0",
+  "version": "v1.0",
+  "date": "2026-09-18",
+  "canonical_program_name": "MANTEQUILLA_EXACT_CLOSURE_BRIDGE",
+  "parent_frontier": "TRUMP_WALL",
+  "epistemic_status": "FROZEN_RESEARCH_PROGRAM__HYPOTHESIS_AND_GATE_SPECIFICATION__NOT_A_THEOREM__NOT_PNP_PROMOTION",
+  "canonical_wall_definition": "Exact symmetry is detectable, but no polynomially bounded, exactly composable semantic interface is yet known.",
+  "wall_decomposition": {
+    "detection_wall": {
+      "question": "Can a genuine nontrivial exact symmetry witness S be detected and frozen?",
+      "current_status": "PARTIALLY_CROSSED_ON_FINITE_PANELS",
+      "note": "UF150/UF250 candidate work supplies finite evidence that real exact exchangeability can be detected. This does not establish universal detection."
+    },
+    "representation_wall": {
+      "question": "Given frozen (F,S), can one construct in polynomial time a polynomial-size exact interface representation for the induced existential boundary semantics?",
+      "formal_target": "(F,S) -> Rep(R_C), where R_C(B_C) = { beta | exists X_C : F_C(X_C,beta)=1 }",
+      "open": true
+    },
+    "composition_wall": {
+      "question": "Can many exact interface representations be composed without exponential product blowup while preserving exact joint semantics?",
+      "formal_target": "Rep(R_C1),...,Rep(R_Cm) -> Rep(R_global) in polynomial total cost",
+      "open": true
+    }
+  },
+  "mantequilla_operator": {
+    "signature": "M:(F,S)->I",
+    "semantics": "I is not a description of the symmetry itself; it is the minimally sufficient exact description of what the symmetric interior can communicate across its boundary.",
+    "obligations": [
+      "|I| <= poly(|F|)",
+      "T_build(I) <= poly(|F|)",
+      "T_closure + T_reconstruct + T_verify <= poly(|F|)",
+      "F in SAT iff Q_I(F) in SAT_Q",
+      "joint boundary semantics must be preserved exactly",
+      "no hidden global search, full 2^n cube, or exponentially materialized quotient"
+    ]
+  },
+  "exact_boundary_relation": {
+    "symbolic_definition": "R_C(B_C) = { beta | exists X_C : F_C(X_C,beta)=1 }",
+    "warning": "R_C must not be forced into an explicit truth table; doing so may manufacture an artificial representation wall.",
+    "permitted_representation_language_principle": "Mantequilla may choose from a preregistered language family L, provided exact equivalence, polynomial representation size, and polynomial implementations of all required operations are proven or independently certified.",
+    "candidate_languages": [
+      "Boolean formula",
+      "Boolean circuit",
+      "BDD or other canonical decision representation",
+      "affine linear system",
+      "cardinality constraints",
+      "generator/orbit certificate",
+      "other preregistered exact symbolic interface language"
+    ],
+    "required_operations": [
+      "build",
+      "exact-equivalence verification",
+      "compose",
+      "solve/closure",
+      "reconstruct",
+      "independent verification"
+    ]
+  },
+  "central_question": "Does detected exact symmetry induce a polynomially representable, polynomially composable exact boundary semantics?",
+  "information_firewall": {
+    "freeze_boundary": "After symmetry detection, seal F + S + permitted-local-view + hashes.",
+    "separate_process_required": true,
+    "detector_artifacts_unavailable_after_freeze": true,
+    "permitted_inputs_after_freeze": [
+      "frozen formula F",
+      "frozen exact symmetry witness S",
+      "preregistered permitted local view",
+      "frozen authority hashes/specification"
+    ],
+    "forbidden_after_freeze": [
+      "repeat global pair/transposition search",
+      "SAT solver calls used to select or tune the bridge",
+      "future ground-truth reads",
+      "full 2^n cube enumeration",
+      "global quotient enumeration as an implementation shortcut",
+      "source-specific rule injection",
+      "posthoc threshold selection",
+      "detector-internal artifacts not included in sealed bundle"
+    ]
+  },
+  "canonical_pipeline": "RAW_INSTANCE -> DETECT -> FREEZE_S -> MANTEQUILLA -> EXACT_INTERFACE -> COMPOSE -> EXACT_CLOSURE -> CERTIFICATE -> RECONSTRUCT -> VERIFY",
+  "canonical_gates": [
+    {
+      "gate": "MANTEQUILLA_LOCAL_EXACT_INTERFACE_GATE",
+      "objective": "Construct a polynomial-size exact representation of R_C from frozen (F,S) and permitted local data.",
+      "allowed_verdicts": [
+        "PASS_CONSTRUCTIVE_BRIDGE",
+        "FAIL_CLOSURE_BLOWUP",
+        "FAIL_NONLOCAL_INFORMATION_REQUIRED",
+        "UNKNOWN_RESOURCE_LIMIT"
+      ]
+    },
+    {
+      "gate": "MANTEQUILLA_DETECTION_TO_POLYNOMIAL_EXACT_CLOSURE_CERTIFICATE_GATE",
+      "objective": "Demonstrate exact equivalence, complete polynomial accounting, and an independently checkable certificate without hidden global search.",
+      "allowed_verdicts": [
+        "PASS_CONSTRUCTIVE_BRIDGE",
+        "FAIL_CLOSURE_BLOWUP",
+        "FAIL_NONLOCAL_INFORMATION_REQUIRED",
+        "UNKNOWN_RESOURCE_LIMIT"
+      ]
+    },
+    {
+      "gate": "MANTEQUILLA_COMPOSITION_WITHOUT_EXPONENTIAL_PRODUCT_GATE",
+      "objective": "Compose several exact interfaces without reintroducing an exponential Cartesian product or equivalent hidden state explosion.",
+      "allowed_verdicts": [
+        "PASS_CONSTRUCTIVE_BRIDGE",
+        "FAIL_COMPOSITION_BLOWUP",
+        "FAIL_NONLOCAL_INFORMATION_REQUIRED",
+        "UNKNOWN_RESOURCE_LIMIT"
+      ]
+    },
+    {
+      "gate": "MANTEQUILLA_RECONSTRUCTION_GATE",
+      "objective": "Lift an interface/quotient solution back to an original satisfying witness in polynomial time and verify it independently.",
+      "allowed_verdicts": [
+        "PASS_CONSTRUCTIVE_BRIDGE",
+        "FAIL_CLOSURE_BLOWUP",
+        "FAIL_COMPOSITION_BLOWUP",
+        "FAIL_NONLOCAL_INFORMATION_REQUIRED",
+        "UNKNOWN_RESOURCE_LIMIT"
+      ]
+    },
+    {
+      "gate": "MANTEQUILLA_COVERAGE_GATE",
+      "objective": "Only after the previous gates pass, test how far the mechanism extends beyond the discovery symmetry family.",
+      "policy": "Must use new preregistered untouched families; no general-SAT promotion from finite coverage."
+    }
+  ],
+  "canonical_verdict_vocabulary": [
+    "PASS_CONSTRUCTIVE_BRIDGE",
+    "FAIL_CLOSURE_BLOWUP",
+    "FAIL_NONLOCAL_INFORMATION_REQUIRED",
+    "FAIL_COMPOSITION_BLOWUP",
+    "UNKNOWN_RESOURCE_LIMIT"
+  ],
+  "discovery_specimen": {
+    "source": "UF250_020",
+    "role": "DISCOVERY_SPECIMEN_ONLY__NOT_CONFIRMATION_PANEL_FOR_MANTEQUILLA",
+    "frozen_detected_pair": [
+      40,
+      240
+    ],
+    "direct_exact_transposition_automorphism": true,
+    "e3_generator_edge": [
+      40,
+      240
+    ],
+    "old_quotient_states_Q": 426092165,
+    "reduced_variables": 205,
+    "reduced_constraints": 219,
+    "scope_L": 20642,
+    "scope_bound_holds": false,
+    "scientific_question": "Can the exact external semantics of the [40,240] symmetric interior be represented by a compact symbolic interface whose exactness and reconstruction can be verified without materializing 426,092,165 quotient states?"
+  },
+  "symmetry_coordinate_hint": {
+    "idea": "For a certified full symmetric action S_k on a cell C of k binary variables, assignments internal to C collapse by Hamming weight from 2^k raw assignments to at most k+1 assignment orbits.",
+    "caution": "Orbit weight alone is generally insufficient when external constraints induce correlations between members or between multiple cells.",
+    "required_upgrade": "The interface must encode the exact joint boundary relation, not independent per-variable admissible-value sets.",
+    "future_test": "Adversarial exact-symmetry instances with deliberately correlated external constraints are required after the local bridge passes."
+  },
+  "candidate_subproblems": [
+    {
+      "id": "KCLASS_GENERATOR_CERTIFICATE",
+      "question": "Can a compact generating set for the action on a detected cell certify the relevant exact symmetry group with polynomial verification cost?"
+    },
+    {
+      "id": "EXACT_BOUNDARY_LANGUAGE_SELECTION",
+      "question": "Does there exist a preregistered representation language L in which the induced exact existential boundary relation stays polynomial-size and required operations stay polynomial?"
+    },
+    {
+      "id": "ASSIGNMENT_ORBIT_COMPRESSION",
+      "question": "When is orbit-coordinate compression semantically sufficient after coupling to the external boundary?"
+    },
+    {
+      "id": "SYMBOLIC_QUOTIENT_WITHOUT_STATE_ENUMERATION",
+      "question": "Can exact closure be performed symbolically without materializing the large quotient state space?"
+    },
+    {
+      "id": "MULTICLASS_PRODUCT_BARRIER",
+      "question": "When do multiple compact local interfaces compose without an exponential product of interface states?"
+    }
+  ],
+  "a_b_killer_test": {
+    "control": "Frozen old E3 / quotient route on the same already-detected symmetry witness.",
+    "treatment": "Mantequilla bridge with detector sealed off after FREEZE_S.",
+    "compare": [
+      "|Q_old|",
+      "|I|",
+      "|Rep(R_C)|",
+      "T_build",
+      "T_compose",
+      "T_reconstruct",
+      "T_verify",
+      "certificate size",
+      "exact-equivalence result"
+    ],
+    "success_criterion": "A PASS requires exact semantics and polynomial symbolic accounting, not merely faster wall-clock execution."
+  },
+  "adversarial_followup_policy": {
+    "trigger": "Only after a local/interface PASS and after UF250 reconciliation authority is settled.",
+    "required_family": "Fresh preregistered adversarial exact-symmetry specimens with external constraints engineered to create nontrivial joint correlations.",
+    "prohibition": "Do not use UF250 as confirmation for a mechanism conceived from UF250."
+  },
+  "current_execution_policy": {
+    "uf250_reconciliation_run_id": 35292149699,
+    "status_at_program_freeze": "IN_PROGRESS_REPAIRED_INDEPENDENT_RECOMPUTATION",
+    "decision": "DO_NOT_START_NEW_SCIENTIFIC_MANTEQUILLA_EXECUTION_UNTIL_UF250_RECONCILIATION_FREEZES",
+    "theory_work_allowed": true,
+    "preregistration_draft_allowed": true
+  },
+  "scientific_firewall": {
+    "exact_semantics_required": true,
+    "total_polynomial_accounting_required": true,
+    "independent_replay_required": true,
+    "finite_pass_not_equal_general_coverage": true,
+    "no_posthoc_promotion": true,
+    "P_VS_NP": "OPEN",
+    "GENERAL_SAT_IN_P": "NOT_PROVED"
+  },
+  "repository_role": "JANUS_META_REGISTRY_CANONICAL_RESEARCH_PROGRAM"
+}
