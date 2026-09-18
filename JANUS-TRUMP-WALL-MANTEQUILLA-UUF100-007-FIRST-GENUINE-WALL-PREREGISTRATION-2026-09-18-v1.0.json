@@ -1,0 +1,194 @@
+{
+  "artifact_id": "JANUS-TRUMP-WALL-MANTEQUILLA-UUF100-007-FIRST-GENUINE-WALL-PREREGISTRATION-2026-09-18-v1.0",
+  "version": "v1.0",
+  "date": "2026-09-18",
+  "branch": "research/TRUMP_WALL-MANTEQUILLA-UUF100-007-first-genuine-wall-2026-09-18",
+  "parent_census": {
+    "commit": "2d72a000f67b815fde41b552366cbdfe35a7e4c0",
+    "blob": "961a6acac5531fbdc64738b534c0ba398a4f44b1",
+    "scientific_outcome": "PASS_STRUCTURAL_CENSUS_WITH_ELIGIBLE_K2_OR_K3_CELLS",
+    "denominator": {
+      "N_sources": 20,
+      "N_detected_cells": 2,
+      "N_null_cells": 0,
+      "N_active_cells": 2,
+      "N_boundary_ge2_cells": 1,
+      "N_Mantequilla_routed_cells": 0,
+      "N_eligible_current_mechanism_k2_or_k3": 1
+    }
+  },
+  "specimen_role": "FIRST_UNSEEN_STRUCTURALLY_ELIGIBLE_MANTEQUILLA_CANDIDATE__NOT_YET_GENUINE_WALL",
+  "specimen": {
+    "source": "UUF100_007",
+    "source_path": "research/source_data/SATLIB_UUF100_007_2026-09-18.cnf",
+    "source_git_blob": "701fa19d23472142aaa440b430a0a1447b52c3b7",
+    "canonical_formula_sha256": "a94745aae1b47dc2950b9c437420af305e7a30664a73b5219e8a984a6df639ad",
+    "reduced_raw_sha256": "a6eebedf602f7f11095fae8189b76f6d1283ae86cf0247dc5240462569a0141e",
+    "projected_raw_sha256": "385a72020f421fae378008c515d34c5865db4424f4e45bef7a6b424368b76477",
+    "reduced_variables": 80,
+    "reduced_constraints": 93,
+    "exact_cell": [
+      12,
+      83
+    ],
+    "certified_group": "S_2",
+    "exact_generator_transposition": [
+      12,
+      83
+    ],
+    "local_constraint_count": 2,
+    "boundary_variables": [
+      14,
+      58
+    ],
+    "boundary_variable_count": 2,
+    "structural_classification": "ACTIVE_EXACT_SYMMETRY_ELIGIBLE",
+    "residual_semantics_known_before_preregistration": false
+  },
+  "canonical_distinctions": {
+    "correlated_not_equal_polynomial_bridge": true,
+    "formula_1": "CORRELATED != POLYNOMIAL_BRIDGE",
+    "formula_2": "PASS_LOCAL_EXACT_INTERFACE_NONTRIVIAL_CORRELATED != PASS_CONSTRUCTIVE_BRIDGE",
+    "explanation": "A correlated exact boundary relation establishes a genuine WALL specimen. Exact ORCSP/ROBDD representations on this finite two-bit boundary establish a local exact-interface pass only. They do not establish a polynomial bound for arbitrary boundary size or composition."
+  },
+  "semantic_space": {
+    "exact_relation": "R_C(14,58) = { beta in {0,1}^2 | exists x12,x83 : F_C(x12,x83,beta)=1 }",
+    "mutually_exclusive_classes": [
+      "R_C_TRUE",
+      "R_C_FALSE",
+      "R_C_NONTRIVIAL_BUT_PRODUCT_OF_UNARY_PROJECTIONS",
+      "R_C_CORRELATED"
+    ],
+    "first_genuine_wall_definition": "UUF100_007/[12,83] may be named FIRST_GENUINE_WALL_SPECIMEN iff R_C is nonconstant and differs exactly from the Cartesian product of its unary projections."
+  },
+  "constructor_firewall": {
+    "allowed_input": [
+      "sealed reduced CSP",
+      "frozen cell [12,83]",
+      "frozen boundary order [14,58]",
+      "frozen representation specifications"
+    ],
+    "forbidden": [
+      "WL modules",
+      "detector internals",
+      "E3/orbit search",
+      "SAT solver",
+      "full boundary cube enumeration",
+      "posthoc representation-language changes",
+      "posthoc variable-order changes",
+      "source-specific special cases"
+    ],
+    "internal_assignment_enumeration": "exactly four assignments to the frozen two-variable cell; constant-size scoped elimination",
+    "constructor_boundary_cube_assignments_enumerated": 0
+  },
+  "representation_A": {
+    "name": "OR_OF_CANONICAL_RESIDUAL_CSP",
+    "construction": "For each of the four internal assignments to x12,x83, restrict the two local CSP constraints, project surviving tuples to boundary variables, canonicalize residual constraints, then OR the four residual-CSP branches.",
+    "exactness_target": "Equivalent to existential elimination of the frozen two-variable cell for every boundary assignment.",
+    "size_measure": [
+      "local_input_symbol_count",
+      "raw_four_branch_residual_symbol_count",
+      "canonical_orcsp_symbol_count"
+    ]
+  },
+  "representation_B": {
+    "name": "CANONICAL_ROBDD",
+    "variable_order": [
+      14,
+      58
+    ],
+    "build_source": "Compile symbolically from OR_OF_CANONICAL_RESIDUAL_CSP; do not build from the four-point truth table.",
+    "measures": [
+      "live_nonterminal_nodes",
+      "mk_calls",
+      "apply_calls",
+      "total_operations"
+    ],
+    "scoped_envelope": {
+      "node_bound": "(local_input_symbol_count + boundary_variable_count + 2)^2",
+      "operation_bound": "(local_input_symbol_count + boundary_variable_count + 2)^4"
+    },
+    "interpretation": "Passing the envelope on this specimen is only scoped finite evidence, not a general polynomial-size theorem."
+  },
+  "independent_checker": {
+    "candidate_imported": false,
+    "allowed_truth_table_exception": {
+      "enabled": true,
+      "scope": "checker only",
+      "exact_assignments": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "count": 4,
+      "purpose": "Independent semantic microscope: directly evaluate the local CSP existentially on all four boundary assignments and compare against ORCSP and ROBDD.",
+      "prohibited_in_constructor": true,
+      "no_scalability_inference": true
+    },
+    "required_checks": [
+      "sealed reduced hash matches census authority",
+      "direct exact swap [12,83] holds",
+      "local constraint count remains 2",
+      "boundary remains [14,58]",
+      "constructor did not enumerate boundary cube",
+      "ORCSP truth values equal independent four-point semantic truth table",
+      "ROBDD truth values equal independent four-point semantic truth table",
+      "ORCSP and ROBDD are exactly equivalent",
+      "semantic class is independently reproduced",
+      "candidate source audit finds no detector/SAT/cube shortcut"
+    ]
+  },
+  "verdict_layers": {
+    "structural_eligibility": "ALREADY_FROZEN_PASS",
+    "semantic_verdicts": [
+      "FAIL_TRIVIAL_ESCAPE__R_C_TRUE",
+      "FAIL_TRIVIAL_ESCAPE__R_C_FALSE",
+      "FAIL_UNARY_FACTORIZATION",
+      "CORRELATED_BOUNDARY_FOUND"
+    ],
+    "representation_verdicts": [
+      "PASS_LOCAL_EXACT_INTERFACE_NONTRIVIAL_CORRELATED",
+      "FAIL_EXACT_REPRESENTATION_MISMATCH",
+      "FAIL_CLOSURE_BLOWUP",
+      "FAIL_NONLOCAL_INFORMATION_REQUIRED",
+      "UNKNOWN_RESOURCE_LIMIT"
+    ],
+    "overall_precedence": [
+      "independent verification failure",
+      "R_C_TRUE or R_C_FALSE -> FAIL_TRIVIAL_ESCAPE",
+      "nonconstant but product of unary projections -> FAIL_UNARY_FACTORIZATION",
+      "correlated but representation mismatch -> FAIL_EXACT_REPRESENTATION_MISMATCH",
+      "correlated but scoped ROBDD envelope exceeded -> FAIL_CLOSURE_BLOWUP",
+      "correlated and ORCSP+ROBDD exact under frozen accounting -> PASS_LOCAL_EXACT_INTERFACE_NONTRIVIAL_CORRELATED"
+    ]
+  },
+  "post_pass_policy": {
+    "if_correlated": "Name UUF100_007/[12,83] FIRST_GENUINE_WALL_SPECIMEN.",
+    "if_local_interface_pass": "Freeze result, then perform separate preregistered A/B against an old quotient-style exact baseline Q_old if such a baseline can be defined without changing the specimen semantics.",
+    "do_not_start_composition": true,
+    "do_not_promote_to_constructive_bridge": true
+  },
+  "scientific_firewall": {
+    "finite_two_bit_boundary": true,
+    "full_cube_checker_exception_not_constructor_algorithm": true,
+    "POLYNOMIAL_BRIDGE": "NOT_PROVED",
+    "GENERAL_K_CLASS": "NOT_PROVED",
+    "MULTI_INTERFACE_COMPOSITION": "NOT_PROVED",
+    "GENERAL_SAT_IN_P": "NOT_PROVED",
+    "P_VS_NP": "OPEN"
+  },
+  "repository_role": "JANUS_META_REGISTRY_PREREGISTRATION"
+}
