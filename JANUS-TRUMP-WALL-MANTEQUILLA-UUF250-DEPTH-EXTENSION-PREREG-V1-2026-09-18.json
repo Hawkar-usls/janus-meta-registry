@@ -1,0 +1,227 @@
+{
+  "artifact_id": "JANUS-TRUMP-WALL-MANTEQUILLA-UUF250-DEPTH-EXTENSION-PREREG-V1-2026-09-18",
+  "version": "v1.0",
+  "date": "2026-09-18",
+  "branch": "research/TRUMP_WALL-MANTEQUILLA-UUF250-depth-extension-021-100-2026-09-18",
+  "purpose": "Same-n depth extension within canonical SATLIB UUF250.1065.100 after exhaustion of the larger-family ladder.",
+  "prior_governance": {
+    "larger_family_extension_prereg_commit": "e10333c65edd0d0fbbd507dd65efb9d49f432e43",
+    "larger_family_resolution": "NO_AUTHORIZED_LARGER_CANONICAL_UUF_FAMILY_IN_FROZEN_METADATA",
+    "old_ladder_complete": true,
+    "uuf250_001_020_result_commit": "1798cefbf3cd9f72dfa7330f0e83752f86bbb716",
+    "uuf250_001_020_result_blob": "f7cbfe579bc6c683fbe7522dcf0fbc6d1bd7aeba",
+    "uuf250_001_020_outcome": "PASS_STRUCTURAL_CENSUS_ZERO_ELIGIBLE_CELLS"
+  },
+  "family_authority": {
+    "family": "SATLIB UUF250.1065.100",
+    "canonical_archive_url": "https://www.cs.ubc.ca/~hoos/SATLIB/Benchmarks/SAT/RND3SAT/uuf250-1065.tar.gz",
+    "archive_sha1": "138484766c966e3f18395db92cf6d69d3c442a3e",
+    "metadata_repository": "prokls/cnf-files-download",
+    "metadata_commit": "c867707b2e265c700cb90810104081a14133cc7e",
+    "sha1_path": "SATlib/uuf250-1065.tar.gz.sha1",
+    "sha1_blob": "4fb6aa3b71cfe093fe9a42a3a08c935331640344",
+    "family_label_implies_100_instances": true,
+    "no_cnf_content_inspected_for_panel_selection": true
+  },
+  "mandatory_panels": [
+    {
+      "panel_id": "P2",
+      "range": "021..040",
+      "indices": [
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40
+      ]
+    },
+    {
+      "panel_id": "P3",
+      "range": "041..060",
+      "indices": [
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60
+      ]
+    },
+    {
+      "panel_id": "P4",
+      "range": "061..080",
+      "indices": [
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80
+      ]
+    },
+    {
+      "panel_id": "P5",
+      "range": "081..100",
+      "indices": [
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100
+      ]
+    }
+  ],
+  "no_optional_stopping": {
+    "required": true,
+    "rule": "All four panels 021..040, 041..060, 061..080, 081..100 must complete the same frozen structural census regardless of discoveries in earlier panels.",
+    "discovery_does_not_cancel_remaining_panels": true,
+    "source_replacement_forbidden": true,
+    "panel_shortening_forbidden": true,
+    "reordering_forbidden": true
+  },
+  "frozen_mechanism": {
+    "panel_size": 20,
+    "projection_blob": "2ef48e73974a5f43d3f4fb4809ebd0c09c0f5be4",
+    "generic_one_round_blob": "9ec365ae27a6caa7b936cd33040e542f183ded99",
+    "wl_blob": "6b697fd8b3de4c83f8226b06399b6bad99953d4e",
+    "direct_exact_blob": "a076cfc56d68aad0348415e313705da1f6b9cdcd",
+    "detector": "UNCHANGED_FROM_UUF250_001_020",
+    "exact_checker": "UNCHANGED_FROM_UUF250_001_020",
+    "eligibility_formula": "m_local(C)>0 AND |B_C|>=2",
+    "existential_survival_not_in_eligibility": true,
+    "semantic_prefilter": false,
+    "correlation_selector": false,
+    "universal_branch_selector": false,
+    "source_specific_rules": false,
+    "Mantequilla": "UNCHANGED",
+    "representation_languages": [
+      "OR_OF_CANONICAL_RESIDUAL_CSP_BRANCHES",
+      "CANONICAL_ROBDD"
+    ],
+    "constructor_sat_calls": 0,
+    "constructor_boundary_cube_enumeration": 0,
+    "independent_checker_small_boundary_microscope_only": true
+  },
+  "panel_protocol": {
+    "structural_phase": "Freeze all 20 rows and denominator for a panel before any semantic execution for that panel.",
+    "semantic_phase": "After structural freeze, seal all eligible k2/k3 cells in that panel before reading the semantic result of the first eligible cell in that panel.",
+    "semantic_execution": "Run unchanged Mantequilla on every eligible sealed cell.",
+    "independent_replay": true,
+    "no_cross_cell_retuning": true,
+    "no_cross_panel_retuning": true
+  },
+  "semantic_outcome_classes": {
+    "TRIVIAL_TRUE_EXISTENTIAL_SHIELDING": "R_C = TRUE",
+    "TRIVIAL_FALSE": "R_C = FALSE",
+    "NONTRIVIAL_FACTORIZED": "R_C != TRUE,FALSE and R_C equals Cartesian product of unary projections",
+    "CORRELATED": "R_C differs from Cartesian product of unary projections"
+  },
+  "posthoc_diagnostics": {
+    "kappa_C_definition": "min{|A| : OR_{alpha in A} R_alpha = TRUE}",
+    "kappa_1_label": "UNIVERSAL_BRANCH_SHIELDING",
+    "kappa_gt_1_label": "DISTRIBUTED_SHIELDING",
+    "routing_use_forbidden": true,
+    "eligibility_use_forbidden": true,
+    "source_selection_use_forbidden": true
+  },
+  "denominators": {
+    "per_panel_required": [
+      "N_sources",
+      "N_detected_cells",
+      "N_null_cells",
+      "N_active_cells",
+      "N_boundary_ge2_cells",
+      "N_Mantequilla_routed_cells",
+      "N_semantically_trivial_true",
+      "N_semantically_trivial_false",
+      "N_semantically_nontrivial",
+      "N_nontrivial_but_unary_factorized",
+      "N_correlated"
+    ],
+    "cumulative_required": true,
+    "cumulative_scope": "UUF250_001..100",
+    "preserve_batch_heterogeneity": true
+  },
+  "discovery_governance": {
+    "if_first_semantically_nontrivial_found": "Freeze FIRST_SEMANTICALLY_NONTRIVIAL_BOUNDARY_SPECIMEN but continue all remaining depth panels unchanged.",
+    "if_first_correlated_found": "Freeze FIRST_GENUINE_CORRELATED_WALL_SPECIMEN and allow a separate representation-study branch; depth census continues unchanged through source 100.",
+    "representation_study_may_not_modify_depth_census": true,
+    "composition_not_authorized_by_discovery_alone": true
+  },
+  "resource_policy": {
+    "complete_panel_or_unknown": true,
+    "resource_failure_verdict": "UNKNOWN_RESOURCE_LIMIT",
+    "no_panel_shortening": true,
+    "no_detector_retuning": true,
+    "no_selective_source_skipping": true,
+    "no_semantic_peek_to_prioritize_sources": true
+  },
+  "scientific_question": "Does the unchanged detector→activity→boundary gate ever reach R_C != TRUE,FALSE on the separately preregistered deeper UUF250 sample, and what is the empirical rarity within UUF250_001..100?",
+  "scientific_firewall": {
+    "scope": "FINITE_CANONICAL_SATLIB_UUF250_001_100_UNDER_FROZEN_DETECTOR_ONLY",
+    "FIRST_SEMANTICALLY_NONTRIVIAL_BOUNDARY_SPECIMEN": "NOT_YET_FOUND",
+    "FIRST_GENUINE_CORRELATED_WALL_SPECIMEN": "NOT_YET_FOUND",
+    "POLYNOMIAL_BRIDGE": "NOT_PROVED",
+    "GENERAL_SAT_IN_P": "NOT_PROVED",
+    "P_VS_NP": "OPEN"
+  },
+  "repository_role": "JANUS_META_REGISTRY_DEPTH_PREREGISTRATION"
+}
