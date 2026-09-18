@@ -1,0 +1,63 @@
+{
+  "artifact_id": "JANUS-TRUMP-U-PAIR-1J-IMPLICIT-MAJORITY-POSTFREEZE-RECONCILIATION-PREREGISTRATION-2026-09-18-v1.0",
+  "date": "2026-09-18",
+  "branch": "research/U-PAIR-1J-majority-postfreeze-reconciliation-2026-09-18",
+  "parent_blind_freeze": {
+    "commit": "96937b044bb6a316911443277d72357784eba5c2",
+    "result_path": "research/U_PAIR_1J_IMPLICIT_MAJORITY_BLIND_SYNTHESIS_RESULT_2026-09-18_v1.0.json",
+    "result_blob": "7d43cc948847eeb5c8bcf0cc73c4ac6baf2894b2",
+    "implementation_review_blob": "17ec614f7de9f500c24e5a6c819f197a48c535dd"
+  },
+  "hidden_reference_authority": {
+    "commit": "d016bcf33b023f80eb32fca8f74ee96fe69d8416",
+    "result_path": "research/U_PAIR_1J_IMPLICIT_MAJORITY_REFERENCE_DAG_RESULT_2026-09-18_v1.0.json",
+    "result_blob": "4393ee89ff3c6a429235d575877f3af7a43470ef",
+    "independent_check_blob": "9e30506de6e25d8e699be332fd7beb20222be76c"
+  },
+  "timing_rule": "Reference metrics are read only after the blind candidate, independent verifier, and blind aggregate result are already frozen.",
+  "allowed_comparison": {
+    "n_values": [
+      5,
+      9,
+      17,
+      33,
+      65
+    ],
+    "S_ref": "reference total_DAG_nodes",
+    "S_synth": "blind candidate S_synth_DAG_nodes",
+    "rho_nodes": "S_synth_DAG_nodes / reference total_DAG_nodes",
+    "allowed_audit_flags": [
+      "reference_DAG_read",
+      "reference_branch_read",
+      "reference_size_metrics_read",
+      "special_function_recognizer_used",
+      "SAT_solver_calls",
+      "generic_validity_calls",
+      "truth_table_enumeration"
+    ]
+  },
+  "forbidden": [
+    "candidate recomputation",
+    "candidate verifier rerun with reference information",
+    "semantic comparison of candidate witness to reference DAG",
+    "changing constructor resources",
+    "changing constructor or verifier code",
+    "retroactive classification based on reference structure beyond frozen taxonomy"
+  ],
+  "verdict_rule": {
+    "PASS_SCOPED_HOSTILE_SYNTHESIS": "All finite blind instances PASS independent verification; forbidden machinery audits are clean; hidden reference confirms compact representation exists. This is an empirical finite-series synthesis result only.",
+    "FAIL_SYNTHESIS_ACCESS": "Blind constructor failed while an accepted compact certificate/reference is confirmed post-freeze.",
+    "FAIL_PROOF_DAG_BLOWUP": "Observed candidate proof DAG grows materially relative to compact reference under the frozen empirical criterion; not a lower bound.",
+    "UNKNOWN_RESOURCE_LIMIT": "Frozen resource budget exhausted before a classified blind result.",
+    "FAIL_HIDDEN_GENERIC_VALIDATION": "Any forbidden oracle/reference/semantic shortcut is detected."
+  },
+  "promotion_firewall": {
+    "finite_series_verdict": "EMPIRICAL_SCALING_ONLY",
+    "uniform_polynomial_synthesis": "OPEN",
+    "symbolic_all_n_bounds_still_required": true,
+    "GENERAL_SAT_IN_P": "NOT_PROVED",
+    "P_EQ_NP": "NOT_PROVED",
+    "P_VS_NP": "OPEN"
+  },
+  "repository_role": "JANUS_META_REGISTRY_POSTFREEZE_RECONCILIATION_PREREG"
+}
