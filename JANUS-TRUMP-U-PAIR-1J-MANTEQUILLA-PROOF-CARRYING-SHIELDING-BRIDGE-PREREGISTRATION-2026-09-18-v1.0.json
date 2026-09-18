@@ -1,0 +1,189 @@
+{
+  "artifact_id": "JANUS-TRUMP-U-PAIR-1J-MANTEQUILLA-PROOF-CARRYING-SHIELDING-BRIDGE-PREREGISTRATION-2026-09-18-v1.0",
+  "date": "2026-09-18",
+  "authority": "PREREGISTERED_SUCCESSOR_BRIDGE__NO_MUTATION_OF_FROZEN_U_PAIR_1J",
+  "branch": "research/U-PAIR-1J-MANTEQUILLA-proof-carrying-shielding-bridge-2026-09-18",
+  "lineage": {
+    "parent_pr_489_head": "8c2447db82f0dc93d83ac2e43c423b5ecae07a85",
+    "parent_u_pair_1j_prereg": {
+      "path": "research/U_PAIR_1J_PROOF_CARRYING_SKOLEM_DISCHARGE_PREREGISTRATION_2026-09-17.json",
+      "blob": "e7830566a195d5b2c2b5dcb17a07c9324962b7c0"
+    },
+    "parent_u_pair_1i_result": {
+      "path": "research/TRUMP_U_PAIR_1I_SKOLEM_DEBT_SYNTHESIS_AND_VALIDATION_BARRIER_RESULT_2026-09-17.json",
+      "blob": "ebbd7f90abe380d8f951314b05745e16c1e974a6"
+    },
+    "read_only_mantequilla_authority": {
+      "canonical_trump_wall_head": "e9249f7d685c332fa7f4bb5386e506b99d3ccb0c",
+      "lemma_blob": "a33a2ff6df91cde04eb6dad87b5646f0e1503f16",
+      "independent_check_blob": "13b4785af9fbf559f045dbc29ba1000ff23b48a3"
+    },
+    "read_only_janus_parallel_authority": {
+      "head": "a61cd667e852343301474d07cf87149d98ba592b",
+      "prereg_blob": "7ad16d626ddaea345ad4fe876042aa48d0c69f77",
+      "proof_blob": "98d5674969d161c4124f2614f542f0d66135863e"
+    },
+    "authority_transfer": false
+  },
+  "target": "U-PAIR-1J_PROOF_CARRYING_SHIELDING_BRIDGE_V1_1",
+  "exact_interface": {
+    "local_relation": "F_C(X_C,B_C)",
+    "domain": "D_C(B_C) := exists X_C F_C(X_C,B_C)",
+    "witness": "f_C(B_C), total as syntax but semantically required only on D_C",
+    "proof_object": "Pi_C := (D_C, f_C, pi_D, pi_f)",
+    "domain_contract": "pi_D certifies D_C(B) iff exists X_C F_C(X_C,B)",
+    "witness_contract": "pi_f certifies D_C(B) => F_C(f_C(B),B)",
+    "outside_domain": "No witness correctness obligation when D_C(B)=FALSE.",
+    "exact_interface_slogan": "DOMAIN + WITNESS + PROOF"
+  },
+  "calculus_governance": {
+    "frozen_parent_calculus": "SKOLEM_LOCAL_DERIVATION_V1",
+    "parent_calculus_is_not_retroactively_modified": true,
+    "bridge_calculus_name": "SKOLEM_LOCAL_DERIVATION_V1_1_SHIELDING_BRIDGE",
+    "inherited_rule_forms": [
+      "CONST(c)",
+      "AFFINE_XOR(c, support)",
+      "EXISTING_DAG_NODE(node_id)",
+      "GUARDED_ITE(guard, rule_true, rule_false) with hash-consed sharing"
+    ],
+    "inherited_justifications": [
+      "RREF_PIVOT_IDENTITY",
+      "UNIT_OR_CONSTANT_FORCE",
+      "EXPLICIT_DEFINITIONAL_DAG_EQUIVALENCE",
+      "LOCAL_GUARD_PARTITION whose two guards are exact complements and whose child derivations are independently valid"
+    ],
+    "exactly_one_new_positive_rule": {
+      "name": "INTERNAL_COVER_WITNESS(alpha)",
+      "justification": "CLAUSEWISE_INTERNAL_OR_BOUNDARY_TAUTOLOGY_COVER",
+      "tautology_safe_cover": "U_C_star = AND_{D: B(D) not identically TRUE} I(D)",
+      "checker_contract": "For every local clause D, verify either B(D) is syntactically/exactly tautological under normalized literal representation or alpha satisfies an internal literal of D.",
+      "conclusion": "F_C(alpha,B) is identically TRUE; therefore D_C=TRUE and f_C(B)=alpha is a valid constant Skolem witness.",
+      "verification_bound": "O(total local clause/literal representation size)",
+      "synthesis_claim": "NONE. Finding alpha is not assumed polynomial."
+    },
+    "forbidden": [
+      "generic SKOLEM_VALID oracle",
+      "generic Boolean-DAG tautology oracle",
+      "arbitrary guard-list coverage accepted by proving OR_i g_i = TRUE generically",
+      "truth-table enumeration as a general algorithmic rule",
+      "unbounded SAT calls hidden in witness synthesis",
+      "exponential guarded-ITE tree hidden behind syntax",
+      "retroactive mutation of U-PAIR-1J V1 preregistration"
+    ]
+  },
+  "guarded_composition": {
+    "proof_node": "GUARDED_ITE(g, Pi_true, Pi_false)",
+    "coverage_rule": "Coverage is by construction from exact complementary branches g and NOT g; no generic tautology proof for a guard union is permitted.",
+    "composed_domain": "D = (g AND D_true) OR ((NOT g) AND D_false)",
+    "composed_witness": "f = ITE(g, f_true, f_false)",
+    "composed_witness_proof": "Check both child witness proofs under their child domains and the exact complementary guard partition.",
+    "hash_consed_sharing_required": true
+  },
+  "shielding_taxonomy": {
+    "UNIVERSAL_BRANCH_SHIELDING": {
+      "condition": "D_C=TRUE and f_C is constant alpha certified by INTERNAL_COVER_WITNESS",
+      "relation_to_mantequilla": "U_C_star SAT iff kappa_C=1"
+    },
+    "DISTRIBUTED_SHIELDING": {
+      "condition": "D_C=TRUE, no constant universal branch, and a nonconstant proof-carrying guarded witness covers all boundary inputs",
+      "expected_form": "shared GUARDED_ITE DAG",
+      "generic_guard_cover_forbidden": true
+    },
+    "SEMANTIC_SIGNAL": {
+      "condition": "D_C is neither TRUE nor FALSE",
+      "obligation": "Retain exact D_C in the interface; do not relabel the object as failed Skolem synthesis merely because the domain is partial."
+    },
+    "TRIVIAL_FALSE": {
+      "condition": "D_C=FALSE",
+      "witness_obligation": "vacuous; exact domain proof still required"
+    }
+  },
+  "proof_carrying_cost_metrics": {
+    "PCShieldSize": "Minimum accepted proof-DAG size among certificates with D_C=TRUE; undefined/infinite when D_C is not TRUE.",
+    "required_accounting": [
+      "T_synth",
+      "proof_DAG_bytes",
+      "proof_DAG_nodes",
+      "T_verify",
+      "max_live_shared_nodes"
+    ],
+    "cheap_verification_does_not_imply_cheap_synthesis": true,
+    "polynomial_success_requires": "One fixed polynomial in original input length L simultaneously bounding synthesis time, proof size, and verification time."
+  },
+  "preregistered_controls": {
+    "universal_branch": {
+      "formula": "(x OR b) AND (x OR NOT b)",
+      "expected": {
+        "D_C": "TRUE",
+        "U_C_star": "SAT",
+        "kappa_C": 1,
+        "witness": "x=1",
+        "required_rule": "INTERNAL_COVER_WITNESS"
+      }
+    },
+    "distributed_shielding": {
+      "formula": "(x OR b) AND (NOT x OR NOT b)",
+      "expected": {
+        "D_C": "TRUE",
+        "U_C_star": "UNSAT",
+        "kappa_C": 2,
+        "witness": "x=NOT b",
+        "required_proof_shape": "One complementary boundary split with two constant leaves",
+        "forbidden_shortcut": "No constant INTERNAL_COVER_WITNESS may PASS"
+      }
+    },
+    "semantic_signal": {
+      "formula": "(x OR b) AND (NOT x OR b)",
+      "expected": {
+        "D_C": "b",
+        "U_C_star": "UNSAT",
+        "total_shielding": "MUST_FAIL",
+        "conditional_witness_example": "x=0 on D_C",
+        "required_interface": "Retain D_C=b plus conditional witness proof"
+      }
+    },
+    "boundary_tautology": {
+      "formula": "(b OR NOT b)",
+      "expected": {
+        "naive_U_C": "UNSAT",
+        "U_C_star": "TRUE",
+        "D_C": "TRUE",
+        "purpose": "Reject the unqualified naive internal-cover converse and validate tautology-safe master theorem."
+      }
+    }
+  },
+  "hostile_suite": {
+    "inherited_from_u_pair_1j": [
+      "IMPLICIT_MAJORITY_SKOL_RELATION_WITHOUT_EXPLICIT_OUTPUT_NODE",
+      "TSEITIN_EXPANDER_SEARCH_RELATIONS",
+      "CONNECTED_MIXED_AFFINE_OR3_EXPANDER_INTERLEAVE",
+      "PAIR_SELECTOR_HITTING_3_RANDOM_MIXED_CONTROLS"
+    ],
+    "bridge_attack_question": "Can the frozen V1.1 calculus synthesize polynomial-size shared guarded witness/domain proofs for total or partial interfaces without invoking generic coNP-hard validity and without expanding an exponential decision tree?",
+    "explicit_distributed_scaling_question": "For relations with U_C_star UNSAT but D_C=TRUE, is there a uniformly synthesized polynomial-size hash-consed GUARDED_ITE proof DAG, with polynomial local verification, or does proof/synthesis size become superpolynomial?",
+    "semantic_signal_question": "When D_C is nontrivial, can an exact polynomial-size proof-carrying domain plus conditional witness be synthesized and verified, rather than silently totalizing or dropping the domain?"
+  },
+  "success_condition": {
+    "scoped_bridge_success": "All preregistered controls behave exactly as specified; hostile instances admitted by the bridge carry exact domain+witness proofs with polynomially bounded synthesis, representation, and verification under one frozen calculus.",
+    "universal_promotion_requirement": "No GENERAL_SAT_IN_P promotion unless these bounds and exact terminalization are proved for the full universal target class, not merely controls."
+  },
+  "failure_conditions": [
+    "INTERNAL_COVER_WITNESS requires generic SAT/validity to verify rather than clausewise local checking",
+    "distributed control cannot be certified without forbidden generic guard tautology validation",
+    "semantic-signal control is incorrectly totalized or drops exact D_C",
+    "hash-consed guarded proof DAG grows superpolynomially on a frozen hostile family",
+    "proof synthesis hides SAT/coNP-hard work in an unaccounted oracle",
+    "proof verifies cheaply but no polynomial synthesis bound is established"
+  ],
+  "scientific_firewall": {
+    "bridge_is_successor_experiment_not_existing_U_PAIR_1J_authority": true,
+    "internal_cover_sat_may_be_sat_hard": true,
+    "exact_domain_synthesis_may_itself_be_hard": true,
+    "cheap_verification_not_equal_cheap_synthesis": true,
+    "no_new_general_solver_authority": true,
+    "GENERAL_SAT_IN_P": "NOT_PROVED",
+    "P_EQ_NP": "NOT_PROVED",
+    "P_VS_NP": "OPEN"
+  },
+  "repository_role": "JANUS_META_REGISTRY_BRIDGE_PREREGISTRATION"
+}
