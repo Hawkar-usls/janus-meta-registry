@@ -1,0 +1,101 @@
+{
+  "artifact_id": "JANUS-TRUMP-WALL-MANTEQUILLA-FIRST-CONSTRUCTIVE-BRIDGE-MILESTONE-2026-09-18-v1.0",
+  "date": "2026-09-18",
+  "program": "MANTEQUILLA_EXACT_CLOSURE_BRIDGE",
+  "gate": "MANTEQUILLA_LOCAL_EXACT_INTERFACE_GATE",
+  "frozen_result": {
+    "repository": "Hawkar-usls/Janus-Fundamentum",
+    "branch": "research/TRUMP_WALL-MANTEQUILLA-UF250-020-checker-repair-reconciliation-2026-09-18",
+    "freeze_commit": "54a6485d98839b8c51f240a6b88dce16ff594b4a",
+    "scientific_result_blob": "259672eb7d4ed94708607c5ac46a5fd85997f611",
+    "reconciliation_result_blob": "2b5fa1556bd9879feaa79cac607ff909963c013c",
+    "sealed_bundle_blob": "c488e7759f4d1527645b298e561ca3c783dc99a9",
+    "run_id": 35314932760,
+    "scientific_outcome": "PASS_CONSTRUCTIVE_BRIDGE",
+    "independent_verdict": "PASS_INDEPENDENT_MANTEQUILLA_LOCAL_EXACT_INTERFACE_VERIFICATION_AFTER_MINIMAL_CHECKER_REPAIR",
+    "claim_ceiling": "ONE_FROZEN_TWO_VARIABLE_EXACT_SYMMETRY_CELL__LOCAL_INTERFACE_ONLY__NO_COMPOSITION_OR_GENERAL_K_CLAIM"
+  },
+  "specimen": {
+    "source": "UF250_020",
+    "frozen_exact_symmetry_cell": [
+      40,
+      240
+    ],
+    "old_e3_quotient_states_Q": 426092165,
+    "reduced_variables": 205,
+    "reduced_constraints": 219,
+    "local_constraint_count": 2,
+    "exterior_constraint_count": 217,
+    "boundary_variables": [
+      15,
+      44
+    ],
+    "boundary_variable_count": 2
+  },
+  "interface_result": {
+    "language": "OR_OF_CANONICAL_RESIDUAL_CSP_BRANCHES",
+    "raw_internal_assignments": 4,
+    "retained_representatives": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        1
+      ]
+    ],
+    "mixed_branch_identity": "Residual(0,1) == Residual(1,0)",
+    "local_input_symbol_count": 50,
+    "raw_four_branch_residual_symbol_count": 10,
+    "compressed_interface_symbol_count": 9,
+    "scoped_linear_bound": 153,
+    "sat_solver_invocations": 0,
+    "boundary_cube_assignments_enumerated": 0,
+    "full_transposition_searches": 0,
+    "detector_imports_after_seal": 0
+  },
+  "critical_interpretation": {
+    "key_observation": "The retained branch (0,1) has an empty residual constraint set, therefore it is TRUE for every boundary assignment.",
+    "consequence": "The exact existential boundary relation for this local cell simplifies further to the constant TRUE relation. Thus the pair [40,240] can be existentially eliminated from the local region without transmitting any boundary restriction; the global reduced CSP is exactly equivalent to the 217-constraint exterior after choosing an appropriate internal witness.",
+    "reconstruction_hint": "The branch (x40,x240)=(0,1) supplies a boundary-independent satisfying internal choice for the two local constraints.",
+    "significance": "The first Mantequilla bridge is genuine and independently verified, and it demonstrates that the 426,092,165-state E3 quotient route was unnecessary for this local elimination.",
+    "limitation": "This specimen does not yet demonstrate that exact symmetry itself is responsible for handling a nontrivial boundary relation. Generic local existential elimination would also discover a universally satisfying internal branch.",
+    "do_not_claim": [
+      "general symmetry-to-interface compression",
+      "nontrivial correlated boundary representation",
+      "multi-interface polynomial composition",
+      "general k-class closure",
+      "general SAT in P",
+      "P=NP"
+    ]
+  },
+  "next_killer_test": {
+    "name": "MANTEQUILLA_NONTRIVIAL_CORRELATED_BOUNDARY_INTERFACE_GATE",
+    "objective": "Use a fresh preregistered exact-symmetry specimen where no internal orbit representative yields a universally TRUE residual and where the exact boundary relation contains genuine joint correlation.",
+    "required_properties": [
+      "exact symmetry witness frozen before Mantequilla run",
+      "no branch may satisfy the entire local region for every boundary assignment",
+      "boundary arity at least 2",
+      "exact boundary relation must be nonconstant",
+      "prefer a relation not representable as independent unary admissibility sets",
+      "candidate must build a compact exact symbolic representation",
+      "independent checker must verify exactness without enumerating the full boundary cube",
+      "UF250_020 remains discovery/development evidence, not confirmation"
+    ],
+    "purpose": "Distinguish a true symmetry-enabled semantic bridge from a trivial existential escape branch and move from Representation WALL toward Composition WALL."
+  },
+  "scientific_firewall": {
+    "MANTEQUILLA_LOCAL_BRIDGE": "PROVED_ONLY_FOR_THIS_FROZEN_TWO_VARIABLE_CELL",
+    "NONTRIVIAL_BOUNDARY_BRIDGE": "NOT_YET_PROVED",
+    "MULTI_INTERFACE_COMPOSITION": "NOT_PROVED",
+    "GENERAL_K_CLASS": "NOT_PROVED",
+    "GENERAL_SAT_IN_P": "NOT_PROVED",
+    "P_VS_NP": "OPEN"
+  },
+  "repository_role": "JANUS_META_REGISTRY_MILESTONE_AND_INTERPRETATION"
+}
