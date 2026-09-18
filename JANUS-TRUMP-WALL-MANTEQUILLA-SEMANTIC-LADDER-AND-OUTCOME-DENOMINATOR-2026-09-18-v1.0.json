@@ -1,0 +1,105 @@
+{
+  "artifact_id": "JANUS-TRUMP-WALL-MANTEQUILLA-SEMANTIC-LADDER-AND-OUTCOME-DENOMINATOR-2026-09-18-v1.0",
+  "date": "2026-09-18",
+  "canonical_hierarchy": [
+    "EXACT",
+    "ACTIVE_EXACT",
+    "BOUNDARY_ACTIVE_EXACT",
+    "SEMANTICALLY_NONTRIVIAL_EXACT",
+    "CORRELATED_EXACT"
+  ],
+  "formal_inclusions": "EXACT ⊇ ACTIVE_EXACT ⊇ BOUNDARY_ACTIVE_EXACT ⊇ SEMANTICALLY_NONTRIVIAL_EXACT ⊇ CORRELATED_EXACT",
+  "definitions": {
+    "EXACT": "Frozen exact automorphism/exchangeability witness under the preregistered detector grammar.",
+    "ACTIVE_EXACT": "Exact symmetry cell with local_constraint_count > 0 after frozen preprocessing.",
+    "BOUNDARY_ACTIVE_EXACT": "ACTIVE_EXACT with boundary_variable_count >= 2 for the correlated-boundary experiment.",
+    "SEMANTICALLY_NONTRIVIAL_EXACT": "After freeze and exact existential elimination, R_C is neither TRUE nor FALSE.",
+    "CORRELATED_EXACT": "SEMANTICALLY_NONTRIVIAL_EXACT and R_C differs from the Cartesian product of its unary projections."
+  },
+  "structural_vs_semantic": {
+    "structural_coupling_not_equal_semantic_transmission": true,
+    "structural_eligibility_formula": "Eligible(F,C,S) iff m_local(C)>0 AND |B_C|>=2",
+    "forbidden_pre_mantequilla_filters": [
+      "R_C != TRUE",
+      "R_C != FALSE",
+      "semantic nontriviality",
+      "unary factorization",
+      "correlation",
+      "ROBDD size",
+      "number of satisfying boundary assignments"
+    ]
+  },
+  "outcome_axis": {
+    "R_C_TRUE": "EXISTENTIALLY_TRIVIAL_TRUE",
+    "R_C_FALSE": "EXISTENTIALLY_TRIVIAL_FALSE",
+    "R_C_NONTRIVIAL_BUT_PRODUCT_OF_UNARY_PROJECTIONS": "SEMANTICALLY_NONTRIVIAL_BUT_UNCORRELATED",
+    "R_C_CORRELATED": "FIRST_GENUINE_WALL_ELIGIBLE_SEMANTIC_CLASS"
+  },
+  "denominator_policy": {
+    "pre_semantic_required": [
+      "N_sources",
+      "N_detected_cells",
+      "N_null_cells",
+      "N_active_cells",
+      "N_boundary_ge2_cells",
+      "N_Mantequilla_routed_cells"
+    ],
+    "post_mantequilla_required": [
+      "N_semantically_trivial_true",
+      "N_semantically_trivial_false",
+      "N_semantically_nontrivial",
+      "N_correlated"
+    ],
+    "critical_rule": "Post-Mantequilla counters are outcomes only and must never become specimen-selection filters."
+  },
+  "current_empirical_status": {
+    "UF250_016": "NULL_EXACT_SYMMETRY",
+    "UF250_018": "NULL_EXACT_SYMMETRY",
+    "UF250_020": "ACTIVE_BUT_EXISTENTIALLY_TRIVIAL_TRUE",
+    "UUF100_007": "BOUNDARY_ACTIVE_BUT_EXISTENTIALLY_TRIVIAL_TRUE",
+    "UUF100_009": "ACTIVE_SINGLETON_BOUNDARY_CONTROL",
+    "FIRST_GENUINE_WALL_SPECIMEN": "NOT_YET_FOUND"
+  },
+  "current_uuf100_denominator": {
+    "N_sources": 20,
+    "N_detected_cells": 2,
+    "N_active_cells": 2,
+    "N_boundary_ge2_cells": 1,
+    "N_Mantequilla_routed_cells": 1,
+    "N_semantically_trivial_true": 1,
+    "N_semantically_trivial_false": 0,
+    "N_semantically_nontrivial": 0,
+    "N_correlated": 0,
+    "sample_specific_only": true
+  },
+  "frozen_pipeline": "SOURCE -> DETECT -> ACTIVE -> BOUNDARY_ELIGIBILITY -> FREEZE -> MANTEQUILLA -> EXACT_R_C -> SEMANTIC_CLASS -> REPRESENTATION_AUDIT",
+  "constructor_checker_firewall": {
+    "constructor_full_boundary_cube_forbidden": true,
+    "independent_checker_may_exhaust_small_boundary_cube": true,
+    "checker_cube_is_validation_only": true,
+    "checker_cube_must_not_be_used_to_claim_scalability": true
+  },
+  "next_family_selection_policy": {
+    "no_preexisting_named_family_after_UUF100_found_in_prior_manifests": true,
+    "deterministic_rule_adopted_now": "Continue along the standard SATLIB UUF random-3-SAT size ladder by increasing variable count, without inspecting family internals or Mantequilla outcomes.",
+    "sequence": [
+      "UUF125.538.100",
+      "UUF150.645.100",
+      "UUF175.753.100",
+      "UUF200.860.100",
+      "UUF225.960.100",
+      "UUF250.1065.100"
+    ],
+    "first_next_family": "UUF125.538.100",
+    "replacement_on_outcome_forbidden": true
+  },
+  "scientific_firewall": {
+    "FIRST_GENUINE_WALL_SPECIMEN": "NOT_YET_FOUND",
+    "POLYNOMIAL_BRIDGE": "NOT_PROVED",
+    "GENERAL_K_CLASS": "NOT_PROVED",
+    "MULTI_INTERFACE_COMPOSITION": "NOT_PROVED",
+    "GENERAL_SAT_IN_P": "NOT_PROVED",
+    "P_VS_NP": "OPEN"
+  },
+  "repository_role": "JANUS_META_REGISTRY_CANONICAL_LADDER"
+}
