@@ -1,0 +1,103 @@
+{
+  "artifact_id": "JANUS-TRUMP-WALL-MANTEQUILLA-UUF175-018-DUAL-ELIGIBLE-SEMANTIC-PREREGISTRATION-2026-09-18-v1.0",
+  "date": "2026-09-18",
+  "branch": "research/TRUMP_WALL-MANTEQUILLA-UUF175-018-dual-eligible-semantics-2026-09-18",
+  "parent_census": {
+    "commit": "f392ffc8669dd471220be81b23344f6af37f3064",
+    "blob": "08a47f0a25168f52f341907711b6c9af9dcef618",
+    "outcome": "PASS_STRUCTURAL_CENSUS_WITH_ELIGIBLE_K2_OR_K3_CELLS"
+  },
+  "source": {
+    "source_id": "UUF175_018",
+    "source_path": "research/source_data/SATLIB_UUF175_018_2026-09-18.cnf",
+    "source_git_blob": "abbc0db2364550a23a300db374983d00268f9844",
+    "canonical_formula_sha256": "bb98ac49e98e886012d643732ef2fb4b832e5b9deaf5adf5c1c1ed6c526f773c",
+    "projected_raw_sha256": "b5ad55f63dfc47ac1925360a9f4e5e02ae5ae0bf75758ce3270ac124074c23cc",
+    "reduced_raw_sha256": "d0196006827015ac37e03a4f3f16e9ebafab560e402aca011f5f1352e53d6dcf",
+    "reduced_variables": 147,
+    "reduced_constraints": 149
+  },
+  "specimens": [
+    {
+      "specimen_id": "A",
+      "cell": [
+        2,
+        171
+      ],
+      "boundary": [
+        17,
+        120
+      ],
+      "local_constraint_count": 2,
+      "group": "S_2"
+    },
+    {
+      "specimen_id": "B",
+      "cell": [
+        104,
+        170
+      ],
+      "boundary": [
+        96,
+        129
+      ],
+      "local_constraint_count": 2,
+      "group": "S_2"
+    }
+  ],
+  "execution_order_policy": "Both implementations, sealers, verdict rules, and independent checkers must be frozen before either semantic execution starts. Outcome A must not alter B.",
+  "frozen_reference_mechanism": {
+    "sealer_blob": "bee47fa747f7e95a32117d3a0b97463feca71cb1",
+    "candidate_blob": "c040c0bf41b02b67d58037bd69ec7da30816365e",
+    "checker_blob": "6231b28c4f9da56f0afe8217cf29d975cde490e4",
+    "allowed_adaptation": [
+      "source/formula/projected/reduced hashes and shape",
+      "PAIR and BOUNDARY constants",
+      "artifact/source labels",
+      "UUF175 DIMACS parser shape and standard end-marker tolerance"
+    ],
+    "forbidden_adaptation": [
+      "residual algorithm",
+      "ORCSP representation",
+      "ROBDD logic or variable-order rule",
+      "semantic classification",
+      "verdict precedence",
+      "bounds",
+      "candidate boundary-cube enumeration"
+    ]
+  },
+  "semantic_classes": [
+    "R_C_TRUE",
+    "R_C_FALSE",
+    "R_C_NONTRIVIAL_BUT_PRODUCT_OF_UNARY_PROJECTIONS",
+    "R_C_CORRELATED"
+  ],
+  "verdict_mapping": {
+    "R_C_TRUE": "FAIL_TRIVIAL_ESCAPE__R_C_TRUE",
+    "R_C_FALSE": "FAIL_TRIVIAL_ESCAPE__R_C_FALSE",
+    "R_C_NONTRIVIAL_BUT_PRODUCT_OF_UNARY_PROJECTIONS": "FAIL_UNARY_FACTORIZATION",
+    "R_C_CORRELATED": "PASS_LOCAL_EXACT_INTERFACE_NONTRIVIAL_CORRELATED if frozen scoped representation bounds also pass"
+  },
+  "terminology_firewall": {
+    "structurally_eligible_not_equal_wall_specimen": true,
+    "semantically_nontrivial_requires": "R_C != TRUE and R_C != FALSE",
+    "first_genuine_correlated_wall_requires": "R_C_CORRELATED independently verified",
+    "correlated_not_equal_polynomial_bridge": true
+  },
+  "checker_firewall": {
+    "constructor_boundary_cube_forbidden": true,
+    "independent_checker_four_point_cube_allowed_for_each_two_bit_boundary": true,
+    "checker_cube_validation_only": true,
+    "no_scalability_inference": true
+  },
+  "after_outcomes": {
+    "if_any_correlated": "Freeze FIRST_GENUINE_CORRELATED_WALL_SPECIMEN status for each qualifying cell; do not start composition; next separate prereg is A/B representation comparison.",
+    "if_none_correlated": "Freeze both semantic outcomes and advance to next predeclared family without retuning."
+  },
+  "scientific_firewall": {
+    "POLYNOMIAL_BRIDGE": "NOT_PROVED",
+    "MULTI_INTERFACE_COMPOSITION": "NOT_PROVED",
+    "GENERAL_SAT_IN_P": "NOT_PROVED",
+    "P_VS_NP": "OPEN"
+  }
+}
