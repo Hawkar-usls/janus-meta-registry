@@ -1,0 +1,104 @@
+{
+  "artifact_id": "JANUS-TRUMP-WALL-MANTEQUILLA-UF250-SYMMETRY-ACTIVITY-CENSUS-AND-NEXT-GATE-2026-09-18-v1.0",
+  "date": "2026-09-18",
+  "scope": "UF250 frozen discovery panel symmetry cells relevant to current Mantequilla program",
+  "frozen_results": [
+    {
+      "source": "UF250_020",
+      "cell": [
+        40,
+        240
+      ],
+      "symmetry_type": "ACTIVE_EXACT_SYMMETRY",
+      "local_constraint_count": 2,
+      "boundary_variables": [
+        15,
+        44
+      ],
+      "boundary_variable_count": 2,
+      "local_interface_outcome": "PASS_CONSTRUCTIVE_BRIDGE",
+      "semantic_relation": "TRUE because branch (0,1) is universally satisfying",
+      "classification": "ACTIVE_BUT_TRIVIAL_EXISTENTIAL_ESCAPE",
+      "freeze_commit": "54a6485d98839b8c51f240a6b88dce16ff594b4a"
+    },
+    {
+      "source": "UF250_016",
+      "cell": [
+        61,
+        91,
+        237
+      ],
+      "symmetry_type": "NULL_EXACT_SYMMETRY",
+      "local_constraint_count": 0,
+      "boundary_variables": [],
+      "boundary_variable_count": 0,
+      "local_interface_outcome": "FAIL_TRIVIAL_ESCAPE",
+      "semantic_relation": "TRUE",
+      "classification": "SEMANTICALLY_NULL_AFTER_FROZEN_REDUCTION",
+      "freeze_commit": "2998add3ac39d063f435121ca4b17e6a8513f3f3",
+      "result_blob": "f1c2830997bf2cc878e5ae1f393c4b007d83f2b0"
+    },
+    {
+      "source": "UF250_018",
+      "cell": [
+        61,
+        100,
+        173
+      ],
+      "symmetry_type": "NULL_EXACT_SYMMETRY",
+      "local_constraint_count": 0,
+      "boundary_variables": [],
+      "boundary_variable_count": 0,
+      "local_interface_outcome": "FAIL_TRIVIAL_ESCAPE",
+      "semantic_relation": "TRUE",
+      "classification": "SEMANTICALLY_NULL_AFTER_FROZEN_REDUCTION",
+      "freeze_commit": "dbdbe6fa9947777612af15dd023e154984d03458",
+      "result_blob": "89609d6fcdce81b342dfcf83cba348ce340a80c0"
+    }
+  ],
+  "combined_readout": {
+    "exact_symmetry_detection_signal": "REAL_BUT_MIXES_ACTIVE_AND_SEMANTICALLY_NULL_CELLS",
+    "uf250_nontrivial_wl_e3_cells_examined": 3,
+    "null_exact_symmetry_cells": 2,
+    "active_exact_symmetry_cells": 1,
+    "active_cells_with_nontrivial_correlated_boundary_relation": 0,
+    "conclusion": "UF250 is exhausted as a discovery panel for the current nontrivial correlated-boundary Mantequilla gate. Its exact symmetry hits do not provide an independently useful nontrivial correlated interface specimen."
+  },
+  "new_canonical_distinction": {
+    "EXACT_SYMMETRY": "Exact automorphism/exchangeability witness, regardless of semantic incidence.",
+    "NULL_EXACT_SYMMETRY": "Exact symmetry cell with zero incident reduced constraints; exact existential boundary relation is TRUE and boundary is empty.",
+    "ACTIVE_EXACT_SYMMETRY": "Exact symmetry cell with at least one incident reduced constraint.",
+    "BOUNDARY_ACTIVE_EXACT_SYMMETRY": "Active exact symmetry whose local region exposes at least two boundary variables, making a nontrivial joint interface test structurally possible."
+  },
+  "new_gate": {
+    "name": "MANTEQUILLA_ACTIVE_EXACT_SYMMETRY_ELIGIBILITY_GATE",
+    "location_in_pipeline": "DETECT -> ACTIVE_ELIGIBILITY -> FREEZE_S -> MANTEQUILLA",
+    "preregistered_structural_eligibility": [
+      "exact symmetry witness is frozen",
+      "local_constraint_count > 0",
+      "boundary_variable_count >= 2 for correlated-boundary experiments"
+    ],
+    "deliberately_not_an_eligibility_test": [
+      "whether any internal branch is TRUE",
+      "whether the exact boundary relation is constant",
+      "whether the relation is unary-factorized",
+      "whether ROBDD is small"
+    ],
+    "reason": "Those are scientific Mantequilla outcomes and must remain hidden until after eligibility and preregistration."
+  },
+  "next_course": {
+    "action": "Move to a fresh unseen family/panel and preregister ACTIVE_EXACT_SYMMETRY eligibility before reading residual semantics.",
+    "representation_language": "Keep OR_OF_CANONICAL_RESIDUAL_CSP_ORBIT_BRANCHES + CANONICAL_ROBDD unchanged for the first active unseen confirmation.",
+    "success_target": "PASS_NONTRIVIAL_CORRELATED_BRIDGE on an eligible active exact-symmetry specimen",
+    "no_retrospective_rescoring": true
+  },
+  "scientific_firewall": {
+    "DETECTION_WALL": "PARTIALLY_CROSSED_ON_FINITE_PANELS",
+    "ACTIVE_SYMMETRY_GENERALITY": "NOT_PROVED",
+    "NONTRIVIAL_CORRELATED_BRIDGE": "NOT_PROVED",
+    "MULTI_INTERFACE_COMPOSITION": "NOT_PROVED",
+    "GENERAL_SAT_IN_P": "NOT_PROVED",
+    "P_VS_NP": "OPEN"
+  },
+  "repository_role": "JANUS_META_REGISTRY_CANONICAL_CENSUS_AND_NEXT_GATE"
+}
