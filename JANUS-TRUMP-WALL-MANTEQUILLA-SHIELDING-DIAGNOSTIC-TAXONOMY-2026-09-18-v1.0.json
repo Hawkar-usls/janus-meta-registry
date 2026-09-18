@@ -1,0 +1,70 @@
+{
+  "artifact_id": "JANUS-TRUMP-WALL-MANTEQUILLA-SHIELDING-DIAGNOSTIC-TAXONOMY-2026-09-18-v1.0",
+  "date": "2026-09-18",
+  "scope": "POST_HOC_DIAGNOSTIC_ONLY__NOT_ELIGIBILITY_NOT_SELECTOR",
+  "definitions": {
+    "universal_branch_shielding": {
+      "label": "UNIVERSAL_BRANCH_SHIELDING",
+      "condition": "exists internal assignment alpha such that R_alpha(B_C)=TRUE",
+      "implication": "R_C = OR_alpha R_alpha = TRUE",
+      "kappa_definition": "kappa_C = min{|A| : OR_{alpha in A} R_alpha = TRUE}",
+      "kappa_value_if_present": 1
+    },
+    "distributed_shielding": {
+      "label": "DISTRIBUTED_SHIELDING",
+      "condition": "for all alpha, R_alpha != TRUE, but OR_alpha R_alpha = TRUE",
+      "implication": "R_C=TRUE without any universal single branch",
+      "kappa_condition": "kappa_C > 1"
+    }
+  },
+  "observed_series": {
+    "UUF100_007": {
+      "semantic_class": "R_C_TRUE",
+      "observed_true_residual_branch_exists": true,
+      "shielding_class": "UNIVERSAL_BRANCH_SHIELDING",
+      "kappa_C": 1
+    },
+    "UUF175_018_A": {
+      "semantic_class": "R_C_TRUE",
+      "observed_true_residual_branch_exists": true,
+      "shielding_class": "UNIVERSAL_BRANCH_SHIELDING",
+      "kappa_C": 1
+    },
+    "UUF175_018_B": {
+      "semantic_class": "R_C_TRUE",
+      "observed_true_residual_branch_exists": true,
+      "shielding_class": "UNIVERSAL_BRANCH_SHIELDING",
+      "kappa_C": 1
+    },
+    "UUF200_003": {
+      "semantic_class": "R_C_TRUE",
+      "true_residual_branches": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "shielding_class": "UNIVERSAL_BRANCH_SHIELDING",
+      "kappa_C": 1
+    }
+  },
+  "accumulated_observation": "All observed multi-boundary semantically trivial TRUE escapes in the current frozen series are single-branch universal escapes. This is empirical on the current finite series only, not a general law.",
+  "firewall": {
+    "eligibility_gate_unchanged": "m_local(C)>0 AND |B_C|>=2",
+    "kappa_not_in_eligibility": true,
+    "shielding_class_not_in_eligibility": true,
+    "semantic_prefilter_forbidden": true,
+    "distributed_shielding_not_targeted": true,
+    "correlated_specimen_not_targeted_manually": true,
+    "FIRST_SEMANTICALLY_NONTRIVIAL_BOUNDARY_SPECIMEN": "NOT_YET_FOUND",
+    "FIRST_GENUINE_CORRELATED_WALL_SPECIMEN": "NOT_YET_FOUND",
+    "POLYNOMIAL_BRIDGE": "NOT_PROVED",
+    "P_VS_NP": "OPEN"
+  },
+  "next_family": "UUF225.960.100",
+  "repository_role": "JANUS_META_REGISTRY_DIAGNOSTIC_TAXONOMY"
+}
