@@ -1,0 +1,96 @@
+{
+  "artifact_id": "JANUS-TRUMP-WALL-MANTEQUILLA-UUF200-003-SEMANTIC-PREREGISTRATION-2026-09-18-v1.0",
+  "date": "2026-09-18",
+  "branch": "research/TRUMP_WALL-MANTEQUILLA-UUF200-003-semantic-2026-09-18",
+  "parent_census": {
+    "commit": "c8008cca1667b097b6d3c7c511382911875f0b95",
+    "blob": "138de634e24cd6429646787296fbc9396ae7c4b4",
+    "scientific_outcome": "PASS_STRUCTURAL_CENSUS_WITH_ELIGIBLE_K2_OR_K3_CELLS"
+  },
+  "specimen": {
+    "source": "UUF200_003",
+    "source_path": "research/source_data/SATLIB_UUF200_003_2026-09-18.cnf",
+    "source_git_blob": "d948c11b67224ae07aa9dace2d642aeb67d2e96c",
+    "canonical_formula_sha256": "51a514945cec52bfbdaefbdd14c5cf2086522af9a7fd04b38265a7be0d4523b3",
+    "projected_raw_sha256": "1f11f1054c412bd7122f19ee7082918957fd252f119d1cd19cca3f8dacbe2d99",
+    "reduced_raw_sha256": "781c1584f797894e08e23a805ff3ddf197c5d1b3bcc3ff294711811b27fcc211",
+    "reduced_variables": 170,
+    "reduced_constraints": 192,
+    "cell": [
+      162,
+      171
+    ],
+    "group": "S_2",
+    "boundary": [
+      13,
+      169
+    ],
+    "local_constraint_count": 2,
+    "residual_semantics_known_before_preregistration": false
+  },
+  "frozen_reference_mechanism": {
+    "sealer_blob": "7af49c3851ab8c5f72fbf7b83b45db28900c9190",
+    "candidate_blob": "db4f851c00ce0dd642932fb9c4fbf3d711ebcab5",
+    "checker_blob": "0f0edc7ca86f26f9840d0a94dd8ae919bd9f7384",
+    "reference_specimen": "UUF175_018_A",
+    "allowed_adaptation": [
+      "source/formula/projected/reduced hashes and shape",
+      "PAIR and BOUNDARY constants",
+      "artifact/source labels",
+      "UUF200 DIMACS parser shape and standard SATLIB end-marker tolerance"
+    ],
+    "forbidden_adaptation": [
+      "residual construction algorithm",
+      "ORCSP language",
+      "ROBDD construction or variable-order rule",
+      "semantic classification",
+      "verdict precedence",
+      "representation bounds",
+      "candidate boundary cube enumeration"
+    ]
+  },
+  "semantic_classes": [
+    "R_C_TRUE",
+    "R_C_FALSE",
+    "R_C_NONTRIVIAL_BUT_PRODUCT_OF_UNARY_PROJECTIONS",
+    "R_C_CORRELATED"
+  ],
+  "verdict_mapping": {
+    "R_C_TRUE": "FAIL_TRIVIAL_ESCAPE__R_C_TRUE",
+    "R_C_FALSE": "FAIL_TRIVIAL_ESCAPE__R_C_FALSE",
+    "R_C_NONTRIVIAL_BUT_PRODUCT_OF_UNARY_PROJECTIONS": "FAIL_UNARY_FACTORIZATION",
+    "R_C_CORRELATED": "PASS_LOCAL_EXACT_INTERFACE_NONTRIVIAL_CORRELATED if frozen scoped representation bounds also pass"
+  },
+  "terminology_firewall": {
+    "structurally_eligible_not_equal_wall_specimen": true,
+    "first_semantically_nontrivial_boundary_specimen_requires": "R_C != TRUE and R_C != FALSE",
+    "first_genuine_correlated_wall_specimen_requires": "R_C_CORRELATED independently verified",
+    "correlated_not_equal_polynomial_bridge": true
+  },
+  "constructor_firewall": {
+    "sat_solver_invocations": 0,
+    "boundary_cube_enumeration_forbidden": true,
+    "detector_imports_forbidden": true,
+    "wl_imports_forbidden": true,
+    "e3_imports_forbidden": true
+  },
+  "independent_checker": {
+    "four_point_boundary_cube_allowed": true,
+    "boundary_order": [
+      13,
+      169
+    ],
+    "purpose": "validation only",
+    "no_scalability_inference": true
+  },
+  "next_if_correlated": "Freeze FIRST_GENUINE_CORRELATED_WALL_SPECIMEN, then separate preregistered representation A/B study; do not start composition.",
+  "next_if_nontrivial_factorized": "Freeze FIRST_SEMANTICALLY_NONTRIVIAL_BOUNDARY_SPECIMEN but not correlated WALL; continue frozen ladder without retuning.",
+  "next_if_trivial": "Freeze semantic escape and continue frozen ladder without retuning.",
+  "scientific_firewall": {
+    "FIRST_GENUINE_CORRELATED_WALL_SPECIMEN": "NOT_YET_FOUND",
+    "POLYNOMIAL_BRIDGE": "NOT_PROVED",
+    "MULTI_INTERFACE_COMPOSITION": "NOT_PROVED",
+    "GENERAL_SAT_IN_P": "NOT_PROVED",
+    "P_VS_NP": "OPEN"
+  }
+}
