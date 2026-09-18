@@ -1,0 +1,110 @@
+{
+  "artifact_id": "JANUS-TRUMP-WALL-MANTEQUILLA-NONTRIVIAL-CORRELATED-BOUNDARY-LAUNCH-2026-09-18-v1.0",
+  "date": "2026-09-18",
+  "parent_frontier": "TRUMP_WALL",
+  "program": "MANTEQUILLA_EXACT_CLOSURE_BRIDGE",
+  "previous_milestone": {
+    "freeze_commit": "54a6485d98839b8c51f240a6b88dce16ff594b4a",
+    "result_blob": "259672eb7d4ed94708607c5ac46a5fd85997f611",
+    "scientific_outcome": "PASS_CONSTRUCTIVE_BRIDGE",
+    "interpretation": "First scoped local bridge passed on UF250_020, but exact local boundary semantics collapsed to TRUE because internal branch (0,1) satisfied the local region for every boundary assignment."
+  },
+  "next_gate": "MANTEQUILLA_NONTRIVIAL_CORRELATED_BOUNDARY_INTERFACE_GATE",
+  "objective": "Test whether a frozen exact symmetry cell can induce a compact exact nonconstant, genuinely joint boundary relation without a universally TRUE internal branch and without reduction to independent unary admissibility sets.",
+  "specimen_selection": {
+    "rule": "Use the lowest-index frozen UF250 source, excluding already-used UF250_020, whose frozen WL1 and WL2 nontrivial variable cell agrees and whose frozen E3 generator graph proves the full symmetric action on that cell.",
+    "selected_source": "UF250_016",
+    "selected_cell": [
+      61,
+      91,
+      237
+    ],
+    "selection_was_made_before_inspecting_local_residual_semantics": true,
+    "source_git_blob": "01ceb79b347e4163f0ae57c62490c405e9c68418",
+    "canonical_formula_sha256": "00845e351df291b16468b1c0b243905aa2abc936780573fc6e46047c4ce030d5",
+    "reduced_raw_sha256": "fae8a40cebba0229bd9ef542a28fec81e1f4efd3451f8ba1d5fe2e1b2de1e674",
+    "frozen_wl_cell": [
+      61,
+      91,
+      237
+    ],
+    "frozen_e3_generator_edges": [
+      [
+        61,
+        91
+      ],
+      [
+        61,
+        237
+      ],
+      [
+        91,
+        237
+      ]
+    ],
+    "e3_generator_graph": "K3",
+    "old_e3_quotient_states_Q": 383572226
+  },
+  "required_nontriviality": {
+    "no_universal_true_branch": true,
+    "boundary_arity_at_least": 2,
+    "exact_boundary_relation_nonconstant": true,
+    "exact_boundary_relation_not_equal_to_product_of_unary_projections": true,
+    "exact_joint_correlation_required": true
+  },
+  "interface_language": {
+    "name": "OR_OF_CANONICAL_RESIDUAL_CSP_ORBIT_BRANCHES",
+    "raw_internal_assignments": 8,
+    "expected_orbit_representatives_by_hamming_weight": [
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        1
+      ],
+      [
+        0,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1
+      ]
+    ],
+    "compression_principle": "Under a verified full S3 action, assignments are grouped by Hamming weight. A representative is retained only after exact residual identity is independently confirmed for every assignment in the same orbit.",
+    "exact_boundary_relation": "R_C(B_C) = { beta | exists X_C : F_C(X_C,beta)=1 }"
+  },
+  "verdicts": [
+    "PASS_NONTRIVIAL_CORRELATED_BRIDGE",
+    "FAIL_TRIVIAL_ESCAPE",
+    "FAIL_UNARY_FACTORIZATION",
+    "FAIL_CLOSURE_BLOWUP",
+    "FAIL_NONLOCAL_INFORMATION_REQUIRED",
+    "UNKNOWN_RESOURCE_LIMIT"
+  ],
+  "pass_requires": [
+    "full S3 action reproduced from sealed reduced CSP",
+    "all assignments of equal Hamming weight have identical canonical residual semantics",
+    "no raw branch yields TRUE over the full boundary",
+    "the existential union of retained orbit branches is nonconstant",
+    "the exact boundary relation is not equivalent to the product of independent unary projections",
+    "candidate emits compact exact symbolic interface without full boundary-cube enumeration",
+    "independent checker reconstructs and verifies the same interface without importing candidate",
+    "SAT solver invocations = 0",
+    "detector/WL/E3 imports after seal = 0"
+  ],
+  "scientific_firewall": {
+    "UF250_016_is_mechanism_development_not_independent_confirmation": true,
+    "local_k3_pass_not_equal_general_k": true,
+    "composition_wall": "NOT_PROVED",
+    "GENERAL_SAT_IN_P": "NOT_PROVED",
+    "P_VS_NP": "OPEN"
+  },
+  "repository_role": "JANUS_META_REGISTRY_NEXT_GATE_LAUNCH"
+}
