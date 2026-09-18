@@ -1,0 +1,101 @@
+{
+  "artifact_id": "JANUS-TRUMP-WALL-MANTEQUILLA-PHASE-IIB-WAVE-1-CONTROLLED-WALL-CHALLENGE-PREREGISTRATION-2026-09-18-v1.0",
+  "date": "2026-09-18",
+  "lane": "PHASE_IIB_CONTROLLED_SEMANTIC_WALL_CHALLENGE",
+  "wave": "WAVE_1_TWO_BOUNDARY_RELATIONS",
+  "status": "PREREGISTERED_NOT_EXECUTED",
+  "boundary_arity": 2,
+  "structural_requirements": {
+    "exact_symmetry_group": "S_2",
+    "local_constraint_count_minimum": 1,
+    "boundary_count": 2,
+    "detector_discovery_not_required": "Challenge is a handling test, not a natural discovery test."
+  },
+  "opaque_public_specimen_ids": [
+    "CHAL_001",
+    "CHAL_002",
+    "CHAL_003",
+    "CHAL_004"
+  ],
+  "ground_truth_classes_sealed_before_constructor_execution": [
+    {
+      "class_id": "UNARY_POSITIVE_CONTROL",
+      "relation": "R(b1,b2)=b1",
+      "expected_factorization": "{1} x {0,1}",
+      "expected_semantically_nontrivial": true,
+      "expected_correlated": false
+    },
+    {
+      "class_id": "CONJUNCTION_CONTROL",
+      "relation": "R(b1,b2)=b1 AND b2",
+      "expected_factorization": "{1} x {1}",
+      "expected_semantically_nontrivial": true,
+      "expected_correlated": false
+    },
+    {
+      "class_id": "XOR_CORRELATED",
+      "relation": "R(b1,b2)=b1 XOR b2",
+      "expected_semantically_nontrivial": true,
+      "expected_correlated": true
+    },
+    {
+      "class_id": "XNOR_CORRELATED",
+      "relation": "R(b1,b2)=NOT(b1 XOR b2)",
+      "expected_semantically_nontrivial": true,
+      "expected_correlated": true
+    }
+  ],
+  "blindness_protocol": {
+    "constructor_receives": [
+      "opaque specimen id",
+      "sealed reduced CSP/public challenge bundle",
+      "frozen cell",
+      "frozen ordered boundary"
+    ],
+    "constructor_forbidden_from_receiving": [
+      "relation label",
+      "truth table",
+      "expected factorization class",
+      "expected correlation class",
+      "ground-truth mapping of opaque id to relation"
+    ],
+    "independent_checker_receives_ground_truth_after_candidate_output": true,
+    "candidate_source_filesystem_access_outside_declared_inputs_forbidden": true
+  },
+  "execution_order": {
+    "build_and_freeze_all_four_public_challenge_bundles_before_any_candidate_run": true,
+    "freeze_ground_truth_commitments_before_any_candidate_run": true,
+    "freeze_all_four_adapted_candidate_checker_implementations_before_any_candidate_run": true,
+    "no_result_dependent_mutation_between_specimens": true
+  },
+  "required_measurements": [
+    "exact semantic equality to ground truth",
+    "ORCSP vs direct truth table agreement",
+    "ROBDD vs direct truth table agreement",
+    "constructor boundary cube assignments enumerated",
+    "SAT solver invocations",
+    "ORCSP symbol count",
+    "ORCSP branch count",
+    "ROBDD live nonterminal nodes",
+    "ROBDD total operations",
+    "T_build",
+    "T_independent_verify"
+  ],
+  "verdicts": {
+    "mechanism_pass": "Exact relation recovered by frozen ORCSP/ROBDD and independently verified under frozen bounds.",
+    "exactness_failure": "FAIL_EXACT_REPRESENTATION_MISMATCH",
+    "bound_failure": "FAIL_CLOSURE_BLOWUP_OR_FROZEN_BOUND",
+    "harness_disagreement": "FAIL_INDEPENDENT_RECONCILIATION"
+  },
+  "claim_ceiling": "CONTROLLED_TWO_BOUNDARY_MECHANISM_CHALLENGE_ONLY__NO_NATURAL_PREVALENCE__NO_GENERAL_K__NO_COMPOSITION__NO_P_VS_NP_INFERENCE",
+  "future_escalation": "Any |B|>2, composition, new relation class, or altered representation requires a separate preregistered wave.",
+  "scientific_firewall": {
+    "phase_I_natural_evidence_unchanged": true,
+    "controlled_correlated_specimen_not_equal_natural_wall_discovery": true,
+    "POLYNOMIAL_BRIDGE": "NOT_PROVED",
+    "MULTI_INTERFACE_COMPOSITION": "NOT_PROVED",
+    "GENERAL_SAT_IN_P": "NOT_PROVED",
+    "P_VS_NP": "OPEN"
+  },
+  "repository_role": "JANUS_META_REGISTRY_PHASE_IIB_WAVE1_PREREGISTRATION"
+}
