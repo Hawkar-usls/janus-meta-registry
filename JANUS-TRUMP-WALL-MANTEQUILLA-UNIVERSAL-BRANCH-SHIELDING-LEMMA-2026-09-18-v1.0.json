@@ -1,0 +1,65 @@
+{
+  "artifact_id": "JANUS-TRUMP-WALL-MANTEQUILLA-UNIVERSAL-BRANCH-SHIELDING-LEMMA-2026-09-18-v1.0",
+  "version": "v1.0",
+  "date": "2026-09-18",
+  "title": "Internal-Cover Characterization of Universal-Branch Shielding",
+  "scope": "Any finite CNF local formula F_C(X_C,B_C) with a finite internal variable set C and boundary variable set B_C.",
+  "definitions": {
+    "local_formula": "F_C(X_C,B_C) = AND_{D in C_C} D",
+    "internal_projection_of_clause": "I_D(X_C) = OR of exactly those literals of D whose variables lie in C; the empty disjunction is FALSE.",
+    "internal_cover": "U_C(X_C) = AND_{D in C_C} I_D(X_C); the empty conjunction is TRUE.",
+    "residual_branch": "For a total internal assignment alpha:C->{0,1}, R_alpha(B_C)=F_C(alpha,B_C) after exact Boolean simplification.",
+    "existential_boundary_relation": "R_C(B_C)=OR_{alpha in {0,1}^{|C|}} R_alpha(B_C).",
+    "kappa_C": "If R_C is identically TRUE, kappa_C=min{|A|: A is a subset of internal assignments and OR_{alpha in A} R_alpha is identically TRUE}; otherwise kappa_C=INFINITY."
+  },
+  "theorem": {
+    "statement": "U_C is satisfiable iff there exists an internal assignment alpha such that R_alpha(B_C) is identically TRUE iff kappa_C=1.",
+    "corollary": "U_C satisfiable implies R_C is identically TRUE.",
+    "nonconverse_warning": "R_C identically TRUE does not imply U_C satisfiable in general; multiple non-universal residual branches may jointly cover the boundary cube (distributed shielding)."
+  },
+  "proof": {
+    "forward": [
+      "Assume U_C is satisfiable and let alpha satisfy U_C.",
+      "For every local clause D, alpha satisfies at least one literal of D whose variable lies in C, because alpha satisfies I_D.",
+      "Therefore each D is already TRUE after substituting alpha, independently of all boundary-variable values.",
+      "Hence F_C(alpha,B_C)=TRUE for every B_C, so R_alpha is identically TRUE.",
+      "Therefore a one-element set {alpha} covers the full boundary relation and kappa_C=1."
+    ],
+    "reverse": [
+      "Assume there exists alpha such that R_alpha(B_C) is identically TRUE.",
+      "Fix any local clause D. If alpha satisfied no internal literal of D, then after substituting alpha the residual of D would contain only boundary literals and could not be identically TRUE as a non-tautological CNF clause under all boundary assignments.",
+      "Therefore alpha satisfies at least one internal literal in every D.",
+      "Thus alpha satisfies every I_D and hence satisfies U_C.",
+      "Therefore U_C is satisfiable."
+    ],
+    "kappa_equivalence": [
+      "By definition kappa_C=1 exactly when one residual branch R_alpha alone is identically TRUE.",
+      "Combining this definition with the forward and reverse directions yields U_C in SAT iff exists alpha:R_alpha=TRUE iff kappa_C=1."
+    ]
+  },
+  "assumptions_and_edge_cases": {
+    "clauses_are_non_tautological_after_literal_normalization": true,
+    "duplicate_literals_irrelevant": true,
+    "empty_internal_projection_makes_U_C_unsatisfiable_for_that_clause": true,
+    "empty_local_clause_set_makes_U_C_TRUE_and_every_residual_branch_TRUE": true,
+    "finite_internal_variable_set_required_for_kappa_definition": true
+  },
+  "mechanistic_classes": {
+    "UNIVERSAL_BRANCH_SHIELDING": "U_C in SAT; equivalently kappa_C=1; necessarily R_C=TRUE.",
+    "NO_UNIVERSAL_BRANCH": "U_C in UNSAT; equivalently no single R_alpha is TRUE.",
+    "DISTRIBUTED_SHIELDING": "U_C in UNSAT and R_C=TRUE, so kappa_C>1.",
+    "SEMANTIC_SIGNAL": "R_C is neither TRUE nor FALSE.",
+    "TRIVIAL_FALSE": "R_C=FALSE."
+  },
+  "routing_governance": {
+    "theorem_itself_does_not_retroactively_change_old_eligibility": true,
+    "any_future_use_of_U_C_as_a_gate_requires_separate_preregistration": true,
+    "kappa_remains_posthoc_for_completed_experiments": true
+  },
+  "scientific_firewall": {
+    "theorem_does_not_establish_frequency_in_random_SAT": true,
+    "theorem_does_not_prove_polynomial_bridge": true,
+    "theorem_does_not_prove_general_SAT_in_P": true,
+    "P_VS_NP": "OPEN"
+  }
+}
