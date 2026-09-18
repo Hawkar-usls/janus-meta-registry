@@ -1,0 +1,110 @@
+{
+  "artifact_id": "JANUS-TRUMP-WALL-MANTEQUILLA-UNSEEN-LADDER-EXTENSION-PREREG-V2-2026-09-18",
+  "version": "v2.0",
+  "date": "2026-09-18",
+  "purpose": "Govern any continuation after completion of the original preregistered UUF100→UUF250 unseen-family ladder without outcome-driven family selection.",
+  "prior_phase": {
+    "status": "OLD_PREREGISTERED_LADDER_COMPLETE",
+    "terminal_family": "UUF250.1065.100",
+    "terminal_result_commit": "1798cefbf3cd9f72dfa7330f0e83752f86bbb716",
+    "terminal_result_blob": "f7cbfe579bc6c683fbe7522dcf0fbc6d1bd7aeba",
+    "terminal_outcome": "PASS_STRUCTURAL_CENSUS_ZERO_ELIGIBLE_CELLS",
+    "no_semantically_nontrivial_specimen_observed": true,
+    "no_correlated_specimen_observed": true
+  },
+  "metadata_only_family_authority": {
+    "repository": "prokls/cnf-files-download",
+    "commit": "c867707b2e265c700cb90810104081a14133cc7e",
+    "download_manifest_path": "SATlib/01_download.sh",
+    "download_manifest_blob": "d4064db3eea93c67af47750c1ac4765397b2120f",
+    "decompress_manifest_path": "SATlib/02_decompress.sh",
+    "decompress_manifest_blob": "93834179f358875d7996c80c2782e898b9b386b0",
+    "canonical_uuf_families": [
+      "UUF50.218.100",
+      "UUF75.325.100",
+      "UUF100.430.100",
+      "UUF125.538.100",
+      "UUF150.645.100",
+      "UUF175.753.100",
+      "UUF200.860.100",
+      "UUF225.960.100",
+      "UUF250.1065.100"
+    ],
+    "family_selection_information_used": [
+      "family names",
+      "variable counts",
+      "clause counts",
+      "archive presence",
+      "archive SHA metadata"
+    ],
+    "cnf_content_inspected_for_extension_selection": false,
+    "detector_outputs_used_for_extension_selection": false,
+    "semantic_outputs_used_for_extension_selection": false
+  },
+  "proposed_v2_family_rule": {
+    "rule": "Select canonical UUF families with variable_count > 250 in strictly increasing variable_count order from the frozen metadata authority.",
+    "panel_size_per_family": 20,
+    "deterministic_panel_rule": "instances 001..020",
+    "missing_size_rule": "skip absent sizes; select next available canonical UUF family by public metadata only",
+    "finite_stop_rule": "Stop after the first 4 qualifying canonical UUF families or at variable_count 400, whichever occurs first.",
+    "resource_policy": {
+      "per_family_scientific_logic_frozen": true,
+      "if_resource_limit_prevents_complete_frozen_census": "UNKNOWN_RESOURCE_LIMIT",
+      "no_panel_shortening": true,
+      "no_detector_retuning": true,
+      "no_selective_source_skipping": true,
+      "no_semantic_peek": true
+    }
+  },
+  "frozen_scientific_mechanism": {
+    "detector": "UNCHANGED",
+    "exact_checker": "UNCHANGED",
+    "eligibility_formula": "m_local(C)>0 AND |B_C|>=2",
+    "panel_size": 20,
+    "semantic_prefilter": false,
+    "existential_survival_not_in_eligibility": true,
+    "Mantequilla": "UNCHANGED",
+    "representation_languages": [
+      "OR_OF_CANONICAL_RESIDUAL_CSP_BRANCHES",
+      "CANONICAL_ROBDD"
+    ],
+    "constructor_sat_calls": 0,
+    "constructor_boundary_cube_enumeration": 0,
+    "independent_checker_small_boundary_microscope_only": true
+  },
+  "metadata_resolution": {
+    "qualifying_canonical_uuf_families_above_250": [],
+    "count": 0,
+    "resolution": "NO_AUTHORIZED_LARGER_CANONICAL_UUF_FAMILY_IN_FROZEN_METADATA",
+    "next_family": "NOT_YET_AUTHORIZED",
+    "v2_execution_status": "EMPTY_EXTENSION__NO_FAMILY_RUN_AUTHORIZED"
+  },
+  "interpretation": {
+    "statement": "The original canonical UUF ladder is exhausted at UUF250 under the frozen metadata authority. Continuing with UUF275/UUF300/etc would invent non-authoritative families. Continuing with UUF250 instances 021..100 would be a different depth-extension experiment and requires a separate preregistration.",
+    "structural_negative_not_mantequilla_failure": true
+  },
+  "separate_future_phase_candidates": {
+    "uuf250_depth_extension": {
+      "status": "NOT_PREREGISTERED_HERE",
+      "possible_panels": [
+        "021..040",
+        "041..060",
+        "061..080",
+        "081..100"
+      ],
+      "note": "Same family size; changes sampling depth, not variable-count ladder."
+    },
+    "non_uuf_benchmark_extension": {
+      "status": "NOT_PREREGISTERED_HERE",
+      "note": "Different benchmark family/distribution; requires separate comparability and selection governance."
+    }
+  },
+  "scientific_firewall": {
+    "FIRST_SEMANTICALLY_NONTRIVIAL_BOUNDARY_SPECIMEN": "NOT_YET_FOUND",
+    "FIRST_GENUINE_CORRELATED_WALL_SPECIMEN": "NOT_YET_FOUND",
+    "POLYNOMIAL_BRIDGE": "NOT_PROVED",
+    "GENERAL_SAT_IN_P": "NOT_PROVED",
+    "P_VS_NP": "OPEN"
+  },
+  "repository_role": "JANUS_META_REGISTRY_GOVERNANCE_PREREGISTRATION"
+}
