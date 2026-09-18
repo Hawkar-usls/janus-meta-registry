@@ -1,0 +1,168 @@
+{
+  "artifact_id": "JANUS-TRUMP-WALL-MANTEQUILLA-UUF100-001-020-ACTIVE-EXACT-SYMMETRY-PANEL-RESERVATION-2026-09-18-v1.0",
+  "version": "v1.0",
+  "date": "2026-09-18",
+  "branch": "research/TRUMP_WALL-MANTEQUILLA-unseen-UUF100-active-eligibility-2026-09-18",
+  "parent_frontier": "TRUMP_WALL",
+  "program": "MANTEQUILLA_EXACT_CLOSURE_BRIDGE",
+  "experiment_class": "FRESH_UNSEEN_STRUCTURAL_CENSUS_THEN_CONDITIONAL_MANTEQUILLA",
+  "prior_selection_provenance": "UUF100.430.1000 was identified as the next qualitatively different family before UF150/UF250 outcomes and before the active/null symmetry distinction was learned.",
+  "family": {
+    "name": "SATLIB UUF100.430.1000",
+    "expected_shape": {
+      "variables": 100,
+      "clauses": 430,
+      "cnf": "3-CNF",
+      "known_family_label": "UNSAT"
+    },
+    "canonical_archive_url": "http://www.cs.ubc.ca/~hoos/SATLIB/Benchmarks/SAT/RND3SAT/uuf100-430.tar.gz",
+    "archive_sha1_authority": {
+      "repository": "prokls/cnf-files-download",
+      "commit": "c867707b2e265c700cb90810104081a14133cc7e",
+      "path": "SATlib/uuf100-430.tar.gz.sha1",
+      "sha1": "cbfb5729045f50efa839a1395a7c9449b01ba698"
+    },
+    "download_recipe_authority": {
+      "repository": "prokls/cnf-files-download",
+      "commit": "c867707b2e265c700cb90810104081a14133cc7e",
+      "path": "SATlib/01_download.sh"
+    }
+  },
+  "panel": {
+    "deterministic_rule": "Use numeric SATLIB instances 1 through 20 inclusive; no replacement based on structural or Mantequilla outcomes.",
+    "files": [
+      "uuf100-01.cnf",
+      "uuf100-02.cnf",
+      "uuf100-03.cnf",
+      "uuf100-04.cnf",
+      "uuf100-05.cnf",
+      "uuf100-06.cnf",
+      "uuf100-07.cnf",
+      "uuf100-08.cnf",
+      "uuf100-09.cnf",
+      "uuf100-010.cnf",
+      "uuf100-011.cnf",
+      "uuf100-012.cnf",
+      "uuf100-013.cnf",
+      "uuf100-014.cnf",
+      "uuf100-015.cnf",
+      "uuf100-016.cnf",
+      "uuf100-017.cnf",
+      "uuf100-018.cnf",
+      "uuf100-019.cnf",
+      "uuf100-020.cnf"
+    ],
+    "panel_size": 20,
+    "structure_inspected_before_reservation": false,
+    "residual_semantics_inspected_before_reservation": false
+  },
+  "frozen_preprocessing": {
+    "projection_blob": "2ef48e73974a5f43d3f4fb4809ebd0c09c0f5be4",
+    "one_round_generic_pendant_blob": "9ec365ae27a6caa7b936cd33040e542f183ded99",
+    "reduction_rounds_per_source": 1,
+    "iterated_peeling_forbidden": true
+  },
+  "detector_grammar": {
+    "wl_blob": "6b697fd8b3de4c83f8226b06399b6bad99953d4e",
+    "exact_transposition_reference_blob": "a076cfc56d68aad0348415e313705da1f6b9cdcd",
+    "candidate_cell_rule": "A nontrivial variable class C must appear identically in frozen 1-WL and frozen 2-WL diagonal partitions of the reduced CSP.",
+    "exact_cell_rule": "Let r=min(C). Check only the star generators (r,v) for every v in C\\{r}; C is DETECTED_EXACT iff every frozen direct exact transposition check is TRUE.",
+    "detector_claim_ceiling": "This is a preregistered detector for this census, not a completeness theorem for exact symmetry.",
+    "no_sat_solver": true,
+    "no_ground_truth_for_detection": true,
+    "no_posthoc_thresholds": true
+  },
+  "structural_taxonomy": {
+    "NULL_EXACT_SYMMETRY": "DETECTED_EXACT and local_constraint_count = 0",
+    "ACTIVE_SINGLETON_BOUNDARY": "DETECTED_EXACT and local_constraint_count > 0 and boundary_variable_count < 2",
+    "ACTIVE_EXACT_SYMMETRY_ELIGIBLE": "DETECTED_EXACT and local_constraint_count > 0 and boundary_variable_count >= 2",
+    "eligibility_formula": "Eligible(F,C,S) iff m_local(C)>0 AND |B_C|>=2"
+  },
+  "census_denominators": {
+    "required": [
+      "N_sources",
+      "N_detected_cells",
+      "N_null_cells",
+      "N_active_cells",
+      "N_boundary_ge2_cells",
+      "N_Mantequilla_routed_cells"
+    ],
+    "additional": [
+      "N_cells_k2",
+      "N_cells_k3",
+      "N_cells_k_gt3",
+      "N_eligible_current_mechanism_k2_or_k3",
+      "N_eligible_unsupported_k_gt3"
+    ],
+    "no_stop_after_first_eligible": true,
+    "all_20_sources_must_finish_structural_census_before_any_Mantequilla_result_is_interpreted": true
+  },
+  "mantequilla_routing": {
+    "representation_languages_frozen": [
+      "OR_OF_CANONICAL_RESIDUAL_CSP_ORBIT_BRANCHES",
+      "CANONICAL_ROBDD with ascending numeric boundary-variable order"
+    ],
+    "current_mechanism_supported_cell_sizes": [
+      2,
+      3
+    ],
+    "route_rule": "After the full structural census is frozen, route every ACTIVE_EXACT_SYMMETRY_ELIGIBLE cell with |C| in {2,3}; do not route or silently discard eligible cells with |C|>3—record them as unsupported by the current mechanism.",
+    "semantic_preselection_forbidden": [
+      "R_C == TRUE/FALSE",
+      "unary factorization",
+      "BDD size",
+      "correlation score",
+      "number of satisfying boundary assignments",
+      "any residual branch semantics"
+    ]
+  },
+  "post_freeze_mantequilla_verdicts": [
+    "PASS_NONTRIVIAL_CORRELATED_BRIDGE",
+    "FAIL_TRIVIAL_ESCAPE",
+    "FAIL_UNARY_FACTORIZATION",
+    "FAIL_CLOSURE_BLOWUP",
+    "FAIL_NONLOCAL_INFORMATION_REQUIRED",
+    "UNKNOWN_RESOURCE_LIMIT"
+  ],
+  "diagnostic_subclassification": {
+    "FAIL_TRIVIAL_ESCAPE": [
+      "R_C_TRUE",
+      "R_C_FALSE"
+    ],
+    "FAIL_UNARY_FACTORIZATION": [
+      "R_C_NONTRIVIAL_BUT_PRODUCT_OF_UNARY_PROJECTIONS"
+    ],
+    "PASS_NONTRIVIAL_CORRELATED_BRIDGE": [
+      "R_C_CORRELATED"
+    ]
+  },
+  "canonical_progression": "UNSEEN_PANEL -> DETECT -> STRUCTURAL_ELIGIBILITY -> FREEZE_CENSUS -> EXACT_R_C -> NONTRIVIALITY -> REPRESENT -> VERIFY",
+  "first_genuine_wall_rule": "The first cell with an independently verified nonconstant boundary relation that differs from the product of its unary projections is named FIRST_GENUINE_WALL_SPECIMEN. No representation-language retuning is allowed before its frozen result.",
+  "a_b_after_first_genuine_wall": {
+    "enabled": true,
+    "only_after_frozen_correlated_specimen": true,
+    "compare": [
+      "Q_old",
+      "M_ORCSP",
+      "M_ROBDD"
+    ],
+    "measures": [
+      "representation_size",
+      "T_build",
+      "T_verify",
+      "exact_equivalence"
+    ],
+    "composition_not_started_yet": true
+  },
+  "scientific_firewall": {
+    "no_family_replacement_after_reservation": true,
+    "no_source_replacement_after_reservation": true,
+    "no_retuning_until_first_genuine_wall_result": true,
+    "finite_panel_not_general": true,
+    "GENERAL_K_CLASS": "NOT_PROVED",
+    "MULTI_INTERFACE_COMPOSITION": "NOT_PROVED",
+    "GENERAL_SAT_IN_P": "NOT_PROVED",
+    "P_VS_NP": "OPEN"
+  },
+  "repository_role": "JANUS_META_REGISTRY_FRESH_PANEL_RESERVATION"
+}
