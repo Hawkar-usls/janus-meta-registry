@@ -1,7 +1,7 @@
 {
   "artifact_id": "JANUS_P_VS_NP_R5_E8_FRONTIER_CHECKPOINT_2026-09-22_v1.0",
   "date": "2026-09-22",
-  "version": "1.0",
+  "version": "1.1",
   "authority": "META_REGISTRY_ANTI_LOOP_CHECKPOINT__MIRRORS_FUNDAMENTUM_DRAFT_LINEAGE",
   "project": "P vs NP / Janus-Fundamentum / R5 E8",
   "source_repository": {
@@ -12,7 +12,11 @@
     "frontier_checkpoint_commit": "7a2cc113afcece41392e2975b9b944ea8622406c",
     "roadmap_commit": "87d700e18833949020b456a321b5df9cb69fdc9c",
     "frontier_checkpoint_path": "registry/R5_B1B1C5B2B2_E8_FRONTIER_CHECKPOINT_2026-09-22_v1.0.json",
-    "roadmap_path": "docs/TRUMP_DEVELOPMENT_JOURNAL_ENTRIES/2026-09-22_R5_E8_PNP_FRONTIER_ROADMAP.md"
+    "roadmap_path": "docs/TRUMP_DEVELOPMENT_JOURNAL_ENTRIES/2026-09-22_R5_E8_PNP_FRONTIER_ROADMAP.md",
+    "net_charge_theorem_path": "research/R5_B1B1C5B2B2_E8_NET_PROJECTION_CHARGE_AND_STEP0_THEOREM_2026-09-22_v1.0.json",
+    "net_charge_theorem_commit": "c080d68289ff174da8b184e5799e84fc852166b0",
+    "frontier_update_commit": "d7c65fa19979d90f109a12c0331936acf725680d",
+    "roadmap_update_commit": "6f12a93f725c63f30f7013446c7a1ff67b77ae09"
   },
   "scientific_state": {
     "P_VS_NP": "OPEN",
@@ -61,6 +65,18 @@
       "status": "PROVED_SCOPED",
       "scope": "m=2^r>=4; odd-selector prefixes while even selector anchors remain unresolved",
       "consequence": "t odd-selector projections => >=2^t reachable structural branch-root refs"
+    },
+    {
+      "id": "NET_PROJECTION_CHARGE_IDENTITY",
+      "status": "PROVED",
+      "scope": "frozen executor",
+      "statement": "cost(v)=N+A_v-sigma_v-kappa_v; greedy primary charge is E_v=A_v-sigma_v-kappa_v within a fixed state."
+    },
+    {
+      "id": "POWER_OF_TWO_STEP0_SELECTOR",
+      "status": "PROVED",
+      "scope": "all m=2^r>=4 in cyclic shared-payload family",
+      "statement": "Every selector beats every payload at step0; x1 is selected by id tie-break."
     }
   ],
   "power_of_two_family": {
@@ -109,28 +125,33 @@
     }
   },
   "true_open_core": {
-    "theorem": "R5_E8_ODD_SELECTOR_GREEDY_PREFIX_THEOREM_V1",
-    "claim": "For every m=2^r>=4, the frozen exact greedy projector selects all m/2 odd selector variables before any payload variable.",
-    "proof_goal": "For every odd-prefix state S_t, min unresolved odd-selector key < min payload key under lexicographic key (projected_reachable_nodes, cone_size, variable_id).",
+    "theorem": "R5_E8_ODD_PREFIX_NET_CHARGE_THEOREM_V1",
+    "claim": "For every odd-only prefix state before all odd selectors are removed, there exists an unresolved odd selector o with (E_o,A_o,o) lexicographically smaller than every payload (E_z,A_z,z).",
+    "definitions": {
+      "E_v": "A_v-sigma_v-kappa_v",
+      "sigma_v": "(2A_v+1)-number_of_new_reachable_trial_nodes",
+      "kappa_v": "old v-independent reachable nodes removed by projection"
+    },
+    "reduced_route": [
+      "prove kappa_payload=0",
+      "do not require kappa_odd=0 because positive kappa_odd helps the selector",
+      "prove A_z-A_o >= sigma_z-sigma_o for a suitable unresolved odd selector against the minimum payload competitor",
+      "resolve E ties by A_o<A_z; full E/A ties favor selector ids"
+    ],
+    "step0": "CLOSED",
     "if_proved": [
-      "t=m/2",
+      "all m/2 odd selectors precede payload",
       "Peak(F_m)>=2^(m/2)",
       "with L=O(m log m), Peak>=2^(Omega(L/log L))",
-      "the exact frozen greedy universal polynomial-peak theorem is falsified"
-    ],
-    "if_falsified": [
-      "record first symbolic payload winner",
-      "identify structural cause",
-      "do not infer P vs NP",
-      "do not reopen audited AIG mechanics"
+      "the exact frozen greedy polynomial-peak theorem is falsified"
     ]
   },
   "authorized_next_work": [
-    "derive exact odd-prefix state normal form",
-    "derive odd-selector projected-size and cone recurrence",
-    "derive payload projected-size/cone lower bounds or exact recurrence",
-    "compare every competitor including tie-breaks",
-    "promote only with arbitrary-n proof"
+    "prove or falsify R5_E8_ODD_PREFIX_NET_CHARGE_THEOREM_V1",
+    "derive payload kappa=0 or exact counterexample",
+    "derive local cone-vs-saving inequalities",
+    "no full N_t counting unless necessary",
+    "no amplifier or new family work"
   ],
   "forbidden_until_gate_resolves": [
     "new representation hunt",
