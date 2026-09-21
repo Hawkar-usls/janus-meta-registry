@@ -1,0 +1,145 @@
+{
+  "artifact_id": "JANUS_P_VS_NP_R5_E8_FRONTIER_CHECKPOINT_2026-09-22_v1.0",
+  "date": "2026-09-22",
+  "version": "1.0",
+  "authority": "META_REGISTRY_ANTI_LOOP_CHECKPOINT__MIRRORS_FUNDAMENTUM_DRAFT_LINEAGE",
+  "project": "P vs NP / Janus-Fundamentum / R5 E8",
+  "source_repository": {
+    "name": "Hawkar-usls/Janus-Fundamentum",
+    "pull_request": 510,
+    "branch": "codex/r5-e8-direct-contract-20260921-82493a57",
+    "base_main": "82493a57d05cd186b0c119e5fcc3b416649e7860",
+    "frontier_checkpoint_commit": "7a2cc113afcece41392e2975b9b944ea8622406c",
+    "roadmap_commit": "87d700e18833949020b456a321b5df9cb69fdc9c",
+    "frontier_checkpoint_path": "registry/R5_B1B1C5B2B2_E8_FRONTIER_CHECKPOINT_2026-09-22_v1.0.json",
+    "roadmap_path": "docs/TRUMP_DEVELOPMENT_JOURNAL_ENTRIES/2026-09-22_R5_E8_PNP_FRONTIER_ROADMAP.md"
+  },
+  "scientific_state": {
+    "P_VS_NP": "OPEN",
+    "D1": "NOT_ADMITTED",
+    "GENERAL_SAT_IN_P": "NOT_PROVED",
+    "current_e8_object": "FROZEN_STRUCTURAL_AIG_EXACT_GREEDY",
+    "current_theorem_target": "R5_E8_ODD_SELECTOR_GREEDY_PREFIX_THEOREM_V1"
+  },
+  "anti_duplication_rule": "Before opening any new P/NP/E8 gate, inspect this checkpoint, the linked Fundamentum roadmap, and the E8 AIG anti-duplication source audit.",
+  "do_not_rediscover": {
+    "external": [
+      "Shannon cofactor projection f|0 OR f|1",
+      "AIG/circuit existential quantification",
+      "structural hashing / strashing",
+      "AIG quantifier scheduling",
+      "one-step size-aware greedy scheduling",
+      "BDD/FRAIG/SAT sweeping compaction"
+    ],
+    "internal": [
+      "C023 exact residual/cache DAG",
+      "C023R serial-diamond multiplicity skeleton",
+      "U1 coordinate-observable 2^k distinguishability skeleton",
+      "factorized feedback-interface portfolio",
+      "guarded bounded-output elimination",
+      "semantic irrelevance != syntactic disappearance correction"
+    ]
+  },
+  "closed_or_scoped_results": [
+    {
+      "id": "LOCAL_SELECTOR_POLY",
+      "status": "PROVED",
+      "scope": "polynomial in current live DAG size"
+    },
+    {
+      "id": "FINITE_GREEDY_MYOPIA",
+      "status": "CONFIRMED_EXECUTOR_DIAGNOSTIC",
+      "scope": "finite signed 2-CNF only"
+    },
+    {
+      "id": "BALANCED_TREE_CARRY_BOUNDARY",
+      "status": "PROVED_TREE_SHAPE",
+      "scope": "frozen balanced builder"
+    },
+    {
+      "id": "ODD_SELECTOR_BRANCH_INJECTIVITY",
+      "status": "PROVED_SCOPED",
+      "scope": "m=2^r>=4; odd-selector prefixes while even selector anchors remain unresolved",
+      "consequence": "t odd-selector projections => >=2^t reachable structural branch-root refs"
+    }
+  ],
+  "power_of_two_family": {
+    "m": "2^r",
+    "formula": "AND_i ((x_i OR z_i OR NOT z_{i+1}) AND (NOT x_i OR z_{i+2} OR NOT z_{i+3}))",
+    "encoded_length": "O(m log m)",
+    "current_finite_pattern": {
+      "m4": [
+        1,
+        3
+      ],
+      "m8": [
+        1,
+        7,
+        3,
+        5
+      ],
+      "m16": [
+        1,
+        15,
+        5,
+        9,
+        3,
+        11,
+        7,
+        13
+      ],
+      "m32_diagnostic": [
+        1,
+        31,
+        9,
+        17,
+        7,
+        21,
+        15,
+        25,
+        19,
+        3,
+        11,
+        27,
+        5,
+        23,
+        13,
+        29
+      ]
+    }
+  },
+  "true_open_core": {
+    "theorem": "R5_E8_ODD_SELECTOR_GREEDY_PREFIX_THEOREM_V1",
+    "claim": "For every m=2^r>=4, the frozen exact greedy projector selects all m/2 odd selector variables before any payload variable.",
+    "proof_goal": "For every odd-prefix state S_t, min unresolved odd-selector key < min payload key under lexicographic key (projected_reachable_nodes, cone_size, variable_id).",
+    "if_proved": [
+      "t=m/2",
+      "Peak(F_m)>=2^(m/2)",
+      "with L=O(m log m), Peak>=2^(Omega(L/log L))",
+      "the exact frozen greedy universal polynomial-peak theorem is falsified"
+    ],
+    "if_falsified": [
+      "record first symbolic payload winner",
+      "identify structural cause",
+      "do not infer P vs NP",
+      "do not reopen audited AIG mechanics"
+    ]
+  },
+  "authorized_next_work": [
+    "derive exact odd-prefix state normal form",
+    "derive odd-selector projected-size and cone recurrence",
+    "derive payload projected-size/cone lower bounds or exact recurrence",
+    "compare every competitor including tie-breaks",
+    "promote only with arbitrary-n proof"
+  ],
+  "forbidden_until_gate_resolves": [
+    "new representation hunt",
+    "new selector design",
+    "new broad literature inventory",
+    "semantic equivalence oracle",
+    "FRAIG/SAT sweeping theorem path",
+    "transfer of OBDD/resolution lower bounds without simulation",
+    "P=NP or P!=NP promotion from finite evidence"
+  ],
+  "roadmap_ref": "registry/p_vs_np/JANUS_P_VS_NP_R5_E8_RESEARCH_ROADMAP_2026-09-22_v1.0.json"
+}
