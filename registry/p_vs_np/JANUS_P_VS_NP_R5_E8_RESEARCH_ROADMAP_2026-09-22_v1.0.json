@@ -1,7 +1,7 @@
 {
   "artifact_id": "JANUS_P_VS_NP_R5_E8_RESEARCH_ROADMAP_2026-09-22_v1.0",
   "date": "2026-09-22",
-  "version": "1.0",
+  "version": "1.1",
   "authority": "META_REGISTRY_ROADMAP__ANTI_LOOP__NO_D1_PROMOTION",
   "mirrors": {
     "repository": "Hawkar-usls/Janus-Fundamentum",
@@ -69,16 +69,18 @@
       "result": "t odd-selector projections imply >=2^t reachable distinct nonconstant noncomplement branch-root refs."
     },
     {
-      "phase": "6_ODD_SELECTOR_SCHEDULER_THEOREM",
-      "status": "CURRENT_OPEN_CORE",
-      "theorem": "R5_E8_ODD_SELECTOR_GREEDY_PREFIX_THEOREM_V1",
-      "claim": "For every m=2^r>=4, all m/2 odd selectors are selected before any payload variable.",
+      "phase": "6_NET_CHARGE_SCHEDULER_THEOREM",
+      "status": "CURRENT_OPEN_CORE_AFTER_STEP0",
+      "theorem": "R5_E8_ODD_PREFIX_NET_CHARGE_THEOREM_V1",
+      "closed_subresult": "R5_E8_POWER_OF_TWO_STEP0_SELECTOR_THEOREM_V1",
+      "identity": "cost(v)=N+A_v-sigma_v-kappa_v; compare (E_v,A_v,id) with E_v=A_v-sigma_v-kappa_v",
       "proof_program": [
-        "A: derive exact live-DAG normal form after arbitrary odd-selector prefix",
-        "B: derive best unresolved odd-selector projected-size/cone key",
-        "C: derive lower bound or exact recurrence for every payload key",
-        "D: prove min_odd_selector_key < min_payload_key for every prefix length 0<=t<m/2",
-        "E: include exact cone-size and variable-id tie-breaks on projected-size ties"
+        "A: prove payload kappa=0 on the odd-prefix state class or find the first symbolic counterexample",
+        "B: derive local sigma profiles without counting full projected DAG size",
+        "C: for the minimum payload competitor construct a suitable unresolved odd selector o",
+        "D: prove A_z-A_o >= sigma_z-sigma_o",
+        "E: on E ties prove A_o<A_z; full E/A ties favor selector ids",
+        "F: iterate for every prefix 0<=t<m/2"
       ]
     },
     {
@@ -125,10 +127,12 @@
     "until_phase6_resolves": [
       "NO new representation hunt",
       "NO new selector",
-      "NO broad new literature sweep",
-      "NO semantic-equivalence simplifier",
+      "NO new family",
+      "NO amplifier re-analysis",
+      "NO broad literature sweep",
+      "NO full N_t counting unless the local net-charge route fails",
       "NO finite-run asymptotic promotion"
     ]
   },
-  "one_line_frontier": "Prove or falsify, for m=2^r, that every one of the m/2 odd selectors beats every payload variable under the exact frozen greedy key before any payload is selected."
+  "one_line_frontier": "Step0 is proved. Now prove or falsify, on every later odd-only prefix for m=2^r, that some unresolved odd selector has smaller net projection charge than every payload, using E=A-sigma-kappa."
 }
