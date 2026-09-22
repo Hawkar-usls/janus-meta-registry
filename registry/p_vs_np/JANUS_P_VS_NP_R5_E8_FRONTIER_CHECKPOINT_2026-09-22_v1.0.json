@@ -1,7 +1,7 @@
 {
   "artifact_id": "JANUS_P_VS_NP_R5_E8_FRONTIER_CHECKPOINT_2026-09-22_v1.0",
   "date": "2026-09-22",
-  "version": "1.5",
+  "version": "2.0",
   "authority": "META_REGISTRY_ANTI_LOOP_CHECKPOINT__MIRRORS_FUNDAMENTUM_DRAFT_LINEAGE",
   "project": "P vs NP / Janus-Fundamentum / R5 E8",
   "source_repository": {
@@ -29,14 +29,18 @@
     "postmortem_commit": "9f6e47f61b15a91845524bf29e53d63181435e05",
     "postmortem_path": "research/R5_B1B1C5B2B2_E8_FROZEN_GREEDY_POSTMORTEM_2026-09-22_v1.0.md",
     "dual_blowup_synthesis_path": "research/R5_B1B1C5B2B2_E8_DUAL_BLOWUP_SURVIVOR_SOURCE_HISTORY_SYNTHESIS_2026-09-22_v1.0.md",
-    "dual_blowup_synthesis_commit": "4746da4533c8bd5abb3197483f948b4662e05e76"
+    "dual_blowup_synthesis_commit": "4746da4533c8bd5abb3197483f948b4662e05e76",
+    "falsification_theorem_path": "research/R5_B1B1C5B2B2_E8_ODD_SELECTOR_GREEDY_PREFIX_AND_PEAK_FALSIFICATION_2026-09-22_v1.0.md",
+    "falsification_theorem_commit": "d8bc43863169b812fbd90a5d34bb442ab965b399",
+    "falsification_result_path": "registry/R5_B1B1C5B2B2_E8_FROZEN_GREEDY_PEAK_FALSIFICATION_RESULT_2026-09-22_v1.0.json",
+    "falsification_result_commit": "8b48cc9281db5384c9a13dc199a115f8eac0b465"
   },
   "scientific_state": {
     "P_VS_NP": "OPEN",
     "D1": "NOT_ADMITTED",
     "GENERAL_SAT_IN_P": "NOT_PROVED",
-    "current_e8_object": "FROZEN_STRUCTURAL_AIG_EXACT_GREEDY__FALSIFIED_AS_D1_CANDIDATE",
-    "current_theorem_target": "R5_E8_ODD_SELECTOR_GREEDY_PREFIX_THEOREM_V1"
+    "current_e8_object": "FROZEN_STRUCTURAL_AIG_EXACT_GREEDY__REJECTED",
+    "current_theorem_target": "NONE__CANDIDATE_CLOSED_NEGATIVE"
   },
   "anti_duplication_rule": "Before opening any new P/NP/E8 gate, inspect this checkpoint, the linked Fundamentum roadmap, and the E8 AIG anti-duplication source audit.",
   "do_not_rediscover": {
@@ -127,6 +131,19 @@
       "status": "PROVED_SYMBOLICALLY",
       "scope": "exact frozen structural-only greedy selector",
       "consequence": "Peak(F_m)>=2^(m/2)=2^(Omega(L/log L))"
+    },
+    {
+      "id": "ORPHAN_PAYLOAD_BARRIER",
+      "status": "PROVED"
+    },
+    {
+      "id": "EVEN_SELECTOR_BARRIER",
+      "status": "PROVED"
+    },
+    {
+      "id": "FROZEN_GREEDY_PEAK_COUNTERFAMILY",
+      "status": "PROVED",
+      "scope": "m=2^r cyclic family; Peak>=2^(m/2)=2^(Omega(L/log L))"
     }
   ],
   "power_of_two_family": {
@@ -175,31 +192,21 @@
     }
   },
   "true_open_core": {
-    "status": "NO_OPEN_ALGORITHM_CORE",
-    "successor": "LOCKED",
-    "source_history_verdict": {
-      "known_dual_blowup_survivor": "ECNF",
-      "ecfn_terminal_consistency": "NP_COMPLETE",
-      "eadt_forgetting": "NOT_POLY_UNLESS_P_EQUALS_NP",
-      "affor_positive_control": "POLY_CO_FO_BOUNDED_CONJUNCTION",
-      "audited_language_closing_all_gates": "NONE_FOUND"
-    },
-    "only_legitimate_question": "Find a known poly-recognizable, compositionally discoverable, projection-preserved tractable invariant inside an ECNF-like mixed affine+clausal language; no new compiler design until such invariant survives source/history audit."
+    "theorem": "NONE_FOR_FROZEN_GREEDY",
+    "status": "CLOSED_NEGATIVE",
+    "next": "POSTMORTEM_AND_SUCCESSOR_GAP_ANALYSIS_ONLY",
+    "P_VS_NP": "OPEN"
   },
   "authorized_next_work": [
-    "source-bound tractable-invariant inventory only",
-    "audit known mixed affine+clausal tractable subclasses",
-    "for each candidate record first failing obligation among entry, recognition, preservation, forgetting, consistency, construction size/time, no-oracle",
-    "do not open successor algorithm"
+    "identify exact missing operation that would compress the elementary selector projection",
+    "compare that operation against prior-art FRAIG/BDD/SAT sweeping and internal factorized/guarded routes",
+    "open no successor algorithm until anti-duplication/source audit is satisfied"
   ],
   "forbidden_until_gate_resolves": [
-    "new representation hunt",
-    "new selector design",
-    "new broad literature inventory",
-    "semantic equivalence oracle",
-    "FRAIG/SAT sweeping theorem path",
-    "transfer of OBDD/resolution lower bounds without simulation",
-    "P=NP or P!=NP promotion from finite evidence"
+    "reopen frozen exact greedy candidate",
+    "relabel AIG quantifier scheduling as novelty",
+    "claim this counterfamily proves P!=NP",
+    "transfer the lower bound to all AIG QE or all SAT"
   ],
   "roadmap_ref": "registry/p_vs_np/JANUS_P_VS_NP_R5_E8_RESEARCH_ROADMAP_2026-09-22_v1.0.json"
 }
