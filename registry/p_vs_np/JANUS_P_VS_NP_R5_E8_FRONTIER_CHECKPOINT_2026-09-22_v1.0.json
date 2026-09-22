@@ -1,7 +1,7 @@
 {
   "artifact_id": "JANUS_P_VS_NP_R5_E8_FRONTIER_CHECKPOINT_2026-09-22_v1.0",
   "date": "2026-09-22",
-  "version": "1.4",
+  "version": "1.5",
   "authority": "META_REGISTRY_ANTI_LOOP_CHECKPOINT__MIRRORS_FUNDAMENTUM_DRAFT_LINEAGE",
   "project": "P vs NP / Janus-Fundamentum / R5 E8",
   "source_repository": {
@@ -27,7 +27,9 @@
     "scope_repair_commit": "2de5bd569514168454f64a23aaa1d2c8ea0f1f1e",
     "audit_commit": "ef2d6e2184ce09accd50fed0cb9f5d43752b9788",
     "postmortem_commit": "9f6e47f61b15a91845524bf29e53d63181435e05",
-    "postmortem_path": "research/R5_B1B1C5B2B2_E8_FROZEN_GREEDY_POSTMORTEM_2026-09-22_v1.0.md"
+    "postmortem_path": "research/R5_B1B1C5B2B2_E8_FROZEN_GREEDY_POSTMORTEM_2026-09-22_v1.0.md",
+    "dual_blowup_synthesis_path": "research/R5_B1B1C5B2B2_E8_DUAL_BLOWUP_SURVIVOR_SOURCE_HISTORY_SYNTHESIS_2026-09-22_v1.0.md",
+    "dual_blowup_synthesis_commit": "4746da4533c8bd5abb3197483f948b4662e05e76"
   },
   "scientific_state": {
     "P_VS_NP": "OPEN",
@@ -173,16 +175,22 @@
     }
   },
   "true_open_core": {
-    "status": "CLOSED_FOR_FROZEN_GREEDY_SELECTOR",
-    "audited_verdict": "PASS_WITH_REPAIRS",
-    "result": "R5_E8_GREEDY_PROJECTOR_PEAK_THEOREM_V1 FALSIFIED",
-    "failure_cause": "structural-only Shannon materialization misses compact local existential rewrite",
-    "successor": "LOCKED_PENDING_SOURCE_HISTORY_SYNTHESIS"
+    "status": "NO_OPEN_ALGORITHM_CORE",
+    "successor": "LOCKED",
+    "source_history_verdict": {
+      "known_dual_blowup_survivor": "ECNF",
+      "ecfn_terminal_consistency": "NP_COMPLETE",
+      "eadt_forgetting": "NOT_POLY_UNLESS_P_EQUALS_NP",
+      "affor_positive_control": "POLY_CO_FO_BOUNDED_CONJUNCTION",
+      "audited_language_closing_all_gates": "NONE_FOUND"
+    },
+    "only_legitimate_question": "Find a known poly-recognizable, compositionally discoverable, projection-preserved tractable invariant inside an ECNF-like mixed affine+clausal language; no new compiler design until such invariant survives source/history audit."
   },
   "authorized_next_work": [
-    "source/history synthesis only",
-    "look for an already-known representation invariant that avoids both cyclic structural-AIG blow-up and flat-CNF/parity DP blow-up",
-    "do not open successor until anti-duplication check completes"
+    "source-bound tractable-invariant inventory only",
+    "audit known mixed affine+clausal tractable subclasses",
+    "for each candidate record first failing obligation among entry, recognition, preservation, forgetting, consistency, construction size/time, no-oracle",
+    "do not open successor algorithm"
   ],
   "forbidden_until_gate_resolves": [
     "new representation hunt",
