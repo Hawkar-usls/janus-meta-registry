@@ -1,7 +1,7 @@
 {
   "artifact_id": "JANUS_P_VS_NP_R5_E8_FRONTIER_CHECKPOINT_2026-09-22_v1.0",
   "date": "2026-09-22",
-  "version": "1.2",
+  "version": "1.1",
   "authority": "META_REGISTRY_ANTI_LOOP_CHECKPOINT__MIRRORS_FUNDAMENTUM_DRAFT_LINEAGE",
   "project": "P vs NP / Janus-Fundamentum / R5 E8",
   "source_repository": {
@@ -13,8 +13,8 @@
     "roadmap_commit": "87d700e18833949020b456a321b5df9cb69fdc9c",
     "frontier_checkpoint_path": "registry/R5_B1B1C5B2B2_E8_FRONTIER_CHECKPOINT_2026-09-22_v1.0.json",
     "roadmap_path": "docs/TRUMP_DEVELOPMENT_JOURNAL_ENTRIES/2026-09-22_R5_E8_PNP_FRONTIER_ROADMAP.md",
-    "net_charge_theorem_path": "research/R5_B1B1C5B2B2_E8_NET_PROJECTION_CHARGE_AND_STEP0_THEOREM_2026-09-22_v1.0.json",
-    "net_charge_theorem_commit": "c080d68289ff174da8b184e5799e84fc852166b0",
+    "net_charge_theorem_path": "research/R5_B1B1C5B2B2_E8_NET_PROJECTION_CHARGE_AND_STEP0_THEOREM_2026-09-22_v1.0.md",
+    "net_charge_theorem_commit": "b681d62b9c399103af39a4a6724f277f73d1c45f",
     "frontier_update_commit": "d7c65fa19979d90f109a12c0331936acf725680d",
     "roadmap_update_commit": "6f12a93f725c63f30f7013446c7a1ff67b77ae09",
     "payload_rigidity_path": "research/R5_B1B1C5B2B2_E8_PAYLOAD_BACKBONE_RIGIDITY_2026-09-22_v1.0.json",
@@ -90,6 +90,16 @@
       "status": "PROVED",
       "statement": "Every payload on an odd-only prefix has kappa_z=0 and sigma_z<=s_z+12; nonlocal Shannon backbone gives no additional payload simplification discount.",
       "source_commit": "ca6639faa48976a1aee159995b8e81c536be7936"
+    },
+    {
+      "id": "NET_PROJECTION_CHARGE_IDENTITY",
+      "status": "PROVED",
+      "scope": "currently reachable trial variables; cost=N+A-sigma-kappa"
+    },
+    {
+      "id": "POWER_OF_TWO_STEP0_SELECTOR_WIN",
+      "status": "PROVED_ARBITRARY_R",
+      "scope": "m=2^r>=4; first frozen greedy winner is x1"
     }
   ],
   "power_of_two_family": {
@@ -139,24 +149,20 @@
   },
   "true_open_core": {
     "theorem": "R5_E8_ODD_PREFIX_NET_CHARGE_THEOREM_V1",
-    "current_subgate": "R5_E8_RELATED_PAYLOAD_CONE_GAP_V1",
-    "proved_inputs": [
-      "E_v=A_v-sigma_v-kappa_v",
-      "sigma_odd>=8",
-      "kappa_payload=0",
-      "sigma_payload<=s_z+12"
-    ],
-    "target": "For every payload z with an unresolved odd support selector o, prove A_z-A_o>=s_z+4; then o strictly beats z.",
-    "next_subgate": "R5_E8_ORPHAN_PAYLOAD_BARRIER_V1 for payloads whose two odd support selectors are already projected.",
-    "step0": "CLOSED",
-    "P_VS_NP": "OPEN"
+    "claim": "For every m=2^r odd-only prefix state, prove kappa_v=0 for relevant comparators and existence of unresolved odd selector o such that for every payload z, A_z-A_o >= sigma_z-sigma_o; equality requires A_o<A_z.",
+    "exact_key": "(E_v,A_v,variable_id), E_v=A_v-sigma_v-kappa_v",
+    "if_proved": [
+      "all m/2 odd selectors precede payload",
+      "Peak(F_m)>=2^(m/2)",
+      "with L=O(m log m), Peak>=2^(Omega(L/log L))",
+      "exact frozen greedy polynomial-peak theorem falsified"
+    ]
   },
   "authorized_next_work": [
-    "prove or falsify R5_E8_ODD_PREFIX_NET_CHARGE_THEOREM_V1",
-    "derive payload kappa=0 or exact counterexample",
-    "derive local cone-vs-saving inequalities",
-    "no full N_t counting unless necessary",
-    "no amplifier or new family work"
+    "prove arbitrary-r kappa=0 on odd-only prefix states",
+    "prove DeltaCone>=DeltaSaving against every payload",
+    "classify bounded local savings profiles if needed",
+    "do not compute total N_t separately"
   ],
   "forbidden_until_gate_resolves": [
     "new representation hunt",
