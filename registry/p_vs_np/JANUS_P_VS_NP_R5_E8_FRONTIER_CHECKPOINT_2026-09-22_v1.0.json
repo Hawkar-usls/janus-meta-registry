@@ -1,7 +1,7 @@
 {
   "artifact_id": "JANUS_P_VS_NP_R5_E8_FRONTIER_CHECKPOINT_2026-09-22_v1.0",
   "date": "2026-09-22",
-  "version": "1.1",
+  "version": "1.2",
   "authority": "META_REGISTRY_ANTI_LOOP_CHECKPOINT__MIRRORS_FUNDAMENTUM_DRAFT_LINEAGE",
   "project": "P vs NP / Janus-Fundamentum / R5 E8",
   "source_repository": {
@@ -18,7 +18,9 @@
     "frontier_update_commit": "d7c65fa19979d90f109a12c0331936acf725680d",
     "roadmap_update_commit": "6f12a93f725c63f30f7013446c7a1ff67b77ae09",
     "payload_rigidity_path": "research/R5_B1B1C5B2B2_E8_PAYLOAD_BACKBONE_RIGIDITY_2026-09-22_v1.0.json",
-    "payload_rigidity_commit": "ca6639faa48976a1aee159995b8e81c536be7936"
+    "payload_rigidity_commit": "ca6639faa48976a1aee159995b8e81c536be7936",
+    "kappa_zero_commit": "db1dc262fbdd9ae3e366f41ce62304defb2ec7e5",
+    "kappa_zero_path": "research/R5_B1B1C5B2B2_E8_ODD_PREFIX_KAPPA_ZERO_LEMMA_2026-09-22_v1.0.md"
   },
   "scientific_state": {
     "P_VS_NP": "OPEN",
@@ -100,6 +102,11 @@
       "id": "POWER_OF_TWO_STEP0_SELECTOR_WIN",
       "status": "PROVED_ARBITRARY_R",
       "scope": "m=2^r>=4; first frozen greedy winner is x1"
+    },
+    {
+      "id": "ODD_PREFIX_KAPPA_ZERO",
+      "status": "PROVED",
+      "scope": "m=2^r>=4 odd-only prefixes; unresolved odd selectors and payload trials"
     }
   ],
   "power_of_two_family": {
@@ -148,9 +155,9 @@
     }
   },
   "true_open_core": {
-    "theorem": "R5_E8_ODD_PREFIX_NET_CHARGE_THEOREM_V1",
-    "claim": "For every m=2^r odd-only prefix state, prove kappa_v=0 for relevant comparators and existence of unresolved odd selector o such that for every payload z, A_z-A_o >= sigma_z-sigma_o; equality requires A_o<A_z.",
-    "exact_key": "(E_v,A_v,variable_id), E_v=A_v-sigma_v-kappa_v",
+    "theorem": "R5_E8_ODD_PREFIX_CONE_SAVING_DOMINATION_THEOREM_V1",
+    "claim": "For every odd-only prefix state, prove existence of unresolved odd selector o satisfying A_z-A_o >= sigma_z-sigma_o for every payload z; equality requires A_o<A_z.",
+    "exact_key": "(A_v-sigma_v,A_v,variable_id) because kappa_v=0 is proved",
     "if_proved": [
       "all m/2 odd selectors precede payload",
       "Peak(F_m)>=2^(m/2)",
@@ -159,10 +166,10 @@
     ]
   },
   "authorized_next_work": [
-    "prove arbitrary-r kappa=0 on odd-only prefix states",
+    "prove sigma localization as skipped rebuilds",
     "prove DeltaCone>=DeltaSaving against every payload",
-    "classify bounded local savings profiles if needed",
-    "do not compute total N_t separately"
+    "finite local-profile enumeration only as theorem discovery aid",
+    "do not count total N_t"
   ],
   "forbidden_until_gate_resolves": [
     "new representation hunt",
