@@ -1,7 +1,7 @@
 {
   "artifact_id": "JANUS_P_VS_NP_R5_E8_RESEARCH_ROADMAP_2026-09-22_v1.0",
   "date": "2026-09-22",
-  "version": "1.1",
+  "version": "1.2",
   "authority": "META_REGISTRY_ROADMAP__ANTI_LOOP__NO_D1_PROMOTION",
   "mirrors": {
     "repository": "Hawkar-usls/Janus-Fundamentum",
@@ -70,18 +70,20 @@
     },
     {
       "phase": "6_NET_CHARGE_SCHEDULER_THEOREM",
-      "status": "CURRENT_OPEN_CORE_AFTER_STEP0",
+      "status": "CURRENT_OPEN_CORE_AFTER_PAYLOAD_RIGIDITY",
       "theorem": "R5_E8_ODD_PREFIX_NET_CHARGE_THEOREM_V1",
-      "closed_subresult": "R5_E8_POWER_OF_TWO_STEP0_SELECTOR_THEOREM_V1",
-      "identity": "cost(v)=N+A_v-sigma_v-kappa_v; compare (E_v,A_v,id) with E_v=A_v-sigma_v-kappa_v",
-      "proof_program": [
-        "A: prove payload kappa=0 on the odd-prefix state class or find the first symbolic counterexample",
-        "B: derive local sigma profiles without counting full projected DAG size",
-        "C: for the minimum payload competitor construct a suitable unresolved odd selector o",
-        "D: prove A_z-A_o >= sigma_z-sigma_o",
-        "E: on E ties prove A_o<A_z; full E/A ties favor selector ids",
-        "F: iterate for every prefix 0<=t<m/2"
-      ]
+      "proved": [
+        "net projection charge identity",
+        "arbitrary-r step0 selector theorem",
+        "odd-selector savings floor sigma_o>=8",
+        "payload kappa_z=0",
+        "payload sigma_z<=s_z+12"
+      ],
+      "current_subgate": "R5_E8_RELATED_PAYLOAD_CONE_GAP_V1",
+      "target": "For payload z with at least one unresolved odd support selector o, prove A_z-A_o>=s_z+4.",
+      "consequence": "Then E_z-E_o >= (s_z+4)-(s_z+12)+8 >= 0, and A_z>A_o resolves equality in favor of the selector.",
+      "next_subgate": "R5_E8_ORPHAN_PAYLOAD_BARRIER_V1",
+      "orphan_definition": "payload whose two odd support selectors have already been projected"
     },
     {
       "phase": "7_IF_THEOREM_PROVED",
@@ -134,5 +136,5 @@
       "NO finite-run asymptotic promotion"
     ]
   },
-  "one_line_frontier": "Step0 is proved. Now prove or falsify, on every later odd-only prefix for m=2^r, that some unresolved odd selector has smaller net projection charge than every payload, using E=A-sigma-kappa."
+  "one_line_frontier": "Payload backbone rigidity is proved. Next prove the related-payload cone gap A_z-A_o>=s_z+4; after that only orphan payloads remain before the full odd-selector prefix theorem."
 }
