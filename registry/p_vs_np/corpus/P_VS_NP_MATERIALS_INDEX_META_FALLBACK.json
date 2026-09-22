@@ -1,6 +1,6 @@
 {
   "schema": "JANUS_P_VS_NP_MATERIALS_INDEX",
-  "version": "1.1-6H-strategic-lock",
+  "version": "1.2-6I-mechanism-donors",
   "generated_utc": "2026-09-22",
   "purpose": "Machine-readable research memory and anti-duplication guide for the JANUS P vs NP program.",
   "scientific_authority": {
@@ -305,6 +305,144 @@
       "source_url": "https://doi.org/10.1016/j.dam.2007.02.010",
       "drive_note": "https://docs.google.com/document/d/1r5d5HaLTDitIjHWYXadDSetSZ7Rme0YAc_ZMPYoWtdg/edit?usp=drivesdk",
       "why_relevant": "Direct anti-loop: tractable Horn + tractable 2-CNF mixture can still be NP-complete."
+    },
+    {
+      "id": "SRC_TAKHANOV_INDUCED_CSP",
+      "priority": "A",
+      "title": "On the induced problem for fixed-template CSPs — Rustem Takhanov",
+      "status": "PREPRINT_REVISED_2023",
+      "source_url": "https://arxiv.org/abs/1708.08292",
+      "why_relevant": "Turns instance-specific algebra assignment into an explicit induced CSP Gamma^B and separates prototype discovery from solving with a supplied prototype.",
+      "use_when": [
+        "INSTANCE_SPECIFIC_ALGEBRA_CERTIFICATE",
+        "PROTOTYPE_DISCOVERY",
+        "MULTI_SORTED_LIFT"
+      ],
+      "blocker": "Prototype discovery can remain as hard as the original CSP; coverage and tractability of Gamma^B must both be proved."
+    },
+    {
+      "id": "SRC_BULATOV_JEAVONS_MULTISORTED",
+      "priority": "A",
+      "title": "An Algebraic Approach to Multi-sorted Constraints — Bulatov & Jeavons",
+      "status": "PEER_REVIEWED_CLASSIC",
+      "source_url": "https://www.cs.ox.ac.uk/activities/constraints/publications/CP03multisorted.pdf",
+      "why_relevant": "Shows that different variables/sorts may use different operation interpretations while one multi-sorted polymorphism preserves each relation; combines tractable single-domain mechanisms.",
+      "use_when": [
+        "MULTI_OPERATION_ALGEBRA",
+        "VARIABLE_SPECIFIC_CARRIERS",
+        "LIFTED_DOMAIN"
+      ],
+      "blocker": "Does not provide universal coverage of arbitrary 3-CNF or polynomial discovery of a suitable multi-sorted structure."
+    },
+    {
+      "id": "SRC_GREEN_COHEN_DOMAIN_PERMUTATION",
+      "priority": "A",
+      "title": "Domain permutation reduction for constraint satisfaction problems — Green & Cohen",
+      "status": "PEER_REVIEWED",
+      "source_url": "https://doi.org/10.1016/j.artint.2007.12.001",
+      "why_relevant": "Exact instance-specific transformation: choose one domain permutation per variable so the transformed relations enter a tractable language; discovery itself becomes a lifted CSP.",
+      "use_when": [
+        "INSTANCE_SPECIFIC_NORMALIZATION",
+        "RENAMABLE_TRACTABLE_LANGUAGE",
+        "CERTIFICATE_CSP"
+      ],
+      "blocker": "Permutation discovery is tractable only for some target classes/domains and can itself be intractable."
+    },
+    {
+      "id": "SRC_CARBONNEL_CONSERVATIVE_META",
+      "priority": "A",
+      "title": "The Dichotomy for Conservative Constraint Satisfaction is Polynomially Decidable — Carbonnel",
+      "status": "PEER_REVIEWED_LINEAGE",
+      "source_url": "https://arxiv.org/abs/1604.07063",
+      "why_relevant": "Positive control that nontrivial algebraic tractability certificates and their coloured graph can sometimes be recognized in polynomial time.",
+      "use_when": [
+        "POLY_CERTIFICATE_DISCOVERY",
+        "CONSERVATIVE_CSP",
+        "COLOURED_GRAPH"
+      ],
+      "blocker": "Recognition theorem is scoped to conservative CSPs; it does not make arbitrary 3-SAT conservative/tractable."
+    },
+    {
+      "id": "SRC_CHEN_LAROSE_METAQUESTIONS",
+      "priority": "A",
+      "title": "Asking the metaquestions in constraint tractability — Chen & Larose",
+      "status": "PEER_REVIEWED_LINEAGE",
+      "source_url": "https://arxiv.org/abs/1604.00932",
+      "why_relevant": "Hardness control for polymorphism discovery: several metaproblems, including conditions associated with tractability/bounded width, are NP-complete.",
+      "use_when": [
+        "DISCOVERABILITY_FIREWALL",
+        "INDICATOR_CSP",
+        "POLYMORPHISM_SEARCH"
+      ],
+      "blocker": "A tractability certificate is not useful for D1 unless the certificate itself is polynomially constructible."
+    },
+    {
+      "id": "SRC_CARBONNEL_MALTSEV_META",
+      "priority": "B",
+      "title": "The Meta-Problem for Conservative Mal'tsev Constraints — Carbonnel",
+      "status": "PEER_REVIEWED",
+      "source_url": "https://doi.org/10.1609/aaai.v30i1.10432",
+      "why_relevant": "Positive control where a conservative Mal'tsev polymorphism can be found in polynomial time and then used by a uniform tractable algorithm.",
+      "use_when": [
+        "MALTSEV_DISCOVERY",
+        "UNIFORM_TRACTABILITY"
+      ],
+      "blocker": "Conservative scope; does not cover the full hard Boolean 3-SAT template."
+    },
+    {
+      "id": "SRC_BULATOV_DALMAU_MALTSEV",
+      "priority": "A",
+      "title": "A Simple Algorithm for Mal'tsev Constraints — Bulatov & Dalmau",
+      "status": "PEER_REVIEWED_CLASSIC",
+      "source_url": "https://doi.org/10.1137/050628957",
+      "why_relevant": "Canonical compact-representation algorithm: maintain polynomial generating representations of successive solution relations, generalizing Gaussian elimination.",
+      "use_when": [
+        "COMPACT_SOLUTION_RELATION",
+        "GENERATING_SET",
+        "PROJECTION_INTERSECTION"
+      ],
+      "blocker": "Requires a common Mal'tsev polymorphism; arbitrary 3-CNF lacks that invariant."
+    },
+    {
+      "id": "SRC_BARTO_KOZIK_ABSORPTION",
+      "priority": "A",
+      "title": "Absorbing Subalgebras, Cyclic Terms, and the Constraint Satisfaction Problem — Barto & Kozik",
+      "status": "PEER_REVIEWED_OPEN",
+      "source_url": "https://arxiv.org/abs/1201.0557",
+      "why_relevant": "Structural decomposition donor: absorption and cyclic/Taylor terms explain recursive domain reduction mechanisms used in tractable CSP theory.",
+      "use_when": [
+        "STRONG_SUBUNIVERSE",
+        "ABSORPTION",
+        "RECURSIVE_TRACTABLE_DECOMPOSITION"
+      ],
+      "blocker": "Applies when the fixed template has Taylor structure; Boolean 3-SAT template does not."
+    },
+    {
+      "id": "SRC_ZHUK_2024_STRONG_SUBALGEBRAS",
+      "priority": "A",
+      "title": "A simplified proof of the CSP Dichotomy Conjecture and XY-symmetric operations — Zhuk",
+      "status": "PREPRINT_2024",
+      "source_url": "https://arxiv.org/abs/2404.01080",
+      "why_relevant": "Mechanism donor for general tractable finite-domain CSPs: strong subalgebras and linear congruences, with a simplified proof of the tractable-side algorithm.",
+      "use_when": [
+        "RECURSIVE_ALGEBRAIC_DECOMPOSITION",
+        "LINEAR_CONGRUENCE",
+        "UNIFORM_TRACTABLE_CSP_SOLVER"
+      ],
+      "blocker": "Still presupposes a tractable/Taylor template; does not supply a lift from arbitrary 3-SAT."
+    },
+    {
+      "id": "SRC_HYBRID_CSP_LIFTED_LANGUAGE",
+      "priority": "B",
+      "title": "Effectiveness of Structural Restrictions for Hybrid CSPs — Kolmogorov, Rolinek & Takhanov",
+      "status": "PEER_REVIEWED_OPEN_LINEAGE",
+      "source_url": "https://arxiv.org/abs/1504.07067",
+      "why_relevant": "Formal lifted-language construction combining structural restrictions on instances with algebraic restrictions on templates.",
+      "use_when": [
+        "LIFTED_LANGUAGE",
+        "INSTANCE_STRUCTURE_PLUS_TEMPLATE_STRUCTURE"
+      ],
+      "blocker": "Characterizes scoped hybrid restrictions rather than giving unrestricted SAT tractability."
     }
   ],
   "next_frontier": {
