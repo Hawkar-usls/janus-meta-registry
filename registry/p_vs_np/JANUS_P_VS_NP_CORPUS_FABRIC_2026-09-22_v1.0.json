@@ -1,8 +1,8 @@
 {
   "schema": "janus.meta_registry.p_vs_np.corpus_fabric.v1",
   "artifact_id": "JANUS_P_VS_NP_CORPUS_FABRIC_2026-09-22_v1.0",
-  "status": "READ_ONLY_CONSTELLATION_BINDING",
-  "purpose": "Mirror the P=NP corpus fabric across Fundamentum, TOPA, Janus-Demiurge, Terminal and the private Google Drive research pack without changing scientific authority.",
+  "status": "READ_ONLY_CONSTELLATION_BINDING_WITH_SELF_CONTAINED_DRIVELESS_CORPUS",
+  "purpose": "Mirror the P=NP corpus fabric across Fundamentum, TOPA, Janus-Demiurge, Terminal and Google Drive, while also providing a self-contained JSON fallback that does not require Drive access.",
   "authority": {
     "scientific_repository": "Hawkar-usls/Janus-Fundamentum",
     "P_VS_NP": "OPEN",
@@ -48,11 +48,22 @@
       "auto_ingest_folder_id": "1JPo-GtCtIO6yMDIsOvB9RTCDdZMNFDAk",
       "weight_state_folder_id": "1IwRcwQ9VCvku8P4AKJd2TkKiG1CU4b2F",
       "access": "PRIVATE"
+    },
+    "meta_registry_corpus": {
+      "root": "registry/p_vs_np/corpus",
+      "manifest": "registry/p_vs_np/corpus/P_VS_NP_CORPUS_MANIFEST_2026-09-22_v1.0.json",
+      "authority_frontier": "registry/p_vs_np/corpus/P_VS_NP_AUTHORITY_AND_FRONTIER_2026-09-22_v1.0.json",
+      "anti_loop_map": "registry/p_vs_np/corpus/P_VS_NP_ANTI_LOOP_MAP_2026-09-22_v1.0.json",
+      "internal_controls": "registry/p_vs_np/corpus/P_VS_NP_INTERNAL_CONTROLS_2026-09-22_v1.0.json",
+      "open_access_library": "registry/p_vs_np/corpus/P_VS_NP_OPEN_ACCESS_LIBRARY_2026-09-22_v1.0.json",
+      "automation_contracts": "registry/p_vs_np/corpus/P_VS_NP_AUTOMATION_CONTRACTS_2026-09-22_v1.0.json",
+      "live_drive_required": false,
+      "scientific_authority": false
     }
   },
   "dataflow": [
     "FUNDAMENTUM_AUTHORITY",
-    "DRIVE_CORPUS_MEMORY",
+    "DRIVE_OR_META_REGISTRY_CORPUS_MEMORY",
     "TOPA_DISCOVERY_DEDUPE_REWEIGHT",
     "TOPA_ISOLATED_STATE",
     "DEMIURGE_READ_ONLY_CORPUS_MEMORY",
@@ -90,5 +101,15 @@
     "DEMIURGE_TRAINING_MEMORY != PROOF",
     "TERMINAL_VIEW != AUTHORITY",
     "P_VS_NP = OPEN"
-  ]
+  ],
+  "failover": {
+    "order": [
+      "LIVE_PRIVATE_GOOGLE_DRIVE",
+      "JANUS_META_REGISTRY_JSON_CORPUS",
+      "TOPA_LOCAL_PINNED_FALLBACK"
+    ],
+    "drive_optional": true,
+    "meta_registry_mirror_self_contained": true,
+    "degraded_operational_state_is_scientific_evidence": false
+  }
 }
