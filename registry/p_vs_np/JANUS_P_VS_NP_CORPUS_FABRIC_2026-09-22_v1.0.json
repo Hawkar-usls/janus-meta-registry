@@ -1,0 +1,94 @@
+{
+  "schema": "janus.meta_registry.p_vs_np.corpus_fabric.v1",
+  "artifact_id": "JANUS_P_VS_NP_CORPUS_FABRIC_2026-09-22_v1.0",
+  "status": "READ_ONLY_CONSTELLATION_BINDING",
+  "purpose": "Mirror the P=NP corpus fabric across Fundamentum, TOPA, Janus-Demiurge, Terminal and the private Google Drive research pack without changing scientific authority.",
+  "authority": {
+    "scientific_repository": "Hawkar-usls/Janus-Fundamentum",
+    "P_VS_NP": "OPEN",
+    "D1": "EMPTY",
+    "successor_algorithm": "LOCKED",
+    "meta_registry_is_truth": false,
+    "drive_corpus_is_truth": false,
+    "topa_weight_is_evidence": false,
+    "automatic_claim_promotion": false,
+    "authority_delta": 0
+  },
+  "bindings": {
+    "fundamentum": {
+      "repository": "Hawkar-usls/Janus-Fundamentum",
+      "pr": 510,
+      "branch": "codex/r5-e8-direct-contract-20260921-82493a57",
+      "corpus_contract": "registry/JANUS_P_VS_NP_CORPUS_FABRIC_2026-09-22_v1.0.json",
+      "pinned_drive_snapshot": "registry/P_VS_NP_MATERIALS_INDEX_DRIVE_SNAPSHOT_2026-09-22_v1.0.json"
+    },
+    "topa": {
+      "repository": "Hawkar-usls/TOPA",
+      "pr": 56,
+      "branch": "integration/pnp-corpus-fabric-v1",
+      "state_branch": "janus/pnp-autoresearch-state",
+      "binding": "registry/JANUS-PNP-CORPUS-FABRIC-BINDING-v1.0.json"
+    },
+    "demiurge": {
+      "repository": "Hawkar-usls/Janus-Demiurge",
+      "pr": 196,
+      "branch": "integration/pnp-corpus-fabric-v1",
+      "extension": "janus_model/extensions/pnp_corpus_memory.py",
+      "policy": "janus_model/policy/JANUS_PNP_CORPUS_FABRIC.json"
+    },
+    "terminal": {
+      "repository": "Hawkar-usls/-Terminal-for-Janus",
+      "pr": 31,
+      "branch": "integration/pnp-corpus-fabric-v1",
+      "config": "config/JANUS_PNP_CORPUS_FABRIC.json"
+    },
+    "google_drive": {
+      "root_folder_id": "1afNpNkT1KcTZie1SJQz6drmIg5kEfVMZ",
+      "materials_index_file_id": "1lL5lftT64eojjeNcd0RqvS9XpCFyaqE9",
+      "auto_ingest_folder_id": "1JPo-GtCtIO6yMDIsOvB9RTCDdZMNFDAk",
+      "weight_state_folder_id": "1IwRcwQ9VCvku8P4AKJd2TkKiG1CU4b2F",
+      "access": "PRIVATE"
+    }
+  },
+  "dataflow": [
+    "FUNDAMENTUM_AUTHORITY",
+    "DRIVE_CORPUS_MEMORY",
+    "TOPA_DISCOVERY_DEDUPE_REWEIGHT",
+    "TOPA_ISOLATED_STATE",
+    "DEMIURGE_READ_ONLY_CORPUS_MEMORY",
+    "JANUS_NATIVE_CONTEXT",
+    "TERMINAL_OBSERVABILITY"
+  ],
+  "dedupe": {
+    "hard_identity_order": [
+      "DOI",
+      "CANONICAL_ARXIV_ID",
+      "NORMALIZED_TITLE_PLUS_FIRST_AUTHOR",
+      "NORMALIZED_SOURCE_URL",
+      "EXACT_CONTENT_SHA256"
+    ],
+    "near_semantic_duplicate": "FLAG_ONLY",
+    "duplicate_independence_credit": 1
+  },
+  "weighting": {
+    "mutable_surface": "SIDECAR_ONLY",
+    "dimensions": [
+      "source_quality_hint",
+      "frontier_relevance_weight",
+      "novelty_weight",
+      "attention_priority"
+    ],
+    "weights_are_truth": false,
+    "weights_are_evidence": false,
+    "weights_can_promote_theorem": false
+  },
+  "laws": [
+    "CORPUS_MEMORY != SCIENTIFIC_AUTHORITY",
+    "ATTENTION_WEIGHT != EVIDENCE",
+    "DUPLICATE_PUBLICATION != INDEPENDENT_CONFIRMATION",
+    "TOPA_DISCOVERY != FUNDAMENTUM_VERDICT",
+    "DEMIURGE_TRAINING_MEMORY != PROOF",
+    "TERMINAL_VIEW != AUTHORITY",
+    "P_VS_NP = OPEN"
+  ]
+}
