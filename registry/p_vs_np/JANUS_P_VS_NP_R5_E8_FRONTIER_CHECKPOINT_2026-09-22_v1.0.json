@@ -1,7 +1,7 @@
 {
   "artifact_id": "JANUS_P_VS_NP_R5_E8_FRONTIER_CHECKPOINT_2026-09-22_v1.0",
   "date": "2026-09-22",
-  "version": "1.1",
+  "version": "1.2",
   "authority": "META_REGISTRY_ANTI_LOOP_CHECKPOINT__MIRRORS_FUNDAMENTUM_DRAFT_LINEAGE",
   "project": "P vs NP / Janus-Fundamentum / R5 E8",
   "source_repository": {
@@ -16,7 +16,9 @@
     "net_charge_theorem_path": "research/R5_B1B1C5B2B2_E8_NET_PROJECTION_CHARGE_AND_STEP0_THEOREM_2026-09-22_v1.0.json",
     "net_charge_theorem_commit": "c080d68289ff174da8b184e5799e84fc852166b0",
     "frontier_update_commit": "d7c65fa19979d90f109a12c0331936acf725680d",
-    "roadmap_update_commit": "6f12a93f725c63f30f7013446c7a1ff67b77ae09"
+    "roadmap_update_commit": "6f12a93f725c63f30f7013446c7a1ff67b77ae09",
+    "payload_rigidity_path": "research/R5_B1B1C5B2B2_E8_PAYLOAD_BACKBONE_RIGIDITY_2026-09-22_v1.0.json",
+    "payload_rigidity_commit": "ca6639faa48976a1aee159995b8e81c536be7936"
   },
   "scientific_state": {
     "P_VS_NP": "OPEN",
@@ -77,6 +79,17 @@
       "status": "PROVED",
       "scope": "all m=2^r>=4 in cyclic shared-payload family",
       "statement": "Every selector beats every payload at step0; x1 is selected by id tie-break."
+    },
+    {
+      "id": "ODD_SELECTOR_LOCAL_SAVINGS_FLOOR",
+      "status": "PROVED",
+      "statement": "Every unresolved odd selector on an odd-only prefix has sigma_o>=8."
+    },
+    {
+      "id": "PAYLOAD_BACKBONE_RIGIDITY",
+      "status": "PROVED",
+      "statement": "Every payload on an odd-only prefix has kappa_z=0 and sigma_z<=s_z+12; nonlocal Shannon backbone gives no additional payload simplification discount.",
+      "source_commit": "ca6639faa48976a1aee159995b8e81c536be7936"
     }
   ],
   "power_of_two_family": {
@@ -126,25 +139,17 @@
   },
   "true_open_core": {
     "theorem": "R5_E8_ODD_PREFIX_NET_CHARGE_THEOREM_V1",
-    "claim": "For every odd-only prefix state before all odd selectors are removed, there exists an unresolved odd selector o with (E_o,A_o,o) lexicographically smaller than every payload (E_z,A_z,z).",
-    "definitions": {
-      "E_v": "A_v-sigma_v-kappa_v",
-      "sigma_v": "(2A_v+1)-number_of_new_reachable_trial_nodes",
-      "kappa_v": "old v-independent reachable nodes removed by projection"
-    },
-    "reduced_route": [
-      "prove kappa_payload=0",
-      "do not require kappa_odd=0 because positive kappa_odd helps the selector",
-      "prove A_z-A_o >= sigma_z-sigma_o for a suitable unresolved odd selector against the minimum payload competitor",
-      "resolve E ties by A_o<A_z; full E/A ties favor selector ids"
+    "current_subgate": "R5_E8_RELATED_PAYLOAD_CONE_GAP_V1",
+    "proved_inputs": [
+      "E_v=A_v-sigma_v-kappa_v",
+      "sigma_odd>=8",
+      "kappa_payload=0",
+      "sigma_payload<=s_z+12"
     ],
+    "target": "For every payload z with an unresolved odd support selector o, prove A_z-A_o>=s_z+4; then o strictly beats z.",
+    "next_subgate": "R5_E8_ORPHAN_PAYLOAD_BARRIER_V1 for payloads whose two odd support selectors are already projected.",
     "step0": "CLOSED",
-    "if_proved": [
-      "all m/2 odd selectors precede payload",
-      "Peak(F_m)>=2^(m/2)",
-      "with L=O(m log m), Peak>=2^(Omega(L/log L))",
-      "the exact frozen greedy polynomial-peak theorem is falsified"
-    ]
+    "P_VS_NP": "OPEN"
   },
   "authorized_next_work": [
     "prove or falsify R5_E8_ODD_PREFIX_NET_CHARGE_THEOREM_V1",
