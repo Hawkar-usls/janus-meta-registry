@@ -1,0 +1,64 @@
+name: JANUS PNP Corpus Fallback CI
+
+on:
+  pull_request:
+    paths:
+      - 'registry/p_vs_np/corpus/**'
+      - '.github/workflows/pnp-corpus-fallback-ci.yml'
+  push:
+    branches:
+      - 'integration/pnp-corpus-fabric-v1'
+    paths:
+      - 'registry/p_vs_np/corpus/**'
+      - '.github/workflows/pnp-corpus-fallback-ci.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validate driveless corpus binding and firewalls
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root=Path('registry/p_vs_np/corpus')
+          index=json.loads((root/'P_VS_NP_MATERIALS_INDEX_META_FALLBACK.json').read_text(encoding='utf-8-sig'))
+          manifest=json.loads((root/'P_VS_NP_CORPUS_MANIFEST_2026-09-22_v1.0.json').read_text())
+          authority=index.get('scientific_authority') or {}
+          assert index.get('schema')=='JANUS_P_VS_NP_MATERIALS_INDEX'
+          assert authority.get('P_VS_NP')=='OPEN'
+          assert authority.get('D1')=='EMPTY'
+          assert authority.get('SUCCESSOR_ALGORITHM')=='LOCKED'
+          assert len(index.get('internal_authority') or [])==14
+          assert len(index.get('open_access_materials') or [])==26
+          binding=manifest.get('entrypoint_binding') or {}
+          assert binding.get('binding_mode')=='STRUCTURED_SUPERSEDING_MIRROR__NOT_BYTE_EQUAL_TO_STALE_DRIVE_SNAPSHOT'
+          assert binding.get('expected_internal_authority_count')==14
+          assert binding.get('expected_open_access_material_count')==26
+          assert binding.get('strategic_lock_commit')=='407ab53727623f6edfbb26f92bde6b7a4ff01ad9'
+          assert binding.get('strategic_lock_checkpoint_commit')=='3ca71f7b72d635d73506259fb3893172b08606e6'
+          assert binding.get('permanent_anti_loop_law_count')==5
+          assert authority.get('STRATEGIC_LOCK')=='R5_E8_6H_POST_INVENTORY_STRATEGIC_LOCK'
+          assert authority.get('CURRENT_THEOREM_TARGET')=='NONE'
+          assert authority.get('NEW_ALGORITHM_DESIGN')=='NO'
+          assert len(index.get('anti_loop_laws') or [])==5
+          assert index.get('rediscovery_rule')
+          assert len(index.get('mandatory_predecessor_comparison') or [])==7
+          fw=manifest.get('authority_firewall') or {}
+          assert fw.get('meta_registry_is_scientific_authority') is False
+          assert fw.get('automatic_theorem_promotion') is False
+          for name in manifest.get('corpus_files') or []:
+              path=root/name
+              assert path.is_file(), name
+              json.loads(path.read_text(encoding='utf-8-sig'))
+          print('JANUS_PNP_META_FALLBACK=PASS')
+          PY
