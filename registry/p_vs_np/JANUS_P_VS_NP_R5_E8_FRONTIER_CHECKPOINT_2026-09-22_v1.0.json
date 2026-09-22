@@ -1,7 +1,7 @@
 {
   "artifact_id": "JANUS_P_VS_NP_R5_E8_FRONTIER_CHECKPOINT_2026-09-22_v1.0",
   "date": "2026-09-22",
-  "version": "1.3",
+  "version": "1.4",
   "authority": "META_REGISTRY_ANTI_LOOP_CHECKPOINT__MIRRORS_FUNDAMENTUM_DRAFT_LINEAGE",
   "project": "P vs NP / Janus-Fundamentum / R5 E8",
   "source_repository": {
@@ -24,7 +24,10 @@
     "counterfamily_result_path": "research/R5_B1B1C5B2B2_E8_CYCLIC_POWER_OF_TWO_COUNTERFAMILY_RESULT_2026-09-22_v1.0.json",
     "counterfamily_result_commit": "a613b1d603993e862536d47d76542690cf7023bf",
     "full_competitor_proof_commit": "40d43aceb68992c9fd3758a294529133b772b0f4",
-    "scope_repair_commit": "2de5bd569514168454f64a23aaa1d2c8ea0f1f1e"
+    "scope_repair_commit": "2de5bd569514168454f64a23aaa1d2c8ea0f1f1e",
+    "audit_commit": "ef2d6e2184ce09accd50fed0cb9f5d43752b9788",
+    "postmortem_commit": "9f6e47f61b15a91845524bf29e53d63181435e05",
+    "postmortem_path": "research/R5_B1B1C5B2B2_E8_FROZEN_GREEDY_POSTMORTEM_2026-09-22_v1.0.md"
   },
   "scientific_state": {
     "P_VS_NP": "OPEN",
@@ -170,19 +173,16 @@
     }
   },
   "true_open_core": {
-    "status": "NO_OPEN_CORE_FOR_THIS_SELECTOR",
+    "status": "CLOSED_FOR_FROZEN_GREEDY_SELECTOR",
+    "audited_verdict": "PASS_WITH_REPAIRS",
     "result": "R5_E8_GREEDY_PROJECTOR_PEAK_THEOREM_V1 FALSIFIED",
-    "next_required_work": [
-      "independent proof audit",
-      "postmortem of missing structural compaction capability",
-      "anti-duplication review before any successor"
-    ],
-    "successor": "LOCKED"
+    "failure_cause": "structural-only Shannon materialization misses compact local existential rewrite",
+    "successor": "LOCKED_PENDING_SOURCE_HISTORY_SYNTHESIS"
   },
   "authorized_next_work": [
-    "independent proof audit of cell-tree variant count/path dominance/orphan sharing",
-    "postmortem only",
-    "do not open successor algorithm yet"
+    "source/history synthesis only",
+    "look for an already-known representation invariant that avoids both cyclic structural-AIG blow-up and flat-CNF/parity DP blow-up",
+    "do not open successor until anti-duplication check completes"
   ],
   "forbidden_until_gate_resolves": [
     "new representation hunt",
