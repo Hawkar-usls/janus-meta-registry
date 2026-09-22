@@ -39,11 +39,11 @@ jobs:
           assert authority.get('D1')=='EMPTY'
           assert authority.get('SUCCESSOR_ALGORITHM')=='LOCKED'
           assert len(index.get('internal_authority') or [])==14
-          assert len(index.get('open_access_materials') or [])==16
+          assert len(index.get('open_access_materials') or [])==26
           binding=manifest.get('entrypoint_binding') or {}
           assert binding.get('binding_mode')=='STRUCTURED_SUPERSEDING_MIRROR__NOT_BYTE_EQUAL_TO_STALE_DRIVE_SNAPSHOT'
           assert binding.get('expected_internal_authority_count')==14
-          assert binding.get('expected_open_access_material_count')==16
+          assert binding.get('expected_open_access_material_count')==26
           assert binding.get('strategic_lock_commit')=='407ab53727623f6edfbb26f92bde6b7a4ff01ad9'
           assert binding.get('strategic_lock_checkpoint_commit')=='3ca71f7b72d635d73506259fb3893172b08606e6'
           assert binding.get('permanent_anti_loop_law_count')==5
