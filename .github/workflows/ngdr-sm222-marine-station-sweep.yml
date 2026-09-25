@@ -1,0 +1,91 @@
+name: JANUS NGDR SM222 Marine Station Sweep
+
+on:
+  push:
+    paths:
+      - data/JANUS-NGDR-SM222-STATION-SWEEP-TRIGGER.txt
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Query SM222-linked marine station layers
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          python3 - <<'PY'
+          import requests,json,pathlib,xml.etree.ElementTree as ET,math
+          LAT=17.0710306; LON=83.2693611
+          base='https://geodataindia.gov.in/guestuser/wmsurl128/'
+          h={'User-Agent':'Mozilla/5.0 JANUS-Cousteau/1.0'}
+          s=requests.Session()
+          layers=[
+            'core_samples_marine_geology',
+            'grab_samples_marine_geology',
+            'surface_sediment_data_marine_geology',
+            'water_samples_marine_geology',
+            'current_observations_marine_geology',
+            'deep_seismic_data_mcsd_marine_geophysics',
+            'shallow_seismic_data_mcsd_marine_geophysics',
+            'bathymetry_marine_geology'
+          ]
+          out={}
+          def hav(lat1,lon1,lat2,lon2):
+              R=6371.0088
+              a1,a2=math.radians(lat1),math.radians(lat2)
+              da=math.radians(lat2-lat1); do=math.radians(lon2-lon1)
+              a=math.sin(da/2)**2+math.cos(a1)*math.cos(a2)*math.sin(do/2)**2
+              return 2*R*math.asin(math.sqrt(a))
+
+          for layer in layers:
+              schema=s.get(base,params={'service':'WFS','version':'1.0.0','request':'DescribeFeatureType','typeName':layer},headers=h,timeout=40)
+              fields=[]
+              try:
+                  root=ET.fromstring(schema.content)
+                  for e in root.iter():
+                      if e.tag.split('}')[-1]=='element' and e.attrib.get('name')!=layer:
+                          fields.append({'name':e.attrib.get('name'),'type':e.attrib.get('type','')})
+              except: pass
+              cruise=[f['name'] for f in fields if 'cruise' in (f['name'] or '').lower()]
+              rec={'fields':fields,'cruise_fields':cruise}
+              if cruise:
+                  cql=' OR '.join([f+"='SM-222'" for f in cruise])
+                  r=s.get(base,params={'service':'WFS','version':'1.0.0','request':'GetFeature','typeName':layer,
+                                       'CQL_FILTER':cql,'outputFormat':'application/json','srsName':'EPSG:4326','maxFeatures':'1000'},
+                          headers=h,timeout=60)
+                  pathlib.Path(f'out/{layer}.json').write_bytes(r.content)
+                  try:
+                      j=r.json()
+                      feats=[]
+                      for f in j.get('features',[]):
+                          pr=f.get('properties') or {}
+                          g=f.get('geometry') or {}
+                          coords=g.get('coordinates')
+                          lon=pr.get('longitude'); lat=pr.get('latitude')
+                          if lon is None or lat is None:
+                              if g.get('type')=='Point' and isinstance(coords,list) and len(coords)>=2:
+                                  lon,lat=coords[0],coords[1]
+                          dist=None
+                          try: dist=hav(LAT,LON,float(lat),float(lon))
+                          except: pass
+                          feats.append({'id':f.get('id'),'distance_km':dist,'properties':pr,'geometry':g})
+                      feats.sort(key=lambda x: 1e99 if x['distance_km'] is None else x['distance_km'])
+                      rec['feature_count']=len(feats)
+                      rec['features']=feats
+                  except Exception as e:
+                      rec['parse_error']=repr(e); rec['head']=r.text[:2000]
+              out[layer]=rec
+          pathlib.Path('out/result.json').write_text(json.dumps(out,indent=2))
+          print(json.dumps(out,indent=2)[:60000])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ngdr-sm222-marine-station-sweep
+          path: out/
+          retention-days: 14
