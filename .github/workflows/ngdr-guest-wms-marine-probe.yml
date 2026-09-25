@@ -1,0 +1,60 @@
+name: JANUS NGDR Guest WMS Marine Probe
+
+on:
+  push:
+    paths:
+      - data/JANUS-NGDR-GUEST-WMS-PROBE-TRIGGER.txt
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Query NGDR guest WMS capabilities
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          python3 - <<'PY'
+          import requests, pathlib, re, json, xml.etree.ElementTree as ET, urllib.parse
+          base='https://geodataindia.gov.in/guestuser/wmsurl128/'
+          params={'SERVICE':'WMS','REQUEST':'GetCapabilities','VERSION':'1.1.1'}
+          r=requests.get(base,params=params,headers={'User-Agent':'Mozilla/5.0 JANUS-Cousteau/1.0'},timeout=60)
+          pathlib.Path('out/capabilities.xml').write_bytes(r.content)
+          result={'status':r.status_code,'url':r.url,'bytes':len(r.content),'content_type':r.headers.get('Content-Type'),'layers':[],'keyword_hits':[]}
+          txt=r.text
+          try:
+              root=ET.fromstring(r.content)
+              for lyr in root.iter():
+                  if lyr.tag.split('}')[-1] != 'Layer': continue
+                  name=title=abstract=''
+                  bbox={}
+                  for ch in list(lyr):
+                      tag=ch.tag.split('}')[-1]
+                      if tag=='Name' and ch.text: name=ch.text.strip()
+                      elif tag=='Title' and ch.text: title=ch.text.strip()
+                      elif tag=='Abstract' and ch.text: abstract=ch.text.strip()
+                      elif tag=='LatLonBoundingBox': bbox=dict(ch.attrib)
+                  if name:
+                      item={'name':name,'title':title,'abstract':abstract,'bbox':bbox}
+                      result['layers'].append(item)
+                      s=(name+' '+title+' '+abstract).lower()
+                      kws=['bathy','bathym','marine','offshore','ocean','sea floor','seafloor','geophys','gravity','magnetic','sonar','multibeam','godavari','pudimadaka','samudra','sm-222','sm222','sediment']
+                      hits=[k for k in kws if k in s]
+                      if hits: result['keyword_hits'].append({**item,'hits':hits})
+          except Exception as e:
+              result['parse_error']=repr(e)
+              result['head']=txt[:5000]
+
+          pathlib.Path('out/result.json').write_text(json.dumps(result,indent=2))
+          print(json.dumps({'status':result.get('status'),'layer_count':len(result.get('layers',[])),'keyword_hits':result.get('keyword_hits',[])},indent=2)[:30000])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ngdr-guest-wms-probe
+          path: out/
+          retention-days: 14
