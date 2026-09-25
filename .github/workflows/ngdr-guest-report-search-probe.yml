@@ -1,0 +1,87 @@
+name: JANUS NGDR Guest Report Search Probe
+
+on:
+  push:
+    paths:
+      - data/JANUS-NGDR-GUEST-REPORT-PROBE-TRIGGER.txt
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Inspect guest report-search frontend
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p out/js
+          python3 - <<'PY'
+          import requests,re,urllib.parse,pathlib,json
+          s=requests.Session()
+          h={'User-Agent':'Mozilla/5.0 JANUS-Cousteau/1.0'}
+          u='https://geodataindia.gov.in/guestuser'
+          r=s.get(u,headers=h,timeout=60)
+          pathlib.Path('out/guestuser.html').write_bytes(r.content)
+          txt=r.text
+          scripts=[]
+          for src in re.findall(r'<script[^>]+src=["\']([^"\']+)["\']',txt,re.I):
+              scripts.append(urllib.parse.urljoin(r.url,src))
+          manifest={'page_status':r.status_code,'page_url':r.url,'page_bytes':len(r.content),'scripts':[]}
+          endpoints=set()
+          terms=['SM-222','report','geophysical','baseline','nuid','NHO','download','search','Report Title','guestuser']
+          hits={}
+          def scan(name,text):
+              hh=[]
+              for term in terms:
+                  for m in re.finditer(re.escape(term),text,re.I):
+                      a=max(0,m.start()-350); b=min(len(text),m.end()+900)
+                      hh.append({'term':term,'context':text[a:b]})
+                      if len(hh)>=100: return hh
+              return hh
+          ph=scan('guestuser.html',txt)
+          if ph: hits['guestuser.html']=ph
+          for pat in [
+              r'url\s*:\s*["\']([^"\']+)["\']',
+              r'\$\.post\(\s*["\']([^"\']+)["\']',
+              r'\$\.get\(\s*["\']([^"\']+)["\']',
+              r'fetch\(\s*["\']([^"\']+)["\']',
+              r'action=["\']([^"\']+)["\']'
+          ]:
+              endpoints.update(re.findall(pat,txt,re.I))
+          for i,su in enumerate(dict.fromkeys(scripts)):
+              if 'geodataindia.gov.in' not in urllib.parse.urlparse(su).netloc: continue
+              try:
+                  q=s.get(su,headers=h,timeout=40)
+              except Exception as e:
+                  manifest['scripts'].append({'url':su,'error':repr(e)}); continue
+              manifest['scripts'].append({'url':su,'status':q.status_code,'bytes':len(q.content)})
+              if q.status_code!=200: continue
+              p=pathlib.Path('out/js')/f'script_{i}.js'; p.write_bytes(q.content)
+              st=q.text
+              sh=scan(str(p),st)
+              if sh: hits[str(p)]=sh
+              for pat in [
+                  r'url\s*:\s*["\']([^"\']+)["\']',
+                  r'\$\.post\(\s*["\']([^"\']+)["\']',
+                  r'\$\.get\(\s*["\']([^"\']+)["\']',
+                  r'fetch\(\s*["\']([^"\']+)["\']',
+                  r'["\']([^"\']*(?:report|Report|geophys|Geophys|download|Download|nuid|NUID|search|Search)[^"\']*)["\']'
+              ]:
+                  endpoints.update(re.findall(pat,st,re.I))
+          pathlib.Path('out/manifest.json').write_text(json.dumps(manifest,indent=2))
+          pathlib.Path('out/endpoints.json').write_text(json.dumps(sorted(x for x in endpoints if len(x)<800),indent=2))
+          pathlib.Path('out/hits.json').write_text(json.dumps(hits,indent=2))
+          print('ENDPOINTS')
+          print(json.dumps(sorted(x for x in endpoints if len(x)<800),indent=2)[:30000])
+          print('HITS')
+          print(json.dumps(hits,indent=2)[:30000])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ngdr-guest-report-search-probe
+          path: out/
+          retention-days: 14
