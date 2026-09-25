@@ -1,0 +1,99 @@
+name: JANUS Cousteau SM222 NGDR Geological Report Sweep V2
+on:
+  push:
+    paths:
+      - data/JANUS-COUSTEAU-SM222-NGDR-GEOREPORT-V2-TRIGGER.txt
+permissions:
+  contents: read
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Query NGDR Geological Report catalogue
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          python3 - <<'PY'
+          import json,re,urllib.request,urllib.parse,http.cookiejar,hashlib
+          from pathlib import Path
+
+          BASE="https://geodataindia.gov.in"
+          terms=["sm-222","sm222","pudimadaka","godavari","ghosh",
+                 "samudra manthan","multibeam","bathymetric",
+                 "continental slope","andhra pradesh coast"]
+
+          cj=http.cookiejar.CookieJar()
+          opener=urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cj))
+          def request(url,data=None,timeout=120):
+              body=urllib.parse.urlencode(data).encode() if data is not None else None
+              req=urllib.request.Request(url,data=body,headers={
+                  "User-Agent":"Mozilla/5.0 JANUS-Cousteau/1.0",
+                  "Accept":"application/json,text/html,*/*",
+                  "X-Requested-With":"XMLHttpRequest" if data is not None else ""
+              })
+              with opener.open(req,timeout=timeout) as r:
+                  return r.status,r.headers, r.read()
+
+          status,h,b=request(BASE+"/guestuser",timeout=40)
+          html=b.decode("utf-8","replace")
+          def hidden_value(element_id):
+              p1=rf'<input[^>]*id=["\']{re.escape(element_id)}["\'][^>]*value=["\']([^"\']+)["\']'
+              p2=rf'<input[^>]*value=["\']([^"\']+)["\'][^>]*id=["\']{re.escape(element_id)}["\']'
+              m=re.search(p1,html,re.I) or re.search(p2,html,re.I)
+              return m.group(1) if m else None
+          key=hidden_value("csrfparname"); val=hidden_value("csrfvalue")
+          if not key or not val:
+              raise RuntimeError("CSRF fields not found")
+          url=BASE+"/guestuser/getbasereport?"+urllib.parse.quote(key)+"="+urllib.parse.quote(val)
+          status2,h2,raw=request(url,{"geophysical_report":"Geological Report"},timeout=150)
+          Path("out/geological_reports_raw.json").write_bytes(raw)
+          digest=hashlib.sha256(raw).hexdigest()
+          data=json.loads(raw.decode("utf-8","replace"))
+          if not isinstance(data,list):
+              raise RuntimeError("Unexpected catalogue payload: "+type(data).__name__)
+
+          matches=[]
+          for rec in data:
+              field_hits={}
+              for field,value in rec.items():
+                  if value is None or isinstance(value,(dict,list)): continue
+                  txt=str(value); low=txt.lower()
+                  hits=[t for t in terms if t in low]
+                  if hits: field_hits[field]={"terms":hits,"value":txt[:12000]}
+              if field_hits:
+                  allhits=sorted({t for x in field_hits.values() for t in x["terms"]})
+                  strong=[t for t in allhits if t in {"sm-222","sm222","pudimadaka","samudra manthan","multibeam","bathymetric","continental slope"}]
+                  summary={}
+                  for k in ["id","baseid","base_upid","baseline_upid","baseline_accession_number",
+                            "projectTitle","reportTitle","title","report_type","reportType",
+                            "reportOwner","organization","author","yearOfPublishing","publicationYear",
+                            "fspid","cruiseId","keywords","keyword","nho_chart_number","nhoChartNumber",
+                            "toposheetNumber","state_name","stateName","district_name","districtName",
+                            "block_area_name","blockAreaName","reportsAndDocumentsDescription",
+                            "reportsAndDocumentsFileName","reportfilesizeAndDate","geom","row_number","rowNumber"]:
+                      if k in rec and rec[k] not in (None,""): summary[k]=rec[k]
+                  matches.append({"strong_hit_count":len(strong),"all_hit_terms":allhits,
+                                  "summary":summary,"field_hits":field_hits})
+          matches.sort(key=lambda x:(x["strong_hit_count"],len(x["all_hit_terms"])),reverse=True)
+
+          result={
+              "endpoint":"guestuser/getbasereport",
+              "report_type":"Geological Report",
+              "http_status":status2,
+              "catalog_record_count":len(data),
+              "raw_bytes":len(raw),
+              "raw_sha256":digest,
+              "match_count":len(matches),
+              "strong_match_count":sum(m["strong_hit_count"]>0 for m in matches),
+              "matches":matches[:250]
+          }
+          Path("out/result.json").write_text(json.dumps(result,indent=2))
+          print(json.dumps(result,indent=2)[:100000])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sm222-ngdr-geological-report-sweep-v2
+          path: out/
+          retention-days: 14
