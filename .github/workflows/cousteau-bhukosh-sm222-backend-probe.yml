@@ -1,0 +1,141 @@
+name: JANUS Cousteau Bhukosh SM222 Backend Probe
+
+on:
+  push:
+    paths:
+      - data/JANUS-COUSTEAU-BHUKOSH-SM222-PROBE-TRIGGER.txt
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Probe Bhukosh and OCBIS public surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p out/pages out/js
+          python3 - <<'PY'
+          import json, re, ssl, urllib.request, urllib.parse, urllib.error
+          from pathlib import Path
+          from html import unescape
+
+          OUT=Path("out")
+          urls=[
+            "https://bhukosh.gsi.gov.in/Bhukosh/Public",
+            "https://bhukosh.gsi.gov.in/Bhukosh/MapViewer.aspx",
+            "https://bhukosh.gsi.gov.in/",
+            "https://www.gsi.gov.in/webcenter/portal/OCBIS/pageReports/pageGsiReports",
+            "https://www.gsi.gov.in/webcenter/portal/OCBIS",
+            "https://geodataindia.gov.in/login"
+          ]
+
+          def fetch(url, timeout=40):
+              req=urllib.request.Request(url, headers={
+                  "User-Agent":"Mozilla/5.0 JANUS-Cousteau/1.0",
+                  "Accept":"text/html,application/xhtml+xml,application/json,*/*"
+              })
+              try:
+                  with urllib.request.urlopen(req,timeout=timeout,context=ssl.create_default_context()) as r:
+                      return {"ok":True,"status":getattr(r,"status",200),
+                              "content_type":r.headers.get("Content-Type",""),
+                              "url":r.geturl(),"body":r.read()}
+              except Exception as e:
+                  return {"ok":False,"url":url,"error":repr(e),"body":b""}
+
+          manifest=[]
+          script_urls=[]
+          endpoint_strings=set()
+          for i,url in enumerate(urls):
+              rec=fetch(url)
+              body=rec.pop("body")
+              manifest.append(rec)
+              if body:
+                  suffix=".html"
+                  (OUT/"pages"/f"page_{i}{suffix}").write_bytes(body)
+                  txt=body.decode("utf-8","replace")
+                  for s in re.findall(r'<script[^>]+src=["\']([^"\']+)["\']',txt,re.I):
+                      script_urls.append(urllib.parse.urljoin(rec.get("url",url),unescape(s)))
+                  for pat in [
+                      r'https?://[^"\'<> ]+',
+                      r'["\']([^"\']*(?:api|Api|API|Search|search|WMS|wms|FeatureServer|MapServer|Download|download|Geophysical|Report)[^"\']*)["\']'
+                  ]:
+                      for m in re.findall(pat,txt,re.I):
+                          val=m if isinstance(m,str) else m[0]
+                          if len(val)<500: endpoint_strings.add(unescape(val))
+
+          # Download first-party JS referenced by Bhukosh pages.
+          seen=set()
+          for j,u in enumerate(script_urls[:120]):
+              if u in seen: continue
+              seen.add(u)
+              if "bhukosh.gsi.gov.in" not in urllib.parse.urlparse(u).netloc: continue
+              rec=fetch(u,60)
+              body=rec.pop("body")
+              manifest.append({"script":u,**rec})
+              if not body: continue
+              fn=OUT/"js"/f"script_{j}.js"
+              fn.write_bytes(body)
+              txt=body.decode("utf-8","replace")
+              for pat in [
+                  r'https?://[^"\'<> ]+',
+                  r'["\']([^"\']*(?:api|Api|API|Search|search|WMS|wms|FeatureServer|MapServer|Download|download|Geophysical|Report|Unified)[^"\']*)["\']'
+              ]:
+                  for m in re.findall(pat,txt,re.I):
+                      val=m if isinstance(m,str) else m[0]
+                      if len(val)<800: endpoint_strings.add(unescape(val))
+
+          # Search downloaded text for exact target terms.
+          terms=["SM-222","SM222","Pudimadaka","Godavari","Ghosh","Multibeam","Unified Search","Geophysical Data"]
+          hits={}
+          for p in list((OUT/"pages").glob("*"))+list((OUT/"js").glob("*")):
+              txt=p.read_text(errors="replace")
+              hh=[]
+              for term in terms:
+                  if term.lower() in txt.lower():
+                      for m in re.finditer(re.escape(term),txt,re.I):
+                          a=max(0,m.start()-300); b=min(len(txt),m.end()+600)
+                          hh.append({"term":term,"context":txt[a:b]})
+                          if len(hh)>=30: break
+                  if len(hh)>=30: break
+              if hh: hits[str(p)]=hh
+
+          # Probe common/public service descriptors and mapserver capabilities.
+          candidates=[
+            "https://bhukosh.gsi.gov.in/Bhukosh/Service.asmx",
+            "https://bhukosh.gsi.gov.in/Bhukosh/WebService.asmx",
+            "https://bhukosh.gsi.gov.in/Bhukosh/Services/",
+            "https://bhukosh.gsi.gov.in/Bhukosh/rest/services",
+            "https://bhukosh.gsi.gov.in/arcgis/rest/services",
+            "https://bhukosh.gsi.gov.in/Bhukosh/MapServer",
+            "https://bhukosh.gsi.gov.in/Bhukosh/Public?SERVICE=WMS&REQUEST=GetCapabilities",
+          ]
+          probes=[]
+          for u in candidates:
+              rec=fetch(u,30); body=rec.pop("body")
+              probes.append({**rec,"head":body.decode("utf-8","replace")[:3000]})
+
+          (OUT/"manifest.json").write_text(json.dumps(manifest,indent=2))
+          (OUT/"script_urls.json").write_text(json.dumps(sorted(set(script_urls)),indent=2))
+          (OUT/"endpoint_strings.json").write_text(json.dumps(sorted(endpoint_strings),indent=2))
+          (OUT/"term_hits.json").write_text(json.dumps(hits,indent=2))
+          (OUT/"candidate_probes.json").write_text(json.dumps(probes,indent=2))
+          print("=== MANIFEST ===")
+          print(json.dumps(manifest,indent=2)[:12000])
+          print("=== ENDPOINT STRINGS ===")
+          print(json.dumps(sorted(endpoint_strings),indent=2)[:20000])
+          print("=== TERM HITS ===")
+          print(json.dumps(hits,indent=2)[:20000])
+          print("=== CANDIDATE PROBES ===")
+          print(json.dumps(probes,indent=2)[:12000])
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bhukosh-sm222-backend-probe
+          path: out/
+          retention-days: 14
