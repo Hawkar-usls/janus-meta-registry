@@ -1,0 +1,126 @@
+name: JANUS Cousteau NGDR SM222 Direct Guest Query
+on:
+  push:
+    paths:
+      - data/JANUS-COUSTEAU-NGDR-DIRECT-QUERY-TRIGGER.txt
+permissions:
+  contents: read
+jobs:
+  direct-query:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Install Selenium
+        run: python3 -m pip install -q selenium
+      - name: Execute exact guest AJAX queries in page context
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          python3 - <<'PY'
+          import json,time
+          from pathlib import Path
+          from selenium import webdriver
+          from selenium.webdriver.chrome.options import Options
+
+          terms=["sm-222","sm222","pudimadaka","godavari","ghosh","multibeam","bathymetric","samudra manthan"]
+          opt=Options()
+          opt.add_argument("--headless=new"); opt.add_argument("--no-sandbox")
+          opt.add_argument("--disable-dev-shm-usage"); opt.add_argument("--window-size=1600,1200")
+          d=webdriver.Chrome(options=opt)
+          result={"terms":{}}
+          try:
+              d.get("https://geodataindia.gov.in/guestuser")
+              time.sleep(8)
+              state=d.execute_script("""
+                return {
+                  csrfparname:document.getElementById('csrfparname')?.value||null,
+                  csrfvalue:document.getElementById('csrfvalue')?.value||null,
+                  contextPath:(typeof contextPath!=='undefined'?contextPath:null),
+                  aes:(typeof AesUtil!=='undefined'),
+                  user_type:(typeof user_type!=='undefined'?user_type:null)
+                }
+              """)
+              result["page_state"]=state
+              if not state["aes"] or not state["csrfparname"] or not state["csrfvalue"]:
+                  raise RuntimeError("NGDR page state incomplete: "+repr(state))
+
+              for term in terms:
+                  termout={}
+                  for endpoint in ["searchkeywordforgeophysical","searchkeyword"]:
+                      script="""
+                        const term=arguments[0], endpoint=arguments[1], done=arguments[arguments.length-1];
+                        try {
+                          const k=document.getElementById('csrfparname').value;
+                          const v=document.getElementById('csrfvalue').value;
+                          const aes=new AesUtil(128,1000);
+                          const enc=aes.encrypt(term.toLowerCase(),'FAAOCAg8AMIICCgKCAgEAv3SWf07W0ja');
+                          const body=new URLSearchParams(); body.set('keyword',enc);
+                          fetch((typeof contextPath!=='undefined'?contextPath:'')+'guestuser/'+endpoint+'?'+encodeURIComponent(k)+'='+encodeURIComponent(v),{
+                            method:'POST',credentials:'same-origin',
+                            headers:{'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8','X-Requested-With':'XMLHttpRequest'},
+                            body:body.toString()
+                          }).then(async r=>done({status:r.status,url:r.url,text:await r.text(),encrypted:enc}))
+                            .catch(e=>done({error:String(e),encrypted:enc}));
+                        } catch(e) { done({error:String(e)}); }
+                      """
+                      raw=d.execute_async_script(script,term,endpoint)
+                      try:
+                          raw["json"]=json.loads(raw.get("text",""))
+                      except: pass
+                      termout[endpoint]=raw
+                  result["terms"][term]=termout
+
+              # Collect server-returned real field names and candidate keywords.
+              mappings=[]
+              for term,tv in result["terms"].items():
+                  for ep,r in tv.items():
+                      for item in r.get("json",[]) if isinstance(r.get("json"),list) else []:
+                          mappings.append({"term":term,"endpoint":ep,"keywords":item.get("keywords"),"fldname":item.get("fldname")})
+              result["mappings"]=mappings
+
+              # For any field mapping returned by the geophysical keyword index,
+              # reproduce the catalog query using the exact server-provided field name.
+              probes=[]
+              seen=set()
+              for m in mappings:
+                  if m["endpoint"]!="searchkeywordforgeophysical": continue
+                  fld=m.get("fldname"); kw=m.get("keywords")
+                  if not fld or not kw: continue
+                  key=(fld,kw)
+                  if key in seen: continue
+                  seen.add(key)
+                  q=f"{fld} SIMILAR TO '%{kw}%'"
+                  script2="""
+                    const q=arguments[0], done=arguments[arguments.length-1];
+                    try{
+                      const k=document.getElementById('csrfparname').value;
+                      const v=document.getElementById('csrfvalue').value;
+                      const aes=new AesUtil(128,1000);
+                      const encq=aes.encrypt(q,'FAAOCAg8AMIICCgKCAgEAv3SWf07W0ja');
+                      const empty=aes.encrypt('','FAAOCAg8AMIICCgKCAgEAv3SWf07W0ja');
+                      const body=new URLSearchParams();
+                      body.set('toponame',encq); body.set('yearfrom',''); body.set('yearto',''); body.set('stakehol',empty);
+                      fetch((typeof contextPath!=='undefined'?contextPath:'')+'guestuser/getgeophyscalsearchresult?'+encodeURIComponent(k)+'='+encodeURIComponent(v),{
+                        method:'POST',credentials:'same-origin',
+                        headers:{'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8','X-Requested-With':'XMLHttpRequest'},
+                        body:body.toString()
+                      }).then(async r=>done({status:r.status,url:r.url,text:await r.text(),query:q}))
+                        .catch(e=>done({error:String(e),query:q}));
+                    }catch(e){done({error:String(e),query:q})}
+                  """
+                  raw=d.execute_async_script(script2,q)
+                  try: raw["json"]=json.loads(raw.get("text",""))
+                  except: pass
+                  probes.append(raw)
+              result["geophysical_catalog_probes"]=probes
+          finally:
+              d.quit()
+          Path("out/result.json").write_text(json.dumps(result,indent=2))
+          print(json.dumps(result,indent=2)[:100000])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ngdr-sm222-direct-guest-query
+          path: out/
+          retention-days: 14
