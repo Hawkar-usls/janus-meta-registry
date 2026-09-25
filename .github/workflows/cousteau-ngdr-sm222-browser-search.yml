@@ -1,0 +1,142 @@
+name: JANUS Cousteau NGDR SM222 Browser Search
+on:
+  push:
+    paths:
+      - data/JANUS-COUSTEAU-NGDR-BROWSER-TRIGGER.txt
+permissions:
+  contents: read
+jobs:
+  browser-search:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Install Selenium
+        run: python3 -m pip install -q selenium
+      - name: Search NGDR guest UI
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          python3 - <<'PY'
+          import json,time,re
+          from pathlib import Path
+          from selenium import webdriver
+          from selenium.webdriver.chrome.options import Options
+          from selenium.webdriver.common.by import By
+
+          opt=Options()
+          opt.add_argument("--headless=new")
+          opt.add_argument("--no-sandbox")
+          opt.add_argument("--disable-dev-shm-usage")
+          opt.add_argument("--window-size=1920,1600")
+          opt.set_capability("goog:loggingPrefs", {"performance":"ALL","browser":"ALL"})
+          d=webdriver.Chrome(options=opt)
+          out={"attempts":[]}
+          try:
+              d.get("https://geodataindia.gov.in/guestuser")
+              time.sleep(7)
+              Path("out/initial.html").write_text(d.page_source,errors="ignore")
+              d.save_screenshot("out/initial.png")
+
+              # Inventory visible controls.
+              controls=d.execute_script("""
+                return Array.from(document.querySelectorAll('input,select,button,a')).map((e,i)=>{
+                  const r=e.getBoundingClientRect();
+                  return {i,tag:e.tagName,id:e.id,name:e.name,type:e.type||'',text:(e.innerText||e.value||'').trim(),
+                    placeholder:e.placeholder||'',cls:e.className||'',x:r.x,y:r.y,w:r.width,h:r.height,
+                    visible:!!(r.width&&r.height),outer:e.outerHTML.slice(0,800)}
+                }).filter(x=>x.visible);
+              """)
+              Path("out/controls.json").write_text(json.dumps(controls,indent=2))
+
+              def perf():
+                  arr=[]
+                  for x in d.get_log("performance"):
+                      try:
+                          m=json.loads(x["message"])["message"]
+                          if m["method"]=="Network.requestWillBeSent":
+                              p=m["params"]; req=p["request"]
+                              if "geodataindia.gov.in" in req.get("url",""):
+                                  arr.append({"url":req["url"],"method":req["method"],
+                                              "postData":req.get("postData"),"type":p.get("type")})
+                      except: pass
+                  return arr
+              perf() # clear initial
+
+              keywords=["SM-222","Pudimadaka","Godavari","Multibeam Bathymetric Survey"]
+              for kw in keywords:
+                  d.get("https://geodataindia.gov.in/guestuser")
+                  time.sleep(5)
+                  candidates=d.execute_script("""
+                    return Array.from(document.querySelectorAll('input')).map(e=>{
+                      const r=e.getBoundingClientRect();
+                      const s=(e.id+' '+e.name+' '+(e.placeholder||'')+' '+(e.getAttribute('aria-label')||'')).toLowerCase();
+                      return {id:e.id,name:e.name,placeholder:e.placeholder||'',x:r.x,y:r.y,w:r.width,h:r.height,
+                        visible:!!(r.width&&r.height),score:(s.includes('keyword')?100:0)+(s.includes('search')?10:0)}
+                    }).filter(x=>x.visible).sort((a,b)=>b.score-a.score);
+                  """)
+                  attempt={"keyword":kw,"input_candidates":candidates[:30]}
+                  chosen=None
+                  # Prefer explicit keyword id/name.
+                  for c in candidates:
+                      if c["score"]>=100:
+                          chosen=c; break
+                  # If none, locate text 'By Keyword' and nearest text input below it within 220px.
+                  if chosen is None:
+                      chosen=d.execute_script("""
+                        const labels=Array.from(document.querySelectorAll('*')).filter(e=>
+                          (e.innerText||'').trim()==='By Keyword' && e.getBoundingClientRect().width>0);
+                        if(!labels.length) return null;
+                        const lr=labels[labels.length-1].getBoundingClientRect();
+                        const ins=Array.from(document.querySelectorAll('input')).map(e=>({e,r:e.getBoundingClientRect()}))
+                          .filter(o=>o.r.width>0&&o.r.height>0&&o.r.y>=lr.y-20&&o.r.y<=lr.y+260)
+                          .sort((a,b)=>Math.abs(a.r.y-lr.y)-Math.abs(b.r.y-lr.y));
+                        if(!ins.length) return null;
+                        const e=ins[0].e,r=ins[0].r; return {id:e.id,name:e.name,placeholder:e.placeholder||'',x:r.x,y:r.y,w:r.width,h:r.height};
+                      """)
+                  attempt["chosen_input"]=chosen
+                  if not chosen:
+                      out["attempts"].append(attempt); continue
+                  selector=None
+                  if chosen.get("id"): selector=("#"+chosen["id"])
+                  elif chosen.get("name"): selector=("[name='"+chosen["name"]+"']")
+                  if selector:
+                      el=d.find_element(By.CSS_SELECTOR,selector)
+                  else:
+                      el=d.execute_script("return document.elementFromPoint(arguments[0],arguments[1])", chosen["x"]+5, chosen["y"]+5)
+                  d.execute_script("arguments[0].scrollIntoView({block:'center'})",el)
+                  el.clear(); el.send_keys(kw)
+                  time.sleep(0.5)
+                  # nearest visible Search button by screen geometry
+                  search=d.execute_script("""
+                    const el=arguments[0], r=el.getBoundingClientRect();
+                    const bs=Array.from(document.querySelectorAll('button,input[type=button],input[type=submit],a')).map(e=>({e,r:e.getBoundingClientRect(),
+                      t:(e.innerText||e.value||e.title||'').trim()}))
+                      .filter(o=>o.r.width>0&&o.r.height>0&&/^search$/i.test(o.t));
+                    bs.sort((a,b)=>(Math.abs(a.r.y-r.y)+Math.abs(a.r.x-r.x))-(Math.abs(b.r.y-r.y)+Math.abs(b.r.x-r.x)));
+                    return bs.length?bs[0].e:null;
+                  """,el)
+                  if search:
+                      attempt["search_outer"]=d.execute_script("return arguments[0].outerHTML",search)[:1200]
+                      d.execute_script("arguments[0].click()",search)
+                      time.sleep(8)
+                  else:
+                      el.submit(); time.sleep(8)
+                  body=d.find_element(By.TAG_NAME,"body").text
+                  attempt["body_hits"]=[line for line in body.splitlines() if any(t.lower() in line.lower() for t in ["SM-222","Pudimadaka","Godavari","Ghosh","Multibeam","NUID"])][:200]
+                  attempt["url_after"]=d.current_url
+                  attempt["network"]=perf()
+                  Path(f"out/{re.sub('[^A-Za-z0-9]+','_',kw)}.html").write_text(d.page_source,errors="ignore")
+                  d.save_screenshot(f"out/{re.sub('[^A-Za-z0-9]+','_',kw)}.png")
+                  out["attempts"].append(attempt)
+              out["browser_logs"]=d.get_log("browser")
+          finally:
+              d.quit()
+          Path("out/result.json").write_text(json.dumps(out,indent=2))
+          print(json.dumps(out,indent=2)[:60000])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ngdr-sm222-browser-search
+          path: out/
+          retention-days: 14
