@@ -1,0 +1,99 @@
+name: JANUS NGDR SM222 Geometry and Bathymetry Verify
+
+on:
+  push:
+    paths:
+      - data/JANUS-NGDR-SM222-GEOM-BATHY-VERIFY-TRIGGER.txt
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Verify SM222 polygons and Bathymetry_India neighborhood
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          python3 - <<'PY'
+          import requests,json,pathlib,math,re
+          LAT=17.0710306; LON=83.2693611
+          base='https://geodataindia.gov.in/guestuser/wmsurl128/'
+          h={'User-Agent':'Mozilla/5.0 JANUS-Cousteau/1.0'}
+          s=requests.Session()
+          result={'target':{'lat':LAT,'lon':LON}}
+
+          # WFS exact SM-222 polygons.
+          p={'service':'WFS','version':'1.0.0','request':'GetFeature',
+             'typeName':'cruise_identification_marine_geology',
+             'CQL_FILTER':"cruise_id='SM-222'",
+             'outputFormat':'application/json','srsName':'EPSG:4326'}
+          try:
+              r=s.get(base,params=p,headers=h,timeout=60)
+              pathlib.Path('out/sm222_wfs.json').write_bytes(r.content)
+              result['wfs']={'status':r.status_code,'url':r.url,'bytes':len(r.content),'type':r.headers.get('Content-Type'),'head':r.text[:3000]}
+              if r.status_code==200:
+                  try:
+                      j=r.json()
+                      result['wfs']['feature_count']=len(j.get('features',[]))
+                      result['wfs']['features']=[{'id':f.get('id'),'properties':f.get('properties'),'geometry':f.get('geometry')} for f in j.get('features',[])]
+                  except Exception as e: result['wfs']['parse_error']=repr(e)
+          except Exception as e: result['wfs']={'error':repr(e)}
+
+          # WCS service/coverage metadata.
+          for reqname,params in [
+             ('wcs_caps',{'SERVICE':'WCS','VERSION':'1.0.0','REQUEST':'GetCapabilities'}),
+             ('wcs_desc',{'SERVICE':'WCS','VERSION':'1.0.0','REQUEST':'DescribeCoverage','COVERAGE':'Bathymetry_India'})
+          ]:
+              try:
+                  r=s.get(base,params=params,headers=h,timeout=60)
+                  pathlib.Path('out/'+reqname+'.xml').write_bytes(r.content)
+                  result[reqname]={'status':r.status_code,'url':r.url,'bytes':len(r.content),'type':r.headers.get('Content-Type'),'head':r.text[:5000]}
+              except Exception as e: result[reqname]={'error':repr(e)}
+
+          # Bathymetry_India point neighborhood.
+          def fi(lon,lat,half=0.001):
+              bbox=f'{lon-half},{lat-half},{lon+half},{lat+half}'
+              p={'SERVICE':'WMS','VERSION':'1.1.1','REQUEST':'GetFeatureInfo',
+                 'LAYERS':'Bathymetry_India','QUERY_LAYERS':'Bathymetry_India',
+                 'SRS':'EPSG:4326','BBOX':bbox,'WIDTH':'101','HEIGHT':'101','X':'50','Y':'50',
+                 'FEATURE_COUNT':'1','INFO_FORMAT':'text/plain','STYLES':''}
+              rr=s.get(base,params=p,headers=h,timeout=30)
+              m=re.search(r'GRAY_INDEX\s*=\s*([-+0-9.]+)',rr.text)
+              return {'lon':lon,'lat':lat,'status':rr.status_code,'gray':float(m.group(1)) if m else None,'text':rr.text[:500]}
+
+          offs=[-0.02,-0.01,-0.005,0,0.005,0.01,0.02]
+          grid=[]
+          for dy in offs:
+              row=[]
+              for dx in offs:
+                  try: row.append(fi(LON+dx,LAT+dy))
+                  except Exception as e: row.append({'lon':LON+dx,'lat':LAT+dy,'error':repr(e)})
+              grid.append(row)
+          result['bathy_grid']=grid
+
+          # compare central gradients in raw positive index units
+          vals=[[c.get('gray') for c in row] for row in grid]
+          result['bathy_values']=vals
+          c=3
+          if all(vals[c][i] is not None for i in [2,3,4]) and vals[c-1][c] is not None and vals[c+1][c] is not None:
+              result['local_deltas']={
+                'center':vals[c][c],
+                'west':vals[c][c-1],'east':vals[c][c+1],
+                'north':vals[c+1][c],'south':vals[c-1][c],
+                'east_minus_west':vals[c][c+1]-vals[c][c-1],
+                'north_minus_south':vals[c+1][c]-vals[c-1][c]
+              }
+
+          pathlib.Path('out/result.json').write_text(json.dumps(result,indent=2))
+          print(json.dumps(result,indent=2)[:50000])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ngdr-sm222-geometry-bathy-verify
+          path: out/
+          retention-days: 14
