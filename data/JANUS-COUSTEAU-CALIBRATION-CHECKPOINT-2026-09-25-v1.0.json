@@ -1,6 +1,111 @@
 {
   "artifact_id": "JANUS-COUSTEAU-CALIBRATION-CHECKPOINT-2026-09-25-v1.0",
   "date": "2026-09-25",
-  "status": "ACTIVE",
-  "next_gate": "SM222_EXACT_COVERAGE_AND_CD169_NAV_BINDING"
+  "status": "ACTIVE__THRESHOLDS_FROZEN",
+  "calibration_contract": {
+    "coordinate": [
+      "C0_NAME_ONLY",
+      "C1_REGION",
+      "C2_APPROX_POINT",
+      "C3_TRACEABLE_DERIVED_POINT",
+      "C4_FROZEN_TRACEABLE_POINT"
+    ],
+    "data": [
+      "D0_NONE",
+      "D1_GLOBAL_OR_REGIONAL_GRID",
+      "D2_SURVEY_REGION_ONLY",
+      "D3_TRACK_OR_SWATH_INTERSECTION_PENDING_PIXEL_VALIDITY",
+      "D4_POINT_BOUND_MEASURED_DATA"
+    ],
+    "ground_truth": [
+      "G0_NONE",
+      "G1_PUBLISHED_INTERPRETATION",
+      "G2_INDEPENDENT_SECOND_SENSOR_OR_REPEAT",
+      "G3_DIRECT_IMAGE_OR_SAMPLE",
+      "G4_KNOWN_MULTIMODAL_OBJECT_OR_FEATURE"
+    ]
+  },
+  "hard_rules": [
+    "SURVEY_AREA_NE_SWATH_AT_POINT",
+    "TRACK_CROSSING_NE_VALID_SENSOR_DATA",
+    "GLOBAL_GRID_NE_LOCAL_SONAR",
+    "GEOMETRIC_SHAPE_NE_ARTIFICIAL_OBJECT",
+    "NO_MORPHOLOGY_BEFORE_POINT_BOUND_DATA",
+    "NO_RECENTERING_AFTER_LOOKING",
+    "BLOCKED_IS_A_VALID_RESULT"
+  ],
+  "active_targets": [
+    {
+      "id": "SM222_INDIA",
+      "coordinate": [
+        17.0710306,
+        83.2693611
+      ],
+      "grade": "C4_D2_G0",
+      "next": "EXACT_SWATH_OR_GRID_CELL_BINDING"
+    },
+    {
+      "id": "CD169_TOBI02_LINE19",
+      "coordinate": [
+        -3.8654180644718967,
+        -12.142441475
+      ],
+      "grade": "C3_D3_G0",
+      "next": "NATIVE_NAV_AND_SENSOR_VALIDITY_BINDING"
+    },
+    {
+      "id": "LOVE_EDEM_OCEAN",
+      "coordinate": [
+        -3.8654180644718967,
+        3.854924373538978
+      ],
+      "grade": "C4_D1_G0",
+      "next": "WAIT_FOR_LOCAL_SENSOR_COVERAGE"
+    },
+    {
+      "id": "JANUS_ZERO_NODE",
+      "coordinate": [
+        -47.3,
+        47.9
+      ],
+      "grade": "C4_D1_G0",
+      "next": "BLOCK_MORPHOLOGY_UNTIL_HIGH_RES_DATA"
+    }
+  ],
+  "controls": [
+    {
+      "id": "RMS_TITANIC_BOW",
+      "coordinate": [
+        41.7325,
+        -49.9469444444
+      ],
+      "role": "KNOWN_ENGINEERED_POSITIVE"
+    },
+    {
+      "id": "REGAB",
+      "coordinate": [
+        -5.7966666667,
+        9.71
+      ],
+      "role": "NATURAL_FALSE_POSITIVE"
+    },
+    {
+      "id": "KOUILOU_HYDRATE_HOLE",
+      "coordinate": [
+        -4.81,
+        9.9083
+      ],
+      "role": "NATURAL_FALSE_POSITIVE"
+    },
+    {
+      "id": "DRACHENSCHLUND",
+      "coordinate": [
+        -8.2975,
+        -13.5073
+      ],
+      "role": "NATURAL_CRATER_LIKE_CONTROL"
+    }
+  ],
+  "next_gate": "SM222_EXACT_COVERAGE_AND_CD169_NAV_BINDING",
+  "canonical_seal": "PROVE_THE_PIXEL__PROVE_THE_SENSOR__THEN_SCORE_THE_SHAPE"
 }
