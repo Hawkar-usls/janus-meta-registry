@@ -1,0 +1,120 @@
+name: JANUS NGDR SM222 Catalog Join
+
+on:
+  push:
+    paths:
+      - data/JANUS-NGDR-SM222-CATALOG-JOIN-TRIGGER.txt
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  join:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Discover schemas and search public catalog
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          python3 - <<'PY'
+          import requests, json, pathlib, re, xml.etree.ElementTree as ET
+          base='https://geodataindia.gov.in/guestuser/wmsurl128/'
+          h={'User-Agent':'Mozilla/5.0 JANUS-Cousteau/1.0'}
+          s=requests.Session()
+          layers=[
+            'geophysical_data_gis_view_report',
+            'cruise_identification_marine_geology',
+            'bathymetry_marine_geology',
+            'bathymetry_contours_india_marine_geophysics',
+            'shallow_seismic_data_mcsd_marine_geophysics',
+            'gravity_data_bay_of_bengal_marine_geophysics',
+            'magnetic_data_bay_of_bengal_marine_geophysics',
+            'core_samples_marine_geology'
+          ]
+          out={'schemas':{},'searches':{},'sm222_crosslayer':{}}
+          text_fields={}
+
+          for layer in layers:
+              p={'service':'WFS','version':'1.0.0','request':'DescribeFeatureType','typeName':layer}
+              try:
+                  r=s.get(base,params=p,headers=h,timeout=45)
+                  pathlib.Path(f'out/schema_{layer}.xml').write_bytes(r.content)
+                  fields=[]
+                  try:
+                      root=ET.fromstring(r.content)
+                      for e in root.iter():
+                          if e.tag.split('}')[-1]=='element':
+                              name=e.attrib.get('name')
+                              typ=e.attrib.get('type','')
+                              if name and name!=layer:
+                                  fields.append({'name':name,'type':typ})
+                  except Exception as e: pass
+                  out['schemas'][layer]={'status':r.status_code,'fields':fields,'head':r.text[:2500]}
+                  text_fields[layer]=[f['name'] for f in fields if any(k in f['type'].lower() for k in ['string','char','text']) or f['name'] in ['cruise_id','project_title','keyword','geo_upid','geoUpid']]
+              except Exception as e:
+                  out['schemas'][layer]={'error':repr(e)}
+
+          terms=['SM-222','SM222','Pudimadaka','Godavari','Multibeam','Samudra']
+          search_layer='geophysical_data_gis_view_report'
+          fields=text_fields.get(search_layer,[])
+          # Keep only semantically appropriate human-readable metadata fields.
+          allowed=[f for f in fields if any(k in f.lower() for k in ['project','title','keyword','upid','accession','report','owner','year','district','state'])]
+          for term in terms:
+              clauses=[]
+              esc=term.replace("'","''")
+              for f in allowed:
+                  clauses.append(f+" ILIKE '%"+esc+"%'")
+              if not clauses: continue
+              cql=' OR '.join(clauses)
+              p={'service':'WFS','version':'1.0.0','request':'GetFeature','typeName':search_layer,
+                 'CQL_FILTER':cql,'outputFormat':'application/json','srsName':'EPSG:4326','maxFeatures':'200'}
+              try:
+                  r=s.get(base,params=p,headers=h,timeout=60)
+                  pathlib.Path('out/search_'+re.sub(r'[^A-Za-z0-9]+','_',term)+'.json').write_bytes(r.content)
+                  rec={'status':r.status_code,'url':r.url,'bytes':len(r.content),'allowed_fields':allowed}
+                  try:
+                      j=r.json()
+                      rec['feature_count']=len(j.get('features',[]))
+                      rec['features']=[{'id':f.get('id'),'properties':f.get('properties')} for f in j.get('features',[])[:200]]
+                  except Exception as e:
+                      rec['parse_error']=repr(e); rec['head']=r.text[:3000]
+                  out['searches'][term]=rec
+              except Exception as e: out['searches'][term]={'error':repr(e)}
+
+          # Cross-layer exact SM-222 only where schema exposes cruise-like text fields.
+          for layer,fields in text_fields.items():
+              cruise_fields=[f for f in fields if 'cruise' in f.lower()]
+              if not cruise_fields: continue
+              clauses=[f+"='SM-222'" for f in cruise_fields]
+              p={'service':'WFS','version':'1.0.0','request':'GetFeature','typeName':layer,
+                 'CQL_FILTER':' OR '.join(clauses),'outputFormat':'application/json','srsName':'EPSG:4326','maxFeatures':'500'}
+              try:
+                  r=s.get(base,params=p,headers=h,timeout=60)
+                  pathlib.Path(f'out/sm222_{layer}.json').write_bytes(r.content)
+                  rec={'status':r.status_code,'url':r.url,'bytes':len(r.content),'cruise_fields':cruise_fields}
+                  try:
+                      j=r.json()
+                      rec['feature_count']=len(j.get('features',[]))
+                      rec['features']=[{'id':f.get('id'),'properties':f.get('properties'),'geometry':f.get('geometry')} for f in j.get('features',[])[:100]]
+                  except Exception as e:
+                      rec['parse_error']=repr(e); rec['head']=r.text[:3000]
+                  out['sm222_crosslayer'][layer]=rec
+              except Exception as e: out['sm222_crosslayer'][layer]={'error':repr(e)}
+
+          pathlib.Path('out/result.json').write_text(json.dumps(out,indent=2))
+          print('SCHEMAS')
+          print(json.dumps({k:v.get('fields') for k,v in out['schemas'].items()},indent=2)[:25000])
+          print('SEARCHES')
+          print(json.dumps(out['searches'],indent=2)[:40000])
+          print('CROSSLAYER')
+          print(json.dumps(out['sm222_crosslayer'],indent=2)[:40000])
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ngdr-sm222-catalog-join
+          path: out/
+          retention-days: 14
