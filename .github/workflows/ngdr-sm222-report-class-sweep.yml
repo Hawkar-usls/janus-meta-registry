@@ -1,0 +1,71 @@
+name: JANUS NGDR SM222 Report Class Sweep
+
+on:
+  push:
+    paths:
+      - data/JANUS-NGDR-SM222-REPORT-CLASS-TRIGGER.txt
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Search report-class public WFS layers
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          python3 - <<'PY'
+          import requests,json,pathlib,xml.etree.ElementTree as ET,re
+          base='https://geodataindia.gov.in/guestuser/wmsurl128/'
+          h={'User-Agent':'Mozilla/5.0 JANUS-Cousteau/1.0'}
+          s=requests.Session()
+          layers=['exploration_data_gis_view_report','exploration_reports_aoi_28-02-22_ngdr','geophysical_data_gis_view_report']
+          terms=['SM-222','SM222','Pudimadaka','Godavari','Multibeam','Samudra Manthan','continental slope']
+          out={}
+          for layer in layers:
+              rs=s.get(base,params={'service':'WFS','version':'1.0.0','request':'DescribeFeatureType','typeName':layer},headers=h,timeout=40)
+              fields=[]
+              try:
+                  root=ET.fromstring(rs.content)
+                  for e in root.iter():
+                      if e.tag.split('}')[-1]=='element' and e.attrib.get('name')!=layer:
+                          fields.append({'name':e.attrib.get('name'),'type':e.attrib.get('type','')})
+              except: pass
+              txt=[f['name'] for f in fields if any(k in f['type'].lower() for k in ['string','char','text'])]
+              allowed=[f for f in txt if any(k in f.lower() for k in ['project','title','keyword','upid','accession','report','description','owner','code','cruise','state','district','year','file'])]
+              lr={'fields':fields,'allowed':allowed,'searches':{}}
+              for term in terms:
+                  if not allowed: continue
+                  esc=term.replace("'","''")
+                  cql=' OR '.join([f+" ILIKE '%"+esc+"%'" for f in allowed])
+                  p={'service':'WFS','version':'1.0.0','request':'GetFeature','typeName':layer,
+                     'CQL_FILTER':cql,'outputFormat':'application/json','srsName':'EPSG:4326','maxFeatures':'100'}
+                  try:
+                      r=s.get(base,params=p,headers=h,timeout=60)
+                      rec={'status':r.status_code,'bytes':len(r.content)}
+                      try:
+                          j=r.json()
+                          rec['feature_count']=len(j.get('features',[]))
+                          rec['features']=[{'id':f.get('id'),'properties':f.get('properties')} for f in j.get('features',[])[:100]]
+                      except Exception as e:
+                          rec['parse_error']=repr(e);rec['head']=r.text[:3000]
+                      lr['searches'][term]=rec
+                      pathlib.Path(f"out/{layer}_{re.sub(r'[^A-Za-z0-9]+','_',term)}.json").write_bytes(r.content)
+                  except Exception as e: lr['searches'][term]={'error':repr(e)}
+              out[layer]=lr
+          pathlib.Path('out/result.json').write_text(json.dumps(out,indent=2))
+          compact={}
+          for layer,lr in out.items():
+              compact[layer]={'allowed':lr['allowed'],'hits':{t:r for t,r in lr['searches'].items() if r.get('feature_count',0)>0}}
+          print(json.dumps(compact,indent=2)[:60000])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ngdr-sm222-report-class-sweep
+          path: out/
+          retention-days: 14
