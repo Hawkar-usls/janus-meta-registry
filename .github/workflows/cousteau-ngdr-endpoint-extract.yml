@@ -1,0 +1,62 @@
+name: JANUS Cousteau NGDR Endpoint Extract
+on:
+  push:
+    paths:
+      - data/JANUS-COUSTEAU-NGDR-ENDPOINT-TRIGGER.txt
+permissions:
+  contents: read
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - name: Fetch target JS and extract endpoints
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          python3 - <<'PY'
+          import re,json,urllib.request,urllib.parse
+          from pathlib import Path
+          base="https://geodataindia.gov.in/"
+          files=[
+            "mis/js/customscripts/geophysicaldata.js",
+            "customol/js/keywordsearch/keywordsearch.js",
+            "mis/js/customscripts/explorationdatasearch.js",
+            "mis/js/services/misservices.js",
+            "mis/js/customscripts/multiCriteriaSearch.js",
+            "mis/js/customscripts/autocomplet.js"
+          ]
+          out={}
+          for i,p in enumerate(files):
+              u=urllib.parse.urljoin(base,p)
+              req=urllib.request.Request(u,headers={"User-Agent":"Mozilla/5.0"})
+              try:
+                  with urllib.request.urlopen(req,timeout=15) as r: b=r.read()
+                  txt=b.decode("utf-8","replace")
+                  Path(f"out/js_{i}.js").write_text(txt)
+                  hits=[]
+                  for pat in [
+                    r'url\s*:\s*["\']([^"\']+)["\']',
+                    r'fetch\(\s*["\']([^"\']+)["\']',
+                    r'\.ajax\s*\(\s*\{[^}]{0,2000}?url\s*:\s*["\']([^"\']+)["\']',
+                    r'["\']([^"\']*(?:report|keyword|search|geophysical|nuid|mis|guestuser)[^"\']*)["\']'
+                  ]:
+                    for m in re.findall(pat,txt,re.I|re.S):
+                      val=m if isinstance(m,str) else m[0]
+                      if val not in hits and 0<len(val)<500: hits.append(val)
+                  snippets=[]
+                  for term in ["ajax","keyword","report","nuid","geophysical","search"]:
+                    for m in list(re.finditer(term,txt,re.I))[:20]:
+                      snippets.append(txt[max(0,m.start()-400):min(len(txt),m.end()+900)])
+                  out[p]={"url":u,"bytes":len(b),"hits":hits[:200],"snippets":snippets[:80]}
+              except Exception as e:
+                  out[p]={"url":u,"error":repr(e)}
+          Path("out/result.json").write_text(json.dumps(out,indent=2))
+          print(json.dumps(out,indent=2)[:70000])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ngdr-endpoint-extract
+          path: out/
+          retention-days: 7
