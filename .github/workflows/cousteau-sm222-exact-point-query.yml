@@ -1,0 +1,173 @@
+name: JANUS Cousteau SM222 Exact Point Query
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - data/JANUS-COUSTEAU-SM222-EXACT-POINT-QUERY-TRIGGER.txt
+
+permissions:
+  contents: read
+
+jobs:
+  exact-point-query:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Query public bathymetry services
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          python3 - <<'PY'
+          import json, math, os, urllib.parse, urllib.request, urllib.error
+          from pathlib import Path
+
+          LAT=17.0710306
+          LON=83.2693611
+          OUT=Path("out")
+
+          def get(url, name, timeout=60):
+              req=urllib.request.Request(url, headers={"User-Agent":"JANUS-Cousteau-SM222/1.0"})
+              rec={"url":url}
+              try:
+                  with urllib.request.urlopen(req, timeout=timeout) as r:
+                      body=r.read()
+                      rec["http_status"]=getattr(r,"status",200)
+                      rec["content_type"]=r.headers.get("Content-Type")
+                      rec["bytes"]=len(body)
+                      (OUT/name).write_bytes(body)
+              except Exception as e:
+                  rec["error"]=repr(e)
+              return rec
+
+          manifest={"target":{"lat":LAT,"lon":LON},"requests":[]}
+
+          # 1) Exact GMRT point.
+          q=urllib.parse.urlencode({"latitude":LAT,"longitude":LON,"format":"json"})
+          manifest["requests"].append(get("https://www.gmrt.org/services/PointServer?"+q,"gmrt_point.json"))
+
+          # 2) GMRT local unmasked + high-resolution-only masked ArcASCII.
+          box={"north":LAT+0.02,"south":LAT-0.02,"west":LON-0.02,"east":LON+0.02,
+               "format":"esriascii","resolution":"max"}
+          for layer,name in [("topo","gmrt_local_topo.asc"),("topo-mask","gmrt_local_mask.asc")]:
+              p=dict(box); p["layer"]=layer
+              manifest["requests"].append(get("https://www.gmrt.org/services/GridServer?"+urllib.parse.urlencode(p),name,120))
+
+          # 3) GEBCO 2026 exact point via ODB public API.
+          q=urllib.parse.urlencode({"lon":LON,"lat":LAT,"mode":"point"})
+          manifest["requests"].append(get("https://api.odb.ntu.edu.tw/gebco?"+q,"gebco_point.json"))
+
+          # 4) Small GEBCO 2026 neighborhood (about 4.4 km x 4.4 km).
+          poly={
+            "type":"Polygon",
+            "coordinates":[[
+              [LON-0.02,LAT-0.02],[LON+0.02,LAT-0.02],[LON+0.02,LAT+0.02],
+              [LON-0.02,LAT+0.02],[LON-0.02,LAT-0.02]
+            ]]
+          }
+          q=urllib.parse.urlencode({"mode":"zonly,row","sample":1,"jsonsrc":json.dumps(poly,separators=(",",":"))})
+          manifest["requests"].append(get("https://api.odb.ntu.edu.tw/gebco?"+q,"gebco_local.json",120))
+
+          # 5) GEBCO WMS GetFeatureInfo: try depth + TID, WMS 1.3.0 and common formats.
+          bbox=f"{LAT-0.01},{LON-0.01},{LAT+0.01},{LON+0.01}"
+          for layer,label in [("gebco_latest_2","depth"),("gebco_latest_tid_2","tid")]:
+              for fmt in ["text/plain","application/json","text/html"]:
+                  p={"SERVICE":"WMS","VERSION":"1.3.0","REQUEST":"GetFeatureInfo",
+                     "LAYERS":layer,"QUERY_LAYERS":layer,"CRS":"EPSG:4326","BBOX":bbox,
+                     "WIDTH":101,"HEIGHT":101,"I":50,"J":50,"INFO_FORMAT":fmt}
+                  safe=fmt.replace("/","_")
+                  manifest["requests"].append(get("https://wms.gebco.net/mapserv?"+urllib.parse.urlencode(p),
+                                                   f"gebco_wms_{label}_{safe}.txt"))
+
+          # 6) NOAA NCEI multibeam track queries around the target.
+          base="https://gis.ngdc.noaa.gov/arcgis/rest/services/web_mercator/multibeam_dynamic/FeatureServer/0/query"
+          for dist in [0,5000,20000,50000]:
+              p={"f":"json","geometry":f"{LON},{LAT}","geometryType":"esriGeometryPoint",
+                 "inSR":4326,"outSR":4326,"spatialRel":"esriSpatialRelIntersects",
+                 "outFields":"SURVEY_ID,PLATFORM,SURVEY_YEAR,SOURCE,NGDC_ID,INSTRUMENT,TRACK_LENGTH,DOWNLOAD_URL",
+                 "returnGeometry":"false"}
+              if dist:
+                  p["distance"]=dist
+                  p["units"]="esriSRUnit_Meter"
+              manifest["requests"].append(get(base+"?"+urllib.parse.urlencode(p),f"ncei_tracks_{dist}m.json"))
+
+          def parse_arcascii(path):
+              p=OUT/path
+              if not p.exists(): return {"present":False}
+              lines=p.read_text(errors="replace").splitlines()
+              if len(lines)<7: return {"present":True,"parse":"too_short","head":lines[:20]}
+              header={}
+              idx=0
+              while idx<len(lines) and len(header)<6:
+                  parts=lines[idx].split()
+                  if len(parts)>=2 and parts[0].lower() in {"ncols","nrows","xllcorner","xllcenter","yllcorner","yllcenter","cellsize","nodata_value"}:
+                      try: header[parts[0].lower()]=float(parts[1])
+                      except: header[parts[0].lower()]=parts[1]
+                      idx+=1
+                  else: break
+              nod=float(header.get("nodata_value",-99999))
+              vals=[]
+              rows=[]
+              for line in lines[idx:]:
+                  try: row=[float(x) for x in line.split()]
+                  except: continue
+                  if row:
+                      rows.append(row)
+                      vals.extend(v for v in row if math.isfinite(v) and v!=nod)
+              result={"present":True,"header":header,"rows":len(rows),
+                      "finite_count":len(vals),"min":min(vals) if vals else None,
+                      "max":max(vals) if vals else None,
+                      "mean":sum(vals)/len(vals) if vals else None}
+              if rows and rows[0]:
+                  nr=len(rows); nc=len(rows[0])
+                  result["center_value"]=rows[nr//2][nc//2]
+                  # local 3x3 roughness around raster center
+                  rr=[]
+                  for i in range(max(0,nr//2-1),min(nr,nr//2+2)):
+                      for j in range(max(0,nc//2-1),min(nc,nc//2+2)):
+                          v=rows[i][j]
+                          if math.isfinite(v) and v!=nod: rr.append(v)
+                  if rr:
+                      mu=sum(rr)/len(rr)
+                      result["center_3x3_range"]=max(rr)-min(rr)
+                      result["center_3x3_sd"]=(sum((v-mu)**2 for v in rr)/len(rr))**0.5
+              return result
+
+          analysis={"gmrt_topo":parse_arcascii("gmrt_local_topo.asc"),
+                    "gmrt_mask":parse_arcascii("gmrt_local_mask.asc")}
+
+          for fn,key in [("gmrt_point.json","gmrt_point"),("gebco_point.json","gebco_point"),("gebco_local.json","gebco_local")]:
+              p=OUT/fn
+              if p.exists():
+                  try: analysis[key]=json.loads(p.read_text())
+                  except Exception as e: analysis[key]={"parse_error":repr(e),"head":p.read_text(errors="replace")[:1000]}
+
+          for dist in [0,5000,20000,50000]:
+              p=OUT/f"ncei_tracks_{dist}m.json"
+              if p.exists():
+                  try:
+                      d=json.loads(p.read_text())
+                      analysis[f"ncei_{dist}m"]={"feature_count":len(d.get("features",[])),
+                                                "features":d.get("features",[])[:20],
+                                                "error":d.get("error")}
+                  except Exception as e: analysis[f"ncei_{dist}m"]={"parse_error":repr(e)}
+
+          # Parse any successful WMS plain/html/json body compactly.
+          wms={}
+          for p in OUT.glob("gebco_wms_*"):
+              txt=p.read_text(errors="replace")
+              wms[p.name]=txt[:4000]
+          analysis["wms"]=wms
+
+          (OUT/"request_manifest.json").write_text(json.dumps(manifest,indent=2))
+          (OUT/"analysis.json").write_text(json.dumps(analysis,indent=2))
+          print(json.dumps(analysis,indent=2)[:30000])
+          PY
+
+      - name: Upload exact-query receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: sm222-exact-point-query
+          path: out/
+          retention-days: 14
