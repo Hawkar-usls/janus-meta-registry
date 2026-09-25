@@ -1,0 +1,75 @@
+name: JANUS NGDR SM222 Geophysical Record Probe
+
+on:
+  push:
+    paths:
+      - data/JANUS-NGDR-SM222-GEORECORD-TRIGGER.txt
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  query:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Query public geophysical/report layers at target
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          python3 - <<'PY'
+          import requests,json,pathlib
+          LAT=17.0710306; LON=83.2693611
+          base='https://geodataindia.gov.in/guestuser/wmsurl128/'
+          h={'User-Agent':'Mozilla/5.0 JANUS-Cousteau/1.0'}
+          s=requests.Session()
+          layers=[
+            'geophysical_data_gis_view_report',
+            'shallow_seismic_data_mcsd_marine_geophysics',
+            'gravity_data_bay_of_bengal_marine_geophysics',
+            'magnetic_data_bay_of_bengal_marine_geophysics',
+            'bathymetry_marine_geology'
+          ]
+          boxes=[
+            (LON-0.01,LAT-0.01,LON+0.01,LAT+0.01),
+            (LON-0.05,LAT-0.05,LON+0.05,LAT+0.05)
+          ]
+          out={'target':[LAT,LON],'layers':{}}
+          for layer in layers:
+              arr=[]
+              for bb in boxes:
+                  p={'service':'WFS','version':'1.0.0','request':'GetFeature',
+                     'typeName':layer,'bbox':','.join(map(str,bb))+',EPSG:4326',
+                     'outputFormat':'application/json','srsName':'EPSG:4326','maxFeatures':'100'}
+                  try:
+                      r=s.get(base,params=p,headers=h,timeout=60)
+                      rec={'bbox':bb,'status':r.status_code,'bytes':len(r.content),'type':r.headers.get('Content-Type'),'url':r.url}
+                      pathlib.Path(f"out/{layer}_{len(arr)}.bin").write_bytes(r.content)
+                      try:
+                          j=r.json()
+                          rec['feature_count']=len(j.get('features',[]))
+                          rec['features']=[{'id':f.get('id'),'properties':f.get('properties'),'geometry_type':(f.get('geometry') or {}).get('type')} for f in j.get('features',[])[:100]]
+                      except Exception as e:
+                          rec['parse_error']=repr(e); rec['head']=r.text[:3000]
+                  except Exception as e: rec={'bbox':bb,'error':repr(e)}
+                  arr.append(rec)
+              out['layers'][layer]=arr
+
+          # Try legend graphic for Bathymetry_India.
+          p={'SERVICE':'WMS','VERSION':'1.1.1','REQUEST':'GetLegendGraphic','FORMAT':'image/png',
+             'LAYER':'Bathymetry_India','STYLE':'Bathymetry_india','WIDTH':'54','HEIGHT':'602'}
+          try:
+              r=s.get(base,params=p,headers=h,timeout=60)
+              pathlib.Path('out/bathymetry_legend.png').write_bytes(r.content)
+              out['legend']={'status':r.status_code,'bytes':len(r.content),'type':r.headers.get('Content-Type'),'url':r.url}
+          except Exception as e: out['legend']={'error':repr(e)}
+          pathlib.Path('out/result.json').write_text(json.dumps(out,indent=2))
+          print(json.dumps(out,indent=2)[:60000])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ngdr-sm222-geophysical-record-probe
+          path: out/
+          retention-days: 14
