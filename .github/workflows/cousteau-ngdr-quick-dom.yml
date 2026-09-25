@@ -1,0 +1,37 @@
+name: JANUS Cousteau NGDR Quick DOM Probe
+on:
+  push:
+    paths:
+      - data/JANUS-COUSTEAU-NGDR-QUICK-TRIGGER.txt
+permissions:
+  contents: read
+jobs:
+  quick:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - name: Fetch guest HTML and list scripts
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          curl -L --max-time 15 -A 'Mozilla/5.0' -o out/guest.html https://geodataindia.gov.in/guestuser
+          python3 - <<'PY'
+          import re,json
+          from pathlib import Path
+          t=Path('out/guest.html').read_text(errors='replace')
+          scripts=re.findall(r'<script[^>]+src=["\']([^"\']+)',t,re.I)
+          inline=re.findall(r'<script(?![^>]+src)[^>]*>(.*?)</script>',t,re.I|re.S)
+          interesting=[]
+          for s in inline:
+            if re.search(r'ajax|fetch|report|keyword|nuid|search',s,re.I):
+              interesting.append(s[:12000])
+          r={'bytes':len(t),'scripts':scripts,'inline_interesting':interesting[:20]}
+          Path('out/result.json').write_text(json.dumps(r,indent=2))
+          print(json.dumps(r,indent=2)[:40000])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ngdr-quick-dom
+          path: out/
+          retention-days: 7
