@@ -1,0 +1,108 @@
+name: JANUS Cousteau SM222 NGDR Exact Report Detail
+on:
+  push:
+    paths:
+      - data/JANUS-COUSTEAU-SM222-NGDR-DETAIL-TRIGGER.txt
+permissions:
+  contents: read
+jobs:
+  detail:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - run: python3 -m pip install -q selenium
+      - name: Fetch exact SM-222 report detail through public guest endpoint
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          python3 - <<'PY'
+          import json,time
+          from pathlib import Path
+          from selenium import webdriver
+          from selenium.webdriver.chrome.options import Options
+
+          TITLE="Progress Report On Multibeam Bathymetric Survey Of The Continental Slope Off Pudimadaka-Godavari, Andhra Pradesh Coast"
+          opt=Options()
+          opt.add_argument("--headless=new")
+          opt.add_argument("--no-sandbox")
+          opt.add_argument("--disable-dev-shm-usage")
+          opt.add_argument("--window-size=1600,1200")
+          d=webdriver.Chrome(options=opt)
+          d.set_script_timeout(90)
+          out={}
+          try:
+              d.get("https://geodataindia.gov.in/guestuser")
+              time.sleep(5)
+              query="project_title SIMILAR TO '%Pudimadaka-Godavari%'"
+              script="""
+                const q=arguments[0], done=arguments[arguments.length-1];
+                try{
+                  const key=document.getElementById('csrfparname').value;
+                  const value=document.getElementById('csrfvalue').value;
+                  const aes=new AesUtil(128,1000);
+                  const secret='FAAOCAg8AMIICCgKCAgEAv3SWf07W0ja';
+                  const encq=aes.encrypt(q,secret);
+                  const encrpt=aes.encrypt('Geological Report',secret);
+                  const encstake=aes.encrypt('',secret);
+                  const body=new URLSearchParams();
+                  body.set('toponame',encq);
+                  body.set('report_type',encrpt);
+                  body.set('yearfrom','');
+                  body.set('yearto','');
+                  body.set('stakehol',encstake);
+                  fetch((typeof contextPath!=='undefined'?contextPath:'')+'guestuser/getSearchResult_Base?'+encodeURIComponent(key)+'='+encodeURIComponent(value),{
+                    method:'POST',credentials:'same-origin',
+                    headers:{'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8','X-Requested-With':'XMLHttpRequest'},
+                    body:body.toString()
+                  }).then(async r=>done({status:r.status,url:r.url,text:await r.text(),query:q}))
+                    .catch(e=>done({error:String(e),query:q}));
+                }catch(e){done({error:String(e),query:q})}
+              """
+              raw=d.execute_async_script(script,query)
+              out["filtered_request"]=raw
+              try: records=json.loads(raw.get("text",""))
+              except: records=[]
+              out["record_count"]=len(records) if isinstance(records,list) else None
+              exact=[]
+              if isinstance(records,list):
+                  for rec in records:
+                      title=str(rec.get("project_title",""))
+                      if "Pudimadaka-Godavari" in title or str(rec.get("id",""))=="5192":
+                          exact.append(rec)
+              out["exact_records"]=exact
+              # If baseid is available, ask map-boundary endpoint too.
+              boundaries=[]
+              for rec in exact:
+                  baseid=rec.get("baseid") or rec.get("id")
+                  if baseid is None: continue
+                  script2="""
+                    const baseid=arguments[0], done=arguments[arguments.length-1];
+                    const key=document.getElementById('csrfparname').value;
+                    const value=document.getElementById('csrfvalue').value;
+                    const body=new URLSearchParams();
+                    body.set('tablename','baseline_data_gis_view');
+                    body.set('clmname','baseid');
+                    body.set('grid_no',String(baseid));
+                    fetch((typeof contextPath!=='undefined'?contextPath:'')+'guestuser/getgridBoundary_basereport?'+encodeURIComponent(key)+'='+encodeURIComponent(value),{
+                      method:'POST',credentials:'same-origin',
+                      headers:{'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8','X-Requested-With':'XMLHttpRequest'},
+                      body:body.toString()
+                    }).then(async r=>done({status:r.status,text:await r.text(),baseid}))
+                      .catch(e=>done({error:String(e),baseid}));
+                  """
+                  b=d.execute_async_script(script2,str(baseid))
+                  try: b["json"]=json.loads(b.get("text",""))
+                  except: pass
+                  boundaries.append(b)
+              out["boundaries"]=boundaries
+          finally:
+              d.quit()
+          Path("out/result.json").write_text(json.dumps(out,indent=2))
+          print(json.dumps(out,indent=2)[:120000])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sm222-ngdr-exact-report-detail
+          path: out/
+          retention-days: 14
