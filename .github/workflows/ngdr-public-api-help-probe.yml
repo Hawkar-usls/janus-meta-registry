@@ -1,0 +1,86 @@
+name: JANUS NGDR Public API Help Probe
+
+on:
+  push:
+    paths:
+      - data/JANUS-NGDR-API-HELP-PROBE-TRIGGER.txt
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  api-help:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Reproduce public API-help download
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          python3 - <<'PY'
+          import requests,re,pathlib,json
+          s=requests.Session()
+          h={'User-Agent':'Mozilla/5.0 JANUS-Cousteau/1.0'}
+          r=s.get('https://geodataindia.gov.in/login',headers=h,timeout=30)
+          pathlib.Path('out/login.html').write_bytes(r.content)
+          csrf=re.search(r'name="_csrf" value="([^"]+)"',r.text).group(1)
+          base='https://geodataindia.gov.in'
+          assets=[
+            '/mert/assets/js/encreaption/AesUtil.js',
+            '/mert/assets/js/encreaption/crypto-js.min.js',
+            '/mert/assets/js/login.js',
+            '/mert/assets/js/file.js'
+          ]
+          man={'login_status':r.status_code,'csrf':csrf,'assets':[]}
+          for a in assets:
+              q=s.get(base+a,headers=h,timeout=30)
+              pathlib.Path('out/'+a.split('/')[-1]).write_bytes(q.content)
+              man['assets'].append({'url':base+a,'status':q.status_code,'bytes':len(q.content),'type':q.headers.get('Content-Type')})
+          pathlib.Path('out/session.json').write_text(json.dumps(man,indent=2))
+          pathlib.Path('out/csrf.txt').write_text(csrf)
+          PY
+
+          cat > out/make_token.js <<'JS'
+          const fs=require('fs'), vm=require('vm');
+          vm.runInThisContext(fs.readFileSync('out/crypto-js.min.js','utf8'));
+          vm.runInThisContext(fs.readFileSync('out/AesUtil.js','utf8'));
+          const aes=new AesUtil(128,1000);
+          const key=AesUtil.getPassPhrase();
+          const enc=aes.encrypt('MERT_PUB:api_help',key);
+          fs.writeFileSync('out/encrypted.txt',enc);
+          fs.writeFileSync('out/aes_meta.json',JSON.stringify({key,encrypted:enc},null,2));
+          console.log(JSON.stringify({key,encrypted:enc}));
+          JS
+          node out/make_token.js
+
+          python3 - <<'PY'
+          import requests,re,pathlib,json
+          s=requests.Session()
+          h={'User-Agent':'Mozilla/5.0 JANUS-Cousteau/1.0','Referer':'https://geodataindia.gov.in/login'}
+          login=s.get('https://geodataindia.gov.in/login',headers=h,timeout=30)
+          csrf=re.search(r'name="_csrf" value="([^"]+)"',login.text).group(1)
+          enc=pathlib.Path('out/encrypted.txt').read_text().strip()
+          attempts=[]
+          for label,val in [('encrypted',enc),('plaintext','MERT_PUB:api_help')]:
+              rr=s.post('https://geodataindia.gov.in/DownloadImagemertstake',
+                        headers=h,data={'_csrf':csrf,'kmlFileId':'0','fildname1':val},
+                        timeout=60,allow_redirects=True)
+              body=rr.content
+              fn=f'out/api_help_{label}.bin'
+              pathlib.Path(fn).write_bytes(body)
+              attempts.append({'label':label,'status':rr.status_code,'url':rr.url,'bytes':len(body),
+                               'content_type':rr.headers.get('Content-Type'),
+                               'content_disposition':rr.headers.get('Content-Disposition'),
+                               'head_hex':body[:24].hex(),
+                               'head_text':body[:200].decode('utf-8','replace')})
+          pathlib.Path('out/download_attempts.json').write_text(json.dumps(attempts,indent=2))
+          print(json.dumps(attempts,indent=2))
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ngdr-api-help-probe
+          path: out/
+          retention-days: 14
