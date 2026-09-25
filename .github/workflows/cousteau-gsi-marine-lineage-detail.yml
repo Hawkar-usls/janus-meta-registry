@@ -1,0 +1,88 @@
+name: JANUS Cousteau GSI Marine Lineage Detail
+on:
+  push:
+    paths:
+      - data/JANUS-COUSTEAU-GSI-MARINE-LINEAGE-TRIGGER.txt
+permissions:
+  contents: read
+jobs:
+  lineage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - run: python3 -m pip install -q selenium
+      - name: Query SM-218 SM-222 SM-230 records
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          python3 - <<'PY'
+          import json,time
+          from pathlib import Path
+          from selenium import webdriver
+          from selenium.webdriver.chrome.options import Options
+
+          queries={
+            "SM222":"project_title SIMILAR TO '%Pudimadaka-Godavari%'",
+            "SM230":"project_title SIMILAR TO '%Middle To Lower Part Of Bengal Fan%'",
+            "SM218":"project_title SIMILAR TO '%Gopalpur, Kalingapatnam-Pudimadaka%'"
+          }
+          opt=Options(); opt.add_argument("--headless=new"); opt.add_argument("--no-sandbox"); opt.add_argument("--disable-dev-shm-usage")
+          d=webdriver.Chrome(options=opt); d.set_script_timeout(90)
+          out={}
+          try:
+            d.get("https://geodataindia.gov.in/guestuser"); time.sleep(5)
+            script="""
+              const q=arguments[0], done=arguments[arguments.length-1];
+              try{
+                const key=document.getElementById('csrfparname').value;
+                const value=document.getElementById('csrfvalue').value;
+                const aes=new AesUtil(128,1000), secret='FAAOCAg8AMIICCgKCAgEAv3SWf07W0ja';
+                const body=new URLSearchParams();
+                body.set('toponame',aes.encrypt(q,secret));
+                body.set('report_type',aes.encrypt('Geological Report',secret));
+                body.set('yearfrom',''); body.set('yearto',''); body.set('stakehol',aes.encrypt('',secret));
+                fetch((typeof contextPath!=='undefined'?contextPath:'')+'guestuser/getSearchResult_Base?'+encodeURIComponent(key)+'='+encodeURIComponent(value),{
+                  method:'POST',credentials:'same-origin',
+                  headers:{'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8','X-Requested-With':'XMLHttpRequest'},
+                  body:body.toString()
+                }).then(async r=>done({status:r.status,text:await r.text(),query:q}))
+                  .catch(e=>done({error:String(e),query:q}));
+              }catch(e){done({error:String(e),query:q})}
+            """
+            bscript="""
+              const baseid=arguments[0], done=arguments[arguments.length-1];
+              const key=document.getElementById('csrfparname').value;
+              const value=document.getElementById('csrfvalue').value;
+              const body=new URLSearchParams();
+              body.set('tablename','baseline_data_gis_view'); body.set('clmname','baseid'); body.set('grid_no',String(baseid));
+              fetch((typeof contextPath!=='undefined'?contextPath:'')+'guestuser/getgridBoundary_basereport?'+encodeURIComponent(key)+'='+encodeURIComponent(value),{
+                method:'POST',credentials:'same-origin',
+                headers:{'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8','X-Requested-With':'XMLHttpRequest'},
+                body:body.toString()
+              }).then(async r=>done({status:r.status,text:await r.text(),baseid}))
+                .catch(e=>done({error:String(e),baseid}));
+            """
+            for label,q in queries.items():
+              raw=d.execute_async_script(script,q)
+              try: records=json.loads(raw.get("text",""))
+              except: records=[]
+              item={"query":q,"status":raw.get("status"),"records":records}
+              for rec in records if isinstance(records,list) else []:
+                baseid=rec.get("baseid") or rec.get("id")
+                if baseid is not None:
+                  b=d.execute_async_script(bscript,str(baseid))
+                  try:b["json"]=json.loads(b.get("text",""))
+                  except:pass
+                  rec["_boundary"]=b
+              out[label]=item
+          finally:
+            d.quit()
+          Path("out/result.json").write_text(json.dumps(out,indent=2))
+          print(json.dumps(out,indent=2)[:120000])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gsi-marine-lineage-detail
+          path: out/
+          retention-days: 14
