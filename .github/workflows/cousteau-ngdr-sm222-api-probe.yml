@@ -1,0 +1,70 @@
+name: JANUS Cousteau NGDR SM222 API Probe
+on:
+  push:
+    paths:
+      - data/JANUS-COUSTEAU-NGDR-SM222-PROBE-TRIGGER.txt
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Probe NGDR guest search backend
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p out/js
+          python3 - <<'PY'
+          import json,re,urllib.parse,urllib.request
+          from pathlib import Path
+          BASE="https://geodataindia.gov.in"
+          url=BASE+"/guestuser"
+          def get(u,timeout=20):
+              req=urllib.request.Request(u,headers={"User-Agent":"Mozilla/5.0","Accept":"text/html,application/javascript,application/json,*/*"})
+              try:
+                  with urllib.request.urlopen(req,timeout=timeout) as r:
+                      b=r.read()
+                      return {"ok":True,"status":r.status,"url":r.geturl(),"ct":r.headers.get("Content-Type",""),"body":b}
+              except Exception as e:
+                  return {"ok":False,"url":u,"error":repr(e),"body":b""}
+          root=get(url)
+          body=root.pop("body")
+          Path("out/guestuser.html").write_bytes(body)
+          txt=body.decode("utf-8","replace")
+          scripts=[urllib.parse.urljoin(url,s) for s in re.findall(r'<script[^>]+src=["\']([^"\']+)',txt,re.I)]
+          links=[urllib.parse.urljoin(url,s) for s in re.findall(r'<(?:link|script)[^>]+(?:href|src)=["\']([^"\']+)',txt,re.I)]
+          endpoints=set()
+          snippets=[]
+          pats=[r'url\s*:\s*["\']([^"\']+)["\']',r'fetch\(["\']([^"\']+)',r'axios\.[a-z]+\(["\']([^"\']+)',
+                r'["\']([^"\']*(?:search|report|keyword|nuid|guest|api|Ajax|ajax)[^"\']*)["\']']
+          for i,s in enumerate(scripts[:100]):
+              if urllib.parse.urlparse(s).netloc not in {"geodataindia.gov.in","www.geodataindia.gov.in"}: continue
+              rec=get(s,20); b=rec.pop("body")
+              if not b: continue
+              p=Path("out/js")/f"s{i}.js"; p.write_bytes(b)
+              st=b.decode("utf-8","replace")
+              for pat in pats:
+                  for m in re.findall(pat,st,re.I):
+                      val=m if isinstance(m,str) else m[0]
+                      if 0<len(val)<600: endpoints.add(val)
+              for term in ["Report Title","NUID","keyword","Keyword","guestuser","reportType","report_type","searchReport","reportSearch","search"]:
+                  for m in list(re.finditer(term,st,re.I))[:10]:
+                      a=max(0,m.start()-500); z=min(len(st),m.end()+1200)
+                      snippets.append({"script":s,"term":term,"context":st[a:z]})
+          # Include inline scripts too
+          for pat in pats:
+              for m in re.findall(pat,txt,re.I):
+                  val=m if isinstance(m,str) else m[0]
+                  if 0<len(val)<600: endpoints.add(val)
+
+          result={"root":root,"scripts":scripts,"interesting_links":[x for x in links if re.search(r'js|api|search|report',x,re.I)],
+                  "endpoints":sorted(endpoints),"snippets":snippets[:120]}
+          Path("out/result.json").write_text(json.dumps(result,indent=2))
+          print(json.dumps(result,indent=2)[:50000])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ngdr-sm222-api-probe
+          path: out/
+          retention-days: 14
