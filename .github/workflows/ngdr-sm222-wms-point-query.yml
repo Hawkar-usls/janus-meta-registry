@@ -1,0 +1,79 @@
+name: JANUS NGDR SM222 Target WMS Point Query
+
+on:
+  push:
+    paths:
+      - data/JANUS-NGDR-SM222-WMS-POINT-TRIGGER.txt
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  query:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Query target against NGDR marine WMS layers
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          python3 - <<'PY'
+          import requests, pathlib, json, urllib.parse, re
+          LAT=17.0710306
+          LON=83.2693611
+          base='https://geodataindia.gov.in/guestuser/wmsurl128/'
+          layers=[
+            'Bathymetry_India',
+            'bathymetric_contours_marine_geopysics',
+            'bathymetry_contours_india_marine_geophysics',
+            'bathymetry_india_eez_marine_geophysics',
+            'bathymetry_seismo_ngdr',
+            'bathymetry_tectonic_gcs_ngdr',
+            'cruise_identification_marine_geology',
+            'core_samples_marine_geology',
+            'coastline_marine_geology',
+            'bouger_gravity_anomaly_tectonic_ngdr'
+          ]
+          sess=requests.Session()
+          headers={'User-Agent':'Mozilla/5.0 JANUS-Cousteau/1.0'}
+          out={'target':{'lat':LAT,'lon':LON},'results':[]}
+          for half in [0.01,0.05]:
+              bbox=f'{LON-half},{LAT-half},{LON+half},{LAT+half}'
+              for layer in layers:
+                  for fmt in ['text/plain','text/html','application/vnd.ogc.gml']:
+                      p={
+                        'SERVICE':'WMS','VERSION':'1.1.1','REQUEST':'GetFeatureInfo',
+                        'LAYERS':layer,'QUERY_LAYERS':layer,'SRS':'EPSG:4326',
+                        'BBOX':bbox,'WIDTH':'101','HEIGHT':'101','X':'50','Y':'50',
+                        'FEATURE_COUNT':'50','INFO_FORMAT':fmt,'STYLES':''
+                      }
+                      rec={'layer':layer,'half_deg':half,'format':fmt}
+                      try:
+                          r=sess.get(base,params=p,headers=headers,timeout=45)
+                          body=r.content
+                          rec.update({'status':r.status_code,'url':r.url,'bytes':len(body),
+                                      'content_type':r.headers.get('Content-Type'),
+                                      'text':body.decode('utf-8','replace')[:12000]})
+                          safe=re.sub(r'[^A-Za-z0-9._-]+','_',f'{layer}_{half}_{fmt}')
+                          pathlib.Path('out/'+safe+'.txt').write_bytes(body)
+                      except Exception as e:
+                          rec['error']=repr(e)
+                      out['results'].append(rec)
+          pathlib.Path('out/results.json').write_text(json.dumps(out,indent=2))
+          # Compact useful hits
+          compact=[]
+          for r in out['results']:
+              txt=r.get('text','')
+              low=txt.lower()
+              useful=any(k in low for k in ['feature 0','value','depth','cruise','samudra','sm-','pudimadaka','godavari','gml','no features'])
+              if useful or (r.get('status')==200 and len(txt.strip())>0):
+                  compact.append({k:r.get(k) for k in ['layer','half_deg','format','status','content_type','bytes','text']})
+          print(json.dumps(compact,indent=2)[:50000])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ngdr-sm222-wms-point-query
+          path: out/
+          retention-days: 14
