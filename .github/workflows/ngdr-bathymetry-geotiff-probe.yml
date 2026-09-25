@@ -1,0 +1,52 @@
+name: JANUS NGDR Bathymetry GeoTIFF Probe
+
+on:
+  push:
+    paths:
+      - data/JANUS-NGDR-BATHY-GEOTIFF-TRIGGER.txt
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Fetch small Bathymetry_India GeoTIFF and inspect pixels
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          python3 - <<'PY'
+          import requests,pathlib,json,subprocess,os
+          LAT=17.0710306; LON=83.2693611
+          base='https://geodataindia.gov.in/guestuser/wmsurl128/'
+          half=0.03
+          p={'SERVICE':'WMS','VERSION':'1.1.1','REQUEST':'GetMap',
+             'LAYERS':'Bathymetry_India','STYLES':'Bathymetry_india',
+             'SRS':'EPSG:4326','BBOX':f'{LON-half},{LAT-half},{LON+half},{LAT+half}',
+             'WIDTH':'512','HEIGHT':'512','FORMAT':'image/geotiff','TRANSPARENT':'false'}
+          r=requests.get(base,params=p,headers={'User-Agent':'Mozilla/5.0 JANUS-Cousteau/1.0'},timeout=60)
+          pathlib.Path('out/bathy.tif').write_bytes(r.content)
+          res={'status':r.status_code,'url':r.url,'bytes':len(r.content),'type':r.headers.get('Content-Type'),'head_hex':r.content[:24].hex()}
+          pathlib.Path('out/http.json').write_text(json.dumps(res,indent=2))
+          print(json.dumps(res,indent=2))
+          PY
+          if command -v gdalinfo >/dev/null; then
+            gdalinfo -stats out/bathy.tif | tee out/gdalinfo.txt
+          else
+            python3 - <<'PY'
+          from PIL import Image
+          import json, pathlib
+          im=Image.open('out/bathy.tif')
+          print('PIL',im.mode,im.size,im.getextrema())
+          pathlib.Path('out/pil.json').write_text(json.dumps({'mode':im.mode,'size':im.size,'extrema':im.getextrema()},default=list,indent=2))
+          PY
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ngdr-bathymetry-geotiff-probe
+          path: out/
+          retention-days: 14
