@@ -1,0 +1,47 @@
+name: JANUS Cousteau NGDR Baseline Report Endpoint Extract
+on:
+  push:
+    paths:
+      - data/JANUS-COUSTEAU-NGDR-BASELINE-ENDPOINT-TRIGGER.txt
+permissions:
+  contents: read
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - name: Fetch baseline report JS
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          python3 - <<'PY'
+          import re,json,urllib.request,urllib.parse
+          from pathlib import Path
+          base="https://geodataindia.gov.in/"
+          files=[
+            "mis/js/customscripts/Baselineexplorationdatasearch.js",
+            "mis/js/customscripts/Baselinemulticriteriasearch.js"
+          ]
+          out={}
+          for i,p in enumerate(files):
+            u=urllib.parse.urljoin(base,p)
+            req=urllib.request.Request(u,headers={"User-Agent":"Mozilla/5.0"})
+            try:
+              with urllib.request.urlopen(req,timeout=20) as r: b=r.read()
+              txt=b.decode("utf-8","replace"); Path(f"out/js_{i}.js").write_text(txt)
+              eps=sorted(set(re.findall(r'["\']([^"\']*(?:guestuser/|searchkeyword|getSearch|getusing|report|baseline)[^"\']*)["\']',txt,re.I)))
+              snippets=[]
+              for term in ["searchkeyword","getusing","getSearch","keywordsdatabase","reportType","nho","projectTitle","base"]:
+                for m in list(re.finditer(term,txt,re.I))[:30]:
+                  snippets.append({"term":term,"context":txt[max(0,m.start()-600):min(len(txt),m.end()+1800)]})
+              out[p]={"bytes":len(b),"endpoints":eps[:300],"snippets":snippets[:160]}
+            except Exception as e: out[p]={"error":repr(e)}
+          Path("out/result.json").write_text(json.dumps(out,indent=2))
+          print(json.dumps(out,indent=2)[:100000])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ngdr-baseline-report-endpoints
+          path: out/
+          retention-days: 7
