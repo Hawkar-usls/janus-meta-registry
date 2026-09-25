@@ -1,0 +1,110 @@
+name: JANUS Cousteau SM222 NGDR Geological Report Sweep
+on:
+  push:
+    paths:
+      - data/JANUS-COUSTEAU-SM222-NGDR-GEOREPORT-TRIGGER.txt
+permissions:
+  contents: read
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Query public NGDR Geological Report catalogue
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          python3 - <<'PY'
+          import json,re,requests,hashlib
+          from pathlib import Path
+          from bs4 import BeautifulSoup
+
+          BASE="https://geodataindia.gov.in"
+          terms=[
+            "sm-222","sm222","pudimadaka","godavari","ghosh",
+            "samudra manthan","multibeam","bathymetric",
+            "continental slope","andhra pradesh coast"
+          ]
+          s=requests.Session()
+          s.headers.update({"User-Agent":"Mozilla/5.0 JANUS-Cousteau/1.0"})
+          r=s.get(BASE+"/guestuser",timeout=30)
+          r.raise_for_status()
+          soup=BeautifulSoup(r.text,"html.parser")
+          k=soup.find(id="csrfparname")
+          v=soup.find(id="csrfvalue")
+          if not k or not v:
+              raise RuntimeError("CSRF fields not found")
+          key=k.get("value"); val=v.get("value")
+          url=f"{BASE}/guestuser/getbasereport?{key}={val}"
+          rr=s.post(url,data={"geophysical_report":"Geological Report"},
+                    headers={"X-Requested-With":"XMLHttpRequest",
+                             "Referer":BASE+"/guestuser"},
+                    timeout=120)
+          raw=rr.content
+          Path("out/geological_reports_raw.json").write_bytes(raw)
+          digest=hashlib.sha256(raw).hexdigest()
+          try:
+              data=rr.json()
+          except Exception as e:
+              raise RuntimeError(f"JSON parse failed status={rr.status_code} ct={rr.headers.get('Content-Type')} head={rr.text[:1000]!r}") from e
+          if not isinstance(data,list):
+              raise RuntimeError(f"Unexpected payload type: {type(data).__name__}")
+
+          # Search all scalar fields, but preserve exact field-level hits.
+          matches=[]
+          for rec in data:
+              field_hits={}
+              for field,value in rec.items():
+                  if value is None: continue
+                  if isinstance(value,(str,int,float,bool)):
+                      txt=str(value)
+                      low=txt.lower()
+                      hits=[t for t in terms if t in low]
+                      if hits:
+                          field_hits[field]={"terms":hits,"value":txt[:10000]}
+              if field_hits:
+                  keep_keys=[
+                    "id","baseid","baselineId","base_upid","baseline_upid",
+                    "baseline_accession_number","accessionNumber","report_title",
+                    "reportTitle","projectTitle","title","report_type","reportType",
+                    "organization","agencyCode","reportOwner","author",
+                    "yearOfPublishing","publicationYear","fspid","fspId",
+                    "cruiseId","cruise_id","keywords","keyword",
+                    "nho_chart_number","nhoChartNumber","toposheetNumber",
+                    "state_name","stateName","district_name","districtName",
+                    "block_area_name","blockAreaName",
+                    "reportsAndDocumentsDescription","reportsAndDocumentsFileName",
+                    "reportfilesizeAndDate","geom","row_number","rowNumber"
+                  ]
+                  summary={k:rec.get(k) for k in keep_keys if k in rec and rec.get(k) not in (None,"")}
+                  matches.append({"summary":summary,"field_hits":field_hits})
+
+          # Rank exact target-specific hits above broad Godavari/Andhra hits.
+          strong_terms={"sm-222","sm222","pudimadaka","samudra manthan","multibeam","bathymetric","continental slope"}
+          for m in matches:
+              allhits={t for f in m["field_hits"].values() for t in f["terms"]}
+              m["strong_hit_count"]=len(allhits & strong_terms)
+              m["all_hit_terms"]=sorted(allhits)
+          matches.sort(key=lambda m:(m["strong_hit_count"],len(m["all_hit_terms"])),reverse=True)
+
+          result={
+            "endpoint":"guestuser/getbasereport",
+            "report_type":"Geological Report",
+            "http_status":rr.status_code,
+            "catalog_record_count":len(data),
+            "raw_bytes":len(raw),
+            "raw_sha256":digest,
+            "search_terms":terms,
+            "match_count":len(matches),
+            "strong_match_count":sum(1 for m in matches if m["strong_hit_count"]>0),
+            "matches":matches[:200]
+          }
+          Path("out/result.json").write_text(json.dumps(result,indent=2))
+          print(json.dumps(result,indent=2)[:80000])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sm222-ngdr-geological-report-sweep
+          path: out/
+          retention-days: 14
