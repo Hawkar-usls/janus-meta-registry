@@ -1,0 +1,53 @@
+name: JANUS Cousteau Bhukosh Quick Surface Probe
+on:
+  push:
+    paths:
+      - data/JANUS-COUSTEAU-BHUKOSH-QUICK-TRIGGER.txt
+permissions:
+  contents: read
+jobs:
+  quick:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Quick probe
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          python3 - <<'PY'
+          import json, re, socket, subprocess, urllib.parse
+          from pathlib import Path
+          host="bhukosh.gsi.gov.in"
+          result={"dns":[],"urls":[]}
+          try:
+              result["dns"]=socket.getaddrinfo(host,443)
+          except Exception as e:
+              result["dns_error"]=repr(e)
+          urls=[
+            "http://bhukosh.gsi.gov.in/Bhukosh/Public",
+            "https://bhukosh.gsi.gov.in/Bhukosh/Public",
+            "http://bhukosh.gsi.gov.in/Bhukosh/MapViewer.aspx",
+            "https://bhukosh.gsi.gov.in/Bhukosh/MapViewer.aspx",
+            "https://bhukosh.gsi.gov.in/"
+          ]
+          for i,u in enumerate(urls):
+              cp=subprocess.run(["curl","-k","-L","--max-time","8","-A","Mozilla/5.0",
+                                 "-D",f"out/h{i}.txt","-o",f"out/b{i}.bin",
+                                 "-w","%{http_code} %{url_effective} %{content_type} %{size_download}",u],
+                                capture_output=True,text=True)
+              body=Path(f"out/b{i}.bin").read_bytes() if Path(f"out/b{i}.bin").exists() else b""
+              txt=body.decode("utf-8","replace")
+              scripts=re.findall(r'<script[^>]+src=["\']([^"\']+)',txt,re.I)
+              links=re.findall(r'(?:href|src)=["\']([^"\']+)',txt,re.I)
+              result["urls"].append({"url":u,"curl_rc":cp.returncode,"summary":cp.stdout,
+                                     "stderr":cp.stderr[-1000:],"head":txt[:4000],
+                                     "scripts":scripts[:50],"interesting_links":[x for x in links if re.search(r'api|service|search|wms|js',x,re.I)][:100]})
+          Path("out/result.json").write_text(json.dumps(result,indent=2))
+          print(json.dumps(result,indent=2)[:28000])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bhukosh-quick-surface
+          path: out/
+          retention-days: 7
