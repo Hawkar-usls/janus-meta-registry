@@ -1,0 +1,182 @@
+name: JANUS Cousteau SR004 SR007 Open NGDR Hunt
+
+on:
+  push:
+    paths:
+      - data/JANUS-COUSTEAU-SR004-SR007-HUNT-TRIGGER.txt
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  hunt:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Query public NGDR cruise geometry stations and report layers
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          python3 - <<'PY'
+          import requests,json,pathlib,xml.etree.ElementTree as ET,re,hashlib,math
+          from datetime import datetime, timezone
+
+          BASE='https://geodataindia.gov.in/guestuser/wmsurl128/'
+          H={'User-Agent':'Mozilla/5.0 JANUS-Cousteau/1.0'}
+          S=requests.Session()
+          CRUISES=['SR-004','SR-007']
+          out={'generated_utc':datetime.now(timezone.utc).isoformat(),'endpoint':BASE,'cruises':{}}
+
+          def req(params, timeout=60):
+              return S.get(BASE,params=params,headers=H,timeout=timeout)
+
+          def get_json(layer,cql=None,bbox=None,maxf=2000):
+              p={'service':'WFS','version':'1.0.0','request':'GetFeature','typeName':layer,
+                 'outputFormat':'application/json','srsName':'EPSG:4326','maxFeatures':str(maxf)}
+              if cql: p['CQL_FILTER']=cql
+              if bbox: p['bbox']=','.join(map(str,bbox))+',EPSG:4326'
+              r=req(p)
+              rec={'status':r.status_code,'bytes':len(r.content),'url':r.url,'content_type':r.headers.get('Content-Type')}
+              try:
+                  j=r.json(); rec['feature_count']=len(j.get('features',[])); rec['features']=j.get('features',[])
+              except Exception as e:
+                  rec['parse_error']=repr(e); rec['head']=r.text[:1500]
+              return rec,r.content
+
+          def describe(layer):
+              r=req({'service':'WFS','version':'1.0.0','request':'DescribeFeatureType','typeName':layer},40)
+              fields=[]
+              try:
+                  root=ET.fromstring(r.content)
+                  for e in root.iter():
+                      if e.tag.split('}')[-1]=='element' and e.attrib.get('name')!=layer:
+                          fields.append({'name':e.attrib.get('name'),'type':e.attrib.get('type','')})
+              except Exception: pass
+              return fields
+
+          def cruise_cql(fields, cruise):
+              names=[f['name'] for f in fields if 'cruise' in (f.get('name') or '').lower()]
+              if not names: return None,names
+              esc=cruise.replace("'","''")
+              return ' OR '.join([f+"='"+esc+"'" for f in names]),names
+
+          def coords_of_geom(g):
+              if not g: return []
+              typ=g.get('type'); c=g.get('coordinates')
+              pts=[]
+              def walk(x):
+                  if isinstance(x,list) and len(x)>=2 and all(isinstance(v,(int,float)) for v in x[:2]): pts.append((float(x[0]),float(x[1])))
+                  elif isinstance(x,list):
+                      for y in x: walk(y)
+              walk(c)
+              return pts
+
+          def geom_summary(features):
+              pts=[]
+              for f in features: pts.extend(coords_of_geom(f.get('geometry')))
+              if not pts: return None
+              xs=[p[0] for p in pts]; ys=[p[1] for p in pts]
+              return {'bbox':[min(xs),min(ys),max(xs),max(ys)],'vertex_mean':[sum(xs)/len(xs),sum(ys)/len(ys)],'vertex_count':len(pts)}
+
+          # 1) Exact official cruise polygons.
+          for cruise in CRUISES:
+              rec,raw=get_json('cruise_identification_marine_geology',"cruise_id='"+cruise+"'",maxf=200)
+              pathlib.Path('out/'+cruise.replace('-','_')+'_cruise_geometry.json').write_bytes(raw)
+              feats=rec.pop('features',[])
+              out['cruises'][cruise]={'geometry':rec,'geometry_features':feats,'geometry_summary':geom_summary(feats)}
+
+          # 2) Cruise-linked marine station / survey layers.
+          station_layers=[
+            'core_samples_marine_geology','grab_samples_marine_geology',
+            'surface_sediment_data_marine_geology','water_samples_marine_geology',
+            'current_observations_marine_geology','deep_seismic_data_mcsd_marine_geophysics',
+            'shallow_seismic_data_mcsd_marine_geophysics','bathymetry_marine_geology',
+            'geophysical_data_gis_view_report'
+          ]
+          for layer in station_layers:
+              fields=describe(layer)
+              for cruise in CRUISES:
+                  cql,cfields=cruise_cql(fields,cruise)
+                  lr={'cruise_fields':cfields,'fields':fields}
+                  if cql:
+                      rec,raw=get_json(layer,cql,maxf=2000)
+                      pathlib.Path('out/'+cruise.replace('-','_')+'_'+layer+'.json').write_bytes(raw)
+                      feats=rec.pop('features',[])
+                      lr.update(rec); lr['features']=feats
+                      # Flag records whose text explicitly mentions anomaly-like terms.
+                      terms=['crater','depression','pockmark','impact','cochin','kochi','laxmi','caldera','gas','cone','mound','fault']
+                      flagged=[]
+                      for f in feats:
+                          blob=json.dumps(f.get('properties') or {},ensure_ascii=False).lower()
+                          hits=[t for t in terms if t in blob]
+                          if hits: flagged.append({'id':f.get('id'),'hits':hits,'properties':f.get('properties'),'geometry':f.get('geometry')})
+                      lr['flagged']=flagged
+                  out['cruises'][cruise].setdefault('layers',{})[layer]=lr
+
+          # 3) Public report-class WFS catalogues, with target-specific terms.
+          report_layers=['exploration_data_gis_view_report','exploration_reports_aoi_28-02-22_ngdr','geophysical_data_gis_view_report']
+          terms_by_cruise={
+            'SR-004':['SR-004','SR004','Cochin','Kochi','impact crater','circular depression','outer continental shelf','Samudra Ratnakar'],
+            'SR-007':['SR-007','SR007','Laxmi Ridge','Laxmi ridge','caldera','gas escape','Samudra Ratnakar']
+          }
+          for layer in report_layers:
+              fields=describe(layer)
+              string_fields=[f['name'] for f in fields if any(k in (f.get('type') or '').lower() for k in ['string','char','text'])]
+              allowed=[f for f in string_fields if any(k in f.lower() for k in ['project','title','keyword','upid','accession','report','description','owner','code','cruise','state','district','year','file','area','location'])]
+              for cruise in CRUISES:
+                  searches={}
+                  for term in terms_by_cruise[cruise]:
+                      if not allowed: break
+                      esc=term.replace("'","''")
+                      cql=' OR '.join([f+" ILIKE '%"+esc+"%'" for f in allowed])
+                      rec,raw=get_json(layer,cql,maxf=200)
+                      feats=rec.pop('features',[])
+                      if feats: searches[term]={'meta':rec,'features':feats}
+                  out['cruises'][cruise].setdefault('reports',{})[layer]={'allowed_fields':allowed,'hits':searches}
+
+          # 4) Raw WFS capabilities: preserve list of potentially relevant feature types
+          # so future sweeps do not guess layer names.
+          caps=req({'service':'WFS','version':'1.0.0','request':'GetCapabilities'},90)
+          pathlib.Path('out/wfs_capabilities.xml').write_bytes(caps.content)
+          relevant=[]
+          try:
+              root=ET.fromstring(caps.content)
+              for ft in root.iter():
+                  if ft.tag.split('}')[-1]!='FeatureType': continue
+                  name=title=''
+                  for ch in ft:
+                      tag=ch.tag.split('}')[-1]
+                      if tag=='Name': name=ch.text or ''
+                      elif tag=='Title': title=ch.text or ''
+                  blob=(name+' '+title).lower()
+                  if any(k in blob for k in ['marine','bathym','gravity','magnet','seismic','core','cruise','geophys','sediment']):
+                      relevant.append({'name':name,'title':title})
+          except Exception as e:
+              out['capabilities_parse_error']=repr(e)
+          out['relevant_feature_types']=relevant
+
+          # compact machine summary
+          summary={}
+          for cruise,c in out['cruises'].items():
+              summary[cruise]={
+                'geometry_feature_count':c.get('geometry',{}).get('feature_count'),
+                'geometry_summary':c.get('geometry_summary'),
+                'layer_counts':{},'flagged':{},'report_hits':{}
+              }
+              for layer,lr in c.get('layers',{}).items():
+                  summary[cruise]['layer_counts'][layer]=lr.get('feature_count',0)
+                  if lr.get('flagged'): summary[cruise]['flagged'][layer]=lr['flagged']
+              for layer,rr in c.get('reports',{}).items():
+                  summary[cruise]['report_hits'][layer]={term:hit['meta'].get('feature_count',len(hit.get('features',[]))) for term,hit in rr.get('hits',{}).items()}
+          out['summary']=summary
+          pathlib.Path('out/result.json').write_text(json.dumps(out,indent=2,ensure_ascii=False))
+          pathlib.Path('out/summary.json').write_text(json.dumps(summary,indent=2,ensure_ascii=False))
+          print(json.dumps(summary,indent=2,ensure_ascii=False)[:80000])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cousteau-sr004-sr007-open-ngdr-hunt
+          path: out/
+          retention-days: 14
