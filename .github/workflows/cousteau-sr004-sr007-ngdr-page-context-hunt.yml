@@ -1,0 +1,181 @@
+name: JANUS Cousteau SR004 SR007 NGDR Page Context Hunt
+
+on:
+  push:
+    paths:
+      - data/JANUS-COUSTEAU-SR004-SR007-PAGE-CONTEXT-TRIGGER.txt
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  hunt:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - run: python3 -m pip install -q selenium
+      - name: Query NGDR inside real guest browser session
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          python3 - <<'PY'
+          import json,time
+          from pathlib import Path
+          from selenium import webdriver
+          from selenium.webdriver.chrome.options import Options
+
+          target_terms=[
+            'sr-004','sr004','cochin','kochi','circular depression','impact crater','samudra ratnakar',
+            'sr-007','sr007','laxmi ridge','laxmi','caldera','gas escape'
+          ]
+          base_queries={
+            'SR004_COCHIN': "project_title SIMILAR TO '%Cochin%'",
+            'SR004_KOCHI': "project_title SIMILAR TO '%Kochi%'",
+            'SR004_SEABED': "project_title SIMILAR TO '%sea bed%'",
+            'SR004_CRUISE': "project_title SIMILAR TO '%SR-004%'",
+            'SR007_LAXMI': "project_title SIMILAR TO '%Laxmi Ridge%'",
+            'SR007_CRUISE': "project_title SIMILAR TO '%SR-007%'"
+          }
+
+          opt=Options(); opt.add_argument('--headless=new'); opt.add_argument('--no-sandbox'); opt.add_argument('--disable-dev-shm-usage'); opt.add_argument('--window-size=1600,1200')
+          d=webdriver.Chrome(options=opt); d.set_script_timeout(120)
+          out={'terms':{},'base_queries':{},'geophysical_probes':[]}
+          secret='FAAOCAg8AMIICCgKCAgEAv3SWf07W0ja'
+          try:
+            d.get('https://geodataindia.gov.in/guestuser'); time.sleep(8)
+            out['page_state']=d.execute_script("""
+              return {
+                href:location.href,
+                csrfparname:document.getElementById('csrfparname')?.value||null,
+                csrfvalue:document.getElementById('csrfvalue')?.value||null,
+                contextPath:(typeof contextPath!=='undefined'?contextPath:null),
+                aes:(typeof AesUtil!=='undefined'),
+                user_type:(typeof user_type!=='undefined'?user_type:null),
+                cookies:document.cookie.split(';').map(x=>x.trim().split('=')[0])
+              }
+            """)
+            if not out['page_state']['aes'] or not out['page_state']['csrfparname']:
+              raise RuntimeError('NGDR guest state unavailable: '+repr(out['page_state']))
+
+            keyword_script="""
+              const term=arguments[0], endpoint=arguments[1], secret=arguments[2], done=arguments[arguments.length-1];
+              try {
+                const k=document.getElementById('csrfparname').value;
+                const v=document.getElementById('csrfvalue').value;
+                const aes=new AesUtil(128,1000);
+                const enc=aes.encrypt(term.toLowerCase(),secret);
+                const body=new URLSearchParams(); body.set('keyword',enc);
+                fetch((typeof contextPath!=='undefined'?contextPath:'')+'guestuser/'+endpoint+'?'+encodeURIComponent(k)+'='+encodeURIComponent(v),{
+                  method:'POST',credentials:'same-origin',
+                  headers:{'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8','X-Requested-With':'XMLHttpRequest'},body:body.toString()
+                }).then(async r=>done({status:r.status,url:r.url,text:await r.text()})).catch(e=>done({error:String(e)}));
+              } catch(e) { done({error:String(e)}); }
+            """
+            for term in target_terms:
+              out['terms'][term]={}
+              for ep in ['searchkeywordforgeophysical','searchkeyword']:
+                raw=d.execute_async_script(keyword_script,term,ep,secret)
+                try: raw['json']=json.loads(raw.get('text',''))
+                except Exception: pass
+                out['terms'][term][ep]=raw
+
+            base_script="""
+              const q=arguments[0], secret=arguments[1], done=arguments[arguments.length-1];
+              try{
+                const key=document.getElementById('csrfparname').value;
+                const value=document.getElementById('csrfvalue').value;
+                const aes=new AesUtil(128,1000);
+                const body=new URLSearchParams();
+                body.set('toponame',aes.encrypt(q,secret));
+                body.set('report_type',aes.encrypt('Geological Report',secret));
+                body.set('yearfrom',''); body.set('yearto',''); body.set('stakehol',aes.encrypt('',secret));
+                fetch((typeof contextPath!=='undefined'?contextPath:'')+'guestuser/getSearchResult_Base?'+encodeURIComponent(key)+'='+encodeURIComponent(value),{
+                  method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8','X-Requested-With':'XMLHttpRequest'},body:body.toString()
+                }).then(async r=>done({status:r.status,url:r.url,text:await r.text(),query:q})).catch(e=>done({error:String(e),query:q}));
+              }catch(e){done({error:String(e),query:q})}
+            """
+            boundary_script="""
+              const tab=arguments[0], clm=arguments[1], grid=arguments[2], done=arguments[arguments.length-1];
+              try{
+                const key=document.getElementById('csrfparname').value;
+                const value=document.getElementById('csrfvalue').value;
+                const body=new URLSearchParams(); body.set('tablename',tab); body.set('clmname',clm); body.set('grid_no',String(grid));
+                fetch((typeof contextPath!=='undefined'?contextPath:'')+'guestuser/getgridBoundary_basereport?'+encodeURIComponent(key)+'='+encodeURIComponent(value),{
+                  method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8','X-Requested-With':'XMLHttpRequest'},body:body.toString()
+                }).then(async r=>done({status:r.status,url:r.url,text:await r.text()})).catch(e=>done({error:String(e)}));
+              }catch(e){done({error:String(e)})}
+            """
+            for label,q in base_queries.items():
+              raw=d.execute_async_script(base_script,q,secret)
+              try: records=json.loads(raw.get('text',''))
+              except Exception: records=[]
+              entry={'status':raw.get('status'),'url':raw.get('url'),'query':q,'records':records if isinstance(records,list) else records}
+              if isinstance(records,list):
+                for rec in records[:100]:
+                  ids=[]
+                  for clm in ['baseid','id','grid_no','gid']:
+                    if rec.get(clm) is not None: ids.append((clm,rec.get(clm)))
+                  for clm,val in ids[:2]:
+                    b=d.execute_async_script(boundary_script,'baseline_data_gis_view',clm,val)
+                    try:b['json']=json.loads(b.get('text',''))
+                    except Exception: pass
+                    rec.setdefault('_boundaries',[]).append({'column':clm,'value':val,'result':b})
+              out['base_queries'][label]=entry
+
+            # Reuse server-returned geophysical field names; never guess schema.
+            mappings=[]
+            for term,tv in out['terms'].items():
+              r=tv.get('searchkeywordforgeophysical',{})
+              j=r.get('json')
+              if isinstance(j,list):
+                for item in j:
+                  if item.get('fldname') and item.get('keywords'):
+                    mappings.append({'term':term,'fldname':item.get('fldname'),'keywords':item.get('keywords')})
+            seen=set()
+            geo_script="""
+              const q=arguments[0], secret=arguments[1], done=arguments[arguments.length-1];
+              try{
+                const key=document.getElementById('csrfparname').value; const value=document.getElementById('csrfvalue').value;
+                const aes=new AesUtil(128,1000); const body=new URLSearchParams();
+                body.set('toponame',aes.encrypt(q,secret)); body.set('yearfrom',''); body.set('yearto',''); body.set('stakehol',aes.encrypt('',secret));
+                fetch((typeof contextPath!=='undefined'?contextPath:'')+'guestuser/getgeophyscalsearchresult?'+encodeURIComponent(key)+'='+encodeURIComponent(value),{
+                  method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8','X-Requested-With':'XMLHttpRequest'},body:body.toString()
+                }).then(async r=>done({status:r.status,url:r.url,text:await r.text(),query:q})).catch(e=>done({error:String(e),query:q}));
+              }catch(e){done({error:String(e),query:q})}
+            """
+            for m in mappings:
+              key=(m['fldname'],m['keywords'])
+              if key in seen: continue
+              seen.add(key)
+              q=f"{m['fldname']} SIMILAR TO '%{m['keywords']}%'"
+              raw=d.execute_async_script(geo_script,q,secret)
+              try: raw['json']=json.loads(raw.get('text',''))
+              except Exception: pass
+              out['geophysical_probes'].append({'mapping':m,'result':raw})
+          finally:
+            d.quit()
+
+          Path('out/result.json').write_text(json.dumps(out,indent=2,ensure_ascii=False))
+          compact={
+            'page_state':out.get('page_state'),
+            'keyword_counts':{},'base_counts':{},'geophysical_counts':[]
+          }
+          for term,tv in out['terms'].items():
+            compact['keyword_counts'][term]={ep:(len(r.get('json',[])) if isinstance(r.get('json'),list) else None) for ep,r in tv.items()}
+          for label,r in out['base_queries'].items():
+            compact['base_counts'][label]=len(r.get('records',[])) if isinstance(r.get('records'),list) else None
+          for p in out['geophysical_probes']:
+            j=p['result'].get('json'); compact['geophysical_counts'].append({'mapping':p['mapping'],'count':len(j) if isinstance(j,list) else None,'status':p['result'].get('status')})
+          Path('out/summary.json').write_text(json.dumps(compact,indent=2,ensure_ascii=False))
+          print(json.dumps(compact,indent=2,ensure_ascii=False))
+          print('JANUS_PAGE_CONTEXT_FULL_BEGIN')
+          print(json.dumps(out,indent=2,ensure_ascii=False)[:120000])
+          print('JANUS_PAGE_CONTEXT_FULL_END')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cousteau-sr004-sr007-ngdr-page-context-hunt
+          path: out/
+          retention-days: 14
