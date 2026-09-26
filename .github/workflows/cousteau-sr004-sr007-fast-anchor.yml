@@ -12,48 +12,85 @@ permissions:
 jobs:
   anchor:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 12
     steps:
       - name: Probe official cruise polygons and sample records
         shell: bash
         run: |
           set -euo pipefail
           python3 - <<'PY'
-          import requests,json,xml.etree.ElementTree as ET
+          import requests,json,time,xml.etree.ElementTree as ET
           B='https://geodataindia.gov.in/guestuser/wmsurl128/'
-          H={'User-Agent':'Mozilla/5.0 JANUS-Cousteau-fast/1.0'}
+          H={'User-Agent':'Mozilla/5.0 JANUS-Cousteau-fast/1.1'}
           S=requests.Session()
           cruises=['SR-004','SR-007']
           layers=['core_samples_marine_geology','grab_samples_marine_geology','surface_sediment_data_marine_geology']
           out={}
+
+          def safe_get(params, attempts=3, timeouts=(35,65,100)):
+              errors=[]
+              for i in range(attempts):
+                  try:
+                      r=S.get(B,params=params,headers=H,timeout=timeouts[min(i,len(timeouts)-1)])
+                      return r,errors
+                  except Exception as e:
+                      errors.append(repr(e))
+                      print('NGDR_RETRY',i+1,params.get('typeName'),params.get('CQL_FILTER',''),repr(e),flush=True)
+                      time.sleep(2*(i+1))
+              return None,errors
+
           def jget(layer,cql,maxf=500):
               p={'service':'WFS','version':'1.0.0','request':'GetFeature','typeName':layer,'CQL_FILTER':cql,
                  'outputFormat':'application/json','srsName':'EPSG:4326','maxFeatures':str(maxf)}
-              r=S.get(B,params=p,headers=H,timeout=25)
-              try: return {'status':r.status_code,'url':r.url,'json':r.json()}
-              except Exception as e: return {'status':r.status_code,'url':r.url,'error':repr(e),'head':r.text[:1000]}
-          def fields(layer):
-              r=S.get(B,params={'service':'WFS','version':'1.0.0','request':'DescribeFeatureType','typeName':layer},headers=H,timeout=20)
-              a=[]
+              r,errors=safe_get(p)
+              if r is None: return {'status':'TIMEOUT','errors':errors}
+              rec={'status':r.status_code,'url':r.url,'bytes':len(r.content),'errors':errors}
               try:
-                root=ET.fromstring(r.content)
-                for e in root.iter():
-                  if e.tag.split('}')[-1]=='element' and e.attrib.get('name')!=layer:
-                    a.append({'name':e.attrib.get('name'),'type':e.attrib.get('type','')})
-              except Exception: pass
-              return a
+                  j=r.json(); rec['json']=j; rec['feature_count']=len(j.get('features',[]))
+              except Exception as e:
+                  rec['parse_error']=repr(e); rec['head']=r.text[:1500]
+              return rec
+
+          def fields(layer):
+              p={'service':'WFS','version':'1.0.0','request':'DescribeFeatureType','typeName':layer}
+              r,errors=safe_get(p,attempts=2,timeouts=(30,60))
+              a=[]
+              if r is None: return a,errors
+              try:
+                  root=ET.fromstring(r.content)
+                  for e in root.iter():
+                      if e.tag.split('}')[-1]=='element' and e.attrib.get('name')!=layer:
+                          a.append({'name':e.attrib.get('name'),'type':e.attrib.get('type','')})
+              except Exception as e: errors.append('parse:'+repr(e))
+              return a,errors
+
           for c in cruises:
               out[c]={}
               q=jget('cruise_identification_marine_geology',"cruise_id='"+c+"'",100)
               out[c]['cruise_geometry']=q
-              for layer in layers:
-                  fs=fields(layer)
-                  cf=[f['name'] for f in fs if 'cruise' in (f['name'] or '').lower()]
-                  rec={'fields':fs,'cruise_fields':cf}
-                  if cf:
-                      cq=' OR '.join([x+"='"+c+"'" for x in cf])
-                      rec['query']=jget(layer,cq,500)
+              print('ANCHOR_PROGRESS',c,'geometry',q.get('feature_count'),q.get('status'),flush=True)
+
+          # Describe each layer only once, then query both cruises.
+          layer_fields={}
+          for layer in layers:
+              fs,errs=fields(layer)
+              layer_fields[layer]={'fields':fs,'errors':errs}
+              cf=[f['name'] for f in fs if 'cruise' in (f['name'] or '').lower()]
+              # Known NGDR convention fallback if schema endpoint itself is flaky.
+              if not cf: cf=['cruise_id','cruise_no','cruise']
+              for c in cruises:
+                  rec={'fields':fs,'cruise_fields':cf,'describe_errors':errs}
+                  hits=[]
+                  for field in cf:
+                      qr=jget(layer,field+"='"+c+"'",500)
+                      hits.append({'field':field,'result':qr})
+                      if qr.get('feature_count',0)>0:
+                          break
+                  rec['attempts']=hits
                   out[c][layer]=rec
+                  best=next((x['result'] for x in hits if x['result'].get('feature_count',0)>0), hits[-1]['result'] if hits else {})
+                  print('ANCHOR_PROGRESS',c,layer,best.get('feature_count'),best.get('status'),flush=True)
+
           print('JANUS_FAST_ANCHOR_JSON_BEGIN')
           print(json.dumps(out,ensure_ascii=False,indent=2))
           print('JANUS_FAST_ANCHOR_JSON_END')
