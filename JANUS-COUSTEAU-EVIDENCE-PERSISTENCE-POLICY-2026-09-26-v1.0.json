@@ -1,0 +1,42 @@
+{
+  "schema": "JANUS_COUSTEAU_EVIDENCE_PERSISTENCE_POLICY",
+  "version": "1.0",
+  "date": "2026-09-26",
+  "status": "ACTIVE",
+  "scope": "JANUS Cousteau / marine anomaly hunt",
+  "directive": "Persist each substantive finding in janus-meta-registry as it is promoted, with provenance, epistemic status, falsifiers and next killer-test. Do not rely on chat history as the canonical scientific record.",
+  "required_fields": [
+    "target_or_control_id",
+    "observation_or_claim",
+    "epistemic_status",
+    "source_or_dataset",
+    "source_url_or_identifier",
+    "independent_confirmation_if_any",
+    "alternative_explanations",
+    "falsifier_or_killer_test",
+    "promotion_constraints"
+  ],
+  "epistemic_status_vocabulary": [
+    "PROVEN",
+    "SUPPORTED",
+    "REPORTED",
+    "OPEN",
+    "NOT_PROVEN",
+    "NO_EVIDENCE",
+    "UNKNOWN_SERVICE_FAILURE"
+  ],
+  "firewalls": [
+    "A real bathymetric or geophysical anomaly is not evidence of an artificial structure.",
+    "Circular morphology alone is not diagnostic of impact.",
+    "Cruise/project polygon membership is not equivalent to valid MBES swath coverage at a target point.",
+    "A web/API timeout or HTTP 5xx is UNKNOWN_SERVICE_FAILURE, not a zero-result dataset.",
+    "Absence of a shock marker in a shallow core is negative evidence only for the sampled interval, not a proof against impact if crater fill may not have been penetrated.",
+    "Hypothesis ranking must remain reversible when new data arrive."
+  ],
+  "current_priority_targets": [
+    "COCHIN_SR004_CIRCULAR_DEPRESSION",
+    "SR007_LAXMI_RIDGE_EXTREME_DEPRESSION",
+    "SM222_TARGET_17.0710306_83.2693611"
+  ],
+  "canonical_rule": "NEW_FINDING -> SOURCE_CHECK -> STATUS -> REGISTRY_COMMIT -> NEXT_TEST"
+}
