@@ -1,0 +1,126 @@
+{
+  "schema": "JANUS_INTERSTELLAR_PACKET_SPEC_V1",
+  "id": "JANUS_HAWKAR_GALACTIC_CENTER_CULTURAL_WARNING_PACKET_V1",
+  "version": "1.0",
+  "date": "2026-10-06",
+  "status": "TRANSMISSION_READY_NOT_PHYSICALLY_TRANSMITTED",
+  "purpose": "Define a compact, redundant, transmitter-ready packet carrying Hawkar's Scott Pilgrim cultural testimony toward the Sagittarius A* Galactic Center reference direction.",
+  "target": {
+    "name_ascii": "SAGITTARIUS_A_STAR_GALACTIC_CENTER",
+    "frame": "ICRS/J2000",
+    "right_ascension_deg": 266.41683708333335,
+    "declination_deg": -29.007810555555555,
+    "approximate_distance_light_years": 26700
+  },
+  "payload": {
+    "path": "HAWKAR-SCOTT-PILGRIM-GALACTIC-CENTER-PAYLOAD-2026-10-06-v1.0.txt",
+    "encoding": "US-ASCII subset of UTF-8",
+    "length_bytes": 511,
+    "sha256": "aac3dfe11e8aca01db097e0f9450619bd9636d6abb4fe2465608e0c1cd9b8eb9",
+    "crc32_hex": "0e2a3352"
+  },
+  "frame": {
+    "path_base64": "HAWKAR-SCOTT-PILGRIM-GALACTIC-CENTER-FRAME-2026-10-06-v1.0.b64.txt",
+    "total_length_bytes": 635,
+    "sha256": "0f869e72a0be60a60ed7e7a8f8919cc55d6f1e03e4aaa33ad0ce02ef2ea2d73b",
+    "crc32_hex": "d5a7972d",
+    "byte_order": "big-endian for integer header fields",
+    "fields": [
+      {
+        "name": "preamble",
+        "offset": 0,
+        "length": 64,
+        "value": "0xAA repeated 64 times",
+        "purpose": "bit-clock acquisition / easy pattern detection"
+      },
+      {
+        "name": "sync",
+        "offset": 64,
+        "length": 8,
+        "value_hex": "d391d391d391d391",
+        "purpose": "frame boundary marker"
+      },
+      {
+        "name": "magic",
+        "offset": 72,
+        "length": 8,
+        "value_ascii": "HKGC2026",
+        "purpose": "human/machine recognition"
+      },
+      {
+        "name": "version",
+        "offset": 80,
+        "length": 2,
+        "type": "uint16_be",
+        "value": 1
+      },
+      {
+        "name": "encoding_id",
+        "offset": 82,
+        "length": 1,
+        "type": "uint8",
+        "value": 1,
+        "meaning": "ASCII subset of UTF-8"
+      },
+      {
+        "name": "flags",
+        "offset": 83,
+        "length": 1,
+        "type": "uint8",
+        "value": 0
+      },
+      {
+        "name": "payload_length",
+        "offset": 84,
+        "length": 4,
+        "type": "uint32_be",
+        "value": 511
+      },
+      {
+        "name": "payload_crc32",
+        "offset": 88,
+        "length": 4,
+        "type": "uint32_be",
+        "value_hex": "0e2a3352"
+      },
+      {
+        "name": "payload_sha256",
+        "offset": 92,
+        "length": 32,
+        "value_hex": "aac3dfe11e8aca01db097e0f9450619bd9636d6abb4fe2465608e0c1cd9b8eb9"
+      },
+      {
+        "name": "payload",
+        "offset": 124,
+        "length": 511,
+        "type": "ASCII"
+      }
+    ]
+  },
+  "transmission_profile": {
+    "modulation": "UNSPECIFIED_BY_PACKET_SPEC",
+    "carrier_frequency": "TO_BE_CHOSEN_BY_AUTHORIZED_TRANSMITTER_OPERATOR",
+    "recommended_principles": [
+      "low symbol rate",
+      "narrow bandwidth",
+      "repeat complete frame many times",
+      "retain exact frame bytes",
+      "use facility-approved forward error correction outside this application frame",
+      "log UTC start/end, frequency, polarization, EIRP, target coordinates, and transmitter identity"
+    ],
+    "physical_emission_status": false,
+    "legal_requirement": "Only an authorized operator/facility may choose and execute the RF or optical emission parameters."
+  },
+  "truth_firewall": {
+    "digital_packet_created": true,
+    "public_repository_copy_created": true,
+    "physical_interstellar_transmission_performed": false,
+    "rule": "TRANSMISSION_READY != TRANSMITTED"
+  },
+  "linked_records": [
+    "HAWKAR-SCOTT-PILGRIM-DIGITAL-GOLDEN-RECORD-2026-10-06-v1.0.json",
+    "HAWKAR-GALACTIC-CENTER-BEACON-2026-10-06-v1.0.json",
+    "HAWKAR-VS-SCOTT-PILGRIM-TOPA-ADVERSARIAL-DEMOLITION-DOSSIER-2026-10-06-v3.2.json"
+  ],
+  "terminal": "RETURN_TO_SENDER_DIRECTION_LOCKED"
+}
