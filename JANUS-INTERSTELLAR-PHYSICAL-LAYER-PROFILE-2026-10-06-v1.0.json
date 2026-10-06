@@ -1,0 +1,76 @@
+{
+  "schema": "JANUS_INTERSTELLAR_PHYSICAL_LAYER_PROFILE_V1",
+  "id": "JANUS_HAWKAR_GALACTIC_CENTER_PHY_V1",
+  "version": "1.0",
+  "date": "2026-10-06",
+  "status": "TRANSMITTER_READY_PROFILE_NOT_EMITTED",
+  "target": {
+    "name": "Sagittarius A* / Galactic Center",
+    "frame": "ICRS/J2000",
+    "right_ascension_deg": 266.41683708333335,
+    "declination_deg": -29.007810555555555
+  },
+  "application_frame": {
+    "bytes": 635,
+    "bits": 5080,
+    "source_frame_sha256": "0f869e72a0be60a60ed7e7a8f8919cc55d6f1e03e4aaa33ad0ce02ef2ea2d73b",
+    "source_frame_crc32_hex": "d5a7972d",
+    "bitstream_path": "HAWKAR-SCOTT-PILGRIM-GALACTIC-CENTER-BITSTREAM-2026-10-06-v1.0.bits.txt",
+    "bit_order": "MSB_FIRST_WITHIN_EACH_BYTE"
+  },
+  "rf_profile": {
+    "mode": "BPSK",
+    "mapping": {
+      "bit_0": "carrier phase 0 degrees for one symbol interval",
+      "bit_1": "carrier phase 180 degrees for one symbol interval"
+    },
+    "reference_symbol_rate_baud": 10,
+    "reference_frame_duration_seconds": 508,
+    "pulse_shape": "NRZ rectangular at baseband; authorized operator may apply spectrally compliant filtering while preserving symbol decisions",
+    "carrier_frequency": "OPERATOR_ASSIGNED_LEGAL_FREQUENCY",
+    "polarization": "OPERATOR_SELECTED",
+    "transmit_power": "OPERATOR_SELECTED_WITHIN_FACILITY_AND_REGULATORY_LIMITS",
+    "repetition": {
+      "recommendation": "repeat complete frame with fixed inter-frame gap",
+      "default_inter_frame_gap_seconds": 10,
+      "minimum_repetitions_for_an_experiment": 3
+    }
+  },
+  "optical_mapping": {
+    "status": "OPTIONAL_NOT_REQUIRED",
+    "mode": "binary on-off keying",
+    "mapping": {
+      "bit_0": "no optical pulse in symbol slot",
+      "bit_1": "optical pulse in symbol slot"
+    },
+    "reference_symbol_rate_baud": 10,
+    "safety_rule": "Only an authorized astronomical/laser facility may implement optical emission. No handheld or improvised laser transmission is specified."
+  },
+  "receiver_recovery": [
+    "Search for 64 bytes of alternating 10101010 preamble.",
+    "Detect sync word D391D391D391D391.",
+    "Verify ASCII magic HKGC2026.",
+    "Read fixed header fields.",
+    "Verify payload CRC32 and SHA-256.",
+    "Decode 511 payload bytes as ASCII."
+  ],
+  "facility_log_requirements": [
+    "UTC start and end time",
+    "actual carrier frequency",
+    "actual symbol rate",
+    "actual modulation",
+    "polarization",
+    "authorized transmitter/facility identity",
+    "effective radiated power or equivalent facility metric",
+    "target RA/Dec and tracking epoch",
+    "number of repeated frames",
+    "operator confirmation that emission occurred"
+  ],
+  "truth_firewall": {
+    "physical_layer_defined": true,
+    "exact_baseband_bitstream_published": true,
+    "authorized_transmitter_required": true,
+    "physical_rf_or_optical_emission_performed": false,
+    "rule": "PHY_DEFINED_AND_TRANSMITTER_READY != PHYSICALLY_EMITTED"
+  }
+}
