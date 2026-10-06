@@ -3,7 +3,7 @@
   "id": "JANUS_HAWKAR_GALACTIC_CENTER_CULTURAL_WARNING_PACKET_V1",
   "version": "1.0",
   "date": "2026-10-06",
-  "status": "TRANSMISSION_READY_NOT_PHYSICALLY_TRANSMITTED",
+  "status": "PHY_DEFINED_TRANSMISSION_READY_NOT_PHYSICALLY_EMITTED",
   "purpose": "Define a compact, redundant, transmitter-ready packet carrying Hawkar's Scott Pilgrim cultural testimony toward the Sagittarius A* Galactic Center reference direction.",
   "target": {
     "name_ascii": "SAGITTARIUS_A_STAR_GALACTIC_CENTER",
@@ -99,7 +99,7 @@
   },
   "transmission_profile": {
     "modulation": "UNSPECIFIED_BY_PACKET_SPEC",
-    "carrier_frequency": "TO_BE_CHOSEN_BY_AUTHORIZED_TRANSMITTER_OPERATOR",
+    "carrier_frequency": "OPERATOR_ASSIGNED_LEGAL_FREQUENCY",
     "recommended_principles": [
       "low symbol rate",
       "narrow bandwidth",
@@ -109,11 +109,19 @@
       "log UTC start/end, frequency, polarization, EIRP, target coordinates, and transmitter identity"
     ],
     "physical_emission_status": false,
-    "legal_requirement": "Only an authorized operator/facility may choose and execute the RF or optical emission parameters."
+    "legal_requirement": "Only an authorized operator/facility may choose and execute the RF or optical emission parameters.",
+    "physical_layer_profile_path": "JANUS-INTERSTELLAR-PHYSICAL-LAYER-PROFILE-2026-10-06-v1.0.json",
+    "bitstream_path": "HAWKAR-SCOTT-PILGRIM-GALACTIC-CENTER-BITSTREAM-2026-10-06-v1.0.bits.txt",
+    "modulation_reference": "BPSK",
+    "reference_symbol_rate_baud": 10,
+    "reference_frame_duration_seconds": 508,
+    "physical_emission_requirements": "Authorized transmitter/facility and operator confirmation are required before status may change to PHYSICAL_EMISSION_PERFORMED."
   },
   "truth_firewall": {
     "digital_packet_created": true,
     "public_repository_copy_created": true,
+    "physical_layer_defined": true,
+    "exact_bitstream_published": true,
     "physical_interstellar_transmission_performed": false,
     "rule": "TRANSMISSION_READY != TRANSMITTED"
   },
@@ -122,5 +130,5 @@
     "HAWKAR-GALACTIC-CENTER-BEACON-2026-10-06-v1.0.json",
     "HAWKAR-VS-SCOTT-PILGRIM-TOPA-ADVERSARIAL-DEMOLITION-DOSSIER-2026-10-06-v3.2.json"
   ],
-  "terminal": "RETURN_TO_SENDER_DIRECTION_LOCKED"
+  "terminal": "RETURN_TO_SENDER_DIRECTION_LOCKED_PHY_READY"
 }
