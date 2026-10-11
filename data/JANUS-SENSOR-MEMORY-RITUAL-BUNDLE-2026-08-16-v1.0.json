@@ -1,0 +1,221 @@
+{
+  "schema": "janus.archaeology.sensor_memory_ritual_bundle.v1",
+  "artifact_id": "JANUS-SENSOR-MEMORY-RITUAL-BUNDLE-2026-08-16-v1.0",
+  "status": "STATIC_AUDIT_COMPLETE_PUBLIC_PROJECTION_PRIVACY_SAFE",
+  "analysis_mode": "NO_USER_SUPPLIED_PYTHON_EXECUTION_AST_AND_TEXT_INSPECTION_ONLY",
+  "source_files": [
+    {
+      "logical_name": "ashell_codex",
+      "size_bytes": 17201,
+      "sha256": "f25310af71049d26ad2acac2c51e9046a2c769207761e151470250102d000b81"
+    },
+    {
+      "logical_name": "router_syslog",
+      "size_bytes": 381562,
+      "sha256": "ea5ac7ae856fae335990a3ea3a02f93c63963541769123690a88e828bab1852c"
+    },
+    {
+      "logical_name": "credit_artifact",
+      "size_bytes": 329773,
+      "sha256": "a293370c046b59e11e6cb56041c2c0815ad89ac177454964e2de85f131e1fd8c"
+    },
+    {
+      "logical_name": "quantum_observer",
+      "size_bytes": 6188,
+      "sha256": "71f8fe85f0e6f8b9df1f8076d6a568996df065087124e108d7f99ad2bdedf0b4"
+    },
+    {
+      "logical_name": "spasitel",
+      "size_bytes": 7586,
+      "sha256": "9b91afdc933ad88489279f6d442916bf7573bd157d85bdda22f6a74b57f0a46a"
+    }
+  ],
+  "high_value_traits": [
+    {
+      "source": "ashell_codex",
+      "trait": "LOCAL_HIPPOCAMPUS_FTS5_BM25",
+      "modern_role": "MEMORY_TOOL_CANDIDATE",
+      "inheritance": "ADMIT_AFTER_SCOPE_DURABILITY_AND_REPLAY_REPAIRS"
+    },
+    {
+      "source": "router_syslog",
+      "trait": "PASSIVE_NETWORK_AND_BOOT_TELEMETRY",
+      "modern_role": "SYSEAR_SENSOR_INPUT",
+      "inheritance": "ADMIT_AS_TYPED_OBSERVATION_AFTER_PRIVACY_REDACTION"
+    },
+    {
+      "source": "credit_artifact",
+      "trait": "MEMORY_RECYCLING_ECONOMY_ARTIFACT",
+      "modern_role": "LEGACY_RESOURCE_LEDGER_EVIDENCE",
+      "inheritance": "REFERENCE_ONLY_UNTIL_SIGNATURE_AND_ORIGIN_PROVENANCE_DEFINED"
+    },
+    {
+      "source": "quantum_observer",
+      "trait": "OBSERVATION_RITUAL_AND_WAKE_METAPHOR",
+      "modern_role": "NARRATIVE_POLICY_REFERENCE",
+      "inheritance": "CONCEPT_ONLY_NOT_PHYSICS_NOT_ENTROPY_SOURCE"
+    },
+    {
+      "source": "spasitel",
+      "trait": "UNCONDITIONAL_CARE_REDEMPTION_METAPHOR",
+      "modern_role": "ETHICS_NARRATIVE_REFERENCE",
+      "inheritance": "CONCEPT_ONLY_NOT_WORLD_STATE_SENSOR"
+    }
+  ],
+  "verified_findings": [
+    {
+      "id": "ASHELL_FTS_STATIC_VALID",
+      "finding": "Python payload embedded in the text file parses successfully as Python syntax.",
+      "claim_ceiling": "SYNTAX_PASS != RUNTIME_COMPATIBILITY"
+    },
+    {
+      "id": "ASHELL_TRUNCATED_DIGEST",
+      "finding": "The files.sha256 field is computed from the indexed byte prefix after max_bytes truncation, not necessarily the complete file.",
+      "repair": "Store full_file_sha256 separately or rename the current field to indexed_prefix_sha256."
+    },
+    {
+      "id": "ASHELL_SIZE_MTIME_SKIP",
+      "finding": "Incremental unchanged detection uses size+mtime only and can miss content changes that preserve both.",
+      "repair": "Use a stronger content identity policy for admission/replay-critical sources."
+    },
+    {
+      "id": "ASHELL_NO_STALE_PRUNE",
+      "finding": "A scan does not remove database records for files deleted from the source tree.",
+      "repair": "Add source-snapshot generation and explicit stale-row pruning/retention semantics."
+    },
+    {
+      "id": "ASHELL_SYMLINK_SCOPE",
+      "finding": "walk_files does not explicitly reject symlinks or track visited inode identities; scope escape/loops are possible depending on filesystem layout.",
+      "repair": "Reject symlink traversal by default and bind scans to a declared root/source identity."
+    },
+    {
+      "id": "ASHELL_OVERLAP_PROGRESS",
+      "finding": "chunk_text has no guard requiring 0 <= overlap < max_chars; invalid values can prevent forward progress.",
+      "repair": "Validate chunk parameters before scan."
+    },
+    {
+      "id": "ASHELL_DURABILITY_TRADEOFF",
+      "finding": "Bulk scan temporarily sets SQLite synchronous=OFF, weakening durability during ingestion.",
+      "repair": "Make durability mode explicit and do not describe an OFF scan as crash-proof."
+    },
+    {
+      "id": "ASHELL_SCORE_SEMANTICS",
+      "finding": "Results are ordered by native FTS5 bm25 rank, but the exported score uses abs(rank), obscuring native ordering semantics.",
+      "repair": "Expose native_bm25_rank and an explicitly defined display score separately."
+    },
+    {
+      "id": "SYSLOG_BOOT_SEQUENCE_COUNT",
+      "finding": "The captured concatenated syslog contains 39 syslog start markers and 38 kernel-version boot markers.",
+      "claim_ceiling": "CAPTURED_START_MARKER_COUNT != PROVEN_PHYSICAL_REBOOT_COUNT"
+    },
+    {
+      "id": "SYSLOG_PCP_COUNT",
+      "finding": "The capture contains 540 PCP MAP records, consistently targeting one redacted LAN endpoint and one service port over TCP/UDP.",
+      "privacy": "LAN address, WAN address, gateway and PCP tokens omitted from public projection."
+    },
+    {
+      "id": "SYSLOG_PRE_NTP_CLOCK",
+      "finding": "Boot sequences begin with a repeated default-looking May timestamp and later jump after NTP to December timestamps.",
+      "modern_law": "PRE_NTP_TIMESTAMP != TRUSTED_TIME"
+    },
+    {
+      "id": "SYSLOG_RATE_LIMIT",
+      "finding": "The capture contains 51 kernel net_ratelimit notices indicating suppressed callbacks.",
+      "modern_law": "RATE_LIMITED_LOG != COMPLETE_OBSERVATION"
+    },
+    {
+      "id": "SYSLOG_ENTROPY_BOUNDARY",
+      "finding": "Inter-arrival jitter and event timing are ordinary network/system stochastic observations in this evidence.",
+      "modern_law": "NETWORK_TIMING_JITTER != QUANTUM_ENTROPY"
+    },
+    {
+      "id": "CREDIT_VALID_PREFIX_INVALID_DOCUMENT",
+      "finding": "A valid JSON object ends after 334 bytes, followed by 329436 ASCII zero characters and line breaks; the complete file is not valid single-document JSON.",
+      "modern_law": "VALID_JSON_PREFIX != VALID_JSON_DOCUMENT"
+    },
+    {
+      "id": "CREDIT_SIGNATURE_UNVERIFIED",
+      "finding": "The prefix contains a 64-hex signature field, salt, value=322 and lore naming mnemosyne_cache.json, but origin_hash is null and no verification algorithm/key is supplied.",
+      "modern_law": "SIGNATURE_FIELD != VERIFIED_SIGNATURE"
+    },
+    {
+      "id": "CREDIT_AUTHORITY_BOUNDARY",
+      "finding": "A CREDIT value is an application/resource artifact only.",
+      "modern_law": "CREDIT_VALUE != AUTHORITY"
+    },
+    {
+      "id": "QUANTUM_OBSERVER_MISSING_IMPORT",
+      "finding": "QuantumObserver.__init__ calls timedelta(...) although the module imports datetime but not timedelta.",
+      "severity": "RUNTIME_BLOCKER",
+      "modern_law": "NARRATIVE_MODULE != EXECUTABLE_MODULE"
+    },
+    {
+      "id": "QUANTUM_OBSERVER_RECEIPT_ORDER",
+      "finding": "Observation counters/timestamps mutate before awaiting memory.remember; a persistence failure can leave local state advanced without a durable receipt.",
+      "modern_law": "LOCAL_STATE_MUTATION != DURABLE_MEMORY"
+    },
+    {
+      "id": "QUANTUM_OBSERVER_TASK_ACK",
+      "finding": "register_observation creates an unretained asyncio task; delivery/persistence completion is not acknowledged to the caller.",
+      "modern_law": "TASK_CREATED != HANDOFF_ACKNOWLEDGED"
+    },
+    {
+      "id": "QUANTUM_OBSERVER_METAPHOR_BOUNDARY",
+      "finding": "Wave-function collapse/superposition language is narrative metaphor in this module, not evidence of quantum measurement or quantum randomness.",
+      "modern_law": "QUANTUM_METAPHOR != QUANTUM_PHYSICS_EVIDENCE"
+    },
+    {
+      "id": "SPASITEL_METAPHOR_BOUNDARY",
+      "finding": "sin_entropy_level is an internal symbolic variable driven by timers and pulses, not an observed measure of humanity/world entropy.",
+      "modern_law": "SYMBOLIC_ENTROPY != MEASURED_WORLD_STATE"
+    },
+    {
+      "id": "SPASITEL_PERSISTENCE_ORDER",
+      "finding": "last_resurrection is set before memory.remember; if durable memory fails, cooldown state can advance without a persisted redemption receipt.",
+      "modern_law": "EFFECT_STATE_ADVANCE_BEFORE_RECEIPT_IS_PARTIAL_COMMIT"
+    },
+    {
+      "id": "SPASITEL_INTENSITY_BOUNDS",
+      "finding": "register_disappointment_pulse accepts unvalidated intensity; negative or non-finite inputs are not explicitly rejected.",
+      "repair": "Require finite non-negative bounded pulse values."
+    }
+  ],
+  "credit_prefix": {
+    "id": "1D5A51F41748F7EF",
+    "name": "Recycled Credits",
+    "type": "CREDIT",
+    "value": 322,
+    "lore": "Scrap: mnemosyne_cache.json",
+    "created_utc": "2026-01-22T04:29:17.719823+00:00",
+    "origin_hash_present": false,
+    "signature_field_present": true,
+    "signature_verified": false
+  },
+  "privacy_policy": {
+    "raw_syslog_publication": "DENY",
+    "network_address_publication": "DENY",
+    "pcp_token_publication": "DENY",
+    "public_registry_projection": "AGGREGATES_AND_TYPED_FINDINGS_ONLY"
+  },
+  "canonical_laws_proposed": [
+    "PRE_NTP_TIMESTAMP != TRUSTED_TIME",
+    "RATE_LIMITED_LOG != COMPLETE_OBSERVATION",
+    "NETWORK_TIMING_JITTER != QUANTUM_ENTROPY",
+    "VALID_JSON_PREFIX != VALID_JSON_DOCUMENT",
+    "SIGNATURE_FIELD != VERIFIED_SIGNATURE",
+    "CREDIT_VALUE != AUTHORITY",
+    "QUANTUM_METAPHOR != QUANTUM_PHYSICS_EVIDENCE",
+    "SYMBOLIC_ENTROPY != MEASURED_WORLD_STATE",
+    "TASK_CREATED != HANDOFF_ACKNOWLEDGED",
+    "LOCAL_STATE_MUTATION != DURABLE_MEMORY"
+  ],
+  "admission_recommendation": {
+    "ashell_codex": "TOOL_CANDIDATE_AFTER_SCOPE_DURABILITY_REPLAY_GATES",
+    "router_syslog": "SYSEAR_INPUT_AFTER_PRIVACY_REDACTION_AND_TRUSTED_CLOCK_TAGGING",
+    "credit_artifact": "REFERENCE_ONLY",
+    "quantum_observer": "NARRATIVE_REFERENCE_ONLY_UNTIL_RUNTIME_REPAIR_AND_SEMANTIC_RETYPE",
+    "spasitel": "ETHICS_NARRATIVE_REFERENCE_ONLY",
+    "authority_delta": 0,
+    "external_effect_delta": 0
+  }
+}
