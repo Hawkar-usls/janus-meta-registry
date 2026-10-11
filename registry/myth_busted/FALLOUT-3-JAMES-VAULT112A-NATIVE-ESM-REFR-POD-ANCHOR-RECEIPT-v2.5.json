@@ -1,0 +1,136 @@
+{
+  "schema": "janus.meta_registry.fallout3_james_vault112a_native_esm_refr_pod_anchor_receipt.v2_5",
+  "artifact_id": "FALLOUT-3-JAMES-VAULT112A-NATIVE-ESM-REFR-POD-ANCHOR-RECEIPT-v2.5",
+  "title": "Fallout 3 — Vault112a native ESM REFR inventory and James pod-anchor receipt v2.5",
+  "status": "NATIVE_ESM_SOURCE_ADMITTED_LOCALLY_EXACT_POD_ASSEMBLY_BOUND_PERSISTENCE_STILL_OPEN",
+  "source": {
+    "filename": "Fallout3.esm",
+    "bytes": 288660898,
+    "sha256": "fb4442418fb6bf6df68e633c7056afb4e09572b521a7f4602a2699fa33d99e32",
+    "cell": {
+      "formid": "0001852C",
+      "editorid": "Vault112a"
+    },
+    "derived_local_inventory": {
+      "format": "TSV",
+      "unique_refr_count": 1008,
+      "sha256": "7a121e5e37d9b8e173df7dc83b2e950aaf5c19d260132a93a95410161a95fee3",
+      "scope": "Vault112a CELL child REFR records from native Fallout3.esm; local analysis only"
+    }
+  },
+  "exact_native_refs": {
+    "james_monitor": {
+      "refid": "000B3645",
+      "baseid": "00031190",
+      "editorid": "Vault112PodTermDad",
+      "position": [7029.43603515625, -1456.0, 6871.08203125],
+      "child_group": "9"
+    },
+    "james_pod_shell": {
+      "refid": "000B3654",
+      "baseid": "000B364C",
+      "editorid": "MQ04DadPodShellRef",
+      "base_editorid": "TLpod01",
+      "position": [6669.16943359375, -1248.0, 6784.0],
+      "child_group": "8",
+      "distance_from_james_monitor_units": 425.0168283350897
+    },
+    "player_pod_shell": {
+      "refid": "000B3656",
+      "baseid": "0002A45B",
+      "editorid": "MQ04PlayerPodShellRef",
+      "base_editorid": "MQ04PlayerPodActivator",
+      "position": [7168.0, -960.0, 6784.0],
+      "child_group": "8",
+      "distance_from_james_monitor_units": 522.3018787251737
+    },
+    "broken_pod": {
+      "refid": "000B364F",
+      "baseid": "000B06D4",
+      "editorid": "TLpodBroken",
+      "position": [6880.0, -2034.83056640625, 6784.0],
+      "child_group": "9",
+      "distance_from_james_monitor_units": 604.1185590395532
+    }
+  },
+  "critical_native_finding": {
+    "statement": "The public-derived role hardening is now superseded for this exact pod-anchor question by primary Fallout3.esm evidence: the Dad monitor has a separately placed shell reference whose EditorID is MQ04DadPodShellRef and whose base is TLpod01 carrying MQ04DadPodScript.",
+    "strength": "PRIMARY_ESM_ASSET_LEVEL_PLACED_REFERENCE_BINDING",
+    "not_claimed": "This still does not prove that the shell/monitor stores or exports James memory."
+  },
+  "script_evidence": {
+    "MQ04DadPodScript": {
+      "formid": "0005AE43",
+      "attached_to_base": "000B364C",
+      "observed_operations": [
+        "OnActivate",
+        "IsActionRef Player",
+        "GetStage MQ04",
+        "ShowMessage MQ04OccupiedPodMessage",
+        "ShowMessage MQ04PodNoAuthMessage"
+      ],
+      "memory_copy_write_export": "NOT_PRESENT_IN_SCRIPT_TEXT"
+    },
+    "MQ04PlayerPodScript": {
+      "formid": "0004B1CF",
+      "observed_role": "player sitting/chair animation and MQ04.PlayerInChair state management",
+      "memory_copy_write_export": "NOT_PRESENT_IN_SCRIPT_TEXT"
+    },
+    "Vault112PodTermDad": {
+      "baseid": "00031190",
+      "record_type": "TERM",
+      "script_attachment": "NONE",
+      "dynamic_memory_store": "NOT_ESTABLISHED"
+    }
+  },
+  "assembly_graph": [
+    "000B3645 Vault112PodTermDad",
+    "000B3654 MQ04DadPodShellRef",
+    "000B364C TLpod01",
+    "0005AE43 MQ04DadPodScript",
+    "00014E8A MQ04 quest",
+    "0005AE42 MQ04PodNoAuthMessage",
+    "000C5D23 MQ04OccupiedPodMessage"
+  ],
+  "negative_control": {
+    "player_shell_is_farther_than_dad_shell": true,
+    "broken_pod_is_farther_than_dad_shell": true,
+    "old_nearest_undifferentiated_pod_method_is_now_unnecessary_for_james_anchor": true,
+    "proximity_is_not_used_to_define_the_dad_shell_identity": true
+  },
+  "claim_matrix": {
+    "NATIVE_FALLOUT3_ESM_BYTES_AVAILABLE_LOCALLY": "PASS",
+    "VAULT112A_CELL_FOUND": "PASS",
+    "ALL_UNIQUE_VAULT112A_REFR_EXTRACTED_LOCALLY": "PASS_1008",
+    "JAMES_MONITOR_EXACT_PLACED_REF": "PASS_000B3645",
+    "JAMES_DAD_POD_SHELL_EXACT_PLACED_REF": "PASS_000B3654",
+    "DAD_SHELL_BASE_TLPOD01": "PASS_000B364C",
+    "DAD_POD_SCRIPT_BASE_BINDING": "PASS_0005AE43",
+    "PLAYER_SHELL_EXACT_PLACED_REF": "PASS_000B3656",
+    "BROKEN_POD_EXACT_PLACED_REF": "PASS_000B364F",
+    "JAMES_MONITOR_DYNAMIC_MEMORY_STORE": "NOT_ESTABLISHED",
+    "JAMES_SESSION_BACKEND_HANDLE": "NOT_ESTABLISHED",
+    "JAMES_SPECIFIC_PERSISTED_MEMORY_STATE": "NOT_ESTABLISHED",
+    "JAMES_MEMORY_TO_REMOVABLE_CARRIER_COPY_WRITE": "NOT_ESTABLISHED"
+  },
+  "hard_rules": [
+    "PRIMARY_ESM_PLACED_REF_BINDING > PUBLIC_DERIVED_ROLE_INFERENCE",
+    "EXACT_DAD_SHELL_REF != MEMORY_STORE",
+    "MQ04DadPodScript != MEMORY_COPY_WRITE_API",
+    "TERM_MONITOR != DYNAMIC_MEMORY_STORE_WITHOUT_SCRIPT_OR_STATE_EDGE",
+    "EXACT_POD_ASSEMBLY != PERSISTED_JAMES_MEMORY",
+    "JAMES_PERSISTENCE_REMAINS_OPEN_UNTIL_BACKEND_STATE_OR_CARRIER_WRITE_EDGE_IS_FOUND"
+  ],
+  "next_gate": {
+    "name": "VAULT112A-JAMES-DAD-POD-EXACT-REF-TO-BACKEND-STATE-AND-CARRIER-AUDIT-v2.6",
+    "required": [
+      "Use exact 000B3645 monitor and 000B3654 shell as primary James-session anchors.",
+      "Follow all references from MQ04DadPodScript 0005AE43 and the referenced MQ04 quest/message forms.",
+      "Trace Think Machine / backend records by primary record references rather than proximity or lexical search alone.",
+      "Trace Braun per-user memory-control records from the exact MQ04 path.",
+      "Trace every memory/chip/carrier record reachable from that graph.",
+      "Require an explicit source-bound state/copy/write edge before promoting SAVE_JAMES."
+    ],
+    "promotion_target": "PERSISTED_JAMES_STATE_CANDIDATE"
+  }
+}
