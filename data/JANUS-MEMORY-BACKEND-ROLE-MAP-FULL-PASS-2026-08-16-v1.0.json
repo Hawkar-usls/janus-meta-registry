@@ -1,0 +1,111 @@
+{
+  "artifact_id": "JANUS-MEMORY-BACKEND-ROLE-MAP-FULL-PASS-2026-08-16-v1.0",
+  "status": "FULL_COMPATIBILITY_PASS",
+  "recorded_date": "2026-08-16",
+  "parent_state_artifact": "JANUS-MEMORY-POWER-INTEGRATION-STATE-2026-08-16-v1.0",
+  "source": {
+    "repository": "Hawkar-usls/Janus_Genesis",
+    "pull_request": 153,
+    "exact_head_sha": "dbb58edc287c7b2a9fa17cdd5f7d9e8e71597878",
+    "base_sha": "42e3798fd6bc07338070874d5c7e1774a2b25313",
+    "synthetic_merge_sha": "410149b92b9f4ac7c87e7b97e32fe08f6a3ff028",
+    "combined_memory_parent_sha": "950de94d95d18e0a7dd2ba25af1788b9e86c1d92",
+    "combined_memory_parent_parents": [
+      "426d25acdb04b3e9a1256e75670c5b2f5b42d802",
+      "bb3c79fbae7f6f6af670562c2e0b868ca056fa89"
+    ]
+  },
+  "exact_runs": {
+    "power_v1": {
+      "run_id": 31962917810,
+      "conclusion": "SUCCESS"
+    },
+    "storj_neighbor_cortex": {
+      "run_id": 31962917792,
+      "conclusion": "SUCCESS"
+    },
+    "hippocampus_hdd_buffer": {
+      "run_id": 31962917805,
+      "conclusion": "SUCCESS"
+    },
+    "power_memory_runtime_adapter": {
+      "run_id": 31962917827,
+      "conclusion": "SUCCESS"
+    },
+    "power_v1_1": {
+      "run_id": 31962917795,
+      "conclusion": "SUCCESS"
+    },
+    "memory_backend_role_map": {
+      "run_id": 31962917823,
+      "conclusion": "SUCCESS",
+      "verified_steps": [
+        "combined Git ancestry",
+        "exact Hippocampus source blob",
+        "exact Cortex source blob",
+        "exact Power-Memory adapter source blob",
+        "duplicate-key-safe role-map JSON",
+        "Hippocampus regression replay",
+        "Cortex regression replay",
+        "Power-Memory adapter regression replay",
+        "role-separation regressions"
+      ]
+    },
+    "armor": {
+      "run_id": 31962917856,
+      "conclusion": "SUCCESS"
+    },
+    "python_matrix": {
+      "run_id": 31962917835,
+      "conclusion": "SUCCESS"
+    }
+  },
+  "admitted_role_split": {
+    "OPERATIONAL_THOUGHT_JOURNAL": {
+      "component_pr": 139,
+      "backend": "JanusHippocampusBufferedJournal",
+      "table": "thoughts",
+      "default_power_telemetry_sink": true
+    },
+    "EPISODIC_SEARCH_STORE": {
+      "component_pr": 143,
+      "backend": "JanusCortexMemory",
+      "table": "memories",
+      "default_power_telemetry_sink": false
+    }
+  },
+  "routing": {
+    "dual_write_default": "DENY",
+    "power_telemetry_to_cortex_default": false,
+    "journal_to_cortex_automatic_mirroring": false,
+    "cortex_to_journal_automatic_mirroring": false,
+    "selective_projection_adapter": "NOT_IMPLEMENTED",
+    "future_projection_requires": [
+      "source_record_identity_or_receipt",
+      "projection_policy_id",
+      "projection_reason",
+      "idempotency_key",
+      "projection_receipt"
+    ]
+  },
+  "evidence_firewall": [
+    "PROJECTION != SECOND_INDEPENDENT_MEMORY_ROOT",
+    "BOTH_BACKENDS_AGREE != INDEPENDENT_CORROBORATION",
+    "SAME_CONTENT_IN_TWO_TABLES != TWO_EVIDENCE_ROOTS",
+    "CORTEX_RECALL != COMMAND",
+    "MEMORY_ROW != TRUTH"
+  ],
+  "claim_ceiling": {
+    "main_merge_performed": false,
+    "live_runtime_deployed": false,
+    "selective_projection_adapter_implemented": false,
+    "production_nas_validated": false,
+    "zero_storj_interference": false,
+    "merge_permission": false
+  },
+  "source_writeback": false,
+  "source_delete": false,
+  "history_rewrite": false,
+  "authority_delta": 0,
+  "mass_effect_budget_delta": 0
+}
