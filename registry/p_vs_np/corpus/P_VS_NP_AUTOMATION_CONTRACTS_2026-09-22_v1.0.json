@@ -1,0 +1,77 @@
+{
+  "schema": "janus.meta_registry.p_vs_np.automation_contracts.v1",
+  "generated_utc": "2026-09-22",
+  "topa_auto_ingest": {
+    "expected_artifacts": [
+      "TOPA_PNP_CORPUS_LATEST.json",
+      "TOPA_PNP_DEDUPE_RECEIPT.json"
+    ],
+    "open_sources": [
+      "ARXIV",
+      "OPENALEX"
+    ],
+    "cadence": "EVERY_2_HOURS",
+    "source_documents_immutable": true,
+    "hard_duplicate_identity_order": [
+      "DOI",
+      "CANONICAL_ARXIV_ID_WITH_VERSION_STRIPPED",
+      "NORMALIZED_TITLE_PLUS_FIRST_AUTHOR",
+      "NORMALIZED_SOURCE_URL",
+      "EXACT_CONTENT_SHA256"
+    ],
+    "near_semantic_duplicates": "FLAG_ONLY__DO_NOT_AUTO_MERGE",
+    "duplicate_independence_credit": 1,
+    "preserve_all_provenance": true,
+    "preserve_negative_and_contradictory_results": true
+  },
+  "topa_weight_state": {
+    "expected_artifact": "TOPA_PNP_WEIGHT_LEDGER.json",
+    "mutable_dimensions": [
+      "source_quality_hint",
+      "frontier_relevance_weight",
+      "novelty_weight",
+      "attention_priority"
+    ],
+    "attention_priority_formula": "CLAMP01(0.35*source_quality_hint + 0.45*frontier_relevance_weight + 0.20*novelty_weight)",
+    "history_required": true,
+    "history_limit_per_record": 16,
+    "weights_are_truth": false,
+    "weights_are_evidence": false,
+    "weights_change_theorem_status": false,
+    "source_documents_immutable": true
+  },
+  "failover": {
+    "order": [
+      "LIVE_PRIVATE_GOOGLE_DRIVE",
+      "JANUS_META_REGISTRY_JSON_CORPUS",
+      "TOPA_LOCAL_PINNED_FALLBACK"
+    ],
+    "live_drive_optional": true,
+    "drive_unavailable_behavior": "CONTINUE_WITH_META_REGISTRY_AND_MARK_DRIVE_DEGRADED",
+    "meta_registry_unavailable_behavior": "CONTINUE_WITH_TOPA_LOCAL_PINNED_FALLBACK",
+    "no_change_is_new_evidence": false,
+    "degraded_state_is_scientific_evidence": false
+  },
+  "demiurge": {
+    "corpus_role": "READ_ONLY_TRAINING_AND_RETRIEVAL_MEMORY",
+    "adaptive_holdout_inclusion": false,
+    "frozen_anchor_inclusion": false,
+    "corpus_is_truth": false,
+    "corpus_is_proof": false,
+    "cross_repository_write": false
+  },
+  "terminal": {
+    "role": "OBSERVABILITY_ONLY",
+    "direct_drive_credentials": false,
+    "attention_weight_is_evidence": false,
+    "drive_sync_status_is_evidence": false
+  },
+  "authority": {
+    "P_VS_NP": "OPEN",
+    "D1": "EMPTY",
+    "SUCCESSOR_ALGORITHM": "LOCKED",
+    "automatic_theorem_promotion": false,
+    "automatic_pnp_promotion": false,
+    "fundamentum_mutation": false
+  }
+}
