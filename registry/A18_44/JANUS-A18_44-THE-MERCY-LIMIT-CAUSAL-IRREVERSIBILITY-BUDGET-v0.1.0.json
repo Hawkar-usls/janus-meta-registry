@@ -1,0 +1,350 @@
+{
+  "schema": "JANUS/meta-registry/a18-44-mercy-limit/v0.1.0",
+  "registry_id": "JANUS-A18_44-THE-MERCY-LIMIT-CAUSAL-IRREVERSIBILITY-BUDGET-20260715",
+  "canonical_name": "JANUS A18.44 — The Mercy Limit",
+  "technical_name": "Causal Irreversibility Budget",
+  "experiment_name": "Counterfactual Waste Cone Experiment",
+  "status": "SEALED_PRE_PRIOR_ART_PRE_CODE_HYPOTHESIS",
+  "sealed_at_utc": "2026-07-15T13:39:06Z",
+  "founder": "Hawkar",
+  "origin": {
+    "protocol": "JANUS CREATIVE REVERSAL PROTOCOL",
+    "human_role": "Source of intention, physical reality, operator judgment and action.",
+    "ai_role": "Generator, critic and architect of hypotheses and falsifiable experiment structure.",
+    "generation_condition": "Derived from project constraints before any dedicated prior-art search for this hypothesis and before implementation code.",
+    "novelty_claim": "NOT_CLAIMED",
+    "prior_art_search_performed": false,
+    "implementation_code_written": false
+  },
+  "mission_alignment": {
+    "english": "JANUS I0 develops auditable measurement and control methods for reducing unnecessary Proof-of-Work computation, thermal stress, energy waste, and hardware wear while preserving standard SHA-256 verification and valid proof semantics.",
+    "russian": "JANUS I0 разрабатывает проверяемые методы измерения и управления, направленные на сокращение ненужных PoW-вычислений, тепловой нагрузки, расхода энергии и износа оборудования без изменения стандартной проверки SHA-256 и правил валидного доказательства работы.",
+    "canonical_line_english": "We do not seek to make the machine work faster at any cost. We seek to remove work it should never have had to perform.",
+    "canonical_line_russian": "Мы не стремимся заставить машину работать быстрее любой ценой. Мы стремимся убрать работу, которую ей никогда не следовало выполнять."
+  },
+  "fundamental_barrier": {
+    "question": "How can JANUS prove that computation was causally unnecessary and preventable, rather than merely unsuccessful in hindsight?",
+    "russian_question": "Как доказать, что работа действительно была причинно ненужной и могла быть предотвращена, а не просто не принесла результата задним числом?",
+    "distinction": {
+      "not_unnecessary_by_itself": "A non-winning SHA-256 attempt is not unnecessary merely because it did not produce a valid proof; before execution it retained the same proof semantics as any other attempt.",
+      "causally_unnecessary_after": [
+        "an authoritative new job invalidates the old epoch",
+        "the old epoch is explicitly revoked",
+        "the task is authoritatively cancelled",
+        "the useful target has already been reached",
+        "the result can no longer be accepted by the active verifier context"
+      ]
+    },
+    "research_object": "Limit the amount of work that can simultaneously lie inside the causal cone of becoming stale after an authoritative horizon."
+  },
+  "first_principles": {
+    "physical_process": [
+      "Admitted work commits processor time and transistor switching.",
+      "Computation consumes electrical energy and releases heat.",
+      "Work creates queue, process, ledger and completion obligations.",
+      "Cancellation and quiescence have non-zero latency.",
+      "During quiescence, some already committed work may remain physically unavoidable."
+    ],
+    "measurable_quantities": {
+      "R_t": "Current exact-exposure rate, such as hashes per second.",
+      "X_t": "Exact exposure of admitted but not authoritatively resolved work.",
+      "tau_q_p": "Chosen p-quantile of measured quiesce latency.",
+      "W_H": "Exact old-epoch exposure irreversibly executed or finalized after authoritative horizon H.",
+      "U": "Useful valid-epoch work that remained eligible under unchanged verifier semantics."
+    },
+    "useful_work_definition": [
+      "belongs to the authoritative active epoch at the relevant point",
+      "preserves unchanged verifier semantics",
+      "preserves nonce traversal and candidate semantics",
+      "is eligible at finalization",
+      "could produce a standard valid result"
+    ],
+    "causality_rule": "A computation becomes causally stale only after an evidenced authoritative horizon makes its result ineligible or no longer useful under the frozen semantics.",
+    "correlation_is_not_causation": [
+      "lower temperature alone does not prove less unnecessary work",
+      "lower power alone does not prove preserved useful output",
+      "lower work count alone may reflect changed concurrency, difficulty, scheduling or workload",
+      "only matched control and intervention with frozen semantics can support a causal claim"
+    ],
+    "hidden_variables": [
+      "background operating-system activity",
+      "ambient temperature",
+      "clock or power-state changes",
+      "network and pool timing",
+      "job-duration variation",
+      "hidden queues",
+      "writer buffering and delayed visibility",
+      "measurement or ledger authority errors"
+    ]
+  },
+  "candidate_hypotheses": [
+    {
+      "class": "conservative",
+      "name": "Unresolved Exposure Cap",
+      "mechanism": "Maintain X(t) <= B, where B is a fixed cap on admitted but unresolved exact exposure.",
+      "possible_new_element": "Express the cap in exact computational exposure rather than task count, process count or queue depth.",
+      "prediction": "Maximum stale tail decreases as B decreases, until control overhead or blocked useful work dominates.",
+      "not_equivalent_to": "Not clock throttling; full compute speed may remain unchanged while outstanding causal obligations are bounded.",
+      "falsifier": "No stale-tail reduction, disproportionate useful-work loss, or overhead greater than prevented work.",
+      "self_deception_risk": "Relabeling ordinary queue-depth reduction as a new physical effect."
+    },
+    {
+      "class": "architectural",
+      "name": "Epoch-Bound Continuation Lease",
+      "mechanism": "Every cohort receives a short-lived control-sidecar lease bound to cycle_id, epoch, maximum exposure, expiry and renewal sequence.",
+      "possible_new_element": "Treat continued computation as a causal permission that must remain valid for the authoritative epoch.",
+      "prediction": "Shorter leases reduce maximum stale tail but create a measurable overhead trade-off curve.",
+      "not_equivalent_to": "The mechanism does not select better hashes or reorder nonces; it validates the right to continue.",
+      "falsifier": "Lease revocation is not faster than the existing gate, loses eligible results, or destabilizes the runtime.",
+      "self_deception_risk": "Allowing the sidecar to become an unacknowledged scheduler."
+    },
+    {
+      "class": "mathematical",
+      "name": "Causal Irreversibility Budget",
+      "mechanism": "Bound the causal waste cone C(t) = X(t) + R_max(t) * tau_q,p + epsilon by a declared budget B.",
+      "possible_new_element": "Control an upper bound on causally vulnerable work rather than throughput, temperature or task count.",
+      "prediction": "Under valid assumptions, stale exact exposure after an authoritative horizon satisfies W_H <= B with confidence level p.",
+      "not_equivalent_to": "Batch size and worker count may remain frozen; the controlled quantity is total unresolved exposure plus physically unavoidable quiesce work.",
+      "falsifier": "Any verified W_H > B + epsilon with intact authoritative ledgers and satisfied assumptions.",
+      "self_deception_risk": "A hidden queue or biased R_max/tau estimate causes systematic undercounting."
+    },
+    {
+      "class": "temporal_causal",
+      "name": "Causal Completion Envelope",
+      "mechanism": "Admit a cohort only if its p-quantile completion bound fits before lease expiry minus quiesce latency.",
+      "possible_new_element": "Use causal reachability of an eligible completion rather than probability of a favorable proof.",
+      "prediction": "Late admissions near explicit lease expiry disappear while work inside the envelope remains eligible.",
+      "not_equivalent_to": "Not post-hoc stopping; it limits admissions using an explicit authoritative lease boundary.",
+      "falsifier": "Completion latency cannot be bounded or useful work is blocked beyond the predeclared margin.",
+      "self_deception_risk": "Choosing an optimistic latency quantile after seeing outcomes."
+    },
+    {
+      "class": "cross_domain",
+      "name": "Thermal Refractory Valley",
+      "mechanism": "Use a short post-horizon refractory valley derived from measured thermal time constants before opening the next epoch.",
+      "possible_new_element": "Place recovery only at already-authoritative causal boundaries instead of continuously throttling.",
+      "prediction": "At matched useful output, thermal-burden and fan-integral metrics decrease.",
+      "not_equivalent_to": "Not permanent throttling; it is event-bound recovery.",
+      "falsifier": "No thermal-burden benefit, increased wall energy, or mere temporal displacement of heat.",
+      "self_deception_risk": "Confusing lower temperature with lower total energy."
+    }
+  ],
+  "selection": {
+    "selected": "Causal Irreversibility Budget with Epoch-Bound Continuation Leases",
+    "working_name": "The Mercy Limit",
+    "reason": [
+      "high potential benefit",
+      "clear mathematical falsifier",
+      "compatible with frozen cryptographic semantics",
+      "safe initial offline replay",
+      "low-cost first experiment",
+      "direct bridge from causal boundary control to preventable work"
+    ],
+    "rejected_for_first_experiment": {
+      "Thermal Refractory Valley": "Requires external wall-power evidence before a strong claim.",
+      "Causal Completion Envelope": "Depends on a robust completion-latency model not yet established.",
+      "Unresolved Exposure Cap": "Useful baseline but too close to simple queue limiting on its own."
+    }
+  },
+  "formal_hypothesis": {
+    "IF": "Each computational cohort is bound to an authoritative epoch lease, and the system knows exact unresolved exposure X(t), a safe upper exposure rate R_max, a verified p-quantile quiesce latency tau_q,p, and a declared accounting margin epsilon.",
+    "UNDER": "Unchanged SHA-256, verifier, nonce traversal, candidate semantics, scheduler, allocator, concurrency, worker count, batch size, pool configuration, credentials and hardware settings.",
+    "THEN": "Maintaining X(t) + R_max * tau_q,p + epsilon <= B will bound stale exact exposure after any authoritative horizon by B at confidence level p and will reduce mean stale tail relative to continuous unbounded admission.",
+    "BECAUSE": "No horizon can make stale more than the already unresolved exposure plus the physically unavoidable work produced during the bounded quiesce interval, assuming complete authority and no hidden queue.",
+    "UNLESS": "A hidden queue exists, quiesce latency lacks a stable upper quantile, the horizon is incorrectly defined, lease overhead exceeds prevented work, or budget B blocks a materially significant fraction of useful work."
+  },
+  "mathematical_contract": {
+    "causal_waste_cone": "C(t) = X(t) + R_max(t) * tau_q,p + epsilon",
+    "controller_invariant": "C(t) <= B",
+    "predicted_horizon_bound": "W_H <= B + epsilon_accounting",
+    "prevented_tail_work": "Delta_W = W_H_control - W_H_intervention",
+    "non_claim": "This model does not predict valid hashes and does not classify pre-horizon non-winning attempts as unnecessary."
+  },
+  "knowledge_layers": {
+    "known_principles": [
+      "computation consumes energy and creates heat",
+      "cancellation has non-zero latency",
+      "authoritative invalidation can make old-epoch results stale",
+      "a non-winning pre-horizon attempt was not necessarily unnecessary"
+    ],
+    "derived_inferences": [
+      "maximum stale tail depends on unresolved exposure and quiesce latency",
+      "quiesce latency creates a physically unavoidable lower tail component",
+      "the controllable object is a causal cone of vulnerable work",
+      "the cone can be expressed in exact-exposure units"
+    ],
+    "new_assumptions": [
+      "the causal waste cone can be bounded without materially reducing useful throughput",
+      "epoch-bound leases can enforce the budget without changing proof semantics",
+      "a useful operating region for B exists above the unavoidable quiesce floor"
+    ],
+    "verified_project_facts": [
+      "JANUS has demonstrated native wave segmentation at A18.42",
+      "JANUS can distinguish admission and submission events",
+      "JANUS has implemented fail-closed evidence handling",
+      "V0.2.7 coherent-cut architecture passed offline validation but is not treated here as a live proof"
+    ],
+    "unverified_predictions": [
+      "the declared stale-tail bound will hold in deterministic replay",
+      "mean stale tail will decrease",
+      "useful exposure loss will stay within the non-inferiority margin",
+      "an optimal budget region exists",
+      "wall-energy benefit may or may not follow and requires a separate experiment"
+    ]
+  },
+  "minimal_falsifiable_experiment": {
+    "version": "JANUS A18.44 V0.1",
+    "mode": "OFFLINE_DETERMINISTIC_REPLAY_FIRST",
+    "purpose": "Test whether stale work can be bounded before any energy or hardware-lifetime claim.",
+    "input_trace": [
+      "jobs and authoritative epochs",
+      "admissions",
+      "exact batch exposure",
+      "completion latency",
+      "authoritative horizon events",
+      "quiesce traces"
+    ],
+    "precommitment": {
+      "horizon_schedule_fixed_before_analysis": true,
+      "horizon_schedule_independent_of_hash_outcomes": true,
+      "primary_budget": "B = 4 * R_max * tau_q,0.99",
+      "budget_multiplier_locked_before_results": true
+    },
+    "control": {
+      "runtime_model": "V0.2.7 coherent-cut model",
+      "budget": "infinity",
+      "admission": "continuous standard admission"
+    },
+    "intervention": {
+      "runtime_model": "same as control",
+      "mechanism": "epoch-bound continuation leases plus C(t) <= B",
+      "proof_semantics": "unchanged"
+    },
+    "frozen_variables": [
+      "SHA-256",
+      "verifier",
+      "nonce traversal",
+      "candidate selection",
+      "scheduler",
+      "allocator",
+      "worker count",
+      "concurrency",
+      "batch size",
+      "job sequence",
+      "horizon schedule",
+      "canonical seed",
+      "ledger semantics",
+      "completion trace"
+    ],
+    "primary_metric": {
+      "name": "W_H",
+      "definition": "Exact old-epoch exposure finalized or irreversibly executed after authoritative horizon H."
+    },
+    "paired_effect": "Delta_W = W_H_control - W_H_intervention",
+    "safety_bound": "For every horizon, W_H_intervention <= B + epsilon.",
+    "secondary_metrics": [
+      "useful exposure before horizon",
+      "valid-epoch completions",
+      "blocked useful admissions",
+      "lease renewals",
+      "control-plane CPU time",
+      "quiesce latency",
+      "hidden-queue reconciliation",
+      "lineage completeness",
+      "false revocations"
+    ],
+    "negative_controls": [
+      {
+        "name": "SHAM_LEASE",
+        "condition": "Sidecar and ledger instrumentation run but budget does not restrict admissions.",
+        "expected": "Practically equivalent to control."
+      },
+      {
+        "name": "INFINITE_BUDGET",
+        "condition": "B = infinity.",
+        "expected": "Mathematically and operationally degenerates to control."
+      },
+      {
+        "name": "SHIFTED_HORIZONS",
+        "condition": "Recorded horizon timestamps are shifted by a predeclared offset.",
+        "expected": "The effect follows the causal horizon schedule rather than incidental load structure."
+      },
+      {
+        "name": "IMPOSSIBLE_BUDGET",
+        "condition": "B < R_max * tau_q,0.99.",
+        "expected": "Fail closed because the requested bound is below the measured physical quiesce floor."
+      }
+    ],
+    "sample_plan": {
+      "replay_sessions": 20,
+      "horizons_per_session": 10,
+      "total_horizon_observations": 200,
+      "paired_order": "CONTROL/INTERVENTION",
+      "order_assignment": "AB/BA determined by canonical seed",
+      "exclusions": "No outcome may be removed merely because it is unfavorable."
+    },
+    "pass_criteria": [
+      "200/200 horizons satisfy W_H_intervention <= B + epsilon",
+      "median stale-tail reduction is at least 30 percent",
+      "lower bound of the 95 percent paired bootstrap interval for reduction is greater than 15 percent",
+      "useful valid-epoch exposure loss is no more than 1 percent versus control",
+      "sham lease is practically equivalent to control",
+      "infinite-budget mode is practically equivalent to control",
+      "impossible budget fails closed",
+      "zero lineage gaps",
+      "zero hidden exposures",
+      "zero wrong-epoch outcomes",
+      "zero reconciliation failures"
+    ],
+    "fail_criteria": [
+      "any verified W_H_intervention > B + epsilon with intact authoritative ledgers",
+      "no stale-tail reduction",
+      "useful exposure loss greater than 1 percent",
+      "sham lease shows the same effect as intervention",
+      "a hidden queue is found",
+      "the budget can only be met by changing frozen semantics or hardware settings",
+      "controller overhead exceeds prevented work"
+    ],
+    "evidence_insufficient_criteria": [
+      "fewer than 100 valid horizon observations",
+      "incomplete exact-exposure lineage",
+      "quiesce latency too unstable to estimate tau_q,p",
+      "control and intervention receive different workload traces",
+      "horizon schedule depends on outcomes",
+      "an unaccounted queue exists",
+      "replay is not representative enough of the live runtime"
+    ],
+    "stop_conditions": [
+      "hash mismatch",
+      "manifest mismatch",
+      "cycle_id drift",
+      "epoch drift",
+      "sequence gap",
+      "ledger hash-chain break",
+      "hidden admission",
+      "hidden submission",
+      "bound violation",
+      "workload-trace asymmetry",
+      "post-hoc adjustment of B"
+    ]
+  },
+  "claim_boundaries": {
+    "eligible_after_offline_pass": "A deterministic replay may support a claim that stale work was bounded and reduced under the sealed model and trace.",
+    "not_eligible": [
+      "wall-energy saving",
+      "hardware-lifetime extension",
+      "generalization to other machines",
+      "live-runtime equivalence",
+      "novelty or absence of prior art",
+      "SHA-256 weakness or prediction",
+      "mining advantage or profitability"
+    ]
+  },
+  "next_gates": [
+    "Seal this exact artifact and canonical seed with a separate SHA-256 record.",
+    "Only after sealing, conduct a dedicated prior-art search without rewriting the sealed origin artifact.",
+    "Only after prior-art classification, design code in a separate additive revision.",
+    "Run the first experiment offline and preserve PASS, FAIL or EVIDENCE_INSUFFICIENT."
+  ],
+  "canonical_seed_sha256": "44e21fdc9d37fda98e2e73b0c9eb268bd04cdca9d84d0519e4f1166be22b46fc"
+}
