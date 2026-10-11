@@ -1,0 +1,48 @@
+{
+  "id": "JANUS_TRUMP_EXACT_INVARIANT_FRONTIER_UPDATE_R44BM_R44BN_2026-09-03",
+  "status": "CANONICAL_SIBLING_SPECIFIC_FRONTIER_UPDATE",
+  "fundamentum": {
+    "R44BM": {
+      "pr": 291,
+      "head": "980e075c067e62f2257d6e3a25d54fc391f85370",
+      "result": "TWO_ACTIVATOR_SIBLING_SPLIT_MERGE exactly preserves maximum deficiency: delta*(M)=delta*(G).",
+      "effect": "Exact sibling OR and linear state pass, but R44BD M2 fails because rank k returns as k rather than <=k-1."
+    },
+    "R44BN": {
+      "pr": 292,
+      "head": "783075165045d5d2057c70a247d9ad5482944418",
+      "workflow_run": 33759368782,
+      "workflow_job": 100661558342,
+      "workflow_conclusion": "SUCCESS",
+      "result": "On the fixed R44AS critical parent, the exact existential projection on five remaining variables has auxiliary-free CNF clause complexity exactly 8; therefore every projection-faithful auxiliary-free CNF has delta*>=3 while parent rank is 2 and both sibling ranks are 1.",
+      "effect": "Strengthens R44AS from ordinary DP rebound to a representation-class lower bound for all auxiliary-free CNFs preserving the full projection function."
+    }
+  },
+  "R44AS_rejoin": {
+    "fact": "R44AS already used a parent with delta*=2, every proper clause subset below 2, and both x2 cofactors at delta*=1; ordinary DP projection returns delta*=3.",
+    "meaning": "RAW_DP_SIBLING_MERGE was already dead on a genuine branchwise-descending critical sibling instance."
+  },
+  "current_frontier": {
+    "name": "SAT_ONLY_OR_WITNESS_TRANSFORMING_SIBLING_COMPRESSION",
+    "why": "R44BN blocks only projection-faithful auxiliary-free representations. R44BD M1+M5 permit a merge to retain a polynomially liftable subset of sibling models or transform witnesses instead of preserving the entire existential projection function.",
+    "required": [
+      "SAT(M) iff SAT(G0) or SAT(G1)",
+      "delta*(M)<=k-1 or exact terminal",
+      "polynomial construction/live state with fixed original-input exponents",
+      "polynomial witness/certificate lifting to the parent",
+      "rank-monotone normalization"
+    ],
+    "anti_drift": "Another function-preserving auxiliary-free CNF representation is not a new machine after R44BN."
+  },
+  "firewalls": [
+    "SIBLING_SPECIFIC != AUTOMATIC_RANK_DESCENT",
+    "COMPACT_EXACT_OR != MAXDEF_COMPRESSION",
+    "PROJECTION_FAITHFUL_LOWER_BOUND != BARRIER_FOR_SAT_ONLY_SAFE_COMPRESSION",
+    "FINITE_EXHAUSTIVE_CERTIFICATE != GLOBAL_P_VS_NP_PROOF",
+    "P_VS_NP=OPEN"
+  ],
+  "TRUMP_finished": false,
+  "SAT_IN_P": "NOT_PROVED",
+  "P_EQUALS_NP": "NOT_PROVED",
+  "P_VS_NP": "OPEN"
+}
