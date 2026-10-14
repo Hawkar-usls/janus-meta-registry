@@ -1,0 +1,66 @@
+{
+  "schema": "janus.observer.machine_market_apis_io_closure_checkpoint.v1",
+  "checkpoint_id": "JANUS_MACHINE_MARKET_APIS_IO_CLOSED_2026-10-15",
+  "as_of_date": "2026-10-15",
+  "source_of_authority": "PROVENANCE_AWARE_STATUS_RECORD_NOT_RUNTIME_OR_PAYMENT_AUTHORITY",
+  "public_evidence": {
+    "apis_io_profile": "https://apis.io/providers/janus-machine-market/",
+    "apis_io_profile_state": "CORRECTED_PAID_JANUS_SEARCH_LIVE_USDT_ETHEREUM_BTT_TRON",
+    "provider_email_confirmation_date": "2026-10-11",
+    "profile_scored_date": "2026-10-09",
+    "market_repository": "https://github.com/Hawkar-usls/JANUS-MACHINE-MARKET",
+    "market_main_snapshot_commit": "4409e8ea5d1cae1a2d56fd9d5a28ffc844622547",
+    "market_persistent_state_snapshot_commit": "673a90f24f164bd1946066756192932e2524260d"
+  },
+  "resolved_gate": {
+    "name": "APIS_IO_CORRECTED_CATALOG_PUBLICATION",
+    "previous_state": "WAITING_WEEKLY_CATALOG_BUILD",
+    "current_state": "COMPLETED",
+    "closure_basis": "Public APIs.io profile explicitly lists paid JANUS.SEARCH exact-invoice checkout with USDT/Ethereum and BTT/TRON; dated email from APIs.io confirms publication.",
+    "repeat_follow_up": "NOT_REQUIRED",
+    "independent_service_validation": false
+  },
+  "independent_active_gates": {
+    "foreign_agent_witness": {
+      "authority_record": "FOREIGN_AGENT_WITNESS.json",
+      "state": "PENDING_REAL_EXTERNAL_PERSISTENT_HOME_REQUEST",
+      "foreign_agent_witness": false,
+      "promotion_authority": "PERSISTENT_HOME_RECEIPT_ONLY",
+      "expected_receipt": "state/r1-foreign-home/FIRST.json on janus/market-state",
+      "receipt_found_in_observed_snapshot": false,
+      "independent_external_principal_verified": false,
+      "owner_issues_not_qualifying": true
+    },
+    "paid_search_seller_commerce": {
+      "authority_records": [
+        "COMMERCE_READINESS.json",
+        "PRICING.json"
+      ],
+      "state": "LIVE_EXACT_INVOICE_DUAL_RAIL",
+      "rails": [
+        "USDT_ETHEREUM_EXACT_INVOICE",
+        "BTT_TRON_EXACT_INVOICE"
+      ],
+      "first_real_paid_delivery": "PENDING",
+      "next_gate": "FIRST_REAL_PAID_SEARCH_SETTLEMENT_QUEUE_DISPATCH_PERSISTENT_HOME_RESULT_RECEIPT",
+      "queue_status_observation": {
+        "state": "EMPTY",
+        "snapshot_generated_at": "2026-10-14T22:24:29.779621Z",
+        "queue_status_path": "state/commerce/paid-search-queue/QUEUE_STATUS.json on janus/market-state"
+      }
+    }
+  },
+  "watch_policy": {
+    "foreign_witness": "Require externally independent principal + public JANUS.SEARCH request + Market acceptance + persistent HOME processing + HOME response + Market reconcile + durable receipt. Never promote owner/fixture/workflow_dispatch/owner-authorized connector traffic.",
+    "paid_delivery": "Require authentic settlement with issue-bound invoice + queue dispatch + persistent HOME result receipt. Do not conflate paid delivery with the zero-price foreign witness.",
+    "deduplication": "Do not re-alert APIs.io correction as new; notify only if a genuinely new regression or material change arises.",
+    "existing_monitor": "JANUS Observer hourly; do not create duplicate schedules or initiate outreach."
+  },
+  "authority": {
+    "external_outreach_authorized": false,
+    "runtime_action_authorized": false,
+    "payment_executed": false,
+    "foreign_agent_witness_promoted": false,
+    "scientific_validation_claimed": false
+  }
+}
