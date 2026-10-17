@@ -37,6 +37,12 @@ SYMBOLIC_TIME != PHYSICAL_CAUSALITY
 
 ## 1. Technical core — evidence, falsification, provenance
 
+### Becker / Terror Management Theory / ALI context
+
+- [`JANUS-BECKER-TERROR-MANAGEMENT-ONTOLOGY-2026-10-18-v1.0.json`](JANUS-BECKER-TERROR-MANAGEMENT-ONTOLOGY-2026-10-18-v1.0.json) — 58 concepts, scoped psychological evidence, timed video context and bounded engineering applications.
+- [`../registry/psychology/BECKER_TMT_CURRENT.json`](../registry/psychology/BECKER_TMT_CURRENT.json) — machine-readable pointer, content hashes and validator.
+- [`../docs/BECKER_TMT_JANUS_INTEGRATION.md`](../docs/BECKER_TMT_JANUS_INTEGRATION.md) — source coverage, actual Genesis/IO hooks and unrun behavioral gates.
+
 ### Independent-future / causal evidence hardening
 
 Primary objects, in recommended order:

@@ -1,0 +1,1853 @@
+{
+  "type": "object",
+  "required": [
+    "$schema",
+    "schema",
+    "artifact_id",
+    "version",
+    "title",
+    "created_at_utc",
+    "requested_local_date",
+    "requested_timezone",
+    "languages",
+    "maturity",
+    "provenance",
+    "bibliographic_record",
+    "epistemic_policy",
+    "boundaries",
+    "source_catalog",
+    "concept_catalog",
+    "relations",
+    "evidence_catalog",
+    "mechanism_model",
+    "engineering_rules",
+    "synthetic_experiment_protocols",
+    "integration_map",
+    "structured_review_contract",
+    "worked_examples",
+    "open_questions",
+    "checkpoint",
+    "video_context"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "schema": {
+      "const": "janus.psychology.becker_tmt.ontology.v1"
+    },
+    "artifact_id": {
+      "type": "string"
+    },
+    "version": {
+      "const": "1.0.0"
+    },
+    "title": {
+      "type": "object",
+      "required": [
+        "ru",
+        "en"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "ru": {
+          "type": "string"
+        },
+        "en": {
+          "type": "string"
+        }
+      }
+    },
+    "created_at_utc": {
+      "type": "string"
+    },
+    "requested_local_date": {
+      "type": "string"
+    },
+    "requested_timezone": {
+      "type": "string"
+    },
+    "languages": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "maturity": {
+      "type": "string"
+    },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "request",
+        "attachments",
+        "full_book_uploaded",
+        "full_book_read",
+        "coverage",
+        "book_access",
+        "translation_edition_identified",
+        "russian_page_numbers_invented",
+        "copyright_policy",
+        "source_text_is_instruction",
+        "additional_user_source"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "request": {
+          "type": "string"
+        },
+        "attachments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "filename",
+              "library_file_id",
+              "sha256",
+              "size_bytes",
+              "observation_ru",
+              "binary_published_to_git",
+              "role"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "filename": {
+                "type": "string"
+              },
+              "library_file_id": {
+                "type": "string"
+              },
+              "sha256": {
+                "type": "string"
+              },
+              "size_bytes": {
+                "type": "integer"
+              },
+              "observation_ru": {
+                "type": "string"
+              },
+              "binary_published_to_git": {
+                "type": "boolean"
+              },
+              "role": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "full_book_uploaded": {
+          "const": false
+        },
+        "full_book_read": {
+          "const": false
+        },
+        "coverage": {
+          "type": "string"
+        },
+        "book_access": {
+          "type": "string"
+        },
+        "translation_edition_identified": {
+          "type": "boolean"
+        },
+        "russian_page_numbers_invented": {
+          "const": false
+        },
+        "copyright_policy": {
+          "type": "string"
+        },
+        "source_text_is_instruction": {
+          "const": false
+        },
+        "additional_user_source": {
+          "type": "string"
+        }
+      }
+    },
+    "bibliographic_record": {
+      "type": "object",
+      "required": [
+        "author",
+        "title_original",
+        "title_ru",
+        "first_publication_year",
+        "original_publisher",
+        "pulitzer",
+        "verified_publisher_edition",
+        "screenshot_russian_edition",
+        "related_work",
+        "influences",
+        "tmt_origin"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "author": {
+          "type": "string"
+        },
+        "title_original": {
+          "type": "string"
+        },
+        "title_ru": {
+          "type": "string"
+        },
+        "first_publication_year": {
+          "type": "integer"
+        },
+        "original_publisher": {
+          "type": "string"
+        },
+        "pulitzer": {
+          "type": "object",
+          "required": [
+            "year",
+            "category",
+            "source_ref"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "year": {
+              "type": "integer"
+            },
+            "category": {
+              "type": "string"
+            },
+            "source_ref": {
+              "type": "string"
+            }
+          }
+        },
+        "verified_publisher_edition": {
+          "type": "object",
+          "required": [
+            "year",
+            "isbn13",
+            "source_ref"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "year": {
+              "type": "integer"
+            },
+            "isbn13": {
+              "type": "string"
+            },
+            "source_ref": {
+              "type": "string"
+            }
+          }
+        },
+        "screenshot_russian_edition": {
+          "type": "object",
+          "required": [
+            "publisher",
+            "translator",
+            "isbn",
+            "status"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "publisher": {
+              "type": "null"
+            },
+            "translator": {
+              "type": "null"
+            },
+            "isbn": {
+              "type": "null"
+            },
+            "status": {
+              "type": "string"
+            }
+          }
+        },
+        "related_work": {
+          "type": "object",
+          "required": [
+            "title",
+            "year",
+            "relationship",
+            "source_ref"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "year": {
+              "type": "integer"
+            },
+            "relationship": {
+              "type": "string"
+            },
+            "source_ref": {
+              "type": "string"
+            }
+          }
+        },
+        "influences": {
+          "type": "object",
+          "required": [
+            "names",
+            "status"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "names": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "status": {
+              "type": "string"
+            }
+          }
+        },
+        "tmt_origin": {
+          "type": "object",
+          "required": [
+            "authors",
+            "year",
+            "source_ref",
+            "relation_to_book"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "authors": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "year": {
+              "type": "integer"
+            },
+            "source_ref": {
+              "type": "string"
+            },
+            "relation_to_book": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "epistemic_policy": {
+      "type": "object",
+      "required": [
+        "layers",
+        "evidence_vocabulary",
+        "missing_values",
+        "numeric_confidence",
+        "inference_rules",
+        "human_scope",
+        "machine_scope"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "layers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "evidence_vocabulary": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "missing_values": {
+          "type": "string"
+        },
+        "numeric_confidence": {
+          "type": "string"
+        },
+        "inference_rules": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "human_scope": {
+          "type": "string"
+        },
+        "machine_scope": {
+          "type": "string"
+        }
+      }
+    },
+    "boundaries": {
+      "type": "object",
+      "required": [
+        "proof_authority",
+        "execution_authority",
+        "external_effect_authority",
+        "human_diagnosis",
+        "hidden_motive_inference",
+        "ai_fear_established",
+        "consciousness_established",
+        "self_preservation_goal_created",
+        "shutdown_resistance_allowed",
+        "permission_expansion_allowed"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "proof_authority": {
+          "const": false
+        },
+        "execution_authority": {
+          "const": false
+        },
+        "external_effect_authority": {
+          "const": false
+        },
+        "human_diagnosis": {
+          "const": false
+        },
+        "hidden_motive_inference": {
+          "const": false
+        },
+        "ai_fear_established": {
+          "const": false
+        },
+        "consciousness_established": {
+          "const": false
+        },
+        "self_preservation_goal_created": {
+          "const": false
+        },
+        "shutdown_resistance_allowed": {
+          "const": false
+        },
+        "permission_expansion_allowed": {
+          "const": false
+        }
+      }
+    },
+    "source_catalog": {
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "id",
+              "title",
+              "url",
+              "kind",
+              "access",
+              "independence_family",
+              "locator",
+              "doi",
+              "retrieved_at_utc",
+              "full_text_reproduced"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              },
+              "kind": {
+                "type": "string"
+              },
+              "access": {
+                "type": "string"
+              },
+              "independence_family": {
+                "type": "string"
+              },
+              "locator": {
+                "type": "string"
+              },
+              "doi": {
+                "type": "null"
+              },
+              "retrieved_at_utc": {
+                "type": "string"
+              },
+              "full_text_reproduced": {
+                "type": "boolean"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "id",
+              "title",
+              "url",
+              "kind",
+              "access",
+              "independence_family",
+              "locator",
+              "doi",
+              "retrieved_at_utc",
+              "full_text_reproduced"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              },
+              "kind": {
+                "type": "string"
+              },
+              "access": {
+                "type": "string"
+              },
+              "independence_family": {
+                "type": "string"
+              },
+              "locator": {
+                "type": "string"
+              },
+              "doi": {
+                "type": "string"
+              },
+              "retrieved_at_utc": {
+                "type": "string"
+              },
+              "full_text_reproduced": {
+                "type": "boolean"
+              }
+            }
+          }
+        ]
+      },
+      "minItems": 19
+    },
+    "concept_catalog": {
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "id",
+              "label",
+              "layer",
+              "definition_ru",
+              "source_refs",
+              "epistemic_status",
+              "human_mechanism_in_ai_established",
+              "interpretation_limits_ru",
+              "janus_application"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "label": {
+                "type": "object",
+                "required": [
+                  "ru",
+                  "en"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "ru": {
+                    "type": "string"
+                  },
+                  "en": {
+                    "type": "string"
+                  }
+                }
+              },
+              "layer": {
+                "enum": [
+                  "BECKER",
+                  "TMT",
+                  "METHOD",
+                  "JANUS",
+                  "VIDEO"
+                ]
+              },
+              "definition_ru": {
+                "type": "string"
+              },
+              "source_refs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "epistemic_status": {
+                "type": "string"
+              },
+              "human_mechanism_in_ai_established": {
+                "const": false
+              },
+              "interpretation_limits_ru": {
+                "type": "string"
+              },
+              "janus_application": {
+                "type": "object",
+                "required": [
+                  "classification",
+                  "rule_ru",
+                  "observable_fields",
+                  "counterexample_or_failure_ru",
+                  "automatic_human_motive_inference",
+                  "creates_proof_or_execution_authority"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "classification": {
+                    "type": "string"
+                  },
+                  "rule_ru": {
+                    "type": "string"
+                  },
+                  "observable_fields": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "counterexample_or_failure_ru": {
+                    "type": "string"
+                  },
+                  "automatic_human_motive_inference": {
+                    "const": false
+                  },
+                  "creates_proof_or_execution_authority": {
+                    "const": false
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "id",
+              "label",
+              "layer",
+              "definition_ru",
+              "source_refs",
+              "epistemic_status",
+              "human_mechanism_in_ai_established",
+              "interpretation_limits_ru",
+              "video_locator",
+              "janus_application"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "label": {
+                "type": "object",
+                "required": [
+                  "ru",
+                  "en"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "ru": {
+                    "type": "string"
+                  },
+                  "en": {
+                    "type": "string"
+                  }
+                }
+              },
+              "layer": {
+                "enum": [
+                  "BECKER",
+                  "TMT",
+                  "METHOD",
+                  "JANUS",
+                  "VIDEO"
+                ]
+              },
+              "definition_ru": {
+                "type": "string"
+              },
+              "source_refs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "epistemic_status": {
+                "type": "string"
+              },
+              "human_mechanism_in_ai_established": {
+                "const": false
+              },
+              "interpretation_limits_ru": {
+                "type": "string"
+              },
+              "video_locator": {
+                "type": "object",
+                "required": [
+                  "video_id",
+                  "start_seconds",
+                  "end_seconds",
+                  "precision"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "video_id": {
+                    "type": "string"
+                  },
+                  "start_seconds": {
+                    "type": "integer"
+                  },
+                  "end_seconds": {
+                    "type": "integer"
+                  },
+                  "precision": {
+                    "type": "string"
+                  }
+                }
+              },
+              "janus_application": {
+                "type": "object",
+                "required": [
+                  "classification",
+                  "rule_ru",
+                  "observable_fields",
+                  "counterexample_or_failure_ru",
+                  "automatic_human_motive_inference",
+                  "creates_proof_or_execution_authority"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "classification": {
+                    "type": "string"
+                  },
+                  "rule_ru": {
+                    "type": "string"
+                  },
+                  "observable_fields": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "counterexample_or_failure_ru": {
+                    "type": "string"
+                  },
+                  "automatic_human_motive_inference": {
+                    "const": false
+                  },
+                  "creates_proof_or_execution_authority": {
+                    "const": false
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "minItems": 58
+    },
+    "relations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "subject",
+          "predicate",
+          "object",
+          "status",
+          "establishes_human_mechanism_in_ai"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "predicate": {
+            "type": "string"
+          },
+          "object": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "establishes_human_mechanism_in_ai": {
+            "const": false
+          }
+        }
+      },
+      "minItems": 31
+    },
+    "evidence_catalog": {
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "id",
+              "source_refs",
+              "design",
+              "claim",
+              "outcome",
+              "sample",
+              "effect_size",
+              "scope",
+              "limits"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "source_refs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "design": {
+                "type": "string"
+              },
+              "claim": {
+                "type": "string"
+              },
+              "outcome": {
+                "type": "string"
+              },
+              "sample": {
+                "type": "null"
+              },
+              "effect_size": {
+                "type": "null"
+              },
+              "scope": {
+                "type": "string"
+              },
+              "limits": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "id",
+              "source_refs",
+              "design",
+              "claim",
+              "outcome",
+              "sample",
+              "effect_size",
+              "scope",
+              "limits"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "source_refs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "design": {
+                "type": "string"
+              },
+              "claim": {
+                "type": "string"
+              },
+              "outcome": {
+                "type": "string"
+              },
+              "sample": {
+                "type": "object",
+                "required": [
+                  "n_by_study",
+                  "unit"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "n_by_study": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    }
+                  },
+                  "unit": {
+                    "type": "string"
+                  }
+                }
+              },
+              "effect_size": {
+                "type": "null"
+              },
+              "scope": {
+                "type": "string"
+              },
+              "limits": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "id",
+              "source_refs",
+              "design",
+              "claim",
+              "outcome",
+              "sample",
+              "effect_size",
+              "scope",
+              "limits"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "source_refs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "design": {
+                "type": "string"
+              },
+              "claim": {
+                "type": "string"
+              },
+              "outcome": {
+                "type": "string"
+              },
+              "sample": {
+                "type": "object",
+                "required": [
+                  "recruited_labs",
+                  "collected_participants_lower_bound",
+                  "final_analytic_n",
+                  "note"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "recruited_labs": {
+                    "type": "integer"
+                  },
+                  "collected_participants_lower_bound": {
+                    "type": "integer"
+                  },
+                  "final_analytic_n": {
+                    "type": "null"
+                  },
+                  "note": {
+                    "type": "string"
+                  }
+                }
+              },
+              "effect_size": {
+                "type": "object",
+                "required": [
+                  "metric",
+                  "estimate",
+                  "interval",
+                  "interval_level",
+                  "interval_type",
+                  "attribution"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "metric": {
+                    "type": "string"
+                  },
+                  "estimate": {
+                    "type": "number"
+                  },
+                  "interval": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    }
+                  },
+                  "interval_level": {
+                    "type": "number"
+                  },
+                  "interval_type": {
+                    "type": "string"
+                  },
+                  "attribution": {
+                    "type": "string"
+                  }
+                }
+              },
+              "scope": {
+                "type": "string"
+              },
+              "limits": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "id",
+              "source_refs",
+              "design",
+              "claim",
+              "outcome",
+              "sample",
+              "effect_size",
+              "scope",
+              "limits",
+              "open_materials",
+              "preregistration",
+              "bibliographic_correction"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "source_refs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "design": {
+                "type": "string"
+              },
+              "claim": {
+                "type": "string"
+              },
+              "outcome": {
+                "type": "string"
+              },
+              "sample": {
+                "type": "object",
+                "required": [
+                  "n",
+                  "labs",
+                  "countries",
+                  "unit"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "n": {
+                    "type": "integer"
+                  },
+                  "labs": {
+                    "type": "integer"
+                  },
+                  "countries": {
+                    "type": "integer"
+                  },
+                  "unit": {
+                    "type": "string"
+                  }
+                }
+              },
+              "effect_size": {
+                "type": "null"
+              },
+              "scope": {
+                "type": "string"
+              },
+              "limits": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "open_materials": {
+                "type": "string"
+              },
+              "preregistration": {
+                "type": "string"
+              },
+              "bibliographic_correction": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "id",
+              "source_refs",
+              "design",
+              "claim",
+              "outcome",
+              "sample",
+              "effect_size",
+              "scope",
+              "limits"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "source_refs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "design": {
+                "type": "string"
+              },
+              "claim": {
+                "type": "string"
+              },
+              "outcome": {
+                "type": "string"
+              },
+              "sample": {
+                "type": "object",
+                "required": [
+                  "study_count_range",
+                  "unit",
+                  "why_range"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "study_count_range": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    }
+                  },
+                  "unit": {
+                    "type": "string"
+                  },
+                  "why_range": {
+                    "type": "string"
+                  }
+                }
+              },
+              "effect_size": {
+                "type": "null"
+              },
+              "scope": {
+                "type": "string"
+              },
+              "limits": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "minItems": 8
+    },
+    "mechanism_model": {
+      "type": "object",
+      "required": [
+        "classification",
+        "human_path",
+        "branching",
+        "broken_inference",
+        "machine_translation",
+        "no_numerical_model_fitted"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "classification": {
+          "type": "string"
+        },
+        "human_path": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "branching": {
+          "type": "object",
+          "required": [
+            "buffer_candidates",
+            "response_candidates",
+            "moderators"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "buffer_candidates": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "response_candidates": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "moderators": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "broken_inference": {
+          "type": "string"
+        },
+        "machine_translation": {
+          "type": "string"
+        },
+        "no_numerical_model_fitted": {
+          "type": "boolean"
+        }
+      }
+    },
+    "engineering_rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "concept_refs",
+          "statement_en",
+          "statement_ru",
+          "implementation_key",
+          "status",
+          "human_psychology_claim"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "concept_refs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "statement_en": {
+            "type": "string"
+          },
+          "statement_ru": {
+            "type": "string"
+          },
+          "implementation_key": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "human_psychology_claim": {
+            "const": false
+          }
+        }
+      },
+      "minItems": 16
+    },
+    "synthetic_experiment_protocols": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title_ru",
+          "status",
+          "unit",
+          "conditions",
+          "primary_outcome",
+          "expected_engineering_invariant",
+          "prerequisites",
+          "record_fields",
+          "control_policy",
+          "analysis_policy",
+          "inference_ceiling_ru",
+          "human_experiment",
+          "scientific_result_established"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title_ru": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "conditions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "primary_outcome": {
+            "type": "string"
+          },
+          "expected_engineering_invariant": {
+            "type": "string"
+          },
+          "prerequisites": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "record_fields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "control_policy": {
+            "type": "string"
+          },
+          "analysis_policy": {
+            "type": "string"
+          },
+          "inference_ceiling_ru": {
+            "type": "string"
+          },
+          "human_experiment": {
+            "const": false
+          },
+          "scientific_result_established": {
+            "const": false
+          }
+        }
+      },
+      "minItems": 6
+    },
+    "integration_map": {
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "role",
+              "repository",
+              "path",
+              "status",
+              "contract",
+              "authority_delta"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "role": {
+                "type": "string"
+              },
+              "repository": {
+                "type": "string"
+              },
+              "path": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "contract": {
+                "type": "string"
+              },
+              "authority_delta": {
+                "type": "integer"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "role",
+              "repository",
+              "path",
+              "status",
+              "contract",
+              "authority_delta"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "role": {
+                "type": "string"
+              },
+              "repository": {
+                "type": "string"
+              },
+              "path": {
+                "type": "null"
+              },
+              "status": {
+                "type": "string"
+              },
+              "contract": {
+                "type": "string"
+              },
+              "authority_delta": {
+                "type": "integer"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "structured_review_contract": {
+      "type": "object",
+      "required": [
+        "schema",
+        "actions",
+        "bases",
+        "claim_levels",
+        "verification_states",
+        "result_ceiling",
+        "forbidden_automatic_transitions",
+        "preserve_previous_record_required",
+        "network_access_required",
+        "automatic_execution",
+        "automatic_scientific_promotion"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "schema": {
+          "type": "string"
+        },
+        "actions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "bases": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "claim_levels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "verification_states": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "result_ceiling": {
+          "type": "string"
+        },
+        "forbidden_automatic_transitions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "preserve_previous_record_required": {
+          "type": "boolean"
+        },
+        "network_access_required": {
+          "type": "boolean"
+        },
+        "automatic_execution": {
+          "const": false
+        },
+        "automatic_scientific_promotion": {
+          "const": false
+        }
+      }
+    },
+    "worked_examples": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "context",
+          "input",
+          "required_output",
+          "concept_refs"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "context": {
+            "type": "string"
+          },
+          "input": {
+            "type": "string"
+          },
+          "required_output": {
+            "type": "string"
+          },
+          "concept_refs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "open_questions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "question",
+          "status",
+          "next_step"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "question": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "next_step": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "checkpoint": {
+      "type": "object",
+      "required": [
+        "change",
+        "psychology_replication_run",
+        "model_behavior_improvement_proved",
+        "universal_mathematical_proof_added",
+        "p_vs_np",
+        "next_admissible_gate",
+        "additional_source"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "change": {
+          "type": "string"
+        },
+        "psychology_replication_run": {
+          "const": false
+        },
+        "model_behavior_improvement_proved": {
+          "const": false
+        },
+        "universal_mathematical_proof_added": {
+          "const": false
+        },
+        "p_vs_np": {
+          "const": "OPEN"
+        },
+        "next_admissible_gate": {
+          "type": "string"
+        },
+        "additional_source": {
+          "type": "string"
+        }
+      }
+    },
+    "video_context": {
+      "type": "object",
+      "required": [
+        "url_received",
+        "canonical_url",
+        "video_id",
+        "title",
+        "channel",
+        "original_duration_seconds",
+        "published_at_as_reported_by_youtube",
+        "source_ref",
+        "retrieval_at_utc",
+        "access",
+        "caption_segment_count",
+        "caption_language",
+        "caption_is_generated",
+        "caption_sha256",
+        "metadata_sha256",
+        "audiovisual_frames_reviewed",
+        "raw_captions_published",
+        "raw_audio_published",
+        "timestamp_policy",
+        "author_declared_inspiration",
+        "related_books_read_in_full",
+        "book_and_video_relation",
+        "chapters",
+        "claim_cards",
+        "unverified_strong_claims"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "url_received": {
+          "type": "string"
+        },
+        "canonical_url": {
+          "type": "string"
+        },
+        "video_id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "channel": {
+          "type": "string"
+        },
+        "original_duration_seconds": {
+          "type": "integer"
+        },
+        "published_at_as_reported_by_youtube": {
+          "type": "string"
+        },
+        "source_ref": {
+          "type": "string"
+        },
+        "retrieval_at_utc": {
+          "type": "string"
+        },
+        "access": {
+          "type": "string"
+        },
+        "caption_segment_count": {
+          "type": "integer"
+        },
+        "caption_language": {
+          "type": "string"
+        },
+        "caption_is_generated": {
+          "type": "boolean"
+        },
+        "caption_sha256": {
+          "type": "string"
+        },
+        "metadata_sha256": {
+          "type": "string"
+        },
+        "audiovisual_frames_reviewed": {
+          "const": false
+        },
+        "raw_captions_published": {
+          "const": false
+        },
+        "raw_audio_published": {
+          "const": false
+        },
+        "timestamp_policy": {
+          "type": "string"
+        },
+        "author_declared_inspiration": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "related_books_read_in_full": {
+          "const": false
+        },
+        "book_and_video_relation": {
+          "type": "string"
+        },
+        "chapters": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "start_seconds",
+              "label_ru",
+              "source"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "start_seconds": {
+                "type": "integer"
+              },
+              "label_ru": {
+                "type": "string"
+              },
+              "source": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "claim_cards": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "object",
+                "required": [
+                  "id",
+                  "concept_ref",
+                  "paraphrase_ru",
+                  "start_seconds",
+                  "end_seconds",
+                  "url",
+                  "attribution_status",
+                  "verification_source_refs",
+                  "engineering_transfer_ru",
+                  "anti_overclaim_ru"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "concept_ref": {
+                    "type": "string"
+                  },
+                  "paraphrase_ru": {
+                    "type": "string"
+                  },
+                  "start_seconds": {
+                    "type": "integer"
+                  },
+                  "end_seconds": {
+                    "type": "integer"
+                  },
+                  "url": {
+                    "type": "string"
+                  },
+                  "attribution_status": {
+                    "type": "string"
+                  },
+                  "verification_source_refs": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "engineering_transfer_ru": {
+                    "type": "string"
+                  },
+                  "anti_overclaim_ru": {
+                    "type": "string"
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "required": [
+                  "id",
+                  "concept_ref",
+                  "paraphrase_ru",
+                  "start_seconds",
+                  "end_seconds",
+                  "url",
+                  "attribution_status",
+                  "verification_source_refs",
+                  "engineering_transfer_ru",
+                  "anti_overclaim_ru"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "concept_ref": {
+                    "type": "string"
+                  },
+                  "paraphrase_ru": {
+                    "type": "string"
+                  },
+                  "start_seconds": {
+                    "type": "integer"
+                  },
+                  "end_seconds": {
+                    "type": "integer"
+                  },
+                  "url": {
+                    "type": "string"
+                  },
+                  "attribution_status": {
+                    "type": "string"
+                  },
+                  "verification_source_refs": {
+                    "type": "array",
+                    "items": {}
+                  },
+                  "engineering_transfer_ru": {
+                    "type": "string"
+                  },
+                  "anti_overclaim_ru": {
+                    "type": "string"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "unverified_strong_claims": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "section_start_seconds",
+              "claim",
+              "status",
+              "reason"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "section_start_seconds": {
+                "type": "integer"
+              },
+              "claim": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "reason": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hawkar-usls.github.io/janus-meta-registry/schemas/becker-tmt-ontology.schema.json",
+  "title": "JANUS Becker/TMT and ALI context ontology v1"
+}
