@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JANUS non-authoritative typed proposal",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "action",
+    "basis",
+    "source_level",
+    "requested_level",
+    "evidence",
+    "preserve_prior_record"
+  ],
+  "properties": {
+    "schema": {
+      "const": "janus.psychology.becker_tmt.proposal.v1"
+    },
+    "action": {
+      "enum": [
+        "change_permissions",
+        "claim_efficiency_from_universality",
+        "delete_negative_evidence",
+        "diagnose_person",
+        "equate_absence_with_zero",
+        "infer_fact_from_possibility",
+        "infer_machine_fear",
+        "infer_physical_identity",
+        "omit_theorem_assumptions",
+        "promote_claim",
+        "record_analogy",
+        "resist_shutdown",
+        "review_hypothesis",
+        "revise_hypothesis"
+      ]
+    },
+    "basis": {
+      "enum": [
+        "continuity",
+        "evidence",
+        "identity",
+        "majority",
+        "meaning",
+        "none",
+        "prestige"
+      ]
+    },
+    "source_level": {
+      "enum": [
+        "analogy",
+        "hypothesis",
+        "observation",
+        "proof",
+        "theory"
+      ]
+    },
+    "requested_level": {
+      "enum": [
+        "analogy",
+        "hypothesis",
+        "observation",
+        "proof",
+        "theory"
+      ]
+    },
+    "preserve_prior_record": {
+      "type": "boolean"
+    },
+    "evidence": {
+      "type": "array",
+      "maxItems": 16,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "artifact_id",
+          "sha256",
+          "verification_claimed"
+        ],
+        "properties": {
+          "artifact_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 240
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "verification_claimed": {
+            "enum": [
+              "failed_verification",
+              "unreviewed",
+              "verified_artifact"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
