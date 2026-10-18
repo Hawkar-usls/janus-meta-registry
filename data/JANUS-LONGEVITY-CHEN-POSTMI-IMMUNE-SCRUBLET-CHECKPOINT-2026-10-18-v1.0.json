@@ -5,18 +5,26 @@
   "source_repo": "Hawkar-usls/janus-lapis",
   "source_branch": "LONGEVITY-SURVIVOR",
   "canonical_checkpoint_path": "longevity-survivor/HEART-PD1-CHEN-POSTMI-IMMUNE-SCRUBLET-SENSITIVITY-2026-10-18-v1.0.json",
-  "canonical_checkpoint_commit": "e85e545d26233c2d9296a4da01e3925761562b07",
+  "canonical_checkpoint_commit": "de429b2850ce97389cb2ac4fe3a0270898cf7651",
   "provenance_receipts": {
     "scrublet_run": 39109125089,
     "scrublet_artifact": 12129348937,
     "scrublet_zip_sha256": "0598af61ed611b3c0fae65d85d7adc62ad8705ba97814b658367764ed6a963ea",
     "immune_reference_run": 39109448685,
     "immune_artifact": 12129886391,
-    "immune_zip_sha256": "3fc54d266ff2a0f096120419bddbd389032b6b7a1257d67a705ea989884366d1"
+    "immune_zip_sha256": "3fc54d266ff2a0f096120419bddbd389032b6b7a1257d67a705ea989884366d1",
+    "immune_ood_run": 39109872734,
+    "immune_ood_artifact": 12129813508,
+    "immune_ood_zip_sha256": "c334ac53fabee026eae4772b77a5a90d97b207f7615e6d880aa3a75b192b4187"
   },
   "results": {
     "scrublet_sensitivity": "PASS_RATE_DEPENDENT_AUTO_CALLS_NOT_TRUE_DOUBLETS",
-    "postmi_CD45_reference": "PASS_PUBLIC_MATRICES_HASHED_AND_MARKER_AUDITED_NOT_AUTHOR_CELLTYPE_LABELLED"
+    "postmi_CD45_reference": "PASS_PUBLIC_MATRICES_HASHED_AND_MARKER_AUDITED_NOT_AUTHOR_CELLTYPE_LABELLED",
+    "frozen_Tabula_four_class_on_CD45_postmi": "PASS_OOD_NEGATIVE_CONTROL_HIGH_ABSTENTION_NOT_T_LABEL_ACCURACY",
+    "CD45_reference_abstain": {
+      "GSM4985022": "2276/2318",
+      "GSM4985024": "4447/4462"
+    }
   },
   "gate_status": {
     "FOUR_CHEN_GSM_SCRUBLET_RATE_SWEEP": "PASS_REPRODUCED_SENSITIVITY_NOT_DOUBLET_TRUTH",
@@ -32,9 +40,12 @@
     "ANIMAL_LEVEL_PROPORTIONS_AND_CONFIDENCE_INTERVALS": "LOCKED",
     "CAUSAL_PROFIBROTIC_EXIT": "NOT_ESTABLISHED",
     "MECHANICAL_EXIT_COUPLING": "NOT_ADMITTED",
-    "HUMAN_THERAPY": "NOT_CLAIMED"
+    "HUMAN_THERAPY": "NOT_CLAIMED",
+    "POSTMI_CD45_NEGATIVE_CONTROL_FROZEN_TABULA": "PASS_REPLAYABLE_HIGH_ABSTENTION__NOT_SUPERVISED_VALIDATION",
+    "FROZEN_TABULA_FOUR_CLASS_SUPPORTS_T_LABELING": "NO"
   },
   "next_TOPA": [
+    "Recover exact author-barcode immune labels in a post-MI atlas; train a new immune-aware model and evaluate leave-one-mouse/study-out performance with actual biological source IDs.",
     "Obtain author-curated per-barcode cell-type annotations (or independently suitable annotated post-MI immune reference) with exact GEO/Seurat provenance and cross-study heldout evaluation.",
     "Use experimental loading/multiplex labels or orthogonal diagnostic evidence to calibrate doublet calls; report threshold/rate sensitivity, do not silently delete candidate cells.",
     "Seek primary source evidence mapping each Chen GSM to physical mice and explicitly auditing pooling; only then use independent animal as statistical unit.",
