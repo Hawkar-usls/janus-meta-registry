@@ -1,0 +1,24 @@
+name: JANUS Meta Third Wish SciOne - source and authority guard
+
+on:
+  pull_request:
+    paths:
+      - 'registry/experimental/JANUS-GENESIS-THIRD-WISH-SCIONE-RISK-REPLAY-EXTENSION-2026-10-18-v1.0.json'
+      - 'tests/test_third_wish_scione_meta_extension.py'
+      - '.github/workflows/janus-third-wish-scione-meta-extension.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-append-only-risk-extension:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Keep provenance and epistemic limits explicit
+        run: python -m unittest discover -s tests -p 'test_third_wish_scione_meta_extension.py' -v
