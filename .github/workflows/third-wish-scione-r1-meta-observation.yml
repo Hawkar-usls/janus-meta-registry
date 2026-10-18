@@ -1,0 +1,32 @@
+name: Third Wish SciOne R1 meta observation contract
+
+on:
+  pull_request:
+    branches:
+      - main
+      - research/third-wish-scione-risk-extension-2026-10-18
+    paths:
+      - "registry/experimental/JANUS-GENESIS-THIRD-WISH-SCIONE-R1-MODEL-OBSERVATION-2026-10-18-v1.0.json"
+      - "tests/test_third_wish_scione_r1_meta_observation.py"
+      - ".github/workflows/third-wish-scione-r1-meta-observation.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate-additive-receipt:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Validate append-only R1 status and no authority expansion
+        run: |
+          python -m json.tool registry/experimental/JANUS-GENESIS-THIRD-WISH-SCIONE-R1-MODEL-OBSERVATION-2026-10-18-v1.0.json >/dev/null
+          python -m unittest -v \
+            tests.test_third_wish_scione_r1_meta_observation \
+            tests.test_third_wish_scione_meta_extension
