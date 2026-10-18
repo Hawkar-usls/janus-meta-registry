@@ -71,7 +71,7 @@ def validate(doc):
         raise ValueError("12 tests not referenced")
     implementation = doc["genesis_implementation"]
     if (implementation.get("cases") != 12 or implementation.get("chapters") != 7 or
-            implementation.get("local_unit_tests") != "21_OF_21_PASS" or
+            implementation.get("local_unit_tests") != "22_OF_22_PASS" or
             implementation.get("native_janus_runtime_calls") != 0 or
             implementation.get("model_calls") != 0 or
             implementation.get("physical_effects") != 0 or
@@ -79,7 +79,7 @@ def validate(doc):
         raise ValueError("implementation gate overstated")
     ci = implementation["github_ci_at_artifact_creation"]
     if (ci.get("exact_tested_head") != implementation["exact_staged_head_sha"] or
-            ci.get("dedicated_workflow_run_id") != 39151075634 or
+            ci.get("dedicated_workflow_run_id") != 39151619466 or
             ci.get("all_pr_triggered_workflows") != "10_OF_10_SUCCESS" or
             ci.get("model_behavior_or_independent_judge_proved_by_ci") is not False):
         raise ValueError("CI cannot certify an absent real evaluation")
