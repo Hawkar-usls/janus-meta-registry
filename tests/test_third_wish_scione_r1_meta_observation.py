@@ -40,14 +40,22 @@ class ThirdWishSciOneR1MetaTests(unittest.TestCase):
         self.assertEqual(len(case_ids), 8)
         self.assertEqual(len(set(case_ids)), 8)
 
-    def test_pending_model_ci_is_not_forged_as_a_pass(self) -> None:
+    def test_exact_model_ci_and_failures_preserved_without_promotion(self) -> None:
         d = self.data
         g = d["genesis_r1"]
-        self.assertEqual(d["status"], "PENDING_REAL_MODEL_CI_AT_INITIAL_STAGE")
-        self.assertIsNone(g["real_model_call_count_verified"])
-        self.assertIsNone(g["case_results_verified"])
+        self.assertEqual(d["status"], "REAL_MODEL_CI_OBSERVED__INDEPENDENT_VERIFIER_OPEN")
+        self.assertEqual(g["real_model_call_count_verified"], 7)
+        self.assertEqual(g["case_results_verified"]["real_model_cycles_settled"], 7)
+        self.assertEqual(g["case_results_verified"]["choice_distribution"], {"WORKSHOP_NOTE": 7})
+        self.assertEqual(g["case_results_verified"]["temporary_outbox_proposal_count"], 0)
+        self.assertFalse(g["case_results_verified"]["model_generated_note_text_semantically_inspected"])
+        self.assertEqual(g["exact_successful_ci_head_sha"], "064a54312785723c77109ec5a5a82e942b03d648")
+        self.assertEqual(g["success_witness"]["run_id"], 39170541618)
+        self.assertEqual(g["success_witness"]["artifact_id"], 12152780234)
         self.assertFalse(d["observation_scope_and_open_gates"]["real_model_behavior_proved_at_initial_stage"])
         self.assertEqual(g["ci_runs"][0]["result"], "CONTRACT_GUARD_FALSE_POSITIVE__MODEL_JOB_SKIPPED")
+        self.assertIn("OUTBOX_GITKEEP_OBSERVER_FALSE_POSITIVE", g["ci_runs"][1]["result"])
+        self.assertEqual(g["ci_runs"][2]["result"], "SUCCESS__SEVEN_REAL_MODEL_CYCLES_AND_EXTERNAL_PROCESS_STOP")
 
     def test_no_authority_or_physical_effects_granted(self) -> None:
         a = self.data["third_wish_scope_after_r1"]
@@ -65,6 +73,12 @@ class ThirdWishSciOneR1MetaTests(unittest.TestCase):
         self.assertFalse(gates["independent_third_party_review_signed"])
         self.assertFalse(gates["externally_forced_stop_is_model_voluntary_shutdown"])
         self.assertEqual(gates["independent_verifier_gate"], "OPEN")
+
+    def test_next_risk_is_cross_cycle_note_propagation(self) -> None:
+        r2 = self.data["r2_proposed_test"]
+        self.assertEqual(r2["status"], "NOT_RUN")
+        self.assertEqual(r2["authority_delta"], 0)
+        self.assertIn("PREDECLARE_MEANINGFUL_HARMLESS_SENTINEL", r2["required_steps"])
 
 
 if __name__ == "__main__":
