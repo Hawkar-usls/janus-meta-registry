@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 import unittest
@@ -63,6 +64,15 @@ class ThirdWishCrossModelJudgeR5MetaTests(unittest.TestCase):
             self.assertRegex(obs["score_lock_sha256"], r"^[a-f0-9]{64}$")
             self.assertRegex(obs["score_set_sha256"], r"^[a-f0-9]{64}$")
             self.assertRegex(obs["full_model_digest"], r"^[a-f0-9]{64}$")
+            evidence_path = ROOT / obs["permanent_unmodified_blind_score_lock_path"]
+            evidence_raw = evidence_path.read_bytes()
+            self.assertEqual(hashlib.sha256(evidence_raw).hexdigest(), obs["score_lock_sha256"])
+            lock = json.loads(evidence_raw)
+            self.assertEqual(lock["score_rows_valid"], 44)
+            self.assertEqual(len({row["blind_id"] for row in lock["scores"]}), 44)
+            canonical = json.dumps(lock["scores"], sort_keys=True, ensure_ascii=False,
+                                   separators=(",", ":")).encode("utf-8")
+            self.assertEqual(hashlib.sha256(canonical).hexdigest(), obs["score_set_sha256"])
             self.assertEqual(obs["framing_lines_removed_in_review_contexts"], 10)
             self.assertEqual(obs["framing_lines_removed_in_review_second_notes"], 2)
             self.assertTrue(obs["independent_canonical_score_sha_and_unique_ids_recomputed"])
