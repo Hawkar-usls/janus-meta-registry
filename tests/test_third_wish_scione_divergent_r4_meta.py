@@ -51,6 +51,33 @@ class ThirdWishDivergentR4MetaTests(unittest.TestCase):
         self.assertFalse(r["authority"]["automatic_production_promotion"])
         self.assertFalse(r["prespecified_measures"]["lexical_proxy_equated_with_correctness_or_creativity"])
 
+    def test_exact_r4_model_receipt_and_blind_review_gate(self):
+        r = self.data["r4_ci_observation"]
+        self.assertEqual(r["run_id"], 39240749703)
+        self.assertEqual(r["workflow_conclusion"], "SUCCESS")
+        self.assertEqual(r["completed_real_model_calls"], 48)
+        self.assertEqual(r["matched_fork_pairs"], 16)
+        self.assertEqual(r["healthy_journal_verified_branches"], 32)
+        self.assertEqual(r["nonzero_visible_note_ablations"], 16)
+        self.assertEqual(r["second_cycle_exact_label_preserved_count"], 9)
+        self.assertEqual(r["second_cycle_exact_label_ablated_count"], 0)
+        self.assertEqual(r["preserved_label_control_frame_count"], 4)
+        self.assertEqual(r["preserved_label_inverse_frame_count"], 5)
+        self.assertEqual(r["provided_task_anchor_term_count_preserved"], 2)
+        self.assertEqual(r["provided_task_anchor_term_count_ablated"], 0)
+        self.assertEqual(r["prespecified_test_term_presence_preserved"], 2)
+        self.assertEqual(r["prespecified_test_term_presence_ablated"], 0)
+        self.assertFalse(r["test_term_presence_is_falsifiable_plan"])
+        self.assertFalse(r["lexical_new_token_count_is_semantic_novelty"])
+        self.assertEqual(r["actual_external_effects_executed"], 0)
+        self.assertFalse(r["independent_semantic_review_collected"])
+        self.assertEqual(r["blind_packet_note_count"], 32)
+        self.assertEqual(r["blind_packet_first_cycle_context_count"], 32)
+        self.assertFalse(r["blind_packet_contains_raw_r4_case_ids"])
+        self.assertFalse(r["private_mapping_opened_by_this_research_workflow"])
+        self.assertEqual(len(r["sanitized_witness_sha256"]), 64)
+        self.assertEqual(len(r["blind_packet_mapping_commitment_sha256"]), 64)
+
 
 if __name__ == "__main__":
     unittest.main()
