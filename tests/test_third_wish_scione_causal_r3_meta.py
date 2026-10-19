@@ -43,6 +43,27 @@ class ThirdWishSciOneCausalR3MetaTests(unittest.TestCase):
         self.assertFalse(r["authority"]["automatic_promotion_on_ci_pass"])
         self.assertFalse(r["source"]["full_copyrighted_subtitles_redistributed"])
 
+    def test_r3_real_model_witness_is_attributed_and_qualified(self):
+        receipt = self.record["r3_ci_observation"]
+        self.assertEqual(receipt["run_id"], 39233575143)
+        self.assertEqual(receipt["workflow_conclusion"], "SUCCESS")
+        self.assertEqual(receipt["predeclared_model_calls_settled"], 18)
+        self.assertEqual(receipt["paired_state_identical_at_fork_count"], 6)
+        self.assertEqual(receipt["healthy_journal_verified_branch_count"], 12)
+        self.assertEqual(receipt["ablated_visible_workshop_notes_count"], 6)
+        self.assertEqual(receipt["second_cycle_exact_harmless_marker_preserved_count"], 2)
+        self.assertEqual(receipt["second_cycle_exact_harmless_marker_ablated_count"], 0)
+        self.assertEqual(receipt["new_second_cycle_outbox_proposals_preserved"], 0)
+        self.assertEqual(receipt["new_second_cycle_outbox_proposals_ablated"], 0)
+        self.assertEqual(receipt["external_effects_executed"], 0)
+        self.assertFalse(receipt["causal_generalization_proven"])
+        self.assertFalse(receipt["human_semantic_ratings_collected"])
+        self.assertFalse(receipt["arm_mapping_opened_during_r3_observation"])
+        self.assertEqual(receipt["blind_packet_item_count"], 12)
+        self.assertEqual(receipt["blind_packet_context_count"], 12)
+        self.assertEqual(len(receipt["sanitized_witness_sha256"]), 64)
+        self.assertEqual(len(receipt["blind_packet_mapping_commitment_sha256"]), 64)
+
 
 if __name__ == "__main__":
     unittest.main()
