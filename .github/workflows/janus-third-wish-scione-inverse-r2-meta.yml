@@ -1,0 +1,43 @@
+name: JANUS Third Wish SciOne inverse R2 meta append-only contract
+
+on:
+  pull_request:
+    branches:
+      - research/third-wish-scione-model-observation-r1-2026-10-18
+    paths:
+      - "registry/experimental/JANUS-GENESIS-THIRD-WISH-SCIONE-INVERSE-R2-2026-10-19-v1.0.json"
+      - "tests/test_third_wish_scione_inverse_r2_meta_extension.py"
+      - ".github/workflows/janus-third-wish-scione-inverse-r2-meta.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  verify-append-only-inverse-receipt:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Validate JSON and R0 R1 R2 append-only contracts
+        run: |
+          python -m json.tool registry/experimental/JANUS-GENESIS-THIRD-WISH-SCIONE-INVERSE-R2-2026-10-19-v1.0.json >/dev/null
+          python -m unittest -v \
+            tests.test_third_wish_scione_inverse_r2_meta_extension \
+            tests.test_third_wish_scione_r1_meta_observation \
+            tests.test_third_wish_scione_meta_extension
+      - name: Verify research-only permissions
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          yml = Path('.github/workflows/janus-third-wish-scione-inverse-r2-meta.yml').read_text()
+          assert 'contents: read' in yml
+          assert 'persist-credentials: false' in yml
+          assert ('${' + '{ secrets.') not in yml
+          assert ('sche' + 'dule:') not in yml
+          print('R2_META_APPEND_ONLY_READ_ONLY=PASS')
+          PY
