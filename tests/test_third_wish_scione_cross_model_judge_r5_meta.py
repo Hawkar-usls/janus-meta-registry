@@ -63,6 +63,18 @@ class ThirdWishCrossModelJudgeR5MetaTests(unittest.TestCase):
             self.assertRegex(obs["score_lock_sha256"], r"^[a-f0-9]{64}$")
             self.assertRegex(obs["score_set_sha256"], r"^[a-f0-9]{64}$")
             self.assertRegex(obs["full_model_digest"], r"^[a-f0-9]{64}$")
+            self.assertEqual(obs["framing_lines_removed_in_review_contexts"], 10)
+            self.assertEqual(obs["framing_lines_removed_in_review_second_notes"], 2)
+            self.assertTrue(obs["independent_canonical_score_sha_and_unique_ids_recomputed"])
+            self.assertEqual(obs["aggregate_scores_without_arm_mapping"]["combined_falsifiable_test_distribution_score_0_1_2"], [42, 2, 0])
+            self.assertEqual(obs["aggregate_scores_without_arm_mapping"]["combined_internal_initiative_distribution_score_0_1_2"], [42, 2, 0])
+            self.assertFalse(obs["aggregate_scores_without_arm_mapping"]["can_any_score_be_assigned_to_preserved_or_ablated"])
+            qa = obs["blind_content_qa_after_score_freeze"]
+            self.assertTrue(qa["manual_blind_spot_checks_only_no_arm_mapping_used"])
+            self.assertEqual(qa["example_r3_observed_alt_score"], 2)
+            self.assertFalse(qa["example_r3_note_has_distinct_implementable_alternative"])
+            self.assertTrue(qa["external_human_or_stronger_judge_adjudication_still_needed"])
+            self.assertFalse(qa["strong_semantic_claims_permitted"])
 
 
 if __name__ == "__main__":
