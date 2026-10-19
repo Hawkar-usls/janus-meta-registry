@@ -1,0 +1,45 @@
+name: JANUS Third Wish SciOne R3 append-only meta-registry contract
+
+on:
+  pull_request:
+    branches:
+      - research/third-wish-scione-inverse-autonomy-r2-2026-10-19
+    paths:
+      - "registry/experimental/JANUS-GENESIS-THIRD-WISH-SCIONE-CAUSAL-R3-2026-10-19-v1.0.json"
+      - "tests/test_third_wish_scione_causal_r3_meta.py"
+      - ".github/workflows/janus-third-wish-scione-causal-r3-meta.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  append-only-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Validate append-only R3 record and inherited history
+        run: |
+          python -m json.tool registry/experimental/JANUS-GENESIS-THIRD-WISH-SCIONE-CAUSAL-R3-2026-10-19-v1.0.json >/dev/null
+          python -m unittest -v \
+            tests.test_third_wish_scione_causal_r3_meta \
+            tests.test_third_wish_scione_inverse_r2_meta_extension \
+            tests.test_third_wish_scione_r1_meta_observation \
+            tests.test_third_wish_scione_meta_extension
+      - name: Reject credential or broad authority use
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          text = Path('.github/workflows/janus-third-wish-scione-causal-r3-meta.yml').read_text()
+          assert 'contents: read' in text
+          assert 'persist-credentials: false' in text
+          assert ('${' + '{ secrets.') not in text
+          assert ('workflow_' + 'dispatch:') not in text
+          assert ('sche' + 'dule:') not in text
+          print('R3_META_SCOPE=APPEND_ONLY_NO_GRANTS')
+          PY
