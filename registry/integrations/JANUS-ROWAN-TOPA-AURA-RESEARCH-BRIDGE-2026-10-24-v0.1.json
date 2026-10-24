@@ -3,7 +3,7 @@
   "artifact_id": "JANUS-ROWAN-TOPA-AURA-RESEARCH-BRIDGE-2026-10-24-v0.1",
   "created_date_utc": "2026-10-24",
   "class": "RESEARCH_INFRASTRUCTURE_PROTOTYPE_NOT_SCIENTIFIC_RESULT",
-  "status": "DRAFT_PR_ENGINEERING_ONLY",
+  "status": "IMPLEMENTATION_MERGED_LIVE_ROWAN_NOT_VERIFIED",
   "scope": "JANUS/GOLEM/AURA hypotheses -> Rowan pKa predictions -> TOPA review -> candidate archival receipt",
   "implementation": {
     "repository": "Hawkar-usls/Janus",
@@ -37,7 +37,9 @@
       "meta-registry.candidate.json"
     ],
     "manual_workflow": ".github/workflows/rowan-research-manual.yml",
-    "model_input_firewall": "SMILES-only pKa methods; 3D-only models forbidden until a typed 3D input adapter exists"
+    "model_input_firewall": "SMILES-only pKa methods; 3D-only models forbidden until a typed 3D input adapter exists",
+    "main_merge_commit_sha": "c5d6cad37aa15b986460749d02be66d6b5c9f4ff",
+    "pr_merged": true
   },
   "peer_authority": {
     "aura": "https://github.com/Hawkar-usls/aura-oracle-tg",
@@ -69,16 +71,16 @@
   },
   "validation": {
     "type": "OFFLINE_MOCK_ONLY",
-    "github_run_url": "https://github.com/Hawkar-usls/Janus/actions/runs/40133814225",
+    "github_run_url": "https://github.com/Hawkar-usls/Janus/actions/runs/40133930352",
     "github_workflow": "Rowan bridge offline tests",
     "workflow_conclusion": "success",
     "scientific_validation": "NOT_ATTEMPTED",
     "paid_or_free_provider_calculation": "NOT_ATTEMPTED",
-    "offline_tests": "14/14 (verified historical workflow run)",
-    "sdk_v3_signature_test": "PASS_WITH_PUBLISHED_ROWAN_PYTHON_SDK_V3"
+    "offline_tests": "15/15 PASS",
+    "sdk_v3_signature_test": "PASS"
   },
   "next_gates": [
-    "Authorize a project-scoped short-lived Rowan API credential and strict credit budget",
+    "Configure ROWAN_API_KEY as a protected GitHub Actions environment secret or an authorized local runtime, then perform read-only whoami credit check",
     "Perform one benign phenol pKa calculation with verified input, correct method and job receipt",
     "Independently compare with empirical chemistry reference and disclose model uncertainty",
     "Run TOPA provenance/falsification review and archive reviewed result without clinical or novelty claims"
