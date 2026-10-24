@@ -17,7 +17,9 @@
       "pka_plan_offline",
       "pka_remote_draft_opt_in",
       "pka_submit_credit_capped_explicit",
-      "pka_collect_opt_in"
+      "pka_collect_opt_in",
+      "read_only_whoami_and_credit_check",
+      "offline_hash_linked_topa_and_registry_envelopes"
     ],
     "provider_capabilities_not_implemented": [
       "docking",
@@ -27,7 +29,15 @@
       "virtual_screening",
       "admet",
       "production_agent_invocation"
-    ]
+    ],
+    "pipeline_entrypoint": "integrations/rowan/janus_science_pipeline.py",
+    "candidate_outputs": [
+      "rowan.receipt.json",
+      "topa.review-request.json",
+      "meta-registry.candidate.json"
+    ],
+    "manual_workflow": ".github/workflows/rowan-research-manual.yml",
+    "model_input_firewall": "SMILES-only pKa methods; 3D-only models forbidden until a typed 3D input adapter exists"
   },
   "peer_authority": {
     "aura": "https://github.com/Hawkar-usls/aura-oracle-tg",
@@ -59,11 +69,13 @@
   },
   "validation": {
     "type": "OFFLINE_MOCK_ONLY",
-    "github_run_url": "https://github.com/Hawkar-usls/Janus/actions/runs/40128703352",
+    "github_run_url": "https://github.com/Hawkar-usls/Janus/actions/runs/40133814225",
     "github_workflow": "Rowan bridge offline tests",
     "workflow_conclusion": "success",
     "scientific_validation": "NOT_ATTEMPTED",
-    "paid_or_free_provider_calculation": "NOT_ATTEMPTED"
+    "paid_or_free_provider_calculation": "NOT_ATTEMPTED",
+    "offline_tests": "14/14 (verified historical workflow run)",
+    "sdk_v3_signature_test": "PASS_WITH_PUBLISHED_ROWAN_PYTHON_SDK_V3"
   },
   "next_gates": [
     "Authorize a project-scoped short-lived Rowan API credential and strict credit budget",
@@ -78,5 +90,12 @@
     "MODEL_PREDICTION_NOT_CAUSALITY_OR_MEDICAL_EFFICACY",
     "SHA256_INTEGRITY_NOT_SOURCE_AUTHENTICATION",
     "REGISTRY_ENTRY_NOT_SCIENTIFIC_DISCOVERY"
-  ]
+  ],
+  "updated_at_utc": "2026-10-24",
+  "execution_environment": {
+    "remote_desktop_connected": false,
+    "account_credential_in_GitHub_Secrets_verified": false,
+    "remote_spend_attempted": false,
+    "reason": "Remote Desktop Commander device offline; no authorized connector action to configure GitHub Actions secrets"
+  }
 }
