@@ -80,7 +80,8 @@ def attest(model, source):
     if any(type(v) not in (int,float) or not math.isfinite(v) or abs(v)>1e6 for v in [*w,b]):
         raise TOPAHold("COEFFICIENTS_NONFINITE_OR_EXTREME")
     split=split_independent()
-    if any(model.get("split",{}).get(key+"_positions")!=split[key] for key in split):
+    names={"test":"test_positions","valid":"validation_positions","train":"training_positions"}
+    if any(model.get("split",{}).get(names[key])!=split[key] for key in split):
         raise TOPAHold("HELDOUT_POSITION_LEAK_OR_DRIFT")
     data=rows(source)
     if set(x[0] for x in data.values())!=set(range(1,65)):
