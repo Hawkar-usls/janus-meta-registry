@@ -50,6 +50,10 @@ jobs:
           fi
       - name: Independently archive source-matched AURA and Demiurge proposals
         run: python modules/rowan_observer/coordination_ingest.py
+      - name: Independent Rowan run, archive, TOPA and Demiurge integrity watchdog
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python modules/rowan_observer/pipeline_watchdog.py
       - name: Commit immutable evidence like Fresco Forge
         run: |
           git config user.name 'JANUS Rowan Observatory'
