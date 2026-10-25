@@ -86,7 +86,7 @@ class FeedbackTests(TestCase):
     def write_canonical_fixture(self, root, raw):
         base=Path(root)/learn.BASE
         (base/"receipts").mkdir(parents=True,exist_ok=True)
-        data=json.dumps(raw,indent=2).encode()+b"\\n"
+        data=json.dumps(raw,indent=2).encode()+b"\n"
         rid=raw["source"]["run_id"]
         (base/"receipts"/f"ROWAN-S2-{rid}-test.json").write_bytes(data)
         state={"schema_id":"janus.rowan.observer_state.v1",
