@@ -83,6 +83,53 @@ class FeedbackTests(TestCase):
             state["notification_dedupe_key"]="bad"
             (p/"CANONICAL_STATE.json").write_text(json.dumps(state))
             with self.assertRaises(learn.Hold):learn.find_verified_receipt(d)
+    def write_canonical_fixture(self, root, raw):
+        base=Path(root)/learn.BASE
+        (base/"receipts").mkdir(parents=True,exist_ok=True)
+        data=json.dumps(raw,indent=2).encode()+b"\\n"
+        rid=raw["source"]["run_id"]
+        (base/"receipts"/f"ROWAN-S2-{rid}-test.json").write_bytes(data)
+        state={"schema_id":"janus.rowan.observer_state.v1",
+               "latest_durable_external_run":rid,
+               "underlying_state_is_derived_from":raw["source"]["source_artifact_sha256"],
+               "notification_dedupe_key":hashlib.sha256(
+                   learn.canonical(raw["calibration"])).hexdigest()[:20]}
+        (base/"CANONICAL_STATE.json").write_text(json.dumps(state))
+        return base
+
+    def test_repeated_collector_snapshot_does_not_mint_identical_weights(self):
+        with tempfile.TemporaryDirectory() as d:
+            first=fake(3)
+            base=self.write_canonical_fixture(d,first)
+            original=learn.run(d)
+            self.assertTrue(original.is_file())
+            second=copy.deepcopy(first)
+            second["source"]={"run_id":12346,"source_artifact_sha256":"c"*64}
+            self.write_canonical_fixture(d,second)
+            reused=learn.run(d)
+            self.assertEqual(reused,original)
+            self.assertEqual(len(list((base/"feedback").glob("FEEDBACK-RUN*.json"))),1)
+            third=fake(4)
+            third["source"]={"run_id":12347,"source_artifact_sha256":"d"*64}
+            self.write_canonical_fixture(d,third)
+            newer=learn.run(d)
+            self.assertNotEqual(newer,original)
+            self.assertEqual(len(list((base/"feedback").glob("FEEDBACK-RUN*.json"))),2)
+
+    def test_changed_original_source_or_fitted_coefficients_cannot_hide_as_noop(self):
+        with tempfile.TemporaryDirectory() as d:
+            first=fake(3)
+            base=self.write_canonical_fixture(d,first)
+            original=learn.run(d)
+            second=copy.deepcopy(first)
+            second["source"]={"run_id":12346,"source_artifact_sha256":"c"*64}
+            self.write_canonical_fixture(d,second)
+            bad=json.loads(original.read_text(encoding="utf-8"))
+            bad["fit"]["weights"][0]+=0.25
+            original.write_text(json.dumps(bad),encoding="utf-8")
+            with self.assertRaisesRegex(learn.Hold,"SAME_INPUT_DIVERGENT_FEEDBACK_MODEL"):
+                learn.run(d)
+
     def test_source_mutant_list_falsifier(self):
         r=fake(8);m=learn.fit_feedback(r,"b"*64)
         r["cases"][7]["mutation"]="WRONG"
