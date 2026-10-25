@@ -50,7 +50,9 @@ def review(model,receipt):
     train=[r for r in records if r[0] in TRAIN]
     test=[r for r in records if r[0] in HELDOUT]
     if len(train)<3:raise TOPAHold("NOT_ENOUGH_TRAINED_SAMPLES")
-    if model["split"].get("completed_training_mutations")!=[r[0] for r in train] or model["split"].get("completed_test_mutations")!=[r[0] for r in test]:
+    # Partial holdout evidence must not be exposed as a completed evaluation.
+    disclosed_test=[r[0] for r in test] if len(test)==len(HELDOUT) else []
+    if model["split"].get("completed_training_mutations")!=[r[0] for r in train] or model["split"].get("completed_test_mutations")!=disclosed_test:
         raise TOPAHold("TRAIN_SPLIT_COMPLETION_MISMATCH")
     xm=sum(r[1] for r in train)/len(train)
     zm=sum(r[2] for r in train)/len(train)
