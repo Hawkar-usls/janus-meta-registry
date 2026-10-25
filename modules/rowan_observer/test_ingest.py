@@ -77,6 +77,27 @@ class Tests(unittest.TestCase):
         r=m.analyze(inp)
         self.assertTrue(r["cases"][0]["provider_credit_cap_alert"])
 
+    def test_over_cap_charge_causes_fail_closed_calibration_state(self):
+        inp=sample(4)
+        inp["pilot_cases"][0]["credits_charged"]=15.
+        r=m.analyze(inp)
+        self.assertEqual(r["calibration"]["classification"],"BUDGET_ALERT_FAIL_CLOSED")
+        self.assertEqual(r["calibration"]["credit_cap_alert_mutations"],["G53A"])
+        self.assertIn("HALT_NEW_STUDIES",r["calibration"]["next_research_proposal"])
+
+    def test_strong_synthetic_association_only_recommends_holdout(self):
+        r=m.analyze(sample(8))
+        self.assertEqual(r["calibration"]["next_research_proposal"],"DESIGN_INDEPENDENT_PRE_REGISTERED_HELDOUT_VALIDATION")
+        self.assertFalse(r["calibration"]["new_experiments_authorized_by_calibration"])
+
+    def test_undifferentiated_scores_flag_negative_control(self):
+        inp=sample(8)
+        for row in inp["pilot_cases"]:
+            row["ptm"]=.8;row["avg_lddt"]=.8
+        inp["spearman_processed_label_vs_delta_structure_confidence"]={"ptm":None,"avg_lddt":None}
+        r=m.analyze(inp)
+        self.assertIn("NEGATIVE_CONTROLS",r["calibration"]["next_research_proposal"])
+
     def test_sensitive_extra_fields_stripped(self):
         inp=sample(1)
         inp["user_secret"]="SHOULD_NOT_PERSIST"

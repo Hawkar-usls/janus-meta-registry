@@ -133,6 +133,24 @@ def analyze(data):
                 raise EvidenceHold("INDEPENDENT_CORRELATION_REPLAY_MISMATCH")
         cal["spearman_processed_assay_label_vs_delta_structural_confidence"]=assoc
         cal["uncertainty"]="N=8 OUTCOME-STRATIFIED; NO INDEPENDENT VALIDATION; NO CLAIM OF BIOLOGICAL CAUSALITY"
+    charge_alarms=[r["mutation"] for r in safe if r.get("provider_credit_cap_alert")]
+    if charge_alarms:
+        cal["classification"]="BUDGET_ALERT_FAIL_CLOSED"
+        cal["next_research_proposal"]="HALT_NEW_STUDIES_AND_INDEPENDENTLY_AUDIT_PROVIDER_BILLING"
+    elif ready:
+        rho=cal.get("spearman_processed_assay_label_vs_delta_structural_confidence",{})
+        numeric=[abs(v) for v in rho.values() if v is not None]
+        if not numeric:
+            cal["next_research_proposal"]="CHECK_UNINFORMATIVE_STRUCTURE_CONFIDENCE_AND_PREPARE_NEGATIVE_CONTROLS"
+        elif max(numeric)>=0.7:
+            cal["next_research_proposal"]="DESIGN_INDEPENDENT_PRE_REGISTERED_HELDOUT_VALIDATION"
+        elif max(numeric)<0.3:
+            cal["next_research_proposal"]="FALSIFY_CONFIDENCE_AS_FITNESS_PROXY_ON_INDEPENDENT_ASSAY"
+        else:
+            cal["next_research_proposal"]="PRE_REGISTER_BLIND_VALIDATION_WITH_ASSAY_TRANSFORM_CONTROLS"
+    cal["credit_cap_alert_mutations"]=charge_alarms
+    cal["topa_audit_authority"]="HUMAN_OR_INDEPENDENT_REFERENCE_REQUIRED"
+    cal["aura_oracle_use"]="HYPOTHESIS_GENERATION_ONLY_NO_SPENDING_AUTHORITY"
     return {
         "schema_id":"janus.meta_registry.rowan_evidence_receipt.v1",
         "method":"READ_ONLY_INDEPENDENT_PROVIDER_RECEIPT_REPLAY",
@@ -218,6 +236,9 @@ def update_once(root:Path, receipts:list[dict]):
             "latest_source_uri":newest["source"]["run_link"],
             "latest_scientific_status":newest["calibration"]["classification"],
             "last_completed_mutants":newest["calibration"]["eight_mutants_with_provider_results"],
+            "budget_guard_alert_mutations":newest["calibration"]["credit_cap_alert_mutations"],
+            "calibration_proposal_no_authority":newest["calibration"]["next_research_proposal"],
+            "topa_gate":newest["science_gates"]["topa"],
             "observer_alert":"ONLY_ON_VERIFIED_NEW_RESULT_HOLD_OR_BUDGET_GUARD_CHANGE",
             "autonomous_spend_authority":"ONLY_FROZEN_EIGHT_MUTANT_S2_WITH_EXISTING_WEEKLY_BUDGET",
             "new_unreviewed_studies":"PROPOSAL_ONLY_NOT_AUTO_EXECUTED",
