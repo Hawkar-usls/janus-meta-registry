@@ -104,6 +104,8 @@ def rows_to_manifest(rows,structures):
             i=v["pdb_position_zero_based"]
             if info["wt_sequence"][i]!=v["wild_type_residue"]:
                 raise GateHold("SELECTED_VARIANT_RESIDUE_MISMATCH")
+            mutant_sequence=(info["wt_sequence"][:i]+v["mutant_residue"]+info["wt_sequence"][i+1:])
+            v["mutant_sequence_sha256"]=sha(mutant_sequence.encode("ascii"))
         member=info["pdb_member"]
         domains.append({
             "pdb_id":pid,"pdb_chain":info["chain"],
@@ -183,7 +185,7 @@ def build(archive_bytes):
         },
         "inference":{
             "frozen_shadow_model_path":"data/rowan/feedback/FEEDBACK-RUN40236409772-38e04b8f73a81a21.json",
-            "frozen_shadow_model_sha256":"52e0d6e75d603f0596ac7938715e45fccaf38835fac0ed9fffd9c6fe6551b781023aaeeb06",
+            "frozen_shadow_model_sha256":"52e0d6e75d603f0596ac7938715e45fccaf38835fac0ed110176128e33d86cf3",
             "status":"NOT_RUN_NO_COMPARABLE_BOLTZ2_CONFIDENCE_FEATURES",
             "requirements":["same provider version and settings for WT and 200 mutants","all 210 structural confidence receipts pinned before any label unlock","no new Rowan credits, unless separately preapproved","no training, recalibration, or heldout adjustment"]
         },
