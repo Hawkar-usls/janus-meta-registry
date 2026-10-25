@@ -19,7 +19,7 @@ concurrency:
 jobs:
   archive:
     runs-on: ubuntu-latest
-    timeout-minutes: 18
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
         with:
@@ -27,12 +27,18 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - name: Install pinned CPU verification dependency
+        run: python -m pip install --disable-pip-version-check --quiet numpy==2.1.3
       - name: Validate evidence gate
         run: python -m unittest discover -s modules/rowan_observer -p 'test_*.py'
       - name: Import published science receipts from completed JANUS runs
         env:
           GH_TOKEN: ${{ github.token }}
         run: python modules/rowan_observer/ingest.py --root . --limit 12
+      - name: Incremental Rowan-feedback weights from newly imported source-bound receipts
+        run: python modules/rowan_observer/feedback_train.py
+      - name: Independent TOPA scalar replay of all retained feedback weights
+        run: python modules/rowan_observer/topa_feedback_replay.py
       - name: Commit immutable evidence like Fresco Forge
         run: |
           git config user.name 'JANUS Rowan Observatory'
@@ -40,5 +46,18 @@ jobs:
           git add data/rowan/
           if git diff --cached --quiet; then exit 0; fi
           git commit -m 'Rowan Observer: append verified provider receipt'
-          git pull --rebase origin main
-          git push origin HEAD:main
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            if ! git rebase origin/main; then
+              git rebase --abort || true
+              echo "ROWAN_FORGE=REBASE_CONFLICT_HOLD"
+              exit 1
+            fi
+            if git push origin HEAD:main; then
+              echo "ROWAN_FORGE=PROVENANCE_AND_TOPA_APPEND_SUCCESS"
+              exit 0
+            fi
+            sleep "$attempt"
+          done
+          echo "ROWAN_FORGE=PUSH_FAILED_AFTER_RETRIES"
+          exit 1
