@@ -39,6 +39,8 @@ jobs:
         run: python modules/rowan_observer/feedback_train.py
       - name: Independent TOPA scalar replay of all retained feedback weights
         run: python modules/rowan_observer/topa_feedback_replay.py
+      - name: Independently archive source-matched AURA and Demiurge proposals
+        run: python modules/rowan_observer/coordination_ingest.py
       - name: Commit immutable evidence like Fresco Forge
         run: |
           git config user.name 'JANUS Rowan Observatory'
