@@ -108,6 +108,82 @@ def fit_feedback(receipt,source_sha):
             "independent_wetlab_science_audit":"OPEN"}
     }
 
+def learning_input_digest(receipt):
+    """Fingerprint only data that can change fitted weights or heldout metrics.
+
+    Excludes source run/receipt identity so harmless repeated status snapshots do
+    not create new models. Heldout inputs enter only after BOTH are complete.
+    """
+    if (receipt.get("schema_id")!="janus.meta_registry.rowan_evidence_receipt.v1"
+            or receipt.get("original_public_data_sha256")!=PIN):
+        raise Hold("LEARNING_SOURCE_SCHEMA_OR_PIN_DRIFT")
+    cases=receipt.get("cases")
+    if not isinstance(cases,list) or len(cases)!=8:
+        raise Hold("INVALID_TRAINING_SOURCE_CASES")
+    wt=receipt.get("wildtype",{})
+    if wt.get("provider_state")!="PROVIDER_RESULT_RETURNED":
+        raise Hold("LEARNING_WT_NOT_COMPLETE")
+    material={"wildtype":[proper(wt.get("ptm"),0,1),proper(wt.get("avg_lddt"),0,1)],
+              "training":[],"heldout":None}
+    heldout=[]
+    for i,case in enumerate(cases):
+        if (case.get("mutation")!=MUTATIONS[i] or case.get("quantile")!=QUANTILES[i]):
+            raise Hold("LEARNING_FROZEN_CASE_DRIFT")
+        if case.get("provider_credit_cap_alert"):
+            raise Hold("LEARNING_CREDIT_CAP_ALERT")
+        if case.get("provider_state")!="PROVIDER_RESULT_RETURNED":
+            continue
+        row=[MUTATIONS[i],proper(case.get("ptm"),0,1),
+             proper(case.get("avg_lddt"),0,1),
+             proper(case.get("published_processed_label"))]
+        (material["training"] if i in TRAIN_INDICES else heldout).append(row)
+    if len(heldout)==len(HOLDOUT_INDICES):
+        material["heldout"]=heldout
+    return hashlib.sha256(canonical(material)).hexdigest()
+
+
+def prior_model_with_matching_input(root, receipt, model):
+    """Verify exact previous source receipts, then suppress duplicate training."""
+    current=learning_input_digest(receipt)
+    prior_paths=sorted((root/BASE/"feedback").glob("FEEDBACK-RUN*.json"))
+    if not prior_paths:
+        return None
+    receipt_by_hash={}
+    for path in (root/BASE/"receipts").glob("ROWAN-S2-*.json"):
+        if path.stat().st_size>100_000:
+            raise Hold("OVERSIZED_HISTORICAL_RECEIPT")
+        raw=path.read_bytes()
+        key=hashlib.sha256(raw).hexdigest()
+        if key in receipt_by_hash:
+            raise Hold("DUPLICATED_HISTORICAL_RECEIPT_HASH")
+        receipt_by_hash[key]=json.loads(raw)
+    found=None
+    for path in prior_paths:
+        if path.stat().st_size>40_000:
+            raise Hold("OVERSIZED_HISTORICAL_SHADOW_MODEL")
+        old=json.loads(path.read_bytes())
+        if old.get("schema_id")!="janus.rowan.bbc1.provider_feedback_shadow.v1":
+            raise Hold("HISTORICAL_SHADOW_MODEL_SCHEMA_DRIFT")
+        original=receipt_by_hash.get(old.get("source_receipt_file_sha256"))
+        if original is None:
+            raise Hold("HISTORICAL_SHADOW_SOURCE_MISSING")
+        if (original.get("source",{}).get("run_id")!=old.get("source_run_id")
+                or original.get("source",{}).get("source_artifact_sha256")!=
+                    old.get("source_artifact_sha256")):
+            raise Hold("HISTORICAL_SHADOW_SOURCE_MISMATCH")
+        if learning_input_digest(original)!=current:
+            continue
+        # A matching original experiment must yield the identical bounded fit.
+        # Never hide a discrepant fit behind a no-op optimization.
+        for field in ("fit","split","metrics","authority"):
+            if old.get(field)!=model.get(field):
+                raise Hold("SAME_INPUT_DIVERGENT_FEEDBACK_MODEL")
+        if found is not None:
+            raise Hold("MULTIPLE_MODELS_FOR_IDENTICAL_LEARNING_INPUT")
+        found=path
+    return found
+
+
 def run(root="."):
     base=Path(root)
     receipt,sha=find_verified_receipt(base)
@@ -115,6 +191,11 @@ def run(root="."):
     if model is None:
         print("JANUS_ROWAN_FEEDBACK=WAIT_FOR_THREE_COMPLETED_TRAINING_MUTANTS")
         return None
+    previous=prior_model_with_matching_input(base,receipt,model)
+    if previous is not None:
+        print("JANUS_ROWAN_FEEDBACK=UNCHANGED_TRAINING_INPUT_NO_NEW_WEIGHTS")
+        print("JANUS_ROWAN_FEEDBACK_REUSED_SOURCE_MODEL="+previous.name)
+        return previous
     digest=hashlib.sha256(canonical(model)).hexdigest()
     path=base/BASE/"feedback"/f"FEEDBACK-RUN{model['source_run_id']}-{digest[:16]}.json"
     path.parent.mkdir(parents=True,exist_ok=True)
