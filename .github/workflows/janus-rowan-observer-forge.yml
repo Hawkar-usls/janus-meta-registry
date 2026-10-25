@@ -39,6 +39,15 @@ jobs:
         run: python modules/rowan_observer/feedback_train.py
       - name: Independent TOPA scalar replay of all retained feedback weights
         run: python modules/rowan_observer/topa_feedback_replay.py
+      - name: TOPA metadata-only triage of exact durable Beetle receiver commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git fetch --no-tags origin beetle-memory; then
+            python modules/rowan_observer/beetle_topa_triage.py
+          else
+            echo 'TOPA_BEETLE_TRIAGE=NO_DURABLE_RECEIVER_BRANCH'
+          fi
       - name: Independently archive source-matched AURA and Demiurge proposals
         run: python modules/rowan_observer/coordination_ingest.py
       - name: Commit immutable evidence like Fresco Forge
