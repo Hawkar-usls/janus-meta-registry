@@ -74,7 +74,7 @@ def rows_to_manifest(rows,structures):
         if info is None:
             group_info[pid]={"wt_sequence":seq,"uniprot_id":uid,"interpro":sorted(interpro),
                              "chain":chain,"pdb_member":name}
-        elif info["wt_sequence"]!=seq or info["uniprot_id"]!=uid:
+        elif info["wt_sequence"]!=seq or info["uniprot_id"]!=uid or info["chain"]!=chain:
             raise GateHold("MULTIPLE_WT_SEQUENCES_OR_UNIPROTS_"+pid)
     candidates=[]
     for pid,variants in groups.items():
@@ -86,12 +86,14 @@ def rows_to_manifest(rows,structures):
     selected=[]
     used_interpro=set()
     used_uniprot=set()
+    used_sequences=set()
     for pid,n,info,families,variants in candidates:
-        if families & used_interpro or info["uniprot_id"] in used_uniprot:
+        if families & used_interpro or info["uniprot_id"] in used_uniprot or info["wt_sequence"] in used_sequences:
             continue
         selected.append((pid,info,variants,n))
         used_interpro.update(families)
         used_uniprot.add(info["uniprot_id"])
+        used_sequences.add(info["wt_sequence"])
         if len(selected)>=MIN_DOMAINS:break
     if len(selected)!=MIN_DOMAINS:raise GateHold("INSUFFICIENT_DISTINCT_PDB_FAMILIES")
     domains=[]
