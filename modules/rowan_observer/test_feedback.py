@@ -60,6 +60,31 @@ class FeedbackTests(TestCase):
     def test_training_cannot_see_reserved_cases(self):
         a=fake(6);b=fake(8)
         self.assertEqual(learn.fit_feedback(a,"b"*64)["fit"],learn.fit_feedback(b,"b"*64)["fit"])
+    def test_single_holdout_keeps_six_case_model_frozen(self):
+        six=fake(6);seven=fake(7)
+        m6=learn.fit_feedback(six,"b"*64)
+        m7=learn.fit_feedback(seven,"c"*64)
+        self.assertEqual(m6["fit"],m7["fit"])
+        self.assertEqual(m6["split"],m7["split"])
+        self.assertEqual(m6["metrics"],m7["metrics"])
+        self.assertEqual(m7["split"]["completed_test_mutations"],[])
+        self.assertEqual(learn.learning_input_digest(six),learn.learning_input_digest(seven))
+        independent=topa.review(m7,seven)
+        self.assertFalse(independent["heldout_complete"])
+        self.assertIsNone(independent["heldout_mae"])
+
+    def test_seven_case_receipt_reuses_frozen_six_case_model(self):
+        with tempfile.TemporaryDirectory() as d:
+            first=fake(6)
+            base=self.write_canonical_fixture(d,first)
+            frozen=learn.run(d)
+            seventh=fake(7)
+            seventh["source"]={"run_id":12346,"source_artifact_sha256":"c"*64}
+            self.write_canonical_fixture(d,seventh)
+            reused=learn.run(d)
+            self.assertEqual(reused,frozen)
+            self.assertEqual(len(list((base/"feedback").glob("FEEDBACK-RUN*.json"))),1)
+
     def test_credit_alert_blocks_updates(self):
         r=fake(4)
         r["cases"][1]["provider_credit_cap_alert"]=True

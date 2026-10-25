@@ -98,7 +98,7 @@ def fit_feedback(receipt,source_sha):
                "ridge":RIDGE,"scale":10,"target":"THIRD_PARTY_PROCESSED_BBC1_ASSAY_LABEL"},
         "split":{"frozen_train_mutations":list(MUTATIONS[:6]),"frozen_test_mutations":list(MUTATIONS[6:]),
                  "completed_training_mutations":[MUTATIONS[r[0]] for r in train],
-                 "completed_test_mutations":[MUTATIONS[r[0]] for r in test]},
+                 "completed_test_mutations":[MUTATIONS[r[0]] for r in test] if evaluated else []},
         "metrics":{"heldout_two_mutants_complete":evaluated,
                    "heldout_mae":test_mae,"heldout_training_mean_baseline_mae":mean_mae,
                    "within_assay_outcome_stratified":True},
