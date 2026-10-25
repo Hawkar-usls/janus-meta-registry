@@ -9,6 +9,7 @@ on:
       - 'modules/rowan_observer/shadow_train.py'
       - 'modules/rowan_observer/topa_replay.py'
       - 'modules/rowan_observer/SHADOW_LEARNING_PROTOCOL.md'
+      - 'data/rowan/CANONICAL_STATE.json'
   pull_request:
     paths:
       - 'modules/rowan_observer/**'
@@ -51,6 +52,12 @@ jobs:
             exit 2
           fi
           python modules/rowan_observer/topa_replay.py --model "${models[0]}"
+      - name: Learn only from 3+ source-attested completed Rowan cases
+        if: github.event_name != 'pull_request'
+        run: python modules/rowan_observer/feedback_train.py
+      - name: TOPA independently reconstructs all provider-feedback ridge coefficients
+        if: github.event_name != 'pull_request'
+        run: python modules/rowan_observer/topa_feedback_replay.py
       - name: Archive shadow weights and independent TOPA evidence
         if: github.event_name != 'pull_request'
         shell: bash
@@ -59,6 +66,7 @@ jobs:
           git config user.name 'JANUS TOPA Evidence Trainer'
           git config user.email 'actions@users.noreply.github.com'
           git add data/rowan/learned/ data/rowan/topa/
+          if [ -d data/rowan/feedback ]; then git add data/rowan/feedback/; fi
           if git diff --cached --quiet; then
             echo "JANUS_SHADOW=UNCHANGED_REPLAY_VERIFIED"
             exit 0
