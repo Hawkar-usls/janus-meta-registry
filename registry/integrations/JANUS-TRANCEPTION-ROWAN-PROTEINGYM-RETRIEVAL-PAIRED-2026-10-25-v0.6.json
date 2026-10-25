@@ -1,0 +1,109 @@
+{
+  "schema_id": "janus.meta_registry.tranception_retrieval_paired_upstream_reanalysis.v0.6",
+  "artifact_id": "JANUS-TRANCEPTION-ROWAN-PROTEINGYM-RETRIEVAL-PAIRED-2026-10-25-v0.6",
+  "record_date_local": "2026-10-25",
+  "evidence_class": "INDEPENDENT_COMPUTATIONAL_REANALYSIS_OF_PUBLISHED_BENCHMARK_AGGREGATES",
+  "scientific_status": "PUBLISHED_PER_ASSAY_REANALYSIS_PASS_NO_MODEL_WEIGHTS_INFERENCE",
+  "preregistration": {
+    "primary_question": "Tranception L retrieval vs Tranception L no retrieval paired Spearman delta",
+    "primary_unit": "unique UniProt protein",
+    "approach": "pair within assay, average repeated assay deltas per protein, bootstrap across proteins",
+    "bootstrap_resamples": 2000,
+    "bootstrap_seed": 20261025,
+    "exploratory_models": [
+      "Tranception M",
+      "Tranception S"
+    ],
+    "no_personal_information_involved": true
+  },
+  "source": {
+    "repository": "OATML-Markslab/ProteinGym",
+    "filename": "benchmarks/DMS_zero_shot/substitutions/Spearman/DMS_substitutions_Spearman_DMS_level.csv",
+    "source_git_blob_sha1": "b5affd05e5bf83eecf5d617ddb56168d7e80bc6f",
+    "original_git_blob_sha_reverified_in_ci": true,
+    "source_type": "OFFICIAL_HISTORICAL_PRECOMPUTED_MODEL_BENCHMARK"
+  },
+  "dataset": {
+    "total_assays": 217,
+    "unique_proteins": 186,
+    "missing_pair_count_all_models": 0,
+    "bbc1_reference_mutants": 2069,
+    "not_comparable_to_third_party_1084_singles_population": true
+  },
+  "results": {
+    "Tranception_L_primary": {
+      "mean_protein_delta_rho": 0.06514471326164874,
+      "median_protein_delta_rho": 0.04500000000000004,
+      "bootstrap_95pct_interval": [
+        0.05254618055555555,
+        0.07899756944444444
+      ],
+      "n_proteins": 186,
+      "positive": 160,
+      "negative": 24,
+      "ties": 2,
+      "bbc1_delta_rho": 0.066
+    },
+    "Tranception_M_exploratory": {
+      "mean_protein_delta_rho": 0.08833064516129033,
+      "median_protein_delta_rho": 0.052000000000000005,
+      "bootstrap_95pct_interval": [
+        0.07212330869175627,
+        0.10537581765232976
+      ],
+      "n_proteins": 186,
+      "positive": 165,
+      "negative": 20,
+      "ties": 1,
+      "bbc1_delta_rho": 0.077
+    },
+    "Tranception_S_exploratory": {
+      "mean_protein_delta_rho": 0.1325752688172043,
+      "median_protein_delta_rho": 0.08387499999999998,
+      "bootstrap_95pct_interval": [
+        0.11068700716845879,
+        0.15596925403225806
+      ],
+      "n_proteins": 186,
+      "positive": 167,
+      "negative": 15,
+      "ties": 4,
+      "bbc1_delta_rho": 0.038
+    }
+  },
+  "software": {
+    "repository": "Hawkar-usls/Janus",
+    "merge_pr": "https://github.com/Hawkar-usls/Janus/pull/21",
+    "merge_commit": "d317bbfa22b24bb02c54941fadc4242be0c7d1ac",
+    "code": "integrations/tranception_rowan/retrieval_paired_audit.py",
+    "ci_run": "https://github.com/Hawkar-usls/Janus/actions/runs/40140606177",
+    "offline_tests": "54/54 PASS",
+    "official_pinned_source_audit": "PASS",
+    "rowan_sdk_surface_test": "PASS",
+    "tranception_model_weights_rerun": false,
+    "rowan_live_workflows_verified_in_this_project": 0
+  },
+  "scientific_limits": [
+    "Effect refers only to published assay-level Spearman correlations of given ProteinGym revision.",
+    "Across-protein bootstrap may understate uncertainty because related proteins are not independent.",
+    "No causal claim that retrieval causes improved biochemical fitness of any given variant.",
+    "No individual K5A-specific Tranception predicted fitness was produced.",
+    "No cloud Rowan computation or private API calls were performed.",
+    "Not an independent re-evaluation of raw DMS data or independent experimental replication.",
+    "Tranception S and M supplementary comparisons exploratory only.",
+    "TOPA human or independent scientific gate remains OPEN.",
+    "No statement about any Rowan jobs elsewhere in the user's account; account activity has not been queried."
+  ],
+  "remaining_gates": {
+    "actual_rowan_auth": "NOT_VERIFIED",
+    "rowan_account_credit_balance": "UNKNOWN",
+    "rowan_bbc1_wildtype_uuid": null,
+    "rowan_bbc1_k5a_uuid": null,
+    "rowan_live_cofolding_results": "NOT_RUN",
+    "real_tranception_per_mutant_predictions": "NOT_COMPUTED",
+    "proteingym_k5a_processed_label": "PREVIOUSLY_VERIFIED_PUBLIC_DERIVATIVE",
+    "raw_experimental_lab_replicates": "NOT_AUDITED",
+    "topa_independent_review": "OPEN"
+  },
+  "next_step": "Obtain real protected Rowan key access and verified free credits; run 1 bounded wildtype and K5A cofolding pair, preserve UUID and output; source individual Tranception predictions on matched DMS cohort before drawing correlations."
+}
