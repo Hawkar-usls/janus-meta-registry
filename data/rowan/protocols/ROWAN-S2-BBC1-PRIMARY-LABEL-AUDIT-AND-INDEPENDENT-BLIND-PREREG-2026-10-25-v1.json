@@ -49,7 +49,7 @@
     "raw_source_name": "Tsuboyama2023_Dataset2_Dataset5",
     "first_paper_doi": "10.1038/s41586-023-06328-6",
     "processed_derivative_sha256": "ca355a655381c95fe899d61a406251e0cd17d68bbabe287651d526fdeb821f87",
-    "current_status": "ORIGINAL_AUTHOR_2023_ZENODO_EIGHT_DIRECT_ROWS_COMPARED_7_MATCH_1_W38L_MISMATCH; NO_TRANSFORMATION_FORMULA_PROVEN",
+    "current_status": "PASS_EXACT_OFFICIAL_BBC1_PROTEINGYM_RAW_TO_PROCESSED_SCORE_AND_BIN_RECONSTRUCTION_2069_OF_2069",
     "pass_condition": "Obtain and pin original raw BBC1 CSV, map all eight sequence+mutation pairs uniquely, compare exact ddG_ML_float to processed labels within 1e-9, record original dataset version and SHA. Any mismatch triggers HOLD, not sign flipping/retuning.",
     "script": "modules/rowan_observer/primary_score_gate.py",
     "if_unavailable": "HOLD_DO_NOT_DECLARE_PRIMARY_SOURCE_VERIFIED",
@@ -65,7 +65,8 @@
       "processed_score": -0.8445540655216376,
       "mirrored_raw_score": -1.0025844433957378,
       "processed_minus_raw": 0.15803037787410024,
-      "requirement": "Resolve exactly which ProteinGym source version / raw experimental transformation produced processed W38L. Do not retrofit legacy model or claim full primary-source audit."
+      "requirement": "Resolve exactly which ProteinGym source version / raw experimental transformation produced processed W38L. Do not retrofit legacy model or claim full primary-source audit.",
+      "reconciliation": "SUPERSEDED_DIAGNOSTIC_ONE_PER_MUT_TYPE_IS_INSUFFICIENT; all published 2069 scores match when grouped on aa_seq."
     },
     "original_author_zenodo_2023_evidence": {
       "status": "HOLD_AUTHOR_PROCESSED_LABEL_DISCREPANCY",
@@ -82,7 +83,8 @@
       "mean_difference_invalid": "ONE_DELTA_NOT_GENERAL_AFFINE_TRANSFORM",
       "authors_full_ZIP_md5_verified": false,
       "attempts": "First direct HTTP range extraction succeeded; later independent automated range replay encountered HTTP 504, retain HOLD on full-source digest.",
-      "source_reconciliation_procedure": "Investigate and reproduce ProteinGym preprocessing at six positions F10,W38,Y39,D45,N47,E57; do not select sign/scale/offset based on previous holdout performance."
+      "source_reconciliation_procedure": "Investigate and reproduce ProteinGym preprocessing at six positions F10,W38,Y39,D45,N47,E57; do not select sign/scale/offset based on previous holdout performance.",
+      "resolution": "PROTEINGYM_COMBINES_ALIASED_AUTHOR_CONSTRUCT_ROWS_WITH_IDENTICAL_TERMINAL_AMINO_ACID_SEQUENCE; direct 2023 single raw W38L remains -1.0025844433957378, but DMS_score -0.8445540655216376 is mean across W38L and F10F:W38L; these are not contradictory measurements of the same raw record."
     },
     "official_proteinGym_v1_0_to_v1_3": {
       "evidence_path": "data/rowan/provenance/ROWAN-BBC1-PROTEINGYM-V1-0-TO-V1-3-POSITION-DRIFT-2026-10-26-v1.json",
@@ -90,11 +92,42 @@
       "official_processed_labels_consistent_v1_0_through_v1_3": true,
       "numeric_drifts_compared_v1_3_raw": 96,
       "positions_affected": 6,
-      "explanatory_transform_verified": false
+      "explanatory_transform_verified": true,
+      "exact_reproduction_witness": "data/rowan/provenance/ROWAN-BBC1-EXACT-PREPROCESS-RECONSTRUCTION-2069OF2069-2026-10-26-v1.json"
+    },
+    "exact_reconstruction": {
+      "status": "PASS_2069_OF_2069_RAW_AND_BINARY_LABELS",
+      "proof_path": "data/rowan/provenance/ROWAN-BBC1-EXACT-PREPROCESS-RECONSTRUCTION-2069OF2069-2026-10-26-v1.json",
+      "verifier_path": "modules/rowan_observer/bbc1_exact_proteingym_reconstruction.py",
+      "official_raw_source_sha256": "d3003e040d984c0361da94a103c31fff4385498fdda36ff66480c3bdef19de2c",
+      "official_processed_source_sha256": "d258240a3ab7088f5ac331abf661611369d9a6a06cf7778ab4ae285b824cfdab",
+      "protein_mutant_sequences": 2069,
+      "raw_records": 2174,
+      "wt_records_excluded": 8,
+      "singleton_mutant_sequences": 1972,
+      "twice_observed_sequences": 97,
+      "matched_numeric_values": 2069,
+      "matched_binary_values": 2069,
+      "previously_unexplained_position_differences": 96,
+      "previously_unexplained_position_differences_remaining": 0,
+      "mechanism": "Arithmetically average all original ddG_ML_float scores grouped by full final 64-aa mutated sequence; exclude WT; DMS_score_bin=int(DMS_score>=-1.271998543).",
+      "W38L_original_observations": [
+        {
+          "mut_type": "W38L",
+          "ddG_ML_float": -1.0025844433957378
+        },
+        {
+          "mut_type": "F10F:W38L",
+          "ddG_ML_float": -0.6865236876475374
+        }
+      ],
+      "W38L_reproduced_DMS_score": -0.8445540655216376,
+      "note": "This is an exactly independently reproduced transformation of published ProteinGym BBC1 source files, not retrieval of the authors' original preprocessing code. Older raw-only mismatch witnesses are historically valid as one-row comparisons but superseded as diagnoses of processed-score errors.",
+      "original_author_Zenodo_full_zip_md5_verified": false
     }
   },
   "prospective_trial": {
-    "design_status": "PREREG_PROTOCOL_FROZEN_BUT_EXECUTION_HOLD_SOURCE_VERSION_AND_INDEPENDENT_LABEL_CUSTODIAN",
+    "design_status": "SOURCE_SCORE_TRANSFORM_PASS_FROZEN_PREREG_INDEPENDENT_BLIND_TRIAL_NOT_STARTED",
     "minimum_distinct_unrelated_protein_domains": 10,
     "minimum_variants_per_domain": 20,
     "minimum_total_variants": 200,
@@ -157,7 +190,7 @@
     "new_model_production_promotion_authorized": false,
     "boltz2_weights_change_authorized": false,
     "independent_biological_validation_completed": false,
-    "next_step": "Retrieve or reconstruct documented ProteinGym v1.0 preprocessing causing 96 site-local differences, reconcile original Tsuboyama Apr-2023 ddG_ML vs official DMS_score before any blind trial. Keep frozen S2 and holdouts unchanged. Independent prospective assay not yet selected.",
+    "next_step": "Original BBC1 source-score transformation reconciled exactly. Select truly independent assay/domain source and blinded custodian, pre-pin input sequences and model predictor receipts, then release labels only after immutable prediction freeze. No paid provider runs or production promotion authorized.",
     "claim_boundary": "Even a passing prospective benchmark would be evidence about quantitative assay prediction within sampled domains, not general protein fitness or self-improving AI."
   }
 }
