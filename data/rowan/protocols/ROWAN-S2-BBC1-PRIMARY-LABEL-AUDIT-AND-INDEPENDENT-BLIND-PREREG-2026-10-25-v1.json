@@ -49,7 +49,7 @@
     "raw_source_name": "Tsuboyama2023_Dataset2_Dataset5",
     "first_paper_doi": "10.1038/s41586-023-06328-6",
     "processed_derivative_sha256": "ca355a655381c95fe899d61a406251e0cd17d68bbabe287651d526fdeb821f87",
-    "current_status": "MIRRORED_RAW_V1_3_SCORES_7_OF_8_MATCH_ONE_W38L_MISMATCH;_PRIMARY_EXPERIMENTAL_FILE_UNVERIFIED",
+    "current_status": "ORIGINAL_AUTHOR_2023_ZENODO_EIGHT_DIRECT_ROWS_COMPARED_7_MATCH_1_W38L_MISMATCH; NO_TRANSFORMATION_FORMULA_PROVEN",
     "pass_condition": "Obtain and pin original raw BBC1 CSV, map all eight sequence+mutation pairs uniquely, compare exact ddG_ML_float to processed labels within 1e-9, record original dataset version and SHA. Any mismatch triggers HOLD, not sign flipping/retuning.",
     "script": "modules/rowan_observer/primary_score_gate.py",
     "if_unavailable": "HOLD_DO_NOT_DECLARE_PRIMARY_SOURCE_VERIFIED",
@@ -66,10 +66,35 @@
       "mirrored_raw_score": -1.0025844433957378,
       "processed_minus_raw": 0.15803037787410024,
       "requirement": "Resolve exactly which ProteinGym source version / raw experimental transformation produced processed W38L. Do not retrofit legacy model or claim full primary-source audit."
+    },
+    "original_author_zenodo_2023_evidence": {
+      "status": "HOLD_AUTHOR_PROCESSED_LABEL_DISCREPANCY",
+      "receipt_path": "data/rowan/provenance/ROWAN-BBC1-ZENODO-AUTHOR-2023-8OF8-DIRECT-ROW-COMPARISON-2026-10-26-v1.json",
+      "direct_original_archive": "https://zenodo.org/records/7992926",
+      "direct_original_member": "Tsuboyama2023_Dataset2_Dataset3_20230416.csv",
+      "author_original_score_column": "ddG_ML",
+      "processed_score_column": "DMS_score",
+      "matched": 7,
+      "mismatch": 1,
+      "only_mismatch": "W38L",
+      "original_score": -1.0025844433957378,
+      "processed_score": -0.8445540655216376,
+      "mean_difference_invalid": "ONE_DELTA_NOT_GENERAL_AFFINE_TRANSFORM",
+      "authors_full_ZIP_md5_verified": false,
+      "attempts": "First direct HTTP range extraction succeeded; later independent automated range replay encountered HTTP 504, retain HOLD on full-source digest.",
+      "source_reconciliation_procedure": "Investigate and reproduce ProteinGym preprocessing at six positions F10,W38,Y39,D45,N47,E57; do not select sign/scale/offset based on previous holdout performance."
+    },
+    "official_proteinGym_v1_0_to_v1_3": {
+      "evidence_path": "data/rowan/provenance/ROWAN-BBC1-PROTEINGYM-V1-0-TO-V1-3-POSITION-DRIFT-2026-10-26-v1.json",
+      "per_assay_entry_sha256_all_versions": "d258240a3ab7088f5ac331abf661611369d9a6a06cf7778ab4ae285b824cfdab",
+      "official_processed_labels_consistent_v1_0_through_v1_3": true,
+      "numeric_drifts_compared_v1_3_raw": 96,
+      "positions_affected": 6,
+      "explanatory_transform_verified": false
     }
   },
   "prospective_trial": {
-    "design_status": "BLOCKED_PENDING_W38L_RAW_SOURCE_RECONCILIATION_AND_INDEPENDENT_DATASET",
+    "design_status": "PREREG_PROTOCOL_FROZEN_BUT_EXECUTION_HOLD_SOURCE_VERSION_AND_INDEPENDENT_LABEL_CUSTODIAN",
     "minimum_distinct_unrelated_protein_domains": 10,
     "minimum_variants_per_domain": 20,
     "minimum_total_variants": 200,
@@ -132,7 +157,7 @@
     "new_model_production_promotion_authorized": false,
     "boltz2_weights_change_authorized": false,
     "independent_biological_validation_completed": false,
-    "next_step": "Resolve W38L 7/8 raw-mirror/processed divergence from original laboratory dataset and versioned ProteinGym transforms before any new genuinely blind evaluation; no new paid computations.",
+    "next_step": "Retrieve or reconstruct documented ProteinGym v1.0 preprocessing causing 96 site-local differences, reconcile original Tsuboyama Apr-2023 ddG_ML vs official DMS_score before any blind trial. Keep frozen S2 and holdouts unchanged. Independent prospective assay not yet selected.",
     "claim_boundary": "Even a passing prospective benchmark would be evidence about quantitative assay prediction within sampled domains, not general protein fitness or self-improving AI."
   }
 }
