@@ -98,7 +98,7 @@ class ReadinessTest(unittest.TestCase):
             g.validate_pairs(records,fake_pairmap())
     def test_provider_version_mixing_blocks(self):
         records=fake_receipts();records[-1]["model_revision"]="v2"
-        with self.assertRaisesRegex(g.GateHold,"MODEL_PROVIDER_VERSION_OR_CONFIG_INCONSISTENT"):
+        with self.assertRaisesRegex(g.GateHold,"WT_FEATURE_OR_PROVIDER_CONFIG_INCONSISTENT|MODEL_PROVIDER_VERSION_OR_CONFIG_INCONSISTENT"):
             g.validate_pairs(records,fake_pairmap())
     def test_metric_equivalence_not_automatic(self):
         records=fake_receipts();records[0]["metric_equivalence_witness_attested"]=False
