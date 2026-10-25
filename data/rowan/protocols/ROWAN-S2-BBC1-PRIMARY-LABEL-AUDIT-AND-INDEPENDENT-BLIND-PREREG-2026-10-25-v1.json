@@ -127,7 +127,7 @@
     }
   },
   "prospective_trial": {
-    "design_status": "SOURCE_SCORE_TRANSFORM_PASS_FROZEN_PREREG_INDEPENDENT_BLIND_TRIAL_NOT_STARTED",
+    "design_status": "RETROSPECTIVE_PUBLIC_SOURCE_CANDIDATE_FROZEN_NOT_GENUINE_PROSPECTIVE_BLIND",
     "minimum_distinct_unrelated_protein_domains": 10,
     "minimum_variants_per_domain": 20,
     "minimum_total_variants": 200,
@@ -156,7 +156,7 @@
       "timestamped external immutable GitHub checkpoint before label-release authorization",
       "custodian attestation that unseen labels were not accessed in prediction or selection stages"
     ],
-    "blinded_label_release": "Separate custodian reveals independent assay numeric labels and their raw source hashes only after prediction receipt has been published and frozen; mismatches of signed transforms trigger HOLD.",
+    "blinded_label_release": "DO_NOT_UNLOCK_LABELS_OR_CALCULATE_A_PERFORMANCE_CLAIM. For public FireProt archive a retrospective leakage-controlled evaluation is possible only after complete sha-pinned real Boltz2 predictions, source-unit/signed score normalization proof, and independent data-handling attestation. For genuine prospective blind validation acquire newly measured undisclosed labels held by an independent custodian; source published 2023 cannot become prospectively blind by commit alone.",
     "primary_metric": "Equal-domain-weighted mean absolute error on raw delta-delta stability kcal/mol",
     "primary_comparator": "Pre-registered zero-change baseline: predict 0 kcal/mol for every mutation",
     "secondary_metrics": [
@@ -182,7 +182,55 @@
       "confidence interval does not exclude zero",
       "budget constraints prevent scoring"
     ],
-    "pretrial_data_status": "NO_CANDIDATE_SOURCE_PINNED_NO_EXTERNAL_BLIND_LABELS_OR_PREDICTIONS_IN_HAND"
+    "pretrial_data_status": "PUBLIC_FIREPROT_THERMOMPNN_HOMOLOGUE_FREE_INPUT_PINNED_10_DOMAINS_200_VARIANTS_ZERO_REFERENCE_FROZEN_NO_BOLTZ2_FORECASTS",
+    "external_candidate": {
+      "source": "Dieckhaus et al., FireProtDB curated with experimental PDB structures, ThermoMPNN dataset",
+      "science_paper_doi": "10.1073/pnas.2314853121",
+      "curated_source_doi": "10.5281/zenodo.8169289",
+      "curated_zip_sha256": "b1403d86b43307f3a7dfc95ff6b72386c64068e8be1191bc7685d37bc8d654b2",
+      "metadata_only_manifest": "data/rowan/protocols/ROWAN-FIREPROT-HF-10X20-LABEL-FREE-INPUT-2026-10-26-v1.json",
+      "input_manifest_sha256": "9a44fd6c01afca2b21990b0f4364cb3dbf89ad61686295f55005f86001ce7b92",
+      "frozen_zero_reference": "data/rowan/protocols/ROWAN-FIREPROT-HF-200-ZERO-REFERENCE-FREEZE-2026-10-26-v1.json",
+      "frozen_zero_reference_sha256": "0b827cd8ee6bd018a72762924dc55a6b68e8ba560ce0db70bb18d3be54ab9d6a",
+      "candidate_pdb_ids": [
+        "1EY0",
+        "2LZM",
+        "1A2P",
+        "1BVC",
+        "5PTI",
+        "2RN2",
+        "1KF2",
+        "1FTG",
+        "2OCJ",
+        "1QLP"
+      ],
+      "n_domains": 10,
+      "variants_per_domain": 20,
+      "n_variants": 200,
+      "source_provenance": "PROTEIN_STABILITY_CURATED_FIREPROTDB_WITH_PDB",
+      "BBC1_assay_not_reused": true,
+      "author_reported_homologue_free_split_relative_to_Megascale": true,
+      "original_authors_25_percent_Megascale_cross_overlap_method": "MMseqs2 25% minimum pairwise identity threshold",
+      "internal_10_domain_independence": "DIFFERENT_UNIPROT_AND_NO_SHARED_INTERPRO_FAMILY; STRUCTURAL_OR_REMOTE_HOMOLOGY_NOT_CERTIFIED",
+      "public_preexisting_labels": "PUBLISHED_AS_OF_2023",
+      "genuine_blinding": "NOT_ESTABLISHED_NO_EXTERNAL_LABEL_CUSTODIAN",
+      "outcomes_embedded_in_metadata_manifest": false,
+      "model_forecasts": "NOT_GENERATED_REQUIRES_COMPARABLE_BOLTZ2_WT_AND_MUTANT_OUTPUTS",
+      "source_unit": "kcal/mol",
+      "source_to_BBC1_direction": "PROVISIONAL_REQUIRE_EXPERIMENT_SPECIFIC_SIGN_PROOF",
+      "model_weight_promotion": false,
+      "new_rowan_credits": 0
+    },
+    "external_candidate_gates": [
+      "FIREPROT_SRC_PIN_PASS",
+      "INPUT_METADATA_AND_200_BASELINE_PRECOMMIT_PASS",
+      "INDEPENDENT_LABEL_CUSTODIAN_MISSING",
+      "OUTCOME_PROVENANCE_ASSAY_SIGN_CHECK_OPEN",
+      "BOLTZ2_210_SOURCE_SCORE_RECEIPTS_MISSING",
+      "PREDICTION_RECEIPT_200_SHADOW_MISSING",
+      "PUBLIC_HISTORIC_DATA_NOT_GENUINE_PROSPECTIVE_BLIND",
+      "BOLTZ2_TRAINING_DATA_LEAKAGE_AUDIT_OPEN"
+    ]
   },
   "governance": {
     "new_paid_provider_jobs_authorized": false,
@@ -190,7 +238,7 @@
     "new_model_production_promotion_authorized": false,
     "boltz2_weights_change_authorized": false,
     "independent_biological_validation_completed": false,
-    "next_step": "Original BBC1 source-score transformation reconciled exactly. Select truly independent assay/domain source and blinded custodian, pre-pin input sequences and model predictor receipts, then release labels only after immutable prediction freeze. No paid provider runs or production promotion authorized.",
+    "next_step": "Candidate 10x20 metadata and 200 zero reference predictions frozen. Audit FireProt/ProteinGym-BBC1 sequence overlap and source sign, secure independently withheld laboratory measurements, obtain real per-variant matched Boltz2 PTM/LDDT without new credit authority, commit 200 signed frozen shadow predictions BEFORE label release. No scientific validation/production model promotion.",
     "claim_boundary": "Even a passing prospective benchmark would be evidence about quantitative assay prediction within sampled domains, not general protein fitness or self-improving AI."
   }
 }
