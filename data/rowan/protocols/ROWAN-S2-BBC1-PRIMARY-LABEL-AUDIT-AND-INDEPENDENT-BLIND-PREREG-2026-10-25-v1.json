@@ -1,0 +1,124 @@
+{
+  "schema_id": "janus.rowan.s2.independent_blind_validation_prereg.v1",
+  "created_at_utc": "2026-10-25",
+  "state": "PROTOCOL_FROZEN_FOR_REVIEW_DATASET_NOT_SELECTED_NO_BLIND_VALIDATION_PERFORMED",
+  "question": "Do the already frozen BBC1-S2 Boltz2 pTM/avg_lDDT shadow coefficients predict quantitative folding-stability changes beyond a no-effect baseline on an independent, blinded, nonhomologous assay dataset?",
+  "evidence_boundary": {
+    "legacy_study": "BBC1_YEAST_Tsuboyama_2023_1TG0",
+    "source_model_path": "data/rowan/feedback/FEEDBACK-RUN40236409772-38e04b8f73a81a21.json",
+    "source_model_sha256": "52e0d6e75d603f0596ac7938715e45fccaf38835fac0ed110176128e33d86cf3",
+    "source_provider_receipt_path": "data/rowan/receipts/ROWAN-S2-40236409772-51508154de2623c0.json",
+    "source_provider_receipt_sha256": "c7f0ffb81e490d6dd555d1b6b073838ec0ed9fffd9c6fe6551b781023aaeeb06",
+    "training_mutations": [
+      "G53A",
+      "G48D",
+      "E27F",
+      "W38L",
+      "K13N",
+      "G64Q"
+    ],
+    "exploratory_heldout_already_seen": [
+      "Q44V",
+      "E42H"
+    ],
+    "frozen_model": {
+      "intercept": -1.327737761434,
+      "weights": [
+        0.196413135791,
+        -0.045214428615
+      ],
+      "scale": 10,
+      "ridge": 1,
+      "features": [
+        "mutant_ptm_minus_wt_ptm",
+        "mutant_avg_lddt_minus_wt_avg_lddt"
+      ],
+      "target": "delta_delta_G_mutant_minus_wildtype",
+      "target_unit": "kcal/mol",
+      "beneficial_direction": "positive_is_stabilizing",
+      "require_model_retraining": false
+    },
+    "previous_8of8_test": "EXPLORATORY_ONLY_NOT_ADMISSIBLE_AS_NEW_BLIND_VALIDATION"
+  },
+  "source_truth_gate": {
+    "protein_gym_reference_repository": "https://github.com/OATML-Markslab/ProteinGym",
+    "reference_file_path": "reference_files/DMS_substitutions.csv",
+    "reference_git_blob_sha": "8d1ea9a19c0404b511cd24378b25c2a5f86f10e9",
+    "raw_phenotype_column": "ddG_ML_float",
+    "raw_directionality": 1,
+    "raw_source_name": "Tsuboyama2023_Dataset2_Dataset5",
+    "first_paper_doi": "10.1038/s41586-023-06328-6",
+    "processed_derivative_sha256": "ca355a655381c95fe899d61a406251e0cd17d68bbabe287651d526fdeb821f87",
+    "current_status": "METADATA_SIGN_AND_PAPER_UNIT_VERIFIED_RAW_EIGHT_ROW_EQUALITY_OPEN",
+    "pass_condition": "Obtain and pin original raw BBC1 CSV, map all eight sequence+mutation pairs uniquely, compare exact ddG_ML_float to processed labels within 1e-9, record original dataset version and SHA. Any mismatch triggers HOLD, not sign flipping/retuning.",
+    "script": "modules/rowan_observer/primary_score_gate.py",
+    "if_unavailable": "HOLD_DO_NOT_DECLARE_PRIMARY_SOURCE_VERIFIED"
+  },
+  "prospective_trial": {
+    "design_status": "NOT_CONDUCTED",
+    "minimum_distinct_unrelated_protein_domains": 10,
+    "minimum_variants_per_domain": 20,
+    "minimum_total_variants": 200,
+    "variant_constraints": [
+      "single amino-acid substitutions only",
+      "one unmodified reference WT per domain",
+      "exact sequence and mutation uniqueness",
+      "no BBC1 S2 variants or close homologs",
+      "no mutation selection using assay outcomes",
+      "freeze inclusion criteria before label access"
+    ],
+    "independence_requirements": [
+      "source and experimental assay data independent of Tsuboyama2023, ProteinGym derivatives and the S2 training labels",
+      "holdout generation or custodianship outside the JANUS model-fitting workflow",
+      "datasets and labels cannot be used by model training, hyperparameter selection, or protocol revision",
+      "screen model and source provider pretraining for potential data leakage or classify as nonblind",
+      "document assay and lab metadata, replicate counts, sequence IDs, accession, DOI, measurement units and transformation before unlock"
+    ],
+    "predictor": "Use only exact frozen S2 coefficients. For each variant obtain comparable Boltz2 pTM and avg_lddt for matched wildtype and mutant with frozen provider version/sampling options; no retraining, recalibration, re-centering, target-dependent threshold or tuning.",
+    "prediction_mode": "Predictions from already-available or no-cost authorized verifiable provider evidence only; otherwise BLOCKED_NO_PREDICTIONS",
+    "frozen_prediction_receipt": [
+      "candidate dataset identifiers and immutable accession/version/sha",
+      "unblinded input sequence ids and mutant ids but NOT labels",
+      "model parameters and full inference environment revision",
+      "complete per-variant signed predictions with SHA-256",
+      "timestamped external immutable GitHub checkpoint before label-release authorization",
+      "custodian attestation that unseen labels were not accessed in prediction or selection stages"
+    ],
+    "blinded_label_release": "Separate custodian reveals independent assay numeric labels and their raw source hashes only after prediction receipt has been published and frozen; mismatches of signed transforms trigger HOLD.",
+    "primary_metric": "Equal-domain-weighted mean absolute error on raw delta-delta stability kcal/mol",
+    "primary_comparator": "Pre-registered zero-change baseline: predict 0 kcal/mol for every mutation",
+    "secondary_metrics": [
+      "global pooled MAE (descriptive)",
+      "per-domain Spearman rho (descriptive)",
+      "per-domain direction accuracy excluding exactly zero labels (descriptive)",
+      "coverage / run integrity"
+    ],
+    "uncertainty": "Cluster bootstrap by domain, 10000 replicates, deterministic seed 20261025, CI percentile 2.5%-97.5% for macro-MAE difference and ratio",
+    "pass_criteria": [
+      "all truth/provenance/blinding/inference integrity gates PASS",
+      "sample sizes at least 10 independent domains and 200 variants, with at least 20 per domain",
+      "point estimate macro-MAE shadow <=0.90 * macro-MAE zero baseline",
+      "upper bound of 95% domain-cluster bootstrap confidence interval for MAE difference (shadow minus zero) is strictly below 0"
+    ],
+    "negative_result_policy": "Fail or indeterminate result stays published; no refitting on same holdout, no posthoc rescue of the primary claim",
+    "exploratory_only_if": [
+      "fewer than 10 independent domains",
+      "any assay raw/processed transform unresolved",
+      "any label accessed before prediction freeze",
+      "noncomparable provider confidence features",
+      "source independence or leakage unknown",
+      "confidence interval does not exclude zero",
+      "budget constraints prevent scoring"
+    ],
+    "pretrial_data_status": "NO_CANDIDATE_SOURCE_PINNED_NO_EXTERNAL_BLIND_LABELS_OR_PREDICTIONS_IN_HAND"
+  },
+  "governance": {
+    "new_paid_provider_jobs_authorized": false,
+    "new_studies_execution_authorized": false,
+    "new_model_production_promotion_authorized": false,
+    "boltz2_weights_change_authorized": false,
+    "independent_biological_validation_completed": false,
+    "next_step": "Select and provenance-audit independent published experimental assay source, obtain external blinded custodian, verify score transform from raw data, then freeze candidate sequences and prediction artifacts before seeing labels.",
+    "claim_boundary": "Even a passing prospective benchmark would be evidence about quantitative assay prediction within sampled domains, not general protein fitness or self-improving AI."
+  }
+}
