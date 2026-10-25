@@ -49,13 +49,27 @@
     "raw_source_name": "Tsuboyama2023_Dataset2_Dataset5",
     "first_paper_doi": "10.1038/s41586-023-06328-6",
     "processed_derivative_sha256": "ca355a655381c95fe899d61a406251e0cd17d68bbabe287651d526fdeb821f87",
-    "current_status": "METADATA_SIGN_AND_PAPER_UNIT_VERIFIED_RAW_EIGHT_ROW_EQUALITY_OPEN",
+    "current_status": "MIRRORED_RAW_V1_3_SCORES_7_OF_8_MATCH_ONE_W38L_MISMATCH;_PRIMARY_EXPERIMENTAL_FILE_UNVERIFIED",
     "pass_condition": "Obtain and pin original raw BBC1 CSV, map all eight sequence+mutation pairs uniquely, compare exact ddG_ML_float to processed labels within 1e-9, record original dataset version and SHA. Any mismatch triggers HOLD, not sign flipping/retuning.",
     "script": "modules/rowan_observer/primary_score_gate.py",
-    "if_unavailable": "HOLD_DO_NOT_DECLARE_PRIMARY_SOURCE_VERIFIED"
+    "if_unavailable": "HOLD_DO_NOT_DECLARE_PRIMARY_SOURCE_VERIFIED",
+    "mirrored_raw_evidence": {
+      "status": "HOLD_RAW_MIRROR_PROCESSED_MISMATCH",
+      "evidence_path": "data/rowan/provenance/ROWAN-BBC1-EIGHT-RAW-MIRROR-SCORE-DIVERGENCE-2026-10-25.json",
+      "independent_mirror_repo": "LiteFold/ProteinGym",
+      "independent_mirror_commit": "b8319fa062ed22d86b329cddd40418234df7f1d8",
+      "independent_mirror_sha256": "72621b29b9ea84e89cabc97c5854ce9a6de19a9a517fd1f6414f250156d4de03",
+      "matched_rows": 7,
+      "discrepant_rows": 1,
+      "discrepant_mutation": "W38L",
+      "processed_score": -0.8445540655216376,
+      "mirrored_raw_score": -1.0025844433957378,
+      "processed_minus_raw": 0.15803037787410024,
+      "requirement": "Resolve exactly which ProteinGym source version / raw experimental transformation produced processed W38L. Do not retrofit legacy model or claim full primary-source audit."
+    }
   },
   "prospective_trial": {
-    "design_status": "NOT_CONDUCTED",
+    "design_status": "BLOCKED_PENDING_W38L_RAW_SOURCE_RECONCILIATION_AND_INDEPENDENT_DATASET",
     "minimum_distinct_unrelated_protein_domains": 10,
     "minimum_variants_per_domain": 20,
     "minimum_total_variants": 200,
@@ -118,7 +132,7 @@
     "new_model_production_promotion_authorized": false,
     "boltz2_weights_change_authorized": false,
     "independent_biological_validation_completed": false,
-    "next_step": "Select and provenance-audit independent published experimental assay source, obtain external blinded custodian, verify score transform from raw data, then freeze candidate sequences and prediction artifacts before seeing labels.",
+    "next_step": "Resolve W38L 7/8 raw-mirror/processed divergence from original laboratory dataset and versioned ProteinGym transforms before any new genuinely blind evaluation; no new paid computations.",
     "claim_boundary": "Even a passing prospective benchmark would be evidence about quantitative assay prediction within sampled domains, not general protein fitness or self-improving AI."
   }
 }
