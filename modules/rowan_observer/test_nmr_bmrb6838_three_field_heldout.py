@@ -1,6 +1,7 @@
 """Independent genuine three-field data integrity and held-out physics tests."""
 from __future__ import annotations
 import inspect
+import importlib.util
 import math
 import unittest
 from nmr_bmrb6838_three_field_heldout import (
@@ -8,6 +9,7 @@ from nmr_bmrb6838_three_field_heldout import (
  parse_all_nine_real_observables,predict_field,train_one_residue,summarize,Hold
 )
 
+@unittest.skipUnless(all(importlib.util.find_spec(n) is not None for n in ("pynmrstar","scipy","numpy")), "Dedicated NMR workflow installs pinned source parser and optimizer")
 class PSE4HoldoutTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
