@@ -1,0 +1,152 @@
+{
+  "schema_id": "janus.rowan.nmr_BMRB6838_three_field_heldout_predictive_baseline_protocol.v1",
+  "frozen_date_utc": "2026-10-26",
+  "protocol_status": "FROZEN_AFTER_SOURCE_INSPECTION_BEFORE_MODEL_FIT; EXPLORATORY_NOT_PROSPECTIVE_BLIND",
+  "scientific_objective": "Independent field-out-of-fit predictive adequacy of axial diffusion and residue-specific N15 CSA assumptions versus spherical fixed CSA, for external enzyme PSE-4 measured at three fields. No inference on FN1 domain orientations.",
+  "data_source": {
+    "BMRB_accession": 6838,
+    "file_url": "https://bmrb.io/ftp/pub/bmrb/entry_directories/bmr6838/bmr6838_3.str",
+    "sha256": "aa437c7f9dd906b8622907aa79f372a211cac2606fbcd3603c477f3cc9cde661",
+    "bytes": 555956,
+    "protein": "PSE-4 class A beta-lactamase",
+    "source_authenticity": "NMR-STAR v3 BMRB public raw fitted relaxation observable values",
+    "measured_1H_fields_MHz": [
+      500,
+      600,
+      800
+    ],
+    "training_fields_MHz": [
+      500,
+      600
+    ],
+    "single_frozen_test_field_MHz": 800,
+    "source_sample_conditions_list_id": 2,
+    "source_temperature_K": 304.65,
+    "source_pH": 6.65,
+    "T1_T2_units": "milliseconds in deposited table; transform R_s_inverse=1000/T_ms and propagate SE_R=1000*SE_T/(T_ms*T_ms); NOE dimensionless",
+    "all_9_observable_lists_have_numerical_errors": true,
+    "all_9_field_type_lists_preliminarily_inspected": true,
+    "complete_same_residue_nine_values_preliminarily_found": 230,
+    "same_residue_three_letter_codes_consistent": true,
+    "known_limitation": "PSE-4 800MHz T2 dataset has documented inconsistency in published secondary NMR diagnostics; use as honest heldout stress test not universal ground truth or proof model wrong; report separately.",
+    "literature_warning": "Sébastien Morin thesis discusses BMRB6838 inconsistent 800MHz R2 and spurious Rex fits",
+    "other_sources": [
+      "https://bmrb.io/data_library/summary/index.php?bmrbId=6838",
+      "https://www.collectionscanada.gc.ca/obj/thesescanada/vol2/QQLA/TC-QQLA-27269.pdf"
+    ]
+  },
+  "source_gate": {
+    "pynmrstar_version": "3.3.6",
+    "require_all_six_core_15N_NH_labels_and_units": true,
+    "require_exact_9_datasets_fields_and_Sample_condition_list_ID_2": true,
+    "require_temperature_pH_source_metadata": true,
+    "require_equal_residue_identity_across_9": true,
+    "require_strictly_positive_all_9_source_uncertainties": true,
+    "inclusion": "ALL residues with all 9 observed positive-valued and positive-error entries; do not choose based on fit or heldout outcomes",
+    "source_expected_ninefold_intersection": 230,
+    "no_exception_to_filter_problematic_R2_800": true
+  },
+  "fixed_forward_model": {
+    "physical_solver_source": "modules/rowan_observer/fn1_external_relax_bmrb_axial_csa_gate.py",
+    "physics_type": "15N R1/R2/steady-state heteronuclear NOE, axial second rank rotational spectral densities; no molecular dynamics trajectories",
+    "published_external_forward_fixture": "data/rowan/provenance/ROWAN-FN1-EXTERNAL-RELAX-BMRB6470-ANISOTROPY-CSA-REAL-2026-10-26-v1.json",
+    "fix_HN_bond_A": 1.02,
+    "fix_internal_tau_e_ns": 0.1,
+    "fix_Rex_s_inv": 0,
+    "fix_NH_polar_theta_deg_for_axial_sensitivity": 45,
+    "note": "theta=45° is a preselected numerical sensitivity direction, NOT PSE-4 NH-vector orientations. No mechanistic proof of anisotropy or actual physical diffusion tensor.",
+    "per_residue_fitted_parameters": {
+      "tau_global_ns": [
+        2,
+        45
+      ],
+      "S2": [
+        0.05,
+        1
+      ],
+      "optional_residue_CSA_ppm": [
+        -220,
+        -120
+      ],
+      "optional_axial_Dparallel_over_Dperp": [
+        0.5,
+        2
+      ]
+    },
+    "start_seeds": [
+      {
+        "tau_ns": 8,
+        "S2": 0.7
+      },
+      {
+        "tau_ns": 15,
+        "S2": 0.85
+      },
+      {
+        "tau_ns": 23,
+        "S2": 0.95
+      }
+    ],
+    "models": [
+      {
+        "id": "M0_ISO_CSA170",
+        "change": "isotropic ratio1; theta ignored, deltaCSA=-170ppm; fit tau_global & S2 (2 params)"
+      },
+      {
+        "id": "M1_ISO_VAR_CSA",
+        "change": "as M0 but fit residue CSA (3 params)"
+      },
+      {
+        "id": "M2_AXIAL_FIXED_CSA",
+        "change": "axial theta fixed 45°, fit Dparallel/Dperp plus tau_global & S2, CSA -170ppm (3 params)"
+      },
+      {
+        "id": "M3_AXIAL_VAR_CSA",
+        "change": "axial theta 45° fixed, fit Dparallel/Dperp and CSA plus tau,S2 (4 params)"
+      }
+    ]
+  },
+  "training_objective": {
+    "observables": [
+      "R1_s_inv",
+      "R2_s_inv",
+      "heteronuclear_NOE"
+    ],
+    "fields_MHz": [
+      500,
+      600
+    ],
+    "weighted_residual": "(forward-observed)/reported_error; least squares over exactly six observations per residue; optimize scipy.optimize.least_squares(bounds) using fixed three initial seeds; choose lowest training chi2 ONLY.",
+    "seed_extra_initials": "when optional, center CSA at -170ppm and Dparallel/Dperp=1.0",
+    "optimizer": "scipy.optimize.least_squares method trf, fixed tolerance 1e-8, max_nfev=200",
+    "uncertainty": "T1/T2 error propagated first order to rates; diagonal weights as approximation, no true covariance known",
+    "validation": "DO NOT LOOK at 800MHz during optimization and model selection, including not tuning bounds, seeds or objective after seeing results."
+  },
+  "heldout_metrics": {
+    "primary": "At 800MHz compute per-residue sum of squared standardized residuals over R1,R2,NOE, then median across all complete residues for each model. Compare M1,M2,M3 minus M0 on exactly same residues.",
+    "secondary": [
+      "median and mean squared standardized residual per observable separately",
+      "fraction of residues with |standardized prediction residual| <=2 per heldout channel",
+      "number and share of residues for each model with ALL 3 heldout observables within 2 errors",
+      "paired per-residue counts of improved total loss vs baseline",
+      "repeat descriptive summary excluding documented compromised 800MHz R2 from only the scoring (NOT fitting) and label sensitivity; primary still includes it"
+    ],
+    "statistical_limit": "No p-value or claim of model superiority on genuinely independent proteins; all residues share one protein and systematic 800MHz anomaly; no posterior, calibration or inference of physical exchange",
+    "quality_gates": [
+      "All prediction JSON rows include actual per-field source values/errors and per-model fitted training parameters & test residuals",
+      "Positive finite T1/T2 and uncertainties all 9",
+      "Always report failures/optimization convergence",
+      "If no physically reasonable fit to training, include precomputed high residual rather than dropping that residue",
+      "Model complexity changes between variants: even heldout gain does NOT establish actual variable CSA/anisotropy without orientational data",
+      "Do not declare FN1 structural validation from PSE-4 rates"
+    ]
+  },
+  "cost_firewall": {
+    "Rowan_job_submissions": 0,
+    "Rowan_credit_spending": 0,
+    "no_workflow_paid_inference": true,
+    "no_model_weight_promotion": true,
+    "non_materials_only": true
+  },
+  "next_if_pass_or_fail": "Consider more independent proteins, actual 3D NH-vector-specific diffusion tensor and clean multiple-field dataset. Do not retroactively alter test split."
+}
