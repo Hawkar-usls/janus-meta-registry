@@ -31,7 +31,7 @@ class EightMutantAuditTests(unittest.TestCase):
         self.assertEqual(len(r["source_bound_frozen_mutant_rows"]),8)
         self.assertFalse(r["fireprot_210_authorized"])
         self.assertFalse(r["scientific_fitness_or_stability_claim"])
-        self.assertIn("OPEN",r["provider_alignment_equivalence"])
+        self.assertTrue(r["provider_alignment_equivalence"].startswith("NOT_DEMONSTRATED"))
     def test_missing_three_case_source_blocks(self):
         bad=three();bad["state"]="PASS_CONFIDENCE_WITHOUT_EVIDENCE"
         with self.assertRaisesRegex(m.AuditHold,"PINNED_THREE_CASE_BRIDGE_NOT_VERIFIED"):
