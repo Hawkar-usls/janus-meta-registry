@@ -43,6 +43,15 @@ class BridgeTests(unittest.TestCase):
             self.assertEqual(x["status"],"PASS_TWO_LOCAL_BOLTZ2_RESULTS_METRIC_EQUIVALENCE_NOT_ESTABLISHED")
             self.assertEqual(x["scientific_status"],"COMPATIBILITY_UNPROVEN")
             self.assertEqual(x["comparison"]["pair_deltas"]["rowan_delta_ptm"],-.009000000000000008)
+    def test_windows_crlf_inputs_keep_exact_observed_hash(self):
+        with tempfile.TemporaryDirectory() as d:
+            p=Path(d,"BBC1_WT.yaml")
+            original=m.yaml_payload(m.BBC1_WT).replace(b"\n",b"\r\n")
+            p.write_bytes(original)
+            report=m.generate_inputs(d)
+            self.assertEqual(p.read_bytes(),original)
+            self.assertEqual(report["BBC1_WT"]["yaml_sha256"],m.sha(original))
+            self.assertEqual(report["BBC1_WT"]["original_input_line_endings"],"CRLF")
     def test_immutable_yaml_input_prevents_reuse_under_changed_sequence(self):
         with tempfile.TemporaryDirectory() as d:
             m.generate_inputs(d)
