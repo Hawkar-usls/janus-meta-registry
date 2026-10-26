@@ -64,7 +64,7 @@ def parse_all_nine_real_observables(star_text):
     if str(d.entry_id)!="6838":raise Hold("WRONG_BMRB_ACCESSION")
     conditions=[f for f in d.frame_list if f.category=="sample_conditions" and f.name=="conditions_2"]
     if len(conditions)!=1:raise Hold("MEASUREMENT_CONDITION_UNKNOWN")
-    ctl=conditions[0].get_loops_by_category("_Sample_condition_variable")
+    ctl=[conditions[0].get_loop_by_category("_Sample_condition_variable")]
     if len(ctl)!=1:raise Hold("MEASUREMENT_CONDITION_LOOP_CHANGED")
     ci=ctl[0].tags.index("Type");vi=ctl[0].tags.index("Val");ui=ctl[0].tags.index("Val_units")
     cond={r[ci]:(float(r[vi]),r[ui]) for r in ctl[0].data}
