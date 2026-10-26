@@ -19,7 +19,7 @@ ROOT=Path(__file__).resolve().parents[2]
 PROTOCOL=ROOT/"data/rowan/protocols/ROWAN-FN1-INDEPENDENT-RELAX-BMRB6470-AXIAL-CSA-GATES-2026-10-26-v1.json"
 pi=math.pi
 MU0=4*pi*1e-7
-HBAR=1.054571817e-34
+HBAR=6.62606876e-34/(2*pi)  # Exactly the original published nmr-relax fixture constant; not current CODATA.
 # Exact constants for independently published relax fixture, not JANUS constants.
 G1H=267522212.0
 GN15=-27126000.0
