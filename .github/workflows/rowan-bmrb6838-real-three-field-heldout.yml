@@ -1,0 +1,61 @@
+name: JANUS BMRB6838 real three-field NMR heldout zero credit
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "modules/rowan_observer/nmr_bmrb6838_three_field_heldout.py"
+      - "modules/rowan_observer/test_nmr_bmrb6838_three_field_heldout.py"
+      - "data/rowan/protocols/ROWAN-NMR-BMRB6838-PSE4-THREE-FIELD-500600-TRAIN-800-HOLDOUT-2026-10-26-v1.json"
+      - ".github/workflows/rowan-bmrb6838-real-three-field-heldout.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  independently-audited-500600-training-800-testing:
+    runs-on: ubuntu-latest
+    timeout-minutes: 28
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install public frozen STAR parser and numeric optimizer
+        run: python -m pip install --quiet --disable-pip-version-check 'pynmrstar==3.3.6' 'numpy>=1.26,<3' 'scipy>=1.11,<2'
+      - name: Verify source SHA and all nine real field observables and synthetic recovery
+        run: python -m unittest discover -v -s modules/rowan_observer -p 'test_nmr_bmrb6838_three_field_heldout.py'
+      - name: Train on 500/600MHz, predict genuinely withheld 800MHz measurements
+        env:
+          JANUS_BMRB6838_ACTUAL_RECEIPT: ${{ runner.temp }}/janus-bmrb6838-real-500600-to-800-heldout.json
+        run: python modules/rowan_observer/nmr_bmrb6838_three_field_heldout.py
+      - name: Verify source units, count, split and zero Rowan spend
+        env:
+          JANUS_BMRB6838_ACTUAL_RECEIPT: ${{ runner.temp }}/janus-bmrb6838-real-500600-to-800-heldout.json
+        run: |
+          python - <<'PY'
+          import json,os
+          d=json.load(open(os.environ['JANUS_BMRB6838_ACTUAL_RECEIPT'],encoding='utf8'))
+          assert d['total_rows_with_complete_9_measurements_and_reported_SE']==230
+          assert d['model_training_fields_MHz']==[500,600]
+          assert d['field_never_used_in_training_MHz']==800
+          assert d['epistemic_limits']['known_800MHz_R2_dataset_inconsistency']
+          assert d['epistemic_limits']['no_Rowan_credits']==0
+          assert d['epistemic_limits']['no_Rowan_jobs']==0
+          assert len(d['comparisons'])==4
+          for model,r in d['comparisons'].items():
+              print('BMRB6838_REAL',model,'N=',r['residues'],
+                    'HELDOUT800_MEDIAN_CHI2=',r['800MHz_holdout_all_three_chi2']['median'],
+                    '800_R1_NOE_MEDIAN_CHI2=',r['800MHz_holdout_R1_NOE_chi2_without_bad_T2']['median'],
+                    'N_ALL_WITHIN2SE=',r['all_three_within_2SE_count'])
+          print('JANUS_BMRB6838=REAL_230_RESIDUES_THREE_FIELDS_NO_PAID_ROWAN')
+          PY
+      - name: Archive all 230 x 9 raw measurements and four heldout model predictions
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-bmrb6838-real-500600-800-heldout-${{ github.run_id }}
+          path: ${{ runner.temp }}/janus-bmrb6838-real-500600-to-800-heldout.json
+          if-no-files-found: error
+          retention-days: 14
