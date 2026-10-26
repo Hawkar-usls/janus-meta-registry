@@ -127,7 +127,7 @@
     }
   },
   "prospective_trial": {
-    "design_status": "PASS_LOCAL_BBC1_PUBLIC_MSA_8OF8_TECHNICAL_HOLD_PRIVATE_ROWAN_CONFIG_EQUIVALENCE_AND_PROSPECTIVE_HIDDEN_LABELS",
+    "design_status": "PASS_BBC1_9OF9_TECHNICAL_FIREPROT_1EY0_PDB_IDENTITY_GATE_CODE_READY_REAL_SOURCE_HOLD_TRUE_BLIND_NOT_STARTED",
     "minimum_distinct_unrelated_protein_domains": 10,
     "minimum_variants_per_domain": 20,
     "minimum_total_variants": 200,
@@ -344,6 +344,22 @@
       "new_paid_rowan_provider_workflows": 0,
       "new_FireProt_210_jobs": 0,
       "no_shadows_or_production_weights_modified": true
+    },
+    "fireprot_pdb_coordinate_identity_audit": {
+      "status": "CODE_AND_SYNTHETIC_REGRESSION_PASS_REAL_ARCHIVE_COORDINATE_AUDIT_NOT_YET_EXECUTED",
+      "gate_script": "modules/rowan_observer/fireprot_pdb_coordinate_identity_gate.py",
+      "regression_tests": "modules/rowan_observer/test_fireprot_pdb_coordinate_identity_gate.py",
+      "synthetic_protective_tests_passed": 9,
+      "real_source_gating_state": "NOT_EXECUTED_NO_REAL_PDB_IDENTITY_PASS_CLAIM",
+      "original_author_preprocess": "https://github.com/Kuhlman-Lab/ThermoMPNN/blob/main/preprocessing/2_seqalign_fireprot_dataset.py",
+      "original_author_PDB_parser": "https://github.com/Kuhlman-Lab/ThermoMPNN/blob/main/protein_mpnn_utils.py",
+      "technical_WT_prereg": "data/rowan/protocols/ROWAN-FIREPROT-1EY0-WT-PDB-IDENTITY-AND-ONE-CASE-PILOT-PREREG-2026-10-26-v1.json",
+      "initial_candidate": "1EY0",
+      "scientific_conclusion": "Independent WT-only computational smoke check permitted after ATOM-chain exact identity, no biological validation, no FireProt label access",
+      "unseen_experimental_label_custodian": false,
+      "new_paid_rowan_jobs": 0,
+      "new_fireprot_210_inferences": 0,
+      "production_promotion": false
     }
   },
   "governance": {
@@ -352,7 +368,7 @@
     "new_model_production_promotion_authorized": false,
     "boltz2_weights_change_authorized": false,
     "independent_biological_validation_completed": false,
-    "next_step": "BBC1 local GPU/Msa bridge validated technically for WT+all 8 frozen mutations, with descriptive pTM delta MAE 0.00234, pLDDT delta MAE 0.00585. Do not interpret these as ΔΔG predictive accuracy. Independently certify original Rowan model weights/checkpoint/sampling/private MSA equivalence or devise a newly preregistered cross-provider portable feature transformation with untouched external holdout. FireProt 210 remains unauthorized until real predictor transfer is demonstrated; independent unseen experimental label custody still required. No paid jobs, no model promotion.",
+    "next_step": "First execute source SHA-pinned label-free FireProt PDB chain/mutation identity gate; if and only if source 1EY0 WT chain A exact, attempt single external WT-only Boltz2 public-MSA smoke check without outcome labels or paid Rowan jobs. No 210 mutant jobs, no cross-domain stability prediction claim, no shadow calibration or production promotion. Previous attempt to inspect source archive was tool-security blocked; do not report a real PASS.",
     "claim_boundary": "Even a passing prospective benchmark would be evidence about quantitative assay prediction within sampled domains, not general protein fitness or self-improving AI."
   }
 }
