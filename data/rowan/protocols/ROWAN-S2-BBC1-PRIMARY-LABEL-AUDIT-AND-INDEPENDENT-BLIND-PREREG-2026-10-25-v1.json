@@ -127,7 +127,7 @@
     }
   },
   "prospective_trial": {
-    "design_status": "HOLD_LOCAL_STRUCTURAL_BRIDGE_METRIC_NON_EQUIVALENCE_TO_ROWAN_AND_NO_TRUE_BLIND_CUSTODIAN",
+    "design_status": "PASS_LOCAL_BBC1_PUBLIC_MSA_8OF8_TECHNICAL_HOLD_PRIVATE_ROWAN_CONFIG_EQUIVALENCE_AND_PROSPECTIVE_HIDDEN_LABELS",
     "minimum_distinct_unrelated_protein_domains": 10,
     "minimum_variants_per_domain": 20,
     "minimum_total_variants": 200,
@@ -268,6 +268,82 @@
       "paid_rowan_jobs": 0,
       "provider_metric_equivalence": false,
       "fireprot_210_authorized": false
+    },
+    "local_bbc1_public_msa_bridge": {
+      "status": "TECHNICAL_PASS_3_OF_3_PUBLIC_MSA_LOCAL_BOLTZ2_ROWAN_PROVIDER_EQUIVALENCE_HOLD",
+      "evidence": "data/rowan/provenance/ROWAN-BBC1-WT-G53A-G48D-PUBLIC-MSA-BRIDGE-2026-10-26-v2.json",
+      "verification": "modules/rowan_observer/bbc1_public_msa_bridge_audit.py",
+      "tests": "modules/rowan_observer/test_bbc1_public_msa_bridge_audit.py",
+      "controls": [
+        "BBC1_WT",
+        "G53A",
+        "G48D"
+      ],
+      "n_real_local_results": 3,
+      "n_frozen_original_rowan_comparisons": 3,
+      "original_rowan_code_settings": {
+        "model": "BOLTZ_2",
+        "num_samples": 1,
+        "use_msa_server": true,
+        "credits_per_workflow_cap": 10
+      },
+      "local_settings": {
+        "model": "boltz2 2.2.1",
+        "msa_server": "https://api.colabfold.com",
+        "seed": 20261026,
+        "no_kernels": true,
+        "recycling_steps": 3,
+        "sampling_steps": 200,
+        "diffusion_samples": 1
+      },
+      "rowan_private_msa_source": "Private Rowan-hosted MSA server; its actual alignment hashes and original model checkpoint not provided",
+      "mutant_G53A_delta_ptm_local": -0.010780930519104004,
+      "mutant_G53A_delta_ptm_rowan": -0.009000000000000008,
+      "mutant_G53A_delta_plddt_local": -0.0025634169578552246,
+      "mutant_G53A_delta_plddt_rowan": 0.0050000000000000044,
+      "mutant_G48D_delta_ptm_local": -0.0014352798461914062,
+      "mutant_G48D_delta_ptm_rowan": -0.0010000000000000009,
+      "mutant_G48D_delta_plddt_local": -0.000008821487426757812,
+      "mutant_G48D_delta_plddt_rowan": 0.008000000000000007,
+      "original_rowan_avg_lddt_definition": "Mean per-residue predicted pLDDT per Rowan Python API; local single-chain mean of 64 residue pLDDTs exactly equals complex_plddt.",
+      "current_model_frozen": true,
+      "source_equivalence_proven": false,
+      "external_blind_test_status": "NOT_STARTED",
+      "fireprot_210_permitted": false,
+      "paid_rowan_jobs_started": 0,
+      "reference_docs": [
+        "https://docs.rowansci.com/api/python/v3/workflows/protein-cofolding/",
+        "https://www.rowansci.com/blog/boltz2-faq"
+      ]
+    },
+    "local_bbc1_public_msa_full_assessment": {
+      "status": "PASS_TECHNICAL_9_OF_9_SOURCE_VERIFIED_PUBLIC_MSA_BBC1_COMPATIBILITY_EXPLORATORY",
+      "source_all_six": "data/rowan/provenance/ROWAN-BBC1-REMAINING-SIX-PUBLIC-MSA-REAL-CONFIDENCES-2026-10-26-v1.json",
+      "source_eight_summary": "data/rowan/provenance/ROWAN-BBC1-ALL-EIGHT-MUTANTS-PUBLIC-MSA-TRANSFER-AUDIT-2026-10-26-v1.json",
+      "audit_script": "modules/rowan_observer/bbc1_public_msa_eight_mutant_validation.py",
+      "unit_tests": "modules/rowan_observer/test_bbc1_public_msa_eight_mutant_validation.py",
+      "frozen_six_preregistration": "data/rowan/protocols/ROWAN-BBC1-REMAINING-SIX-PUBLIC-MSA-PREREG-2026-10-26-v1.json",
+      "n_local_structural_confidence_WT": 1,
+      "n_local_mutation_cases": 8,
+      "all_real_gpu_run_exit_code_zero": true,
+      "all_public_alignment_sha256_verified": true,
+      "all_confidence_sha256_verified": true,
+      "per_residue_plddt_n_per_case": 64,
+      "mean_abs_rowan_minus_local_mutant_delta_ptm": 0.0023402124643325806,
+      "max_abs_rowan_minus_local_mutant_delta_ptm": 0.005254366874694827,
+      "mean_abs_rowan_minus_local_mutant_delta_plddt": 0.005849334359169012,
+      "max_abs_rowan_minus_local_mutant_delta_plddt": 0.008008821487426765,
+      "model": "local Boltz2 2.2.1",
+      "msa_source": "public api.colabfold.com",
+      "rowan_msa_source": "private Rowan service",
+      "performance_claim_scope": "DESCRIPTIVE_STRUCTURAL_METRIC_AGREEMENT_ON_8_PREVIOUSLY_KNOWN_BBC1_MUTATIONS_ONLY",
+      "independent_biological_or_prospective_validation": false,
+      "model_version_and_private_MSA_byte_equivalence": false,
+      "rising_accuracy_over_no_MSA_for_pTM": true,
+      "no_undisclosed_outcome_labels_used": true,
+      "new_paid_rowan_provider_workflows": 0,
+      "new_FireProt_210_jobs": 0,
+      "no_shadows_or_production_weights_modified": true
     }
   },
   "governance": {
@@ -276,7 +352,7 @@
     "new_model_production_promotion_authorized": false,
     "boltz2_weights_change_authorized": false,
     "independent_biological_validation_completed": false,
-    "next_step": "Before any 210 FireProt computation, independently recover the Rowan Boltz2 model revision/checkpoint, exact MSA, seed/sampling/inference parameters, and mapping of avg_lddt vs open Boltz2 complex_plddt. Repeat BBC1 paired WT+G53A bridge under matched conditions. Current local no-MSA pair is numerically non-equivalent. Keep external labels unopened and 210 blocked; no paid Rowan calls or model promotion.",
+    "next_step": "BBC1 local GPU/Msa bridge validated technically for WT+all 8 frozen mutations, with descriptive pTM delta MAE 0.00234, pLDDT delta MAE 0.00585. Do not interpret these as ΔΔG predictive accuracy. Independently certify original Rowan model weights/checkpoint/sampling/private MSA equivalence or devise a newly preregistered cross-provider portable feature transformation with untouched external holdout. FireProt 210 remains unauthorized until real predictor transfer is demonstrated; independent unseen experimental label custody still required. No paid jobs, no model promotion.",
     "claim_boundary": "Even a passing prospective benchmark would be evidence about quantitative assay prediction within sampled domains, not general protein fitness or self-improving AI."
   }
 }
