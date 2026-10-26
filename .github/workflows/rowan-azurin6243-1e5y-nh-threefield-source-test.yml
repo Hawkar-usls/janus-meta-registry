@@ -1,0 +1,39 @@
+name: JANUS Azurin 6243 independent two-temperature PDB NH NMR source gate
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "modules/rowan_observer/nmr_azurin6243_1e5y_structural_holdout.py"
+      - "modules/rowan_observer/test_nmr_azurin6243_1e5y_structural_holdout.py"
+      - "data/rowan/protocols/ROWAN-NMR-AZURIN6243-PDB1E5Y-PRE_FIT-500600-TO-800-2026-10-26-v1.json"
+      - ".github/workflows/rowan-azurin6243-1e5y-nh-threefield-source-test.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  source-identity-geometry-and-no-leakage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pinned public structural and numeric dependencies
+        run: python -m pip install --quiet --disable-pip-version-check 'pynmrstar==3.3.6' 'biopython==1.85' 'numpy>=1.26,<3' 'scipy>=1.11,<2'
+      - name: Verify 18 original field/observable tables, two temperatures and PDB peptide geometry
+        run: python -m unittest discover -v -s modules/rowan_observer -p 'test_nmr_azurin6243_1e5y_structural_holdout.py'
+      - name: Scientific firewall source check
+        run: |
+          python - <<'PY'
+          import json,pathlib
+          p=json.loads(pathlib.Path('data/rowan/protocols/ROWAN-NMR-AZURIN6243-PDB1E5Y-PRE_FIT-500600-TO-800-2026-10-26-v1.json').read_text())
+          assert p['measurements']['train_fields_MHz']==[500,600]
+          assert p['measurements']['test_field_MHz']==800
+          assert p['epistemic']['zero_new_rowan_jobs']
+          assert p['epistemic']['zero_new_rowan_credits']
+          print('JANUS_AZURIN=REAL_2_TEMPERATURES_1E5Y_NH_GEOMETRY_SOURCE_TESTS_PASS')
+          PY
