@@ -20,6 +20,7 @@ import sys
 ROOT=Path(__file__).resolve().parents[2]
 SOURCE=ROOT/"data/rowan/provenance/ROWAN-FN1-ISOLATED-FNII-PAIR-SMITH2000-ORIGINAL-15N-SI-2026-10-26-v1.json"
 PROTOCOL=ROOT/"data/rowan/protocols/ROWAN-FN1-NMR-T1-T2-NOE-TWOSCALE-FORWARD-EXPLORATORY-2026-10-26-v1.json"
+UNCERTAINTIES=ROOT/"data/rowan/provenance/ROWAN-FN1-SMITH2000-SI-10-ROW-T1-T2-DELTA-TRANSCRIPTION-2026-10-26-v1.json"
 FIELD_T=11.7
 MU0=4*pi*1e-7
 HBAR=1.054571817e-34
@@ -99,7 +100,21 @@ def read_real_subset():
         raise Hold("NMR_HAND_VERIFIED_POSITIONS_DRIFT")
     from fn1_tandem_pair_original_si_noe_gate import run as original_provenance_check
     original_provenance_check(data)
-    return rows
+    measurements=json.loads(UNCERTAINTIES.read_text(encoding="utf8"))
+    if (measurements["schema_id"]!="janus.fn1_Smith2000_tandem_original_si_subset_T1_T2_delta_transcription.v1"
+        or measurements["source_pdf_sha256"]!=SOURCE_SHA256):
+        raise Hold("UNCERTAINTIES_SOURCE_IDENTITY_DRIFT")
+    errs=measurements["delta_T1_T2_ms_by_author_residue"]
+    if len(errs)!=10 or len({r["si_residue"] for r in errs})!=10:
+        raise Hold("SOURCE_UNCERTAINTY_ROWS_DRIFT")
+    keyed={r["si_residue"]:r for r in errs}
+    if set(keyed)!={r["si_residue"] for r in rows}:
+        raise Hold("UNCERTAINTY_POSITION_MAPPING_DRIFT")
+    return [
+      {**r,"T1_uncertainty_ms":keyed[r["si_residue"]]["delta_T1_ms"],
+       "T2_uncertainty_ms":keyed[r["si_residue"]]["delta_T2_ms"]}
+      for r in rows
+    ]
 
 def score_single(row, rex_grid):
     # T1 and T2 alone are used to accept each model; NOE is an out-of-fit check.
