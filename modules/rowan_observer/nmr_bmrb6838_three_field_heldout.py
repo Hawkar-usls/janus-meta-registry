@@ -19,9 +19,6 @@ import statistics
 import sys
 import urllib.request
 
-import numpy as np
-import pynmrstar
-from scipy.optimize import least_squares
 from fn1_external_relax_bmrb_axial_csa_gate import rates as published_relax_compatible_rates
 
 ROOT=Path(__file__).resolve().parents[2]
@@ -59,6 +56,7 @@ def source_text(proto):
     return raw.decode("utf-8")
 
 def parse_all_nine_real_observables(star_text):
+    import pynmrstar  # optional and pinned in dedicated source workflow
     try: d=pynmrstar.Entry.from_string(star_text)
     except Exception as e: raise Hold("NMRSTAR_GRAMMAR_MISMATCH") from e
     if str(d.entry_id)!="6838":raise Hold("WRONG_BMRB_ACCESSION")
@@ -158,6 +156,8 @@ def predict_field(mhz,p,mode):
     return rate
 
 def train_one_residue(row,mode):
+    import numpy as np
+    from scipy.optimize import least_squares  # optional and pinned in science workflow
     cache=[(mhz,obs,row["data"][str(mhz)][obs]) for mhz in TRAIN for obs in OBS]
     def vector(p):
         vals={mhz:predict_field(mhz,p,mode) for mhz in TRAIN}
