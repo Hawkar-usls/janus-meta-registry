@@ -49,10 +49,20 @@ def generate_inputs(folder):
     for name,seq in seqs.items():
         dest=folder/(name+".yaml")
         b=yaml_payload(seq)
-        if dest.exists() and dest.read_bytes()!=b:
-            raise Hold("FROZEN_YAML_INPUT_WOULD_CHANGE_"+name)
-        if not dest.exists():dest.write_bytes(b)
-        records[name]={"sequence_sha256":sha(seq.encode()),"yaml_sha256":sha(b),"sequence_length":len(seq)}
+        if dest.exists():
+            actual=dest.read_bytes()
+            # Windows newline conversion is bytewise distinct but YAML-equivalent.
+            # Preserve the *actual* input hash: never rewrite an already used file.
+            if actual.replace(b"\r\n",b"\n")!=b:
+                raise Hold("FROZEN_YAML_INPUT_WOULD_CHANGE_"+name)
+        else:
+            dest.write_bytes(b)
+            actual=b
+        records[name]={"sequence_sha256":sha(seq.encode()),
+                       "yaml_sha256":sha(actual),
+                       "normalized_yaml_sha256":sha(b),
+                       "original_input_line_endings":"CRLF" if b"\r\n" in actual else "LF",
+                       "sequence_length":len(seq)}
     return records
 
 def confidence_score(blob):
