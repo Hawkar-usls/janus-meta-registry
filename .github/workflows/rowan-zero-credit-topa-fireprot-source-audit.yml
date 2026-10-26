@@ -1,0 +1,58 @@
+name: JANUS zero-credit TOPA and original FireProt identity audit
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/rowan-zero-credit-topa-fireprot-source-audit.yml"
+      - "modules/rowan_observer/rowan_1ey0_T8A_rounding_gate.py"
+      - "modules/rowan_observer/test_rowan_1ey0_T8A_rounding_gate.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: janus-zero-credit-topa-fireprot-source-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  provenance-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify TOPA arithmetic and fail-closed firewalls
+        run: |
+          python -m unittest discover -v -s modules/rowan_observer -p 'test_rowan_1ey0_T8A_rounding_gate.py'
+      - name: Audit real prior WT/T8A receipt without new predictions
+        run: |
+          python modules/rowan_observer/rowan_1ey0_T8A_rounding_gate.py \
+            --source data/rowan/provenance/ROWAN-1EY0-T8A-REAL-ROWAN-VS-LOCAL-MUTATION-DELTA-2026-10-26-v1.json \
+            --out "$RUNNER_TEMP/rowan-topa-1ey0-T8A-precision-audit.json"
+      - name: Download original author Zenodo ZIP (source only; no labels read)
+        run: |
+          curl --fail --location --silent --show-error --retry 3 --max-time 120 \
+            'https://zenodo.org/records/8169289/files/fireprot_upload.zip?download=1' \
+            --output "$RUNNER_TEMP/fireprot_upload.zip"
+          printf '%s  %s\n' 'b1403d86b43307f3a7dfc95ff6b72386c64068e8be1191bc7685d37bc8d654b2' "$RUNNER_TEMP/fireprot_upload.zip" | sha256sum --check --status
+          printf '%s  %s\n' '25cf04760665946b54b768eb7b6dfd1d' "$RUNNER_TEMP/fireprot_upload.zip" | md5sum --check --status
+      - name: Audit actual curated PDB bytes and all frozen mutation identities without reading labels
+        run: |
+          python modules/rowan_observer/fireprot_pdb_coordinate_identity_gate.py \
+            --manifest data/rowan/protocols/ROWAN-FIREPROT-HF-10X20-LABEL-FREE-INPUT-2026-10-26-v1.json \
+            --archive "$RUNNER_TEMP/fireprot_upload.zip" \
+            --out "$RUNNER_TEMP/rowan-fireprot-original-pdb-coordinate-audit.json"
+      - name: Preserve sanitized zero-credit science receipts (never archive raw ZIP)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-rowan-no-credit-science-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/rowan-topa-1ey0-T8A-precision-audit.json
+            ${{ runner.temp }}/rowan-fireprot-original-pdb-coordinate-audit.json
+          if-no-files-found: warn
+          retention-days: 14
