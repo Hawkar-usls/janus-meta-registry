@@ -40,7 +40,7 @@ def normalized(vec):
 
 def structural_theta(pdb_bytes, expected_sequence):
     import io
-    structure=MMCIFParser(QUIET=True).get_structure("azurin",io.StringIO(pdb_bytes.decode("utf-8"))))
+    structure=MMCIFParser(QUIET=True).get_structure("azurin",io.StringIO(pdb_bytes.decode("utf-8")))
     chain=structure[0]["A"]
     residues={r.id[1]:r for r in chain if r.id[0]==" "}
     if set(residues)!=set(range(1,129)):raise Hold("PDB_A_EXACT_128_RESIDUE_MAP_FAILED")
