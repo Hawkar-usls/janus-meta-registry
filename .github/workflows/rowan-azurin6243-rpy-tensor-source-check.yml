@@ -1,0 +1,43 @@
+name: JANUS Azurin 6243 RPY hydrodynamic tensor and NH source gates
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "modules/rowan_observer/nmr_azurin6243_rpy_rex_csa_nh_sensitivity.py"
+      - "modules/rowan_observer/test_nmr_azurin6243_rpy_rex_csa_nh_sensitivity.py"
+      - "data/rowan/protocols/ROWAN-AZURIN6243-RPY-HYDRODYNAMIC-CSA-REX-NH-SENSITIVITY-2026-10-26-v1.json"
+      - ".github/workflows/rowan-azurin6243-rpy-tensor-source-check.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  physical-rpy-and-provenance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install pinned NMR and PDB parsing packages
+        run: python -m pip install --quiet --disable-pip-version-check 'pynmrstar==3.3.6' 'biopython==1.85' 'numpy>=1.26,<3' 'scipy>=1.11,<2'
+      - name: Verify genuine PDB and BMRB inputs, PSD rigid RPY tensor, rotation covariance, and NOE firewalls
+        run: python -m unittest discover -v -s modules/rowan_observer -p 'test_nmr_azurin6243_rpy_rex_csa_nh_sensitivity.py'
+      - name: Validate immutable protocol and no paid inference
+        run: |
+          python - <<'PY'
+          import json,pathlib
+          p=json.loads(pathlib.Path("data/rowan/protocols/ROWAN-AZURIN6243-RPY-HYDRODYNAMIC-CSA-REX-NH-SENSITIVITY-2026-10-26-v1.json").read_text())
+          assert p["hydrodynamic_forward"]["bead_radii_A"]==[2.5,3.0,3.5]
+          assert p["fit_plan"]["training_fields_MHz"]==[500,600]
+          assert p["fit_plan"]["evaluation_field_MHz"]==800
+          assert p["scientific_firewalls"]["credits_spent"]==0
+          print("JANUS_RPY_GATES=SOURCE_INTEGRITY_ROTATIONAL_TENSOR_NO_800_FIT")
+          PY
