@@ -119,7 +119,9 @@ def audit(manifest_bytes,zip_bytes):
                 correct+=1
             # A portable Boltz single-chain WT requires exact coordinate chain
             # correspondence, not just a curated matching mutation index.
-            permitted=match_type=="SINGLE_CHAIN_EXACT"
+            expected_chain=dom.get("pdb_chain")
+            permitted=(match_type=="SINGLE_CHAIN_EXACT" and
+                       list(chains)==[expected_chain] and "X" not in pdb_concat)
             rows.append({
                 "pdb_id":pid,"frozen_pdb_member_sha256":digest(pb),
                 "expected_wt_sequence_sha256":digest(target.encode("ascii")),
@@ -129,6 +131,8 @@ def audit(manifest_bytes,zip_bytes):
                 "pdb_concatenated_length":len(pdb_concat),
                 "pdb_concatenated_sha256":digest(pdb_concat.encode("ascii")),
                 "curated_vs_coordinate_identity":match_type,
+                "expected_original_chain_id":expected_chain,
+                "chain_identity_attested":list(chains)==[expected_chain],
                 "frozen_20_mutation_sequences_verified":correct,
                 "safe_single_chain_boltz_wt_technical_pilot":permitted
             })
