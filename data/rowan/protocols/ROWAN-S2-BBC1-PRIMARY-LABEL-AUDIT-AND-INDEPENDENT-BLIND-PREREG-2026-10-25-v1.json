@@ -127,7 +127,7 @@
     }
   },
   "prospective_trial": {
-    "design_status": "HOLD_PUBLIC_MSA_3OF3_DIAGNOSTIC_PASS_ROWAN_PROVIDER_BYTEWISE_EQUIVALENCE_NOT_PROVEN_AND_TRUE_BLIND_MISSING",
+    "design_status": "PASS_LOCAL_BBC1_PUBLIC_MSA_8OF8_TECHNICAL_HOLD_PRIVATE_ROWAN_CONFIG_EQUIVALENCE_AND_PROSPECTIVE_HIDDEN_LABELS",
     "minimum_distinct_unrelated_protein_domains": 10,
     "minimum_variants_per_domain": 20,
     "minimum_total_variants": 200,
@@ -315,6 +315,35 @@
         "https://docs.rowansci.com/api/python/v3/workflows/protein-cofolding/",
         "https://www.rowansci.com/blog/boltz2-faq"
       ]
+    },
+    "local_bbc1_public_msa_full_assessment": {
+      "status": "PASS_TECHNICAL_9_OF_9_SOURCE_VERIFIED_PUBLIC_MSA_BBC1_COMPATIBILITY_EXPLORATORY",
+      "source_all_six": "data/rowan/provenance/ROWAN-BBC1-REMAINING-SIX-PUBLIC-MSA-REAL-CONFIDENCES-2026-10-26-v1.json",
+      "source_eight_summary": "data/rowan/provenance/ROWAN-BBC1-ALL-EIGHT-MUTANTS-PUBLIC-MSA-TRANSFER-AUDIT-2026-10-26-v1.json",
+      "audit_script": "modules/rowan_observer/bbc1_public_msa_eight_mutant_validation.py",
+      "unit_tests": "modules/rowan_observer/test_bbc1_public_msa_eight_mutant_validation.py",
+      "frozen_six_preregistration": "data/rowan/protocols/ROWAN-BBC1-REMAINING-SIX-PUBLIC-MSA-PREREG-2026-10-26-v1.json",
+      "n_local_structural_confidence_WT": 1,
+      "n_local_mutation_cases": 8,
+      "all_real_gpu_run_exit_code_zero": true,
+      "all_public_alignment_sha256_verified": true,
+      "all_confidence_sha256_verified": true,
+      "per_residue_plddt_n_per_case": 64,
+      "mean_abs_rowan_minus_local_mutant_delta_ptm": 0.0023402124643325806,
+      "max_abs_rowan_minus_local_mutant_delta_ptm": 0.005254366874694827,
+      "mean_abs_rowan_minus_local_mutant_delta_plddt": 0.005849334359169012,
+      "max_abs_rowan_minus_local_mutant_delta_plddt": 0.008008821487426765,
+      "model": "local Boltz2 2.2.1",
+      "msa_source": "public api.colabfold.com",
+      "rowan_msa_source": "private Rowan service",
+      "performance_claim_scope": "DESCRIPTIVE_STRUCTURAL_METRIC_AGREEMENT_ON_8_PREVIOUSLY_KNOWN_BBC1_MUTATIONS_ONLY",
+      "independent_biological_or_prospective_validation": false,
+      "model_version_and_private_MSA_byte_equivalence": false,
+      "rising_accuracy_over_no_MSA_for_pTM": true,
+      "no_undisclosed_outcome_labels_used": true,
+      "new_paid_rowan_provider_workflows": 0,
+      "new_FireProt_210_jobs": 0,
+      "no_shadows_or_production_weights_modified": true
     }
   },
   "governance": {
@@ -323,7 +352,7 @@
     "new_model_production_promotion_authorized": false,
     "boltz2_weights_change_authorized": false,
     "independent_biological_validation_completed": false,
-    "next_step": "Extend third-case predeclared MSA source-compatibility observations to remaining original six BBC1 pilot variants before making any general transfer claim. Record their raw MSA and confidence SHA, compare frozen original Rowan scores. Note Rowan uses private MSA, public MSA byte equivalence unavailable; DO NOT compute 210 FireProt variants or declare prospective blind or promote shadow model.",
+    "next_step": "BBC1 local GPU/Msa bridge validated technically for WT+all 8 frozen mutations, with descriptive pTM delta MAE 0.00234, pLDDT delta MAE 0.00585. Do not interpret these as ΔΔG predictive accuracy. Independently certify original Rowan model weights/checkpoint/sampling/private MSA equivalence or devise a newly preregistered cross-provider portable feature transformation with untouched external holdout. FireProt 210 remains unauthorized until real predictor transfer is demonstrated; independent unseen experimental label custody still required. No paid jobs, no model promotion.",
     "claim_boundary": "Even a passing prospective benchmark would be evidence about quantitative assay prediction within sampled domains, not general protein fitness or self-improving AI."
   }
 }
