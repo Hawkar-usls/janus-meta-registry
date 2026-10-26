@@ -46,7 +46,9 @@ def verify_six(six,inputs,outputs):
                 raise AuditHold("RESIDUE_MEAN_NOT_MATCH_"+mut)
         if len(rec["source"]["msa"])!=2:raise AuditHold("TWO_MSA_FILES_REQUIRED_"+mut)
         for f in rec["source"]["msa"]:
-            msa=base/"msa"/f["name"]
+            msa_candidates=list(base.rglob(f["name"]))
+            if len(msa_candidates)!=1:raise AuditHold("MSA_NOT_EXACTLY_ONE_"+mut)
+            msa=msa_candidates[0]
             check(mut+"_"+f["name"],msa,f["sha256"])
             if msa.stat().st_size!=f["bytes"]:raise AuditHold("MSA_SIZE_DRIFT")
         values.append({"mutation":mut,"ptm":raw["ptm"],"complex_plddt":raw["complex_plddt"],
