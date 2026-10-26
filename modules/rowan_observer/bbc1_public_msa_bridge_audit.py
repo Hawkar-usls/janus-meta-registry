@@ -33,12 +33,23 @@ CASES={
    },
    "rowan_ptm":.918,"rowan_avg_lddt":.968,
    "without_msa_ptm":.8305742740631104,"without_msa_plddt":.8682771921157837
+ },
+ "BBC1_G48D_MSA":{
+   "yaml_sha256":"5abe5f341b87ed685ec88b875d985afc22f110bf150a5deab6b119f559705570",
+   "confidence_sha256":"206d9d8f7e4f15654497522979a2b4557e92aeea99047be27fa6e9a89c50be09",
+   "plddt_npz_sha256":"afb180abd84bca002e194b1bad9ba1c7205e74ef290a597b007585d444b5141d",
+   "msa_sha256":{
+      "bfd.mgnify30.metaeuk30.smag30.a3m":"3b24020c01f106f917efff6f43907d5dfcd5e5506798c9b0f29292eb33927cc2",
+      "uniref.a3m":"9d3d21d71842394cb7328b4c57253fb4d13bc48daec4d5e5e71767dc1d121c91"
+   },
+   "rowan_ptm":.926,"rowan_avg_lddt":.971,
+   "without_msa_ptm":None,"without_msa_plddt":None
  }
 }
 ROWAN_SOURCE_RECEIPT="data/rowan/receipts/ROWAN-S2-40236409772-51508154de2623c0.json"
 OUTPUT_SOURCE="https://github.com/jwohlwend/boltz"
 SOURCE_BUILD="boltz==2.2.1;torch==2.12.1+cu126;python==3.12.15"
-EXPECTED_YAML_LABELS=("BBC1_WT_MSA","BBC1_G53A_MSA")
+EXPECTED_YAML_LABELS=("BBC1_WT_MSA","BBC1_G53A_MSA","BBC1_G48D_MSA")
 class AuditHold(ValueError):pass
 
 def sha_bytes(b):return hashlib.sha256(b).hexdigest()
@@ -97,8 +108,8 @@ def audit(inputs,outputs):
         b=out["BBC1_G53A_MSA"][metric]
         return b-a
     return {
-       "schema_id":"janus.rowan.bbc1.public_msa_real_two_case_bridge.v1",
-       "state":"PASS_LOCAL_BBC1_TWO_MSA_SOURCE_VERIFIED_METRIC_PROVIDER_EQUIVALENCE_HOLD",
+       "schema_id":"janus.rowan.bbc1.public_msa_real_three_case_bridge.v2",
+       "state":"PASS_LOCAL_BBC1_THREE_MSA_SOURCE_VERIFIED_METRIC_PROVIDER_EQUIVALENCE_HOLD",
        "source_rowan_receipt":ROWAN_SOURCE_RECEIPT,
        "source_model":SOURCE_BUILD,
        "model_provenance_status":"INTERNAL_BOLTZ2_CHECKPOINT_CRC_PASS_FULL_SERVER_ETAG_TO_LOCAL_SHA_RELATIONSHIP_OPEN",
@@ -112,7 +123,11 @@ def audit(inputs,outputs):
           "local_no_msa_delta_ptm":.8305742740631104-.9174146056175232,
           "rowan_delta_avg_lddt":.968-.963,
           "local_msa_delta_complex_plddt":delta("complex_plddt"),
-          "local_no_msa_delta_complex_plddt":.8682771921157837-.965494692325592
+          "local_no_msa_delta_complex_plddt":.8682771921157837-.965494692325592,
+          "g48d_rowan_delta_ptm":.926-.927,
+          "g48d_local_msa_delta_ptm":out["BBC1_G48D_MSA"]["ptm"]-out["BBC1_WT_MSA"]["ptm"],
+          "g48d_rowan_delta_avg_lddt":.971-.963,
+          "g48d_local_msa_delta_complex_plddt":out["BBC1_G48D_MSA"]["complex_plddt"]-out["BBC1_WT_MSA"]["complex_plddt"]
        },
        "scientific_guard":{
           "source_MSAs_bytewise_matched_to_private_rowan":False,
