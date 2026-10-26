@@ -127,7 +127,7 @@
     }
   },
   "prospective_trial": {
-    "design_status": "PUBLIC_FIREPROT_200_INPUT_PINNED_NO_SOURCE_BOLTZ2_FEATURES_CUSTODIAN_OPEN_TRUE_BLIND_NOT_STARTED",
+    "design_status": "HOLD_LOCAL_STRUCTURAL_BRIDGE_METRIC_NON_EQUIVALENCE_TO_ROWAN_AND_NO_TRUE_BLIND_CUSTODIAN",
     "minimum_distinct_unrelated_protein_domains": 10,
     "minimum_variants_per_domain": 20,
     "minimum_total_variants": 200,
@@ -229,7 +229,10 @@
       "BOLTZ2_210_SOURCE_SCORE_RECEIPTS_MISSING",
       "PREDICTION_RECEIPT_200_SHADOW_MISSING",
       "PUBLIC_HISTORIC_DATA_NOT_GENUINE_PROSPECTIVE_BLIND",
-      "BOLTZ2_TRAINING_DATA_LEAKAGE_AUDIT_OPEN"
+      "BOLTZ2_TRAINING_DATA_LEAKAGE_AUDIT_OPEN",
+      "LOCAL_BBC1_WT_G53A_REAL_GPU_RESULT_PASS",
+      "OLD_ROWAN_VS_LOCAL_METRIC_DELTA_NON_EQUIVALENT",
+      "FIREPROT_210_INFERENCE_BLOCKED_BY_UNPROVEN_METRIC_MAPPING"
     ],
     "fireprot_feature_readiness": {
       "status": "HOLD_NO_PROSPECTIVE_BLIND_OR_210_MATCHED_SOURCE_FEATURES",
@@ -250,6 +253,21 @@
       "source_boltz_documentation": "https://api.boltz.bio/docs/api/guides/predictions/",
       "publication_sign_reference": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7778887/",
       "status_reason": "Input frozen and 200 zero reference values frozen; RTX2070 CUDA found but no installed Boltz2, original Rowan avg_lddt equivalence unproven, no real 210 model score results, per-assay sign and independent new-label custodian unverified"
+    },
+    "local_bbc1_boltz2_bridge": {
+      "technical_status": "PASS_2_REAL_BBC1_WT_AND_G53A_GPU_INFERENCES",
+      "scientific_status": "HOLD_ROWAN_METRIC_AND_MODEL_MSA_EQUIVALENCE_NOT_ESTABLISHED",
+      "report": "data/rowan/provenance/ROWAN-BBC1-LOCAL-BOLTZ2-WT-G53A-OBSERVED-PAIR-2026-10-26-v1.json",
+      "prior_rowan_delta_ptm": -0.009000000000000008,
+      "local_boltz2_delta_ptm": -0.08684033155441284,
+      "prior_rowan_delta_avg_lddt": 0.0050000000000000044,
+      "local_boltz2_delta_complex_plddt": -0.09721750020980835,
+      "reason": "Local Boltz2 2.2.1 single-sequence MSA-free settings produce a much larger mutant effect and reverse the candidate lDDT sign relative to Rowan. Original Rowan model revision, MSA and normalization unavailable.",
+      "source_sha256_reported_real_confidence_files": true,
+      "gpu": "NVIDIA GeForce RTX 2070 SUPER 8 GB",
+      "paid_rowan_jobs": 0,
+      "provider_metric_equivalence": false,
+      "fireprot_210_authorized": false
     }
   },
   "governance": {
@@ -258,7 +276,7 @@
     "new_model_production_promotion_authorized": false,
     "boltz2_weights_change_authorized": false,
     "independent_biological_validation_completed": false,
-    "next_step": "Implement and validate a no-cost single-chain Boltz2 smoke test on authorized CUDA hardware if resource limits allow, using a frozen BBC1 WT+variant feature-equivalence bridge first. Do NOT run 210 simulations until model/version normalization and no-cost hardware verified. Independently obtain unpublished prospective experimental results held by outside signatory; never mark existing public FireProt labels as truly blind. Do not change frozen S2 model, and no paid Rowan submissions.",
+    "next_step": "Before any 210 FireProt computation, independently recover the Rowan Boltz2 model revision/checkpoint, exact MSA, seed/sampling/inference parameters, and mapping of avg_lddt vs open Boltz2 complex_plddt. Repeat BBC1 paired WT+G53A bridge under matched conditions. Current local no-MSA pair is numerically non-equivalent. Keep external labels unopened and 210 blocked; no paid Rowan calls or model promotion.",
     "claim_boundary": "Even a passing prospective benchmark would be evidence about quantitative assay prediction within sampled domains, not general protein fitness or self-improving AI."
   }
 }
