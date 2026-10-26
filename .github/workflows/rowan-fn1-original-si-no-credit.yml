@@ -1,0 +1,35 @@
+name: JANUS Rowan FNII original Smith2000 NMR SI no-credit audit
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "data/rowan/provenance/ROWAN-FN1-ISOLATED-FNII-PAIR-SMITH2000-ORIGINAL-15N-SI-2026-10-26-v1.json"
+      - "modules/rowan_observer/fn1_tandem_pair_original_si_noe_gate.py"
+      - "modules/rowan_observer/test_fn1_tandem_pair_original_si_noe_gate.py"
+      - ".github/workflows/rowan-fn1-original-si-no-credit.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  source-verified-relaxation-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Eight independent no-network numeric/source identity checks
+        run: python -m unittest discover -v -s modules/rowan_observer -p 'test_fn1_tandem_pair_original_si_noe_gate.py'
+      - name: Produce sanitized descriptive non-NOESY NMR receipt
+        run: python modules/rowan_observer/fn1_tandem_pair_original_si_noe_gate.py > fn1-smith2000-noe-receipt.json
+      - name: Archive computed receipt, without downloaded publisher PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: fn1-smith2000-original-noe-${{ github.run_id }}
+          path: fn1-smith2000-noe-receipt.json
+          retention-days: 14
