@@ -13,7 +13,7 @@ def writefixture(base):
     inp=base/"inputs";out=base/"outputs"
     inp.mkdir();out.mkdir()
     cases={}
-    for mutant in ("BBC1_WT_MSA","BBC1_G53A_MSA"):
+    for mutant in ("BBC1_WT_MSA","BBC1_G53A_MSA","BBC1_G48D_MSA"):
         b=f"sequences:\n  - protein:\n      id: A\n      sequence: ABCDEFGH\n".encode()
         (inp/(mutant+".yaml")).write_bytes(b)
         root=out/("boltz_results_"+mutant)
@@ -44,7 +44,7 @@ class ActualOutputsMandatory(unittest.TestCase):
             a,b,c=writefixture(d)
             with mock.patch.object(m,"CASES",c):
                 got=m.audit(a,b)
-            self.assertTrue(got["state"].startswith("PASS_LOCAL_BBC1_TWO_MSA"))
+            self.assertTrue(got["state"].startswith("PASS_LOCAL_BBC1_THREE_MSA"))
             self.assertFalse(got["scientific_guard"]["source_MSAs_bytewise_matched_to_private_rowan"])
             self.assertEqual(got["scientific_guard"]["FireProt_210_compute_gate"],"HOLD_DO_NOT_RUN")
     def test_missing_confidence_file_holds(self):
