@@ -1,0 +1,54 @@
+name: JANUS Rowan FN1 independent relax BMRB axial CSA validation
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "modules/rowan_observer/fn1_external_relax_bmrb_axial_csa_gate.py"
+      - "modules/rowan_observer/test_fn1_external_relax_bmrb_axial_csa_gate.py"
+      - "data/rowan/protocols/ROWAN-FN1-INDEPENDENT-RELAX-BMRB6470-AXIAL-CSA-GATES-2026-10-26-v1.json"
+      - ".github/workflows/rowan-fn1-relax-bmrb-axial-csa-zero-credit.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  external-physics-reference-and-source-data:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Test independent upstream relax numerical fixture and 600MHz BMRB source
+        run: python -m unittest discover -v -s modules/rowan_observer -p 'test_fn1_external_relax_bmrb_axial_csa_gate.py'
+      - name: Calculate reference, real external deposition and theoretical sensitivities
+        run: python modules/rowan_observer/fn1_external_relax_bmrb_axial_csa_gate.py > fn1-external-relax-bmrb-anisotropy-csa.json
+      - name: Verify no multi-field experiment or inferred angular ensemble
+        run: |
+          python - <<'PY'
+          import json
+          p="fn1-external-relax-bmrb-anisotropy-csa.json"
+          a=json.load(open(p,encoding="utf8"))
+          assert a["scientific_limits"]["BMRB_6470_is_600MHz_only"]
+          assert a["scientific_limits"]["no_new_Rowan_credits"]==0
+          assert a["scientific_limits"]["no_new_Rowan_jobs"]==0
+          assert len(a["external_software_numerical_comparison"])==3
+          assert a["axial_CSA_theoretical_sensitivity_not_FN1_fitted"]["cases_count"]==81
+          for x in a["external_software_numerical_comparison"]:
+              assert x["PASS_independent_external_reference"]
+          print("JANUS_INDEPENDENT_RELAX_PHYSICS=PASS_3_FIELDS_0_CREDITS")
+          for k,v in a["BMRB_data"]["real_measured_values"].items():
+              print("BMRB_6470_REAL_600MHZ",k,"n=",v["n_common_residues"],
+                    "replicate_abs_diff_median=",v["median_absolute_difference_between_two_600MHz_sets"])
+          print("JANUS_FNI_ANISO_CSA_THEORY=PASS_81_CASES_NOT_FN1_FITTED")
+          PY
+      - name: Archive real source-audited numeric receipt without secrets
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-fn1-independent-relax-bmrb-axial-csa-${{ github.run_id }}
+          path: fn1-external-relax-bmrb-anisotropy-csa.json
+          retention-days: 14
+          if-no-files-found: error
