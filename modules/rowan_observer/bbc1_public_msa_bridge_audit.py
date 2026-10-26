@@ -73,8 +73,9 @@ def one_case(inputs,outputs,case):
     if abs(mean-float(score["complex_plddt"]))>1e-7:
         raise AuditHold("PLDDT_MEAN_NOT_COMPLEX_PLDDT")
     msa={}
+    scope=conf.parents[2]  # matching Boltz experiment root, not both sibling runs
     for basename,hash_ in spec["msa_sha256"].items():
-        matches=list(Path(outputs).rglob(basename))
+        matches=list(scope.rglob(basename))
         if len(matches)!=1:raise AuditHold("MSA_PATH_NOT_UNIQUE_"+basename)
         p=check_file_sha(matches[0],hash_,"MSA_"+case+"_"+basename)
         msa[basename]={"sha256":hash_,"bytes":p.stat().st_size}
