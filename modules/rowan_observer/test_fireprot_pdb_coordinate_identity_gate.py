@@ -64,7 +64,7 @@ class FireProtPDBIdentity(unittest.TestCase):
         self.assertEqual(out["pdbs"][0]["curated_vs_coordinate_identity"],"AUTHOR_PDB_SEQUENCE_NOT_EXACT_COORDINATE_MAP")
         self.assertFalse(out["pdbs"][0]["safe_single_chain_boltz_wt_technical_pilot"])
     def test_unexpected_chain_fails_identity(self):
-        m,a=fixture(lambda content:content.replace(b" A",b" B"))
+        m,a=fixture(lambda content:b"\n".join(line[:21]+b"B"+line[22:] for line in content.splitlines())+b"\n")
         out=checked(m,a)
         self.assertFalse(out["pdbs"][0]["safe_single_chain_boltz_wt_technical_pilot"])
     def test_pdb_hash_drift_blocks(self):
