@@ -63,6 +63,14 @@ class TestSyncWitness(unittest.TestCase):
         d,raw=mock_inputs();d["genesis"]["authority"]["rowanJobs"]=True
         with self.assertRaisesRegex(m.Hold,"GENESIS_SOURCE_AUTHORITY_HOLD"):
             m.verify(d,raw)
+    def test_source_sha_must_be_lowercase_hex(self):
+        d,raw=mock_inputs();d["canonical"]["underlying_state_is_derived_from"]="z"*64
+        with self.assertRaisesRegex(m.Hold,"ROWAN_SOURCE_SHA_HOLD"):
+            m.verify(d,raw)
+    def test_permitted_prefix_does_not_authorize_child_path(self):
+        for path in (m.URLS["canonical"]+"/private.json", m.URLS["tranception"]+"/extra", m.URLS["pointer"]+"?raw=1"):
+            with self.subTest(path=path), self.assertRaisesRegex(m.Hold,"SOURCE_URL_NOT_ALLOWLISTED"):
+                m.fetch(path)
     def test_unapproved_uri_rejected_without_network(self):
         with self.assertRaisesRegex(m.Hold,"SOURCE_URL_NOT_ALLOWLISTED"):
             m.fetch("Hawkar-usls/janus-meta-registry/main/../../private")
