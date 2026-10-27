@@ -1,0 +1,22 @@
+name: JANUS Field Paradigm 5D Source Integrity
+on:
+  pull_request:
+    paths:
+      - 'registry/p_vs_np/JANUS_FIELD_PARADIGM_*'
+      - 'registry/p_vs_np/sources/JANUS_FIELD_PARADIGM_*'
+      - 'tools/validate_field_paradigm_5d.py'
+      - '.github/workflows/field-paradigm-5d.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate-source-bound-5d:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify source-bound 5D source and micro-pass graph
+        run: python tools/validate_field_paradigm_5d.py
