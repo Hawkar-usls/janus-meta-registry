@@ -46,7 +46,7 @@ def verify():
         val = json_pointer(source, leaf["pointer"])
         kind = "missing_null" if val is None else type(val).__name__
         assert kind == leaf["kind"] or (kind == "str" and leaf["kind"] == "string") or (
-            kind == "int" and leaf["kind"] == "number"
+            kind in ("int", "float") and leaf["kind"] == "number"
         ) or (kind == "bool" and leaf["kind"] == "boolean")
     allowed = {"RETAIN", "SPLIT", "WEAKEN", "PROMOTE", "REPLACE", "KEEP_PARALLEL"}
     required = [
