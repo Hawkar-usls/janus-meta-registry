@@ -38,7 +38,7 @@ def sha_obj(x):
  return hashlib.sha256(json.dumps(x,sort_keys=True,separators=(",",":"),ensure_ascii=False,allow_nan=False).encode()).hexdigest()
 
 def fetch(path):
- if not path.startswith(tuple(URLS.values())) and path != META+"data/rowan/coordination/LATEST_COORDINATION_STATE.json" and not (path.startswith(META) and RECEIPT.fullmatch(path[len(META):])):
+ if path not in URLS.values() and not (path.startswith(META) and RECEIPT.fullmatch(path[len(META):])):
   raise Hold("SOURCE_URL_NOT_ALLOWLISTED")
  with urlopen(Request(RAW+path,headers={"User-Agent":"JANUS-ROWAN-ECOSYSTEM-WITNESS/1"}),timeout=25) as response:
   body=response.read(MAX_FILE+1)
@@ -66,7 +66,7 @@ def verify(data,raw):
  run=m.get("latest_durable_external_run");count=m.get("last_completed_mutants")
  require(type(run) is int and run>0 and type(count) is int and count==8,"ROWAN_PILOT_NOT_ATTESTED")
  source=m.get("underlying_state_is_derived_from")
- require(isinstance(source,str) and len(source)==64,"ROWAN_SOURCE_SHA_HOLD")
+ require(isinstance(source,str) and re.fullmatch(r"[0-9a-f]{64}",source) is not None,"ROWAN_SOURCE_SHA_HOLD")
  require(p.get("latest_archived_source_run")==run and p.get("latest_completed_source_run")==run and p.get("completed_mutants")==count and p.get("archive_status")=="ARCHIVE_CURRENT","ROWAN_ARCHIVE_LAG_HOLD")
  require(p.get("credit_cap_violations")==[] and p.get("science_gates",{}).get("new_billing_authorized_by_watchdog") is False,"ROWAN_BUDGET_AUTHORITY_HOLD")
  require(p.get("science_gates",{}).get("model_production_promotion") is False and p.get("science_gates",{}).get("wetlab_independent_validation")=="OPEN","ROWAN_SCIENCE_AUTHORITY_HOLD")
