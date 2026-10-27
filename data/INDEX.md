@@ -95,6 +95,10 @@ For historical executable-code risks, use [`../docs/RUNTIME_SOURCE_TRIAGE_2026-0
 
 ## 3. Useful conceptual design patterns
 
+### Искусство невидимых отличий / The Art of Invisible Differences
+
+- [`JANUS-INVISIBLE-DIFFERENCES-AESTHETICS-2026-10-28-v1.0.json`](JANUS-INVISIBLE-DIFFERENCES-AESTHETICS-2026-10-28-v1.0.json) — философско-эстетическая онтология тонкой персональной кастомизации: 5D-спираль, типология, методология проверки HCI, граница между личной ценностью и функциональной пользой, предлагаемые связи HRAiN/iNaiHR/Tranception/LAPIS. **Концептуальная запись, не эмпирический результат и не доказательство P vs NP.**
+
 ### Observation-chain / evidence-ledger design
 
 - [`JANUS-BITCOIN-WHITEPAPER-INVERSION-LEDGER-SIGNAL-v1.0.json`](JANUS-BITCOIN-WHITEPAPER-INVERSION-LEDGER-SIGNAL-v1.0.json)
