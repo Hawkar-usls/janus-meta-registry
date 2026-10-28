@@ -204,6 +204,53 @@ def artifact(run_id):
         raise EvidenceHold("ARTIFACT_JSON_INVALID") from exc
 
 
+def audit_existing_receipts(root, latest_run):
+    """Recheck every retained receipt, not just the latest checkpoint."""
+    folder = root / ROOT_REL / "receipts"
+    fail(folder.is_dir(), "ARCHIVE_HISTORY_FOLDER_MISSING")
+    names = sorted(folder.glob("ROWAN-BBC1-WT-K5A-*.json"))
+    fail(0 < len(names) <= 10000, "ARCHIVE_HISTORY_COUNT_INVALID")
+    seen = set()
+    greatest = 0
+    for path in names:
+        match = re.fullmatch(
+            r"ROWAN-BBC1-WT-K5A-([1-9][0-9]*)-([0-9a-f]{16})[.]json",
+            path.name,
+        )
+        fail(match is not None and path.is_file()
+             and 0 < path.stat().st_size <= MAX_BYTES,
+             "ARCHIVE_RECEIPT_FILE_IDENTITY_INVALID")
+        source_run = int(match.group(1))
+        raw = path.read_bytes()
+        fail(hashlib.sha256(raw).hexdigest().startswith(match.group(2)),
+             "ARCHIVE_HISTORIC_RECEIPT_HASH_DRIFT")
+        try:
+            obj = json.loads(raw.decode("utf-8"))
+        except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+            raise EvidenceHold("ARCHIVE_HISTORIC_RECEIPT_JSON_INVALID") from exc
+        source = obj.get("source")
+        fail(isinstance(source, dict)
+             and source.get("repo") == SOURCE_REPO
+             and source.get("workflow_file") == WORKFLOW_FILE
+             and source.get("run_id") == source_run
+             and source.get("run_link") == (
+                 f"https://github.com/{SOURCE_REPO}/actions/runs/{source_run}")
+             and type(source.get("head_sha")) is str
+             and SHA.fullmatch(source["head_sha"])
+             and type(source.get("artifact_sha256")) is str
+             and DIGEST.fullmatch(source["artifact_sha256"])
+             and obj.get("schema_id") in {
+                 "janus.rowan.bbc1.structural_status_archive.v1",
+                 "janus.rowan.bbc1.legacy_schema_evidence_hold.v1",
+             }
+             and obj.get("science_gates", {}).get("new_spend_authorized") is False,
+             "ARCHIVE_HISTORIC_SOURCE_OR_AUTHORITY_DRIFT")
+        fail(source_run not in seen, "ARCHIVE_DUPLICATE_SOURCE_RUN")
+        seen.add(source_run)
+        greatest = max(greatest, source_run)
+    fail(greatest == latest_run, "ARCHIVE_HISTORY_CHECKPOINT_NOT_MAXIMUM")
+
+
 def previous(root):
     p = root / ROOT_REL / "LATEST.json"
     if not p.exists():
@@ -224,6 +271,7 @@ def previous(root):
          "PREVIOUS_RECEIPT_INTEGRITY_HOLD")
     r = json.loads(receipt.read_text(encoding="utf-8"))
     fail(r.get("source", {}).get("run_id") == rid, "PREVIOUS_SOURCE_MISMATCH")
+    audit_existing_receipts(root, rid)
     return rid
 
 
