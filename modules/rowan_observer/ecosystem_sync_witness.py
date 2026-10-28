@@ -28,8 +28,11 @@ URLS = {
  "genesis": "Hawkar-usls/Janus_Genesis/main/.janus/ROWAN_RESEARCH_SOURCE_LINK.json",
  "topa_repo": "Hawkar-usls/TOPA/main/.janus/ROWAN_INDEPENDENT_SOURCE_LINK.json",
  "tranception": "Hawkar-usls/Janus/main/integrations/tranception_rowan/discovery_manifest.json",
+ "cosmos": "Hawkar-usls/Janus-Cosmos/main/data/integrations/rowan/LATEST.json",
 }
 RECEIPT = re.compile(r"^data/rowan/coordination/receipts/ROWAN-COUNCIL-\d+-[0-9a-f]{16}\.json$")
+COSMOS_BASE = "Hawkar-usls/Janus-Cosmos/main/"
+COSMOS_RECEIPT = re.compile(r"^data/integrations/rowan/receipts/COSMOS-ROWAN-\d+-[0-9a-f]{16}\.json$")
 MAX_FILE = 96_000
 
 class Hold(ValueError): pass
@@ -38,7 +41,7 @@ def sha_obj(x):
  return hashlib.sha256(json.dumps(x,sort_keys=True,separators=(",",":"),ensure_ascii=False,allow_nan=False).encode()).hexdigest()
 
 def fetch(path):
- if not path.startswith(tuple(URLS.values())) and path != META+"data/rowan/coordination/LATEST_COORDINATION_STATE.json" and not (path.startswith(META) and RECEIPT.fullmatch(path[len(META):])):
+ if path not in URLS.values() and not (path.startswith(META) and RECEIPT.fullmatch(path[len(META):])) and not (path.startswith(COSMOS_BASE) and COSMOS_RECEIPT.fullmatch(path[len(COSMOS_BASE):])):
   raise Hold("SOURCE_URL_NOT_ALLOWLISTED")
  with urlopen(Request(RAW+path,headers={"User-Agent":"JANUS-ROWAN-ECOSYSTEM-WITNESS/1"}),timeout=25) as response:
   body=response.read(MAX_FILE+1)
@@ -54,6 +57,12 @@ def load_public():
   raise Hold("UNTRUSTED_COORDINATION_RECEIPT_PATH")
  raw["receipt"]=fetch(META+path)
  parsed["receipt"]=json.loads(raw["receipt"])
+ cosmos=parsed["cosmos"]
+ cosmos_receipt=cosmos.get("receipt_path") if isinstance(cosmos,dict) else None
+ if not isinstance(cosmos_receipt,str) or not COSMOS_RECEIPT.fullmatch(cosmos_receipt):
+  raise Hold("UNTRUSTED_COSMOS_RECEIPT_PATH")
+ raw["cosmos_receipt"]=fetch(COSMOS_BASE+cosmos_receipt)
+ parsed["cosmos_receipt"]=json.loads(raw["cosmos_receipt"])
  return parsed,raw
 
 def require(test,reason):
@@ -94,10 +103,46 @@ def verify(data,raw):
  require(genesis.get("schema")=="janus.genesis.rowan_evidence_source_link.v1" and all(v is False for v in genesis.get("authority",{}).values()),"GENESIS_SOURCE_AUTHORITY_HOLD")
  require(topa_repo.get("schema")=="janus.topa.rowan_independent_replay_source_link.v1" and all(v is False for v in topa_repo.get("authority",{}).values()),"TOPA_REPO_AUTHORITY_HOLD")
  require(data["tranception"].get("schema_id")=="janus.tranception.rowan.discovery_manifest.v1","TRANCEPTION_LINK_HOLD")
+ cosmos=data["cosmos"];cr=data["cosmos_receipt"]
+ require(cosmos.get("schema_id")=="janus.cosmos.rowan_latest_witness.v1" and
+         cr.get("schema_id")=="janus.cosmos.rowan_cross_domain_evidence_witness.v1" and
+         cosmos.get("status")=="PASS_READ_ONLY_SOURCE_BOUND_REPLAY" and
+         cr.get("status")==cosmos["status"],"COSMOS_WITNESS_SCHEMA_OR_STATUS_HOLD")
+ require(cosmos.get("canonical_rowan_run")==run and
+         cr.get("canonical_rowan_run")==run and
+         cr.get("completed_mutants")==count and
+         cosmos.get("observation_key")==cr.get("observation_key") and
+         cr.get("coordination_receipt")==pointer["receipt_path"] and
+         cr.get("coordination_source_binding_sha256")==rs and
+         cr.get("source_artifact_sha256")==source, "COSMOS_CANONICAL_OR_COORDINATION_DRIFT")
+ require(cosmos.get("cosmos_domain_transfer")=="PROTOCOL_AND_PROVENANCE_ONLY" and
+         cr.get("cosmos_domain_transfer")=="PROTOCOL_AND_PROVENANCE_ONLY" and
+         cr.get("authority")=="OBSERVE_AND_ARCHIVE_ONLY" and
+         cr.get("astronomical_physical_evidence") is False and
+         cr.get("protein_fitness_or_ddg_established") is False and
+         cr.get("cosmos_earth_space_ocean_bhb_osiris_gates_modified") is False and
+         cr.get("rowan_provider_jobs_created")==0 and
+         cr.get("rowan_credits_spent")==0, "COSMOS_SCIENCE_OR_CREDIT_AUTHORITY_HOLD")
+ source_map={"canonical":"canonical","aura":"aura","demiurge":"council",
+             "coordination":"pointer","receipt":"receipt","topa":"topa","shadow":"shadow"}
+ hashes=cr.get("source_sha256")
+ require(isinstance(hashes,dict) and set(hashes)==set(source_map),"COSMOS_SOURCE_SET_DRIFT")
+ for cosmos_name,local_name in source_map.items():
+  require(hashes[cosmos_name]==hashlib.sha256(raw[local_name]).hexdigest(),
+          "COSMOS_SOURCE_DIGEST_DRIFT_"+cosmos_name.upper())
+ observation=hashlib.sha256(json.dumps(hashes,sort_keys=True,separators=(",",":")).encode()).hexdigest()
+ require(cr.get("observation_key")==observation and
+         COSMOS_RECEIPT.fullmatch(cosmos.get("receipt_path","")) is not None and
+         cosmos["receipt_path"].endswith("-"+observation[:16]+".json"),
+         "COSMOS_IMMUTABLE_POINTER_DRIFT")
+ require(cr.get("topa",{}).get("audit")==topa.get("audit") and
+         cr["topa"].get("promotion_gate")=="SHADOW_ONLY" and
+         cr["topa"].get("test_mae")==topa.get("test_mae_independent"),
+         "COSMOS_TOPA_REPLAY_DRIFT")
  return {"schema":"janus.rowan.ecosystem_sync_witness.v1",
          "status":"PASS_PUBLIC_SOURCE_BINDINGS_NOT_SCIENCE_VALIDATION",
          "canonicalRun":run,"completedMutants":count,"sourceArtifactSha256":source,
-         "coordinationSha256":rs,"linkedConsumers":["Meta Registry","TOPA numerical replay","AURA","Demiurge","Universal Beetle","HRAiN","iNaiHR","Genesis","Tranception"],
+         "coordinationSha256":rs,"linkedConsumers":["Meta Registry","TOPA numerical replay","AURA","Demiurge","Universal Beetle","HRAiN","iNaiHR","Genesis","Tranception","Cosmos"],
          "newRowanJobs":False,"creditsSpentByWitness":0,
          "independentWetlab":"OPEN","modelProductionPromotion":False,
          "privateGraphInspected":False,"productionAutonomyAuthorized":False}
