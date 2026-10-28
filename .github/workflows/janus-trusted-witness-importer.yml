@@ -1,0 +1,87 @@
+name: JANUS Trusted External Witness Importer
+
+on:
+  schedule:
+    - cron: '53 * * * *'
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'modules/witness_importer/**'
+      - 'tests/test_witness_importer.py'
+      - '.github/workflows/janus-trusted-witness-importer.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'modules/witness_importer/**'
+      - 'tests/test_witness_importer.py'
+      - '.github/workflows/janus-trusted-witness-importer.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: janus-trusted-witness-importer
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check Python syntax
+        run: python -m py_compile modules/witness_importer/bridge.py tests/test_witness_importer.py
+      - name: Test provenance, threshold, SHA, rollback, dedup and authority boundaries
+        run: python -m unittest discover -s tests -p test_witness_importer.py -v
+
+  import:
+    if: github.event_name != 'pull_request'
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Capture external source evidence into append-only Meta Registry receipts
+        env:
+          GH_TOKEN: ${{ github.token }}
+          WITNESS_PRIVATE_READ_TOKEN: ${{ secrets.JANUS_WITNESS_PRIVATE_READ_TOKEN }}
+        run: python modules/witness_importer/bridge.py --root .
+      - name: Trusted Meta Registry write only (no witness permissions)
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'JANUS Trusted Witness Importer'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/witness_importer/
+          if git diff --cached --quiet; then
+            echo 'WITNESS_IMPORTER=IDEMPOTENT_NO_CHANGE'
+            exit 0
+          fi
+          git commit -m 'JANUS: archive external witness source evidence'
+          for attempt in 1 2 3 4; do
+            git fetch origin main
+            if ! git rebase origin/main; then
+              git rebase --abort || true
+              echo 'WITNESS_IMPORTER=CONFLICT_HOLD'
+              exit 1
+            fi
+            if git push origin HEAD:main; then
+              echo 'WITNESS_IMPORTER=ARCHIVE_COMMITTED'
+              exit 0
+            fi
+            sleep "$attempt"
+          done
+          echo 'WITNESS_IMPORTER=PUSH_FAILED'
+          exit 1
