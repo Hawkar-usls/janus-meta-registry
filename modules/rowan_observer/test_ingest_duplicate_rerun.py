@@ -30,6 +30,17 @@ def checkpoint(root, run_id=40593272360):
 
 
 class IdempotentArchiveTest(unittest.TestCase):
+    def test_fail_closed_hold_code_is_diagnostic_only(self):
+        self.assertEqual(m.safe_hold_code(m.EvidenceHold("MATCHING_UNEXPIRED_ARTIFACT_NOT_UNIQUE")),
+                         "MATCHING_UNEXPIRED_ARTIFACT_NOT_UNIQUE")
+        self.assertEqual(m.safe_hold_code(m.EvidenceHold("GITHUB_HISTORY_BEHIND_DURABLE_CHECKPOINT")),
+                         "GITHUB_HISTORY_BEHIND_DURABLE_CHECKPOINT")
+
+    def test_hold_code_does_not_echo_untrusted_data(self):
+        for detail in ("https://private.example/?token=secret", "problem/path.json",
+                       "token=SECRET", "", "bad\\nGITHUB_TOKEN=SECRET"):
+            self.assertEqual(m.safe_hold_code(m.EvidenceHold(detail)), "UNCLASSIFIED_HOLD")
+
     def test_old_duplicate_attempt_is_not_reopened(self):
         with tempfile.TemporaryDirectory() as t:
             checkpoint(t)
