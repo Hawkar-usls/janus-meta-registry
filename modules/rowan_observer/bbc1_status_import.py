@@ -243,7 +243,25 @@ def update(root, runs, retrieve=artifact, limit=12):
         payload, raw_digest = retrieve(r["id"])
         print("ROWAN_BBC1_SOURCE_RUN=" + str(r["id"]))
         print("ROWAN_BBC1_SOURCE_ARTIFACT_SHA256_PREFIX=" + raw_digest[:16])
-        data = validate(payload)
+        try:
+            data = validate(payload)
+        except EvidenceHold as exc:
+            # Legacy collector artifacts without all v2 attestations can
+            # preserve a SHA-bound, data-free HOLD; they never become science.
+            if str(exc) != "UNEXPECTED_PAYLOAD_FIELDS":
+                raise
+            data = {
+                "schema_id": "janus.rowan.bbc1.legacy_schema_evidence_hold.v1",
+                "status": "HOLD_UNVERIFIED_LEGACY_SOURCE_FIELDS",
+                "hold_code": "UNEXPECTED_PAYLOAD_FIELDS",
+                "science_gates": {
+                    "protein_fitness_validated": False,
+                    "tranception_model_run": False,
+                    "new_provider_jobs_authorized": False,
+                    "new_spend_authorized": False,
+                    "source_payload_values_persisted": False,
+                },
+            }
         data["source"] = {
             "repo": SOURCE_REPO,
             "workflow_file": WORKFLOW_FILE,
@@ -275,6 +293,15 @@ def update(root, runs, retrieve=artifact, limit=12):
         "latest_receipt_sha256": last_digest,
         "source_artifact_sha256": receipts[-1]["source"]["artifact_sha256"],
         "science_authority": "STRUCTURAL_STATUS_ONLY_NOT_FITNESS",
+        "latest_evidence_state": (
+            "UNVERIFIED_LEGACY_SCHEMA_HOLD"
+            if receipts[-1]["schema_id"].endswith("legacy_schema_evidence_hold.v1")
+            else "VERIFIED_STRUCTURAL_STATUS_NOT_FITNESS"
+        ),
+        "legacy_schema_holds_in_batch": sum(
+            r["schema_id"].endswith("legacy_schema_evidence_hold.v1")
+            for r in receipts
+        ),
         "new_provider_jobs_authorized": False,
         "new_spend_authorized": False,
     }
