@@ -35,11 +35,12 @@ jobs:
       - name: Audit pure function contract and failure adversaries
         run: python -m unittest discover -v -s modules/rowan_observer -p test_ecosystem_sync_witness.py
       - name: Independently attest live 8/8 across canonical, brain, witness, AURA, TOPA and scout sources
+        if: github.event_name != 'pull_request'
         env:
           PYTHONDONTWRITEBYTECODE: '1'
         run: python modules/rowan_observer/ecosystem_sync_witness.py > rowan-ecosystem-sync-witness.json
       - name: Retain public metadata witness (no private graph, provider keys, billing)
-        if: success()
+        if: success() && github.event_name != 'pull_request'
         uses: actions/upload-artifact@v4
         with:
           name: janus-rowan-ecosystem-source-binding
