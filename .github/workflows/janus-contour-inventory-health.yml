@@ -1,0 +1,37 @@
+name: JANUS Contour Owner Inventory Health
+on:
+  pull_request:
+    paths:
+      - 'agent-observatory/JANUS_CONTOUR_MANIFEST.json'
+      - 'tools/janus_contour_inventory_audit.py'
+      - '.github/workflows/janus-contour-inventory-health.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'agent-observatory/JANUS_CONTOUR_MANIFEST.json'
+      - 'tools/janus_contour_inventory_audit.py'
+      - '.github/workflows/janus-contour-inventory-health.yml'
+  schedule:
+    - cron: '28 2 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  public-owner-reconciliation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Schema and fail-closed negative controls
+        run: |
+          python -m py_compile tools/janus_contour_inventory_audit.py
+          python tools/janus_contour_inventory_audit.py --self-test
+      - name: Reconcile current GitHub public repositories and explicit contour
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python tools/janus_contour_inventory_audit.py --live

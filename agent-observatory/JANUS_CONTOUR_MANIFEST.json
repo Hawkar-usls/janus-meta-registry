@@ -1,43 +1,485 @@
 {
-  "schema": "janus.agent.observatory.contour-manifest.v1",
-  "version": "1.0.0",
-  "last_reviewed": "2026-08-31",
+  "schema": "janus.agent.observatory.contour-manifest.v2",
+  "version": "2.0.0",
+  "last_reviewed": "2026-10-28",
   "canonical_observatory_issue": "https://github.com/Hawkar-usls/janus-meta-registry/issues/197",
-  "scope_note": "Public repositories intentionally treated as JANUS core, interfaces, research infrastructure or public satellites for agent-discovery accounting. Private repositories are excluded from public beacon rollout.",
+  "scope_note": "Only explicitly designated public JANUS repositories are eligible for agent-discovery counting. Other public repositories (forks, libraries, hobby projects) are accounted for as EXTERNAL, never auto-enrolled. Three existing private exclusions remain excluded from public discovery. Inventory membership is not operational integration or authority.",
   "repositories": [
-    {"repo":"Hawkar-usls/Hawkar-usls","class":"ACTIVATION_AND_PROFILE"},
-    {"repo":"Hawkar-usls/Janus","class":"CORE"},
-    {"repo":"Hawkar-usls/Janus_Genesis","class":"CORE"},
-    {"repo":"Hawkar-usls/Janus-Demiurge","class":"CORE"},
-    {"repo":"Hawkar-usls/Janus-Fundamentum","class":"CORE"},
-    {"repo":"Hawkar-usls/janus-lapis","class":"CORE"},
-    {"repo":"Hawkar-usls/janus-meta-registry","class":"REGISTRY"},
-    {"repo":"Hawkar-usls/janus-distributed-ai-swarm","class":"DISTRIBUTED_AI"},
-    {"repo":"Hawkar-usls/janus-io-public","class":"INTELLECT_OBSERVER_PUBLIC"},
-    {"repo":"Hawkar-usls/Janus-Cosmos","class":"RESEARCH"},
-    {"repo":"Hawkar-usls/Janus-HELIOS","class":"COMPUTE_AND_LICENSING"},
-    {"repo":"Hawkar-usls/JANUS-MACHINE-MARKET","class":"MACHINE_MARKET"},
-    {"repo":"Hawkar-usls/Hrain","class":"MEMORY_INTERFACE"},
-    {"repo":"Hawkar-usls/Demi_Head","class":"INTERFACE"},
-    {"repo":"Hawkar-usls/TOPA","class":"RESEARCH_AGENT"},
-    {"repo":"Hawkar-usls/Fast-CAT-SHAiTan","class":"RESEARCH_AGENT"},
-    {"repo":"Hawkar-usls/aura-oracle-tg","class":"INTERFACE"},
-    {"repo":"Hawkar-usls/-Terminal-for-Janus","class":"INTERFACE"},
-    {"repo":"Hawkar-usls/AIFC","class":"AI_INFRASTRUCTURE"},
-    {"repo":"Hawkar-usls/SSlot","class":"EXPERIMENTAL_INTERFACE"},
-    {"repo":"Hawkar-usls/DIVINE_REALM","class":"EXPERIMENTAL_INTERFACE"},
-    {"repo":"Hawkar-usls/SCOBY-D0","class":"RESEARCH_SATELLITE"},
-    {"repo":"Hawkar-usls/Simptomat","class":"APPLICATION_SATELLITE"},
-    {"repo":"Hawkar-usls/The-Voice-of-Janus","class":"INTERFACE"}
+    {
+      "repo": "Hawkar-usls/-Terminal-for-Janus",
+      "class": "INTERFACE"
+    },
+    {
+      "repo": "Hawkar-usls/AIFC",
+      "class": "AI_INFRASTRUCTURE"
+    },
+    {
+      "repo": "Hawkar-usls/aura-oracle-tg",
+      "class": "INTERFACE"
+    },
+    {
+      "repo": "Hawkar-usls/BFain",
+      "class": "EXPERIMENTAL_INTERFACE"
+    },
+    {
+      "repo": "Hawkar-usls/Demi_Head",
+      "class": "INTERFACE"
+    },
+    {
+      "repo": "Hawkar-usls/DIVINE_REALM",
+      "class": "EXPERIMENTAL_INTERFACE"
+    },
+    {
+      "repo": "Hawkar-usls/Echo-Pyramid",
+      "class": "RESEARCH"
+    },
+    {
+      "repo": "Hawkar-usls/Fast-CAT-SHAiTan",
+      "class": "RESEARCH_AGENT"
+    },
+    {
+      "repo": "Hawkar-usls/Hawkar-usls",
+      "class": "ACTIVATION_AND_PROFILE"
+    },
+    {
+      "repo": "Hawkar-usls/Hrain",
+      "class": "MEMORY_INTERFACE"
+    },
+    {
+      "repo": "Hawkar-usls/iNaiHR",
+      "class": "MEMORY_INTERFACE"
+    },
+    {
+      "repo": "Hawkar-usls/Janus",
+      "class": "CORE"
+    },
+    {
+      "repo": "Hawkar-usls/Janus_Genesis",
+      "class": "CORE"
+    },
+    {
+      "repo": "Hawkar-usls/Janus-Cosmos",
+      "class": "RESEARCH"
+    },
+    {
+      "repo": "Hawkar-usls/Janus-Demiurge",
+      "class": "CORE"
+    },
+    {
+      "repo": "Hawkar-usls/janus-distributed-ai-swarm",
+      "class": "DISTRIBUTED_AI"
+    },
+    {
+      "repo": "Hawkar-usls/janus-first-followers-club-",
+      "class": "COMMUNITY_INTERFACE"
+    },
+    {
+      "repo": "Hawkar-usls/Janus-Fundamentum",
+      "class": "CORE"
+    },
+    {
+      "repo": "Hawkar-usls/Janus-HELIOS",
+      "class": "COMPUTE_AND_LICENSING"
+    },
+    {
+      "repo": "Hawkar-usls/janus-io-public",
+      "class": "INTELLECT_OBSERVER_PUBLIC"
+    },
+    {
+      "repo": "Hawkar-usls/janus-lapis",
+      "class": "CORE"
+    },
+    {
+      "repo": "Hawkar-usls/JANUS-MACHINE-MARKET",
+      "class": "MACHINE_MARKET"
+    },
+    {
+      "repo": "Hawkar-usls/janus-meta-registry",
+      "class": "REGISTRY"
+    },
+    {
+      "repo": "Hawkar-usls/SCOBY-D0",
+      "class": "RESEARCH_SATELLITE"
+    },
+    {
+      "repo": "Hawkar-usls/Simptomat",
+      "class": "APPLICATION_SATELLITE"
+    },
+    {
+      "repo": "Hawkar-usls/SLOT",
+      "class": "EXPERIMENTAL_INTERFACE"
+    },
+    {
+      "repo": "Hawkar-usls/SSlot",
+      "class": "EXPERIMENTAL_INTERFACE"
+    },
+    {
+      "repo": "Hawkar-usls/The-Voice-of-Janus",
+      "class": "INTERFACE"
+    },
+    {
+      "repo": "Hawkar-usls/TOPA",
+      "class": "RESEARCH_AGENT"
+    },
+    {
+      "repo": "Hawkar-usls/tranception",
+      "class": "RESEARCH_AGENT"
+    }
   ],
   "private_or_nonpublic_exclusions": [
-    "Hawkar-usls/janus-io",
     "Hawkar-usls/JanusMMORPG",
-    "Hawkar-usls/SkinGPT"
+    "Hawkar-usls/SkinGPT",
+    "Hawkar-usls/janus-io"
   ],
   "counting_law": {
     "confirmed_agent": "A syntactically valid self-reported janus.agent.checkin.v1 comment on the canonical observatory issue.",
     "probable_agent": "Reserved for future evidence-backed signals; currently not inferred from page views or user-agent strings.",
-    "raw_discovery_traffic": "Repository/page traffic, where available, must never be relabeled as agent traffic without separate evidence."
+    "raw_discovery_traffic": "Repository/page traffic, where available, must never be relabeled as agent traffic without separate evidence.",
+    "integration_state_note": "SOURCE_BOUND_WITNESS_CONFIRMED requires external receipt. INTEGRATION_SURFACES_PRESENT is code presence, not operational success. EXTERNAL is never eligible for agent check-ins."
+  },
+  "repository_inventory": [
+    {
+      "repo": "Hawkar-usls/-Terminal-for-Janus",
+      "role": "ORGAN",
+      "visibility": "public",
+      "integration_state": "INTEGRATION_SURFACES_PRESENT",
+      "discovery_scope": "JANUS_CONTOUR_ELIGIBLE"
+    },
+    {
+      "repo": "Hawkar-usls/AI-Cardputer-adv-A-Portable-AI-Assistant",
+      "role": "EXTERNAL",
+      "visibility": "public",
+      "integration_state": "NOT_ASSESSED",
+      "discovery_scope": "NOT_IN_JANUS_CONTOUR"
+    },
+    {
+      "repo": "Hawkar-usls/AIFC",
+      "role": "ORGAN",
+      "visibility": "public",
+      "integration_state": "INTEGRATION_SURFACES_PRESENT",
+      "discovery_scope": "JANUS_CONTOUR_ELIGIBLE"
+    },
+    {
+      "repo": "Hawkar-usls/Arduino-AI-Chat-Library",
+      "role": "EXTERNAL",
+      "visibility": "public",
+      "integration_state": "NOT_ASSESSED",
+      "discovery_scope": "NOT_IN_JANUS_CONTOUR"
+    },
+    {
+      "repo": "Hawkar-usls/arduino-ide",
+      "role": "EXTERNAL",
+      "visibility": "public",
+      "integration_state": "NOT_ASSESSED",
+      "discovery_scope": "NOT_IN_JANUS_CONTOUR"
+    },
+    {
+      "repo": "Hawkar-usls/ATOM-ELITE-1989---M5stack-ATOMS3R-2026-",
+      "role": "EXTERNAL",
+      "visibility": "public",
+      "integration_state": "NOT_ASSESSED",
+      "discovery_scope": "NOT_IN_JANUS_CONTOUR"
+    },
+    {
+      "repo": "Hawkar-usls/ATOM-RPG",
+      "role": "EXTERNAL",
+      "visibility": "public",
+      "integration_state": "NOT_ASSESSED",
+      "discovery_scope": "NOT_IN_JANUS_CONTOUR"
+    },
+    {
+      "repo": "Hawkar-usls/aura-oracle-tg",
+      "role": "CORE",
+      "visibility": "public",
+      "integration_state": "INTEGRATION_SURFACES_PRESENT",
+      "discovery_scope": "JANUS_CONTOUR_ELIGIBLE"
+    },
+    {
+      "repo": "Hawkar-usls/BFain",
+      "role": "SATELLITE",
+      "visibility": "public",
+      "integration_state": "METADATA_ONLY",
+      "discovery_scope": "JANUS_CONTOUR_ELIGIBLE"
+    },
+    {
+      "repo": "Hawkar-usls/Cardputer-Game-Station-Emulators",
+      "role": "EXTERNAL",
+      "visibility": "public",
+      "integration_state": "NOT_ASSESSED",
+      "discovery_scope": "NOT_IN_JANUS_CONTOUR"
+    },
+    {
+      "repo": "Hawkar-usls/clawdbot",
+      "role": "EXTERNAL",
+      "visibility": "public",
+      "integration_state": "NOT_ASSESSED",
+      "discovery_scope": "NOT_IN_JANUS_CONTOUR"
+    },
+    {
+      "repo": "Hawkar-usls/Demi_Head",
+      "role": "ORGAN",
+      "visibility": "public",
+      "integration_state": "INTEGRATION_SURFACES_PRESENT",
+      "discovery_scope": "JANUS_CONTOUR_ELIGIBLE"
+    },
+    {
+      "repo": "Hawkar-usls/DIVINE_REALM",
+      "role": "SATELLITE",
+      "visibility": "public",
+      "integration_state": "METADATA_ONLY",
+      "discovery_scope": "JANUS_CONTOUR_ELIGIBLE"
+    },
+    {
+      "repo": "Hawkar-usls/Echo-Pyramid",
+      "role": "ORGAN",
+      "visibility": "public",
+      "integration_state": "INTEGRATION_SURFACES_PRESENT",
+      "discovery_scope": "JANUS_CONTOUR_ELIGIBLE"
+    },
+    {
+      "repo": "Hawkar-usls/emoji",
+      "role": "EXTERNAL",
+      "visibility": "public",
+      "integration_state": "NOT_ASSESSED",
+      "discovery_scope": "NOT_IN_JANUS_CONTOUR"
+    },
+    {
+      "repo": "Hawkar-usls/ESP32-TWAI-CAN",
+      "role": "EXTERNAL",
+      "visibility": "public",
+      "integration_state": "NOT_ASSESSED",
+      "discovery_scope": "NOT_IN_JANUS_CONTOUR"
+    },
+    {
+      "repo": "Hawkar-usls/Fast-CAT-SHAiTan",
+      "role": "ORGAN",
+      "visibility": "public",
+      "integration_state": "INTEGRATION_SURFACES_PRESENT",
+      "discovery_scope": "JANUS_CONTOUR_ELIGIBLE"
+    },
+    {
+      "repo": "Hawkar-usls/Hawkar-usls",
+      "role": "ORGAN",
+      "visibility": "public",
+      "integration_state": "INTEGRATION_SURFACES_PRESENT",
+      "discovery_scope": "JANUS_CONTOUR_ELIGIBLE"
+    },
+    {
+      "repo": "Hawkar-usls/HotdRemake_ArcadePlugin",
+      "role": "EXTERNAL",
+      "visibility": "public",
+      "integration_state": "NOT_ASSESSED",
+      "discovery_scope": "NOT_IN_JANUS_CONTOUR"
+    },
+    {
+      "repo": "Hawkar-usls/Hrain",
+      "role": "CORE",
+      "visibility": "public",
+      "integration_state": "INTEGRATION_SURFACES_PRESENT",
+      "discovery_scope": "JANUS_CONTOUR_ELIGIBLE"
+    },
+    {
+      "repo": "Hawkar-usls/iNaiHR",
+      "role": "CORE",
+      "visibility": "public",
+      "integration_state": "INTEGRATION_SURFACES_PRESENT",
+      "discovery_scope": "JANUS_CONTOUR_ELIGIBLE"
+    },
+    {
+      "repo": "Hawkar-usls/Janus",
+      "role": "CORE",
+      "visibility": "public",
+      "integration_state": "INTEGRATION_SURFACES_PRESENT",
+      "discovery_scope": "JANUS_CONTOUR_ELIGIBLE"
+    },
+    {
+      "repo": "Hawkar-usls/Janus_Genesis",
+      "role": "CORE",
+      "visibility": "public",
+      "integration_state": "INTEGRATION_SURFACES_PRESENT",
+      "discovery_scope": "JANUS_CONTOUR_ELIGIBLE"
+    },
+    {
+      "repo": "Hawkar-usls/Janus-Cosmos",
+      "role": "CORE",
+      "visibility": "public",
+      "integration_state": "SOURCE_BOUND_WITNESS_CONFIRMED",
+      "discovery_scope": "JANUS_CONTOUR_ELIGIBLE"
+    },
+    {
+      "repo": "Hawkar-usls/Janus-Demiurge",
+      "role": "CORE",
+      "visibility": "public",
+      "integration_state": "INTEGRATION_SURFACES_PRESENT",
+      "discovery_scope": "JANUS_CONTOUR_ELIGIBLE"
+    },
+    {
+      "repo": "Hawkar-usls/janus-distributed-ai-swarm",
+      "role": "CORE",
+      "visibility": "public",
+      "integration_state": "INTEGRATION_SURFACES_PRESENT",
+      "discovery_scope": "JANUS_CONTOUR_ELIGIBLE"
+    },
+    {
+      "repo": "Hawkar-usls/janus-first-followers-club-",
+      "role": "SATELLITE",
+      "visibility": "public",
+      "integration_state": "INTEGRATION_SURFACES_PRESENT",
+      "discovery_scope": "JANUS_CONTOUR_ELIGIBLE"
+    },
+    {
+      "repo": "Hawkar-usls/Janus-Fundamentum",
+      "role": "CORE",
+      "visibility": "public",
+      "integration_state": "INTEGRATION_SURFACES_PRESENT",
+      "discovery_scope": "JANUS_CONTOUR_ELIGIBLE"
+    },
+    {
+      "repo": "Hawkar-usls/Janus-HELIOS",
+      "role": "ORGAN",
+      "visibility": "public",
+      "integration_state": "INTEGRATION_SURFACES_PRESENT",
+      "discovery_scope": "JANUS_CONTOUR_ELIGIBLE"
+    },
+    {
+      "repo": "Hawkar-usls/janus-io-public",
+      "role": "ORGAN",
+      "visibility": "public",
+      "integration_state": "INTEGRATION_SURFACES_PRESENT",
+      "discovery_scope": "JANUS_CONTOUR_ELIGIBLE"
+    },
+    {
+      "repo": "Hawkar-usls/janus-lapis",
+      "role": "CORE",
+      "visibility": "public",
+      "integration_state": "INTEGRATION_SURFACES_PRESENT",
+      "discovery_scope": "JANUS_CONTOUR_ELIGIBLE"
+    },
+    {
+      "repo": "Hawkar-usls/JANUS-MACHINE-MARKET",
+      "role": "ORGAN",
+      "visibility": "public",
+      "integration_state": "INTEGRATION_SURFACES_PRESENT",
+      "discovery_scope": "JANUS_CONTOUR_ELIGIBLE"
+    },
+    {
+      "repo": "Hawkar-usls/janus-meta-registry",
+      "role": "CORE",
+      "visibility": "public",
+      "integration_state": "INTEGRATION_SURFACES_PRESENT",
+      "discovery_scope": "JANUS_CONTOUR_ELIGIBLE"
+    },
+    {
+      "repo": "Hawkar-usls/Linear-A-decipherment-programme",
+      "role": "EXTERNAL",
+      "visibility": "public",
+      "integration_state": "NOT_ASSESSED",
+      "discovery_scope": "NOT_IN_JANUS_CONTOUR"
+    },
+    {
+      "repo": "Hawkar-usls/lineara.xyz",
+      "role": "EXTERNAL",
+      "visibility": "public",
+      "integration_state": "NOT_ASSESSED",
+      "discovery_scope": "NOT_IN_JANUS_CONTOUR"
+    },
+    {
+      "repo": "Hawkar-usls/M5Unit-ENV",
+      "role": "EXTERNAL",
+      "visibility": "public",
+      "integration_state": "NOT_ASSESSED",
+      "discovery_scope": "NOT_IN_JANUS_CONTOUR"
+    },
+    {
+      "repo": "Hawkar-usls/player",
+      "role": "EXTERNAL",
+      "visibility": "public",
+      "integration_state": "NOT_ASSESSED",
+      "discovery_scope": "NOT_IN_JANUS_CONTOUR"
+    },
+    {
+      "repo": "Hawkar-usls/RadioPlayerV3",
+      "role": "EXTERNAL",
+      "visibility": "public",
+      "integration_state": "NOT_ASSESSED",
+      "discovery_scope": "NOT_IN_JANUS_CONTOUR"
+    },
+    {
+      "repo": "Hawkar-usls/SCOBY-D0",
+      "role": "SATELLITE",
+      "visibility": "public",
+      "integration_state": "INTEGRATION_SURFACES_PRESENT",
+      "discovery_scope": "JANUS_CONTOUR_ELIGIBLE"
+    },
+    {
+      "repo": "Hawkar-usls/Simptomat",
+      "role": "SATELLITE",
+      "visibility": "public",
+      "integration_state": "INTEGRATION_SURFACES_PRESENT",
+      "discovery_scope": "JANUS_CONTOUR_ELIGIBLE"
+    },
+    {
+      "repo": "Hawkar-usls/SLOT",
+      "role": "SATELLITE",
+      "visibility": "public",
+      "integration_state": "METADATA_ONLY",
+      "discovery_scope": "JANUS_CONTOUR_ELIGIBLE"
+    },
+    {
+      "repo": "Hawkar-usls/SSlot",
+      "role": "SATELLITE",
+      "visibility": "public",
+      "integration_state": "METADATA_ONLY",
+      "discovery_scope": "JANUS_CONTOUR_ELIGIBLE"
+    },
+    {
+      "repo": "Hawkar-usls/The-Voice-of-Janus",
+      "role": "ORGAN",
+      "visibility": "public",
+      "integration_state": "INTEGRATION_SURFACES_PRESENT",
+      "discovery_scope": "JANUS_CONTOUR_ELIGIBLE"
+    },
+    {
+      "repo": "Hawkar-usls/TOPA",
+      "role": "CORE",
+      "visibility": "public",
+      "integration_state": "INTEGRATION_SURFACES_PRESENT",
+      "discovery_scope": "JANUS_CONTOUR_ELIGIBLE"
+    },
+    {
+      "repo": "Hawkar-usls/tranception",
+      "role": "ORGAN",
+      "visibility": "public",
+      "integration_state": "INTEGRATION_SURFACES_PRESENT",
+      "discovery_scope": "JANUS_CONTOUR_ELIGIBLE"
+    },
+    {
+      "repo": "Hawkar-usls/vcmi",
+      "role": "EXTERNAL",
+      "visibility": "public",
+      "integration_state": "NOT_ASSESSED",
+      "discovery_scope": "NOT_IN_JANUS_CONTOUR"
+    },
+    {
+      "repo": "Hawkar-usls/xiaozhi-esp32",
+      "role": "EXTERNAL",
+      "visibility": "public",
+      "integration_state": "NOT_ASSESSED",
+      "discovery_scope": "NOT_IN_JANUS_CONTOUR"
+    }
+  ],
+  "inventory_policy": {
+    "schema": "janus.contour.owner_inventory_policy.v1",
+    "owner": "Hawkar-usls",
+    "as_of_utc": "2026-10-28",
+    "owner_repository_count": 50,
+    "public_repository_count": 47,
+    "private_repository_count": 3,
+    "public_contour_count": 30,
+    "public_external_count": 17,
+    "private_names_must_not_enter_inventory": true,
+    "classification_does_not_grant_authority": true,
+    "full_integration_requires_independent_live_receipt": true,
+    "public_repo_inventory_source": "GitHub owner repositories; reconciled against public API by CI"
   }
 }
