@@ -289,6 +289,12 @@ def pending_source_runs(root: Path, runs: list[dict], limit: int) -> tuple[list[
     return [x for x in runs if int(x["id"])>checkpoint][:limit],checkpoint
 
 
+def safe_hold_code(exc: EvidenceHold) -> str:
+    """Expose allowlisted reason codes without printing untrusted artifact data."""
+    code = str(exc)
+    return code if re.fullmatch(r"[A-Z][A-Z0-9_]{2,95}", code) else "UNCLASSIFIED_HOLD"
+
+
 def main():
     parser=argparse.ArgumentParser()
     parser.add_argument("--root",default=".")
@@ -312,7 +318,11 @@ def main():
         print("ROWAN_OBSERVER_CHANGED_FILES="+str(len(modified)))
         print("ROWAN_OBSERVER_LATEST_RUN="+str(max(r["source"]["run_id"] for r in receipts)))
         return 0
-    except (EvidenceHold, OSError, ValueError, subprocess.SubprocessError) as exc:
+    except EvidenceHold as exc:
+        print("ROWAN_OBSERVER=BLOCKED_EvidenceHold")
+        print("ROWAN_OBSERVER_HOLD_CODE="+safe_hold_code(exc))
+        return 2
+    except (OSError, ValueError, subprocess.SubprocessError) as exc:
         print("ROWAN_OBSERVER=BLOCKED_"+type(exc).__name__)
         return 2
 
