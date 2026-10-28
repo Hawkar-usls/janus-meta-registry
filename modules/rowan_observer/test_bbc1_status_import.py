@@ -109,6 +109,28 @@ class StructuralArchiveTests(unittest.TestCase):
         try: self.assertEqual([v["id"] for v in m.source_runs()],[200])
         finally: m.github=original
 
+    def test_unknown_legacy_fields_archive_only_hash_bound_hold(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)
+            def fetch(rid):
+                data=sample()
+                if rid == 199:
+                    del data["provider_spend_by_collector"]
+                return data, hashlib.sha256(m.canonical(data)).hexdigest()
+            result=m.update(root,[run(200),run(199)],fetch,limit=2)
+            self.assertEqual(result["new_receipts"],2)
+            receipts=list((root/m.ROOT_REL/"receipts").glob("*.json"))
+            self.assertEqual(len(receipts),2)
+            held=[json.loads(p.read_text()) for p in receipts
+                  if "199" in p.name]
+            self.assertEqual(len(held),1)
+            self.assertEqual(held[0]["status"],"HOLD_UNVERIFIED_LEGACY_SOURCE_FIELDS")
+            self.assertNotIn("entries", held[0])
+            self.assertFalse(held[0]["science_gates"]["protein_fitness_validated"])
+            latest=json.loads((root/m.ROOT_REL/"LATEST.json").read_text())
+            self.assertEqual(latest["latest_evidence_state"],"VERIFIED_STRUCTURAL_STATUS_NOT_FITNESS")
+            self.assertEqual(latest["legacy_schema_holds_in_batch"],1)
+
     def test_no_billing_surface(self):
         text=(HERE/"bbc1_status_import.py").read_text()
         for forbidden in ("ROWAN_API_KEY","submit_protein_cofolding_workflow(",
