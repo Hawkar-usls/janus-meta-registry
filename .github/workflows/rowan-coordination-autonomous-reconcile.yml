@@ -1,0 +1,97 @@
+name: JANUS Rowan AURA Demiurge autonomous council reconciliation
+on:
+  schedule:
+    - cron: '53 * * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/rowan-coordination-autonomous-reconcile.yml'
+      - 'modules/rowan_observer/coordination_ingest.py'
+      - 'modules/rowan_observer/test_coordination.py'
+  pull_request:
+    paths:
+      - '.github/workflows/rowan-coordination-autonomous-reconcile.yml'
+      - 'modules/rowan_observer/coordination_ingest.py'
+      - 'modules/rowan_observer/test_coordination.py'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: janus-rowan-durable-observer
+  cancel-in-progress: false
+
+jobs:
+  council-reconcile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify no-network council source-bound adversarial tests
+        run: |
+          python -m unittest discover -v -s modules/rowan_observer -p 'test_coordination.py'
+          python -m py_compile modules/rowan_observer/coordination_ingest.py
+          test -z "${ROWAN_API_KEY:-}"
+      - name: Attest exact matched AURA/Demiurge sources and prepare metadata
+        if: github.event_name != 'pull_request'
+        run: |
+          set -euo pipefail
+          python modules/rowan_observer/coordination_ingest.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          base=Path("data/rowan")
+          meta=json.loads((base/"CANONICAL_STATE.json").read_text())
+          pointer=json.loads((base/"coordination/LATEST_COORDINATION_STATE.json").read_text())
+          canonical=meta["latest_durable_external_run"]
+          matched=pointer["meta_canonical_run"]
+          assert type(canonical) is int and type(matched) is int
+          assert matched<=canonical,("COUNCIL_CANNOT_OUTRUN_CANONICAL",matched,canonical)
+          assert pointer["scientific_status"]=="HYPOTHESES_ONLY_NOT_BIOLOGICAL_DISCOVERY"
+          receipt=Path(pointer["receipt_path"])
+          assert receipt.is_file()
+          r=json.loads(receipt.read_text())
+          assert r["source_binding_sha256"]==pointer["source_binding_sha256"]
+          assert r["sources"]["meta_canonical_run"]==matched
+          assert r["authority"]["new_rowan_jobs"] is False
+          assert r["authority"]["new_credit_spend"] is False
+          assert r["authority"]["hypotheses_are_empirical_proof"] is False
+          print("ROWAN_COORDINATION_VERIFIED_POINTER="+str(matched))
+          print("ROWAN_COORDINATION_NEW_CANONICAL="+str(canonical))
+          print("ROWAN_COORDINATION_SOURCES_MATCHED="+str(matched==canonical).upper())
+          PY
+      - name: Commit only validated Rowan coordination receipts
+        if: github.event_name != 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add data/rowan/coordination/
+          if git diff --cached --quiet; then
+            echo 'ROWAN_COORDINATION=NO_NEW_SOURCE_MATCH'
+            exit 0
+          fi
+          git config user.name 'JANUS Rowan Council Reconciler'
+          git config user.email 'actions@users.noreply.github.com'
+          git commit -m '[rowan] Source-bound AURA/Demiurge council reconciliation'
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            if ! git rebase origin/main; then
+              git rebase --abort || true
+              echo 'ROWAN_COORDINATION=REBASE_CONFLICT_HOLD'
+              exit 1
+            fi
+            if git push origin HEAD:main; then
+              echo 'ROWAN_COORDINATION=SOURCE_BOUND_COMMIT_SUCCESS'
+              exit 0
+            fi
+            sleep "$attempt"
+          done
+          echo 'ROWAN_COORDINATION=PUSH_FAILED_HOLD'
+          exit 1
