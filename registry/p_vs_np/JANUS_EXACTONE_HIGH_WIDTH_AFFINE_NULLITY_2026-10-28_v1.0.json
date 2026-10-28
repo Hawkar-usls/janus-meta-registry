@@ -1,0 +1,86 @@
+{
+  "schema": "janus.meta_registry.exactone_high_width_affine_nullity_v1",
+  "artifact_id": "JANUS-P-VS-NP-HIGH-WIDTH-AFFINE-NULLITY-2026-10-28-v1.0",
+  "date": "2026-10-28",
+  "status": "CI_VERIFIED_BOUNDED_NULLITY_SPECIAL_CLASS",
+  "research_scope": "DRAFT_PR_ONLY",
+  "links": {
+    "fundamentum_pr": "https://github.com/Hawkar-usls/Janus-Fundamentum/pull/571",
+    "latest_math_commit": "f400eddba18ae3f7562c66df7f5f1597c76d96c6",
+    "operator": "research/exactone_affine_nullity.py",
+    "theorem_notes": "docs/EXACTONE_HIGH_WIDTH_AFFINE_NULLITY_20261028.md",
+    "math_ci": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/40655809303",
+    "lapis_rowan_e2e_ci": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/40655809682",
+    "true_lapis_sha": "72daf0b4dce0467afad4f5f3ceaa813503923b30",
+    "true_fundamentum_receiver_sha": "ed297fee1a60d1c97232411990921b707633b809",
+    "rowan_actual_archive_source": "https://github.com/Hawkar-usls/Janus/actions/runs/40593272360"
+  },
+  "method": {
+    "name": "EXACTONE_AFFINE_NULLITY_CERTIFICATE_SOLVER",
+    "operator": "Build necessary GF(2) equations from signed 1- and 3-literal exact-one clauses, eliminate over GF(2) with XOR source lineages, and enumerate all affine free-coordinate candidates only when their dimension k is bounded; test each against original exact-one constraints",
+    "free_dimension_parameter": "k=n-rank(GF2 necessary parity relaxation)",
+    "runtime": "O(poly(L)+2^k * poly(L))",
+    "certificate_size": "O(poly(L)+2^k*log(m+1)) plus encoding overhead",
+    "polynomial_if": "k=O(log L) with polynomial factor and a resource budget allowing enumeration",
+    "consistency": "UNSAT_XOR uses source-clause XOR lineage proving 0=1",
+    "sat": "Original full assignment and valid free-coordinate witness",
+    "unsat": "One violated original exact-one clause per enumerated affine candidate",
+    "fail_closed": "OPEN_NULLITY_CAP when k > configured maximum free dimension; max allowed 10, default 4",
+    "proof_authority": "Independent verifier reconstructs all original parity rows, checks rank-complete RREF and source lineage, checks all candidate rejections and any original-clause satisfying witness",
+    "limitation": "No universal polynomial bound if k grows linearly with n"
+  },
+  "test_evidence": {
+    "independent_small_cases": 507,
+    "high_treewidth_satisfiable": {
+      "variables": 66,
+      "primal_graph": "K66",
+      "treewidth_exactly": 65,
+      "clauses": 2080,
+      "gf2_nullity": 1,
+      "verdict": "SAT",
+      "witness_class": "h=1, all leaves zero"
+    },
+    "high_treewidth_unsatisfiable": {
+      "variables": 66,
+      "primal_graph": "K66",
+      "treewidth_exactly": 65,
+      "clauses": 2081,
+      "gf2_nullity": 0,
+      "verdict": "UNSAT_EXACTONE",
+      "certificate": "Single remaining affine candidate violates original exact-one hub/pair clauses; XOR system by itself consistent"
+    },
+    "open_large_nullity": "PASS",
+    "forged_rehashed_unsat": "REJECTED",
+    "math_ci_status": "SUCCESS",
+    "lapis_e2e_status": "SUCCESS",
+    "math_artifact": {
+      "id": 12801966684,
+      "digest": "sha256:902a0b0e8ce0b44ff6c8a42b558340f3ec8a71b09eed0c72e8a804ea6d446160"
+    },
+    "e2e_artifact": {
+      "id": 12801747031,
+      "digest": "sha256:8e5f1d6f67d27709abf871958a3ccccaa1c88b02faf4f10129688f6bf408b02a"
+    }
+  },
+  "cross_domain_integrity": {
+    "actual_lapis_converter_executed": true,
+    "lapis_math_transport": "HEURISTIC_ANNOTATE_ONLY_IR",
+    "original_math_certificate_rechecked_independently_in_fundamentum": true,
+    "lapis_affine_sat_algorithm_sha256": "116efa39be9b178e36d37a8adccc03657b51ab83877d81a9a53e0a529c40df83",
+    "real_archived_rowan_bbc1_evidence_also_translated": true,
+    "rowan_model_scores_transferred_into_sat": false,
+    "rowan_new_jobs_by_ci": 0,
+    "rowan_provider_credits_by_ci": 0,
+    "independent_rowan_exact_one_solver": false
+  },
+  "academic_position": {
+    "mathematical_principle": "Classical affine linear-algebra relaxation plus bounded-k exhaustive reconstruction; special tractable class, not a general result P=NP",
+    "structural_advance": "An infinite high-treewidth clique family becomes tractable through low GF(2) nullity; demonstrates primal width is sufficient but not necessary for tractability",
+    "relation_to_prior": "Orthogonal to bounded-treewidth DP and bounded variable feedback cutset",
+    "open_barrier": "Need a polynomial uniformly compact exact representation and polynomial-time construction/composition/decision/witness reconstruction for arbitrary high-treewidth, high-affine-nullity cyclic Exact-One instances",
+    "p_vs_np": "OPEN",
+    "universal_polynomial_exact_one_solver_proven": false,
+    "independent_peer_review": false,
+    "no_main_changes": true
+  }
+}
