@@ -24,7 +24,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           path: target
-          fetch-depth: 0
+          # A full Meta Registry history clone delays incoming ACKs.
+          # The receiver fetches the isolated beetle-memory branch explicitly.
+          fetch-depth: 1
 
       - name: Checkout pinned JANUS Beetle receiver
         uses: actions/checkout@v4
