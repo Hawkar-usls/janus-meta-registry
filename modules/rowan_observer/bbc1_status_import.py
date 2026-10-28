@@ -65,7 +65,12 @@ def validate(payload):
         "protein_fitness_validated", "experimental_assay_independent_review",
         "provider_spend_by_collector",
     }
-    fail(set(payload) == expected, "UNEXPECTED_PAYLOAD_FIELDS")
+    if set(payload) != expected:
+        # Diagnostics expose counts only; never echo untrusted field names or values.
+        print("ROWAN_BBC1_PAYLOAD_ROOT_FIELD_COUNT=" + str(len(payload)))
+        print("ROWAN_BBC1_PAYLOAD_EXTRA_FIELD_COUNT=" + str(len(set(payload) - expected)))
+        print("ROWAN_BBC1_PAYLOAD_MISSING_FIELD_COUNT=" + str(len(expected - set(payload))))
+        raise EvidenceHold("UNEXPECTED_PAYLOAD_FIELDS")
     fail(payload["schema"] == SCHEMA and
          payload["source_kind"] == "REAL_PROVIDER_READ_ONLY_STATUS",
          "SOURCE_SCHEMA_OR_KIND_DRIFT")
@@ -236,6 +241,8 @@ def update(root, runs, retrieve=artifact, limit=12):
     receipts = []
     for r in current:
         payload, raw_digest = retrieve(r["id"])
+        print("ROWAN_BBC1_SOURCE_RUN=" + str(r["id"]))
+        print("ROWAN_BBC1_SOURCE_ARTIFACT_SHA256_PREFIX=" + raw_digest[:16])
         data = validate(payload)
         data["source"] = {
             "repo": SOURCE_REPO,
