@@ -155,7 +155,9 @@ def github(endpoint):
 
 
 def source_runs():
-    endpoint = (f"repos/{SOURCE_REPO}/actions/runs"
+    # Restrict to the known-good workflow-scoped endpoint used by S2 Observer.
+    endpoint = (f"repos/{SOURCE_REPO}/actions/workflows/"
+                f"{WORKFLOW_FILE.rsplit('/', 1)[-1]}/runs"
                 f"?branch=main&status=completed&per_page=100")
     data = github(endpoint)
     fail(type(data) is dict and type(data.get("workflow_runs")) is list,
