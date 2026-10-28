@@ -56,7 +56,7 @@ jobs:
           python-version: '3.11'
       - name: Source-bound immutable structural receipt archive
         env:
-          GH_TOKEN: \${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
         run: python modules/rowan_observer/bbc1_status_import.py --root . --limit 12
       - name: Publish only independent structural status receipts
         shell: bash
