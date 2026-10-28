@@ -251,6 +251,44 @@ def update_once(root:Path, receipts:list[dict]):
             paths.append(state_path)
     return [str(x.relative_to(root)) for x in paths]
 
+def pending_source_runs(root: Path, runs: list[dict], limit: int) -> tuple[list[dict], int | None]:
+    """Only fetch run IDs newer than a verified durable Rowan checkpoint.
+
+    Old workflow attempts can leave duplicate named artifacts. This routine
+    does not select from ambiguous duplicates. Newly discovered runs still
+    require the existing strict single-artifact verification.
+    """
+    root=Path(root)
+    state_file=root/BASE/"CANONICAL_STATE.json"
+    if not state_file.exists():
+        return runs[:limit],None
+    state=json.loads(state_file.read_text(encoding="utf-8"))
+    if state.get("schema_id")!="janus.rowan.observer_state.v1":
+        raise EvidenceHold("INVALID_PREVIOUS_CANONICAL_SCHEMA")
+    checkpoint=state.get("latest_durable_external_run")
+    source_digest=state.get("underlying_state_is_derived_from")
+    completed=state.get("last_completed_mutants")
+    if (type(checkpoint) is not int or checkpoint<=0 or
+        type(completed) is not int or not 0<=completed<=8 or
+        not isinstance(source_digest,str) or not re.fullmatch(r"[0-9a-f]{64}",source_digest)):
+        raise EvidenceHold("INVALID_PREVIOUS_CANONICAL_CHECKPOINT")
+    matched=False
+    for file in sorted((root/BASE/"receipts").glob(f"ROWAN-S2-{checkpoint}-*.json")):
+        if file.stat().st_size>MAX_RECEIPT:
+            raise EvidenceHold("PREVIOUS_RECEIPT_OVERSIZED")
+        previous=json.loads(file.read_text(encoding="utf-8"))
+        if (previous.get("source",{}).get("run_id")==checkpoint and
+            previous.get("source",{}).get("source_artifact_sha256")==source_digest and
+            previous.get("calibration",{}).get("eight_mutants_with_provider_results")==completed):
+            matched=True
+            break
+    if not matched:
+        raise EvidenceHold("PREVIOUS_CANONICAL_SOURCE_RECEIPT_NOT_ATTESTED")
+    if not runs or max(int(x["id"]) for x in runs)<checkpoint:
+        raise EvidenceHold("GITHUB_HISTORY_BEHIND_DURABLE_CHECKPOINT")
+    return [x for x in runs if int(x["id"])>checkpoint][:limit],checkpoint
+
+
 def main():
     parser=argparse.ArgumentParser()
     parser.add_argument("--root",default=".")
@@ -259,12 +297,14 @@ def main():
     if not 1<=args.limit<=MAX_RUNS:raise SystemExit("BAD_LIMIT")
     receipts=[]
     try:
-        for run in last_runs()[:args.limit]:
+        selected,checkpoint=pending_source_runs(Path(args.root),last_runs(),args.limit)
+        for run in selected:
             rid=run["id"]
             raw,sha=fetch_artifact(rid)
             receipts.append(prepare_receipt(rid,raw,sha))
         if not receipts:
-            print("ROWAN_OBSERVER=NO_ELIGIBLE_SUCCESSFUL_RUNS")
+            print("ROWAN_OBSERVER=NO_NEW_SOURCE_RUNS_ALREADY_ATTESTED")
+            print("ROWAN_OBSERVER_LAST_DURABLE_RUN="+str(checkpoint))
             return 0
         modified=update_once(Path(args.root),receipts)
         print("ROWAN_OBSERVER=VERIFIED_SOURCE_RECEIPTS")
