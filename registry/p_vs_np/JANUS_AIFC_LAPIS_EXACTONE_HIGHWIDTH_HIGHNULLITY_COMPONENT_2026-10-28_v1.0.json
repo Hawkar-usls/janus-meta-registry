@@ -1,0 +1,106 @@
+{
+  "schema": "janus.meta_registry.aifc_lapis_highwidth_exactone_component_evidence.v1",
+  "artifact_id": "JANUS-AIFC-LAPIS-EXACTONE-HIGHWIDTH-HIGHNULLITY-2026-10-28-v1.0",
+  "created_at": "2026-10-28",
+  "research_status": "DRAFT_SOURCE_PINNED_CI_VERIFIED",
+  "sources": {
+    "aifc": {
+      "repository": "Hawkar-usls/AIFC",
+      "commit": "86bf957815911658edad330d5948e1bea2ea59b1",
+      "implementation": "reference/verifier/canonical.py",
+      "licence": "Apache-2.0",
+      "scientific_domain": "independent future-event admission and provenance, NOT SAT computation"
+    },
+    "fundamentum": {
+      "repository": "Hawkar-usls/Janus-Fundamentum",
+      "pull_request": "https://github.com/Hawkar-usls/Janus-Fundamentum/pull/571",
+      "source_commit": "26ad06aecfe2107450cefa7c659ba2997931a614",
+      "operator": "research/exactone_component_factorization.py",
+      "math_ci": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/40660548781",
+      "cross_repo_ci": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/40660548792"
+    },
+    "lapis": {
+      "repository": "Hawkar-usls/janus-lapis",
+      "pinned_commit": "72daf0b4dce0467afad4f5f3ceaa813503923b30",
+      "operator": "tools/lapis_converter.py",
+      "mode": "ANNOTATION_ONLY"
+    },
+    "rowan": {
+      "status": "PREVIOUS_API_FETCH_ARCHIVED_BBC1_8OF8_ONLY",
+      "new_job_count": 0,
+      "credits_consumed_by_test": 0
+    }
+  },
+  "theorem": {
+    "factorization": "F is a conjunction of independent connected components F_i of the variable-clause incidence graph; global SAT iff SAT(F_i) for all i",
+    "exact_composition": "Global SAT witness is the disjoint union of local witnesses; one UNSAT local certificate suffices for global UNSAT",
+    "local_approach": "Necessary XOR relaxation, complete verification of 2^k_i affine candidates against original signed Exact-One clauses",
+    "runtime": "O(poly(L)+sum_i 2^(k_i)*poly(L_i))",
+    "certificate_size": "O(poly(L)+sum_i 2^(k_i)*poly(L_i)) conservative",
+    "tractable_class": "Any family with uniformly bounded local XOR nullity k_i, even if global nullity sum_i k_i and primal width are unbounded",
+    "structural_limitation": "No claimed general solution for irreducible connected high-width/high-nullity instances",
+    "novelty_boundary": "Known independent-factor CSP decomposition, not a novel P vs NP theorem"
+  },
+  "actual_tests": {
+    "reference_cases": 306,
+    "constructed_family": {
+      "variables": 272,
+      "clauses": 1920,
+      "disjoint_components": 16,
+      "proven_primal_treewidth": 16,
+      "global_xor_nullity": 16,
+      "local_xor_nullity": 1,
+      "outputs": [
+        "SAT_COMPONENTS",
+        "UNSAT_COMPONENT"
+      ],
+      "global_65536_candidates_enumerated": false
+    },
+    "independently_checkable_sat_witness": true,
+    "independently_checkable_unsat_component": true,
+    "forged_rehashed_component_rejected": true,
+    "open_local_cap_case_checked": true,
+    "math_ci_status": "SUCCESS",
+    "e2e_ci_status": "SUCCESS",
+    "aifc_real_module_executed": true,
+    "aifc_canonicalization_negative_tests": [
+      "duplicate_JSON_keys",
+      "floats",
+      "non_NFC_unicode"
+    ],
+    "aifc_domain_hashes": "JANUS:EXACTONE:COMPONENT_PRODUCT:v1; source-bound hashes are not a cryptographic witness quorum",
+    "lapis_real_converter_executed": true,
+    "lapis_math_authority": false,
+    "original_math_certificate_replayed_by_fundamentum": true,
+    "math_artifact": {
+      "id": 12803164130,
+      "digest": "sha256:fcc8812b89486c64437e8d157aa71f485a9d39f7efd3e9de9a49281d182a9972"
+    },
+    "e2e_artifact": {
+      "id": 12802769779,
+      "digest": "sha256:8b06f0592aab70e6bd27f0955b3f5e82a1881fa7f10dcd49494804a96f7d830a"
+    }
+  },
+  "aifc_further_integration": {
+    "target": "AURA Oracle / CHRONOS future random target experiments",
+    "connection": "AURA Fortune Cookie can provide a sealed precommitment but AIFC additionally requires externally certified trial creation before candidate production, independent witness quorum, post-freeze entropy proof, multiplicity audit, and verified causal and statistical gates",
+    "current_status": "RESEARCH_COMPATIBILITY_ONLY_NO_EXTERNAL_FUTURE_EXPERIMENT_ADMITTED",
+    "statement": "Physical retrocausality not observed or proven",
+    "aifc_semantic_authority_not_transferred": true,
+    "aura_research_draft_pr": "https://github.com/Hawkar-usls/aura-oracle-tg/pull/8",
+    "aura_ci_run": "https://github.com/Hawkar-usls/aura-oracle-tg/actions/runs/40660918547",
+    "aura_ci_status": "SUCCESS_RESEARCH_ONLY",
+    "aura_external_future_trial_executed": false,
+    "aura_future_trial_admission": "NOT_ADMITTED"
+  },
+  "open_barrier": "Polynomial discovery, compact exact representation, composition and witness reconstruction for arbitrary connected irreducible Exact-One with both growing primal width and growing XOR nullity",
+  "security": {
+    "no_main_changes": true,
+    "no_prod_promotions": true,
+    "no_provider_compute": true,
+    "no_new_secrets": true,
+    "p_vs_np": "OPEN",
+    "general_polynomial_exactone_solver": false,
+    "independent_external_peer_review": false
+  }
+}
