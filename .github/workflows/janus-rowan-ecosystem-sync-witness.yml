@@ -14,6 +14,10 @@ on:
       - 'modules/rowan_observer/ecosystem_sync_witness.py'
       - 'modules/rowan_observer/test_ecosystem_sync_witness.py'
       - '.github/workflows/janus-rowan-ecosystem-sync-witness.yml'
+      # Independent attestation immediately after the verified reconciler
+      # pushes its exact source-bound coordination pointer; never on every
+      # routine canonical archive write, which would be too early.
+      - 'data/rowan/coordination/LATEST_COORDINATION_STATE.json'
 permissions:
   contents: read
 concurrency:
