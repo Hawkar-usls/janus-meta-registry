@@ -1,0 +1,72 @@
+name: Rowan archive idempotency and real source replay (zero Rowan credits)
+on:
+  pull_request:
+    paths:
+      - 'modules/rowan_observer/ingest.py'
+      - 'modules/rowan_observer/test_ingest_duplicate_rerun.py'
+      - '.github/workflows/rowan-archive-idempotency-ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  archive-replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install CPU-only numeric replay test dependency
+        run: python -m pip install --disable-pip-version-check --quiet numpy==2.1.3
+      - name: Run every Rowan archive and scientific negative control, no provider key
+        run: |
+          python -m unittest discover -v -s modules/rowan_observer -p 'test_*.py'
+      - name: Real GitHub source-artifact archive replay in throwaway CI checkout
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          test -z "${ROWAN_API_KEY:-}"
+          python modules/rowan_observer/ingest.py --root . --limit 12
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("data/rowan/CANONICAL_STATE.json")
+          d=json.loads(p.read_text(encoding="utf-8"))
+          assert d["schema_id"]=="janus.rowan.observer_state.v1"
+          assert d["latest_durable_external_run"]>=40638479917,d
+          assert d["last_completed_mutants"]==8
+          assert not d["budget_guard_alert_mutations"]
+          assert d["new_unreviewed_studies"]=="PROPOSAL_ONLY_NOT_AUTO_EXECUTED"
+          rid=d["latest_durable_external_run"]
+          matches=list(Path("data/rowan/receipts").glob(f"ROWAN-S2-{rid}-*.json"))
+          assert len(matches)==1, matches
+          receipt=json.loads(matches[0].read_text())
+          assert receipt["source"]["run_id"]==rid
+          assert receipt["source"]["source_artifact_sha256"]==d["underlying_state_is_derived_from"]
+          assert receipt["calibration"]["eight_mutants_with_provider_results"]==8
+          print("REAL_NEW_ROWAN_ARTIFACT_SOURCE_BOUND=PASS")
+          print("ARCHIVE_ADVANCED_TO="+str(rid))
+          print("NO_PROVIDER_CALLS_OR_BILLING=PASS")
+          PY
+          cp data/rowan/CANONICAL_STATE.json "${RUNNER_TEMP}/rowan-dryrun-canonical.json"
+      - name: Check repeated import is content-idempotent
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          sha256sum data/rowan/CANONICAL_STATE.json > /tmp/rowan-before.sha
+          python modules/rowan_observer/ingest.py --root . --limit 12
+          sha256sum -c /tmp/rowan-before.sha
+          echo 'ROWAN_REPEATED_ARCHIVE_NO_NEW_DATA=PASS'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rowan-archive-real-new-run-readonly-preview
+          path: ${{ runner.temp }}/rowan-dryrun-canonical.json
+          retention-days: 14
