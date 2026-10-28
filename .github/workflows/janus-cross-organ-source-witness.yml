@@ -1,0 +1,82 @@
+name: JANUS Cross Organ Source-Bound Evidence Witness
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '41 */6 * * *'
+  pull_request:
+    paths:
+      - 'tools/janus_cross_organ_source_witness.py'
+      - 'agent-observatory/JANUS_CONTOUR_MANIFEST.json'
+      - '.github/workflows/janus-cross-organ-source-witness.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'tools/janus_cross_organ_source_witness.py'
+      - 'agent-observatory/JANUS_CONTOUR_MANIFEST.json'
+      - '.github/workflows/janus-cross-organ-source-witness.yml'
+permissions:
+  contents: read
+concurrency:
+  group: janus-cross-organ-sources
+  cancel-in-progress: false
+jobs:
+  source-bound-readonly:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate fail-closed negative controls
+        run: |
+          python -m py_compile tools/janus_cross_organ_source_witness.py
+          python tools/janus_cross_organ_source_witness.py --test --out "$RUNNER_TEMP/cross-organ-witness.json"
+      - name: Publish independent bounded source hash audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-cross-organ-source-witness-${{ github.run_id }}
+          path: ${{ runner.temp }}/cross-organ-witness.json
+          retention-days: 14
+          if-no-files-found: error
+  archive:
+    if: github.event_name != 'pull_request'
+    needs: source-bound-readonly
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Re-verify live independent sources and write immutable receipt
+        run: python tools/janus_cross_organ_source_witness.py --persist-root .
+      - name: Persist only source-hash receipt, never external authority
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'JANUS Cross Organ Witness'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/integrations/contour/
+          if git diff --cached --quiet; then
+            echo 'JANUS_CONTOUR_ARCHIVE=IDEMPOTENT'
+            exit 0
+          fi
+          git commit -m 'JANUS: immutable cross-organ source witness'
+          for i in 1 2 3; do
+            git fetch origin main
+            if ! git rebase origin/main; then
+              git rebase --abort || true
+              exit 1
+            fi
+            if git push origin HEAD:main; then exit 0; fi
+            sleep "$i"
+          done
+          exit 1
