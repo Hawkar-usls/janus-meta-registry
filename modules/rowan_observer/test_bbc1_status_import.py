@@ -95,6 +95,27 @@ class StructuralArchiveTests(unittest.TestCase):
             latest=json.loads((root/m.ROOT_REL/"LATEST.json").read_text())
             self.assertEqual(latest["latest_source_run"],40681221109)
 
+    def test_historical_receipt_tamper_detected_even_when_latest_valid(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)
+            pull=lambda _:(sample(), "a"*64)
+            m.update(root,[run(200),run(100)],pull,limit=2)
+            older=next((root/m.ROOT_REL/"receipts").glob("*100*"))
+            older.write_bytes(older.read_bytes()+b" ")
+            with self.assertRaisesRegex(m.EvidenceHold, "HISTORIC_RECEIPT_HASH_DRIFT"):
+                m.update(root,[run(200)],pull)
+
+    def test_duplicate_same_run_is_not_silently_accepted(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)
+            pull=lambda _:(sample(), "a"*64)
+            m.update(root,[run(200)],pull)
+            first=next((root/m.ROOT_REL/"receipts").glob("*200*"))
+            twin=root/m.ROOT_REL/"receipts"/("ROWAN-BBC1-WT-K5A-200-"+"f"*16+".json")
+            twin.write_bytes(first.read_bytes())
+            with self.assertRaisesRegex(m.EvidenceHold, "HISTORIC_RECEIPT_HASH_DRIFT"):
+                m.update(root,[run(200)],pull)
+
     def test_rollback_history_rejected(self):
         with tempfile.TemporaryDirectory() as tmp:
             r=lambda _:(sample(),"e"*64)
