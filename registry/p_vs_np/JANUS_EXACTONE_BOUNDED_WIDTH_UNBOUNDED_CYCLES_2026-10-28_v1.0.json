@@ -1,0 +1,92 @@
+{
+  "schema": "janus.meta_registry.exactone_bounded_primal_width_certificate_v1",
+  "artifact_id": "JANUS-P-VS-NP-WIDTH-DP-UNBOUNDED-CYCLES-2026-10-28-v1.0",
+  "created_at": "2026-10-28",
+  "classification": "FINITE_CI_VERIFIED_SPECIAL_CLASS_THEOREM_AND_REPLAYABLE_CERTIFICATE",
+  "source": {
+    "repository": "Hawkar-usls/Janus-Fundamentum",
+    "draft_pr": "https://github.com/Hawkar-usls/Janus-Fundamentum/pull/571",
+    "source_branch": "research/exactone-parity-certificate-preprocessor-20261028",
+    "source_commit": "5269096c7971f37d0eb694494407714757acb185",
+    "operator": "research/exactone_bounded_width_dp.py",
+    "proof_scope": "docs/EXACTONE_BOUNDED_WIDTH_UNBOUNDED_CYCLES_20261028.md",
+    "mathematical_ci": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/40654610345",
+    "cross_repository_ci": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/40654610501",
+    "math_artifact_id": 12801470247,
+    "e2e_artifact_id": 12801081124,
+    "lapis_converter_source_commit": "72daf0b4dce0467afad4f5f3ceaa813503923b30",
+    "source_rowan_archived_collect": "https://github.com/Hawkar-usls/Janus/actions/runs/40593272360"
+  },
+  "formal_statement": {
+    "problem": "Signed EXACT-ONE clauses of arity 1 or 3; negative and repeated literals accepted",
+    "input_size": "L := encoded input length",
+    "structural_parameter": "w := maximum current primal-neighborhood size along a witnessed variable elimination order",
+    "algorithm": "Exact existential variable elimination using bounded-size Boolean factors; store all allowed projected tuples and one reconstruction bit for each",
+    "proof_sketch": [
+      "Each original factor enumerates exactly satisfying tuples of its signed exact-one constraint",
+      "Existential elimination of one variable produces a logically equivalent factor on its neighbors when conjoined with other factors",
+      "Induction across elimination stages preserves existential satisfiability; backwards reconstruction yields a valid model",
+      "An empty projected relation witnesses UNSAT; independent local replay detects unjustified projections",
+      "A supplied/elaborated ordering of fixed width w bounds each factor scope by w+1 and projected tuples by 2^w"
+    ],
+    "time_bound": "O(poly(L) * 2^(w+1)) for the implemented deterministic elimination heuristic and its replay",
+    "certificate_size_bound": "O(L*(w+1)*2^w) table entries, plus index encoding overhead",
+    "polynomial_subclass": "Any input on which an elimination order of uniformly bounded width is found; specifically an infinite chain-of-overlapping-cubic-clauses family has width 2",
+    "open_condition": "OPEN_WIDTH_CAP if heuristic minimum current degree exceeds tested explicit research width cap 2..6",
+    "recognition_limitation": "Heuristic failure is not evidence that the optimal treewidth exceeds the cap; unrestricted treewidth can scale with input size",
+    "historical_context": "Classical bounded-treewidth CSP variable elimination; not asserted as a newly discovered general complexity principle"
+  },
+  "experimental_results": {
+    "status": "PASS",
+    "independent_small_truth_table_cases": 427,
+    "status_counts": {
+      "SAT": 165,
+      "UNSAT": 240,
+      "OPEN_WIDTH_CAP": 22
+    },
+    "large_family": {
+      "variables": 83,
+      "consecutive_cubic_exactone_clauses": 81,
+      "distinct_incidence_four_cycles_lower_bound": 80,
+      "maximum_elimination_width": 2,
+      "satisfiable_control": "PASS",
+      "contradictory_cubic_unsat_control": "PASS",
+      "scalable_family": "n-2 windows (i,i+1,i+2), one new overlapping cycle for each consecutive pair"
+    },
+    "independent_verifier": "REPLAYS EACH ELIMINATION STEP BY SEPARATE LOCAL BUCKET ENUMERATOR",
+    "proof_witness": "SAT original-clause witness; UNSAT empty exact projected factor",
+    "tampered_and_rehashed_projection": "REJECTED",
+    "exact_workflow_artifact_sha256": "sha256:3ab62124e815e99059384278f476a2ee3dd67bb33645dc2689c6d8c5796096a4",
+    "cross_repo_workflow_artifact_sha256": "sha256:6a6d9126fd70e2f55e817654a1fcd7f04df390ed85bf2312591e286e9429710f"
+  },
+  "lapis": {
+    "actual_converter_executed": true,
+    "converted_mathematical_certificate": true,
+    "converted_archived_real_rowan_bbc1_science_receipt": true,
+    "algorithm_ir_mode": "heuristic_translation",
+    "IR_operators": "ANNOTATE_ONLY",
+    "formal_proof_authority_granted": false,
+    "original_sat_certificate_accepted_by_fundamentum_independent_checker": true,
+    "cycle_case_lapis_algorithm_sha256": "2b9036f91e96e99f5521c7c99469874a86a8bc15ed80408b451da88a351afb67"
+  },
+  "rowan": {
+    "archived_provider_mutants": 8,
+    "new_provider_jobs": 0,
+    "credits_spent_in_this_pipeline": 0,
+    "scientific_structure_scores_used_as_sat_witness": false,
+    "real_rowan_general_sat_workflow_verified": false
+  },
+  "research_boundary": {
+    "p_vs_np": "OPEN",
+    "universal_polynomial_exactone_solver_proven": false,
+    "polynomial_decision_for_all_cyclic_graphs": false,
+    "independent_peer_review": false,
+    "next_barrier": "Find uniformly poly-bounded relation representation or decomposition / compilation for arbitrary high-primal-width cyclic Exact-One residuals, with polynomial-time recognition, construction, composition and reconstruction",
+    "production_changes": false,
+    "scope": "DRAFT_PR_ONLY"
+  },
+  "external_context": [
+    "https://courses.csail.mit.edu/6.854/18/Scribe/s25-online/s25-online.html",
+    "https://www.cs.bme.hu/~dmarx/papers/marx-weizmann-hypergraph.pdf"
+  ]
+}
