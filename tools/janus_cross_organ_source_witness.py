@@ -22,6 +22,13 @@ SOURCES={
  "market":("JANUS-MACHINE-MARKET","ORGAN_SERVICE_MATRIX.json","CONTROL"),
  "voice":("The-Voice-of-Janus","README.md","NOTIFY"),
  "echo":("Echo-Pyramid","README.md","NOTIFY"),
+ "link_scoby":("SCOBY-D0",".janus/JANUS_CROSS_ORGAN_SOURCE_LINK.json","SCIENCE"),
+ "link_fundamentum":("Janus-Fundamentum",".janus/JANUS_CROSS_ORGAN_SOURCE_LINK.json","SCIENCE"),
+ "link_terminal":("-Terminal-for-Janus",".janus/JANUS_CROSS_ORGAN_SOURCE_LINK.json","CONTROL"),
+ "link_helios":("Janus-HELIOS",".janus/JANUS_CROSS_ORGAN_SOURCE_LINK.json","CONTROL"),
+ "link_market":("JANUS-MACHINE-MARKET",".janus/JANUS_CROSS_ORGAN_SOURCE_LINK.json","CONTROL"),
+ "link_voice":("The-Voice-of-Janus",".janus/JANUS_CROSS_ORGAN_SOURCE_LINK.json","NOTIFY"),
+ "link_echo":("Echo-Pyramid",".janus/JANUS_CROSS_ORGAN_SOURCE_LINK.json","NOTIFY"),
 }
 MAX=180_000
 class Hold(ValueError):pass
@@ -75,6 +82,29 @@ def audit(raw,manifest):
  require("ORGAN_CAPABILITY != LIVE_MARKET_EXECUTION" in r["market"].get("routing_laws",[]) and
          r["market"].get("services",{}).get("JANUS.FUNDAMENTUM_AUDIT",{}).get("public_live") is False,
          "MARKET_AUTONOMOUS_DISPATCH_HOLD")
+ for key,(source_repo,source_path,lane) in SOURCES.items():
+  if not key.startswith("link_"):continue
+  link=r[key]
+  require(link.get("schema")=="janus.organ.cross_organ_source_link.v1" and
+          link.get("organ")=="Hawkar-usls/"+source_repo and
+          link.get("lane")==lane and
+          link.get("link_type")=="RECIPROCAL_READ_ONLY_SOURCE_POINTER" and
+          link.get("delivery_witness")=="NOT_ATTESTED_SOURCE_LINK_ONLY",
+          "RECIPROCAL_LINK_IDENTITY_HOLD_"+key)
+  contracts=link.get("source_contracts")
+  require(isinstance(contracts,list) and contracts and contracts[0].get("repo")=="Hawkar-usls/janus-meta-registry" and
+          contracts[0].get("path")=="data/integrations/contour/LATEST.json",
+          "RECIPROCAL_LINK_UPSTREAM_HOLD_"+key)
+  auth=link.get("authority",{})
+  require(auth.get("observe_public_provenance") is True and
+          all(value is False for prop,value in auth.items() if prop!="observe_public_provenance") and
+          {"submit_rowan_job","spend_rowan_credits","trigger_external_workflows",
+           "authorize_market_payment","issue_operator_command","promote_scientific_claim",
+           "publish_private_data"}<=set(auth),
+          "RECIPROCAL_LINK_AUTHORITY_HOLD_"+key)
+  if lane=="SCIENCE":
+   require(len(contracts)==5,"SCIENCE_LINK_INCOMPLETE_"+key)
+  else:require(len(contracts)==1,"CONTROL_OR_NOTIFY_LINK_EXPANDED_"+key)
  hashes={name:sha(raw[name]) for name in sorted(raw)}
  key=sha(json.dumps(hashes,sort_keys=True,separators=(",",":")).encode())
  return {"schema":"janus.cross_organ.source_witness.v1",
