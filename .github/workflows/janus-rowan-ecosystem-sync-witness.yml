@@ -1,7 +1,9 @@
 name: JANUS Rowan Ecosystem Independent Sync Witness
 on:
   schedule:
-    - cron: '23 */4 * * *'
+    # GITHUB_TOKEN writes by the hourly council do not trigger downstream
+    # push workflows. Audit after the :53 council reconciliation independently.
+    - cron: '58 * * * *'
   workflow_dispatch:
   pull_request:
     paths:
