@@ -129,6 +129,7 @@ jobs:
       contents: write
     outputs:
       state_commit: ${{ steps.save.outputs.state_commit }}
+      publish_status: ${{ steps.scope.outputs.publish_status }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -177,9 +178,26 @@ jobs:
           fi
           echo "state_commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
       - name: Publish honest scope
-        run: cat PUBLISH.json >> "$GITHUB_STEP_SUMMARY"
+        id: scope
+        shell: bash
+        run: |
+          cat PUBLISH.json >> "$GITHUB_STEP_SUMMARY"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          result = json.loads(Path("PUBLISH.json").read_bytes())
+          status = result.get("status")
+          if status not in ("PROMOTED_PURE_EXTENSION_ONLY", "REJECTED_NO_PROMOTION",
+                            "ALREADY_PUBLISHED", "IDLE_ALL_ADMITTED_TASKS_DONE"):
+              raise SystemExit("UNRECOGNIZED_CODER_PUBLICATION_STATUS")
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as stream:
+              stream.write("publish_status=" + status + "\n")
+          PY
   clean-consumer:
     needs: publish
+    # Idle is not new accepted code. No fresh receipt exists for this run;
+    # the previously verified extension must never be presented as new work.
+    if: ${{ needs.publish.outputs.publish_status != 'IDLE_ALL_ADMITTED_TASKS_DONE' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
