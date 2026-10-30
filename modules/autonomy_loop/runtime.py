@@ -4,6 +4,7 @@ import argparse
 import base64
 import hashlib
 import json
+import importlib.util
 import os
 from pathlib import Path
 import re
@@ -82,7 +83,7 @@ class PublicGitHub:
         self.opener = build_opener(NoRedirect())
         self.pins = {}
     def get(self, repo, path):
-        allowed = {s[0] for s in SPECS.values()} | {w[0] for w in WORKFLOWS.values()}
+        allowed = {s[0] for s in SPECS.values()} | {w[0] for w in WORKFLOWS.values()} | {"Hrain", "iNaiHR", "TOPA", "Janus", "janus-lapis"}
         if repo not in allowed or not path.startswith("/") or ".." in path:
             raise Hold("SOURCE_NOT_ALLOWLISTED")
         headers = {"Accept": "application/vnd.github+json", "User-Agent": "JANUS-Autonomy-Loop/1"}
@@ -104,7 +105,7 @@ class PublicGitHub:
                 raise Hold("INVALID_REF_SHA")
             self.pins[key] = sha
         return self.pins[key]
-    def file(self, repo, commit, path):
+    def raw_file(self, repo, commit, path):
         if not SHA.fullmatch(commit):
             raise Hold("UNPINNED_FILE_READ")
         result = self.get(repo, "/contents/" + quote(path, safe="/") + "?ref=" + commit)
@@ -116,10 +117,13 @@ class PublicGitHub:
         blob_sha = hashlib.sha1(b"blob " + str(len(raw)).encode() + b"\0" + raw).hexdigest()
         if blob_sha != result.get("sha"):
             raise Hold("GIT_BLOB_DIGEST_MISMATCH")
+        return raw, hashlib.sha256(raw).hexdigest(), blob_sha
+    def file(self, repo, commit, path):
+        raw, sha, blob_sha = self.raw_file(repo, commit, path)
         data = json.loads(raw, parse_constant=lambda _: (_ for _ in ()).throw(Hold("NONFINITE_JSON")))
         if not isinstance(data, dict):
             raise Hold("SOURCE_NOT_OBJECT")
-        return data, hashlib.sha256(raw).hexdigest(), blob_sha
+        return data, sha, blob_sha
 
 def collect(client):
     sources = {}
@@ -160,7 +164,7 @@ def collect(client):
         workflows[name] = info
     return sources, workflows
 
-def summarize(sources, workflows, observed_at, code_sha, previous=None):
+def summarize(sources, workflows, observed_at, code_sha, previous=None, action=None):
     findings = []
     def add(phase, reason, evidence):
         findings.append({"id": phase + ":" + reason, "phase": phase,
@@ -222,13 +226,20 @@ def summarize(sources, workflows, observed_at, code_sha, previous=None):
     completed = dict((previous or {}).get("accepted_phases", {}))
     if set(completed) - {p[0] for p in PHASES}:
         raise Hold("UNKNOWN_ACCEPTANCE_PHASE")
-    if set(completed) - {"P0.1"}:
+    if set(completed) - {"P0.1", "P0.2"}:
         raise Hold("UNIMPLEMENTED_PHASE_ACCEPTANCE")
+    if "P0.2" in completed and ("P0.1" not in completed or completed["P0.2"].get("status") != "PASS_SOURCE_COHORT_ONLY"):
+        raise Hold("INVALID_PHASE_ACCEPTANCE")
     if completed and completed["P0.1"].get("status") != "PASS_STATUS_CAPTURE_ONLY":
         raise Hold("INVALID_PHASE_ACCEPTANCE")
     current = next((p[0] for p in PHASES if p[0] not in completed), None)
+    reopened = "P0.2" in completed and any(
+        f["phase"] == "P0.2" and ("GENERATION_DRIFT" in f["reason"] or "DIGEST_DRIFT" in f["reason"])
+        for f in findings)
+    if reopened:
+        current = "P0.2"
     plan = [{"order": i + 1, "phase": pid, "objective": objective, "issue": issue,
-             "state": "DONE" if pid in completed else "ACTIVE" if pid == current else "WAITING_FOR_PREVIOUS",
+             "state": "ACTIVE_RECHECK" if pid == current and pid in completed else "DONE" if pid in completed else "ACTIVE" if pid == current else "WAITING_FOR_PREVIOUS",
              "tasks": [f for f in findings if f["phase"] == pid]}
             for i, (pid, objective, issue) in enumerate(PHASES)]
     model_metrics = {key: model.get(key) for key in ("attempt_count", "promotion_count", "rejection_count", "checkpoint_sha256", "last_training_status")}
@@ -248,6 +259,7 @@ def summarize(sources, workflows, observed_at, code_sha, previous=None):
                     "native_decision": d["native_decision"].get("status"),
                     "forge": d["forge"].get("status")},
         "current_phase": current, "roadmap": plan, "accepted_phases": completed,
+        "maintenance": action or {},
         "execution": {"status": "OBSERVE_PLAN_PERSIST", "runtime_code_changes_this_cycle": 0,
                       "next": "VERIFY_P0_1_SNAPSHOT" if current == "P0.1" else "EXECUTE_REVIEWED_HANDLER_OR_WAIT",
                       "unimplemented_handlers_do_not_count_as_done": True},
@@ -336,6 +348,13 @@ def load_record(root):
         raise Hold("LATEST_REBINDING")
     return pointer, record
 
+def maintenance_module():
+    path = Path(__file__).with_name("maintenance.py")
+    spec = importlib.util.spec_from_file_location("janus_reviewed_maintenance", path)
+    obj = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(obj)
+    return obj
+
 def verify_persisted(root, client, accept=False):
     pointer, record = load_record(root)
     unknown = []
@@ -360,7 +379,7 @@ def verify_persisted(root, client, accept=False):
         if any(actual.get(k) != value for k, value in expected.items()):
             raise Hold("INDEPENDENT_WORKFLOW_REPLAY_MISMATCH")
     rebuilt = summarize(replayed, record["workflows"], record["observed_at_utc"],
-                        record["code_sha"], {"accepted_phases": record.get("accepted_phases", {})})
+                        record["code_sha"], {"accepted_phases": record.get("accepted_phases", {})}, record.get("maintenance", {}))
     if rebuilt["state_sha256"] != record["state_sha256"]:
         raise Hold("DERIVED_STATUS_REPLAY_MISMATCH")
     if accept and any(name in unknown for name in ("canonical", "genesis_current", "home", "native_model")):
@@ -370,6 +389,18 @@ def verify_persisted(root, client, accept=False):
     result = {"schema": "janus.autonomy.verification.v1", "snapshot_sha256": record["state_sha256"],
               "status": "PASS_STATUS_CAPTURE_ONLY", "unknown_sources": unknown,
               "verified_at_utc": utcnow(), "full_issue_162_acceptance": False, "authority_delta": 0}
+    p02 = record.get("maintenance", {}).get("p02_proof")
+    p02_acceptance = maintenance_module().verify_cohort(root, client, p02) if p02 else None
+    if p02_acceptance:
+        if p02_acceptance["canonical_run"] != record["rowan_generations"]["canonical"]:
+            raise Hold("P02_OTHER_GENERATION")
+        for proof_key, snapshot_key in {"canonical": "canonical", "aura": "aura", "council": "council",
+                                        "pointer": "coordination", "cosmos": "cosmos"}.items():
+            proof_source = p02["sources"][proof_key]
+            status_source = record["sources"][snapshot_key]
+            for key in ("repository", "commit_sha", "path", "content_sha256", "blob_sha"):
+                if proof_source[key] != status_source.get(key):
+                    raise Hold("P02_DIFFERENT_STATUS_COHORT")
     if accept:
         base = Path(root) / OUTPUT
         path = base / "CHECKPOINT.json"
@@ -377,11 +408,16 @@ def verify_persisted(root, client, accept=False):
         phases = previous.get("accepted_phases", {})
         if "P0.1" not in phases:
             phases["P0.1"] = result
+        if p02_acceptance:
+            phases.setdefault("P0.2", p02_acceptance)
+        current = next((p[0] for p in PHASES if p[0] not in phases), None)
         state = {"schema": "janus.autonomy.checkpoint.v1", "accepted_phases": phases,
-                 "last_verified_snapshot": record["state_sha256"], "current_phase": "P0.2",
+                 "last_verified_snapshot": record["state_sha256"], "current_phase": current,
                  "authority_delta": 0, "unimplemented_handlers_do_not_count_as_done": True}
+        advanced = summarize(replayed, record["workflows"], record["observed_at_utc"], record["code_sha"], state, record.get("maintenance", {}))
+        state["current_phase"] = advanced["current_phase"]
         path.write_bytes(encode(state))
-        persist(root, summarize(replayed, record["workflows"], record["observed_at_utc"], record["code_sha"], state))
+        persist(root, advanced)
     return result
 
 def main():
@@ -398,7 +434,8 @@ def main():
         checkpoint = args.root / OUTPUT / "CHECKPOINT.json"
         previous = json.loads(checkpoint.read_bytes()) if checkpoint.exists() else {}
         sources, workflows = collect(client)
-        record = summarize(sources, workflows, utcnow(), os.environ.get("JANUS_LOOP_CODE_SHA", os.environ.get("GITHUB_SHA", "LOCAL_READ_ONLY")), previous)
+        action = maintenance_module().execute(args.root, client, sources, previous)
+        record = summarize(sources, workflows, utcnow(), os.environ.get("JANUS_LOOP_CODE_SHA", os.environ.get("GITHUB_SHA", "LOCAL_READ_ONLY")), previous, action)
         pointer = persist(args.root, record)
         print(json.dumps({"collector": "SUCCESS", "ecosystem_status": "AUTONOMY_PARTIAL",
                           "current_phase": record["current_phase"], "findings": len(record["findings"]), **pointer}))
