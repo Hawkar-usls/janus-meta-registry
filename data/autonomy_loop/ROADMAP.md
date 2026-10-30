@@ -62,7 +62,7 @@ A successful collector is not proof of useful work or full autonomy.
 - **P0.4** PATCHES_WAITING: 38
 - **P0.5** SCOUT_MODEL_SYNTHESIS_DEGRADED: {"snapshots": 17, "synthesis": 0, "expected": 17}
 - **P3** RECENT_TRAINING_ALL_REJECTED: 64
-- **P0.3** WORKFLOW_NOT_SUCCESS_BEETLE_PRODUCER: {"repository": "Hawkar-usls/janus-lapis", "workflow": "universal-beetle-hourly.yml", "status": "OBSERVED", "run_id": 41071119214, "event": "schedule", "conclusion": "failure", "head_sha": "4958fcf4dd23e78ff8d45b946491482ca8a95cf0", "created_at": "2026-10-30T14:21:35Z", "url": "https://github.com/Hawkar-usls/janus-lapis/actions/runs/41071119214"}
+- **P0.3** WORKFLOW_NOT_SUCCESS_BEETLE_PRODUCER: {"conclusion": "failure", "created_at": "2026-10-30T14:21:35Z", "event": "schedule", "head_sha": "4958fcf4dd23e78ff8d45b946491482ca8a95cf0", "repository": "Hawkar-usls/janus-lapis", "run_id": 41071119214, "status": "OBSERVED", "url": "https://github.com/Hawkar-usls/janus-lapis/actions/runs/41071119214", "workflow": "universal-beetle-hourly.yml"}
 
 ## Continuation
 
