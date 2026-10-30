@@ -1,7 +1,7 @@
 name: JANUS Autonomous Roadmap and Continuation
 on:
   workflow_run:
-    workflows: ["JANUS Rowan Durable Observer", "JANUS Beetle Memory Receiver"]
+    workflows: ["JANUS Rowan Durable Observer", "JANUS Beetle Memory Receiver", "JANUS Self-Writer Real Operational Consumer"]
     types: [completed]
     branches: [main]
   schedule:
@@ -44,7 +44,7 @@ jobs:
     if: >-
       ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' &&
           (github.event_name != 'workflow_run' ||
-           (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.head_repository.full_name == github.repository)) }}
+           (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.head_repository.full_name == github.repository && github.event.workflow_run.event != 'pull_request')) }}
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     permissions:
@@ -60,6 +60,29 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Attest independently completed upstream wake source (no model authority)
+        if: github.event_name == 'workflow_run'
+        env:
+          UPSTREAM_ID: ${{ github.event.workflow_run.id }}
+          UPSTREAM_NAME: ${{ github.event.workflow_run.name }}
+          UPSTREAM_SHA: ${{ github.event.workflow_run.head_sha }}
+          UPSTREAM_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+          UPSTREAM_BRANCH: ${{ github.event.workflow_run.head_branch }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$UPSTREAM_CONCLUSION" = success
+          test "$UPSTREAM_BRANCH" = main
+          case "$UPSTREAM_NAME" in
+            "JANUS Rowan Durable Observer"|"JANUS Beetle Memory Receiver"|"JANUS Self-Writer Real Operational Consumer") ;;
+            *) echo 'JANUS_WAKER_UNADMITTED_SOURCE'; exit 1 ;;
+          esac
+          [[ "$UPSTREAM_SHA" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$UPSTREAM_ID" =~ ^[0-9]+$ ]]
+          echo "JANUS_AUTONOMY_WAKE_SOURCE=$UPSTREAM_NAME"
+          echo "JANUS_AUTONOMY_WAKE_RUN=$UPSTREAM_ID"
+          echo "JANUS_AUTONOMY_WAKE_HEAD=$UPSTREAM_SHA"
+          echo 'JANUS_AUTONOMY_WAKE_AUTHORITY_DELTA=0'
       - name: Bind trusted code before reading external metadata
         id: code
         run: |
