@@ -61,3 +61,9 @@ autonomous integration into trusted `main`.
   This mechanism provides verifiable **proposals**, not general-purpose
   self-modification or proof of P2/GENESIS #162 autonomy.
 
+
+### Repository Actions PR-permission fallback
+
+The first real main-branch proposer run `41120045517` **pushed** an exact-source review branch for `retry_delay`, but GitHub explicitly rejected `gh pr create`: `GitHub Actions is not permitted to create or approve pull requests`. This is a repository policy, not proof that module verification failed. PR #379 was instead opened once using the separately authorized GitHub connection; its source is still review-only.
+
+The workflow now preserves this restriction: when Actions PR creation is denied, it does **not** borrow a more privileged token or alter repository settings. It creates a persistent GitHub issue pointing to the immutable review branch, and dispatches a fresh **read-only** workflow to verify the branch's precise one-commit/two-file diff, exact source SHA, historic state commit ancestor, and replay of model and independent evaluator evidence. A human-authorized actor can turn the reviewed branch into a PR later. This fallback is not itself a PR and does not merge or install code. If issue creation or independent verification is denied, the workflow must remain visibly failed/HOLD rather than claim integration.
