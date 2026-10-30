@@ -24,3 +24,40 @@ The publisher now builds `self_modules/<reviewed-task>/module.py` containing **e
 Before packaging, the builder independently replays the full chain `candidate response → SHA-bound bundle → independent evaluation → immutable receipt → accepted source`. It rejects altered source, forged evaluation, substituted model weights, replay conflicts, changed earlier packages, or permission metadata. A clean separate worker reopens the state commit and repeats this exact audit before calling any extension in its networkless pinned container. Failed/rejected code does not create a module and cannot impersonate an earlier accepted one. Normal package publishing uses existing permissions and remains scoped to `self_modules/`, `MODULE_INDEX.json`, `STATE.json`, `ROADMAP.md`, and existing evidence directories.
 
 **Admission boundary:** new module *categories* or new dependencies still require reviewed policy, independent behavioral oracle, tests, an explicit PR and permission checks. A published self-module is an independently validated **pure extension**, not an automatically trusted production library, a plugin installer, a universal self-writer or proof of P2/G1–G20. This is the first composable catalog layer toward controlled self-maintenance, not permission to run generated shell code or modify sensitive infrastructure.
+
+
+## Review-only autonomous module PR lane
+
+Once a pure module passes independent evaluation and is stored in the isolated
+`janus/autonomous-code-state` branch, a separate GitHub-hosted proposer can
+prepare **one review-only pull request** per invocation. This is not
+autonomous integration into trusted `main`.
+
+* The proposer reads and replays the complete module catalog, candidate bundle,
+  pinned external-model identity, independent evaluator, immutable receipt,
+  source bytes, and state commit. Its only allowed PR payload is
+  `candidate_modules/<reviewed-task>/module.py` (exact authored bytes) and
+  `candidate_modules/<reviewed-task>/PROPOSAL.json` (deterministic provenance
+  with zero permissions and `install_into_runtime=false`).
+* The branch name binds the reviewed task and the full SHA-256 of the generated
+  source. Historical pull requests and existing remote review branches are
+  checked so repeated scheduled runs cannot silently overwrite attempts or
+  flood duplicate proposals. No branch force-push or deletion is authorized.
+* Only the proposer job has narrowly scoped GitHub Actions write permissions
+  for creating a proposal branch and a **non-merged** PR. It cannot mutate
+  production state, call Rowan or install model-generated dependencies.
+* A clean read-only verification job separately checks GitHub's actual PR
+  head/base and exact two-file diff, finds the originating state SHA as an
+  ancestor of the durable state branch, reconstructs the **historical** commit,
+  and replays exact source/manifest/receipt/evaluator integrity against it.
+  PRs cannot establish their own new criteria, and an unexpected file, fork,
+  changed source, substituted state SHA or altered authority flag fails closed.
+  Since GitHub-token-generated PRs may not trigger other workflows, the
+  proposer explicitly dispatches the independent read-only verification.
+* Approval and merge are separate human-reviewed actions. No generated code is
+  automatically imported by trusted runtime, used as a privileged model tool,
+  assigned a network credential, or deployed to other JANUS organs. An
+  operational rollback plan is required before any later approved integration.
+  This mechanism provides verifiable **proposals**, not general-purpose
+  self-modification or proof of P2/GENESIS #162 autonomy.
+
