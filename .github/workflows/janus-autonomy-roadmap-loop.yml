@@ -31,7 +31,10 @@ jobs:
         with:
           python-version: '3.12'
       - name: Offline source, ordering, tamper and recovery controls
-        run: python -m unittest discover -v -s tests -p test_autonomy_loop.py
+        run: |
+          python -m unittest discover -v -s tests -p 'test_autonomy_*.py'
+          python -m unittest discover -v -s modules/rowan_observer -p test_coordination.py
+          python -m unittest discover -v -s modules/rowan_observer -p test_ecosystem_sync_witness.py
   cycle:
     needs: contract
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
@@ -65,7 +68,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          git add -- data/autonomy_loop/
+          git add -- data/autonomy_loop/ data/rowan/coordination/
           if ! git diff --cached --quiet; then
             git config user.name 'JANUS Autonomous Roadmap'
             git config user.email 'actions@users.noreply.github.com'
