@@ -1,0 +1,207 @@
+name: JANUS Autonomous Open-Weight Coder
+on:
+  schedule:
+    - cron: '43 */6 * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'modules/autonomy_coder/**'
+      - 'tests/test_autonomy_coder.py'
+      - '.github/workflows/janus-autonomous-coder.yml'
+  pull_request:
+    paths:
+      - 'modules/autonomy_coder/**'
+      - 'tests/test_autonomy_coder.py'
+      - '.github/workflows/janus-autonomous-coder.yml'
+permissions:
+  contents: read
+concurrency:
+  group: janus-autonomous-coder-state
+  cancel-in-progress: false
+jobs:
+  contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Offline admission, provenance, conflict and exactly-once controls
+        run: python -m unittest discover -v -s tests -p test_autonomy_coder.py
+      - name: Pull exact isolated evaluation runtime
+        run: docker pull python@sha256:1148dbb014615300fa7e713b2f94f550c0d1c69780c0805f84f093ceee34dd0b
+      - name: Real networkless container positive and negative controls
+        run: |
+          python - <<'PY'
+          import sys, subprocess
+          sys.path.insert(0, 'modules/autonomy_coder')
+          from lifecycle import isolated_check
+          good = 'def retry_delay(attempt, cap):\n    return min(cap, 2 ** attempt)\n'
+          assert isolated_check(good, 'retry_delay')['cases'] >= 200
+          for bad in ('def retry_delay(attempt, cap):\n    return 1\n',
+                      'def retry_delay(attempt, cap):\n    while True:\n        pass\n'):
+              try:
+                  isolated_check(bad, 'retry_delay')
+              except (ValueError, subprocess.TimeoutExpired):
+                  continue
+              raise AssertionError('negative container control accepted')
+          print('REAL_ISOLATED_CODE_CONTROLS=PASS')
+          PY
+  author:
+    needs: contract
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          path: _code
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: janus/autonomous-code-state
+          path: _state
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Restore model bytes; every byte is verified before use
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/janus-open-coder
+          key: janus-open-coder-ea3f2471cf1b1f0db85067f1ef93848e38e88c25
+      - name: Install CPU inference runtime
+        run: |
+          python -m pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cpu
+          python -m pip install transformers==4.57.1 huggingface-hub==0.36.0 safetensors==0.6.2
+      - name: Generate two actual model-authored variants for the next admitted task
+        env:
+          HF_HUB_DISABLE_TELEMETRY: '1'
+          HF_HUB_DISABLE_XET: '1'
+          TOKENIZERS_PARALLELISM: 'false'
+        run: |
+          python _code/modules/autonomy_coder/author.py \
+            --state _state/STATE.json \
+            --cache "$HOME/.cache/janus-open-coder" \
+            --out author-output/CANDIDATES.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: autonomous-coder-candidates
+          path: author-output/CANDIDATES.json
+          if-no-files-found: error
+          retention-days: 30
+  independent-evaluator:
+    needs: author
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          name: autonomous-coder-candidates
+          path: _candidate
+      - name: Pull pinned evaluation image
+        run: docker pull python@sha256:1148dbb014615300fa7e713b2f94f550c0d1c69780c0805f84f093ceee34dd0b
+      - name: Evaluate both variants without network, credentials or host write access
+        run: python modules/autonomy_coder/lifecycle.py evaluate --bundle _candidate/CANDIDATES.json --out evaluation/EVALUATION.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: autonomous-coder-independent-evaluation
+          path: evaluation/EVALUATION.json
+          if-no-files-found: error
+          retention-days: 30
+  publish:
+    needs: [author, independent-evaluator]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    outputs:
+      state_commit: ${{ steps.save.outputs.state_commit }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          path: _code
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: janus/autonomous-code-state
+          path: _state
+          fetch-depth: 1
+      - uses: actions/download-artifact@v4
+        with:
+          name: autonomous-coder-candidates
+          path: _candidate
+      - uses: actions/download-artifact@v4
+        with:
+          name: autonomous-coder-independent-evaluation
+          path: _evaluation
+      - name: Publish exact verified bytes to the dedicated extension branch
+        run: |
+          python _code/modules/autonomy_coder/lifecycle.py publish \
+            --root _state --bundle _candidate/CANDIDATES.json \
+            --evaluation _evaluation/EVALUATION.json --out PUBLISH.json
+      - name: Preserve immutable attempts and advance state without force or rebase
+        id: save
+        working-directory: _state
+        run: |
+          set -euo pipefail
+          git config user.name 'janus-autonomous-coder[bot]'
+          git config user.email 'janus-autonomous-coder[bot]@users.noreply.github.com'
+          git add STATE.json ROADMAP.md attempts receipts generated
+          python - <<'PY'
+          import subprocess
+          paths = subprocess.check_output(['git', 'diff', '--cached', '--name-only'], text=True).splitlines()
+          if any(p not in ('STATE.json', 'ROADMAP.md') and not p.startswith(('attempts/', 'receipts/', 'generated/')) for p in paths):
+              raise SystemExit('CODER_WRITE_SCOPE')
+          status = subprocess.check_output(['git', 'diff', '--cached', '--diff-filter=D', '--name-only'], text=True)
+          if status:
+              raise SystemExit('CODER_DELETION_DENIED')
+          PY
+          if ! git diff --cached --quiet; then
+            git diff --cached --check
+            git commit -m "coder: exact reviewed extension attempt ${GITHUB_RUN_ID}"
+            git push origin HEAD:janus/autonomous-code-state
+          fi
+          echo "state_commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+      - name: Publish honest scope
+        run: cat PUBLISH.json >> "$GITHUB_STEP_SUMMARY"
+  clean-consumer:
+    needs: publish
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          path: _code
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.publish.outputs.state_commit }}
+          path: _state
+          persist-credentials: false
+      - name: Pull pinned isolated runtime
+        run: docker pull python@sha256:1148dbb014615300fa7e713b2f94f550c0d1c69780c0805f84f093ceee34dd0b
+      - name: Reconstruct from durable Git and call the verified extension
+        run: python _code/modules/autonomy_coder/lifecycle.py consume --root _state --out CONSUMPTION.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: autonomous-coder-clean-consumption
+          path: CONSUMPTION.json
+          if-no-files-found: error
+          retention-days: 30
+      - run: cat CONSUMPTION.json >> "$GITHUB_STEP_SUMMARY"
+
