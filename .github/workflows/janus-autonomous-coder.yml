@@ -9,12 +9,14 @@ on:
       - 'modules/autonomy_coder/**'
       - 'tests/test_autonomy_coder.py'
       - 'tests/test_autonomy_module_registry.py'
+      - 'tests/test_rex_need_intake.py'
       - '.github/workflows/janus-autonomous-coder.yml'
   pull_request:
     paths:
       - 'modules/autonomy_coder/**'
       - 'tests/test_autonomy_coder.py'
       - 'tests/test_autonomy_module_registry.py'
+      - 'tests/test_rex_need_intake.py'
       - '.github/workflows/janus-autonomous-coder.yml'
 permissions:
   contents: read
@@ -36,6 +38,7 @@ jobs:
         run: |
           python -m unittest discover -v -s tests -p test_autonomy_coder.py
           python -m unittest discover -v -s tests -p test_autonomy_module_registry.py
+          python -m unittest discover -v -s tests -p test_rex_need_intake.py
       - name: Pull exact isolated evaluation runtime
         run: docker pull python@sha256:1148dbb014615300fa7e713b2f94f550c0d1c69780c0805f84f093ceee34dd0b
       - name: Real networkless container positive and negative controls
@@ -83,6 +86,21 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - uses: actions/checkout@v4
+        with:
+          repository: Hawkar-usls/Janus-Demiurge
+          ref: janus/rex-code-need-state
+          path: _rex
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            rex/code_needs
+      - name: Independently replay exact Rex engineering need before code inference
+        run: |
+          python _code/modules/autonomy_coder/rex_need_intake.py \
+            --rex-dir _rex/rex/code_needs \
+            --state _state/STATE.json \
+            --out author-input/REX_NEED_GATE.json
       - name: Restore model bytes; every byte is verified before use
         uses: actions/cache@v4
         with:
@@ -101,6 +119,7 @@ jobs:
           python _code/modules/autonomy_coder/author.py \
             --state _state/STATE.json \
             --cache "$HOME/.cache/janus-open-coder" \
+            --rex-need-gate author-input/REX_NEED_GATE.json \
             --out author-output/CANDIDATES.json
       - uses: actions/upload-artifact@v4
         with:
