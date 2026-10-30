@@ -150,6 +150,39 @@ class CoderTests(unittest.TestCase):
             self.assertEqual(got["task_id"], "clamp")
             self.assertEqual(got["source_sha256"], p.source_digest(second_source))
 
+    def test_all_tasks_done_is_safe_idle_without_forged_new_receipt(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            state = p.empty_state()
+            for task in p.TASKS:
+                sha = "a"*64
+                state["accepted"][task] = {
+                    "source_sha256": sha, "path": f"generated/{task}/{sha}.py",
+                    "run_id": "123456-1", "receipt_sha256": "b"*64,
+                    "author_model": p.MODEL_ID}
+            state["sequence"] = len(p.TASKS)
+            (root / "STATE.json").write_bytes(p.canonical(state))
+            idle = bundle(state)
+            idle["run_id"] = "123460-1"
+            idle["task_id"] = None
+            idle["candidates"] = []
+            result = m.publish(root, idle, m.evaluate(idle, independent_check))
+            self.assertEqual(result["status"], "IDLE_ALL_ADMITTED_TASKS_DONE")
+            self.assertFalse(result["changed"])
+            self.assertEqual((root / "STATE.json").read_bytes(), p.canonical(state))
+            self.assertFalse((root / "receipts/123460-1.json").exists())
+            with self.assertRaisesRegex(ValueError, "CONSUMER_RUN_MISMATCH"):
+                m.consume(root, expected_run_id="123460-1", check=independent_check)
+
+    def test_cloud_clean_consumer_skips_only_truthful_idle(self):
+        wf = (Path(__file__).resolve().parents[1] /
+              ".github/workflows/janus-autonomous-coder.yml").read_text()
+        self.assertIn("publish_status: ${{ steps.scope.outputs.publish_status }}", wf)
+        self.assertIn("if: ${{ needs.publish.outputs.publish_status != 'IDLE_ALL_ADMITTED_TASKS_DONE' }}", wf)
+        self.assertIn("UNRECOGNIZED_CODER_PUBLICATION_STATUS", wf)
+        self.assertIn("--expected-run-id", wf)
+        self.assertIn("github.run_attempt", wf)
+
     def test_rejected_new_run_cannot_reconsume_previous_success_as_new(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
