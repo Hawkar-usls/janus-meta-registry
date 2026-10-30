@@ -39,13 +39,40 @@ def load_model(cache):
         trust_remote_code=False, use_safetensors=True, torch_dtype=torch.float32).eval()
     return torch, tokenizer, model, {"torch": torch.__version__, "transformers": transformers.__version__}
 
-def generate(state, run_id, cache):
+def verified_rex_need(state, gate):
+    if gate is None:
+        return None
+    status = gate.get("status")
+    if status in ("IDLE_NO_REX_CODE_NEED", "IDLE_NEED_ALREADY_SATISFIED"):
+        if gate.get("task_id") is not None or gate.get("authority_delta") != 0:
+            raise ValueError("REX_IDLE_GATE_UNTRUSTED")
+        return None
+    if (status != "VERIFIED_NEED_BOUND_TO_PREADMITTED_TASK" or
+        gate.get("task_id") != next_task(state) or
+        gate.get("task_id") not in TASKS or
+        gate.get("coder_state_sha256") != digest(state) or
+        gate.get("authority_delta") != 0 or
+        gate.get("code_authority_granted") is not False or
+        gate.get("human_review_required") is not True or
+        not isinstance(gate.get("need_id"), str) or
+        not gate["need_id"].startswith("code_need_") or
+        not isinstance(gate.get("source_need_sha256"), str) or
+        len(gate["source_need_sha256"]) != 64):
+        raise ValueError("REX_NEED_AUTHOR_GATE_REJECTED")
+    return {"need_id": gate["need_id"], "task_id": gate["task_id"],
+            "source_need_sha256": gate["source_need_sha256"], "authority_delta": 0}
+
+
+def generate(state, run_id, cache, need_gate=None):
     task = next_task(state)
+    admitted_need = verified_rex_need(state, need_gate)
     result = {"schema": "janus.autonomous_coder.candidates.v1", "run_id": run_id,
               "base_state_sha256": digest(state), "task_id": task,
               "model": {"id": MODEL_ID, "revision": MODEL_REVISION, "weights_sha256": WEIGHTS_SHA256,
                         "attribution": "EXTERNAL_OPEN_WEIGHTS_NOT_NATIVE_JANUS"},
               "code_commit": os.environ.get("GITHUB_SHA", "LOCAL"), "candidates": []}
+    if admitted_need is not None:
+        result["rex_need_provenance"] = admitted_need
     if task is None:
         return validate_bundle(result)
     torch, tokenizer, model, versions = load_model(cache)
@@ -77,9 +104,12 @@ def main():
     parser.add_argument("--state", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--cache", required=True)
+    parser.add_argument("--rex-need-gate", type=Path)
     args = parser.parse_args()
     state = json.loads(args.state.read_bytes()) if args.state.exists() else empty_state()
-    bundle = generate(state, os.environ["GITHUB_RUN_ID"] + "-" + os.environ["GITHUB_RUN_ATTEMPT"], args.cache)
+    rex_gate = json.loads(args.rex_need_gate.read_bytes()) if args.rex_need_gate else None
+    bundle = generate(state, os.environ["GITHUB_RUN_ID"] + "-" + os.environ["GITHUB_RUN_ATTEMPT"], args.cache,
+                      need_gate=rex_gate)
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(bundle, sort_keys=True, indent=2, allow_nan=False) + "\n")
     print(json.dumps({"task_id": bundle["task_id"], "variants": len(bundle["candidates"]),
