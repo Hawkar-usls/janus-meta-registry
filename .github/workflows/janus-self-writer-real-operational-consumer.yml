@@ -1,0 +1,74 @@
+name: JANUS Self-Writer Real Operational Consumer
+
+on:
+  schedule:
+    - cron: '07 */6 * * *'
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'modules/autonomy_coder/real_operational_consumer.py'
+      - 'tests/test_real_operational_self_writer_consumer.py'
+      - '.github/workflows/janus-self-writer-real-operational-consumer.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'modules/autonomy_coder/real_operational_consumer.py'
+      - 'tests/test_real_operational_self_writer_consumer.py'
+      - '.github/workflows/janus-self-writer-real-operational-consumer.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: janus-self-writer-real-consumer-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  independent-operational-consumption:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: _code
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: ccb2f82edb0f1c61c460aa0a4521a9991e8d5eb2
+          path: _state
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Negative controls for genuine model-authored source and observation
+        run: |
+          python -m unittest discover -s _code/tests -p test_real_operational_self_writer_consumer.py -v
+      - name: Fetch unchanged pinned networkless evaluation container
+        run: docker pull python@sha256:1148dbb014615300fa7e713b2f94f550c0d1c69780c0805f84f093ceee34dd0b
+      - name: Exact SHA provenance, clean isolated model-code execution and real LATEST
+        run: |
+          set -euo pipefail
+          test "$(git -C _state rev-parse HEAD)" = ccb2f82edb0f1c61c460aa0a4521a9991e8d5eb2
+          PYTHONPATH=_code/modules/autonomy_coder \
+            python _code/modules/autonomy_coder/real_operational_consumer.py \
+              --state _state \
+              --latest _code/data/autonomy_loop/LATEST.json \
+              --out runtime/real-operational-consumer/RECEIPT.json
+          python - <<'PY'
+          import json
+          r=json.load(open('runtime/real-operational-consumer/RECEIPT.json'))
+          assert r['schema']=='janus.autonomous_coder.real_operational_consumer.v1'
+          assert r['model_authorship']=='EXTERNAL_OPEN_WEIGHTS_NOT_NATIVE_JANUS'
+          assert r['executed_in_networkless_oracle'] is True
+          assert r['authority_delta']==0 and r['source_writeback'] is False
+          assert r['installed_into_trusted_runtime'] is False
+          print('SELF_WRITER_REAL_CONSUMER=' + r['status'])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-self-writer-real-observation-receipt
+          path: runtime/real-operational-consumer/RECEIPT.json
+          retention-days: 14
+          if-no-files-found: error
