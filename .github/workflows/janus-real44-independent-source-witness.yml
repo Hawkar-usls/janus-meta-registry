@@ -1,0 +1,91 @@
+name: JANUS Nexus REAL44 Independent Public Witness
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '23 * * * *'
+  pull_request:
+    paths:
+      - 'tools/janus_real44_public_verdict_witness.py'
+      - 'tests/test_janus_real44_public_verdict_witness.py'
+      - '.github/workflows/janus-real44-independent-source-witness.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'tools/janus_real44_public_verdict_witness.py'
+      - 'tests/test_janus_real44_public_verdict_witness.py'
+      - '.github/workflows/janus-real44-independent-source-witness.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: janus-real44-independent-source-witness
+  cancel-in-progress: false
+
+jobs:
+  offline-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify metadata-only witness has no runtime or full-162 authority
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/janus_real44_public_verdict_witness.py
+          python -m unittest discover -s tests -p 'test_janus_real44_public_verdict_witness.py' -v
+
+  archive:
+    needs: offline-contract
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Independently verify GitHub public REAL44 workflow and archive
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python tools/janus_real44_public_verdict_witness.py --root .
+      - name: Commit immutable public-only source proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'JANUS REAL44 Independent Source Witness'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/integrations/nexus_real44/
+          if git diff --cached --quiet; then
+            echo 'NEXUS_REAL44_SOURCE_ARCHIVE=IDEMPOTENT'
+            exit 0
+          fi
+          git diff --cached --check
+          git commit -m 'JANUS: archive source-bound REAL44 cloud gate evidence'
+          for attempt in 1 2 3; do
+            git fetch origin main
+            if ! git rebase origin/main; then
+              git rebase --abort || true
+              echo 'NEXUS_REAL44_SOURCE_ARCHIVE=CONFLICT_HOLD'
+              exit 1
+            fi
+            if git push origin HEAD:main; then
+              echo 'NEXUS_REAL44_SOURCE_ARCHIVE=PASS'
+              exit 0
+            fi
+            sleep "$attempt"
+          done
+          echo 'NEXUS_REAL44_SOURCE_ARCHIVE=PUSH_HOLD'
+          exit 1
