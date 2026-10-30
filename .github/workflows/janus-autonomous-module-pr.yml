@@ -50,6 +50,7 @@ jobs:
   propose-one:
     needs: contract
     if: >-
+      github.event_name != 'pull_request' && (
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
       github.event_name == 'schedule' ||
       (github.event_name == 'workflow_dispatch' && inputs.pr_number == '') ||
@@ -57,7 +58,7 @@ jobs:
        github.event.workflow_run.conclusion == 'success' &&
        github.event.workflow_run.head_branch == 'main' &&
        github.event.workflow_run.head_repository.full_name == github.repository &&
-       github.event.workflow_run.event != 'pull_request')
+       github.event.workflow_run.event != 'pull_request'))
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
@@ -86,8 +87,8 @@ jobs:
           set -euo pipefail
           git -C _code ls-remote --heads origin 'refs/heads/janus/review-pure-*' |
             awk '{sub(/^refs\/heads\//,"",$2); print $2}' > known-branches.txt
-          gh pr list --state all --limit 1000 --json headRefName --jq '.[].headRefName' |
-            grep '^janus/review-pure-' >> known-branches.txt || true
+          gh pr list --state all --limit 1000 --json headRefName --jq '.[].headRefName' > historical-branches.txt
+          grep '^janus/review-pure-' historical-branches.txt >> known-branches.txt || true
           sort -u -o known-branches.txt known-branches.txt
       - name: Prepare at most one verified immutable module
         id: selection
