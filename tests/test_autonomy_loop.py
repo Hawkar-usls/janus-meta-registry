@@ -31,6 +31,23 @@ def fixture():
     data("native_decision").update(status="NO_ACTION")
     data("forge").update(status="IDLE_NO_CANDIDATE")
     data("patch_queue").update(proposal_count=0, verified_count=0, proposals=[])
+    data("self_writer_state").update(
+        schema="janus.autonomous_coder.state.v1", sequence=1,
+        authority_delta=0, universal_code_writer_proven=False,
+        accepted={"retry_delay": {"source_sha256": "d"*64, "receipt_sha256": "e"*64, "run_id": "123456-1"}})
+    module = {"module_id": "janus.pure.retry_delay.v1",
+              "path": "self_modules/retry_delay/module.py",
+              "manifest_path": "self_modules/retry_delay/MODULE.json",
+              "source_sha256": "d"*64, "receipt_sha256": "e"*64,
+              "run_id": "123456-1", "module_manifest_sha256": "f"*64}
+    index = data("self_module_index")
+    index.update(schema="janus.autonomous_coder.module_index.v1",
+                 state_sequence=1, accepted_count=1, modules={"retry_delay": module},
+                 installation_scope="ISOLATED_STATE_BRANCH_ONLY",
+                 model_authorship="EXTERNAL_OPEN_WEIGHTS_NOT_NATIVE_JANUS",
+                 runtime_auto_import=False, new_permissions=0, authority_delta=0,
+                 full_issue_162_acceptance=False)
+    index["index_sha256"] = m.digest(index)
     workflows = {key: {"status": "OBSERVED", "conclusion": "success", "run_id": 101,
                        "event": "schedule", "head_sha": "a"*40,
                        "created_at": "2026-10-30T10:00:00Z", "url": "https://github.com/example/run"}
@@ -100,6 +117,39 @@ class LoopTests(unittest.TestCase):
         s["council"]["data"]["sources"]["meta_registry"]["canonical_run"] = 122
         r = m.summarize(s, w, "now", "d"*40)
         self.assertTrue(any(f["reason"] == "ROWAN_GENERATION_DRIFT_COUNCIL" for f in r["findings"]))
+    def test_self_module_registry_is_visible_but_not_p2_completion(self):
+        r = snapshot()
+        self.assertEqual(r["metrics"]["self_writer"]["accepted_pure_modules"], 1)
+        self.assertEqual(r["metrics"]["self_writer"]["attempt_sequence"], 1)
+        self.assertTrue(r["metrics"]["self_writer"]["not_native_janus_model"])
+        self.assertFalse(r["metrics"]["self_writer"]["full_p2_acceptance"])
+        self.assertFalse(r["metrics"]["self_writer"]["trusted_main_auto_update"])
+        self.assertIn("SELF_WRITER_REVIEWED_TASKS_REMAINING",
+                      {f["reason"] for f in r["findings"]})
+
+    def test_self_writer_rejects_source_rebinding_even_with_rehashed_index(self):
+        s, w = fixture()
+        index = s["self_module_index"]["data"]
+        index["modules"]["retry_delay"]["source_sha256"] = "a"*64
+        index["index_sha256"] = m.digest({k: v for k, v in index.items()
+                                            if k != "index_sha256"})
+        result = m.summarize(s, w, "now", "d"*40)
+        self.assertEqual(result["metrics"]["self_writer"]["status"], "UNVERIFIED")
+        self.assertIsNone(result["metrics"]["self_writer"]["accepted_pure_modules"])
+        self.assertIn("SELF_MODULE_CATALOG_UNVERIFIED",
+                      {f["reason"] for f in result["findings"]})
+
+    def test_model_does_not_self_grant_main_admission_via_catalog_metadata(self):
+        s, w = fixture()
+        index = s["self_module_index"]["data"]
+        index["runtime_auto_import"] = True
+        index["index_sha256"] = m.digest({k: v for k, v in index.items()
+                                            if k != "index_sha256"})
+        result = m.summarize(s, w, "now", "d"*40)
+        self.assertEqual(result["metrics"]["self_writer"]["status"], "UNVERIFIED")
+        self.assertEqual(result["ecosystem_status"], "AUTONOMY_PARTIAL")
+        self.assertFalse(result["full_issue_162_acceptance"])
+
     def test_model_degradation_separate_from_snapshots(self):
         s, w = fixture()
         s["scouts"]["data"]["agents_model_synthesis_ok"] = 0

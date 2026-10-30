@@ -37,6 +37,8 @@ SPECS = {
     "genesis_current": ("Janus_Genesis", "main", "protocol/JANUS_REAL44_CLOUD_MATERIALIZATION-v2.0.json"),
     "cosmos": ("Janus-Cosmos", "main", "data/integrations/rowan/LATEST.json"),
     "patch_queue": ("janus-meta-registry", "janus/native-self-memory-modular-organism-v1", "JANUS/PATCHES/INDEX.json"),
+    "self_writer_state": ("janus-meta-registry", "janus/autonomous-code-state", "STATE.json"),
+    "self_module_index": ("janus-meta-registry", "janus/autonomous-code-state", "MODULE_INDEX.json"),
     "forge": ("Janus-Demiurge", "janus/autonomous-keymaster-lockpick", "janus_model/autonomous-keymaster/KEYMASTER_AUTONOMOUS_FORGE_LATEST.json"),
 }
 WORKFLOWS = {
@@ -244,6 +246,59 @@ def summarize(sources, workflows, observed_at, code_sha, previous=None, action=N
     if type(synthesis) is not int or type(expected) is not int or synthesis < expected:
         add("P0.5", "SCOUT_MODEL_SYNTHESIS_DEGRADED",
             {"snapshots": scouts.get("agents_snapshot_observed"), "synthesis": synthesis, "expected": expected})
+    # A self-generated module is observable only as source-bound metadata.
+    # It is not evidence of adoption by Genesis or of full P2 autonomy.
+    writer = d["self_writer_state"]
+    catalog = d["self_module_index"]
+    accepted = writer.get("accepted")
+    modules = catalog.get("modules")
+    unsigned_catalog = {k: v for k, v in catalog.items() if k != "index_sha256"}
+    valid_modules = (
+        writer.get("schema") == "janus.autonomous_coder.state.v1" and
+        writer.get("authority_delta") == 0 and
+        writer.get("universal_code_writer_proven") is False and
+        type(writer.get("sequence")) is int and writer["sequence"] >= 0 and
+        isinstance(accepted, dict) and len(accepted) <= 10 and
+        catalog.get("schema") == "janus.autonomous_coder.module_index.v1" and
+        catalog.get("index_sha256") == digest(unsigned_catalog) and
+        catalog.get("state_sequence") == writer.get("sequence") and
+        catalog.get("accepted_count") == len(accepted) and
+        catalog.get("installation_scope") == "ISOLATED_STATE_BRANCH_ONLY" and
+        catalog.get("model_authorship") == "EXTERNAL_OPEN_WEIGHTS_NOT_NATIVE_JANUS" and
+        catalog.get("runtime_auto_import") is False and
+        catalog.get("new_permissions") == 0 and
+        catalog.get("authority_delta") == 0 and
+        catalog.get("full_issue_162_acceptance") is False and
+        isinstance(modules, dict) and set(modules) == set(accepted) and
+        sources.get("self_writer_state", {}).get("commit_sha") ==
+        sources.get("self_module_index", {}).get("commit_sha"))
+    if valid_modules:
+        for task, entry in accepted.items():
+            row = modules[task]
+            if (not isinstance(entry, dict) or not isinstance(row, dict) or
+                row.get("module_id") != "janus.pure." + task + ".v1" or
+                row.get("path") != "self_modules/" + task + "/module.py" or
+                row.get("manifest_path") != "self_modules/" + task + "/MODULE.json" or
+                row.get("source_sha256") != entry.get("source_sha256") or
+                row.get("receipt_sha256") != entry.get("receipt_sha256") or
+                row.get("run_id") != entry.get("run_id") or
+                not isinstance(row.get("module_manifest_sha256"), str) or
+                not HEX.fullmatch(row["module_manifest_sha256"])):
+                valid_modules = False
+                break
+    if not valid_modules:
+        add("P2", "SELF_MODULE_CATALOG_UNVERIFIED", "source_binding_or_schema")
+    elif len(modules) < 10:
+        add("P2", "SELF_WRITER_REVIEWED_TASKS_REMAINING",
+            {"accepted": len(modules), "admitted": 10})
+    self_writer_metrics = {
+        "status": "SOURCE_BOUND_ISOLATED_MODULE_METADATA_ONLY" if valid_modules else "UNVERIFIED",
+        "attempt_sequence": writer.get("sequence") if valid_modules else None,
+        "accepted_pure_modules": len(modules) if valid_modules else None,
+        "admitted_task_ceiling": 10,
+        "not_native_janus_model": True,
+        "trusted_main_auto_update": False,
+        "full_p2_acceptance": False}
     model = d["native_model"]
     history = model.get("history", [])
     rejected = sum(row.get("status") == "REJECTED" for row in history)
@@ -289,6 +344,7 @@ def summarize(sources, workflows, observed_at, code_sha, previous=None, action=N
             key: {k: v for k, v in val.items() if k != "data"} for key, val in sources.items()},
         "workflows": workflows, "rowan_generations": bindings, "findings": findings,
         "metrics": {"native_model": model_metrics,
+                    "self_writer": self_writer_metrics,
                     "scouts": {"snapshots": scouts.get("agents_snapshot_observed"), "model_synthesis": synthesis, "expected": expected},
                     "patch_queue": {"proposals": queue.get("proposal_count"), "verified": queue.get("verified_count"), "waiting": waiting},
                     "home": {"sequence": d["home"].get("sequence"), "source_main_sha": d["home"].get("source_main_sha")},
