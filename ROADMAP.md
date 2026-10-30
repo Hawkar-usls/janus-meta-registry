@@ -5,7 +5,7 @@
 - [x] stable_unique
 - [x] pending_count
 - [x] is_fresh
-- [ ] chunk_count
+- [x] chunk_count
 - [ ] bounded_batch
 - [ ] all_equal
 - [ ] safe_ratio
