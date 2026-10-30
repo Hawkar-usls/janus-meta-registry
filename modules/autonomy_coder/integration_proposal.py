@@ -160,6 +160,30 @@ def inspect_pr(pull, files, expected_repo):
             "source_sha256": sha, "branch": branch, "changed_files": 2}
 
 
+def inspect_branch(branch, change_rows):
+    """Strict review-branch fallback when repository Actions cannot create PRs."""
+    if not isinstance(branch, str):
+        raise ValueError("REVIEW_BRANCH_UNTRUSTED")
+    match = re.fullmatch(r"janus/review-pure-([a-z_]+)-([0-9a-f]{64})", branch)
+    if match is None or match.group(1) not in TASKS:
+        raise ValueError("REVIEW_BRANCH_UNTRUSTED")
+    if not isinstance(change_rows, list) or len(change_rows) != 2:
+        raise ValueError("REVIEW_BRANCH_EXTRA_CHANGES")
+    task, source_sha = match.groups()
+    want = {"candidate_modules/" + task + "/module.py",
+            "candidate_modules/" + task + "/PROPOSAL.json"}
+    observed = set()
+    for row in change_rows:
+        if (not isinstance(row, (list, tuple)) or len(row) != 2 or
+                row[0] != "A" or row[1] not in want):
+            raise ValueError("REVIEW_BRANCH_UNEXPECTED_DIFF")
+        observed.add(row[1])
+    if observed != want:
+        raise ValueError("REVIEW_BRANCH_MISSING_PAYLOAD")
+    return {"branch": branch, "task_id": task, "source_sha256": source_sha,
+            "changed_files": 2}
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("mode", choices=("prepare", "verify"))
