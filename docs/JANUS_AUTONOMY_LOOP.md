@@ -14,7 +14,7 @@ Live files:
 
 The approved order is P0.1 through P0.6, then P1 through P5. Findings can add bounded tasks inside their phase; they cannot reorder prerequisites or grant capabilities. An absent verifier or implementation remains WAIT/HOLD.
 
-v1 implements observation, roadmap regeneration, preservation and independently verified P0.1 continuation. Later mutation handlers require reviewed executable code and their own acceptance evidence. A successful collector does not imply a code change, model synthesis, source synchronization, scientific validation or full #162 acceptance.
+v2 adds a reviewed metadata-only P0.2 handler: strict Rowan/AURA/council reconciliation into own immutable coordination receipts, followed by an exact-pinned full public-source witness. A separate worker repeats the witness before phase acceptance. Later mutation handlers require reviewed executable code and their own acceptance evidence. A successful collector does not imply a code change, model synthesis, source synchronization, scientific validation or full #162 acceptance.
 
-No provider API is called and no Rowan credits are spent. Reads are fixed to public status metadata. Runtime writes are limited to this repository's data/autonomy_loop/ surface. Model/issue text is not executed. No source-history deletion, force push, arbitrary shell command, automatic main-code merge, secret management or authority expansion is present.
+No provider API is called and no Rowan credits are spent. Reads are fixed to public status metadata. Runtime writes are limited to this repository's data/autonomy_loop/ surface and the existing data/rowan/coordination/ metadata lane. Model/issue text is not executed. No source-history deletion, force push, arbitrary shell command, automatic main-code merge, secret management or authority expansion is present.
 
