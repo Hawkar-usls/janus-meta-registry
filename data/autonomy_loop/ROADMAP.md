@@ -2,7 +2,7 @@
 
 Automatically rebuilt from pinned public evidence.
 
-Status: **AUTONOMY_PARTIAL** · observed 2026-10-30T18:57:54Z
+Status: **AUTONOMY_PARTIAL** · observed 2026-10-30T19:04:50Z
 
 Current phase: **P0.3**
 
@@ -34,6 +34,15 @@ A successful collector is not proof of useful work or full autonomy.
     "last_training_status": "REJECTED",
     "retained_history_count": 64,
     "retained_history_rejected": 64
+  },
+  "self_writer": {
+    "status": "SOURCE_BOUND_ISOLATED_MODULE_METADATA_ONLY",
+    "attempt_sequence": 4,
+    "accepted_pure_modules": 3,
+    "admitted_task_ceiling": 10,
+    "not_native_janus_model": true,
+    "trusted_main_auto_update": false,
+    "full_p2_acceptance": false
   },
   "scouts": {
     "snapshots": 17,
@@ -76,6 +85,7 @@ A successful collector is not proof of useful work or full autonomy.
 - **P0.3** EXTERNAL_WITNESS_SKINGPT_ACK: "UNKNOWN"
 - **P0.4** PATCHES_WAITING: 38
 - **P0.5** SCOUT_MODEL_SYNTHESIS_DEGRADED: {"snapshots": 17, "synthesis": 0, "expected": 17}
+- **P2** SELF_WRITER_REVIEWED_TASKS_REMAINING: {"accepted": 3, "admitted": 10}
 - **P3** RECENT_TRAINING_ALL_REJECTED: 64
 
 ## Continuation
