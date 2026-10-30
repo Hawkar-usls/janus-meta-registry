@@ -191,6 +191,11 @@ def build(root):
     if prior.exists():
         earlier = json.loads(exact(root, "MODULE_INDEX.json"))
         if (earlier.get("schema") != SCHEMA or
+                earlier.get("index_sha256") != digest(
+                    {k: v for k, v in earlier.items() if k != "index_sha256"}) or
+                earlier.get("authority_delta") != 0 or
+                earlier.get("runtime_auto_import") is not False or
+                earlier.get("new_permissions") != 0 or
                 type(earlier.get("state_sequence")) is not int or
                 earlier["state_sequence"] > index["state_sequence"] or
                 not isinstance(earlier.get("modules"), dict)):
