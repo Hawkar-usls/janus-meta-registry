@@ -122,6 +122,16 @@ class ReplayClient:
                 "html_url": "https://github.com/example/run"}
 
 class ContinuationTests(unittest.TestCase):
+    def test_new_generation_reopens_maintenance_without_erasing_proof(self):
+        s, w = fixture()
+        s["canonical"]["data"]["latest_durable_external_run"] = 124
+        prior = {"accepted_phases": {"P0.1": {"status": "PASS_STATUS_CAPTURE_ONLY"},
+                                      "P0.2": {"status": "PASS_SOURCE_COHORT_ONLY"}}}
+        r = m.summarize(s, w, "now", "d"*40, prior)
+        self.assertEqual(r["current_phase"], "P0.2")
+        self.assertEqual(r["roadmap"][1]["state"], "ACTIVE_RECHECK")
+        self.assertIn("P0.2", r["accepted_phases"])
+
     def test_serialized_workflow_key_order_does_not_change_observation(self):
         s, w = fixture()
         for row in w.values():
@@ -153,7 +163,7 @@ class ContinuationTests(unittest.TestCase):
                 m.verify_persisted(root, ReplayClient(), True)
     def test_later_phase_without_handler_is_not_accepted(self):
         with self.assertRaisesRegex(m.Hold, "UNIMPLEMENTED_PHASE_ACCEPTANCE"):
-            snapshot({"accepted_phases": {"P0.2": {"status": "PASS"}}})
+            snapshot({"accepted_phases": {"P0.3": {"status": "PASS"}}})
     def test_file_pin_cache_survives_remote_head_moving(self):
         client = m.PublicGitHub()
         calls = []
