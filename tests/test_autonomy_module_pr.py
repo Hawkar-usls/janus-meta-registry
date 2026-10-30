@@ -164,6 +164,40 @@ class ProposalTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "STATE_PATH_ESCAPE"):
             pr.verify_proposal(self.repo, self.state, COMMIT, "retry_delay")
 
+    def test_explicit_branch_fallback_rejects_unreviewed_diffs(self):
+        branch = pr.propose(self.state, "retry_delay", COMMIT)[0]
+        files = [
+            ["A", "candidate_modules/retry_delay/module.py"],
+            ["A", "candidate_modules/retry_delay/PROPOSAL.json"],
+        ]
+        info = pr.inspect_branch(branch, files)
+        self.assertEqual(info["branch"], branch)
+        self.assertEqual(info["source_sha256"], p.source_digest(GOOD))
+        variants = [
+            [["A", "candidate_modules/retry_delay/module.py"]],
+            [files[0], ["A", ".github/workflows/malicious.yml"]],
+            [files[0], ["M", "candidate_modules/retry_delay/PROPOSAL.json"]],
+            [files[0], files[0]],
+        ]
+        for item in variants:
+            with self.subTest(item=item), self.assertRaises(ValueError):
+                pr.inspect_branch(branch, item)
+        with self.assertRaises(ValueError):
+            pr.inspect_branch("janus/review-pure-script-"+p.source_digest(GOOD), files)
+
+    def test_no_hidden_pr_creation_permission_expansion(self):
+        wf = (Path(__file__).resolve().parents[1] /
+              ".github/workflows/janus-autonomous-module-pr.yml").read_text()
+        self.assertIn("issues: write", wf)
+        self.assertIn("gh issue create", wf)
+        self.assertIn("review_branch=$PROPOSE_BRANCH", wf)
+        self.assertIn("inspect_branch", wf)
+        self.assertIn("git -C _candidate merge-base origin/main HEAD", wf)
+        self.assertIn("git -C _candidate rev-list --count", wf)
+        self.assertIn("github.event_name == 'workflow_dispatch' && inputs.review_branch != ''", wf)
+        self.assertNotIn("gh pr merge", wf)
+        self.assertNotIn("--force", wf)
+
     def test_main_workflow_writes_only_exact_candidates_and_never_auto_merges(self):
         path = Path(__file__).resolve().parents[1] / ".github/workflows/janus-autonomous-module-pr.yml"
         wf = path.read_text()
