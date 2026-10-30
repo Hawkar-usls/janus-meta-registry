@@ -1,5 +1,9 @@
 name: JANUS Rowan Ecosystem Independent Sync Witness
 on:
+  workflow_run:
+    workflows: ["JANUS Autonomous Roadmap and Continuation"]
+    types: [completed]
+    branches: [main]
   schedule:
     # GITHUB_TOKEN writes by the hourly council do not trigger downstream
     # push workflows. Audit after the :53 council reconciliation independently.
@@ -27,6 +31,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   independent-readonly:
+    if: ${{ github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.head_repository.full_name == github.repository) }}
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:
