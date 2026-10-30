@@ -6,7 +6,7 @@
 - [x] pending_count
 - [x] is_fresh
 - [x] chunk_count
-- [ ] bounded_batch
+- [x] bounded_batch
 - [ ] all_equal
 - [ ] safe_ratio
 - [ ] common_prefix
