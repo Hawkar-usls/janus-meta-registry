@@ -4,7 +4,7 @@
 - [x] clamp
 - [x] stable_unique
 - [x] pending_count
-- [ ] is_fresh
+- [x] is_fresh
 - [ ] chunk_count
 - [ ] bounded_batch
 - [ ] all_equal
