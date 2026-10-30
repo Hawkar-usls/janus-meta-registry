@@ -2,7 +2,7 @@
 
 Automatically rebuilt from pinned public evidence.
 
-Status: **AUTONOMY_PARTIAL** · observed 2026-10-30T21:41:10Z
+Status: **AUTONOMY_PARTIAL** · observed 2026-10-30T23:45:31Z
 
 Current phase: **P0.2**
 
@@ -27,9 +27,9 @@ A successful collector is not proof of useful work or full autonomy.
 ```json
 {
   "native_model": {
-    "attempt_count": 1576,
+    "attempt_count": 1580,
     "promotion_count": 61,
-    "rejection_count": 1515,
+    "rejection_count": 1519,
     "checkpoint_sha256": "fc767adb812ac3bea54c44cbccfa9680941f95e2c8a77120559b41da044d9463",
     "last_training_status": "REJECTED",
     "retained_history_count": 64,
@@ -37,8 +37,8 @@ A successful collector is not proof of useful work or full autonomy.
   },
   "self_writer": {
     "status": "SOURCE_BOUND_ISOLATED_MODULE_METADATA_ONLY",
-    "attempt_sequence": 5,
-    "accepted_pure_modules": 4,
+    "attempt_sequence": 8,
+    "accepted_pure_modules": 7,
     "admitted_task_ceiling": 10,
     "not_native_janus_model": true,
     "trusted_main_auto_update": false,
@@ -60,15 +60,15 @@ A successful collector is not proof of useful work or full autonomy.
   },
   "beetle_delivery": {
     "status": "WARN",
-    "observed_at": "2026-10-30T21:06:39.974589Z",
-    "total_pending": 15,
+    "observed_at": "2026-10-30T23:16:20.538858Z",
+    "total_pending": 12,
     "receiver_states": {
-      "PENDING": 13,
-      "UP_TO_DATE": 5,
+      "PENDING": 11,
+      "UP_TO_DATE": 7,
       "ACK_UNAVAILABLE": 1
     },
-    "routing_allowed": true,
-    "routing_reason": "ROUTING_ALLOWED",
+    "routing_allowed": false,
+    "routing_reason": "HOLD_DELIVERY_BACKPRESSURE",
     "runtime_consumption_attested": false
   },
   "native_decision": "NO_ACTION",
@@ -78,20 +78,21 @@ A successful collector is not proof of useful work or full autonomy.
 
 ## Evidence-driven tasks
 
-- **P0.2** ROWAN_GENERATION_DRIFT_AURA: 41076642267
 - **P0.2** ROWAN_GENERATION_DRIFT_COUNCIL: 41076642267
 - **P0.2** ROWAN_GENERATION_DRIFT_COORDINATION: 41076642267
 - **P0.2** ROWAN_GENERATION_DRIFT_COSMOS: 41076642267
-- **P0.2** AURA_CANONICAL_DIGEST_DRIFT: "aura"
 - **P0.2** COUNCIL_CANONICAL_DIGEST_DRIFT: "council"
-- **P0.3** BEETLE_DELIVERY_PENDING: {"total_pending": 15, "receiver_states": {"PENDING": 13, "UP_TO_DATE": 5, "ACK_UNAVAILABLE": 1}}
-- **P0.3** EXTERNAL_WITNESS_BEETLE_PRODUCER: "SCHEDULE_SILENCE"
-- **P0.3** EXTERNAL_WITNESS_GENESIS_HIGHWATER: "ANCHOR_PENDING_WITHIN_GRACE"
+- **P0.2** COUNCIL_AURA_DIGEST_DRIFT: "council"
+- **P0.3** BEETLE_DELIVERY_PENDING: {"total_pending": 12, "receiver_states": {"PENDING": 11, "UP_TO_DATE": 7, "ACK_UNAVAILABLE": 1}}
+- **P0.3** BEETLE_ROUTING_HELD: "HOLD_DELIVERY_BACKPRESSURE"
 - **P0.3** EXTERNAL_WITNESS_SKINGPT_ACK: "UNKNOWN"
 - **P0.4** PATCHES_WAITING: 38
 - **P0.5** SCOUT_MODEL_SYNTHESIS_DEGRADED: {"snapshots": 17, "synthesis": 0, "expected": 17}
-- **P2** SELF_WRITER_REVIEWED_TASKS_REMAINING: {"accepted": 4, "admitted": 10}
+- **P2** SELF_WRITER_REVIEWED_TASKS_REMAINING: {"accepted": 7, "admitted": 10}
 - **P3** RECENT_TRAINING_ALL_REJECTED: 64
+- **P0.2** WORKFLOW_NOT_SUCCESS_COSMOS_WITNESS: {"repository": "Hawkar-usls/Janus-Cosmos", "workflow": "cosmos-rowan-ecosystem-witness.yml", "status": "OBSERVED", "run_id": 41141509213, "event": "workflow_run", "conclusion": "failure", "head_sha": "edf03407e4b5ab5d3889328c1be18890aab14631", "created_at": "2026-10-30T22:58:00Z", "url": "https://github.com/Hawkar-usls/Janus-Cosmos/actions/runs/41141509213"}
+- **P0.2** WORKFLOW_NOT_SUCCESS_CROSS_ORGAN_WITNESS: {"repository": "Hawkar-usls/janus-meta-registry", "workflow": "janus-cross-organ-source-witness.yml", "status": "OBSERVED", "run_id": 41139542511, "event": "schedule", "conclusion": "failure", "head_sha": "4dea19c6e2c7c9b8464863daf2c593177c52fd3f", "created_at": "2026-10-30T22:39:19Z", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/41139542511"}
+- **P0.2** WORKFLOW_NOT_SUCCESS_ROWAN_WITNESS: {"repository": "Hawkar-usls/janus-meta-registry", "workflow": "janus-rowan-ecosystem-sync-witness.yml", "status": "OBSERVED", "run_id": 41140786871, "event": "schedule", "conclusion": "failure", "head_sha": "bdef345fdeb31181a1412c90ba56d06f4c2a05ca", "created_at": "2026-10-30T22:50:55Z", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/41140786871"}
 
 ## Continuation
 
