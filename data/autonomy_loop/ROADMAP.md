@@ -2,7 +2,7 @@
 
 Automatically rebuilt from pinned public evidence.
 
-Status: **AUTONOMY_PARTIAL** · observed 2026-10-30T15:58:20Z
+Status: **AUTONOMY_PARTIAL** · observed 2026-10-30T16:02:32Z
 
 Current phase: **P0.3**
 
@@ -49,6 +49,19 @@ A successful collector is not proof of useful work or full autonomy.
     "sequence": 215,
     "source_main_sha": "55b7c6d35e88bc5c7753c7fdeb2ad8e403a4a207"
   },
+  "beetle_delivery": {
+    "status": "WARN",
+    "observed_at": "2026-10-30T15:55:44.220534Z",
+    "total_pending": 14,
+    "receiver_states": {
+      "PENDING": 13,
+      "UP_TO_DATE": 5,
+      "ACK_UNAVAILABLE": 1
+    },
+    "routing_allowed": false,
+    "routing_reason": "HOLD_DELIVERY_BACKPRESSURE",
+    "runtime_consumption_attested": false
+  },
   "native_decision": "NO_ACTION",
   "forge": "SEARCHED_NO_NOVEL_FALLBACK_CANDIDATE"
 }
@@ -56,6 +69,8 @@ A successful collector is not proof of useful work or full autonomy.
 
 ## Evidence-driven tasks
 
+- **P0.3** BEETLE_DELIVERY_PENDING: {"total_pending": 14, "receiver_states": {"PENDING": 13, "UP_TO_DATE": 5, "ACK_UNAVAILABLE": 1}}
+- **P0.3** BEETLE_ROUTING_HELD: "HOLD_DELIVERY_BACKPRESSURE"
 - **P0.3** EXTERNAL_WITNESS_BEETLE_PRODUCER: "SCHEDULE_SILENCE"
 - **P0.3** EXTERNAL_WITNESS_GENESIS_HOME: "SCHEDULE_SILENCE"
 - **P0.3** EXTERNAL_WITNESS_SKINGPT_ACK: "UNKNOWN"
