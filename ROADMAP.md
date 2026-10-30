@@ -1,7 +1,7 @@
 # JANUS autonomous code queue
 
 - [x] retry_delay
-- [ ] clamp
+- [x] clamp
 - [ ] stable_unique
 - [ ] pending_count
 - [ ] is_fresh
