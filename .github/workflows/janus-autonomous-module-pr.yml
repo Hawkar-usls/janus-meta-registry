@@ -1,0 +1,212 @@
+name: JANUS Autonomous Module Review Proposals
+
+on:
+  schedule:
+    - cron: '23 */6 * * *'
+  workflow_run:
+    workflows: ['JANUS Autonomous Open-Weight Coder']
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'Optional PR number for read-only verification'
+        required: false
+        type: string
+  push:
+    branches: [main]
+    paths:
+      - 'modules/autonomy_coder/integration_proposal.py'
+      - 'tests/test_autonomy_module_pr.py'
+      - '.github/workflows/janus-autonomous-module-pr.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'candidate_modules/**'
+      - 'modules/autonomy_coder/integration_proposal.py'
+      - 'tests/test_autonomy_module_pr.py'
+      - '.github/workflows/janus-autonomous-module-pr.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: janus-autonomous-module-review-lane
+  cancel-in-progress: false
+
+jobs:
+  contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Offline provenance, scope, dedup and authority tests
+        run: python -m unittest discover -v -s tests -p test_autonomy_module_pr.py
+
+  propose-one:
+    needs: contract
+    if: >-
+      github.event_name != 'pull_request' && (
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      github.event_name == 'schedule' ||
+      (github.event_name == 'workflow_dispatch' && inputs.pr_number == '') ||
+      (github.event_name == 'workflow_run' &&
+       github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.head_branch == 'main' &&
+       github.event.workflow_run.head_repository.full_name == github.repository &&
+       github.event.workflow_run.event != 'pull_request'))
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
+      actions: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          path: _code
+          persist-credentials: true
+      - uses: actions/checkout@v4
+        with:
+          ref: janus/autonomous-code-state
+          path: _state
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Read known review branches and existing PRs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          git -C _code ls-remote --heads origin 'refs/heads/janus/review-pure-*' |
+            awk '{sub(/^refs\/heads\//,"",$2); print $2}' > known-branches.txt
+          gh pr list --state all --limit 1000 --json headRefName --jq '.[].headRefName' > historical-branches.txt
+          grep '^janus/review-pure-' historical-branches.txt >> known-branches.txt || true
+          sort -u -o known-branches.txt known-branches.txt
+      - name: Prepare at most one verified immutable module
+        id: selection
+        run: |
+          python _code/modules/autonomy_coder/integration_proposal.py prepare \
+            --repo-root _code --state-root _state \
+            --state-commit "$(git -C _state rev-parse HEAD)" \
+            --reviewed-branches known-branches.txt --out selection.json
+      - name: Push only two proposal files and open review-only PR
+        if: steps.selection.outputs.proposal_status == 'REVIEW_ONLY_PROPOSAL_PREPARED'
+        working-directory: _code
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          PROPOSE_BRANCH: ${{ steps.selection.outputs.proposal_branch }}
+          PROPOSE_TASK: ${{ steps.selection.outputs.proposal_task }}
+        run: |
+          set -euo pipefail
+          git switch -c "$PROPOSE_BRANCH"
+          git config user.name 'janus-module-proposer[bot]'
+          git config user.email 'janus-module-proposer[bot]@users.noreply.github.com'
+          git add "candidate_modules/$PROPOSE_TASK/module.py" \
+                  "candidate_modules/$PROPOSE_TASK/PROPOSAL.json"
+          python - <<'PY'
+          import os, subprocess
+          task = os.environ["PROPOSE_TASK"]
+          wanted = {f"candidate_modules/{task}/module.py",
+                    f"candidate_modules/{task}/PROPOSAL.json"}
+          actual = set(subprocess.check_output(
+              ["git", "diff", "--cached", "--name-only"], text=True).splitlines())
+          if actual != wanted:
+              raise SystemExit("CANDIDATE_SCOPE_MISMATCH")
+          if subprocess.check_output(
+              ["git", "diff", "--cached", "--diff-filter=D", "--name-only"], text=True):
+              raise SystemExit("CANDIDATE_DELETION_DENIED")
+          PY
+          git diff --cached --check
+          git commit -m "review-only: verified pure module $PROPOSE_TASK"
+          git push origin "HEAD:refs/heads/$PROPOSE_BRANCH"
+          gh pr create --base main --head "$PROPOSE_BRANCH" \
+            --title "Review-only JANUS pure module: $PROPOSE_TASK" \
+            --body "Exact model-authored, independently checked pure-module candidate. Source and run provenance are in candidate_modules/$PROPOSE_TASK/PROPOSAL.json. Requires explicit review; no runtime import, auto-merge, arbitrary dependencies or additional permissions. Independent verification follows."
+          number="$(gh pr view "$PROPOSE_BRANCH" --json number --jq .number)"
+          # Token-created PR events might not start their own Actions; explicit
+          # workflow_dispatch starts separate read-only verification of PR SHA.
+          gh workflow run janus-autonomous-module-pr.yml --ref main -f "pr_number=$number"
+
+  verify-pr:
+    needs: contract
+    if: >-
+      (github.event_name == 'pull_request' &&
+       startsWith(github.event.pull_request.head.ref, 'janus/review-pure-')) ||
+      (github.event_name == 'workflow_dispatch' && inputs.pr_number != '')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          path: _code
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          path: _candidate
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: janus/autonomous-code-state
+          fetch-depth: 0
+          path: _state
+          persist-credentials: false
+      - name: Verify PR identity and bounded diff
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ inputs.pr_number || github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          [[ "$PR_NUMBER" =~ ^[1-9][0-9]{0,9}$ ]] || exit 2
+          gh api "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER" > pr.json
+          gh api "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER/files?per_page=100" > pr-files.json
+          python - <<'PY'
+          import json, os, sys
+          sys.path.insert(0, "_code/modules/autonomy_coder")
+          from integration_proposal import inspect_pr
+          scope = inspect_pr(json.load(open("pr.json")),
+                             json.load(open("pr-files.json")),
+                             os.environ["GITHUB_REPOSITORY"])
+          with open("scope.json", "w") as stream:
+              json.dump(scope, stream, sort_keys=True)
+          print("EXACT_REVIEW_PR_SCOPE=PASS")
+          PY
+      - name: Independently reconstruct exact PR and historic source state
+        run: |
+          set -euo pipefail
+          head_sha="$(python -c 'import json;print(json.load(open("scope.json"))["head_sha"])')"
+          git -C _candidate fetch origin "$head_sha" --depth=1
+          git -C _candidate checkout --detach FETCH_HEAD
+          state_commit="$(python -c 'import json;print(json.load(open("_candidate/candidate_modules/" + json.load(open("scope.json"))["task_id"] + "/PROPOSAL.json"))["source_state_commit"])')"
+          [[ "$state_commit" =~ ^[0-9a-f]{40}$ ]] || exit 3
+          git -C _state cat-file -e "$state_commit^{commit}"
+          git -C _state merge-base --is-ancestor "$state_commit" HEAD
+          git -C _state checkout --detach "$state_commit"
+          task="$(python -c 'import json;print(json.load(open("scope.json"))["task_id"])')"
+          python _code/modules/autonomy_coder/integration_proposal.py verify \
+            --repo-root _candidate --state-root _state \
+            --state-commit "$state_commit" --task "$task" --out review-verified.json
+          python - <<'PY'
+          import json
+          actual=json.load(open("review-verified.json"))
+          expected=json.load(open("scope.json"))
+          if (actual["branch"] != expected["branch"] or
+              actual["source_sha256"] != expected["source_sha256"] or
+              actual["authority_delta"] != 0 or actual["auto_merge"] is not False):
+              raise SystemExit("PROPOSAL_BRANCH_PROVENANCE_DRIFT")
+          print("REVIEW_ONLY_EXACT_MODEL_PROVENANCE=PASS")
+          PY
