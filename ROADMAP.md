@@ -2,7 +2,7 @@
 
 - [x] retry_delay
 - [x] clamp
-- [ ] stable_unique
+- [x] stable_unique
 - [ ] pending_count
 - [ ] is_fresh
 - [ ] chunk_count
