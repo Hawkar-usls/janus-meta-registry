@@ -1,0 +1,133 @@
+name: JANUS Autonomous Roadmap and Continuation
+on:
+  schedule:
+    - cron: '19 * * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'modules/autonomy_loop/**'
+      - 'tests/test_autonomy_loop.py'
+      - '.github/workflows/janus-autonomy-roadmap-loop.yml'
+  pull_request:
+    paths:
+      - 'modules/autonomy_loop/**'
+      - 'tests/test_autonomy_loop.py'
+      - '.github/workflows/janus-autonomy-roadmap-loop.yml'
+permissions:
+  contents: read
+concurrency:
+  group: janus-autonomy-roadmap-state
+  cancel-in-progress: false
+jobs:
+  contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Offline source, ordering, tamper and recovery controls
+        run: python -m unittest discover -v -s tests -p test_autonomy_loop.py
+  cycle:
+    needs: contract
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    outputs:
+      state_commit: ${{ steps.save.outputs.state_commit }}
+      code_commit: ${{ steps.code.outputs.code_commit }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Bind trusted code before reading external metadata
+        id: code
+        run: |
+          git pull --ff-only origin main
+          echo "code_commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          echo "JANUS_LOOP_CODE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+      - name: Observe, regenerate evidence-driven roadmap and preserve checkpoint
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python modules/autonomy_loop/runtime.py --collect
+      - name: Persist only loop metadata; preserve history and source files
+        id: save
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add -- data/autonomy_loop/
+          if ! git diff --cached --quiet; then
+            git config user.name 'JANUS Autonomous Roadmap'
+            git config user.email 'actions@users.noreply.github.com'
+            git commit -m "JANUS roadmap: observe and checkpoint ${GITHUB_RUN_ID}"
+            saved=false
+            for attempt in 1 2 3 4; do
+              git fetch origin main
+              if ! git rebase origin/main; then
+                git rebase --abort || true
+                exit 1
+              fi
+              if git push origin HEAD:main; then saved=true; break; fi
+              sleep "$attempt"
+            done
+            test "$saved" = true
+          fi
+          echo "state_commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+      - name: Publish honest cycle summary
+        run: cat data/autonomy_loop/ROADMAP.md >> "$GITHUB_STEP_SUMMARY"
+  independent-verifier:
+    needs: cycle
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.cycle.outputs.code_commit }}
+          path: _code
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.cycle.outputs.state_commit }}
+          path: _state
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Independently reread exact source commits and accept status capture only
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python _code/modules/autonomy_loop/runtime.py --root _state --verify --accept-p01
+      - name: Persist verified continuation without force push
+        working-directory: _state
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add -- data/autonomy_loop/
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name 'JANUS Roadmap Independent Verifier'
+          git config user.email 'actions@users.noreply.github.com'
+          git commit -m "JANUS roadmap: verified continuation ${GITHUB_RUN_ID}"
+          saved=false
+          for attempt in 1 2 3 4; do
+            git fetch origin main
+            if ! git rebase origin/main; then
+              git rebase --abort || true
+              exit 1
+            fi
+            if git push origin HEAD:main; then saved=true; break; fi
+            sleep "$attempt"
+          done
+          test "$saved" = true
+
