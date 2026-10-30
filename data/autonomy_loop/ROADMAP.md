@@ -2,7 +2,7 @@
 
 Automatically rebuilt from pinned public evidence.
 
-Status: **AUTONOMY_PARTIAL** · observed 2026-10-30T15:42:57Z
+Status: **AUTONOMY_PARTIAL** · observed 2026-10-30T15:49:58Z
 
 Current phase: **P0.3**
 
@@ -62,9 +62,7 @@ A successful collector is not proof of useful work or full autonomy.
 - **P0.4** PATCHES_WAITING: 38
 - **P0.5** SCOUT_MODEL_SYNTHESIS_DEGRADED: {"snapshots": 17, "synthesis": 0, "expected": 17}
 - **P3** RECENT_TRAINING_ALL_REJECTED: 64
-- **P0.3** WORKFLOW_NOT_SUCCESS_BEETLE_PRODUCER: {"conclusion": "failure", "created_at": "2026-10-30T14:21:35Z", "event": "schedule", "head_sha": "4958fcf4dd23e78ff8d45b946491482ca8a95cf0", "repository": "Hawkar-usls/janus-lapis", "run_id": 41071119214, "status": "OBSERVED", "url": "https://github.com/Hawkar-usls/janus-lapis/actions/runs/41071119214", "workflow": "universal-beetle-hourly.yml"}
-- **P0.2** WORKFLOW_NOT_SUCCESS_CROSS_ORGAN_WITNESS: {"conclusion": "failure", "created_at": "2026-10-30T13:34:34Z", "event": "schedule", "head_sha": "719a731609032a76bbbbbc81dd055ee58513a619", "repository": "Hawkar-usls/janus-meta-registry", "run_id": 41064391344, "status": "OBSERVED", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/41064391344", "workflow": "janus-cross-organ-source-witness.yml"}
-- **P0.2** WORKFLOW_NOT_SUCCESS_ROWAN_WITNESS: {"conclusion": "failure", "created_at": "2026-10-30T13:45:33Z", "event": "schedule", "head_sha": "b88dde6190637a095ca630cd0d26a756f0993fef", "repository": "Hawkar-usls/janus-meta-registry", "run_id": 41065892573, "status": "OBSERVED", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/41065892573", "workflow": "janus-rowan-ecosystem-sync-witness.yml"}
+- **P0.3** WORKFLOW_NOT_SUCCESS_BEETLE_PRODUCER: {"repository": "Hawkar-usls/janus-lapis", "workflow": "universal-beetle-hourly.yml", "status": "OBSERVED", "run_id": 41071119214, "event": "schedule", "conclusion": "failure", "head_sha": "4958fcf4dd23e78ff8d45b946491482ca8a95cf0", "created_at": "2026-10-30T14:21:35Z", "url": "https://github.com/Hawkar-usls/janus-lapis/actions/runs/41071119214"}
 
 ## Continuation
 
