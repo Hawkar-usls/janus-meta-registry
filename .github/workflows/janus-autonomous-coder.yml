@@ -8,11 +8,13 @@ on:
     paths:
       - 'modules/autonomy_coder/**'
       - 'tests/test_autonomy_coder.py'
+      - 'tests/test_autonomy_module_registry.py'
       - '.github/workflows/janus-autonomous-coder.yml'
   pull_request:
     paths:
       - 'modules/autonomy_coder/**'
       - 'tests/test_autonomy_coder.py'
+      - 'tests/test_autonomy_module_registry.py'
       - '.github/workflows/janus-autonomous-coder.yml'
 permissions:
   contents: read
@@ -31,7 +33,9 @@ jobs:
         with:
           python-version: '3.12'
       - name: Offline admission, provenance, conflict and exactly-once controls
-        run: python -m unittest discover -v -s tests -p test_autonomy_coder.py
+        run: |
+          python -m unittest discover -v -s tests -p test_autonomy_coder.py
+          python -m unittest discover -v -s tests -p test_autonomy_module_registry.py
       - name: Pull exact isolated evaluation runtime
         run: docker pull python@sha256:1148dbb014615300fa7e713b2f94f550c0d1c69780c0805f84f093ceee34dd0b
       - name: Real networkless container positive and negative controls
@@ -154,6 +158,10 @@ jobs:
           python _code/modules/autonomy_coder/lifecycle.py publish \
             --root _state --bundle _candidate/CANDIDATES.json \
             --evaluation _evaluation/EVALUATION.json --out PUBLISH.json
+      - name: Package accepted model bytes into immutable isolated modules
+        run: |
+          python _code/modules/autonomy_coder/module_registry.py build \
+            --root _state --out MODULE_BUILD.json
       - name: Preserve immutable attempts and advance state without force or rebase
         id: save
         working-directory: _state
@@ -161,11 +169,11 @@ jobs:
           set -euo pipefail
           git config user.name 'janus-autonomous-coder[bot]'
           git config user.email 'janus-autonomous-coder[bot]@users.noreply.github.com'
-          git add STATE.json ROADMAP.md attempts receipts generated
+          git add STATE.json ROADMAP.md MODULE_INDEX.json attempts receipts generated self_modules
           python - <<'PY'
           import subprocess
           paths = subprocess.check_output(['git', 'diff', '--cached', '--name-only'], text=True).splitlines()
-          if any(p not in ('STATE.json', 'ROADMAP.md') and not p.startswith(('attempts/', 'receipts/', 'generated/')) for p in paths):
+          if any(p not in ('STATE.json', 'ROADMAP.md', 'MODULE_INDEX.json') and not p.startswith(('attempts/', 'receipts/', 'generated/', 'self_modules/')) for p in paths):
               raise SystemExit('CODER_WRITE_SCOPE')
           status = subprocess.check_output(['git', 'diff', '--cached', '--diff-filter=D', '--name-only'], text=True)
           if status:
@@ -213,6 +221,8 @@ jobs:
           persist-credentials: false
       - name: Pull pinned isolated runtime
         run: docker pull python@sha256:1148dbb014615300fa7e713b2f94f550c0d1c69780c0805f84f093ceee34dd0b
+      - name: Independently replay exact model candidate, evaluator and module catalog
+        run: python _code/modules/autonomy_coder/module_registry.py verify --root _state --expected-run-id "${{ github.run_id }}-${{ github.run_attempt }}"
       - name: Reconstruct from durable Git and call the verified extension
         run: python _code/modules/autonomy_coder/lifecycle.py consume --root _state --expected-run-id "${{ github.run_id }}-${{ github.run_attempt }}" --out CONSUMPTION.json
       - uses: actions/upload-artifact@v4
