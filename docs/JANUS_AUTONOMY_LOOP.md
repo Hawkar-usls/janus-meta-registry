@@ -20,3 +20,5 @@ Generated data/autonomy_loop/ status, roadmaps and checkpoints are excluded from
 
 No provider API is called and no Rowan credits are spent. Reads are fixed to public status metadata. Runtime writes are limited to this repository's data/autonomy_loop/ surface and the existing data/rowan/coordination/ metadata lane. Model/issue text is not executed. No source-history deletion, force push, arbitrary shell command, automatic main-code merge, secret management or authority expansion is present.
 
+
+The live collector also pins Beetle's own delivery-health and routing-gate receipts (18 fixed sources total). A green producer workflow does not clear a pending queue: aggregate receiver states, unknown ACKs and routing HOLD remain explicit P0.3 tasks. Inbox ACKs never attest downstream runtime consumption. Public roadmap output uses aggregate counts, without naming opaque/private receivers.
