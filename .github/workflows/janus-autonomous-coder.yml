@@ -196,7 +196,7 @@ jobs:
       - name: Pull pinned isolated runtime
         run: docker pull python@sha256:1148dbb014615300fa7e713b2f94f550c0d1c69780c0805f84f093ceee34dd0b
       - name: Reconstruct from durable Git and call the verified extension
-        run: python _code/modules/autonomy_coder/lifecycle.py consume --root _state --out CONSUMPTION.json
+        run: python _code/modules/autonomy_coder/lifecycle.py consume --root _state --expected-run-id "${{ github.run_id }}-${{ github.run_attempt }}" --out CONSUMPTION.json
       - uses: actions/upload-artifact@v4
         with:
           name: autonomous-coder-clean-consumption

@@ -129,5 +129,49 @@ class CoderTests(unittest.TestCase):
             self.assertGreaterEqual(len(a), 200)
             self.assertNotEqual(a, b)
 
+    def test_clean_consumer_uses_exact_latest_run_and_new_task(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / "STATE.json").write_bytes(p.canonical(p.empty_state()))
+            first = bundle()
+            m.publish(root, first, m.evaluate(first, independent_check))
+            state = m.load(root / "STATE.json")
+            second_source = "def clamp(value, low, high):\\n    return min(high, max(low, value))\\n".replace("\\n", "\n")
+            second = bundle(state)
+            second["run_id"] = "123457-1"
+            second["task_id"] = "clamp"
+            second["candidates"] = [
+                {"index": i, "raw_response": second_source, "source": second_source,
+                 "source_sha256": p.source_digest(second_source)} for i in range(2)]
+            m.publish(root, second, m.evaluate(second, independent_check))
+            with self.assertRaisesRegex(ValueError, "CONSUMER_RUN_MISMATCH"):
+                m.consume(root, expected_run_id="123456-1", check=independent_check)
+            got = m.consume(root, expected_run_id="123457-1", check=independent_check)
+            self.assertEqual(got["task_id"], "clamp")
+            self.assertEqual(got["source_sha256"], p.source_digest(second_source))
+
+    def test_rejected_new_run_cannot_reconsume_previous_success_as_new(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / "STATE.json").write_bytes(p.canonical(p.empty_state()))
+            first = bundle()
+            m.publish(root, first, m.evaluate(first, independent_check))
+            second = bundle(m.load(root / "STATE.json"))
+            second["run_id"] = "123458-1"
+            second["task_id"] = "clamp"
+            bad_source = "def clamp(value, low, high):\\n    return 999\\n".replace("\\n", "\n")
+            second["candidates"] = [
+                {"index": i, "raw_response": bad_source, "source": bad_source,
+                 "source_sha256": p.source_digest(bad_source)} for i in range(2)]
+            def reject(*args, **kwargs):
+                raise ValueError("behavior failed")
+            result = m.publish(root, second, m.evaluate(second, reject))
+            self.assertEqual(result["status"], "REJECTED_NO_PROMOTION")
+            def never_check(*args, **kwargs):
+                raise AssertionError("rejected run must not execute previous code")
+            got = m.consume(root, expected_run_id="123458-1", check=never_check)
+            self.assertEqual(got["status"], "WAIT_NO_NEW_ACCEPTED_EXTENSION")
+            self.assertFalse(got["full_issue_162_acceptance"])
+
 if __name__ == "__main__":
     unittest.main()

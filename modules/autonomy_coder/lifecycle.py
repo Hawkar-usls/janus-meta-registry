@@ -8,7 +8,7 @@ from pathlib import Path
 import secrets
 import subprocess
 import tempfile
-from policy import (TASKS, IMAGE, canonical, digest, source_digest, validate_source,
+from policy import (TASKS, IMAGE, RUN, canonical, digest, source_digest, validate_source,
                     validate_state, validate_bundle, next_task)
 
 def load(path):
@@ -137,9 +137,27 @@ def publish(root, bundle, evaluation):
     return {"status": receipt["status"], "changed": True, "task_id": bundle["task_id"],
             "accepted_count": len(state["accepted"]), "next_task": next_task(state)}
 
-def consume(root, task="retry_delay", call=None, check=isolated_check):
+def consume(root, task="retry_delay", call=None, check=isolated_check, expected_run_id=None):
     root = Path(root)
     state = validate_state(load(safe_path(root, "STATE.json")))
+    if expected_run_id is not None:
+        if not isinstance(expected_run_id, str) or not RUN.fullmatch(expected_run_id):
+            raise ValueError("CONSUMER_RUN_ID")
+        expected_receipt = "receipts/" + expected_run_id + ".json"
+        if state.get("last_receipt") != expected_receipt:
+            raise ValueError("CONSUMER_RUN_MISMATCH")
+        latest = load(safe_path(root, expected_receipt))
+        if latest.get("run_id") != expected_run_id:
+            raise ValueError("CONSUMER_RECEIPT_REBINDING")
+        if latest.get("status") == "REJECTED_NO_PROMOTION":
+            return {"status": "WAIT_NO_NEW_ACCEPTED_EXTENSION", "run_id": expected_run_id,
+                    "authority_delta": 0, "full_issue_162_acceptance": False}
+        if latest.get("status") != "PROMOTED_PURE_EXTENSION_ONLY" or latest.get("task_id") not in TASKS:
+            raise ValueError("CONSUMER_RECEIPT_STATUS")
+        task = latest["task_id"]
+        if (task not in state["accepted"] or
+                state["accepted"][task].get("run_id") != expected_run_id):
+            raise ValueError("CONSUMER_ACCEPTED_RUN_MISMATCH")
     if task not in state["accepted"]:
         return {"status": "WAIT_NO_ACCEPTED_EXTENSION", "task_id": task}
     entry = state["accepted"][task]
@@ -162,6 +180,7 @@ def main():
     parser.add_argument("--bundle", type=Path)
     parser.add_argument("--evaluation", type=Path)
     parser.add_argument("--root", type=Path)
+    parser.add_argument("--expected-run-id")
     parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args()
     if args.mode == "evaluate":
@@ -169,7 +188,8 @@ def main():
     elif args.mode == "publish":
         result = publish(args.root, load(args.bundle), load(args.evaluation))
     else:
-        result = consume(args.root, call=[3, 30])
+        result = consume(args.root, call=None if args.expected_run_id else [3, 30],
+                         expected_run_id=args.expected_run_id)
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_bytes(canonical(result) + b"\n")
     print(json.dumps(result, sort_keys=True))
