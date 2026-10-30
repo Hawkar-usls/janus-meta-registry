@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 import sys
 import tempfile
@@ -19,7 +20,7 @@ def candidate_bundle(state, task="retry_delay", run_id="123456-1", source=None):
     return {
         "schema": "janus.autonomous_coder.candidates.v1",
         "run_id": run_id, "base_state_sha256": policy.digest(state),
-        "task_id": task, "code_commit": "a" * 40,
+        "task_id": task, "code_commit": os.environ.get("GITHUB_SHA", "LOCAL"),
         "model": {
             "id": policy.MODEL_ID, "revision": policy.MODEL_REVISION,
             "weights_sha256": policy.WEIGHTS_SHA256,
