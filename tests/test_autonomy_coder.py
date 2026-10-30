@@ -1,6 +1,7 @@
 """Adversarial offline controls; no model download and no provider calls."""
 import copy
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -16,7 +17,7 @@ BAD = "def retry_delay(attempt, cap):\n    return 1\n"
 
 def bundle(state=None):
     return {"schema": "janus.autonomous_coder.candidates.v1", "run_id": "123456-1",
-        "base_state_sha256": p.digest(state or p.empty_state()), "task_id": "retry_delay", "code_commit": "LOCAL",
+        "base_state_sha256": p.digest(state or p.empty_state()), "task_id": "retry_delay", "code_commit": os.environ.get("GITHUB_SHA", "LOCAL"),
         "model": {"id": p.MODEL_ID, "revision": p.MODEL_REVISION, "weights_sha256": p.WEIGHTS_SHA256,
                   "attribution": "EXTERNAL_OPEN_WEIGHTS_NOT_NATIVE_JANUS"},
         "candidates": [{"index": i, "raw_response": s, "source": s, "source_sha256": p.source_digest(s)} for i, s in enumerate((BAD, GOOD))]}
