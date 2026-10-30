@@ -108,6 +108,9 @@ def validate_source(source, task):
                         len(node.args) != 1 or node.keywords):
                     raise ValueError("UNSAFE_SET_ADD")
                 add_calls.add(id(node.func))
+    if add_calls and any(isinstance(node, ast.FunctionDef) and node is not fn
+                         for node in nodes):
+        raise ValueError("NESTED_SET_BINDING_FORBIDDEN")
     for node in nodes:
         if isinstance(node, forbidden):
             raise ValueError("FORBIDDEN_SYNTAX")
