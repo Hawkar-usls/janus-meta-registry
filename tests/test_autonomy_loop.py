@@ -176,6 +176,63 @@ class ContinuationTests(unittest.TestCase):
         self.assertEqual(r["roadmap"][1]["state"], "ACTIVE_RECHECK")
         self.assertIn("P0.2", r["accepted_phases"])
 
+    def test_matching_new_sources_still_recheck_old_checkpoint_proof(self):
+        s, w = fixture()
+        new_run = 124
+        s["canonical"]["data"]["latest_durable_external_run"] = new_run
+        s["aura"]["data"]["source"]["upstream_run"] = new_run
+        s["aura"]["data"]["source"]["state_sha256"] = m.digest(s["canonical"]["data"])
+        s["council"]["data"]["sources"]["meta_registry"]["canonical_run"] = new_run
+        s["council"]["data"]["sources"]["meta_registry"]["sha256"] = m.digest(s["canonical"]["data"])
+        s["council"]["data"]["sources"]["aura_oracle"]["packet_sha256"] = m.digest(s["aura"]["data"])
+        s["coordination"]["data"]["meta_canonical_run"] = new_run
+        s["cosmos"]["data"]["canonical_rowan_run"] = new_run
+        previous = {"accepted_phases": {
+            "P0.1": {"status": "PASS_STATUS_CAPTURE_ONLY"},
+            "P0.2": {"status": "PASS_SOURCE_COHORT_ONLY", "canonical_run": 123}}}
+        out = m.summarize(s, w, "now", "d"*40, previous)
+        self.assertFalse(any("GENERATION_DRIFT" in item["reason"] or
+                             "DIGEST_DRIFT" in item["reason"] for item in out["findings"]))
+        self.assertEqual(out["current_phase"], "P0.2")
+        self.assertEqual(out["roadmap"][1]["state"], "ACTIVE_RECHECK")
+
+    def test_exact_new_independent_cohort_replaces_old_generation(self):
+        phases = {"P0.1": {"status": "PASS_STATUS_CAPTURE_ONLY"},
+                  "P0.2": {"status": "PASS_SOURCE_COHORT_ONLY",
+                           "canonical_run": 123, "proof_sha256": "a"*64}}
+        refreshed = {"status": "PASS_SOURCE_COHORT_ONLY", "canonical_run": 124,
+                     "proof_sha256": "b"*64, "authority_delta": 0,
+                     "full_issue_162_acceptance": False}
+        result = m.admit_verified_p02(phases, refreshed, 124)
+        self.assertEqual(result["P0.2"]["canonical_run"], 124)
+        self.assertEqual(result["P0.2"]["proof_sha256"], "b"*64)
+        s, w = fixture()
+        s["canonical"]["data"]["latest_durable_external_run"] = 124
+        s["aura"]["data"]["source"].update(
+            upstream_run=124, state_sha256=m.digest(s["canonical"]["data"]))
+        s["council"]["data"]["sources"]["meta_registry"].update(
+            canonical_run=124, sha256=m.digest(s["canonical"]["data"]))
+        s["council"]["data"]["sources"]["aura_oracle"]["packet_sha256"] = m.digest(s["aura"]["data"])
+        s["coordination"]["data"]["meta_canonical_run"] = 124
+        s["cosmos"]["data"]["canonical_rowan_run"] = 124
+        self.assertEqual(m.summarize(s, w, "now", "d"*40,
+                                     {"accepted_phases": phases})["current_phase"], "P0.3")
+
+    def test_p02_replacement_refuses_rollback_or_unverified_authority(self):
+        phases = {"P0.2": {"status": "PASS_SOURCE_COHORT_ONLY", "canonical_run": 124}}
+        good = {"status": "PASS_SOURCE_COHORT_ONLY", "canonical_run": 123,
+                "authority_delta": 0, "full_issue_162_acceptance": False}
+        with self.assertRaisesRegex(m.Hold, "P02_GENERATION_ROLLBACK_DENIED"):
+            m.admit_verified_p02(phases, good, 123)
+        self.assertEqual(phases["P0.2"]["canonical_run"], 124)
+        good["canonical_run"] = 125
+        good["full_issue_162_acceptance"] = True
+        with self.assertRaisesRegex(m.Hold, "P02_INVALID_CURRENT_GENERATION_PROOF"):
+            m.admit_verified_p02(phases, good, 125)
+        with self.assertRaisesRegex(m.Hold, "P02_INVALID_CURRENT_GENERATION_PROOF"):
+            m.admit_verified_p02(phases, {**good, "full_issue_162_acceptance": False}, 126)
+        self.assertEqual(phases["P0.2"]["canonical_run"], 124)
+
     def test_serialized_workflow_key_order_does_not_change_observation(self):
         s, w = fixture()
         for row in w.values():
