@@ -1,5 +1,9 @@
 name: JANUS Autonomous Roadmap and Continuation
 on:
+  workflow_run:
+    workflows: ["JANUS Rowan Durable Observer"]
+    types: [completed]
+    branches: [main]
   schedule:
     - cron: '19 * * * *'
   workflow_dispatch:
@@ -7,12 +11,12 @@ on:
     branches: [main]
     paths:
       - 'modules/autonomy_loop/**'
-      - 'tests/test_autonomy_loop.py'
+      - 'tests/test_autonomy_*.py'
       - '.github/workflows/janus-autonomy-roadmap-loop.yml'
   pull_request:
     paths:
       - 'modules/autonomy_loop/**'
-      - 'tests/test_autonomy_loop.py'
+      - 'tests/test_autonomy_*.py'
       - '.github/workflows/janus-autonomy-roadmap-loop.yml'
 permissions:
   contents: read
@@ -37,7 +41,10 @@ jobs:
           python -m unittest discover -v -s modules/rowan_observer -p test_ecosystem_sync_witness.py
   cycle:
     needs: contract
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    if: >-
+      ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' &&
+          (github.event_name != 'workflow_run' ||
+           (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.head_repository.full_name == github.repository)) }}
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     permissions:

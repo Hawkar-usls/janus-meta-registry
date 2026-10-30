@@ -17,7 +17,7 @@ TEXT_EXTENSIONS = {
     ".jsx", ".css", ".scss", ".sh", ".ps1", ".xml", ".jsonl", ".ndjson"
 }
 EXCLUDED_DIR_NAMES = {".git", "node_modules", "__pycache__", ".venv", "venv", ".mypy_cache", ".pytest_cache"}
-EXCLUDED_PREFIXES = ("EYE/generated/", "assets/hrain-full-memory/")
+EXCLUDED_PREFIXES = ("EYE/generated/", "assets/hrain-full-memory/", "data/autonomy_loop/")
 EXCLUDED_EXACT_PATHS = {"assets/hrain-registry-index.json"}
 TOKEN_RE = re.compile(r"[A-Za-zА-Яа-яЁё0-9][A-Za-zА-Яа-яЁё0-9_.:/+-]{2,}", re.UNICODE)
 HEX64_RE = re.compile(r"(?<![0-9a-fA-F])[0-9a-fA-F]{64}(?![0-9a-fA-F])")

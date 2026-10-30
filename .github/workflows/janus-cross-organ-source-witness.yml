@@ -1,5 +1,9 @@
 name: JANUS Cross Organ Source-Bound Evidence Witness
 on:
+  workflow_run:
+    workflows: ["JANUS Autonomous Roadmap and Continuation"]
+    types: [completed]
+    branches: [main]
   workflow_dispatch:
   schedule:
     - cron: '41 */6 * * *'
@@ -21,6 +25,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   source-bound-readonly:
+    if: ${{ github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.head_repository.full_name == github.repository) }}
     runs-on: ubuntu-latest
     timeout-minutes: 9
     steps:
