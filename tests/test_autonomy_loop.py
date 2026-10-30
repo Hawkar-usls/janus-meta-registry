@@ -73,6 +73,17 @@ class LoopTests(unittest.TestCase):
         self.assertEqual(r["ecosystem_status"], "AUTONOMY_PARTIAL")
         self.assertIs(r["full_issue_162_acceptance"], False)
         self.assertEqual(r["current_phase"], "P0.1")
+
+    def test_second_cloud_wake_retains_exact_origin_and_no_pr_writer(self):
+        workflow = (Path(__file__).parents[1] /
+                    ".github/workflows/janus-autonomy-roadmap-loop.yml").read_text()
+        self.assertIn("JANUS Beetle Memory Receiver", workflow)
+        self.assertIn("JANUS Rowan Durable Observer", workflow)
+        self.assertIn("github.event.workflow_run.conclusion == 'success'", workflow)
+        self.assertIn("github.event.workflow_run.head_branch == 'main'", workflow)
+        self.assertIn("github.event.workflow_run.head_repository.full_name == github.repository", workflow)
+        self.assertIn("github.event_name != 'pull_request'", workflow)
+        self.assertIn("cron: '19 * * * *'", workflow)
     def test_unknown_source_remains_visible(self):
         s, w = fixture()
         s["aura"]["status"] = "UNKNOWN"
