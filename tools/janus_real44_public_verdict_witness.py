@@ -67,7 +67,7 @@ def _exact_id(value: Any) -> int:
 
 def inspect(get: Callable[[str], dict[str, Any]] = github_api) -> dict[str, Any]:
     """Observe the newest completed trusted-main live run, never a PR canary."""
-    rows = get("/actions/runs?per_page=35").get("workflow_runs")
+    rows = get("/actions/workflows/janus-real44-cloud-materialization-v2.yml/runs?per_page=20").get("workflow_runs")
     if not isinstance(rows, list):
         raise WitnessHold("RUN_LIST_UNAVAILABLE")
     accepted = []
@@ -159,17 +159,18 @@ def persist(report: dict[str, Any], root: Path) -> tuple[Path, bool]:
     digest = str(report["content_sha256"])
     receipt = receipt_dir / f"REAL44-{run}-{digest[:16]}.json"
     body = (json.dumps(report, indent=2, sort_keys=True, ensure_ascii=False) + "\n").encode("utf-8")
+    # Never import a rollback receipt into the authoritative source history.
+    # Check this before creating any receipt, even on an initial API race.
+    if latest.exists():
+        previous = json.loads(latest.read_text(encoding="utf-8"))
+        if _exact_id(previous.get("source_run_id")) > run:
+            raise WitnessHold("RUN_SEQUENCE_ROLLBACK_HOLD")
     receipt_dir.mkdir(parents=True, exist_ok=True)
     if receipt.exists() and receipt.read_bytes() != body:
         raise WitnessHold("IMMUTABLE_RECEIPT_COLLISION")
     if not receipt.exists():
         receipt.write_bytes(body)
-    # Never roll the source clock back over a newer witnessed run.
     latest.parent.mkdir(parents=True, exist_ok=True)
-    if latest.exists():
-        previous = json.loads(latest.read_text(encoding="utf-8"))
-        if _exact_id(previous.get("source_run_id")) > run:
-            raise WitnessHold("RUN_SEQUENCE_ROLLBACK_HOLD")
     marker = {
         "schema": "janus.nexus.real44.public_latest.v1",
         "source_run_id": run,
