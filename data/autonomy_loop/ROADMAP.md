@@ -2,7 +2,7 @@
 
 Automatically rebuilt from pinned public evidence.
 
-Status: **AUTONOMY_PARTIAL** · observed 2026-10-30T17:48:54Z
+Status: **AUTONOMY_PARTIAL** · observed 2026-10-30T18:50:43Z
 
 Current phase: **P0.3**
 
@@ -46,8 +46,8 @@ A successful collector is not proof of useful work or full autonomy.
     "waiting": 38
   },
   "home": {
-    "sequence": 216,
-    "source_main_sha": "55b7c6d35e88bc5c7753c7fdeb2ad8e403a4a207"
+    "sequence": 217,
+    "source_main_sha": "84b7d4e41bd69d205b3ce997e1f7958162fa8fbc"
   },
   "beetle_delivery": {
     "status": "WARN",
