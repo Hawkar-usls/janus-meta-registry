@@ -124,6 +124,46 @@ class ProposalTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "UNREVIEWED_MODULE_TASK"):
             pr.propose(self.state, "shell_script", COMMIT)
 
+    def test_independent_pr_diff_gate_rejects_extra_files_or_fork(self):
+        branch = pr.propose(self.state, "retry_delay", COMMIT)[0]
+        pull = {
+            "state": "open", "merged": False,
+            "base": {"ref": "main", "repo": {"full_name": "Hawkar-usls/janus-meta-registry"}},
+            "head": {"ref": branch, "sha": COMMIT,
+                     "repo": {"full_name": "Hawkar-usls/janus-meta-registry"}},
+            "changed_files": 2,
+        }
+        files = [
+            {"filename": "candidate_modules/retry_delay/module.py", "status": "added"},
+            {"filename": "candidate_modules/retry_delay/PROPOSAL.json", "status": "added"},
+        ]
+        expected_repo = "Hawkar-usls/janus-meta-registry"
+        self.assertEqual(pr.inspect_pr(pull, files, expected_repo)["task_id"], "retry_delay")
+        forged = [dict(row) for row in files]
+        forged[1]["filename"] = ".github/workflows/backdoor.yml"
+        with self.assertRaisesRegex(ValueError, "REVIEW_PR_UNEXPECTED_FILES"):
+            pr.inspect_pr(pull, forged, expected_repo)
+        with self.assertRaisesRegex(ValueError, "REVIEW_PR_METADATA_OR_SCOPE_INVALID"):
+            pr.inspect_pr({**pull, "changed_files": 3}, files, expected_repo)
+        with self.assertRaisesRegex(ValueError, "REVIEW_PR_METADATA_OR_SCOPE_INVALID"):
+            pr.inspect_pr({**pull, "head": {**pull["head"],
+                          "repo": {"full_name": "other/fork"}}}, files, expected_repo)
+        with self.assertRaisesRegex(ValueError, "REVIEW_PR_METADATA_OR_SCOPE_INVALID"):
+            pr.inspect_pr({**pull, "merged": True}, files, expected_repo)
+        with self.assertRaisesRegex(ValueError, "REVIEW_PR_UNEXPECTED_FILES"):
+            pr.inspect_pr(pull, [{**files[0], "status": "modified"}, files[1]],
+                          expected_repo)
+
+    def test_generated_review_candidate_cannot_follow_symlink_into_repo(self):
+        pr.prepare(self.repo, self.state, COMMIT, set())
+        module_path = self.repo / "candidate_modules/retry_delay/module.py"
+        module_path.unlink()
+        outside = self.root / "outside.py"
+        outside.write_text(GOOD)
+        module_path.symlink_to(outside)
+        with self.assertRaisesRegex(ValueError, "STATE_PATH_ESCAPE"):
+            pr.verify_proposal(self.repo, self.state, COMMIT, "retry_delay")
+
     def test_main_workflow_writes_only_exact_candidates_and_never_auto_merges(self):
         path = Path(__file__).resolve().parents[1] / ".github/workflows/janus-autonomous-module-pr.yml"
         wf = path.read_text()
