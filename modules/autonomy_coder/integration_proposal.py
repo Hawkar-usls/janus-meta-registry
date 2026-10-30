@@ -130,6 +130,36 @@ def verify_proposal(repo_root, state_root, state_commit, task):
     }
 
 
+def inspect_pr(pull, files, expected_repo):
+    """Check two-file, same-repo, not-merged review PR before any state fetch."""
+    if (not isinstance(pull, dict) or not isinstance(files, list) or
+            pull.get("state") != "open" or
+            pull.get("merged") is True or
+            pull.get("base", {}).get("ref") != "main" or
+            pull.get("base", {}).get("repo", {}).get("full_name") != expected_repo or
+            pull.get("head", {}).get("repo", {}).get("full_name") != expected_repo or
+            pull.get("changed_files") != 2 or len(files) != 2):
+        raise ValueError("REVIEW_PR_METADATA_OR_SCOPE_INVALID")
+    branch = pull["head"].get("ref")
+    commit = pull["head"].get("sha")
+    if (not isinstance(branch, str) or not branch.startswith(PREFIX) or
+            not isinstance(commit, str) or not HEX40.fullmatch(commit)):
+        raise ValueError("REVIEW_PR_HEAD_UNTRUSTED")
+    m = re.fullmatch(r"janus/review-pure-([a-z_]+)-([0-9a-f]{64})", branch)
+    if m is None or m.group(1) not in TASKS:
+        raise ValueError("REVIEW_PR_BRANCH_UNREVIEWED")
+    task, sha = m.groups()
+    wanted = {
+        "candidate_modules/" + task + "/PROPOSAL.json",
+        "candidate_modules/" + task + "/module.py",
+    }
+    if ({f.get("filename") for f in files if isinstance(f, dict)} != wanted or
+            any(not isinstance(f, dict) or f.get("status") != "added" for f in files)):
+        raise ValueError("REVIEW_PR_UNEXPECTED_FILES")
+    return {"task_id": task, "head_sha": commit,
+            "source_sha256": sha, "branch": branch, "changed_files": 2}
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("mode", choices=("prepare", "verify"))
