@@ -32,6 +32,8 @@ SPECS = {
     "scouts": ("Janus-Demiurge", "main", "scout_swarm/state/SCOUT_SWARM_STATUS-v1.json"),
     "feedback": ("Janus-Demiurge", "main", "janus_model/state/JANUS_VERIFIED_OUTCOME_MEMORY.json"),
     "home": ("Janus_Genesis", "janus/habitat-cloud-state", "state/habitat_cloud_home/STATE.json"),
+    "beetle_delivery": ("janus-lapis", "beetle-state", "data/beetle-state/latest_delivery_health.json"),
+    "beetle_gate": ("janus-lapis", "beetle-state", "data/beetle-state/latest_routing_gate.json"),
     "genesis_current": ("Janus_Genesis", "main", "protocol/JANUS_REAL44_CLOUD_MATERIALIZATION-v2.0.json"),
     "cosmos": ("Janus-Cosmos", "main", "data/integrations/rowan/LATEST.json"),
     "patch_queue": ("janus-meta-registry", "janus/native-self-memory-modular-organism-v1", "JANUS/PATCHES/INDEX.json"),
@@ -201,6 +203,34 @@ def summarize(sources, workflows, observed_at, code_sha, previous=None, action=N
     source_head = sources.get("genesis_current", {}).get("commit_sha")
     if not source_head or d["home"].get("source_main_sha") != source_head:
         add("P0.3", "HOME_SOURCE_HEAD_DIFFERS", d["home"].get("source_main_sha"))
+    delivery = d["beetle_delivery"]
+    gate = d["beetle_gate"]
+    receivers = delivery.get("repositories", {})
+    valid_delivery = (delivery.get("schema") == "janus.beetle.delivery_health.v1" and
+                      delivery.get("ack_semantics") == "INBOX_DURABLE_ONLY_NOT_RUNTIME_CONSUMPTION" and
+                      isinstance(receivers, dict) and bool(receivers) and
+                      all(isinstance(row, dict) and type(row.get("pending")) is int and row["pending"] >= 0
+                          for row in receivers.values()) and
+                      type(delivery.get("total_pending")) is int and
+                      delivery["total_pending"] == sum(row["pending"] for row in receivers.values()))
+    if not valid_delivery:
+        add("P0.3", "BEETLE_DELIVERY_HEALTH_UNVERIFIED", "schema_or_pending_totals")
+    receiver_states = {}
+    if valid_delivery:
+        for row in receivers.values():
+            status = row.get("status", "UNKNOWN")
+            status = status if isinstance(status, str) and status in {"UP_TO_DATE", "PENDING", "STALE", "ACK_CONFLICT", "ACK_UNAVAILABLE", "AWAITING_ACK"} else "UNKNOWN"
+            receiver_states[status] = receiver_states.get(status, 0) + 1
+        if delivery["total_pending"]:
+            add("P0.3", "BEETLE_DELIVERY_PENDING", {"total_pending": delivery["total_pending"],
+                                                    "receiver_states": receiver_states})
+    valid_gate = (gate.get("schema") == "janus.beetle.producer_routing_gate.v1" and
+                  type(gate.get("routing_allowed")) is bool and
+                  gate.get("ack_semantics") == "INBOX_DURABLE_ONLY_NOT_RUNTIME_CONSUMPTION")
+    if not valid_gate:
+        add("P0.3", "BEETLE_ROUTING_GATE_UNVERIFIED", "schema_or_routing_decision")
+    elif not gate["routing_allowed"]:
+        add("P0.3", "BEETLE_ROUTING_HELD", gate.get("reason", "UNKNOWN"))
     for line, info in d["external_witness"].get("line_states", {}).items():
         if info.get("status") not in ("SCHEDULE_OK", "ANCHOR_MATCH"):
             add("P0.3", "EXTERNAL_WITNESS_" + line.upper(), info.get("status"))
@@ -256,6 +286,13 @@ def summarize(sources, workflows, observed_at, code_sha, previous=None, action=N
                     "scouts": {"snapshots": scouts.get("agents_snapshot_observed"), "model_synthesis": synthesis, "expected": expected},
                     "patch_queue": {"proposals": queue.get("proposal_count"), "verified": queue.get("verified_count"), "waiting": waiting},
                     "home": {"sequence": d["home"].get("sequence"), "source_main_sha": d["home"].get("source_main_sha")},
+                    "beetle_delivery": {"status": delivery.get("status") if valid_delivery else "UNVERIFIED",
+                                        "observed_at": delivery.get("at"),
+                                        "total_pending": delivery.get("total_pending") if valid_delivery else None,
+                                        "receiver_states": receiver_states,
+                                        "routing_allowed": gate.get("routing_allowed") if valid_gate else None,
+                                        "routing_reason": gate.get("reason") if valid_gate else "UNVERIFIED",
+                                        "runtime_consumption_attested": False},
                     "native_decision": d["native_decision"].get("status"),
                     "forge": d["forge"].get("status")},
         "current_phase": current, "roadmap": plan, "accepted_phases": completed,

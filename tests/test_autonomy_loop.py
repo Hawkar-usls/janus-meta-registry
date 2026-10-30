@@ -21,6 +21,11 @@ def fixture():
     data("coordination").update(meta_canonical_run=123)
     data("cosmos").update(canonical_rowan_run=123)
     data("home").update(source_main_sha="a"*40, sequence=214)
+    data("beetle_delivery").update(schema="janus.beetle.delivery_health.v1", status="PASS",
+        ack_semantics="INBOX_DURABLE_ONLY_NOT_RUNTIME_CONSUMPTION", total_pending=0,
+        repositories={"opaque_receiver": {"status": "UP_TO_DATE", "pending": 0}})
+    data("beetle_gate").update(schema="janus.beetle.producer_routing_gate.v1", routing_allowed=True,
+        reason="ROUTING_ALLOWED", ack_semantics="INBOX_DURABLE_ONLY_NOT_RUNTIME_CONSUMPTION")
     data("scouts").update(agents_expected=17, agents_snapshot_observed=17, agents_model_synthesis_ok=17)
     data("native_model").update(attempt_count=3, promotion_count=1, rejection_count=2, history=[])
     data("native_decision").update(status="NO_ACTION")
@@ -35,6 +40,34 @@ def snapshot(previous=None):
     s, w = fixture()
     return m.summarize(s, w, "2026-10-30T15:00:00Z", "d"*40, previous)
 class LoopTests(unittest.TestCase):
+    def test_successful_workflow_does_not_hide_delivery_backlog(self):
+        s, w = fixture()
+        s["beetle_delivery"]["data"].update(status="WARN", total_pending=14,
+            repositories={"public_receiver": {"status": "PENDING", "pending": 13},
+                          "opaque_private_receiver": {"status": "ACK_UNAVAILABLE", "pending": 1}})
+        s["beetle_gate"]["data"].update(routing_allowed=False, reason="HOLD_DELIVERY_BACKPRESSURE")
+        r = m.summarize(s, w, "now", "d"*40)
+        self.assertTrue(all(obs["conclusion"] == "success" for obs in r["workflows"].values()))
+        self.assertEqual(r["metrics"]["beetle_delivery"]["total_pending"], 14)
+        self.assertEqual(r["metrics"]["beetle_delivery"]["receiver_states"]["ACK_UNAVAILABLE"], 1)
+        self.assertFalse(r["metrics"]["beetle_delivery"]["runtime_consumption_attested"])
+        self.assertIn("BEETLE_ROUTING_HELD", {f["reason"] for f in r["findings"]})
+        self.assertNotIn("opaque_private_receiver", m.encode(r).decode())
+
+    def test_malformed_delivery_totals_do_not_report_clear(self):
+        s, w = fixture()
+        s["beetle_delivery"]["data"]["total_pending"] = 1
+        r = m.summarize(s, w, "now", "d"*40)
+        self.assertEqual(r["metrics"]["beetle_delivery"]["status"], "UNVERIFIED")
+        self.assertIsNone(r["metrics"]["beetle_delivery"]["total_pending"])
+        self.assertIn("BEETLE_DELIVERY_HEALTH_UNVERIFIED", {f["reason"] for f in r["findings"]})
+
+    def test_clear_inbox_still_is_not_runtime_execution(self):
+        r = snapshot()
+        self.assertEqual(r["metrics"]["beetle_delivery"]["total_pending"], 0)
+        self.assertFalse(r["metrics"]["beetle_delivery"]["runtime_consumption_attested"])
+        self.assertFalse(r["full_issue_162_acceptance"])
+
     def test_green_components_never_inherit_full_acceptance(self):
         r = snapshot()
         self.assertEqual(r["ecosystem_status"], "AUTONOMY_PARTIAL")
