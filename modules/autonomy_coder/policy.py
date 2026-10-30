@@ -80,18 +80,48 @@ def validate_source(source, task):
     nodes = list(ast.walk(tree))
     if len(nodes) > 512:
         raise ValueError("AST_TOO_LARGE")
+    # A set.add call is admitted only on a locally constructed builtin set
+    # with exactly one Store binding. This does NOT allow arbitrary .add on
+    # caller-owned objects or widening the original method allowlist.
+    stores = {}
+    for node in nodes:
+        if isinstance(node, ast.Name) and isinstance(node.ctx, ast.Store):
+            stores[node.id] = stores.get(node.id, 0) + 1
+    safe_sets = set()
+    if stores.get("set", 0) == 0 and "set" not in TASKS[task][0]:
+        for node in nodes:
+            if (isinstance(node, ast.Assign) and len(node.targets) == 1 and
+                    isinstance(node.targets[0], ast.Name) and
+                    isinstance(node.value, ast.Call) and
+                    isinstance(node.value.func, ast.Name) and
+                    node.value.func.id == "set" and
+                    not node.value.args and not node.value.keywords and
+                    stores.get(node.targets[0].id) == 1 and
+                    node.targets[0].id not in TASKS[task][0]):
+                safe_sets.add(node.targets[0].id)
+    add_calls = set()
+    for node in nodes:
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
+            if node.func.attr == "add":
+                if (not isinstance(node.func.value, ast.Name) or
+                        node.func.value.id not in safe_sets or
+                        len(node.args) != 1 or node.keywords):
+                    raise ValueError("UNSAFE_SET_ADD")
+                add_calls.add(id(node.func))
     for node in nodes:
         if isinstance(node, forbidden):
             raise ValueError("FORBIDDEN_SYNTAX")
         if isinstance(node, ast.Name) and node.id.startswith("_"):
             raise ValueError("PRIVATE_NAME")
-        if isinstance(node, ast.Attribute) and node.attr not in methods:
+        if isinstance(node, ast.Attribute) and (node.attr not in methods and
+                                                 (node.attr != "add" or id(node) not in add_calls)):
             raise ValueError("FORBIDDEN_ATTRIBUTE")
         if isinstance(node, ast.Constant) and (isinstance(node.value, (str, bytes)) and len(node.value) > 128):
             raise ValueError("CONSTANT_TOO_LARGE")
         if isinstance(node, ast.Call):
             if not ((isinstance(node.func, ast.Name) and node.func.id in calls) or
-                    (isinstance(node.func, ast.Attribute) and node.func.attr in methods)):
+                    (isinstance(node.func, ast.Attribute) and
+                     (node.func.attr in methods or id(node.func) in add_calls))):
                 raise ValueError("FORBIDDEN_CALL")
     return source
 
