@@ -12,6 +12,10 @@ on:
         description: 'Optional PR number for read-only verification'
         required: false
         type: string
+      review_branch:
+        description: 'Exact quarantined branch to verify if Actions cannot create PR'
+        required: false
+        type: string
   push:
     branches: [main]
     paths:
@@ -53,7 +57,7 @@ jobs:
       github.event_name != 'pull_request' && (
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
       github.event_name == 'schedule' ||
-      (github.event_name == 'workflow_dispatch' && inputs.pr_number == '') ||
+      (github.event_name == 'workflow_dispatch' && inputs.pr_number == '' && inputs.review_branch == '') ||
       (github.event_name == 'workflow_run' &&
        github.event.workflow_run.conclusion == 'success' &&
        github.event.workflow_run.head_branch == 'main' &&
@@ -64,6 +68,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+      issues: write
       actions: write
     steps:
       - uses: actions/checkout@v4
@@ -128,20 +133,29 @@ jobs:
           git diff --cached --check
           git commit -m "review-only: verified pure module $PROPOSE_TASK"
           git push origin "HEAD:refs/heads/$PROPOSE_BRANCH"
-          gh pr create --base main --head "$PROPOSE_BRANCH" \
+          if gh pr create --base main --head "$PROPOSE_BRANCH" \
             --title "Review-only JANUS pure module: $PROPOSE_TASK" \
-            --body "Exact model-authored, independently checked pure-module candidate. Source and run provenance are in candidate_modules/$PROPOSE_TASK/PROPOSAL.json. Requires explicit review; no runtime import, auto-merge, arbitrary dependencies or additional permissions. Independent verification follows."
-          number="$(gh pr view "$PROPOSE_BRANCH" --json number --jq .number)"
-          # Token-created PR events might not start their own Actions; explicit
-          # workflow_dispatch starts separate read-only verification of PR SHA.
-          gh workflow run janus-autonomous-module-pr.yml --ref main -f "pr_number=$number"
+            --body "Exact model-authored, independently checked pure-module candidate. Source and run provenance are in candidate_modules/$PROPOSE_TASK/PROPOSAL.json. Requires explicit review; no runtime import, auto-merge, arbitrary dependencies or additional permissions. Independent verification follows."; then
+            number="$(gh pr view "$PROPOSE_BRANCH" --json number --jq .number)"
+            gh workflow run janus-autonomous-module-pr.yml --ref main -f "pr_number=$number"
+            echo "JANUS_MODULE_REVIEW=PR_OPENED_$number" >> "$GITHUB_STEP_SUMMARY"
+          else
+            # Respect the repo's explicit 'Actions may not create PRs' setting.
+            # Never borrow a token or silently claim a PR: persist an issue
+            # and verify the already-pushed branch independently instead.
+            issue_url="$(gh issue create \
+              --title "JANUS review request: pure module $PROPOSE_TASK" \
+              --body "GitHub Actions was denied permission to open a pull request. This is a human-review request, NOT an automatic installation. Immutable candidate branch: $PROPOSE_BRANCH . Review the exact source + PROPOSAL.json (source SHA and independent evaluator receipt). No merge, model runtime import, new rights or paid Rowan work has happened.")"
+            echo "JANUS_MODULE_REVIEW=BRANCH_WITH_ISSUE_$issue_url" >> "$GITHUB_STEP_SUMMARY"
+            gh workflow run janus-autonomous-module-pr.yml --ref main -f "review_branch=$PROPOSE_BRANCH"
+          fi
 
   verify-pr:
     needs: contract
     if: >-
       (github.event_name == 'pull_request' &&
        startsWith(github.event.pull_request.head.ref, 'janus/review-pure-')) ||
-      (github.event_name == 'workflow_dispatch' && inputs.pr_number != '')
+      (github.event_name == 'workflow_dispatch' && (inputs.pr_number != '' || inputs.review_branch != ''))
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
@@ -156,6 +170,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: main
+          fetch-depth: 0
           path: _candidate
           persist-credentials: false
       - uses: actions/checkout@v4
@@ -165,6 +180,7 @@ jobs:
           path: _state
           persist-credentials: false
       - name: Verify PR identity and bounded diff
+        if: github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.review_branch == '')
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
@@ -185,12 +201,39 @@ jobs:
               json.dump(scope, stream, sort_keys=True)
           print("EXACT_REVIEW_PR_SCOPE=PASS")
           PY
-      - name: Independently reconstruct exact PR and historic source state
+      - name: Independently check durable branch when PR creation was denied
+        if: github.event_name == 'workflow_dispatch' && inputs.review_branch != ''
+        env:
+          REVIEW_BRANCH: ${{ inputs.review_branch }}
+        run: |
+          set -euo pipefail
+          [[ "$REVIEW_BRANCH" =~ ^janus/review-pure-[a-z_]+-[0-9a-f]{64}$ ]] || exit 3
+          git -C _candidate fetch origin "refs/heads/$REVIEW_BRANCH"
+          git -C _candidate checkout --detach FETCH_HEAD
+          base="$(git -C _candidate merge-base origin/main HEAD)"
+          [[ "$(git -C _candidate rev-list --count "$base..HEAD")" == 1 ]] || exit 4
+          git -C _candidate diff --name-status "$base" HEAD > candidate-diff.txt
+          python - <<'PY'
+          import json, os, sys
+          sys.path.insert(0, "_code/modules/autonomy_coder")
+          from integration_proposal import inspect_branch
+          rows=[line.split("\t") for line in open("candidate-diff.txt").read().splitlines()]
+          scope=inspect_branch(os.environ["REVIEW_BRANCH"], rows)
+          import subprocess
+          scope["head_sha"]=subprocess.check_output(
+              ["git","-C","_candidate","rev-parse","HEAD"],text=True).strip()
+          with open("scope.json","w") as out:
+              json.dump(scope,out,sort_keys=True)
+          print("EXACT_REVIEW_BRANCH_SCOPE=PASS")
+          PY
+      - name: Independently reconstruct exact proposal and historic source state
         run: |
           set -euo pipefail
           head_sha="$(python -c 'import json;print(json.load(open("scope.json"))["head_sha"])')"
-          git -C _candidate fetch origin "$head_sha" --depth=1
-          git -C _candidate checkout --detach FETCH_HEAD
+          if [[ "$(git -C _candidate rev-parse HEAD)" != "$head_sha" ]]; then
+            git -C _candidate fetch origin "$head_sha" --depth=1
+            git -C _candidate checkout --detach FETCH_HEAD
+          fi
           state_commit="$(python -c 'import json;print(json.load(open("_candidate/candidate_modules/" + json.load(open("scope.json"))["task_id"] + "/PROPOSAL.json"))["source_state_commit"])')"
           [[ "$state_commit" =~ ^[0-9a-f]{40}$ ]] || exit 3
           git -C _state cat-file -e "$state_commit^{commit}"
