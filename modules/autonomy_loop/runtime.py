@@ -263,9 +263,15 @@ def summarize(sources, workflows, observed_at, code_sha, previous=None, action=N
     if completed and completed["P0.1"].get("status") != "PASS_STATUS_CAPTURE_ONLY":
         raise Hold("INVALID_PHASE_ACCEPTANCE")
     current = next((p[0] for p in PHASES if p[0] not in completed), None)
-    reopened = "P0.2" in completed and any(
-        f["phase"] == "P0.2" and ("GENERATION_DRIFT" in f["reason"] or "DIGEST_DRIFT" in f["reason"])
-        for f in findings)
+    # A historical PASS is evidence for its exact Rowan generation only.
+    # Even if all current consumers have converged, P0.2 remains in recheck
+    # until a fresh independently replayed cohort is admitted to CHECKPOINT.
+    historical_run = completed.get("P0.2", {}).get("canonical_run")
+    reopened = "P0.2" in completed and (
+        historical_run != run or any(
+            f["phase"] == "P0.2" and
+            ("GENERATION_DRIFT" in f["reason"] or "DIGEST_DRIFT" in f["reason"])
+            for f in findings))
     if reopened:
         current = "P0.2"
     plan = [{"order": i + 1, "phase": pid, "objective": objective, "issue": issue,
@@ -392,6 +398,29 @@ def maintenance_module():
     spec.loader.exec_module(obj)
     return obj
 
+def admit_verified_p02(phases, proof, canonical_run):
+    """Replace old generation acceptance only after exact independent replay.
+
+    The caller validates immutable source bytes and independently computes
+    proof; this method only controls monotone checkpoint transitions.
+    """
+    if not proof:
+        return phases
+    run = proof.get("canonical_run")
+    if (type(run) is not int or run <= 0 or run != canonical_run or
+        proof.get("status") != "PASS_SOURCE_COHORT_ONLY" or
+        proof.get("authority_delta") != 0 or
+        proof.get("full_issue_162_acceptance") is not False):
+        raise Hold("P02_INVALID_CURRENT_GENERATION_PROOF")
+    prior = phases.get("P0.2")
+    if prior:
+        previous_run = prior.get("canonical_run")
+        if type(previous_run) is not int or previous_run <= 0 or run < previous_run:
+            raise Hold("P02_GENERATION_ROLLBACK_DENIED")
+    phases["P0.2"] = proof
+    return phases
+
+
 def verify_persisted(root, client, accept=False):
     pointer, record = load_record(root)
     unknown = []
@@ -445,8 +474,7 @@ def verify_persisted(root, client, accept=False):
         phases = previous.get("accepted_phases", {})
         if "P0.1" not in phases:
             phases["P0.1"] = result
-        if p02_acceptance:
-            phases.setdefault("P0.2", p02_acceptance)
+        admit_verified_p02(phases, p02_acceptance, record["rowan_generations"]["canonical"])
         current = next((p[0] for p in PHASES if p[0] not in phases), None)
         state = {"schema": "janus.autonomy.checkpoint.v1", "accepted_phases": phases,
                  "last_verified_snapshot": record["state_sha256"], "current_phase": current,
