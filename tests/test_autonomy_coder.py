@@ -61,6 +61,30 @@ class CoderTests(unittest.TestCase):
             with self.subTest(source=source), self.assertRaises((ValueError, SyntaxError)):
                 p.validate_source(source, "retry_delay")
 
+    def test_set_add_only_for_single_initialized_local_builtin_set(self):
+        good = ("def stable_unique(values):\n"
+                "    seen = set()\n"
+                "    result = []\n"
+                "    for value in values:\n"
+                "        if value not in seen:\n"
+                "            seen.add(value)\n"
+                "            result.append(value)\n"
+                "    return result\n")
+        self.assertEqual(p.validate_source(good, "stable_unique"), good)
+        unsafe = [
+            "def stable_unique(values):\n    return values.add('x')\n",
+            "def stable_unique(values):\n    seen = set()\n    seen = values\n    seen.add('x')\n    return []\n",
+            "def stable_unique(values):\n    seen = set()\n    for seen in values:\n        seen.add('x')\n    return []\n",
+            "def stable_unique(values):\n    seen = values\n    seen.add('x')\n    return []\n",
+            "def stable_unique(values):\n    seen = set()\n    alias = seen.add\n    return []\n",
+            "def stable_unique(values):\n    seen = set()\n    seen.add('a', 'b')\n    return []\n",
+            "def stable_unique(values):\n    set = list\n    seen = set()\n    seen.add('x')\n    return []\n",
+            "def stable_unique(values):\n    def set():\n        return values\n    seen = set()\n    seen.add('x')\n    return []\n",
+        ]
+        for source in unsafe:
+            with self.subTest(source=source), self.assertRaises((ValueError, SyntaxError)):
+                p.validate_source(source, "stable_unique")
+
     def test_container_has_no_network_credentials_or_host_write_mount(self):
         seen = []
         def runner(command, **kwargs):
