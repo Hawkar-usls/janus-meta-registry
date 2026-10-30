@@ -46,6 +46,15 @@ jobs:
           from lifecycle import isolated_check
           good = 'def retry_delay(attempt, cap):\n    return min(cap, 2 ** attempt)\n'
           assert isolated_check(good, 'retry_delay')['cases'] >= 200
+          stable_unique = ('def stable_unique(values):\n'
+                           '    seen = set()\n'
+                           '    result = []\n'
+                           '    for value in values:\n'
+                           '        if value not in seen:\n'
+                           '            seen.add(value)\n'
+                           '            result.append(value)\n'
+                           '    return result\n')
+          assert isolated_check(stable_unique, 'stable_unique')['cases'] >= 300
           for bad in ('def retry_delay(attempt, cap):\n    return 1\n',
                       'def retry_delay(attempt, cap):\n    while True:\n        pass\n'):
               try:
