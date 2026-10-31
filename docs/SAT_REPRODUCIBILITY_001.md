@@ -60,6 +60,16 @@ Freeze before-training and after-training artifact hashes and *what physically c
 
 Primary endpoint is paired reduction of PAR-2 averaged across the predeclared version/seed policy on the **L3-only blind set**. Provisional improvement margin and conservative interval as in L2. No manual cherry-picking or optional stopping. Record noninferiority margins and per-stratum failure rules explicitly **before freezing**, not after looking at heldout outcomes. A longer training history alone is not evidence of better SAT solving.
 
+## Executable verification boundary (synthetic fixtures only)
+
+A strict, bounded [3-CNF and SAT-assignment checker](../tools/verify_sat_witness.py) provides the first offline scientific integrity primitive. It reads original DIMACS bytes and a separate JSON assignment, verifies their SHA-256 binding, checks all literals and all clauses, and **never executes historical solver or pickle weights**. Example future interface:
+
+`python tools/verify_sat_witness.py --cnf original.cnf --witness candidate-sat-assignment.json`
+
+The witness must have `schema=janus.sat_reproducibility.sat_witness.v1`, `verdict=SAT`, `instance_sha256` of the original CNF bytes, and a full `literals` array containing one signed literal for every variable. The verifier returns `VERIFIED_SAT_ASSIGNMENT_ONLY` or a nonzero error; it does **not** generate or accept UNSAT proofs. Real verifier binaries, UNSAT proof format and resource limits for the benchmark still need separate freeze.
+
+Current [unit tests](../tests/test_sat_witness.py) use **synthetic three-variable formulas**, which prove a local checker contract and do not support historical 220–240-variable success claims.
+
 ## Chain of custody and freeze
 
 **Fundamentum can review methodology but cannot count as independent custodian merely by being a different repository controlled by the same agents and credentials.** Require a separate principal with access controls that Demiurge, Scout workflows and their GitHub tokens cannot reach.
