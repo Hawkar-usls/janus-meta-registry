@@ -1,0 +1,196 @@
+name: JANUS Self-Writer Recovery Isolated Real-Path E2E
+
+on:
+  pull_request:
+    paths:
+      - 'modules/autonomy_coder/scoped_recovery.py'
+      - 'tests/test_scoped_self_writer_recovery.py'
+      - '.github/workflows/janus-self-writer-recovery-sandbox-e2e.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'modules/autonomy_coder/scoped_recovery.py'
+      - 'tests/test_scoped_self_writer_recovery.py'
+      - '.github/workflows/janus-self-writer-recovery-sandbox-e2e.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: janus-recovery-isolated-e2e-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  independent-incident-detector:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 7
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Contract must remain green despite synthetic source drift
+        run: |
+          set -euo pipefail
+          python -m unittest discover -v -s tests -p test_scoped_self_writer_recovery.py
+      - name: Commit a real source regression ONLY in a disposable local Git clone
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib, json, subprocess, sys, tempfile
+          from pathlib import Path
+          repo=Path.cwd()
+          sys.path.insert(0,str(repo/'modules/autonomy_coder'))
+          import scoped_recovery as gate
+          out=repo/'runtime'/'recovery-e2e'
+          out.mkdir(parents=True,exist_ok=True)
+          with tempfile.TemporaryDirectory(prefix='janus-isolated-git-incident-') as temporary:
+              clone=Path(temporary)/'local'
+              subprocess.run(['git','clone','-q','--no-local',str(repo),str(clone)],check=True)
+              subprocess.run(['git','-C',str(clone),'config','user.name','JANUS local E2E witness'],check=True)
+              subprocess.run(['git','-C',str(clone),'config','user.email','janus-local-only@users.noreply.github.com'],check=True)
+              subprocess.run(['git','-C',str(clone),'switch','-q','-c','test/isolated-drift'],check=True)
+              target=clone/gate.TARGET
+              original=target.read_bytes()
+              assert gate.git_blob(original)==gate.GOOD_BLOB
+              injected=original+b'\n# JANUS_E2E_ISOLATED_FAULT_INJECTION_DO_NOT_DEPLOY\n'
+              target.write_bytes(injected)
+              subprocess.run(['git','-C',str(clone),'add',gate.TARGET],check=True)
+              subprocess.run(['git','-C',str(clone),'commit','-qm','test: isolated fixture source regression'],check=True)
+              assert gate.git_blob(target.read_bytes())!=gate.GOOD_BLOB
+              proc=subprocess.run([sys.executable,str(repo/'modules/autonomy_coder/scoped_recovery.py'),
+                    '--root',str(clone),'--out',str(out/'PLAN.json'),
+                    '--candidate',str(out/'KNOWN_GOOD_MODULE.py')],check=True,
+                    capture_output=True,text=True)
+              decision=json.loads((out/'PLAN.json').read_bytes())
+              assert decision['status']=='SCOPED_RESTORE_PR_ELIGIBLE',decision
+              assert decision['only_allowed_path']==gate.TARGET
+              assert decision['current_source_blob']==gate.git_blob(injected)
+              assert decision['trusted_installed_source_blob']==gate.GOOD_BLOB
+              assert decision['auto_merge'] is False and decision['authority_delta']==0
+              assert (out/'KNOWN_GOOD_MODULE.py').read_bytes()==original
+              (out/'CORRUPTED_MODULE.py').write_bytes(injected)
+              (out/'DETECTION_RECEIPT.json').write_text(json.dumps({
+                  'schema':'janus.self_writer.recovery_real_path_e2e.v1',
+                  'status':'REAL_GIT_LOCAL_FAULT_DETECTED_REVIEW_ONLY',
+                  'injected_source_blob':gate.git_blob(injected),
+                  'model_generated_new_code':False,
+                  'production_main_modified':False,
+                  'remote_branch_pushed':False,
+                  'draft_pr_created_on_github':False,
+                  'authority_delta':0,
+              },sort_keys=True,indent=2)+'\n')
+              print(proc.stdout.strip())
+              print('JANUS_REAL_GIT_ISOLATED_INCIDENT_DETECTED=PASS')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-isolated-real-git-recovery-detection
+          path: runtime/recovery-e2e/
+          retention-days: 14
+          if-no-files-found: error
+
+  separate-clean-review-and-rollback:
+    needs: independent-incident-detector
+    runs-on: ubuntu-24.04
+    timeout-minutes: 9
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          name: janus-isolated-real-git-recovery-detection
+          path: input
+      - name: Independently re-create a real scoped recovery Git commit and local rollback
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib, json, subprocess, sys, tempfile
+          from pathlib import Path
+          repo=Path.cwd()
+          sys.path.insert(0,str(repo/'modules/autonomy_coder'))
+          import scoped_recovery as gate
+          plan=json.loads((repo/'input/PLAN.json').read_bytes())
+          good=(repo/'input/KNOWN_GOOD_MODULE.py').read_bytes()
+          bad=(repo/'input/CORRUPTED_MODULE.py').read_bytes()
+          first=json.loads((repo/'input/DETECTION_RECEIPT.json').read_bytes())
+          assert first['status']=='REAL_GIT_LOCAL_FAULT_DETECTED_REVIEW_ONLY'
+          assert first['production_main_modified'] is False
+          assert plan['status']=='SCOPED_RESTORE_PR_ELIGIBLE'
+          assert plan['trusted_installed_source_blob']==gate.GOOD_BLOB
+          assert plan['current_source_blob']==gate.git_blob(bad)
+          assert plan['candidate_source_sha256']==hashlib.sha256(good).hexdigest()
+          assert plan['patch_files']==[gate.TARGET]
+          assert plan['auto_merge'] is False and plan['human_review_required'] is True
+          assert plan['authority_delta']==0 and plan['full_autonomy'] is False
+          assert gate.git_blob(good)==gate.GOOD_BLOB
+          assert good==subprocess.check_output(['git','show',gate.INSTALL+':'+gate.TARGET])
+          assert bad==good+b'\n# JANUS_E2E_ISOLATED_FAULT_INJECTION_DO_NOT_DEPLOY\n'
+          with tempfile.TemporaryDirectory(prefix='janus-clean-independent-recovery-') as temp:
+              clone=Path(temp)/'local'
+              subprocess.run(['git','clone','-q','--no-local',str(repo),str(clone)],check=True)
+              for key,value in (('user.name','JANUS independent E2E witness'),
+                                ('user.email','janus-local-only@users.noreply.github.com')):
+                  subprocess.run(['git','-C',str(clone),'config',key,value],check=True)
+              subprocess.run(['git','-C',str(clone),'switch','-q','-c','test/independent-drift'],check=True)
+              dest=clone/gate.TARGET
+              dest.write_bytes(bad)
+              subprocess.run(['git','-C',str(clone),'add',gate.TARGET],check=True)
+              subprocess.run(['git','-C',str(clone),'commit','-qm','test: independent local incident'],check=True)
+              rerun, candidate=gate.evaluate(clone)
+              assert rerun['status']=='SCOPED_RESTORE_PR_ELIGIBLE'
+              assert rerun['current_source_blob']==plan['current_source_blob']
+              assert candidate==good
+              subprocess.run(['git','-C',str(clone),'switch','-q','-c',rerun['candidate_branch']],check=True)
+              dest.write_bytes(candidate)
+              subprocess.run(['git','-C',str(clone),'add',gate.TARGET],check=True)
+              subprocess.run(['git','-C',str(clone),'commit','-qm','review-only: revert locally injected incident'],check=True)
+              changes=subprocess.check_output(['git','-C',str(clone),'diff','HEAD^','HEAD','--name-only'],text=True).splitlines()
+              assert changes==[gate.TARGET],changes
+              assert gate.git_blob(dest.read_bytes())==gate.GOOD_BLOB
+              subprocess.run([sys.executable,'-m','unittest','discover','-v','-s','tests',
+                              '-p','test_real_operational_self_writer_consumer.py'],
+                             check=True,cwd=clone,timeout=40)
+              reviewer_commit=subprocess.check_output(['git','-C',str(clone),'rev-parse','HEAD'],text=True).strip()
+              subprocess.run(['git','-C',str(clone),'revert','--no-edit','HEAD'],check=True)
+              assert dest.read_bytes()==bad
+              assert subprocess.check_output(['git','-C',str(clone),'rev-parse','HEAD^'],text=True).strip()==reviewer_commit
+          out=repo/'runtime/recovery-e2e-independent/RECEIPT.json'
+          out.parent.mkdir(parents=True,exist_ok=True)
+          out.write_text(json.dumps({
+              'schema':'janus.self_writer.recovery_e2e_independent_v1',
+              'status':'ISOLATED_GIT_RECOVERY_BRANCH_AND_FUNCTIONAL_TESTS_PASS',
+              'historical_source_blob':gate.GOOD_BLOB,
+              'simulated_incident_source_blob':gate.git_blob(bad),
+              'scoped_git_diff_paths':[gate.TARGET],
+              'production_main_modified':False,
+              'remote_branch_pushed':False,
+              'github_draft_pr_creation_tested':False,
+              'production_automerge_enabled':False,
+              'production_rollback_executed':False,
+              'new_model_authorship_proven':False,
+              'authority_delta':0,
+          },sort_keys=True,indent=2)+'\n')
+          print('JANUS_REAL_GIT_RECOVERY_CLEAN_WORKER_WITH_REVERSIBLE_PR_COMMIT=PASS')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-isolated-real-git-recovery-independent-review
+          path: runtime/recovery-e2e-independent/RECEIPT.json
+          retention-days: 14
+          if-no-files-found: error
