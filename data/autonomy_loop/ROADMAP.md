@@ -2,7 +2,7 @@
 
 Automatically rebuilt from pinned public evidence.
 
-Status: **AUTONOMY_PARTIAL** · observed 2026-10-31T12:28:01Z
+Status: **AUTONOMY_PARTIAL** · observed 2026-10-31T13:55:12Z
 
 Current phase: **P0.3**
 
@@ -27,9 +27,9 @@ A successful collector is not proof of useful work or full autonomy.
 ```json
 {
   "native_model": {
-    "attempt_count": 1592,
+    "attempt_count": 1598,
     "promotion_count": 61,
-    "rejection_count": 1531,
+    "rejection_count": 1537,
     "checkpoint_sha256": "fc767adb812ac3bea54c44cbccfa9680941f95e2c8a77120559b41da044d9463",
     "last_training_status": "REJECTED",
     "retained_history_count": 64,
@@ -37,7 +37,7 @@ A successful collector is not proof of useful work or full autonomy.
   },
   "self_writer": {
     "status": "SOURCE_BOUND_ISOLATED_MODULE_METADATA_ONLY",
-    "attempt_sequence": 14,
+    "attempt_sequence": 15,
     "accepted_pure_modules": 9,
     "admitted_task_ceiling": 10,
     "not_native_janus_model": true,
@@ -55,7 +55,7 @@ A successful collector is not proof of useful work or full autonomy.
     "waiting": 38
   },
   "home": {
-    "sequence": 223,
+    "sequence": 225,
     "source_main_sha": "84b7d4e41bd69d205b3ce997e1f7958162fa8fbc"
   },
   "beetle_delivery": {
