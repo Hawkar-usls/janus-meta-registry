@@ -1,0 +1,209 @@
+name: JANUS Self-Writer Scoped Regression Recovery
+
+on:
+  schedule:
+    - cron: '17 */6 * * *'
+  workflow_dispatch:
+  workflow_run:
+    workflows: ['JANUS Self-Writer Installed Repair Integrity Watch']
+    types: [completed]
+    branches: [main]
+  push:
+    branches: [main]
+    paths:
+      - 'modules/autonomy_coder/scoped_recovery.py'
+      - 'tests/test_scoped_self_writer_recovery.py'
+      - '.github/workflows/janus-self-writer-scoped-recovery.yml'
+  pull_request:
+    paths:
+      - 'modules/autonomy_coder/scoped_recovery.py'
+      - 'tests/test_scoped_self_writer_recovery.py'
+      - '.github/workflows/janus-self-writer-scoped-recovery.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: janus-scoped-recovery-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.sha || 'main' }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Bound known-good recovery to exact archived source and negative cases
+        run: |
+          set -euo pipefail
+          python -m unittest discover -v -s tests -p test_scoped_self_writer_recovery.py
+
+  detect:
+    needs: contract
+    if: >-
+      ${{ github.event_name != 'pull_request' &&
+          (github.event_name != 'workflow_run' ||
+           (github.event.workflow_run.head_branch == 'main' &&
+            github.event.workflow_run.head_repository.full_name == github.repository &&
+            github.event.workflow_run.event != 'pull_request')) }}
+    permissions:
+      contents: read
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    outputs:
+      decision: ${{ steps.read.outputs.decision }}
+      parent: ${{ steps.read.outputs.parent }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Inspect real main and sealed previous repair, with no GitHub write token
+        id: read
+        run: |
+          set -euo pipefail
+          python modules/autonomy_coder/scoped_recovery.py \
+            --root . --out recovery/PLAN.json \
+            --candidate recovery/KNOWN_GOOD_MODULE.py
+          python - <<'PY'
+          import json, os
+          data=json.load(open('recovery/PLAN.json'))
+          assert data['status'] in ('IDLE_KNOWN_GOOD','SCOPED_RESTORE_PR_ELIGIBLE')
+          assert data['auto_merge'] is False and data['authority_delta']==0
+          assert data['production_modified'] is False
+          with open(os.environ['GITHUB_OUTPUT'],'a') as out:
+              out.write('decision='+data['status']+'\n')
+              out.write('parent='+data['main_head_sha']+'\n')
+          print('JANUS_REAL_REPAIR_DETECTION='+data['status'])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-repair001-recovery-proposal
+          path: recovery/
+          retention-days: 14
+          if-no-files-found: error
+
+  clean-canary:
+    needs: detect
+    if: ${{ needs.detect.outputs.decision == 'SCOPED_RESTORE_PR_ELIGIBLE' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.detect.outputs.parent }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: janus-repair001-recovery-proposal
+          path: recovery
+      - name: Independently re-create signed restoration and simulate rollback locally
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib,json,subprocess,tempfile
+          from pathlib import Path
+          p=json.loads(Path('recovery/PLAN.json').read_text())
+          assert p['schema']=='janus.self_writer.scoped_recovery_plan.v1'
+          assert p['status']=='SCOPED_RESTORE_PR_ELIGIBLE'
+          assert p['main_head_sha']==subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+          assert p['patch_files']==['modules/autonomy_coder/real_operational_consumer.py']
+          assert p['human_review_required'] is True and p['auto_merge'] is False
+          assert p['authority_delta']==0 and p['production_modified'] is False
+          raw=Path('recovery/KNOWN_GOOD_MODULE.py').read_bytes()
+          old=Path(p['only_allowed_path']).read_bytes()
+          def blob(data):
+              return hashlib.sha1(b'blob '+str(len(data)).encode()+b'\\0'+data).hexdigest()
+          assert blob(raw)=='c787f96523442cf314f2327bf57af658a06e1a47'
+          assert hashlib.sha256(raw).hexdigest()==p['candidate_source_sha256']
+          assert blob(old)==p['current_source_blob'] and old!=raw
+          installed=subprocess.check_output(['git','show',
+              '1245c05f0002cce3193e50d8a5edb7f37a6c2d87:'+p['only_allowed_path']])
+          assert raw==installed
+          # Isolated smoke test: restore exact accepted bytes, then rehearse
+          # returning to the current bytes without changing the repository.
+          with tempfile.TemporaryDirectory() as d:
+              target=Path(d)/'module.py'
+              target.write_bytes(old)
+              target.write_bytes(raw)
+              assert target.read_bytes()==installed
+              target.write_bytes(old)
+              assert target.read_bytes()==old
+          print('JANUS_SCOPED_REPAIR_CLEAN_CANARY_AND_LOCAL_ROLLBACK=PASS')
+          PY
+
+  open-draft-pr:
+    needs: [detect, clean-canary]
+    if: ${{ needs.detect.outputs.decision == 'SCOPED_RESTORE_PR_ELIGIBLE' &&
+            needs.clean-canary.result == 'success' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/download-artifact@v4
+        with:
+          name: janus-repair001-recovery-proposal
+          path: recovery
+      - name: Exact parent lease, one-file scope, review-only branch and draft PR
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          python - <<'PY' >> "$GITHUB_ENV"
+          import json,re
+          p=json.load(open('recovery/PLAN.json'))
+          assert p['status']=='SCOPED_RESTORE_PR_ELIGIBLE'
+          branch=p['candidate_branch']
+          assert re.fullmatch(r'janus/recover-repair001-[0-9a-f]{16}',branch)
+          print('JANUS_RESTORE_BRANCH='+branch)
+          print('JANUS_EXPECTED_MAIN='+p['main_head_sha'])
+          PY
+          [[ "$(git rev-parse HEAD)" == "$JANUS_EXPECTED_MAIN" ]] || { echo 'CURRENT_MAIN_MOVED_HOLD'; exit 1; }
+          git fetch origin main
+          [[ "$(git rev-parse origin/main)" == "$JANUS_EXPECTED_MAIN" ]] || { echo 'CURRENT_MAIN_ADVANCED_HOLD'; exit 1; }
+          if git ls-remote --exit-code --heads origin "refs/heads/$JANUS_RESTORE_BRANCH" >/dev/null; then
+            echo 'EXISTING_REVIEW_BRANCH__DO_NOT_DUPLICATE'
+            exit 0
+          fi
+          git switch -c "$JANUS_RESTORE_BRANCH"
+          cp recovery/KNOWN_GOOD_MODULE.py modules/autonomy_coder/real_operational_consumer.py
+          git add modules/autonomy_coder/real_operational_consumer.py
+          python - <<'PY'
+          import subprocess
+          exact=['modules/autonomy_coder/real_operational_consumer.py']
+          paths=subprocess.check_output(['git','diff','--cached','--name-only'],text=True).splitlines()
+          assert paths==exact,('UNTRUSTED_REPAIR_WRITE_SCOPE',paths)
+          assert not subprocess.check_output(['git','diff','--cached','--diff-filter=D','--name-only'])
+          PY
+          git diff --cached --check
+          git config user.name 'janus-scoped-restore[bot]'
+          git config user.email 'janus-scoped-restore[bot]@users.noreply.github.com'
+          git commit -m 'review-only: restore exact previously validated UTC consumer'
+          git push origin "HEAD:refs/heads/$JANUS_RESTORE_BRANCH"
+          gh pr create --draft --base main --head "$JANUS_RESTORE_BRANCH" \
+            --title 'JANUS review-only: restore SHA-certified UTC consumer' \
+            --body 'Detected a change from previously independently validated production source. This PR restores only the exact previously accepted Git blob c787f96523442cf314f2327bf57af658a06e1a47, referenced by permanent JANUS_SELF_WRITER_REAL_REPAIR_001.json. Independent staging and local rollback canary passed. Requires explicit review and full PR CI. No new model code was generated; no auto-merge, secret access, Rowan credits, or production rollback.'
+          echo 'JANUS_RECOVERY=REVIEW_PR_CREATED_NOT_MERGED' >> "$GITHUB_STEP_SUMMARY"
