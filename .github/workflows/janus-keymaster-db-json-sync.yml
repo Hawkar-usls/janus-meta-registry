@@ -1,0 +1,87 @@
+name: JANUS DADDY_KEYMASTER Meta Registry JSON Database Mirror
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/keymaster_db_sync.py'
+      - 'scripts/keymaster_db_verify.py'
+      - 'tests/test_keymaster_db_sync.py'
+      - '.github/workflows/janus-keymaster-db-json-sync.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/keymaster_db_sync.py'
+      - 'scripts/keymaster_db_verify.py'
+      - 'tests/test_keymaster_db_sync.py'
+      - '.github/workflows/janus-keymaster-db-json-sync.yml'
+  schedule:
+    - cron: '19 5,17 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: janus-keymaster-meta-registry-db-mirror
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify full replay, SHA, archive chain and immutable dedup
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s tests -p test_keymaster_db_sync.py -v
+      - name: Check live pinned Keymaster source without writing (PR safe)
+        run: |
+          set -euo pipefail
+          python scripts/keymaster_db_sync.py --check-only
+
+  archive:
+    if: github.event_name != 'pull_request'
+    needs: verify
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: true
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Refresh full verified JSON DB only if immutable source HEAD advanced
+        run: |
+          set -euo pipefail
+          python scripts/keymaster_db_sync.py --output-dir data/daddy_keymaster_db
+          git add -- data/daddy_keymaster_db/LATEST.json data/daddy_keymaster_db/MIRROR.json data/daddy_keymaster_db/MIRROR.sha256 data/daddy_keymaster_db/snapshots/
+          if git diff --cached --quiet; then
+            echo 'JANUS_KEYMASTER_DB_NO_CHANGE'
+            exit 0
+          fi
+          # Only the generated allowlisted JSON files may be included.
+          git diff --cached --name-only | while IFS= read -r file; do
+            case "$file" in
+              data/daddy_keymaster_db/LATEST.json|data/daddy_keymaster_db/MIRROR.json|data/daddy_keymaster_db/MIRROR.sha256|data/daddy_keymaster_db/snapshots/*.json) ;;
+              *) echo 'UNEXPECTED_KEYMASTER_PATH' >&2; exit 1 ;;
+            esac
+          done
+          git -c user.name='janus-keymaster-witness[bot]' \
+              -c user.email='janus-keymaster-witness@users.noreply.github.com' \
+              commit -m 'meta-registry: archive verified Keymaster JSON state'
+          # Non-forced push. Concurrent updates or branch restrictions stop
+          # this attempt; never rewrite a newer LATEST or source history.
+          git push origin HEAD:refs/heads/main
