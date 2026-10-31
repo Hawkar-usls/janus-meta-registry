@@ -1,0 +1,87 @@
+name: JANUS Self-Writer Installed Repair Integrity Watch
+
+on:
+  schedule:
+    - cron: '11 */6 * * *'
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'modules/autonomy_coder/repair_integrity_watch.py'
+      - 'tests/test_self_writer_repair_integrity_watch.py'
+      - '.github/workflows/janus-self-writer-repair-integrity-watch.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'modules/autonomy_coder/repair_integrity_watch.py'
+      - 'tests/test_self_writer_repair_integrity_watch.py'
+      - '.github/workflows/janus-self-writer-repair-integrity-watch.yml'
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: janus-self-writer-repair-integrity-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  source-and-actual-cloud-evidence:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - name: Read the actual current source from main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: _live
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Load test/checker code from this candidate branch
+        uses: actions/checkout@v4
+        with:
+          path: _watch
+          persist-credentials: false
+      - name: Read immutable archived source/receipt at exact known commit
+        uses: actions/checkout@v4
+        with:
+          ref: a80e8301dc5897b0b2779db94a74bf55a2020852
+          path: _archive
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Fail-closed offline witness negative controls
+        run: |
+          set -euo pipefail
+          python -m unittest discover -v -s _watch/tests -p test_self_writer_repair_integrity_watch.py
+      - name: Independently compare live source, archive commit and real GitHub run statuses
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python _watch/modules/autonomy_coder/repair_integrity_watch.py \
+            --main _live --archive _archive \
+            --out runtime/self-writer-integrity/RECEIPT.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('runtime/self-writer-integrity/RECEIPT.json').read_text())
+          assert d['status']=='VERIFIED_EXISTING_PATCH__NOT_AUTONOMOUS_SELF_REPAIR'
+          assert d['live_source_blob']=='c787f96523442cf314f2327bf57af658a06e1a47'
+          assert len(d['github_runs_independently_checked'])==5
+          assert d['remote_write'] is False and d['full_autonomy'] is False
+          print('JANUS_REAL_PATCH_SOURCE_AND_INDEPENDENT_CLOUD_PROOFS=PASS')
+          print('JANUS_ARCHIVE_MERGED_MAIN='+str(d['evidence_on_main']))
+          PY
+      - name: Preserve verifiable PASS or fail-closed HOLD receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-self-writer-continuing-source-integrity
+          path: runtime/self-writer-integrity/RECEIPT.json
+          retention-days: 30
+          if-no-files-found: warn
