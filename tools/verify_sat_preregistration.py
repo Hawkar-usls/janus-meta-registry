@@ -185,12 +185,65 @@ def valid_v1(p: dict) -> list[str]:
     return problems
 
 
+
+def valid_historical_source_audit(a: dict) -> list[str]:
+    """Bound a historical negative observation to exact original file hashes.
+
+    The checked file list is not a complete NAS census or proof that larger SAT
+    experiments did not exist; it cannot validate solver assignments.
+    """
+    problems = []
+    if not isinstance(a, dict):
+        return ["HISTORICAL_AUDIT_NOT_OBJECT"]
+    if a.get("schema_id") != "janus.sat_reproducibility.historical_source_audit.v1":
+        problems.append("BAD_HISTORICAL_AUDIT_SCHEMA")
+    if a.get("evidence_lane") != "SAT_REPRODUCIBILITY_001":
+        problems.append("BAD_HISTORICAL_AUDIT_LANE")
+    if a.get("scientific_verdict") != "HISTORICAL_CLAIM_STILL_UNVERIFIED":
+        problems.append("FALSE_HISTORICAL_AUDIT_PROMOTION")
+    if a.get("negative_evidence_same_visibility_as_positive") is not True:
+        problems.append("NEGATIVE_AUDIT_HIDDEN")
+    items = a.get("evidence_items", [])
+    if not isinstance(items, list) or len(items) < 3:
+        return problems + ["MISSING_HISTORICAL_EVIDENCE_ITEMS"]
+    for item in items:
+        if not isinstance(item, dict) or not is_sha(item.get("sha256")):
+            problems.append("HISTORICAL_EVIDENCE_SHA_INVALID")
+    duels = next((x for x in items if isinstance(x, dict) and
+                  x.get("local_path") == r"E:\Janus_Love\sat_duels.jsonl"), None)
+    if not isinstance(duels, dict):
+        problems.append("MISSING_100_ROUND_DUELS")
+    else:
+        ok = (duels.get("read_record_count") == 100 and
+              duels.get("first_round") == 1 and duels.get("last_round") == 100 and
+              duels.get("minimum_variables") == 9 and
+              duels.get("maximum_variables") == 108 and
+              sum(duels.get("record_result_classes", {}).values()) == 100 and
+              duels.get("checked_payload_keys_present") is False)
+        if not ok:
+            problems.append("HISTORICAL_DUELS_SCOPE_CHANGED")
+    scope = a.get("source_scope", {})
+    if (scope.get("original_220_to_240_cnf_located") is not False or
+        scope.get("original_220_to_240_solver_trace_verified") is not False or
+        scope.get("nas_entire_archive_search_complete") is not False or
+        scope.get("independent_sat_answer_reverification_performed") is not False):
+        problems.append("UNSUPPORTED_HISTORICAL_COMPLETENESS")
+    policy = a.get("disclosure_policy", {})
+    if (policy.get("raw_user_files_uploaded") is not False or
+        policy.get("untrusted_pickle_executed") is not False or
+        policy.get("paid_compute_submitted") is not False or
+        policy.get("local_files_modified") is not False):
+        problems.append("HISTORICAL_DISCLOSURE_POLICY")
+    return problems
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--path", type=Path, default=DEFAULT)
     args = parser.parse_args()
     try:
         problems = valid_v1(read(args.path))
+        audit = ROOT / "data/sat_reproducibility/HISTORICAL_SOURCE_AUDIT_20261101.json"
+        problems.extend(valid_historical_source_audit(read(audit)))
     except (OSError, ValueError, TypeError, KeyError) as exc:
         print(f"SAT_PREREG_INTEGRITY=FAIL: {type(exc).__name__}: {exc}")
         return 1
