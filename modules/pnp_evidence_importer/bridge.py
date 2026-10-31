@@ -259,7 +259,8 @@ def persist(root,record,deep=None):
         existing=strict_obj(path.read_bytes(),"REGISTRY_RECORD_BAD")
         if scientific_identity(existing)!=stable:
             raise IntakeHold("IMMUTABLE_RECORD_CONFLICT")
-        return {"status":"IDEMPOTENT_NO_CHANGE","record":str(path)}
+        deep_status=persist_deep_receipts(output,record,deep) if deep is not None else "NOT_REQUESTED"
+        return {"status":"IDEMPOTENT_NO_CHANGE" if deep_status!="APPENDED_DEEP_RECEIPT_IMMUTABLY" else "DEEP_SUPPLEMENT_APPENDED","record":str(path),"deep_status":deep_status}
     path.parent.mkdir(parents=True,exist_ok=True)
     # Deterministic provenance key; no rewrite of historical immutable records.
     raw=json.dumps(record,ensure_ascii=False,sort_keys=True,indent=2)+"\n"
@@ -280,7 +281,8 @@ def persist(root,record,deep=None):
                                   "context_sha256":tag,"relative_record_path":"records/"+tag+".json",
                                   "proof_status":"P_VS_NP_OPEN","authority_delta":0},
                                  indent=2,sort_keys=True)+"\n",encoding="utf-8")
-    return {"status":"APPENDED_UNMODIFIED_HISTORY","record":str(path)}
+    deep_status=persist_deep_receipts(output,record,deep) if deep is not None else "NOT_REQUESTED"
+    return {"status":"APPENDED_UNMODIFIED_HISTORY","record":str(path),"deep_status":deep_status}
 
 def main():
     p=argparse.ArgumentParser()
@@ -294,6 +296,6 @@ def main():
     verified=check_sources(fetch,content)
     observed=dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")
     record=build_record(context,sha_head,verified,observed)
-    print(json.dumps(persist(args.root,record),sort_keys=True))
+    print(json.dumps(persist(args.root,record,deep=context["deep_replay_receipts"]),sort_keys=True))
 if __name__=="__main__":
     main()
