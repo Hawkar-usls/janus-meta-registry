@@ -129,6 +129,18 @@ def check_context(context):
             or f.get("independent_finite_replay",{}).get("general_theorem_proved") is not False \
             or b.get("independent_source_truth_established") is not False:
         raise IntakeHold("SCIENCE_CONCLUSION_OVERRUN")
+    deep=evid.get("deep_evidence",{})
+    all_receipts=context.get("deep_replay_receipts",{})
+    ledger=all_receipts.get("beetle",{})
+    cleanroom=all_receipts.get("policy0a",{})
+    if deep.get("status")!="ALL_BATCHES_AND_FINITE_MECHANICS_REPLAYED_NO_GENERAL_PROOF"             or deep.get("beetle_individual_batches_checked")!=b.get("last_processed_sequence")             or deep.get("beetle_source_commit")!=b.get("source_commit")             or deep.get("external_gt_theorem_independently_proved") is not False             or deep.get("asymptotic_refutation_independently_proved") is not False             or deep.get("may_satisfy_promotion_gate") is not False:
+        raise IntakeHold("DEEP_EVIDENCE_NOT_ADMITTED")
+    if ledger.get("status")!="ALL_RECORDED_BATCHES_RESULT_AND_RECEIPT_REPLAYED"             or ledger.get("validated_batches")!=b.get("last_processed_sequence")             or ledger.get("validated_results")!=ledger.get("validated_receipts")             or ledger.get("validated_results")!=ledger.get("validated_input_packets")             or ledger.get("validated_results")!=ledger.get("validated_batches")             or ledger.get("beetle_source_commit")!=b.get("source_commit")             or ledger.get("recomputed_context_sha256")!=b.get("source_context_sha256")             or ledger.get("cursor_receipt_sha256")!=b.get("last_processing_receipt_sha256")             or ledger.get("source_truth_independently_established") is not False:
+        raise IntakeHold("DEEP_BEETLE_INDIVIDUAL_REPLAY_MISMATCH")
+    finite=cleanroom.get("finite",{})
+    symbolic=cleanroom.get("symbolic_sink",{})
+    if cleanroom.get("P_VS_NP")!="OPEN" or finite.get("sink_pairs_checked")!=331776             or finite.get("both_branch_projections_checked") is not True             or finite.get("source_code_imported") is not False             or symbolic.get("external_GT_lower_bound_independently_established") is not False             or symbolic.get("full_policy0a_asymptotic_result_independently_proved") is not False:
+        raise IntakeHold("DEEP_TOPA_FINITE_OR_AUTHORITY_MISMATCH")
     if not all(sha64(x.get("sha256")) for x in (f,t)):
         raise IntakeHold("SOURCE_BYTES_SHA_MISSING")
     if type(b.get("last_processed_sequence")) is not int:
