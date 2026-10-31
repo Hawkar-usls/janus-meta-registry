@@ -1,0 +1,379 @@
+{
+  "schema_id": "janus.sat_reproducibility.preregistration.v1",
+  "experiment_id": "SAT_REPRODUCIBILITY_001",
+  "title": "Demiurge historical 3-SAT claim: falsifiable, source-bound reproduction, competitiveness and independent learning",
+  "version": "0.1.0",
+  "drafted_on_utc_date": "2026-11-01",
+  "lifecycle": "DRAFT_NOT_FROZEN",
+  "registered_immutable_prereg_sha256": null,
+  "status_qualifier": "Design proposed before independent holdout, not evidence of experiments or validation",
+  "ownership": {
+    "solver_candidate": "Hawkar-usls/Janus-Demiurge",
+    "methodology": "Hawkar-usls/Janus-Fundamentum",
+    "public_evidence_registry": "Hawkar-usls/janus-meta-registry",
+    "independent_secret_custodian": "UNAPPOINTED",
+    "same_agent_or_credentials_as_candidate_allowed": false
+  },
+  "independence": {
+    "lane": "SAT_REPRODUCIBILITY_ONLY",
+    "unrelated_gates": [
+      "ROWAN_P0_2",
+      "AUTONOMY_FULL"
+    ],
+    "scientific_authority_delta": 0,
+    "paid_compute_authority_delta": 0,
+    "mainline_model_promotion_authority_delta": 0
+  },
+  "historic_claim": {
+    "raw_claim": "Random 3-SAT instances with 220, 225, 230, 235 and 240 variables were solved on a consumer PC",
+    "epistemic_status": "UNVERIFIED_HISTORICAL_CLAIM",
+    "performance_data_verified": false,
+    "original_dimacs_cnf_hashes": [],
+    "original_instance_seeds": [],
+    "original_solver_commit": null,
+    "original_runner_and_environment_attestation": null,
+    "original_metrics_and_correctness_certificates": [],
+    "archived_microgpt": {
+      "repo": "Hawkar-usls/Janus-Demiurge",
+      "path": "archaeology/nas_early_cores_20261031/microgpt.py",
+      "nas_original_sha256": "10b7d4fbb1a498cf6c8ac30915059106b8eccc0b480d7f2098f3b6687170f0cd",
+      "relationship_to_historical_sat_solver": "NOT_ESTABLISHED",
+      "production_runtime_active": false,
+      "never_unpickle_untrusted_models": true
+    }
+  },
+  "hypotheses": [
+    {
+      "id": "L1",
+      "label": "Correctness and reproducibility",
+      "primary_endpoint": "Verified SAT assignments or sound UNSAT proof accepted by pinned verifier; NOT identical randomized execution trace",
+      "designated_n": 300,
+      "decision": [
+        "REPRODUCED",
+        "NOT_REPRODUCED",
+        "INCOMPLETE_EVIDENCE",
+        "INVALID_RESULT",
+        "NOT_TESTED"
+      ],
+      "claim_scope": "Fixed disclosed implementations, instances and resources; historical recovery is a separate provenance gate"
+    },
+    {
+      "id": "L2",
+      "label": "Competitiveness",
+      "primary_endpoint": "Instance-paired PAR-2 using wall clock under fixed per-instance T; report solved count",
+      "designated_n": 600,
+      "decision": [
+        "PASS",
+        "FAIL",
+        "INCONCLUSIVE",
+        "INVALID",
+        "NOT_TESTED"
+      ],
+      "claim_scope": "Only within predeclared domain, mode and hardware"
+    },
+    {
+      "id": "L3",
+      "label": "Improvement on never-exposed instances",
+      "primary_endpoint": "Paired relative PAR-2 reduction of frozen post-training versus frozen pre-training over independent holdout formulas",
+      "designated_n": 600,
+      "decision": [
+        "PASS",
+        "FAIL",
+        "INCONCLUSIVE",
+        "INVALID",
+        "NOT_TESTED"
+      ],
+      "claim_scope": "Specified update target and training policy; no general self-improvement claim"
+    }
+  ],
+  "instance_design": {
+    "generator": "UNPINNED_REQUIRES_FREEZE",
+    "random_3cnf_definition": "Exactly 3 distinct variable indices per clause, no repeated or complementary literal within a clause, polarity sampling specified before freeze; duplicate clauses policy must be pinned",
+    "n_variables": [
+      220,
+      225,
+      230,
+      235,
+      240
+    ],
+    "clause_variable_ratios": [
+      4,
+      4.267,
+      4.5
+    ],
+    "strata": [
+      {
+        "n_variables": 220,
+        "ratio": 4,
+        "L1": 20,
+        "L2": 40,
+        "L3": 40
+      },
+      {
+        "n_variables": 220,
+        "ratio": 4.267,
+        "L1": 20,
+        "L2": 40,
+        "L3": 40
+      },
+      {
+        "n_variables": 220,
+        "ratio": 4.5,
+        "L1": 20,
+        "L2": 40,
+        "L3": 40
+      },
+      {
+        "n_variables": 225,
+        "ratio": 4,
+        "L1": 20,
+        "L2": 40,
+        "L3": 40
+      },
+      {
+        "n_variables": 225,
+        "ratio": 4.267,
+        "L1": 20,
+        "L2": 40,
+        "L3": 40
+      },
+      {
+        "n_variables": 225,
+        "ratio": 4.5,
+        "L1": 20,
+        "L2": 40,
+        "L3": 40
+      },
+      {
+        "n_variables": 230,
+        "ratio": 4,
+        "L1": 20,
+        "L2": 40,
+        "L3": 40
+      },
+      {
+        "n_variables": 230,
+        "ratio": 4.267,
+        "L1": 20,
+        "L2": 40,
+        "L3": 40
+      },
+      {
+        "n_variables": 230,
+        "ratio": 4.5,
+        "L1": 20,
+        "L2": 40,
+        "L3": 40
+      },
+      {
+        "n_variables": 235,
+        "ratio": 4,
+        "L1": 20,
+        "L2": 40,
+        "L3": 40
+      },
+      {
+        "n_variables": 235,
+        "ratio": 4.267,
+        "L1": 20,
+        "L2": 40,
+        "L3": 40
+      },
+      {
+        "n_variables": 235,
+        "ratio": 4.5,
+        "L1": 20,
+        "L2": 40,
+        "L3": 40
+      },
+      {
+        "n_variables": 240,
+        "ratio": 4,
+        "L1": 20,
+        "L2": 40,
+        "L3": 40
+      },
+      {
+        "n_variables": 240,
+        "ratio": 4.267,
+        "L1": 20,
+        "L2": 40,
+        "L3": 40
+      },
+      {
+        "n_variables": 240,
+        "ratio": 4.5,
+        "L1": 20,
+        "L2": 40,
+        "L3": 40
+      }
+    ],
+    "planned_counts": {
+      "L1": 300,
+      "L2": 600,
+      "L3": 600,
+      "total": 1500
+    },
+    "instance_source_separation": "DISJOINT_SHA256_SETS_AND_GENERATOR_SEEDS_MUST_BE_ATTESTED",
+    "strata_interpretation": "All stratum effects descriptive unless multiplicity-adjusted and predeclared",
+    "phase_transition_caveat": "Size and density grids target a historical claim; they do not imply universal computational complexity",
+    "generator_commit": null,
+    "generator_sha256": null,
+    "seed_manifest_private_sha256": null,
+    "public_instance_manifest_sha256": null,
+    "pilot_power_analysis": null
+  },
+  "solver_modes": {
+    "complete_sat_unsat": {
+      "required_for_unsat": true,
+      "accept_sat": "Each reported assignment satisfies every clause of the original DIMACS bytes",
+      "accept_unsat": "Pinned independent proof checker must accept pinned proof format; an unsolved stochastic search is NEVER UNSAT",
+      "baseline_candidates": [
+        "Kissat",
+        "CaDiCaL"
+      ],
+      "selection_and_versions_frozen": false
+    },
+    "sat_witness_search": {
+      "required_for_unsat": false,
+      "accept_sat": "Verified satisfying assignment",
+      "on_unsat_or_timeout": "UNKNOWN (not UNSAT)",
+      "baseline_candidates": [
+        "WalkSAT-family predeclared implementation"
+      ],
+      "selection_and_versions_frozen": false
+    },
+    "compare_across_modes": false,
+    "scoring_requires_same_mode": true
+  },
+  "resources": {
+    "machine_spec_and_os": null,
+    "resource_attestation_sha256": null,
+    "cpu_threads": null,
+    "memory_limit_mb": null,
+    "time_limit_seconds_T": null,
+    "worker_restarts_allowed": "PREDECLARE",
+    "billing_policy": "NO_PAID_PROVIDER_OR_ROWAN_SUBMISSION",
+    "measurement_policy": "Pinned process wall time, separate startup/load and solver time, peak RSS and CPU time; include all attempts and censored timeouts"
+  },
+  "metrics": {
+    "primary_L2": "PAR2 = arithmetic mean over formulas of actual wall seconds if solved within T, otherwise 2*T",
+    "primary_L3": "relative reduction = (PAR2_frozen_before - PAR2_frozen_after) / PAR2_frozen_before",
+    "minimum_practical_reduction": 0.05,
+    "statistical_unit": "distinct CNF instance; seeds and training replicas are repeated measures, not independent CNFs",
+    "interval": "cluster bootstrap by CNF, jointly preserving all paired solver runs and training-seed pairing; predefine random seed and repetitions before freeze",
+    "pass_rule": "Lower bound of predeclared 95% confidence interval on relative improvement strictly exceeds 0.05, with correctness gate PASS",
+    "secondary_tests": "Wilcoxon signed rank descriptive on per-instance paired data; not a replacement for censored PAR2 effect interval",
+    "multiplicity": "Only L2 and L3 each have one family-wise primary comparator; other baselines and strata exploratory or predeclared adjusted using Holm",
+    "missing_and_timeout_policy": "Timed out or crashed or missing result gets 2*T (unless integrity-invalid); never omit hard instances",
+    "reruns": "No optional stop or selective rerun; retries count unless predeclared machine-fault criteria"
+  },
+  "training": {
+    "change_type": "UNDECLARED_MUST_FREEZE (weights vs heuristics vs ensemble routing)",
+    "frozen_before_sha256": null,
+    "frozen_after_sha256": null,
+    "train_seeds_required_minimum": 3,
+    "solver_seeds_per_version_required": 5,
+    "no_access_to_L2_or_L3_instances_during_training": true,
+    "train_validation_and_L1_overlap_policy": "DISJOINT_BY_CANONICAL_INSTANCE_SHA256",
+    "survivor_only_bias_forbidden": true,
+    "promotion_to_production": "BLOCKED_IN_THIS_EXPERIMENT"
+  },
+  "blind_custody": {
+    "custodian_id": null,
+    "custodian_key_fingerprint": null,
+    "custodian_external_to_candidate_agent_permissions": true,
+    "no_candidate_access_to_private_seeds_cnf_labels_or_solver_logs": true,
+    "public_precommit_manifest_sha256": null,
+    "private_dataset_manifest_sha256": null,
+    "sealed_creation_utc": null,
+    "frozen_candidate_submission_utc": null,
+    "reveal_utc": null,
+    "reveal_policy": "After all preregistered final result receipts are immutable; demonstrate hash match, provenance, and absence of earlier candidate access",
+    "custody_status": "UNASSIGNED_UNSEALED",
+    "internal_only_fallback": "INTERNAL_HOLDOUT_ONLY_NOT_INDEPENDENT",
+    "single_public_hash_not_sufficient_for_independence": true,
+    "no_synthetic_public_test_masquerading_as_blind": true
+  },
+  "evidence_contract": {
+    "run_required": [
+      "experiment_id",
+      "prereg_sha256",
+      "instance_sha256",
+      "solver_commit",
+      "solver_sha256",
+      "model_sha256",
+      "training_seed",
+      "solver_seed",
+      "environment_digest",
+      "mode",
+      "wall_time_s",
+      "cpu_time_s",
+      "memory_peak_bytes",
+      "verdict",
+      "verification_status",
+      "failure_reason",
+      "receipt_sha256"
+    ],
+    "aggregate_required": [
+      "machine_readable_manifest",
+      "raw_per_attempt_rows",
+      "correctness_verifier_log",
+      "all_failed_runs",
+      "predeclared_analysis",
+      "deviations_and_exclusions",
+      "sealed_precommit_and_reveal",
+      "independent_verification"
+    ],
+    "failure_classifications": [
+      "INVALID_ASSIGNMENT",
+      "FALSE_UNSAT",
+      "TIMEOUT",
+      "CRASH",
+      "RESOURCE_EXHAUSTION",
+      "MODEL_REGRESSION",
+      "LEAKAGE",
+      "PROTOCOL_VIOLATION",
+      "PROOF_CHECK_FAILURE",
+      "MISSING_ARTIFACT"
+    ],
+    "append_only_negative_and_positive_equal_discoverability": true,
+    "no_silent_result_deletion": true,
+    "no_posthoc_selection": true,
+    "sample_results_present": false
+  },
+  "freeze_gate": {
+    "requirements": [
+      "Recover and hash actual historical solver + authentic CNF/seed evidence or narrow scope explicitly to modern reimplementation",
+      "Pin DIMACS generator and duplicate policy, solver versions, proof checker and all binary SHA-256",
+      "Freeze hardware/threads/memory/T, RNG protocol, attempts and resource accounting",
+      "Complete baseline and paired-cluster power analysis, adjust N if needed before freeze",
+      "Appoint independent custodian and separate access to private seeds, CNF and labels",
+      "Publish timestamped commitment hashes and candidate freeze receipt before scoring",
+      "Fix test inclusion/exclusion rules, analysis code SHA-256, multiplicity strategy and final verdicts"
+    ],
+    "satisfied": [],
+    "status": "BLOCKED_NOT_FROZEN",
+    "forbidden_claims": [
+      "P_EQUALS_NP_PROVEN",
+      "GENERAL_POLYNOMIAL_SAT",
+      "UNIVERSAL_SUPERIORITY",
+      "MODEL_SELF_IMPROVEMENT_CONFIRMED",
+      "AUTONOMY_FULL"
+    ],
+    "allowed_future_states": [
+      "DRAFT_NOT_FROZEN",
+      "PREREG_FROZEN",
+      "RUNNING",
+      "RESULTS_SEALED",
+      "REVEALED_VERIFIED",
+      "INVALIDATED"
+    ]
+  },
+  "research_links": {
+    "demiurge_readme": "https://github.com/Hawkar-usls/Janus-Demiurge/blob/main/README.md",
+    "archived_microgpt_manifest": "https://github.com/Hawkar-usls/Janus-Demiurge/blob/main/archaeology/nas_early_cores_20261031/README.md",
+    "fundamentum_status": "https://github.com/Hawkar-usls/Janus-Fundamentum/blob/main/docs/CURRENT_RESEARCH_STATUS.md",
+    "protocol_doc": "docs/SAT_REPRODUCIBILITY_001.md"
+  }
+}
