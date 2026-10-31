@@ -1,0 +1,30 @@
+name: JANUS NAS Historical SQLite WAL Metadata Preflight
+on:
+  pull_request:
+    paths:
+      - 'scripts/legacy_sqlite_wal_header_preflight.py'
+      - 'tests/test_legacy_sqlite_wal_header_preflight.py'
+      - 'registry/experimental/JANUS-NAS-SQLITE-WAL-RECOVERY-2026-10-31-v1.json'
+      - '.github/workflows/nas-legacy-wal-preflight.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/legacy_sqlite_wal_header_preflight.py'
+      - 'tests/test_legacy_sqlite_wal_header_preflight.py'
+      - 'registry/experimental/JANUS-NAS-SQLITE-WAL-RECOVERY-2026-10-31-v1.json'
+      - '.github/workflows/nas-legacy-wal-preflight.yml'
+permissions:
+  contents: read
+jobs:
+  static-wal-preflight:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run only synthetic WAL metadata tests (never read NAS or real DB rows)
+        run: python -m unittest discover -s tests -p test_legacy_sqlite_wal_header_preflight.py -v
