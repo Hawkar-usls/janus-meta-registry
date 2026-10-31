@@ -29,8 +29,28 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          # A rerun of an old scheduled job must read CURRENT main, not the
+          # event's historical github.sha. PRs still test only their own SHA.
+          ref: ${{ github.event_name == 'pull_request' && github.sha || 'main' }}
           fetch-depth: 0
           persist-credentials: true
+      - name: Refuse an obsolete local canonical snapshot
+        if: github.event_name != 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          python - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          path='data/rowan/CANONICAL_STATE.json'
+          local=json.loads(Path(path).read_text())
+          published=json.loads(subprocess.check_output(
+              ['git','show','origin/main:'+path],text=True))
+          assert local == published, 'ROWAN_CANONICAL_STALE_WORKTREE_HOLD'
+          print('ROWAN_COORDINATION_CURRENT_MAIN_CANONICAL='+str(
+              local['latest_durable_external_run']))
+          PY
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -72,6 +92,24 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          # Revalidate immediately before any write. An upstream Rowan
+          # generation can advance while AURA/Council were being read.
+          git fetch origin main
+          python - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          base=Path('data/rowan')
+          pointer=json.loads((base/'coordination/LATEST_COORDINATION_STATE.json').read_text())
+          local=json.loads((base/'CANONICAL_STATE.json').read_text())
+          published=json.loads(subprocess.check_output(
+              ['git','show','origin/main:data/rowan/CANONICAL_STATE.json'],
+              text=True))
+          assert local == published, 'ROWAN_CANONICAL_ADVANCED_DURING_RECONCILE_HOLD'
+          assert pointer['meta_canonical_run'] == published['latest_durable_external_run'], (
+              'ROWAN_COORDINATION_STALE_POINTER_HOLD',
+              pointer['meta_canonical_run'], published['latest_durable_external_run'])
+          print('ROWAN_COORDINATION_PREPUSH_COHORT_MATCH=PASS')
+          PY
           git add data/rowan/coordination/
           if git diff --cached --quiet; then
             echo 'ROWAN_COORDINATION=NO_NEW_SOURCE_MATCH'
@@ -82,6 +120,19 @@ jobs:
           git commit -m '[rowan] Source-bound AURA/Demiurge council reconciliation'
           for attempt in 1 2 3 4 5; do
             git fetch origin main
+            # No rebase may transplant an old coordination pointer onto a
+            # newer canonical. Re-read remote state on EVERY retry.
+            python - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          pointer=json.loads(Path('data/rowan/coordination/LATEST_COORDINATION_STATE.json').read_text())
+          remote=json.loads(subprocess.check_output(
+              ['git','show','origin/main:data/rowan/CANONICAL_STATE.json'],
+              text=True))
+          assert pointer['meta_canonical_run'] == remote['latest_durable_external_run'], (
+              'ROWAN_COORDINATION_RETRY_SOURCE_CHANGED_HOLD')
+          print('ROWAN_COORDINATION_RETRY_SOURCE_STILL_CURRENT=PASS')
+          PY
             if ! git rebase origin/main; then
               git rebase --abort || true
               echo 'ROWAN_COORDINATION=REBASE_CONFLICT_HOLD'
