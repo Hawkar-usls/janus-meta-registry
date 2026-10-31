@@ -2,7 +2,7 @@
 
 Automatically rebuilt from pinned public evidence.
 
-Status: **AUTONOMY_PARTIAL** · observed 2026-10-31T12:12:47Z
+Status: **AUTONOMY_PARTIAL** · observed 2026-10-31T12:28:01Z
 
 Current phase: **P0.3**
 
@@ -84,7 +84,6 @@ A successful collector is not proof of useful work or full autonomy.
 - **P0.5** SCOUT_MODEL_SYNTHESIS_DEGRADED: {"snapshots": 17, "synthesis": 0, "expected": 17}
 - **P2** SELF_WRITER_REVIEWED_TASKS_REMAINING: {"accepted": 9, "admitted": 10}
 - **P3** RECENT_TRAINING_ALL_REJECTED: 64
-- **P0.2** WORKFLOW_NOT_SUCCESS_CROSS_ORGAN_WITNESS: {"conclusion": "failure", "created_at": "2026-10-31T08:42:39Z", "event": "workflow_run", "head_sha": "e2b5d4485420f95189978333d380adc87598b621", "repository": "Hawkar-usls/janus-meta-registry", "run_id": 41185705466, "status": "OBSERVED", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/41185705466", "workflow": "janus-cross-organ-source-witness.yml"}
 
 ## Continuation
 
