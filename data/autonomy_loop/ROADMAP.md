@@ -2,17 +2,17 @@
 
 Automatically rebuilt from pinned public evidence.
 
-Status: **AUTONOMY_PARTIAL** · observed 2026-10-31T13:55:12Z
+Status: **AUTONOMY_PARTIAL** · observed 2026-10-31T15:29:46Z
 
-Current phase: **P0.3**
+Current phase: **P0.2**
 
 A successful collector is not proof of useful work or full autonomy.
 
 | Order | Phase | State | Objective |
 |---|---|---|---|
 | 1 | P0.1 | DONE | [One verified source-pinned status snapshot](https://github.com/Hawkar-usls/janus-meta-registry/issues/364) |
-| 2 | P0.2 | DONE | [One Rowan generation through AURA, council, Cosmos and witnesses](https://github.com/Hawkar-usls/janus-meta-registry/issues/365) |
-| 3 | P0.3 | ACTIVE | [Beetle delivery and current Cloud HOME](https://github.com/Hawkar-usls/Janus_Genesis/issues/164) |
+| 2 | P0.2 | ACTIVE_RECHECK | [One Rowan generation through AURA, council, Cosmos and witnesses](https://github.com/Hawkar-usls/janus-meta-registry/issues/365) |
+| 3 | P0.3 | WAITING_FOR_PREVIOUS | [Beetle delivery and current Cloud HOME](https://github.com/Hawkar-usls/Janus_Genesis/issues/164) |
 | 4 | P0.4 | WAITING_FOR_PREVIOUS | Deduplicate patch queue and preserve superseded attempts |
 | 5 | P0.5 | WAITING_FOR_PREVIOUS | Separate snapshots, model synthesis, useful work and idle |
 | 6 | P0.6 | WAITING_FOR_PREVIOUS | Restore local Habitat adapter without recreating HOME |
@@ -27,9 +27,9 @@ A successful collector is not proof of useful work or full autonomy.
 ```json
 {
   "native_model": {
-    "attempt_count": 1598,
+    "attempt_count": 1599,
     "promotion_count": 61,
-    "rejection_count": 1537,
+    "rejection_count": 1538,
     "checkpoint_sha256": "fc767adb812ac3bea54c44cbccfa9680941f95e2c8a77120559b41da044d9463",
     "last_training_status": "REJECTED",
     "retained_history_count": 64,
@@ -60,15 +60,15 @@ A successful collector is not proof of useful work or full autonomy.
   },
   "beetle_delivery": {
     "status": "WARN",
-    "observed_at": "2026-10-31T08:54:53.117939Z",
-    "total_pending": 14,
+    "observed_at": "2026-10-31T15:16:59.224473Z",
+    "total_pending": 13,
     "receiver_states": {
-      "PENDING": 13,
-      "UP_TO_DATE": 5,
+      "PENDING": 12,
+      "UP_TO_DATE": 6,
       "ACK_UNAVAILABLE": 1
     },
-    "routing_allowed": true,
-    "routing_reason": "ROUTING_ALLOWED",
+    "routing_allowed": false,
+    "routing_reason": "HOLD_DELIVERY_BACKPRESSURE",
     "runtime_consumption_attested": false
   },
   "native_decision": "NO_ACTION",
@@ -78,7 +78,14 @@ A successful collector is not proof of useful work or full autonomy.
 
 ## Evidence-driven tasks
 
-- **P0.3** BEETLE_DELIVERY_PENDING: {"total_pending": 14, "receiver_states": {"PENDING": 13, "UP_TO_DATE": 5, "ACK_UNAVAILABLE": 1}}
+- **P0.2** ROWAN_GENERATION_DRIFT_AURA: 41172788427
+- **P0.2** ROWAN_GENERATION_DRIFT_COUNCIL: 41172788427
+- **P0.2** ROWAN_GENERATION_DRIFT_COORDINATION: 41172788427
+- **P0.2** ROWAN_GENERATION_DRIFT_COSMOS: 41172788427
+- **P0.2** AURA_CANONICAL_DIGEST_DRIFT: "aura"
+- **P0.2** COUNCIL_CANONICAL_DIGEST_DRIFT: "council"
+- **P0.3** BEETLE_DELIVERY_PENDING: {"total_pending": 13, "receiver_states": {"PENDING": 12, "UP_TO_DATE": 6, "ACK_UNAVAILABLE": 1}}
+- **P0.3** BEETLE_ROUTING_HELD: "HOLD_DELIVERY_BACKPRESSURE"
 - **P0.3** EXTERNAL_WITNESS_SKINGPT_ACK: "UNKNOWN"
 - **P0.4** PATCHES_WAITING: 38
 - **P0.5** SCOUT_MODEL_SYNTHESIS_DEGRADED: {"snapshots": 17, "synthesis": 0, "expected": 17}
