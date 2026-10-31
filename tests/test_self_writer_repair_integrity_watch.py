@@ -131,6 +131,29 @@ class IndependentContinuousIntegrityTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "MISSING_VERIFIED_RUN"):
             watch.verify_runs(records)
 
+    def test_main_archive_must_exist_and_match_pinned_historical_bytes(self):
+        from tempfile import TemporaryDirectory
+        with TemporaryDirectory() as directory:
+            journal = Path(directory) / "JANUS_SELF_WRITER_REAL_REPAIR_001.json"
+            sealed = b'{"immutable":true}\n'
+            with self.assertRaisesRegex(ValueError, "MAIN_JOURNAL_MISSING"):
+                watch.verify_main_archive(journal, sealed)
+            journal.write_bytes(sealed + b" ")
+            with self.assertRaisesRegex(ValueError, "MAIN_JOURNAL_NOT_SAME_AS_PINNED_EVIDENCE"):
+                watch.verify_main_archive(journal, sealed)
+            journal.write_bytes(sealed)
+            self.assertIs(watch.verify_main_archive(journal, sealed), True)
+
+    def test_actual_main_archive_present_and_locked_to_trusted_model_intent(self):
+        path = BASE / watch.JOURNAL
+        self.assertTrue(path.is_file(), "Merged archive must exist in main")
+        import json
+        data = json.loads(path.read_bytes())
+        self.assertEqual(data["record_id"], "JANUS_SELF_WRITER_REAL_REPAIR_001")
+        self.assertEqual(data["typed_compilation"]["source_sha256"], watch.MODEL_FUNCTION_SHA)
+        self.assertFalse(data["installation"]["model_can_modify_main_directly"])
+        self.assertTrue(watch.verify_main_archive(path, path.read_bytes()))
+
     def test_no_production_mutation_controls(self):
         file = (BASE / "modules/autonomy_coder/repair_integrity_watch.py").read_text()
         self.assertNotIn("update_ref(", file)
