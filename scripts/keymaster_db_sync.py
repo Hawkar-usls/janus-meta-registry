@@ -185,12 +185,23 @@ def write_copy(snapshot, output_dir, compare=check_nonrewound):
     if not HEX40.fullmatch(head):
         raise ValueError("KEYMASTER_BAD_COMMIT")
     ptr = out / "LATEST.json"
+    live = out / "MIRROR.json"
+    live_hash = out / "MIRROR.sha256"
     rel = "snapshots/" + head + ".json"
     dest = out / rel
     if ptr.exists():
         old = json.loads(ptr.read_text(encoding="utf-8"))
         if old.get("schema") != POINTER_SCHEMA:
             raise ValueError("KEYMASTER_POINTER_SCHEMA_MISMATCH")
+        prior_path = out / "snapshots" / (old["source_commit_sha"] + ".json")
+        if (not HEX40.fullmatch(old["source_commit_sha"]) or
+            old.get("snapshot_path") != "data/daddy_keymaster_db/snapshots/" + old["source_commit_sha"] + ".json" or
+            not prior_path.exists()):
+            raise ValueError("KEYMASTER_MISSING_PRIOR_PINNED_SNAPSHOT")
+        prior = json.loads(prior_path.read_text(encoding="utf-8"))
+        if (prior.get("snapshot_sha256") != old.get("snapshot_sha256") or
+            h({k:v for k,v in prior.items() if k != "snapshot_sha256"}) != prior["snapshot_sha256"]):
+            raise ValueError("KEYMASTER_PREVIOUS_SNAPSHOT_INVALID")
         if old["source_commit_sha"] != head:
             compare(old["source_commit_sha"], head)
         if old["source_commit_sha"] == head and old.get("snapshot_sha256") != digest:
@@ -216,7 +227,18 @@ def write_copy(snapshot, output_dir, compare=check_nonrewound):
         "active_epoch": snapshot["active_epoch"],
     }
     pbytes = canonical(pointer) + b"\n"
-    if not ptr.exists() or ptr.read_bytes() != pbytes:
+    # A stable small-endpoint full JSON DB is provided for an optional NAS
+    # read-only cold mirror. The NAS never has to parse the pointer, run
+    # Python, keep SSH keys or monitor a repository clone.
+    expected_hash = hashlib.sha256(encoded).hexdigest() + "  MIRROR.json\n"
+    stable_correct = (
+        live.exists() and live.read_bytes() == encoded and
+        live_hash.exists() and live_hash.read_text(encoding="utf-8") == expected_hash
+    )
+    pointer_correct = ptr.exists() and ptr.read_bytes() == pbytes
+    if not stable_correct or not pointer_correct:
+        live.write_bytes(encoded)
+        live_hash.write_text(expected_hash, encoding="utf-8")
         ptr.write_bytes(pbytes)
         return "UPDATED"
     return "UNCHANGED"
