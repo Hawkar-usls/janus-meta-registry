@@ -100,11 +100,11 @@ class CoordinationWorkflowSourcePinTests(unittest.TestCase):
     def test_trusted_rowan_observer_completed_wakes_reconciliation(self):
         path=Path(__file__).resolve().parents[2]/".github/workflows/rowan-coordination-autonomous-reconcile.yml"
         workflow=path.read_text()
-        event=workflow.split("\\n  workflow_run:\\n",1)[1].split("\\n  schedule:\\n",1)[0]
+        event=workflow.split("\n  workflow_run:\n",1)[1].split("\n  schedule:\n",1)[0]
         self.assertIn('workflows: ["JANUS Rowan Durable Observer"]',event)
         self.assertIn("types: [completed]",event)
         self.assertIn("branches: [main]",event)
-        job=workflow.split("\\n  council-reconcile:\\n",1)[1]
+        job=workflow.split("\n  council-reconcile:\n",1)[1]
         self.assertIn("github.event.workflow_run.conclusion == 'success'",job)
         self.assertIn("github.event.workflow_run.head_branch == 'main'",job)
         self.assertIn("github.event.workflow_run.head_repository.full_name == github.repository",job)
