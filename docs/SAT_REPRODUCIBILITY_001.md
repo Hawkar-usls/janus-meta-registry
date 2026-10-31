@@ -12,6 +12,14 @@ The recovered [NAS early-cores manifest](https://github.com/Hawkar-usls/Janus-De
 
 Do not mix this SAT lane with Rowan P0.2, FULL autonomy, model champion promotion or any paid compute.
 
+## Historical negative-evidence checkpoint (read-only)
+
+The source-bound [Yaksa E-drive audit](../data/sat_reproducibility/HISTORICAL_SOURCE_AUDIT_20261101.json) records **100 actual `sat_duels.jsonl` rounds, from 9 to 108 variables** (100/100 lines read), alongside `sat_state.json` ending at 108 variables. Original file SHA-256 digests are in the audit; original files have not been copied or mutated.
+
+The duel rows summarize agent competition (35 `speed`, 28 `draw`, 22 `solved`, 15 `max_sat`) and do **not** provide original CNFs, seeds or verified SAT assignments. They cannot substantiate a 220–240-variable benchmark. The local `experimental_sat_profile.py` describes assignment-occupancy profiling, and `janus_solver_integrated.py` describes a subset-sum experiment rather than a verified large random-3-SAT replay.
+
+**Scope:** targeted inspection of the named files and a recursive name-filtered E-drive inventory, not a complete NAS/archive search or proof of historical nonexistence. This scoped failure to verify is preserved as a first-class negative finding.
+
 ## Pre-experiment experimental strata
 
 A *proposed*, **not yet power-validated** 3-CNF design uses five variable sizes × three clause densities.
