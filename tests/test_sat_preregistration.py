@@ -101,6 +101,22 @@ class SATPreregistrationIntegrity(unittest.TestCase):
             json.loads('{"schema_id":"ok","schema_id":"tampered"}',
                        object_pairs_hook=unique_keys)
 
+    def test_historical_negative_evidence_is_hash_bound_and_limited(self):
+        from verify_sat_preregistration import valid_historical_source_audit
+        audit = read(ROOT / "data/sat_reproducibility/HISTORICAL_SOURCE_AUDIT_20261101.json")
+        self.assertEqual(valid_historical_source_audit(audit), [])
+        self.assertEqual(audit["evidence_items"][0]["read_record_count"], 100)
+        self.assertEqual(audit["evidence_items"][0]["maximum_variables"], 108)
+        self.assertFalse(audit["source_scope"]["nas_entire_archive_search_complete"])
+        bad = copy.deepcopy(audit)
+        bad["evidence_items"][0]["maximum_variables"] = 240
+        self.assertIn("HISTORICAL_DUELS_SCOPE_CHANGED",
+                      valid_historical_source_audit(bad))
+        bad = copy.deepcopy(audit)
+        bad["scientific_verdict"] = "SAT_240_PROVEN"
+        self.assertIn("FALSE_HISTORICAL_AUDIT_PROMOTION",
+                      valid_historical_source_audit(bad))
+
     def test_pre_registration_doc_exists_and_marks_draft(self):
         doc = (ROOT / "docs/SAT_REPRODUCIBILITY_001.md").read_text(encoding="utf-8")
         for marker in ("DRAFT_NOT_FROZEN", "HISTORICAL_ARTIFACT_INCOMPLETE",
