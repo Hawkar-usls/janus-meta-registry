@@ -67,9 +67,14 @@ jobs:
               assert gate.git_blob(target.read_bytes())!=gate.GOOD_BLOB
               proc=subprocess.run([sys.executable,str(repo/'modules/autonomy_coder/scoped_recovery.py'),
                     '--root',str(clone),'--out',str(out/'PLAN.json'),
-                    '--candidate',str(out/'KNOWN_GOOD_MODULE.py')],check=True,
+                    '--candidate',str(out/'KNOWN_GOOD_MODULE.py')],check=False,
                     capture_output=True,text=True)
+              print('JANUS_SANDBOX_RECOVERY_STDOUT='+proc.stdout.strip(),flush=True)
+              print('JANUS_SANDBOX_RECOVERY_STDERR='+proc.stderr.strip()[-500:],flush=True)
               decision=json.loads((out/'PLAN.json').read_bytes())
+              print('JANUS_SANDBOX_RECOVERY_STATUS='+decision['status'],flush=True)
+              if proc.returncode:
+                  raise AssertionError('REAL_PATH_HOLD:'+str(decision.get('reason')))
               assert decision['status']=='SCOPED_RESTORE_PR_ELIGIBLE',decision
               assert decision['only_allowed_path']==gate.TARGET
               assert decision['current_source_blob']==gate.git_blob(injected)
