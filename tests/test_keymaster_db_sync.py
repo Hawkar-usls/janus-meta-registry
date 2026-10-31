@@ -126,6 +126,10 @@ class SyncTests(unittest.TestCase):
             latest=json.loads(p.read_text())
             self.assertEqual(latest["source_commit_sha"],HEAD)
             self.assertEqual(latest["archive_count"],1)
+            mirror=(Path(tmp)/"MIRROR.json").read_bytes()
+            checksum=(Path(tmp)/"MIRROR.sha256").read_text().split()[0]
+            self.assertEqual(hashlib.sha256(mirror).hexdigest(),checksum)
+            self.assertEqual(json.loads(mirror)["snapshot_sha256"],doc["snapshot_sha256"])
             self.assertTrue((Path(tmp)/"snapshots"/(HEAD+".json")).exists())
             corrupt=copy.deepcopy(doc)
             corrupt["archive_count"]=77
@@ -141,6 +145,15 @@ class SyncTests(unittest.TestCase):
                 sync.write_copy(next_doc,tmp,compare=lambda a,b: (_ for _ in ()).throw(
                     ValueError("KEYMASTER_SOURCE_REF_REWOUND_OR_DIVERGED")))
             self.assertEqual(json.loads((Path(tmp)/"LATEST.json").read_text())["source_commit_sha"],HEAD)
+
+    def test_missing_previous_snapshot_refuses_head_advance(self):
+        doc=sync.make_snapshot(HEAD,valid_files())
+        with tempfile.TemporaryDirectory() as tmp:
+            sync.write_copy(doc,tmp)
+            (Path(tmp)/"snapshots"/(HEAD+".json")).unlink()
+            newer=sync.make_snapshot(AFTER,valid_files())
+            with self.assertRaisesRegex(ValueError,"MISSING_PRIOR_PINNED_SNAPSHOT"):
+                sync.write_copy(newer,tmp,compare=lambda x,y: True)
 
     def test_same_head_collision_rejected(self):
         doc=sync.make_snapshot(HEAD,valid_files())
