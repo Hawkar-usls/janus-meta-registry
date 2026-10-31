@@ -1,0 +1,145 @@
+name: JANUS Self-Writer Typed Compilation of Real Model Proposal
+
+on:
+  pull_request:
+    paths:
+      - 'modules/autonomy_coder/typed_repair_lowerer.py'
+      - 'tests/test_typed_model_repair_lowerer.py'
+      - '.github/workflows/janus-self-writer-typed-repair.yml'
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: janus-self-writer-typed-compiler-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  compile-strict-model-intent:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Fixed narrow compiler unit and adversarial tests
+        run: python -m unittest discover -s tests -p test_typed_model_repair_lowerer.py -v
+      - uses: actions/download-artifact@v4
+        with:
+          repository: Hawkar-usls/janus-meta-registry
+          run-id: 41181433808
+          github-token: ${{ github.token }}
+          name: janus-strong-repair-model-raw-variants
+          path: prior
+      - uses: actions/download-artifact@v4
+        with:
+          repository: Hawkar-usls/janus-meta-registry
+          run-id: 41181433808
+          github-token: ${{ github.token }}
+          name: janus-strong-repair-independent-verdict
+          path: prior
+      - name: Bind independent FAIL verdict and exact raw model bytes before compilation
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo '69ee0581fe9e8e41f14a83e14dc9eec67f94a31e1e3e6935a780ea8c8e17f604  prior/BUNDLE.json' | sha256sum -c -
+          echo '1d465ca12ef2738160dce01bf6e6dfd5fe1a1eaab312b45d799018327ff5a450  prior/EVALUATION.json' | sha256sum -c -
+          python modules/autonomy_coder/typed_repair_lowerer.py \
+            --bundle prior/BUNDLE.json \
+            --verdict prior/EVALUATION.json \
+            --out-bundle staged/BUNDLE.json \
+            --out-receipt staged/COMPILER_RECEIPT.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-typed-model-repair-staged-source
+          path: staged/
+          retention-days: 30
+          if-no-files-found: error
+
+  fresh-independent-sandbox:
+    needs: compile-strict-model-intent
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          path: _compiler
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 59c640d7b47f358b5e707b8b42c28006d913a4d4
+          path: _independent_reviewer
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: janus-typed-model-repair-staged-source
+          path: staged
+      - uses: actions/download-artifact@v4
+        with:
+          repository: Hawkar-usls/janus-meta-registry
+          run-id: 41181433808
+          github-token: ${{ github.token }}
+          name: janus-strong-repair-model-raw-variants
+          path: prior
+      - uses: actions/download-artifact@v4
+        with:
+          repository: Hawkar-usls/janus-meta-registry
+          run-id: 41181433808
+          github-token: ${{ github.token }}
+          name: janus-strong-repair-independent-verdict
+          path: prior
+      - name: Reconstruct exact compiler output independently on clean worker
+        shell: bash
+        run: |
+          set -euo pipefail
+          PYTHONPATH=_compiler/modules/autonomy_coder \
+            python _compiler/modules/autonomy_coder/typed_repair_lowerer.py \
+              --bundle prior/BUNDLE.json --verdict prior/EVALUATION.json \
+              --out-bundle fresh/BUNDLE.json --out-receipt fresh/COMPILER_RECEIPT.json
+          cmp -s fresh/BUNDLE.json staged/BUNDLE.json
+          cmp -s fresh/COMPILER_RECEIPT.json staged/COMPILER_RECEIPT.json
+          echo 'JANUS_MODEL_COMPILATION_CLEAN_REPLAY=PASS'
+      - name: Prepare pinned no-network, no-privilege code test image
+        run: docker pull python@sha256:1148dbb014615300fa7e713b2f94f550c0d1c69780c0805f84f093ceee34dd0b
+      - name: Strict unchanged 417-case evaluator for typed-lowered model result
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p evaluated
+          timeout 120 docker run --rm --network none --read-only \
+            --user 65534:65534 --cap-drop ALL --security-opt no-new-privileges \
+            --memory 256m --cpus 1 --pids-limit 32 --ulimit cpu=10:10 \
+            --mount "type=bind,src=$PWD/_independent_reviewer/modules/autonomy_coder,dst=/judge,readonly" \
+            --mount "type=bind,src=$PWD/staged,dst=/candidate,readonly" \
+            python@sha256:1148dbb014615300fa7e713b2f94f550c0d1c69780c0805f84f093ceee34dd0b \
+            python -I -B /judge/strong_bug_repair_oracle.py --bundle /candidate/BUNDLE.json \
+            > evaluated/EVALUATION.json
+          python - <<'PY'
+          import json
+          e=json.load(open('evaluated/EVALUATION.json'))
+          c=json.load(open('staged/COMPILER_RECEIPT.json'))
+          assert e['status']=='REVIEWABLE_MODEL_REPAIR', e['status']
+          assert e['evaluated_cases_per_variant']==417
+          assert c['status']=='REVIEW_REQUIRED__NOT_INSTALLED'
+          assert c['raw_model_source_admitted'] is False
+          assert e['installed_into_production'] is False
+          assert e['authority_delta']==0 and c['authority_delta']==0
+          print('JANUS_TYPED_COMPILED_REPAIR_INDEPENDENT_EVAL=PASS')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-typed-model-repair-independent-417-case-review
+          path: evaluated/EVALUATION.json
+          retention-days: 30
+          if-no-files-found: error
