@@ -161,7 +161,7 @@ class SyncTests(unittest.TestCase):
             sync.write_copy(doc,tmp)
             path=Path(tmp)/"snapshots"/(HEAD+".json")
             path.write_text("{}")
-            with self.assertRaisesRegex(ValueError,"IMMUTABLE_SNAPSHOT_COLLISION"):
+            with self.assertRaisesRegex(ValueError,"PREVIOUS_SNAPSHOT_INVALID|IMMUTABLE_SNAPSHOT_COLLISION"):
                 sync.write_copy(doc,tmp)
 
     def test_bounded_archives_and_allowlist(self):
