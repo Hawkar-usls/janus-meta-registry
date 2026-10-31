@@ -79,9 +79,11 @@ jobs:
               *) echo 'UNEXPECTED_KEYMASTER_PATH' >&2; exit 1 ;;
             esac
           done
-          git -c user.name='janus-keymaster-witness[bot]' \
-              -c user.email='janus-keymaster-witness@users.noreply.github.com' \
-              commit -m 'meta-registry: archive verified Keymaster JSON state'
+          # Rebase needs a local committer identity, not just -c for
+          # the first commit. Restrict this identity to this checkout.
+          git config user.name 'janus-keymaster-witness[bot]'
+          git config user.email 'janus-keymaster-witness@users.noreply.github.com'
+          git commit -m 'meta-registry: archive verified Keymaster JSON state'
           # Meta Registry has independent legitimate writers. Replay this
           # ONE verified JSON-only commit on a newer main, at most four times.
           # No force push; any rebase conflict or invalid source stops.
