@@ -7,6 +7,8 @@ on:
       - 'docs/SAT_REPRODUCIBILITY_001.md'
       - 'tools/verify_sat_preregistration.py'
       - 'tests/test_sat_preregistration.py'
+      - 'tools/verify_sat_witness.py'
+      - 'tests/test_sat_witness.py'
       - '.github/workflows/sat-preregistration-integrity.yml'
   push:
     branches: [main]
@@ -15,6 +17,8 @@ on:
       - 'docs/SAT_REPRODUCIBILITY_001.md'
       - 'tools/verify_sat_preregistration.py'
       - 'tests/test_sat_preregistration.py'
+      - 'tools/verify_sat_witness.py'
+      - 'tests/test_sat_witness.py'
       - '.github/workflows/sat-preregistration-integrity.yml'
   workflow_dispatch:
 
@@ -38,6 +42,8 @@ jobs:
         run: python tools/verify_sat_preregistration.py
       - name: Test adversarial tampering and separation of claims
         run: python -m unittest discover -s tests -p 'test_sat_preregistration.py' -v
+      - name: Validate synthetic SAT certificates and reject false UNSAT claims
+        run: python -m unittest discover -s tests -p 'test_sat_witness.py' -v
       - name: State exact meaning of CI result
         run: |
           echo 'SAT_PREREG_CI=DESIGN_INTEGRITY_ONLY'
