@@ -67,7 +67,7 @@ jobs:
         run: |
           set -euo pipefail
           python scripts/keymaster_db_sync.py --output-dir data/daddy_keymaster_db
-          git add -- data/daddy_keymaster_db/LATEST.json data/daddy_keymaster_db/snapshots/
+          git add -- data/daddy_keymaster_db/LATEST.json data/daddy_keymaster_db/MIRROR.json data/daddy_keymaster_db/MIRROR.sha256 data/daddy_keymaster_db/snapshots/
           if git diff --cached --quiet; then
             echo 'JANUS_KEYMASTER_DB_NO_CHANGE'
             exit 0
@@ -75,7 +75,7 @@ jobs:
           # Only the generated allowlisted JSON files may be included.
           git diff --cached --name-only | while IFS= read -r file; do
             case "$file" in
-              data/daddy_keymaster_db/LATEST.json|data/daddy_keymaster_db/snapshots/*.json) ;;
+              data/daddy_keymaster_db/LATEST.json|data/daddy_keymaster_db/MIRROR.json|data/daddy_keymaster_db/MIRROR.sha256|data/daddy_keymaster_db/snapshots/*.json) ;;
               *) echo 'UNEXPECTED_KEYMASTER_PATH' >&2; exit 1 ;;
             esac
           done
