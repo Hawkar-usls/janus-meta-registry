@@ -6,12 +6,14 @@ on:
   workflow_dispatch:
   pull_request:
     paths:
+      - 'data/self_writer/JANUS_SELF_WRITER_REAL_REPAIR_001.json'
       - 'modules/autonomy_coder/repair_integrity_watch.py'
       - 'tests/test_self_writer_repair_integrity_watch.py'
       - '.github/workflows/janus-self-writer-repair-integrity-watch.yml'
   push:
     branches: [main]
     paths:
+      - 'data/self_writer/JANUS_SELF_WRITER_REAL_REPAIR_001.json'
       - 'modules/autonomy_coder/repair_integrity_watch.py'
       - 'tests/test_self_writer_repair_integrity_watch.py'
       - '.github/workflows/janus-self-writer-repair-integrity-watch.yml'
@@ -73,9 +75,10 @@ jobs:
           assert d['status']=='VERIFIED_EXISTING_PATCH__NOT_AUTONOMOUS_SELF_REPAIR'
           assert d['live_source_blob']=='c787f96523442cf314f2327bf57af658a06e1a47'
           assert len(d['github_runs_independently_checked'])==5
+          assert d['evidence_on_main'] is True
           assert d['remote_write'] is False and d['full_autonomy'] is False
           print('JANUS_REAL_PATCH_SOURCE_AND_INDEPENDENT_CLOUD_PROOFS=PASS')
-          print('JANUS_ARCHIVE_MERGED_MAIN='+str(d['evidence_on_main']))
+          print('JANUS_ARCHIVE_MERGED_MAIN_REQUIRED=TRUE')
           PY
       - name: Preserve verifiable PASS or fail-closed HOLD receipt
         if: always()
