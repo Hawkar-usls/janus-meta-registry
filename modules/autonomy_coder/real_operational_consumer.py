@@ -22,6 +22,13 @@ EXPECTED_SOURCE_SHA256 = "30a35a12b9c864af6ff066fe30dd94ece681e81fa6e8b95c3c4a43
 STATE_SOURCE_COMMIT = "ccb2f82edb0f1c61c460aa0a4521a9991e8d5eb2"
 MAX_SUPPORTED_AGE = 10_000
 
+# Model proposal Qwen2.5-Coder-1.5B; exact function bytes obtained through
+# audited typed lowering, NOT directly accepted from the raw model response.
+# SHA256: 812096e5305073344e3a4e19a46e3f888f42f2d1760ef81ae8ba5fb76c625405
+# Compiler witness: GitHub Actions run 41181745142 (417 tests, both variants).
+def floor_age_us(delta_us):
+    return delta_us // 1000000
+
 
 def _timestamp(raw):
     if type(raw) is not str or not raw.endswith("Z"):
@@ -73,17 +80,24 @@ def probe(state_root, latest_path, *, now=None, check=isolated_check):
     clock = now if now is not None else datetime.now(timezone.utc)
     if clock.tzinfo is None:
         raise ValueError("REAL_CONSUMER_CLOCK_NAIVE")
-    age = int((clock - _timestamp(latest.get("last_observed_at_utc"))).total_seconds())
+    # timedelta.days/seconds/microseconds are exact integers; avoid int(float)
+    # truncating future timestamps within one second into a false FRESH.
+    delta = clock - _timestamp(latest.get("last_observed_at_utc"))
+    delta_us = (delta.days * 86400 + delta.seconds) * 1000000 + delta.microseconds
+    age = floor_age_us(delta_us)
     # The generated function's admitted domain is [-10000,10000].
     # Clamp only the *input*, never the reported actual age. Our threshold is
     # strictly less than 10000, so out-of-range ages stay unequivocally stale.
-    capped = max(-MAX_SUPPORTED_AGE, min(MAX_SUPPORTED_AGE, age))
     max_age = 3600
+    # A nonnegative subsecond remainder must round UP for a maximum-age gate:
+    # 3600.000001 seconds is expired, but a future -0.5 seconds remains -1.
+    gate_age = age + (1 if delta_us >= 0 and delta_us % 1000000 else 0)
+    capped = max(-MAX_SUPPORTED_AGE, min(MAX_SUPPORTED_AGE, gate_age))
     result = check(data.decode("utf-8"), TASK, call=[capped, max_age],
                    seed="janus-real-operational-freshness-20261031")
     if result.get("status") != "PASS_PURE_FUNCTION_ONLY" or type(result.get("value")) is not bool:
         raise ValueError("REAL_CONSUMER_UNVERIFIED_MODEL_RESULT")
-    expected = 0 <= age <= max_age
+    expected = 0 <= delta_us <= max_age * 1000000
     if result["value"] is not expected:
         raise ValueError("REAL_CONSUMER_GENERATED_CODE_DISAGREES_WITH_CONTRACT")
     return {

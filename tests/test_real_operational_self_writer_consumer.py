@@ -88,6 +88,45 @@ class RealOperationalConsumerTests(unittest.TestCase):
         self.set_age(3600)
         self.assertEqual(self.run_probe()["status"], "FRESH_SOURCE_DIAGNOSTIC_ONLY")
 
+    def test_actual_model_compiled_helper_byte_identity(self):
+        source = (Path(__file__).resolve().parents[1] /
+                  "modules/autonomy_coder/real_operational_consumer.py").read_text()
+        start = source.index("def floor_age_us(delta_us):")
+        end = source.index("\n\ndef _timestamp", start)
+        compiled_bytes = (source[start:end].rstrip("\n") + "\n").encode()
+        self.assertEqual(
+            hashlib.sha256(compiled_bytes).hexdigest(),
+            "812096e5305073344e3a4e19a46e3f888f42f2d1760ef81ae8ba5fb76c625405"
+        )
+        for offset_us in (-10**16-1, -1500000, -500000, -1, 0, 1,
+                          999999, 1000000, 1500000, 10**16+1):
+            self.assertEqual(c.floor_age_us(offset_us), offset_us // 1000000)
+
+    def test_real_future_subsecond_bug_fixed_and_exact_expiry_boundary(self):
+        # Original production accepted a future +0.5s timestamp as age 0
+        # because int(-0.5)==0. This is a real observed code defect.
+        cases_us = (
+            -1500000, -999999, -500000, -1, 0, 1, 500000, 1000000,
+            3599999999, 3600000000, 3600000001, 3600500000,
+            3601000000, 100000000000,
+        )
+        for age_us in cases_us:
+            with self.subTest(age_us=age_us):
+                observed = NOW - timedelta(microseconds=age_us)
+                self.latest.write_text(json.dumps({
+                    "schema": "janus.autonomy.latest.v1",
+                    "ecosystem_status": "AUTONOMY_PARTIAL",
+                    "last_observed_at_utc": observed.isoformat().replace("+00:00", "Z")
+                }))
+                result = self.run_probe()
+                self.assertEqual(result["age_seconds"], age_us // 1000000)
+                is_fresh = 0 <= age_us <= 3600 * 1000000
+                self.assertEqual(result["status"],
+                                 "FRESH_SOURCE_DIAGNOSTIC_ONLY" if is_fresh
+                                 else "STALE_SOURCE_DIAGNOSTIC_ONLY")
+                self.assertEqual(result["authority_delta"], 0)
+                self.assertFalse(result["source_writeback"])
+
     def test_model_source_tampering_is_detected_before_execution(self):
         (self.state / "self_modules/is_fresh/module.py").write_text(
             "def is_fresh(age, max_age):\n    return True\n")
