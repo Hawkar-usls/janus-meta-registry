@@ -82,6 +82,27 @@ jobs:
           git -c user.name='janus-keymaster-witness[bot]' \
               -c user.email='janus-keymaster-witness@users.noreply.github.com' \
               commit -m 'meta-registry: archive verified Keymaster JSON state'
-          # Non-forced push. Concurrent updates or branch restrictions stop
-          # this attempt; never rewrite a newer LATEST or source history.
-          git push origin HEAD:refs/heads/main
+          # Meta Registry has independent legitimate writers. Replay this
+          # ONE verified JSON-only commit on a newer main, at most four times.
+          # No force push; any rebase conflict or invalid source stops.
+          published=0
+          for attempt in 1 2 3 4; do
+            git fetch origin main
+            if ! git merge-base --is-ancestor origin/main HEAD; then
+              git rebase origin/main || {
+                echo 'KEYMASTER_MIRROR_REBASE_CONFLICT_HOLD' >&2
+                exit 1
+              }
+            fi
+            python scripts/keymaster_db_sync.py --check-only
+            if git push origin HEAD:refs/heads/main; then
+              echo 'KEYMASTER_META_JSON_PUBLISHED'
+              published=1
+              break
+            fi
+            sleep 2
+          done
+          if [ "$published" != "1" ]; then
+            echo 'KEYMASTER_META_JSON_BOUNDED_CAS_CONFLICT_HOLD' >&2
+            exit 1
+          fi
