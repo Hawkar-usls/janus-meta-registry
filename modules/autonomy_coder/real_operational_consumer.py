@@ -88,13 +88,16 @@ def probe(state_root, latest_path, *, now=None, check=isolated_check):
     # The generated function's admitted domain is [-10000,10000].
     # Clamp only the *input*, never the reported actual age. Our threshold is
     # strictly less than 10000, so out-of-range ages stay unequivocally stale.
-    capped = max(-MAX_SUPPORTED_AGE, min(MAX_SUPPORTED_AGE, age))
     max_age = 3600
+    # A nonnegative subsecond remainder must round UP for a maximum-age gate:
+    # 3600.000001 seconds is expired, but a future -0.5 seconds remains -1.
+    gate_age = age + (1 if delta_us >= 0 and delta_us % 1000000 else 0)
+    capped = max(-MAX_SUPPORTED_AGE, min(MAX_SUPPORTED_AGE, gate_age))
     result = check(data.decode("utf-8"), TASK, call=[capped, max_age],
                    seed="janus-real-operational-freshness-20261031")
     if result.get("status") != "PASS_PURE_FUNCTION_ONLY" or type(result.get("value")) is not bool:
         raise ValueError("REAL_CONSUMER_UNVERIFIED_MODEL_RESULT")
-    expected = 0 <= age <= max_age
+    expected = 0 <= delta_us <= max_age * 1000000
     if result["value"] is not expected:
         raise ValueError("REAL_CONSUMER_GENERATED_CODE_DISAGREES_WITH_CONTRACT")
     return {
