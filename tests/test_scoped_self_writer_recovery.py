@@ -6,7 +6,6 @@ import sys
 import unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "modules/autonomy_coder"))
@@ -67,10 +66,10 @@ class ScopedRecoveryTests(unittest.TestCase):
             path = root / s.JOURNAL
             path.parent.mkdir(parents=True)
             path.write_bytes(b'{"forged":true}\n')
-            with patch.object(s, "git", side_effect=lambda _root, *args: (
-                self.good if args[1].startswith(s.INSTALL) else b'{"legit":true}\n')):
-                with self.assertRaisesRegex(s.Hold, "CANONICAL_ARCHIVE_ABSENT_OR_TAMPERED"):
-                    s.exact_archive(root)
+            def fake_git(_root, *args):
+                return self.good if args[1].startswith(s.INSTALL) else b'{"legit":true}\n'
+            with self.assertRaisesRegex(s.Hold, "CANONICAL_ARCHIVE_ABSENT_OR_TAMPERED"):
+                s.exact_archive(root, git_read=fake_git)
 
     def test_no_model_writer_runtime_or_direct_main_push(self):
         source = (ROOT / "modules/autonomy_coder/scoped_recovery.py").read_text()
