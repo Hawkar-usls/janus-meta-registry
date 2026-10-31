@@ -18,15 +18,29 @@ class ScopedRecoveryTests(unittest.TestCase):
         cls.good = subprocess.check_output(
             ["git", "-C", str(ROOT), "show", s.INSTALL + ":" + s.TARGET])
 
-    def test_exact_current_production_is_idle_no_pr(self):
+    def test_exact_signed_known_good_source_is_idle_no_pr(self):
+        # The contract MUST pass even if current production is regressed.
+        # Otherwise the recovery workflow's prerequisite job would fail,
+        # preventing the incident detector and clean repair from ever running.
         self.assertEqual(s.git_blob(self.good), s.GOOD_BLOB)
-        current = (ROOT / s.TARGET).read_bytes()
-        decision = s.assess(current, self.good, "a" * 40, "b" * 64)
+        decision = s.assess(self.good, self.good, "a" * 40, "b" * 64)
         self.assertEqual(decision["status"], "IDLE_KNOWN_GOOD")
         self.assertFalse(decision["auto_merge"])
         self.assertFalse(decision["production_modified"])
         self.assertFalse(decision["full_autonomy"])
         self.assertNotIn("candidate_branch", decision)
+
+    def test_regression_does_not_poison_healthy_contract(self):
+        from unittest.mock import patch
+        altered = self.good + b"# simulated drift, never on main\\n"
+        self.assertNotEqual(s.git_blob(altered), s.GOOD_BLOB)
+        with patch.object(Path, "read_bytes", side_effect=AssertionError(
+                "Healthy contract must not inspect mutable production source")):
+            decision = s.assess(self.good, self.good, "b"*40, "c"*64)
+        self.assertEqual(decision["status"], "IDLE_KNOWN_GOOD")
+        simulated = s.assess(altered, self.good, "b"*40, "c"*64)
+        self.assertEqual(simulated["status"], "SCOPED_RESTORE_PR_ELIGIBLE")
+        self.assertFalse(simulated["auto_merge"])
 
     def test_one_byte_source_drift_creates_only_known_good_review_candidate(self):
         bad = self.good.replace(b"def floor_age_us(delta_us):",

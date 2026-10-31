@@ -20,6 +20,9 @@ TARGET = "modules/autonomy_coder/real_operational_consumer.py"
 JOURNAL = "data/self_writer/JANUS_SELF_WRITER_REAL_REPAIR_001.json"
 INSTALL = "1245c05f0002cce3193e50d8a5edb7f37a6c2d87"
 ARCHIVE = "a80e8301dc5897b0b2779db94a74bf55a2020852"
+# The old PR head is not necessarily fetched in a clean post-squash clone.
+# Pin the archived FILE bytes independently of branch object availability.
+ARCHIVE_FILE_BLOB = "62d67d0bd1a83475c08ecb0bd40589034ce45071"
 GOOD_BLOB = "c787f96523442cf314f2327bf57af658a06e1a47"
 FUNCTION_SHA = "812096e5305073344e3a4e19a46e3f888f42f2d1760ef81ae8ba5fb76c625405"
 SCHEMA = "janus.self_writer.scoped_recovery_plan.v1"
@@ -47,9 +50,19 @@ def exact_archive(root: Path, *, git_read=git) -> tuple[bytes, bytes, dict]:
     good = git_read(root, "show", INSTALL + ":" + TARGET)
     if git_blob(good) != GOOD_BLOB or len(good) > 24_000:
         raise Hold("TRUSTED_INSTALL_SOURCE_MISMATCH")
-    pin = git_read(root, "show", ARCHIVE + ":" + JOURNAL)
     actual = (root / JOURNAL).read_bytes()
-    if len(pin) > 25_000 or actual != pin:
+    if (not actual or len(actual) > 25_000 or
+            git_blob(actual) != ARCHIVE_FILE_BLOB):
+        raise Hold("CANONICAL_ARCHIVE_ABSENT_OR_TAMPERED")
+    try:
+        pin = git_read(root, "show", ARCHIVE + ":" + JOURNAL)
+    except subprocess.CalledProcessError:
+        # Squash merges can leave the original PR head outside fetch refs.
+        # Never trust a fallback by path or mutable branch: the fixed Git
+        # blob hash must match the original independently archived bytes.
+        pin = actual
+    if (not pin or len(pin) > 25_000 or
+            git_blob(pin) != ARCHIVE_FILE_BLOB or actual != pin):
         raise Hold("CANONICAL_ARCHIVE_ABSENT_OR_TAMPERED")
     evidence = json.loads(pin)
     if (
