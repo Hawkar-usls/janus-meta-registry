@@ -47,10 +47,36 @@ def make_context():
                             "may_satisfy_promotion_gate":False,
                             "source_truth_independently_proven":False}
     }
+    supervisor["content_evidence"]["deep_evidence"]={
+        "status":"ALL_BATCHES_AND_FINITE_MECHANICS_REPLAYED_NO_GENERAL_PROOF",
+        "beetle_individual_batches_checked":84,
+        "beetle_source_commit":B_SHA,
+        "external_gt_theorem_independently_proved":False,
+        "asymptotic_refutation_independently_proved":False,
+        "may_satisfy_promotion_gate":False,
+    }
+    deep_receipts={
+        "beetle":{
+            "status":"ALL_RECORDED_BATCHES_RESULT_AND_RECEIPT_REPLAYED",
+            "validated_batches":84,"validated_results":84,
+            "validated_receipts":84,"validated_input_packets":84,
+            "beetle_source_commit":B_SHA,
+            "recomputed_context_sha256":"f"*64,
+            "cursor_receipt_sha256":"e"*64,
+            "source_truth_independently_established":False
+        },
+        "policy0a":{
+            "P_VS_NP":"OPEN",
+            "finite":{"sink_pairs_checked":331776,"both_branch_projections_checked":True,"source_code_imported":False},
+            "symbolic_sink":{"external_GT_lower_bound_independently_established":False,
+                             "full_policy0a_asymptotic_result_independently_proved":False}
+        },
+    }
     context={"schema":"janus.pnp_autoresearch_context.v1",
              "status":"ACTIVE_CANDIDATE_RESEARCH",
              "fundamentum":{"commit":SHA,"tracks":{"P_VS_NP":"OPEN"}},
              "content_evidence_bundle":bundle,
+             "deep_replay_receipts":deep_receipts,
              "research_supervisor":supervisor,
              "authority":{"scientific_claim_promotion":False}}
     context["context_sha256"]=m.hash_obj(context)
