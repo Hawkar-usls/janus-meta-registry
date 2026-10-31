@@ -200,7 +200,50 @@ def build_record(context,demiurge_commit,verified,observed):
             "independent_asymptotic_proof_verified":False,
             "beetle_discovery_is_proof":False}
 
-def persist(root,record):
+def persist_deep_receipts(output,record,deep):
+    if not isinstance(deep,dict) or set(deep)!={"beetle","policy0a"}:
+        raise IntakeHold("DEEP_RECEIPT_SHAPE")
+    tag=record["origin"]["context_sha256"]
+    attestation={
+        "schema":"janus.registry.pnp_deep_receipt_archive.v1",
+        "origin_context_sha256":tag,
+        "source_commit":record["origin"]["commit"],
+        "content_bundle_sha256":record["content_bundle_sha256"],
+        "deep_receipts":deep,
+        "deep_receipts_sha256":hash_obj(deep),
+        "scientific_promotion":False,
+        "P_VS_NP":"OPEN",
+        "authority_delta":0,
+    }
+    path=output/"deep_receipts"/(tag+".json")
+    if path.exists():
+        existing=strict_obj(path.read_bytes(),"DEEP_ARCHIVE_BAD")
+        original={k:v for k,v in existing.items() if k!="source_commit"}
+        proposed={k:v for k,v in attestation.items() if k!="source_commit"}
+        if original!=proposed:
+            raise IntakeHold("DEEP_IMMUTABLE_RECEIPT_CONFLICT")
+        return "IDEMPOTENT_NO_DEEP_CHANGE"
+    path.parent.mkdir(parents=True,exist_ok=True)
+    path.write_text(json.dumps(attestation,indent=2,sort_keys=True,ensure_ascii=False)+"\n",encoding="utf-8")
+    history=output/"DEEP_HISTORY.jsonl"
+    old=history.read_text(encoding="utf-8") if history.exists() else ""
+    if old and not old.endswith("\n"):
+        raise IntakeHold("DEEP_HISTORY_FORMAT")
+    line={"schema":"janus.registry.pnp_deep_receipt_history.v1",
+          "origin_context_sha256":tag,
+          "deep_receipts_sha256":attestation["deep_receipts_sha256"],
+          "source_commit":record["origin"]["commit"],
+          "scientific_promotion":False}
+    history.write_text(old+json.dumps(line,sort_keys=True)+"\n",encoding="utf-8")
+    (output/"LATEST_DEEP.json").write_text(json.dumps({
+        "schema":"janus.registry.pnp_latest_deep_receipt.v1",
+        "origin_context_sha256":tag,
+        "deep_receipts_sha256":attestation["deep_receipts_sha256"],
+        "relative_record_path":"deep_receipts/"+tag+".json",
+        "authority_delta":0},indent=2,sort_keys=True)+"\n",encoding="utf-8")
+    return "APPENDED_DEEP_RECEIPT_IMMUTABLY"
+
+def persist(root,record,deep=None):
     output=root/DEST
     output.mkdir(parents=True,exist_ok=True)
     tag=record["origin"]["context_sha256"]
@@ -216,7 +259,8 @@ def persist(root,record):
         existing=strict_obj(path.read_bytes(),"REGISTRY_RECORD_BAD")
         if scientific_identity(existing)!=stable:
             raise IntakeHold("IMMUTABLE_RECORD_CONFLICT")
-        return {"status":"IDEMPOTENT_NO_CHANGE","record":str(path)}
+        deep_status=persist_deep_receipts(output,record,deep) if deep is not None else "NOT_REQUESTED"
+        return {"status":"IDEMPOTENT_NO_CHANGE" if deep_status!="APPENDED_DEEP_RECEIPT_IMMUTABLY" else "DEEP_SUPPLEMENT_APPENDED","record":str(path),"deep_status":deep_status}
     path.parent.mkdir(parents=True,exist_ok=True)
     # Deterministic provenance key; no rewrite of historical immutable records.
     raw=json.dumps(record,ensure_ascii=False,sort_keys=True,indent=2)+"\n"
@@ -237,7 +281,8 @@ def persist(root,record):
                                   "context_sha256":tag,"relative_record_path":"records/"+tag+".json",
                                   "proof_status":"P_VS_NP_OPEN","authority_delta":0},
                                  indent=2,sort_keys=True)+"\n",encoding="utf-8")
-    return {"status":"APPENDED_UNMODIFIED_HISTORY","record":str(path)}
+    deep_status=persist_deep_receipts(output,record,deep) if deep is not None else "NOT_REQUESTED"
+    return {"status":"APPENDED_UNMODIFIED_HISTORY","record":str(path),"deep_status":deep_status}
 
 def main():
     p=argparse.ArgumentParser()
@@ -251,6 +296,6 @@ def main():
     verified=check_sources(fetch,content)
     observed=dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")
     record=build_record(context,sha_head,verified,observed)
-    print(json.dumps(persist(args.root,record),sort_keys=True))
+    print(json.dumps(persist(args.root,record,deep=context["deep_replay_receipts"]),sort_keys=True))
 if __name__=="__main__":
     main()
