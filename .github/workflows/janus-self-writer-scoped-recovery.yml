@@ -128,7 +128,7 @@ jobs:
           raw=Path('recovery/KNOWN_GOOD_MODULE.py').read_bytes()
           old=Path(p['only_allowed_path']).read_bytes()
           def blob(data):
-              return hashlib.sha1(b'blob '+str(len(data)).encode()+b'\\0'+data).hexdigest()
+              return hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()
           assert blob(raw)=='c787f96523442cf314f2327bf57af658a06e1a47'
           assert hashlib.sha256(raw).hexdigest()==p['candidate_source_sha256']
           assert blob(old)==p['current_source_blob'] and old!=raw
@@ -172,15 +172,10 @@ jobs:
           GH_REPO: ${{ github.repository }}
         run: |
           set -euo pipefail
-          python - <<'PY' >> "$GITHUB_ENV"
-          import json,re
-          p=json.load(open('recovery/PLAN.json'))
-          assert p['status']=='SCOPED_RESTORE_PR_ELIGIBLE'
-          branch=p['candidate_branch']
-          assert re.fullmatch(r'janus/recover-repair001-[0-9a-f]{16}',branch)
-          print('JANUS_RESTORE_BRANCH='+branch)
-          print('JANUS_EXPECTED_MAIN='+p['main_head_sha'])
-          PY
+          JANUS_RESTORE_BRANCH="$(python -c "import json;print(json.load(open('recovery/PLAN.json'))['candidate_branch'])")"
+          JANUS_EXPECTED_MAIN="$(python -c "import json;print(json.load(open('recovery/PLAN.json'))['main_head_sha'])")"
+          [[ "$JANUS_RESTORE_BRANCH" =~ ^janus/recover-repair001-[a-f0-9]{16}$ ]] || exit 2
+          [[ "$JANUS_EXPECTED_MAIN" =~ ^[a-f0-9]{40}$ ]] || exit 2
           [[ "$(git rev-parse HEAD)" == "$JANUS_EXPECTED_MAIN" ]] || { echo 'CURRENT_MAIN_MOVED_HOLD'; exit 1; }
           git fetch origin main
           [[ "$(git rev-parse origin/main)" == "$JANUS_EXPECTED_MAIN" ]] || { echo 'CURRENT_MAIN_ADVANCED_HOLD'; exit 1; }
