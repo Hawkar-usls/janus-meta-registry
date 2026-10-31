@@ -61,7 +61,7 @@ jobs:
           git -C "$dir/isolated" config user.name 'JANUS Isolated Rollback Witness'
           git -C "$dir/isolated" config user.email 'janus-readonly-witness@users.noreply.github.com'
           git -C "$dir/isolated" checkout -q --detach "$MERGE"
-          git -C "$dir/isolated" revert -q --no-edit "$MERGE"
+          git -C "$dir/isolated" revert --no-edit "$MERGE"
           test "$(git -C "$dir/isolated" hash-object "$TARGET")" = "$PREVIOUS_BLOB"
           test "$(git -C "$dir/isolated" rev-parse HEAD^)" = "$MERGE"
           test "$(git -C "$dir/isolated" diff HEAD^ HEAD --name-only | wc -l)" -ge 1
