@@ -1,0 +1,43 @@
+name: JANUS NAS Historical A18 Release SHA Integrity Static Gate
+on:
+  pull_request:
+    paths:
+      - 'scripts/legacy_release_manifest_audit.py'
+      - 'tests/test_legacy_release_manifest_audit.py'
+      - 'registry/experimental/JANUS-NAS-I0-A18_35-MANIFEST-DRIFT-2026-10-31-v1.json'
+      - '.github/workflows/nas-a18-historical-integrity.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/legacy_release_manifest_audit.py'
+      - 'tests/test_legacy_release_manifest_audit.py'
+      - 'registry/experimental/JANUS-NAS-I0-A18_35-MANIFEST-DRIFT-2026-10-31-v1.json'
+      - '.github/workflows/nas-a18-historical-integrity.yml'
+permissions:
+  contents: read
+jobs:
+  integrity-offline:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify fail-closed release integrity guard using synthetic fixtures
+        run: python -m unittest discover -s tests -p test_legacy_release_manifest_audit.py -v
+      - name: Confirm historical A18 evidence remains HOLD
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('registry/experimental/JANUS-NAS-I0-A18_35-MANIFEST-DRIFT-2026-10-31-v1.json')
+          x=json.loads(p.read_text())
+          d=x['manifest_results']
+          assert d['status']=='HOLD_INCOMPLETE_AND_DRIFTED'
+          assert d['manifest_entries']==d['matched_sha256']+d['missing_under_manifest_relative_paths']+d['present_modified']
+          assert x['research_boundaries']['live_external_pool_execution_authorized'] is False
+          print('JANUS_NAS_A18_HISTORICAL_HOLD_VALIDATED')
+          PY
