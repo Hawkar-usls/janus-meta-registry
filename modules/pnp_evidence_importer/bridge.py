@@ -195,10 +195,14 @@ def persist(root,record):
     if not sha64(tag):
         raise IntakeHold("RECORD_HASH_INVALID")
     path=output/"records"/(tag+".json")
-    stable={k:v for k,v in record.items() if k!="observed_at_utc"}
+    def scientific_identity(r):
+        stable={k:v for k,v in r.items() if k!="observed_at_utc"}
+        stable["origin"]={k:v for k,v in stable["origin"].items() if k!="commit"}
+        return stable
+    stable=scientific_identity(record)
     if path.exists():
         existing=strict_obj(path.read_bytes(),"REGISTRY_RECORD_BAD")
-        if {k:v for k,v in existing.items() if k!="observed_at_utc"}!=stable:
+        if scientific_identity(existing)!=stable:
             raise IntakeHold("IMMUTABLE_RECORD_CONFLICT")
         return {"status":"IDEMPOTENT_NO_CHANGE","record":str(path)}
     path.parent.mkdir(parents=True,exist_ok=True)
