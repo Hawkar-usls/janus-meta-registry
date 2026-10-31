@@ -1,0 +1,96 @@
+name: JANUS Self-Writer Real Repair Rollback Witness
+
+on:
+  pull_request:
+    paths:
+      - 'data/self_writer/JANUS_SELF_WRITER_REAL_REPAIR_001.json'
+      - 'tests/test_self_writer_real_patch_witness.py'
+      - '.github/workflows/janus-self-writer-repair-rollback-witness.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'data/self_writer/JANUS_SELF_WRITER_REAL_REPAIR_001.json'
+      - 'tests/test_self_writer_real_patch_witness.py'
+      - '.github/workflows/janus-self-writer-repair-rollback-witness.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: janus-self-writer-rollback-witness-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  independently-replay-compensating-revert:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: _code
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Freeze model-derived function and permanent journal receipts
+        run: |
+          set -euo pipefail
+          cd _code
+          python -m unittest discover -v -s tests -p test_self_writer_real_patch_witness.py
+      - uses: actions/checkout@v4
+        with:
+          ref: 1245c05f0002cce3193e50d8a5edb7f37a6c2d87
+          path: _historical_install
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Undo exact installed commit ONLY inside an ephemeral local Git checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          MERGE=1245c05f0002cce3193e50d8a5edb7f37a6c2d87
+          PARENT=df024a40683da1dfa746a19338c8c1167c40d1f0
+          PREVIOUS_BLOB=7a28b110fef7c7458372ba50c9e5d37224d4c0a0
+          TARGET=modules/autonomy_coder/real_operational_consumer.py
+          test "$(git -C _historical_install rev-parse HEAD)" = "$MERGE"
+          test "$(git -C _historical_install rev-parse HEAD^)" = "$PARENT"
+          dir=$(mktemp -d)
+          trap 'rm -rf "$dir"' EXIT
+          git clone -q --no-local _historical_install "$dir/isolated"
+          git -C "$dir/isolated" config user.name 'JANUS Isolated Rollback Witness'
+          git -C "$dir/isolated" config user.email 'janus-readonly-witness@users.noreply.github.com'
+          git -C "$dir/isolated" checkout -q --detach "$MERGE"
+          git -C "$dir/isolated" revert --no-edit "$MERGE"
+          test "$(git -C "$dir/isolated" hash-object "$TARGET")" = "$PREVIOUS_BLOB"
+          test "$(git -C "$dir/isolated" rev-parse HEAD^)" = "$MERGE"
+          test "$(git -C "$dir/isolated" diff HEAD^ HEAD --name-only | wc -l)" -ge 1
+          test "$(git -C "$dir/isolated" status --porcelain)" = ""
+          test -f "$dir/isolated/$TARGET"
+          mkdir -p runtime/rollback-rehearsal
+          export REHEARSAL_SHA="$(git -C "$dir/isolated" rev-parse HEAD)"
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          r={
+            'schema':'janus.self_writer.rollback_readonly_witness.v1',
+            'status':'ISOLATED_COMPENSATING_REVERT_PASS__NO_PRODUCTION_CHANGE',
+            'original_install_commit':'1245c05f0002cce3193e50d8a5edb7f37a6c2d87',
+            'original_prepatch_git_blob':'7a28b110fef7c7458372ba50c9e5d37224d4c0a0',
+            'isolated_revert_commit':os.environ['REHEARSAL_SHA'],
+            'write_remote':False,
+            'force_push':False,
+            'production_rollback_executed':False,
+            'future_automatic_revert_permission':False,
+            'authority_delta':0,
+          }
+          Path('runtime/rollback-rehearsal/RECEIPT.json').write_text(
+            json.dumps(r,sort_keys=True,indent=2)+'\n')
+          print('JANUS_EXACT_SOURCE_ROLLBACK_REHEARSAL=PASS__LOCAL_ONLY')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-self-writer-repair001-rollback-witness
+          path: runtime/rollback-rehearsal/RECEIPT.json
+          if-no-files-found: error
+          retention-days: 30
