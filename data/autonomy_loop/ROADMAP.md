@@ -2,7 +2,7 @@
 
 Automatically rebuilt from pinned public evidence.
 
-Status: **AUTONOMY_PARTIAL** · observed 2026-10-31T18:47:11Z
+Status: **AUTONOMY_PARTIAL** · observed 2026-10-31T19:29:45Z
 
 Current phase: **P0.2**
 
@@ -60,15 +60,15 @@ A successful collector is not proof of useful work or full autonomy.
   },
   "beetle_delivery": {
     "status": "WARN",
-    "observed_at": "2026-10-31T15:16:59.224473Z",
+    "observed_at": "2026-10-31T19:25:13.941479Z",
     "total_pending": 13,
     "receiver_states": {
       "PENDING": 12,
       "UP_TO_DATE": 6,
       "ACK_UNAVAILABLE": 1
     },
-    "routing_allowed": false,
-    "routing_reason": "HOLD_DELIVERY_BACKPRESSURE",
+    "routing_allowed": true,
+    "routing_reason": "ROUTING_ALLOWED",
     "runtime_consumption_attested": false
   },
   "native_decision": "NO_ACTION",
@@ -78,18 +78,16 @@ A successful collector is not proof of useful work or full autonomy.
 
 ## Evidence-driven tasks
 
-- **P0.2** ROWAN_GENERATION_DRIFT_COORDINATION: 41172788427
 - **P0.2** ROWAN_GENERATION_DRIFT_COSMOS: 41172788427
 - **P0.3** BEETLE_DELIVERY_PENDING: {"total_pending": 13, "receiver_states": {"PENDING": 12, "UP_TO_DATE": 6, "ACK_UNAVAILABLE": 1}}
-- **P0.3** BEETLE_ROUTING_HELD: "HOLD_DELIVERY_BACKPRESSURE"
 - **P0.3** EXTERNAL_WITNESS_SKINGPT_ACK: "UNKNOWN"
 - **P0.4** PATCHES_WAITING: 38
 - **P0.5** SCOUT_MODEL_SYNTHESIS_DEGRADED: {"snapshots": 17, "synthesis": 0, "expected": 17}
 - **P2** SELF_WRITER_REVIEWED_TASKS_REMAINING: {"accepted": 9, "admitted": 10}
 - **P3** RECENT_TRAINING_ALL_REJECTED: 64
-- **P0.2** WORKFLOW_NOT_SUCCESS_COSMOS_WITNESS: {"conclusion": "failure", "created_at": "2026-10-31T18:46:40Z", "event": "workflow_run", "head_sha": "a1006ce98c0528bd2f1027153dff248033bf97c0", "repository": "Hawkar-usls/Janus-Cosmos", "run_id": 41231049556, "status": "OBSERVED", "url": "https://github.com/Hawkar-usls/Janus-Cosmos/actions/runs/41231049556", "workflow": "cosmos-rowan-ecosystem-witness.yml"}
-- **P0.2** WORKFLOW_NOT_SUCCESS_CROSS_ORGAN_WITNESS: {"conclusion": "failure", "created_at": "2026-10-31T17:45:24Z", "event": "workflow_run", "head_sha": "02f6fd30f1a453afaeec44b9c1f7b7cbd551278e", "repository": "Hawkar-usls/janus-meta-registry", "run_id": 41226057943, "status": "OBSERVED", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/41226057943", "workflow": "janus-cross-organ-source-witness.yml"}
-- **P0.2** WORKFLOW_NOT_SUCCESS_ROWAN_WITNESS: {"conclusion": "failure", "created_at": "2026-10-31T17:45:24Z", "event": "workflow_run", "head_sha": "02f6fd30f1a453afaeec44b9c1f7b7cbd551278e", "repository": "Hawkar-usls/janus-meta-registry", "run_id": 41226057896, "status": "OBSERVED", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/41226057896", "workflow": "janus-rowan-ecosystem-sync-witness.yml"}
+- **P0.2** WORKFLOW_NOT_SUCCESS_COSMOS_WITNESS: {"repository": "Hawkar-usls/Janus-Cosmos", "workflow": "cosmos-rowan-ecosystem-witness.yml", "status": "OBSERVED", "run_id": 41231049556, "event": "workflow_run", "conclusion": "failure", "head_sha": "a1006ce98c0528bd2f1027153dff248033bf97c0", "created_at": "2026-10-31T18:46:40Z", "url": "https://github.com/Hawkar-usls/Janus-Cosmos/actions/runs/41231049556"}
+- **P0.2** WORKFLOW_NOT_SUCCESS_CROSS_ORGAN_WITNESS: {"repository": "Hawkar-usls/janus-meta-registry", "workflow": "janus-cross-organ-source-witness.yml", "status": "OBSERVED", "run_id": 41231167349, "event": "workflow_run", "conclusion": "failure", "head_sha": "1067633e886df04a2fa0c8165e66dc7a28f647f9", "created_at": "2026-10-31T18:48:11Z", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/41231167349"}
+- **P0.2** WORKFLOW_NOT_SUCCESS_ROWAN_WITNESS: {"repository": "Hawkar-usls/janus-meta-registry", "workflow": "janus-rowan-ecosystem-sync-witness.yml", "status": "OBSERVED", "run_id": 41232876354, "event": "schedule", "conclusion": "failure", "head_sha": "d13d166c613b3377ea9e9eee91ab9f4c2ccfe511", "created_at": "2026-10-31T19:09:33Z", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/41232876354"}
 
 ## Continuation
 
