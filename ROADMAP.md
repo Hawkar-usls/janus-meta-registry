@@ -8,7 +8,7 @@
 - [x] chunk_count
 - [x] bounded_batch
 - [x] all_equal
-- [ ] safe_ratio
+- [x] safe_ratio
 - [ ] common_prefix
 
 Scope: pure extensions only. External model attribution retained. Full #162 acceptance remains false.
