@@ -71,4 +71,29 @@ class CoordinationTests(unittest.TestCase):
             self.assertEqual(p.read_bytes(),raw)
             self.assertTrue((base/"coordination/LATEST_COORDINATION_STATE.json").exists())
             self.assertEqual(len(list((base/"coordination/receipts").glob("*.json"))),1)
+class CoordinationWorkflowSourcePinTests(unittest.TestCase):
+    """Catch regressions that silently re-run an old GitHub event commit."""
+
+    def test_trusted_rerun_reads_current_main_not_old_event_sha(self):
+        path=Path(__file__).resolve().parents[2]/".github/workflows/rowan-coordination-autonomous-reconcile.yml"
+        workflow=path.read_text()
+        self.assertIn(
+            "ref: ${{ github.event_name == 'pull_request' && github.sha || 'main' }}",
+            workflow)
+        self.assertIn("ROWAN_CANONICAL_STALE_WORKTREE_HOLD", workflow)
+        self.assertIn("ROWAN_CANONICAL_ADVANCED_DURING_RECONCILE_HOLD", workflow)
+        self.assertIn("ROWAN_COORDINATION_STALE_POINTER_HOLD", workflow)
+        self.assertIn("ROWAN_COORDINATION_PREPUSH_COHORT_MATCH=PASS", workflow)
+        self.assertGreaterEqual(workflow.count("git fetch origin main"), 2)
+
+    def test_recheck_stays_before_write_and_never_adds_provider_access(self):
+        path=Path(__file__).resolve().parents[2]/".github/workflows/rowan-coordination-autonomous-reconcile.yml"
+        workflow=path.read_text()
+        marker="ROWAN_COORDINATION_PREPUSH_COHORT_MATCH=PASS"
+        self.assertLess(workflow.index(marker),workflow.index("git add data/rowan/coordination/"))
+        self.assertNotIn("ROWAN_API_KEY: ${{ secrets.",workflow)
+        self.assertNotIn("workflow_dispatch:\n    inputs:",workflow)
+        self.assertIn('test -z "${ROWAN_API_KEY:-}"',workflow)
+        self.assertIn("if: github.event_name != 'pull_request'",workflow)
+
 if __name__=="__main__":unittest.main()
