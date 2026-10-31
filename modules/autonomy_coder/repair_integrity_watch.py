@@ -133,6 +133,15 @@ def verify_git(root, archive):
         deny("INSTALLED_COMMIT_NOT_ANCESTOR")
     return git(root, "rev-parse", "HEAD")
 
+def verify_main_archive(path, independently_pinned_bytes):
+    """Since verified PR #395 merged, absent/changed main evidence is HOLD."""
+    if not path.is_file():
+        deny("MAIN_JOURNAL_MISSING")
+    observed = path.read_bytes()
+    if observed != independently_pinned_bytes:
+        deny("MAIN_JOURNAL_NOT_SAME_AS_PINNED_EVIDENCE")
+    return True
+
 def audit(root, archive, run_loader):
     raw = (root / CODE).read_bytes()
     journal = (archive / JOURNAL).read_bytes()
@@ -143,9 +152,7 @@ def audit(root, archive, run_loader):
     data = verify_contents(raw, evidence, ARCHIVE_COMMIT)
     runs = verify_runs({rid: run_loader(rid) for rid in PASS_RUNS})
     canonical = root / JOURNAL
-    journal_on_main = canonical.is_file()
-    if journal_on_main and canonical.read_bytes() != journal:
-        deny("MAIN_JOURNAL_NOT_SAME_AS_PINNED_EVIDENCE")
+    journal_on_main = verify_main_archive(canonical, journal)
     return {
         "schema": SCHEMA, "status": "VERIFIED_EXISTING_PATCH__NOT_AUTONOMOUS_SELF_REPAIR",
         "observed_at_utc": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
