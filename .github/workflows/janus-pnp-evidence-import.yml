@@ -1,0 +1,86 @@
+name: JANUS PNP Content Evidence Durable Registry Import
+
+on:
+  pull_request:
+    paths:
+      - 'modules/pnp_evidence_importer/**'
+      - 'tests/test_pnp_evidence_importer.py'
+      - '.github/workflows/janus-pnp-evidence-import.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'modules/pnp_evidence_importer/**'
+      - 'tests/test_pnp_evidence_importer.py'
+      - '.github/workflows/janus-pnp-evidence-import.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '58 */2 * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: janus-pnp-evidence-registry-import
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Independent archiving invariant tests
+        run: |
+          python -m py_compile modules/pnp_evidence_importer/bridge.py
+          python -m unittest -v tests/test_pnp_evidence_importer.py
+
+  import:
+    if: github.event_name != 'pull_request'
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Pull exact Demiurge content and SHA-verified scientific source bytes
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          python modules/pnp_evidence_importer/bridge.py --root .
+      - name: Append only verified evidence to Meta Registry own files
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'JANUS PNP Evidence Importer'
+          git config user.email 'actions@users.noreply.github.com'
+          git add data/pnp_evidence_import/
+          if git diff --cached --quiet; then
+            echo 'JANUS_PNP_IMPORT=IDEMPOTENT_NO_CHANGE'
+            exit 0
+          fi
+          git commit -m 'JANUS: archive SHA-checked PNP content evidence'
+          for attempt in 1 2 3; do
+            git fetch origin main
+            if ! git rebase origin/main; then
+              git rebase --abort || true
+              echo 'JANUS_PNP_IMPORT=CONCURRENT_CONFLICT_HOLD'
+              exit 1
+            fi
+            if git push origin HEAD:main; then
+              echo 'JANUS_PNP_IMPORT=COMMITTED'
+              exit 0
+            fi
+            sleep "$attempt"
+          done
+          echo 'JANUS_PNP_IMPORT=WRITE_HOLD'
+          exit 1
