@@ -84,7 +84,9 @@ class CoordinationWorkflowSourcePinTests(unittest.TestCase):
         self.assertIn("ROWAN_CANONICAL_ADVANCED_DURING_RECONCILE_HOLD", workflow)
         self.assertIn("ROWAN_COORDINATION_STALE_POINTER_HOLD", workflow)
         self.assertIn("ROWAN_COORDINATION_PREPUSH_COHORT_MATCH=PASS", workflow)
-        self.assertGreaterEqual(workflow.count("git fetch origin main"), 2)
+        self.assertGreaterEqual(workflow.count("git fetch origin main"), 3)
+        self.assertIn("ROWAN_COORDINATION_RETRY_SOURCE_CHANGED_HOLD", workflow)
+        self.assertIn("ROWAN_COORDINATION_RETRY_SOURCE_STILL_CURRENT=PASS", workflow)
 
     def test_recheck_stays_before_write_and_never_adds_provider_access(self):
         path=Path(__file__).resolve().parents[2]/".github/workflows/rowan-coordination-autonomous-reconcile.yml"
