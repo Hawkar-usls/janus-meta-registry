@@ -88,6 +88,15 @@ class CoordinationWorkflowSourcePinTests(unittest.TestCase):
         self.assertIn("ROWAN_COORDINATION_RETRY_SOURCE_CHANGED_HOLD", workflow)
         self.assertIn("ROWAN_COORDINATION_RETRY_SOURCE_STILL_CURRENT=PASS", workflow)
 
+    def test_canonical_change_wakes_reconcile_without_coordination_loop(self):
+        path=Path(__file__).resolve().parents[2]/".github/workflows/rowan-coordination-autonomous-reconcile.yml"
+        workflow=path.read_text()
+        trigger=workflow.split("\n  push:\n",1)[1].split("\n  pull_request:\n",1)[0]
+        self.assertIn("'data/rowan/CANONICAL_STATE.json'",trigger)
+        self.assertNotIn("data/rowan/coordination/",trigger)
+        self.assertIn("    - cron: '53 * * * *'",workflow)
+        self.assertNotIn("repository_dispatch:",workflow)
+
     def test_recheck_stays_before_write_and_never_adds_provider_access(self):
         path=Path(__file__).resolve().parents[2]/".github/workflows/rowan-coordination-autonomous-reconcile.yml"
         workflow=path.read_text()
