@@ -135,6 +135,19 @@ class ImporterTests(unittest.TestCase):
             again["observed_at_utc"]="2026-11-01T02:00:00+00:00"
             self.assertEqual(m.persist(root,again)["status"],"IDEMPOTENT_NO_CHANGE")
             self.assertEqual(len(journal.read_text().splitlines()),1)
+            deep=ctx["deep_replay_receipts"]
+            backfill=m.persist(root,record,deep=deep)
+            self.assertEqual(backfill["status"],"DEEP_SUPPLEMENT_APPENDED")
+            sidecar=root/m.DEST/"deep_receipts"/(ctx["context_sha256"]+".json")
+            archived=json.loads(sidecar.read_text())
+            self.assertEqual(archived["deep_receipts"]["beetle"]["validated_batches"],84)
+            self.assertEqual(archived["deep_receipts"]["policy0a"]["finite"]["sink_pairs_checked"],331776)
+            self.assertFalse(archived["scientific_promotion"])
+            deep_history=root/m.DEST/"DEEP_HISTORY.jsonl"
+            self.assertEqual(len(deep_history.read_text().splitlines()),1)
+            repeated=m.persist(root,again,deep=deep)
+            self.assertEqual(repeated["status"],"IDEMPOTENT_NO_CHANGE")
+            self.assertEqual(len(deep_history.read_text().splitlines()),1)
             changed=copy.deepcopy(record)
             changed["content_bundle_sha256"]="0"*64
             with self.assertRaises(m.IntakeHold):
