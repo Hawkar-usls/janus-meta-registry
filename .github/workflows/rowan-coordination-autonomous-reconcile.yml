@@ -6,6 +6,10 @@ on:
   push:
     branches: [main]
     paths:
+      # Source-triggered best effort wake when GitHub emits this push event;
+      # GITHUB_TOKEN-suppressed pushes still use the hourly schedule.
+      # Coordination-only writes are deliberately excluded (no self-loop).
+      - 'data/rowan/CANONICAL_STATE.json'
       - '.github/workflows/rowan-coordination-autonomous-reconcile.yml'
       - 'modules/rowan_observer/coordination_ingest.py'
       - 'modules/rowan_observer/test_coordination.py'
