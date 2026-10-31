@@ -7,7 +7,7 @@
 - [x] is_fresh
 - [x] chunk_count
 - [x] bounded_batch
-- [ ] all_equal
+- [x] all_equal
 - [ ] safe_ratio
 - [ ] common_prefix
 
