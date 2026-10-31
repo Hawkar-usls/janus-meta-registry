@@ -1,0 +1,390 @@
+{
+  "artifact_id": "JANUS-SAT-220-240-HISTORICAL-FORENSIC-CONSOLIDATED-LEDGER-2026-11-01-v1.0",
+  "schema": "janus.sat.historical_forensic_evidence_ledger.v1",
+  "version": "1.0",
+  "record_date_utc": "2026-11-01",
+  "title": {
+    "ru": "Единый реестр доказательств JANUS: исторические заявления о решении 3-SAT с 220–240 переменными",
+    "en": "JANUS historical 3-SAT 220–240 variables: consolidated forensic evidence ledger"
+  },
+  "purpose": "Consolidate evidence already read from Yaksa E: historical files, SQLite databases, archives and pinned GitHub artifacts without converting claims into verified results.",
+  "evidence_class": "FORENSIC_PROVENANCE_AND_CLAIM_AUDIT_NOT_A_PROOF",
+  "overall_verdict": {
+    "historical_SAT_code_and_logs_exist": true,
+    "march_2026_five_size_claim": "REPORTED_ONLY_NOT_INDEPENDENTLY_VERIFIED",
+    "august_2026_n240_planted_3sat": "SOURCE_CODE_AND_AGGREGATE_REPORT_PRESERVED_REPLAY_NOT_EXECUTED",
+    "independent_clause_checked_assignments_for_march_claim": 0,
+    "original_march_CNF_seeds_assignments_found": false,
+    "per_trial_august_240_results_found": false,
+    "general_3sat_polynomial_decider_established": false,
+    "P_equals_NP": "OPEN",
+    "decision": "DO_NOT_PROMOTE_TO_INDEPENDENT_3SAT_220_240_VERIFIED"
+  },
+  "historical_claim_march_2026": {
+    "report": "Project JANUS v7.2: How I Built a Self-Learning SAT-Solver That Breaks Its Own Records (And Why P=NP Is No Longer a Philosophy)",
+    "publication_date": "2026-03-30",
+    "evidence_status": "PRIOR_REPORTED_TABLE_NO_PRIMARY_RUN_ARTIFACT_LOCATED",
+    "claimed_runs": [
+      {
+        "n_vars": 220,
+        "claimed_wall_seconds": 47.34
+      },
+      {
+        "n_vars": 225,
+        "claimed_wall_seconds": 53.39
+      },
+      {
+        "n_vars": 230,
+        "claimed_wall_seconds": 62.43
+      },
+      {
+        "n_vars": 235,
+        "claimed_wall_seconds": 73
+      },
+      {
+        "n_vars": 240,
+        "claimed_wall_seconds": 124.21
+      }
+    ],
+    "notes": [
+      "Reported timings are from historical article account, not separately observed by this forensic search.",
+      "Exact seconds search in examined historic text and SQLite found no run-matched proof; several lexical hits were device sensor telemetry.",
+      "No DIMACS formula, generator seed, assignment, solver build/environment, independent clause verification or exact execution trace recovered for these five claimed runs.",
+      "This claim must not be conflated with the later 2026-08-01 planted n=240 experiments."
+    ]
+  },
+  "physical_evidence_yaksa": {
+    "device_name": "Yaksa",
+    "checked_roots": [
+      "E:\\Janus_Love",
+      "E:\\Janus_Titan",
+      "E:\\Janus_BFaiN"
+    ],
+    "forensic_handling": "READ_ONLY_SOURCE_INSPECTION",
+    "direct_files": [
+      {
+        "path": "E:\\Janus_Love\\sat_duels.jsonl",
+        "size_bytes": 64452,
+        "sha256": "0228c5fee2031101bf44f9f028dbe507b9973d8bbf1383303c7f9cd9a8cf6e0a",
+        "record_count": 100,
+        "utc_first": "2026-04-04T18:12:47.778422Z",
+        "utc_last": "2026-04-04T18:16:49.132717Z",
+        "n_vars_min": 9,
+        "n_vars_max": 108,
+        "outcomes": {
+          "solved": 22,
+          "speed": 35,
+          "max_sat": 15,
+          "draw": 28
+        },
+        "largest_solved_claim": {
+          "round": 98,
+          "n_vars": 106,
+          "n_clauses": 402,
+          "winner_time_seconds": 0.22107720375061035
+        },
+        "round99": {
+          "n_vars": 107,
+          "n_clauses": 406,
+          "result": "max_sat"
+        },
+        "round100": {
+          "n_vars": 108,
+          "n_clauses": 410,
+          "result": "draw"
+        },
+        "reproduction_fields_missing": [
+          "CNF",
+          "seed",
+          "winning_assignment"
+        ],
+        "evidence_scope": "AUTHENTIC_AGGREGATE_DUEL_LOG_NOT_N220_240"
+      },
+      {
+        "path": "E:\\Janus_Love\\sat_state.json",
+        "size_bytes": 1210,
+        "sha256": "b0d43e50e4525b35f372e7051aa50d0346d4510ccbc440e21688326bcdedd0bd",
+        "round": 100,
+        "n_vars": 108,
+        "n_clauses": 410,
+        "contents": "agent states, parameters and clone lineage; no CNF or assignment"
+      },
+      {
+        "path": "E:\\Janus_Love\\team_duels.jsonl",
+        "rows": 975,
+        "max_n_vars": 13,
+        "evidence_scope": "NONMATCH"
+      },
+      {
+        "path": "E:\\Janus_BFaiN\\raw_logs\\pvp_battles.jsonl",
+        "rows": 2362,
+        "max_task_vars": 200,
+        "records_n220_to_240": 0,
+        "evidence_scope": "HISTORICAL_AGENT_BATTLES_NOT_MARCH_FIVE_CASES"
+      },
+      {
+        "path": "E:\\Janus_BFaiN\\raw_logs\\pvp_state.json",
+        "history_rows": 1000,
+        "max_task_vars": 50,
+        "records_n220_to_240": 0
+      },
+      {
+        "path": "E:\\Janus_Titan\\All Stars\\raw_logs\\pvp_state.json",
+        "history_rows": 1000,
+        "max_task_vars": 50,
+        "records_n220_to_240": 0
+      },
+      {
+        "path": "E:\\Janus_Love\\HOLO.py",
+        "contents": "separate holographic 3-SAT generator, local-search solver and arena; association with sat_duels.jsonl not proved",
+        "methodology_warning": "holo_walk reports n_vars as 'sat' on success and clause count on partial search, so metric semantics need source-specific checking"
+      },
+      {
+        "path": "E:\\Janus_Love\\3\\Mod\\mod_walksat.py",
+        "contents": "historical WalkSAT implementation; no proof of n220-240 run"
+      }
+    ],
+    "archive_inventory": [
+      {
+        "path": "E:\\Janus_Love\\Janus_Love.rar",
+        "size_bytes": 66911089,
+        "sha256": "6c967c1d05ebe420e89fca6225e30419aefe46103d8d6a333e7fd6724c907fde",
+        "entries_listed": 1608,
+        "relevant_named_files": [
+          "sat_duels.jsonl",
+          "sat_state.json",
+          "final_benchmark_tmp.csv"
+        ],
+        "distinct_dimacs_in_listing": 0
+      },
+      {
+        "path": "E:\\Janus_Titan\\backups janus_cores\\backups janus_cores.rar",
+        "entries_listed": 6170,
+        "distinct_dimacs_in_listing": 0
+      },
+      {
+        "path": "E:\\Janus_Love\\3\\ONE\\Janus.rar.zip",
+        "entries_listed": 40196,
+        "distinct_dimacs_in_listing": 0
+      },
+      {
+        "path": "E:\\Janus_Love\\3\\ONE\\Janus.zip",
+        "entries_listed": 40195,
+        "distinct_dimacs_in_listing": 0
+      },
+      {
+        "path": "E:\\Janus_Love\\3\\ONE\\Janus.zip.rar",
+        "entries_listed": 40196,
+        "distinct_dimacs_in_listing": 0
+      }
+    ],
+    "sqlite_database_findings": [
+      {
+        "path": "E:\\Janus_BFaiN\\raw_logs\\janus.db",
+        "genesis_events": 4507,
+        "device_data": 52214,
+        "numeric_hits_220_to_240": "cycle counters or incidental device observations, not task_vars=220-240"
+      },
+      {
+        "path": "E:\\Janus_Titan\\All Stars\\raw_logs\\janus.db",
+        "genesis_events": 61377,
+        "device_data": 33833,
+        "example": "cycle 220/225/230/235 with task_vars 22"
+      },
+      {
+        "path": "E:\\Janus_Love\\All Star\\raw_logs\\janus.db",
+        "genesis_events": 49385,
+        "device_data": 31851
+      },
+      {
+        "path": "E:\\Janus_Love\\Janus_Titan\\All Star\\raw_logs\\janus.db",
+        "genesis_events": 31665,
+        "device_data": 26565
+      },
+      {
+        "path": "E:\\Janus_Love\\janus_unified_theta_infinity_memory.db",
+        "source_memory_rows": 2000,
+        "sat_relevant": "historical imports of sat_duels.jsonl and team_duels.jsonl, not new independent runs"
+      },
+      {
+        "path": "E:\\Janus_Love\\Janus_Titan\\janus.db",
+        "janus_experiments_rows": 1,
+        "conclusion": "no 220-240 evidence"
+      }
+    ]
+  },
+  "scope_of_file_discovery": {
+    "total_disk_E_files_listed_in_broad_pass": 127573,
+    "recent_aug01_plus_text_and_archives_by_extension": 7311,
+    "filename_sat_proof_related_candidates": 337,
+    "recent_content_scanned_files": 7276,
+    "recent_content_with_target_numbers": 518,
+    "recent_candidate_context_matches": 17,
+    "caution": "These counts describe filters and overlapping scopes, not proof of exhaustive bytes inspected across every archive, DB and alternate mount.",
+    "newer_file_timestamp_issue": "2026-10-31 temporary corpus snapshots contain older Meta Registry reports; copied-file mtime is not experiment date.",
+    "nas_network_shortcut_NOT_IN_THIS_PASS": true
+  },
+  "august_2026_3sat_240_code_and_results": {
+    "study": "JANUS P-N Junction Selective Distributed Field v2.0",
+    "study_date_utc": "2026-08-01",
+    "historical_github_commit": "3e2fa3bd13edf5ecf37f15360c1bea9e3af38a66",
+    "repo_at_commit": "Hawkar-usls/Janus-Fundamentum",
+    "reproducibility_status": "PINNED_SOURCE_AND_AGGREGATE_RESULTS_ONLY",
+    "experiment_type": "planted satisfiable random 3-SAT near clause/variable ratio 4.26",
+    "holdout_seed": 440224,
+    "sizes": [
+      32,
+      48,
+      64,
+      96,
+      128,
+      160,
+      192,
+      240
+    ],
+    "trials_per_size": 8,
+    "trials_total": 64,
+    "claimed_solved_v03": 64,
+    "claimed_solved_v20": 64,
+    "n240": {
+      "trials": 8,
+      "median_latency_rounds_v03": 301.5,
+      "median_latency_rounds_v20": 276.5,
+      "mean_latency_rounds_v03": 327,
+      "mean_latency_rounds_v20": 304.25,
+      "mean_total_work_v20": 666.75
+    },
+    "overall": {
+      "median_latency_rounds_v03": 116.5,
+      "median_latency_rounds_v20": 87,
+      "paired_faster": 25,
+      "paired_tied": 39,
+      "paired_slower": 0,
+      "mean_total_work_ratio": 2.110599078341014,
+      "python_sequential_wall_time_ratio": 2.074591267891598
+    },
+    "per_size_median_rounds": [
+      {
+        "n": 32,
+        "v03": 13.5,
+        "v20": 13.5
+      },
+      {
+        "n": 48,
+        "v03": 30.5,
+        "v20": 30
+      },
+      {
+        "n": 64,
+        "v03": 85,
+        "v20": 51.5
+      },
+      {
+        "n": 96,
+        "v03": 95,
+        "v20": 82.5
+      },
+      {
+        "n": 128,
+        "v03": 153,
+        "v20": 91.5
+      },
+      {
+        "n": 160,
+        "v03": 215,
+        "v20": 215
+      },
+      {
+        "n": 192,
+        "v03": 287.5,
+        "v20": 256
+      },
+      {
+        "n": 240,
+        "v03": 301.5,
+        "v20": 276.5
+      }
+    ],
+    "source_links": {
+      "metadata": "https://github.com/Hawkar-usls/Janus-Fundamentum/blob/3e2fa3bd13edf5ecf37f15360c1bea9e3af38a66/experiment_manifest.json",
+      "report": "https://github.com/Hawkar-usls/Janus-Fundamentum/blob/3e2fa3bd13edf5ecf37f15360c1bea9e3af38a66/experiments/v2.0-selective-distributed/REPORT.md",
+      "summary": "https://github.com/Hawkar-usls/Janus-Fundamentum/blob/3e2fa3bd13edf5ecf37f15360c1bea9e3af38a66/experiments/v2.0-selective-distributed/release_summary.json",
+      "latency": "https://github.com/Hawkar-usls/Janus-Fundamentum/blob/3e2fa3bd13edf5ecf37f15360c1bea9e3af38a66/experiments/v2.0-selective-distributed/latency_comparison.csv",
+      "generator": "https://github.com/Hawkar-usls/Janus-Fundamentum/blob/3e2fa3bd13edf5ecf37f15360c1bea9e3af38a66/experiments/v2.0-selective-distributed/src/sat_core.py",
+      "solver": "https://github.com/Hawkar-usls/Janus-Fundamentum/blob/3e2fa3bd13edf5ecf37f15360c1bea9e3af38a66/experiments/v2.0-selective-distributed/src/selective_swarm_v20.py"
+    },
+    "primary_detail_missing_in_github_tree": [
+      "holdout_results.json",
+      "holdout_detail.csv",
+      "raw per-instance clauses",
+      "raw per-instance assignment witnesses"
+    ],
+    "named_sha256_manifest_exists": true,
+    "github_tree_reported_file_hash_only_note": "sha256.json lists hashes for named artifacts not present in checked historical tree; hash assertions not individually reverified against absent bytes.",
+    "methodological_limits": [
+      "Planted instances are SAT by construction, unlike independent random UNKNOWN/UNSAT controls.",
+      "Aggregate success claims in reports do not substitute for individual formulas and independently verified assignments.",
+      "Latency is in coordinator rounds, not the March article seconds.",
+      "Sequential Python total work and wall time worsened; not a demonstrated single-node speedup.",
+      "No complete rerun or independent CDCL baseline performed in this evidence audit."
+    ]
+  },
+  "adjacent_but_not_march_220_240_confirmations": [
+    {
+      "id": "JANUS-TRUMP-R7D-DENSE-3SAT-POLYNOMIAL-PROOF-ATTACK-RESULT-2026-09-01-v1.0",
+      "reported_result": "10/10 exposed near-dense 3-SAT remainders ended correctly; 8 exact width-four eliminations, 2 width-four resolution refutations",
+      "exclusions": "Not a n=220-240 primary benchmark and not prospective blind generalization."
+    },
+    {
+      "id": "JANUS-OSIRIS-V2-TECHNICAL-SAT-SOLVER-RUN-2026-08-18-v1.0",
+      "reported_result": "8/8 calibration including PLANTED_3SAT_12",
+      "exclusions": "No matched n=220–240 test."
+    },
+    {
+      "id": "SATLIB-UUF225.960.100-PANEL-RESERVATION-2026-09-18",
+      "n_vars": 225,
+      "n_clauses": 960,
+      "source": "JANUS-TRUMP-WALL-MANTEQUILLA-UUF225-001-020-ACTIVE-EXACT-SYMMETRY-PANEL-RESERVATION-2026-09-18-v1.0",
+      "status": "PANEL_RESERVED_STRUCTURAL_CENSUS_BEFORE_SEMANTIC_RESULTS",
+      "note": "This is known UNSAT family; reservation is not a solved-case certificate."
+    },
+    {
+      "id": "JANUS-TITAN-ADAPTIVE-COMPLEXITY-AND-META-OPTIMIZER-PROVENANCE-v1.0",
+      "rows": 542,
+      "unique_configs": 26,
+      "note": "Optimizer training records, not direct n=240 3-SAT runs."
+    }
+  ],
+  "evidence_grading": {
+    "L0": "Article assertion or summary without primary task and witness.",
+    "L1": "Pinned source code, frozen configuration, aggregate benchmark table, or authentic execution lineage.",
+    "L2": "Every instance and run pinned by CNF hash, seed, solver revision, complete assignment or UNSAT proof, independent checker.",
+    "L3": "External independently reproducible benchmark with modern baselines and comparable hardware.",
+    "march_five": "L0",
+    "sat_duels_history": "L1 for existence of experiments; no direct March n220–240 proof",
+    "august_n240": "L1 (pinned historical implementation plus aggregate report), not yet L2 or L3"
+  },
+  "future_recovery_and_falsification": {
+    "immediate": [
+      "Inspect old NAS archives via approved Windows network shortcut (separate subsequent phase).",
+      "Search March 2026 originals by names and the five precise elapsed times.",
+      "Recover versioned generator, CNF bytes, RNG states, assignments and checkpoint logs for each n=220,225,230,235,240.",
+      "Recover August v2.0 per-trial files referenced by sha256.json, if present.",
+      "Run independent clause-level assignment verification with SHA-256 provenance and compare against CDCL baselines on held-out DIMACS."
+    ],
+    "admission_gate": "Only promote a size n to VERIFIED if complete original formula and claimed assignment/proof are independently checked against pinned source bytes.",
+    "no_claims": [
+      "Do not infer P=NP from a finite benchmark.",
+      "Do not treat 220-240 cycle numbers as SAT variable count.",
+      "Do not equate planted SAT with arbitrary 3-SAT.",
+      "Do not label reconstructed runs as the original 2026 evidence."
+    ]
+  },
+  "chain_of_custody": {
+    "primary_E_files_modified": false,
+    "github_source_artifacts_modified": false,
+    "source_evidence_reused_without_rewriting": true,
+    "meta_record_new_consolidation": true,
+    "review_note": "A later NAS follow-up must be recorded in an independently versioned update, not silently backdated."
+  }
+}
