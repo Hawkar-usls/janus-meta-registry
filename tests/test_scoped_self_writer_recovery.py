@@ -75,7 +75,7 @@ class ScopedRecoveryTests(unittest.TestCase):
     def test_no_model_writer_runtime_or_direct_main_push(self):
         source = (ROOT / "modules/autonomy_coder/scoped_recovery.py").read_text()
         self.assertNotIn("git push", source)
-        self.assertNotIn("auto_merge": True", source)
+        self.assertNotIn('"auto_merge": True', source)
         self.assertNotIn("openai.api", source.lower())
         self.assertNotIn("rowan_api_key", source.lower())
         self.assertNotIn("subprocess.run([source", source)
