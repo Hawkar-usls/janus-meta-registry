@@ -18,8 +18,9 @@ FORBIDDEN_PREFIXES = (
     "EYE/r2/generated/",
     "EYE/r3/generated/",
     "assets/hrain-full-memory/",
+    "data/autonomy_loop/",
 )
-FORBIDDEN_EXACT = {"assets/hrain-registry-index.json"}
+FORBIDDEN_EXACT = {"assets/hrain-registry-index.json", "assets/site-feed.json"}
 TARGET = ("PALOMAR", "MUSIC", "GENESIS")
 
 
