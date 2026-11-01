@@ -126,13 +126,22 @@ def check(candidate):
             "comparison":("IMPROVEMENT_5PCT_OR_MORE" if improvement>=0.05 else
                           ("WITHIN_5PCT_OF_BENCHMARK" if improvement>=-0.05 else "WORSE_THAN_BENCHMARK_5PCT")),
             "interpretation":"OBSERVED_CALIBRATION_PREDICTION_ONLY__NO_NOVEL_PHYSICS"})
+    evaluations=[v for v in results if v["dataset"] in ("PONTIUS","NORRIS")]
+    baseline_beaten_all=(len(evaluations)==2 and all(
+        v["decision"]=="PROPOSE" and
+        v["holdout_improvement_vs_selected_baseline"]>=0.05
+        for v in evaluations))
     return {"experiment":"JANUS-LOGOS-001","phase":"R1.1",
             "witness":"SEPARATE_STD_LIB_HOLDOUT_AND_INDEPENDENT_BASELINE_FIT",
             "source":"NIST_OBSERVED_CALIBRATION_DATA_PUBLIC",
             "results":results,
-            "positive_real_cases_evaluated":sum(v["decision"]=="PROPOSE" for v in results[:2]),
+            "positive_real_cases_evaluated":sum(v["decision"]=="PROPOSE" for v in evaluations),
             "corrupted_pairing_controls_rejected":2,
             "verdict":"PASS_SCIENTIFIC_EVALUATION_INTEGRITY",
+            "scientific_performance":"COMPETITIVE_ALL_TESTED_5PCT" if baseline_beaten_all
+                                      else "BASELINE_NOT_BEATEN__NO_MODEL_PROMOTION",
+            "research_model_promotion_allowed":False,
+            "no_promotion_reason":"Synthetic R1.1 is a limited public observed-data pilot; independent external benchmarks and cross-domain replication remain absent.",
             "scientific_ceiling":"OBSERVED_DATA_NOT_UNKNOWN_PHYSICS_NOT_EXTERNAL_BLIND_LAB_NOT_DIVINE_PROOF"}
 
 def tamper_checks(candidate):
