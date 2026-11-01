@@ -1,0 +1,112 @@
+{
+  "schema": "janus.time_sat_004d8.verified_sat_model_first_rank.v1",
+  "id": "JANUS-TIME-SAT-004D8-ORIGINAL-VERIFIED-SAT-NO-ADDITIONAL-GF2-RANK-2026-11-02",
+  "date_utc": "2026-11-02",
+  "scientific_status": "TWO_SHA_PINNED_ORIGINAL_SAT_MODELS_PASS_TWO_UBUNTUS_ZERO_NEW_INDEPENDENT_GF2_RANK_PERFORMANCE_NOT_TESTED",
+  "type": "Append-only original-source SAT-model gate and independently replayed bounded resolution rank check",
+  "previous_study": "data/JANUS-TIME-SAT-004D7-UNSAT-TRAP-PROOF-AWARE-RANK-2026-11-02-v1.0.json",
+  "motivation": "004D7 P-center yielded two independent GF(2) forms but original CNF was proven UNSAT; vacuous entailment is not a useful SAT-case discovery. Require valid full model of exact original CNF BEFORE checking rank.",
+  "source_origin": {
+    "kind": "SAT Competition 2026, public, previously observed; development NOT blind external holdout",
+    "SAT_catalog_labels_not_sufficient": true,
+    "pre_registered_before_new_results": true,
+    "original_004B_dual_download_receipt_git_blob": "7bc8e0514e6b39057015d2b68124563bf207ea13",
+    "original_004D4B_public_sources_git_blob": "0cbf0eee23aa77b399ad2057f113ac1e48bd8405",
+    "original_004D8_preregistered_git_blob": "d4a9f9aede966e2caf057da843a9183edfacf2af",
+    "identities_fixed": [
+      "binary-tree-parity",
+      "lights-out"
+    ],
+    "no_posthoc_source_replacement": true
+  },
+  "implementation": {
+    "research_draft_PR": "https://github.com/Hawkar-usls/Janus-Fundamentum/pull/594",
+    "branch": "research/time-sat-004d8-verified-sat-model-rank-20261102",
+    "strict_SAT_model_validator": "experiments/direct/janus_time_sat_004d8_sat_gate.py",
+    "source_only_probe": "experiments/direct/janus_time_sat_004d8_sat_probe.py",
+    "source_independence_operator": "unchanged 004D6 exact bounded resolution and 004D7 GF2 rank",
+    "proof_method": "Exact original source CNF SHA256 and DIMACS counts, complete signed assignment verifies every original clause, every resolution step independently replayed, all derived XOR parity keys checked against SAT model, exact coefficient + augmented rank",
+    "SAT_witness_qualifying_gate": "SAT_VERIFIED_EVERY_ORIGINAL_CLAUSE",
+    "UNSAT_or_unknown_policy": "BLOCK_WITHOUT_SAT_SOURCE_MODEL",
+    "solver_benchmark_calls": 0,
+    "code_reviews_or_outside_admin": "NOT_PERFORMED",
+    "original_C023_main": "UNCHANGED"
+  },
+  "original_cloud_evidence": {
+    "CI": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/41363901306",
+    "CI_conclusion": "SUCCESS",
+    "original_tested_HEAD": "f592bf67f539c37937bbd23753168b3d77f77a99",
+    "Ubuntu_22_04": "PASS",
+    "Ubuntu_24_04": "PASS",
+    "new_model_gating_tests_per_host": 9,
+    "prior_004D7_rank_tests_per_host": 7,
+    "prior_004D6_resolution_tests_per_host": 8,
+    "C023_serialized_verifier": "PASS_ON_BOTH",
+    "results_match_on_two_hosts": true,
+    "valid_original_SAT_models": 2,
+    "positive_new_independent_GF2_rank": 0,
+    "model_verification_authority": "Separate same-admin exact source model replay, not independent external witness"
+  },
+  "cases": [
+    {
+      "family": "binary-tree-parity",
+      "original_CNF_SHA256": "8d94924bef8978b28a2bf95472556b280bef5d98b6833c6db33554098f52d2d8",
+      "n_variables": 1023,
+      "m_original_clauses": 4088,
+      "GBD_ID_NOT_SHA256": "7db30d12cb06f0dc2f30abff80d96d6a",
+      "SAT_model_origin": "prior original-CNF verified SAT model from 004D4B",
+      "SAT_model_sha256": "b67e33b3aab7f4229ec97fa1887dcafcbc27f5b5efd3953a7704ca0aa496e04b",
+      "SAT_model_full_original_clause_replay": "PASS",
+      "additional_proven_parity_forms": 164,
+      "new_coefficient_GF2_rank": 0,
+      "new_augmented_GF2_rank": 0,
+      "performance_eligibility": "BLOCK_NO_NEW_INDEPENDENT_GF2_RANK"
+    },
+    {
+      "family": "lights-out",
+      "original_CNF_SHA256": "6be9bfe6b44454a061a2e93350f589643f8a16f5bca6babdaa50a2d3d7069361",
+      "n_variables": 625,
+      "m_original_clauses": 9216,
+      "GBD_ID_NOT_SHA256": "01d6fa8efd18ebfecd06af408958477b",
+      "SAT_model_origin": "exact complete source XOR cover, polynomial GF2 candidate, original CNF replay of every clause",
+      "SAT_model_sha256": "756766d1ae9c68e32d5258e78c8200d7075457ef43c41a577f16c6b9ddec4477",
+      "SAT_model_full_original_clause_replay": "PASS",
+      "additional_proven_parity_forms": 0,
+      "new_coefficient_GF2_rank": 0,
+      "new_augmented_GF2_rank": 0,
+      "performance_eligibility": "BLOCK_NO_NEW_INDEPENDENT_GF2_RANK"
+    }
+  ],
+  "permanent_archive": {
+    "archive_CI": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/41364049942",
+    "archive_CI_conclusion": "SUCCESS",
+    "archive_git_commit": "3465771dfa92ec54bc1329c1b55e10465bf178c7",
+    "archive_summary": "experiments/time_sat_004_external/time_sat_004d8_evidence/summary.json",
+    "frozen_original_lights_out_CNF_and_transfer": "SAVED_IN_RESEARCH_BRANCH_SHA_BOUND",
+    "source_models": "ORIGINAL_BOTH_HOST_SIGNED_MODELS_ARCHIVED_WITH_COMPLETE_RESOLUTION_DAGS",
+    "original_actions_zip_sha256": {
+      "ubuntu22": "3c40b08fc9f27f0d07fa2333d4d2f48c4374cecc466dfe9da36a847ac67d62f2",
+      "ubuntu24": "feaf536e5402b20db7dd49c6cc9259f1fc05b773e46af6ca1db2e05b1ad64d91"
+    },
+    "source_and_models_replayed_at_archive_again": "PASS"
+  },
+  "interpretation": [
+    "004D8 resolves the 004D7 vacuous entailment concern for these two exact instances, because independently verified satisfying full assignments exist.",
+    "The XOR resolution operator found no new linearly independent GF2 information on either of these previously known public original SAT instances.",
+    "Binary-tree-parity source has 164 newly recognized but linearly redundant parity forms; lights-out has zero new recognized parity forms.",
+    "Two hosted runs and same-admin checks establish reproducibility, not independent administrative 004C certification.",
+    "No CPU solver benchmarking was performed, no P=NP proof, no generic SAT speedup evidence, no production promotion."
+  ],
+  "next_gate": "Select genuinely fresh externally administered verified SAT sources with fixed source SHAs and independent full model witnesses before development evaluation. If incremental GF2 rank >0, pre-register and run fair full-process comparison vs raw native-XOR CryptoMiniSat, CaDiCaL and Glucose plus no-op costs. Do not auto-advance zero-rank sources.",
+  "gates": {
+    "TIME_SAT_004C": "OPEN_EXTERNAL_ADMIN_WITNESS",
+    "TIME_SAT_004D": "PARTIAL_SOURCE_PROOF_AND_SAT_MODEL_CORRECTNESS_PASS_PERFORMANCE_UNPROVEN",
+    "TIME_SAT_004E": "OPEN_NET_PROFIT",
+    "TIME_SAT_004F": "NOT_READY"
+  },
+  "production_C023": "UNCHANGED",
+  "main": "UNCHANGED",
+  "paid_Rowans": "NONE",
+  "user_NAS_PC_load": "NONE",
+  "append_only": true
+}
