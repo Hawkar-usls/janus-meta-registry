@@ -1,0 +1,59 @@
+name: JANUS GitHub Worker Derivative Trigger Firewall
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/eye-meta-registry-train.yml'
+      - '.github/workflows/eye-r2-novel-bridge-miner.yml'
+      - '.github/workflows/eye-r3-hidden-machine-miner.yml'
+      - '.github/workflows/janus-site-autonomous-curator.yml'
+      - '.github/workflows/janus-neural-link-archive.yml'
+      - '.github/workflows/connection-full-registry-discovery*.yml'
+      - '.github/workflows/janus-worker-trigger-firewall.yml'
+      - 'EYE/training/train_eye_registry.py'
+      - 'EYE/r2/eye_r2_novel_bridge_miner.py'
+      - 'EYE/r3/eye_r3_hidden_machine_miner.py'
+      - 'tests/test_worker_trigger_firewall.py'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/eye-meta-registry-train.yml'
+      - '.github/workflows/eye-r2-novel-bridge-miner.yml'
+      - '.github/workflows/eye-r3-hidden-machine-miner.yml'
+      - '.github/workflows/janus-site-autonomous-curator.yml'
+      - '.github/workflows/janus-neural-link-archive.yml'
+      - '.github/workflows/connection-full-registry-discovery*.yml'
+      - '.github/workflows/janus-worker-trigger-firewall.yml'
+      - 'EYE/training/train_eye_registry.py'
+      - 'EYE/r2/eye_r2_novel_bridge_miner.py'
+      - 'EYE/r3/eye_r3_hidden_machine_miner.py'
+      - 'tests/test_worker_trigger_firewall.py'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: janus-worker-trigger-firewall-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile source and check derivative trigger contract
+        run: |
+          python -m py_compile EYE/training/train_eye_registry.py EYE/r2/eye_r2_novel_bridge_miner.py EYE/r3/eye_r3_hidden_machine_miner.py
+          python -m unittest discover -s tests -p 'test_worker_trigger_firewall.py' -v
+      - name: State CI scope
+        run: |
+          echo 'DERIVATIVE_TRIGGER_FIREWALL=STATIC_CONTRACT_ONLY'
+          echo 'NO_NEW_WORKER_DISPATCH=TRUE'
+          echo 'NO_PAID_COMPUTE=TRUE'
+          echo 'UNRELATED_SOURCE_CHANGES_STILL_WAKE=TRUE'
