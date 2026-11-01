@@ -82,7 +82,7 @@ class AttemptReplayTests(unittest.TestCase):
         f=Fake()
         tampered=observation(BASE)
         tampered["head_sha"]="f"*40
-        with self.assertRaisesRegex(m.Hold,"INDEPENDENT_WORKFLOW_ATTEMPT_REPLAY_MISMATCH"):
+        with self.assertRaisesRegex(m.Hold,"INDEPENDENT_WORKFLOW_REPLAY_MISMATCH"):
             m.verify_workflow_observation(f,"janus-meta-registry",tampered)
 
     def test_changed_conclusion_or_created_at_rejected(self):
@@ -105,7 +105,7 @@ class AttemptReplayTests(unittest.TestCase):
                 bad["run_attempt"]=value
                 with self.assertRaises(m.Hold):
                     m.verify_workflow_observation(Fake(),"janus-meta-registry",bad)
-        with self.assertRaisesRegex(m.Hold,"INDEPENDENT_WORKFLOW_ATTEMPT_REPLAY_MISMATCH"):
+        with self.assertRaisesRegex(m.Hold,"INDEPENDENT_WORKFLOW_REPLAY_MISMATCH"):
             m.verify_workflow_observation(Fake(first={**BASE,"id":999}),
                                          "janus-meta-registry",observation(BASE))
 
