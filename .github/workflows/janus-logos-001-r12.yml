@@ -1,0 +1,94 @@
+name: JANUS LOGOS 001 R1.2 - prospective observed NIST scientific trial
+
+on:
+  pull_request:
+    paths:
+      - 'research/logos_001/r12_*.py'
+      - 'research/logos_001/test_r12.py'
+      - 'research/logos_001/data_r12/**'
+      - 'data/JANUS-LOGOS-001-R12-*.json'
+      - '.github/workflows/janus-logos-001-r12.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'research/logos_001/r12_*.py'
+      - 'research/logos_001/test_r12.py'
+      - 'research/logos_001/data_r12/**'
+      - 'data/JANUS-LOGOS-001-R12-*.json'
+      - '.github/workflows/janus-logos-001-r12.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: janus-logos-r12-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  discoverer:
+    name: Train-only grouped CV analytical hypotheses
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Materialize real NIST train and validation only
+        run: python research/logos_001/r12_data.py --part discover --out /tmp/logos-r12-observed-training.json
+      - name: Frozen nested training-CV symbolic selection
+        run: |
+          python research/logos_001/r12_discover.py --input /tmp/logos-r12-observed-training.json --out /tmp/logos-r12-proposals.json
+          python research/logos_001/r12_discover.py --input /tmp/logos-r12-observed-training.json --out /tmp/logos-r12-replay.json
+          cmp /tmp/logos-r12-proposals.json /tmp/logos-r12-replay.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: logos-r12-candidate-equations
+          path: /tmp/logos-r12-proposals.json
+          retention-days: 30
+          if-no-files-found: error
+
+  independent-witness:
+    name: Separate NIST heldout scientific comparison and negative controls
+    needs: discoverer
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/download-artifact@v4
+        with:
+          name: logos-r12-candidate-equations
+          path: /tmp/logos-r12-artifact
+      - name: Independent original NIST source and holdout validation
+        run: |
+          python research/logos_001/r12_witness.py \
+            --candidate /tmp/logos-r12-artifact/logos-r12-proposals.json \
+            --out /tmp/logos-r12-independent-result.json --self-test
+      - uses: actions/upload-artifact@v4
+        with:
+          name: logos-r12-independent-scientific-witness
+          path: /tmp/logos-r12-independent-result.json
+          retention-days: 30
+          if-no-files-found: error
+
+  protocol-tests:
+    name: Original source SHA and scientific falsification tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Source integrity, holdout partition and negative-control tests
+        run: python -m unittest discover -s research/logos_001 -p 'test_r12.py' -v
