@@ -1,0 +1,80 @@
+name: JANUS LOGOS 001 R1 - law discovery with independent holdout witness
+
+on:
+  pull_request:
+    paths:
+      - 'research/logos_001/r1_*.py'
+      - 'research/logos_001/test_r1.py'
+      - 'data/JANUS-LOGOS-001-R1-*.json'
+      - '.github/workflows/janus-logos-001-r1.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'research/logos_001/r1_*.py'
+      - 'research/logos_001/test_r1.py'
+      - 'data/JANUS-LOGOS-001-R1-*.json'
+      - '.github/workflows/janus-logos-001-r1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: janus-logos-001-r1-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  discovery:
+    name: Discover equations using TRAIN and VALIDATION only
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Generate fixed synthetic TRAIN and VALIDATION
+        run: python research/logos_001/r1_data.py --out /tmp/logos-r1-data.json
+      - name: Run frozen symbolic equation search
+        run: python research/logos_001/r1_discover.py --input /tmp/logos-r1-data.json --out /tmp/logos-r1-candidate.json
+      - name: Recheck pure discovery determinism
+        run: |
+          python research/logos_001/r1_discover.py --input /tmp/logos-r1-data.json --out /tmp/logos-r1-candidate-2.json
+          cmp /tmp/logos-r1-candidate.json /tmp/logos-r1-candidate-2.json
+      - name: Test scientific controls and malformed inputs
+        run: python -m unittest discover -s research/logos_001 -p 'test_r1.py' -v
+      - name: Produce discoverer-only artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: logos-r1-discovery
+          path: /tmp/logos-r1-candidate.json
+          if-no-files-found: error
+          retention-days: 14
+
+  independent-holdout-witness:
+    name: Independent witness on fresh runner and hidden-from-input points
+    needs: discovery
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/download-artifact@v4
+        with:
+          name: logos-r1-discovery
+          path: /tmp/logos-r1-artifact
+      - name: Reconstruct frozen source SHA and evaluate unseen test points
+        run: |
+          python research/logos_001/r1_witness.py \
+            --candidate /tmp/logos-r1-artifact/logos-r1-candidate.json \
+            --out /tmp/logos-r1-independent-witness.json \
+            --self-test
+      - name: Preserve independent witness receipt as run artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: logos-r1-independent-witness
+          path: /tmp/logos-r1-independent-witness.json
+          if-no-files-found: error
+          retention-days: 30
