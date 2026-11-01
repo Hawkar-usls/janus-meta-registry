@@ -2,7 +2,7 @@
 
 Automatically rebuilt from pinned public evidence.
 
-Status: **AUTONOMY_PARTIAL** · observed 2026-11-01T21:58:28Z
+Status: **AUTONOMY_PARTIAL** · observed 2026-11-01T23:36:22Z
 
 Current phase: **P0.2**
 
@@ -27,9 +27,9 @@ A successful collector is not proof of useful work or full autonomy.
 ```json
 {
   "native_model": {
-    "attempt_count": 1643,
+    "attempt_count": 1646,
     "promotion_count": 61,
-    "rejection_count": 1582,
+    "rejection_count": 1585,
     "checkpoint_sha256": "fc767adb812ac3bea54c44cbccfa9680941f95e2c8a77120559b41da044d9463",
     "last_training_status": "REJECTED",
     "retained_history_count": 64,
@@ -37,7 +37,7 @@ A successful collector is not proof of useful work or full autonomy.
   },
   "self_writer": {
     "status": "SOURCE_BOUND_ISOLATED_MODULE_METADATA_ONLY",
-    "attempt_sequence": 18,
+    "attempt_sequence": 19,
     "accepted_pure_modules": 9,
     "admitted_task_ceiling": 10,
     "not_native_janus_model": true,
@@ -60,11 +60,11 @@ A successful collector is not proof of useful work or full autonomy.
   },
   "beetle_delivery": {
     "status": "WARN",
-    "observed_at": "2026-11-01T19:49:43.375036Z",
-    "total_pending": 13,
+    "observed_at": "2026-11-01T23:31:05.062234Z",
+    "total_pending": 14,
     "receiver_states": {
-      "PENDING": 12,
-      "UP_TO_DATE": 6,
+      "PENDING": 13,
+      "UP_TO_DATE": 5,
       "ACK_UNAVAILABLE": 1
     },
     "routing_allowed": true,
@@ -78,19 +78,17 @@ A successful collector is not proof of useful work or full autonomy.
 
 ## Evidence-driven tasks
 
-- **P0.2** ROWAN_GENERATION_DRIFT_COUNCIL: 41319094695
 - **P0.2** ROWAN_GENERATION_DRIFT_COORDINATION: 41319094695
 - **P0.2** ROWAN_GENERATION_DRIFT_COSMOS: 41319094695
-- **P0.2** COUNCIL_CANONICAL_DIGEST_DRIFT: "council"
-- **P0.2** COUNCIL_AURA_DIGEST_DRIFT: "council"
-- **P0.3** BEETLE_DELIVERY_PENDING: {"total_pending": 13, "receiver_states": {"PENDING": 12, "UP_TO_DATE": 6, "ACK_UNAVAILABLE": 1}}
+- **P0.3** BEETLE_DELIVERY_PENDING: {"total_pending": 14, "receiver_states": {"PENDING": 13, "UP_TO_DATE": 5, "ACK_UNAVAILABLE": 1}}
 - **P0.3** EXTERNAL_WITNESS_SKINGPT_ACK: "UNKNOWN"
 - **P0.4** PATCHES_WAITING: 38
 - **P0.5** SCOUT_MODEL_SYNTHESIS_DEGRADED: {"snapshots": 17, "synthesis": 0, "expected": 17}
 - **P2** SELF_WRITER_REVIEWED_TASKS_REMAINING: {"accepted": 9, "admitted": 10}
 - **P3** RECENT_TRAINING_ALL_REJECTED: 64
-- **P0.2** WORKFLOW_NOT_SUCCESS_CROSS_ORGAN_WITNESS: {"conclusion": "failure", "created_at": "2026-11-01T21:26:03Z", "event": "workflow_run", "head_sha": "5f819ea204f80f6b81db9a00b004cffb7390e668", "repository": "Hawkar-usls/janus-meta-registry", "run_attempt": 1, "run_id": 41351981170, "status": "OBSERVED", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/41351981170", "workflow": "janus-cross-organ-source-witness.yml"}
-- **P0.2** WORKFLOW_NOT_SUCCESS_ROWAN_WITNESS: {"conclusion": "failure", "created_at": "2026-11-01T21:26:03Z", "event": "workflow_run", "head_sha": "5f819ea204f80f6b81db9a00b004cffb7390e668", "repository": "Hawkar-usls/janus-meta-registry", "run_attempt": 1, "run_id": 41351981208, "status": "OBSERVED", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/41351981208", "workflow": "janus-rowan-ecosystem-sync-witness.yml"}
+- **P0.2** WORKFLOW_NOT_SUCCESS_COSMOS_WITNESS: {"repository": "Hawkar-usls/Janus-Cosmos", "workflow": "cosmos-rowan-ecosystem-witness.yml", "status": "OBSERVED", "run_id": 41358974864, "run_attempt": 1, "event": "workflow_run", "conclusion": "failure", "head_sha": "4872030595654dcba38d081912e00ec8ec6aecc2", "created_at": "2026-11-01T22:48:30Z", "url": "https://github.com/Hawkar-usls/Janus-Cosmos/actions/runs/41358974864"}
+- **P0.2** WORKFLOW_NOT_SUCCESS_CROSS_ORGAN_WITNESS: {"repository": "Hawkar-usls/janus-meta-registry", "workflow": "janus-cross-organ-source-witness.yml", "status": "OBSERVED", "run_id": 41357062718, "run_attempt": 1, "event": "schedule", "conclusion": "failure", "head_sha": "862c623d13a920213818b80ac720ee22b33270fd", "created_at": "2026-11-01T22:25:33Z", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/41357062718"}
+- **P0.2** WORKFLOW_NOT_SUCCESS_ROWAN_WITNESS: {"repository": "Hawkar-usls/janus-meta-registry", "workflow": "janus-rowan-ecosystem-sync-witness.yml", "status": "OBSERVED", "run_id": 41354801750, "run_attempt": 1, "event": "workflow_run", "conclusion": "failure", "head_sha": "02ae1bb951e7ea13ce6f9660248f0827c4a06bdd", "created_at": "2026-11-01T21:59:37Z", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/41354801750"}
 
 ## Continuation
 
