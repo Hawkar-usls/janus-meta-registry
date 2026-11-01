@@ -1,11 +1,21 @@
 name: JANUS Rowan AURA Demiurge autonomous council reconciliation
 on:
+  workflow_run:
+    # Event-based wake even when the Rowan archive was committed with
+    # GITHUB_TOKEN (such commits do not trigger downstream push workflows).
+    workflows: ["JANUS Rowan Durable Observer"]
+    types: [completed]
+    branches: [main]
   schedule:
     - cron: '53 * * * *'
   workflow_dispatch:
   push:
     branches: [main]
     paths:
+      # Source-triggered best effort wake when GitHub emits this push event;
+      # GITHUB_TOKEN-suppressed pushes still use the hourly schedule.
+      # Coordination-only writes are deliberately excluded (no self-loop).
+      - 'data/rowan/CANONICAL_STATE.json'
       - '.github/workflows/rowan-coordination-autonomous-reconcile.yml'
       - 'modules/rowan_observer/coordination_ingest.py'
       - 'modules/rowan_observer/test_coordination.py'
@@ -24,6 +34,13 @@ concurrency:
 
 jobs:
   council-reconcile:
+    # Never give untrusted/PR-originated upstream events a write-capable job.
+    if: >-
+      ${{ github.event_name != 'workflow_run' ||
+          (github.event.workflow_run.conclusion == 'success' &&
+           github.event.workflow_run.head_branch == 'main' &&
+           github.event.workflow_run.head_repository.full_name == github.repository &&
+           github.event.workflow_run.event != 'pull_request') }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
