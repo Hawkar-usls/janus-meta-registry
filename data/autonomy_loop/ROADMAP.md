@@ -2,17 +2,17 @@
 
 Automatically rebuilt from pinned public evidence.
 
-Status: **AUTONOMY_PARTIAL** · observed 2026-11-01T08:11:28Z
+Status: **AUTONOMY_PARTIAL** · observed 2026-11-01T09:33:13Z
 
-Current phase: **P0.3**
+Current phase: **P0.2**
 
 A successful collector is not proof of useful work or full autonomy.
 
 | Order | Phase | State | Objective |
 |---|---|---|---|
 | 1 | P0.1 | DONE | [One verified source-pinned status snapshot](https://github.com/Hawkar-usls/janus-meta-registry/issues/364) |
-| 2 | P0.2 | DONE | [One Rowan generation through AURA, council, Cosmos and witnesses](https://github.com/Hawkar-usls/janus-meta-registry/issues/365) |
-| 3 | P0.3 | ACTIVE | [Beetle delivery and current Cloud HOME](https://github.com/Hawkar-usls/Janus_Genesis/issues/164) |
+| 2 | P0.2 | ACTIVE_RECHECK | [One Rowan generation through AURA, council, Cosmos and witnesses](https://github.com/Hawkar-usls/janus-meta-registry/issues/365) |
+| 3 | P0.3 | WAITING_FOR_PREVIOUS | [Beetle delivery and current Cloud HOME](https://github.com/Hawkar-usls/Janus_Genesis/issues/164) |
 | 4 | P0.4 | WAITING_FOR_PREVIOUS | Deduplicate patch queue and preserve superseded attempts |
 | 5 | P0.5 | WAITING_FOR_PREVIOUS | Separate snapshots, model synthesis, useful work and idle |
 | 6 | P0.6 | WAITING_FOR_PREVIOUS | Restore local Habitat adapter without recreating HOME |
@@ -27,9 +27,9 @@ A successful collector is not proof of useful work or full autonomy.
 ```json
 {
   "native_model": {
-    "attempt_count": 1628,
+    "attempt_count": 1629,
     "promotion_count": 61,
-    "rejection_count": 1567,
+    "rejection_count": 1568,
     "checkpoint_sha256": "fc767adb812ac3bea54c44cbccfa9680941f95e2c8a77120559b41da044d9463",
     "last_training_status": "REJECTED",
     "retained_history_count": 64,
@@ -60,11 +60,11 @@ A successful collector is not proof of useful work or full autonomy.
   },
   "beetle_delivery": {
     "status": "WARN",
-    "observed_at": "2026-11-01T01:30:17.476589Z",
-    "total_pending": 14,
+    "observed_at": "2026-11-01T08:11:49.908509Z",
+    "total_pending": 13,
     "receiver_states": {
-      "PENDING": 13,
-      "UP_TO_DATE": 5,
+      "PENDING": 12,
+      "UP_TO_DATE": 6,
       "ACK_UNAVAILABLE": 1
     },
     "routing_allowed": true,
@@ -78,14 +78,18 @@ A successful collector is not proof of useful work or full autonomy.
 
 ## Evidence-driven tasks
 
-- **P0.3** BEETLE_DELIVERY_PENDING: {"total_pending": 14, "receiver_states": {"PENDING": 13, "UP_TO_DATE": 5, "ACK_UNAVAILABLE": 1}}
+- **P0.2** ROWAN_GENERATION_DRIFT_AURA: 41252069696
+- **P0.2** ROWAN_GENERATION_DRIFT_COUNCIL: 41252069696
+- **P0.2** ROWAN_GENERATION_DRIFT_COORDINATION: 41252069696
+- **P0.2** ROWAN_GENERATION_DRIFT_COSMOS: 41252069696
+- **P0.2** AURA_CANONICAL_DIGEST_DRIFT: "aura"
+- **P0.2** COUNCIL_CANONICAL_DIGEST_DRIFT: "council"
+- **P0.3** BEETLE_DELIVERY_PENDING: {"total_pending": 13, "receiver_states": {"PENDING": 12, "UP_TO_DATE": 6, "ACK_UNAVAILABLE": 1}}
 - **P0.3** EXTERNAL_WITNESS_SKINGPT_ACK: "UNKNOWN"
 - **P0.4** PATCHES_WAITING: 38
 - **P0.5** SCOUT_MODEL_SYNTHESIS_DEGRADED: {"snapshots": 17, "synthesis": 0, "expected": 17}
 - **P2** SELF_WRITER_REVIEWED_TASKS_REMAINING: {"accepted": 9, "admitted": 10}
 - **P3** RECENT_TRAINING_ALL_REJECTED: 64
-- **P0.2** WORKFLOW_NOT_SUCCESS_CROSS_ORGAN_WITNESS: {"conclusion": "failure", "created_at": "2026-11-01T07:33:05Z", "event": "workflow_run", "head_sha": "7843a945fdba51d9979ddab040dd26edc3894663", "repository": "Hawkar-usls/janus-meta-registry", "run_attempt": 1, "run_id": 41285229179, "status": "OBSERVED", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/41285229179", "workflow": "janus-cross-organ-source-witness.yml"}
-- **P0.2** WORKFLOW_NOT_SUCCESS_ROWAN_WITNESS: {"conclusion": "failure", "created_at": "2026-11-01T07:33:05Z", "event": "workflow_run", "head_sha": "7843a945fdba51d9979ddab040dd26edc3894663", "repository": "Hawkar-usls/janus-meta-registry", "run_attempt": 1, "run_id": 41285229293, "status": "OBSERVED", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/41285229293", "workflow": "janus-rowan-ecosystem-sync-witness.yml"}
 
 ## Continuation
 
