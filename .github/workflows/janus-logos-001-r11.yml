@@ -1,0 +1,88 @@
+name: JANUS LOGOS 001 R1.1 - NIST observed data independent witness
+
+on:
+  pull_request:
+    paths:
+      - 'research/logos_001/r11_*.py'
+      - 'research/logos_001/test_r11.py'
+      - 'data/JANUS-LOGOS-001-R11-*.json'
+      - '.github/workflows/janus-logos-001-r11.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'research/logos_001/r11_*.py'
+      - 'research/logos_001/test_r11.py'
+      - 'data/JANUS-LOGOS-001-R11-*.json'
+      - '.github/workflows/janus-logos-001-r11.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: logos-001-r11-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  scientific-discovery:
+    name: Scientific dataset real measurements equation proposal
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Prepare observed NIST TRAIN and VALIDATION only
+        run: python research/logos_001/r11_data.py --part discover --out /tmp/logos-r11-discover.json
+      - name: Search bounded equations without holdout
+        run: python research/logos_001/r11_discover.py --input /tmp/logos-r11-discover.json --out /tmp/logos-r11-candidates.json
+      - name: Confirm deterministic inference
+        run: |
+          python research/logos_001/r11_discover.py --input /tmp/logos-r11-discover.json --out /tmp/logos-r11-replay.json
+          cmp /tmp/logos-r11-candidates.json /tmp/logos-r11-replay.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: logos-r11-real-measurement-candidates
+          path: /tmp/logos-r11-candidates.json
+          retention-days: 30
+          if-no-files-found: error
+
+  independent-holdout-witness:
+    name: Independently score NIST observed heldout calibration and baselines
+    needs: scientific-discovery
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/download-artifact@v4
+        with:
+          name: logos-r11-real-measurement-candidates
+          path: /tmp/logos-r11-evidence
+      - name: Verify new measurements, benchmarks and tampering
+        run: |
+          python research/logos_001/r11_witness.py \
+            --candidate /tmp/logos-r11-evidence/logos-r11-candidates.json \
+            --out /tmp/logos-r11-real-observation-witness.json \
+            --self-test
+      - uses: actions/upload-artifact@v4
+        with:
+          name: logos-r11-real-observation-witness
+          path: /tmp/logos-r11-real-observation-witness.json
+          retention-days: 30
+          if-no-files-found: error
+
+  source-and-integrity-tests:
+    name: NIST source counts, provenance and corruption unit tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Run independent NIST source and integrity unit tests
+        run: python -m unittest discover -s research/logos_001 -p 'test_r11.py' -v
