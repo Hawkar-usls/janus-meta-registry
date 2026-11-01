@@ -173,9 +173,12 @@ def collect(client):
                 exact.get("status") != "completed" or
                 exact.get("event") != run["event"] or
                 exact.get("head_sha") != run["head_sha"] or
-                exact.get("created_at") != run["created_at"] or
+                exact.get("html_url") != run["html_url"] or
                 exact.get("conclusion") != run["conclusion"]):
                 raise Hold("WORKFLOW_ATTEMPT_MOVED_DURING_COLLECTION")
+            # GitHub's list entry retains ORIGINAL run.created_at; an exact
+            # /attempts/N endpoint has a DIFFERENT created_at on reruns.
+            # Persist attempt timestamp, never mix run and attempt clocks.
             info.update(status="OBSERVED", run_id=run["id"],
                         run_attempt=attempt, event=exact["event"],
                         conclusion=exact["conclusion"], head_sha=exact["head_sha"],
