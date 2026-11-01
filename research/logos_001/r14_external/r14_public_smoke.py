@@ -4,7 +4,6 @@ import json
 import math
 from pathlib import Path
 from r14_submission import produce_predictions
-from r14_custodian_reference import evaluate_custodian_private
 
 def fixture():
     names=("fixture_wave","fixture_linear","fixture_quadratic")
@@ -36,6 +35,7 @@ def participant_outputs():
     return {"protocol":"PUBLIC_FIXTURE_PROTOCOL_SMOKE_ONLY","outputs":output}
 
 def custodian_smoke(proposals):
+    from r14_custodian_reference import evaluate_custodian_private
     if proposals.get("protocol")!="PUBLIC_FIXTURE_PROTOCOL_SMOKE_ONLY" or len(proposals.get("outputs",[]))!=3:
         raise ValueError("Not a public fixture submission")
     by_id={r["domain_id"]:r for r in proposals["outputs"]}
