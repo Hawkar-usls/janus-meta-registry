@@ -129,6 +129,51 @@ class PublicGitHub:
             raise Hold("SOURCE_NOT_OBJECT")
         return data, sha, blob_sha
 
+MAX_REPLAY_ATTEMPTS = 16
+
+def verify_workflow_observation(client, repo, obs):
+    """Verify exact attempt, including legacy pre-attempt snapshots.
+
+    The unqualified Actions run status can change on retry. Never mutate
+    historical evidence to match the newer success/failure.
+    """
+    rid = obs.get("run_id")
+    if type(rid) is not int or rid <= 0:
+        raise Hold("INDEPENDENT_WORKFLOW_ID_INVALID")
+    expected = {"id": rid, "event": obs.get("event"),
+                "conclusion": obs.get("conclusion"), "head_sha": obs.get("head_sha"),
+                "created_at": obs.get("created_at"), "html_url": obs.get("url")}
+    def matches(actual):
+        return all(actual.get(k) == value for k, value in expected.items())
+    attempt = obs.get("run_attempt")
+    if attempt is not None:
+        if type(attempt) is not int or not 1 <= attempt <= MAX_REPLAY_ATTEMPTS:
+            raise Hold("INDEPENDENT_WORKFLOW_ATTEMPT_INVALID")
+        actual = client.get(repo, "/actions/runs/" + str(rid) +
+                            "/attempts/" + str(attempt))
+        if (actual.get("run_attempt") != attempt or
+            actual.get("status") != "completed" or not matches(actual)):
+            raise Hold("INDEPENDENT_WORKFLOW_REPLAY_MISMATCH")
+        return
+    # Historical signed snapshots have no attempt ID. Preserve their
+    # original conclusion and find a UNIQUE exact historical occurrence.
+    latest = client.get(repo, "/actions/runs/" + str(rid))
+    if matches(latest):
+        return
+    count = latest.get("run_attempt")
+    if type(count) is not int or not 1 <= count <= MAX_REPLAY_ATTEMPTS:
+        raise Hold("INDEPENDENT_LEGACY_RUN_ATTEMPTS_UNVERIFIABLE")
+    candidates = []
+    for n in range(1, count + 1):
+        old = client.get(repo, "/actions/runs/" + str(rid) + "/attempts/" + str(n))
+        if old.get("run_attempt") != n or old.get("id") != rid:
+            raise Hold("INDEPENDENT_LEGACY_RUN_ATTEMPT_REBIND")
+        if old.get("status") == "completed" and matches(old):
+            candidates.append(n)
+    if len(candidates) != 1:
+        raise Hold("INDEPENDENT_WORKFLOW_REPLAY_MISMATCH")
+
+
 def collect(client):
     sources = {}
     errors = {}
@@ -164,7 +209,7 @@ def collect(client):
             # conclusion may later change. Bind a completed exact ATTEMPT,
             # so an independent verifier replays immutable run evidence.
             attempt = run.get("run_attempt")
-            if type(attempt) is not int or attempt < 1:
+            if type(attempt) is not int or not 1 <= attempt <= MAX_REPLAY_ATTEMPTS:
                 raise Hold("WORKFLOW_RUN_ATTEMPT_UNPINNED")
             exact = client.get(repo, "/actions/runs/" + str(run["id"]) +
                                "/attempts/" + str(attempt))
@@ -175,6 +220,8 @@ def collect(client):
                 exact.get("head_sha") != run["head_sha"] or
                 exact.get("html_url") != run["html_url"] or
                 exact.get("conclusion") != run["conclusion"]):
+                # Run-list created_at is the FIRST attempt's timestamp,
+                # while exact attempt created_at moves when a run is retried.
                 raise Hold("WORKFLOW_ATTEMPT_MOVED_DURING_COLLECTION")
             # GitHub's list entry retains ORIGINAL run.created_at; an exact
             # /attempts/N endpoint has a DIFFERENT created_at on reruns.
@@ -515,21 +562,7 @@ def verify_persisted(root, client, accept=False):
         if obs.get("status") != "OBSERVED":
             continue
         repo, _ = WORKFLOWS[name]
-        # Historical receipts without run_attempt retain their strict
-        # legacy gate; new receipts MUST replay the pinned completed attempt.
-        # The API's unqualified /runs/{id} is mutable after reruns.
-        attempt = obs.get("run_attempt")
-        if attempt is not None and (type(attempt) is not int or attempt < 1):
-            raise Hold("INDEPENDENT_WORKFLOW_ATTEMPT_INVALID")
-        suffix = ("/attempts/" + str(attempt)) if attempt is not None else ""
-        actual = client.get(repo, "/actions/runs/" + str(obs["run_id"]) + suffix)
-        expected = {"id": obs["run_id"], "event": obs["event"], "conclusion": obs["conclusion"],
-                    "head_sha": obs["head_sha"], "created_at": obs["created_at"], "html_url": obs["url"]}
-        if attempt is not None:
-            expected["run_attempt"] = attempt
-            expected["status"] = "completed"
-        if any(actual.get(k) != value for k, value in expected.items()):
-            raise Hold("INDEPENDENT_WORKFLOW_REPLAY_MISMATCH")
+        verify_workflow_observation(client, repo, obs)
     rebuilt = summarize(replayed, record["workflows"], record["observed_at_utc"],
                         record["code_sha"], {"accepted_phases": record.get("accepted_phases", {})}, record.get("maintenance", {}))
     if rebuilt["state_sha256"] != record["state_sha256"]:
