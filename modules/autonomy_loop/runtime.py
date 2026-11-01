@@ -129,6 +129,56 @@ class PublicGitHub:
             raise Hold("SOURCE_NOT_OBJECT")
         return data, sha, blob_sha
 
+MAX_WORKFLOW_ATTEMPTS = 16  # Bounded read-only replay, never silently accept unknown reruns.
+
+def _workflow_fields(obj):
+    return {key: obj.get(key) for key in
+            ("id", "event", "conclusion", "head_sha", "created_at", "html_url")}
+
+def verify_workflow_observation(client, repo, obs):
+    """Bind a workflow status to its exact GitHub Actions *attempt*.
+
+    Old signed snapshots without run_attempt remain reproducible after a
+    re-run; the original attempt is checked by the immutable attempt endpoint.
+    Never rewrite the old snapshot to match newer run-level conclusions.
+    """
+    run_id = obs.get("run_id")
+    if type(run_id) is not int or run_id <= 0:
+        raise Hold("WORKFLOW_RUN_ID_INVALID")
+    expected = {"id": run_id, "event": obs.get("event"),
+                "conclusion": obs.get("conclusion"), "head_sha": obs.get("head_sha"),
+                "created_at": obs.get("created_at"), "html_url": obs.get("url")}
+    attempt = obs.get("run_attempt")
+    if attempt is not None:
+        if type(attempt) is not int or not 1 <= attempt <= MAX_WORKFLOW_ATTEMPTS:
+            raise Hold("WORKFLOW_ATTEMPT_PIN_INVALID")
+        actual = client.get(repo, "/actions/runs/" + str(run_id) +
+                            "/attempts/" + str(attempt))
+        if actual.get("run_attempt") != attempt or _workflow_fields(actual) != expected:
+            raise Hold("INDEPENDENT_WORKFLOW_ATTEMPT_REPLAY_MISMATCH")
+        return
+
+    # Legacy snapshots were created before attempts were recorded. Prefer
+    # their original run-level representation if still current; otherwise
+    # search immutable attempts for a SINGLE exact original observation.
+    latest = client.get(repo, "/actions/runs/" + str(run_id))
+    if _workflow_fields(latest) == expected:
+        return
+    count = latest.get("run_attempt")
+    if type(count) is not int or not 1 <= count <= MAX_WORKFLOW_ATTEMPTS:
+        raise Hold("LEGACY_WORKFLOW_ATTEMPT_COUNT_UNVERIFIABLE")
+    matches = []
+    for n in range(1, count + 1):
+        exact = client.get(repo, "/actions/runs/" + str(run_id) +
+                           "/attempts/" + str(n))
+        if exact.get("run_attempt") != n or exact.get("id") != run_id:
+            raise Hold("LEGACY_WORKFLOW_ATTEMPT_REBIND")
+        if _workflow_fields(exact) == expected:
+            matches.append(n)
+    if len(matches) != 1:
+        raise Hold("INDEPENDENT_WORKFLOW_REPLAY_MISMATCH")
+
+
 def collect(client):
     sources = {}
     errors = {}
@@ -159,10 +209,23 @@ def collect(client):
             runs = result.get("workflow_runs", [])
             if len(runs) != 1:
                 raise Hold("NO_COMPLETED_RUN")
-            run = runs[0]
-            info.update(status="OBSERVED", run_id=run["id"], event=run["event"],
-                        conclusion=run["conclusion"], head_sha=run["head_sha"],
-                        created_at=run["created_at"], url=run["html_url"])
+            listed = runs[0]
+            run_id, attempt = listed.get("id"), listed.get("run_attempt")
+            if (type(run_id) is not int or run_id <= 0 or
+                type(attempt) is not int or not 1 <= attempt <= MAX_WORKFLOW_ATTEMPTS):
+                raise Hold("WORKFLOW_ATTEMPT_NOT_PINNABLE")
+            run = client.get(repo, "/actions/runs/" + str(run_id) +
+                             "/attempts/" + str(attempt))
+            if (run.get("id") != run_id or run.get("run_attempt") != attempt or
+                run.get("event") != listed.get("event") or
+                run.get("conclusion") != listed.get("conclusion") or
+                run.get("head_sha") != listed.get("head_sha") or
+                run.get("status") != "completed"):
+                raise Hold("WORKFLOW_ATTEMPT_CHANGED_DURING_CAPTURE")
+            info.update(status="OBSERVED", run_id=run_id, run_attempt=attempt,
+                        event=run["event"], conclusion=run["conclusion"],
+                        head_sha=run["head_sha"], created_at=run["created_at"],
+                        url=run["html_url"])
         except (OSError, ValueError, KeyError) as exc:
             info.update(status="UNKNOWN", error_class=type(exc).__name__)
         workflows[name] = info
@@ -495,11 +558,7 @@ def verify_persisted(root, client, accept=False):
         if obs.get("status") != "OBSERVED":
             continue
         repo, _ = WORKFLOWS[name]
-        actual = client.get(repo, "/actions/runs/" + str(obs["run_id"]))
-        expected = {"id": obs["run_id"], "event": obs["event"], "conclusion": obs["conclusion"],
-                    "head_sha": obs["head_sha"], "created_at": obs["created_at"], "html_url": obs["url"]}
-        if any(actual.get(k) != value for k, value in expected.items()):
-            raise Hold("INDEPENDENT_WORKFLOW_REPLAY_MISMATCH")
+        verify_workflow_observation(client, repo, obs)
     rebuilt = summarize(replayed, record["workflows"], record["observed_at_utc"],
                         record["code_sha"], {"accepted_phases": record.get("accepted_phases", {})}, record.get("maintenance", {}))
     if rebuilt["state_sha256"] != record["state_sha256"]:
