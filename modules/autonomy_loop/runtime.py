@@ -153,7 +153,7 @@ def verify_workflow_observation(client, repo, obs):
                             "/attempts/" + str(attempt))
         if (actual.get("run_attempt") != attempt or
             actual.get("status") != "completed" or not matches(actual)):
-            raise Hold("INDEPENDENT_WORKFLOW_ATTEMPT_REPLAY_MISMATCH")
+            raise Hold("INDEPENDENT_WORKFLOW_REPLAY_MISMATCH")
         return
     # Historical signed snapshots have no attempt ID. Preserve their
     # original conclusion and find a UNIQUE exact historical occurrence.
