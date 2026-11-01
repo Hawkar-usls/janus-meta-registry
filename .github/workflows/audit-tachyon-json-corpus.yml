@@ -1,0 +1,33 @@
+name: Audit all JSON and JSONL mentions of tachyon and retrocausality
+
+on:
+  push:
+    paths:
+      - 'tools/audit_tachyon_json_corpus.py'
+      - '.github/workflows/audit-tachyon-json-corpus.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  scan-full-checkout:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Scan all checked-out JSON files (not GitHub search index)
+        run: python tools/audit_tachyon_json_corpus.py --root . --out evidence/tachyon-full-json-inventory.json
+      - name: Retain complete inventory, SHA, mentions and status
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tachyon-full-json-corpus-inventory
+          path: evidence/tachyon-full-json-inventory.json
+          if-no-files-found: error
+          retention-days: 30

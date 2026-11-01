@@ -1,0 +1,86 @@
+{
+  "schema": "janus.registry.novikov_partial_consistency.v1",
+  "artifact_id": "JANUS-NOVIKOV-002-PARTIAL-CONSISTENCY-SAT-2026-11-01-v1.0",
+  "date_utc": "2026-11-01",
+  "status": "BOUNDED_CLASSICAL_PARTIAL_CONSISTENCY_PASS_PERFORMANCE_GATE_NOT_READY",
+  "links": {
+    "prior_novikov001": "data/JANUS-NOVIKOV-001-GLOBAL-CONSISTENCY-FUNDAMENTUM-BRIDGE-2026-11-01-v1.0.json",
+    "historic_tachyon_inventory": "data/JANUS-TACHYON-FULL-JSON-CORPUS-INDEX-2026-11-01-v1.0.json",
+    "fundamentum_repo": "Hawkar-usls/Janus-Fundamentum",
+    "fundamentum_pr": 574,
+    "research_branch": "research/ufr-001-structural-renaming-20261101",
+    "code": "experiments/direct/janus_novikov_002.py",
+    "tests": "tests/test_novikov_002.py",
+    "benchmark": "experiments/direct/janus_novikov_002_benchmark.py",
+    "persistent_evidence": "experiments/NOVIKOV_002_CLOUD_EVIDENCE_20261101.json",
+    "validated_run": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/41308187788",
+    "validated_sha": "da00bdde288cbae64f429c6e8db69918515e373b"
+  },
+  "formal_contract": {
+    "scope": "Classical SAT/Exact-One partial assignments, n<=240, max 4096 clauses and 24 literals per clause",
+    "state": "UNSET=-1, FALSE=0, TRUE=1",
+    "SAT_forcing": "Unit propagation only forces a literal when every other way of satisfying its clause is contradicted",
+    "EXACT_ONE_forcing": "Each native Exact-One row's per-variable literal multiplicity is preserved; exact support reachability computed with integer bitset DP",
+    "failed_literal": "Temporarily assign v=0 and v=1; only an actual propagated conflict can force the opposite value",
+    "quota": "Selective failed-literal probing capped at 5% of total chargeable clause visits, plus at most one crossing visit. Aborted probe yields no inferred conflict.",
+    "complete_search": "Both branch values remain reachable unless a logical contradiction is found; resource exhaustion is UNKNOWN",
+    "SAT_witness": "Must pass independent UFR Boolean verifier",
+    "UNSAT_witness": "n<=12 exhaustive independent check; n>12 requires separate C023/UFR portable certificate before external promotion",
+    "causal_consistency": "PENROSE-003 strict DAG remains acyclic; optional hints are not an allowed FINAL_GATE->UFR_PRODUCE dependency"
+  },
+  "controlled_results": {
+    "small_count": 60,
+    "frozen_suite_sha256": "865af20c649740dc7847a7204d9cd0c36470ddb66777c4e92c26bde33c58c53b",
+    "unrestricted_faster": 15,
+    "unrestricted_slower": 45,
+    "unrestricted_median_runtime_ratio": 1.3125121799418302,
+    "quota_faster": 11,
+    "quota_slower": 49,
+    "quota_median_runtime_ratio": 1.3334263852060002,
+    "large_cases": {
+      "MAJ3_K4_n18": {
+        "unit": "UNKNOWN",
+        "lookahead": "UNKNOWN",
+        "selective": "UNKNOWN"
+      },
+      "planted_3sat_n220": {
+        "unit": "SAT",
+        "lookahead": "UNKNOWN",
+        "selective": "SAT"
+      },
+      "planted_3sat_n240": {
+        "unit": "UNKNOWN",
+        "lookahead": "UNKNOWN",
+        "selective": "UNKNOWN"
+      },
+      "synthetic_4bit_core_unsat_n220": {
+        "unit": "UNSAT_SEARCH_ONLY",
+        "lookahead": "UNSAT_SEARCH_ONLY",
+        "selective": "UNSAT_SEARCH_ONLY"
+      },
+      "synthetic_4bit_core_unsat_n240": {
+        "unit": "UNSAT_SEARCH_ONLY",
+        "lookahead": "UNSAT_SEARCH_ONLY",
+        "selective": "UNSAT_SEARCH_ONLY"
+      }
+    },
+    "shared_budget": {
+      "recursive_nodes": 140,
+      "clause_visits": 140000,
+      "seconds": 4
+    },
+    "legacy_C023_certificate_verifier": "PASS",
+    "new_unit_test_groups": "8/8 PASS",
+    "previous_NOVIKOV001_groups": "9/9 PASS"
+  },
+  "epistemic_ceiling": [
+    "Global model consistency and forward-time partial-state consistency are ordinary formal algorithms",
+    "Lookahead forcing is standard failed-literal SAT search, not a new principle of causality",
+    "n220/240 test formulas are newly generated synthetic inputs, not historical unsolved CNFs from a NAS",
+    "Generated unsat cores do not produce portable third-party-verified UNSAT certificates in this experiment",
+    "UNKNOWN and failed proof time caps must be retained as negative/incomplete observations, not erased",
+    "Observed low-n slowdown means optimization not admitted to production C023",
+    "Retrocausal physical signaling NOT_ESTABLISHED, P vs NP OPEN",
+    "Research PRs should stay draft pending independent speed, proof, memory and external-blind gates"
+  ]
+}
