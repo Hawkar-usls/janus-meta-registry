@@ -1,0 +1,98 @@
+name: JANUS LOGOS 001 R1.3 - new observed NIST strong benchmark + bootstrap witness
+
+on:
+  pull_request:
+    paths:
+      - 'research/logos_001/r13_*.py'
+      - 'research/logos_001/test_r13.py'
+      - 'research/logos_001/data_r13/**'
+      - 'data/JANUS-LOGOS-001-R13-*.json'
+      - '.github/workflows/janus-logos-001-r13.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'research/logos_001/r13_*.py'
+      - 'research/logos_001/test_r13.py'
+      - 'research/logos_001/data_r13/**'
+      - 'data/JANUS-LOGOS-001-R13-*.json'
+      - '.github/workflows/janus-logos-001-r13.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: janus-logos-001-r13-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  scientific-discovery:
+    name: Frozen equations from TRAIN and VALIDATION only
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Extract six frozen NIST observed-data cases with no TEST fields
+        run: python research/logos_001/r13_data.py --out /tmp/logos-r13-train-valid.json
+      - name: Frozen R1.2 equation learner proposes R1.3 candidates
+        run: |
+          python research/logos_001/r13_discover.py --input /tmp/logos-r13-train-valid.json --out /tmp/logos-r13-candidates.json
+          python research/logos_001/r13_discover.py --input /tmp/logos-r13-train-valid.json --out /tmp/logos-r13-candidates-replay.json
+          cmp /tmp/logos-r13-candidates.json /tmp/logos-r13-candidates-replay.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: logos-r13-candidates
+          path: /tmp/logos-r13-candidates.json
+          retention-days: 30
+          if-no-files-found: error
+
+  independent-strong-baseline-witness:
+    name: Independent NIST holdout scorer with strong baselines and bootstrap CIs
+    needs: scientific-discovery
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install pinned recognized regression baseline packages
+        run: python -m pip install --disable-pip-version-check numpy==1.26.4 scipy==1.14.1 scikit-learn==1.5.2
+      - uses: actions/download-artifact@v4
+        with:
+          name: logos-r13-candidates
+          path: /tmp/logos-r13-proposals
+      - name: Reconstruct NIST source; independently score TEST and negative controls
+        run: |
+          python research/logos_001/r13_witness.py \
+            --candidate /tmp/logos-r13-proposals/logos-r13-candidates.json \
+            --out /tmp/logos-r13-independent-witness.json --self-test
+      - uses: actions/upload-artifact@v4
+        with:
+          name: logos-r13-independent-holdout-bootstrap-witness
+          path: /tmp/logos-r13-independent-witness.json
+          if-no-files-found: error
+          retention-days: 30
+
+  protocol-and-source-tests:
+    name: Independent adversarial scientific protocol and NIST source tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install pinned independent evaluation dependencies
+        run: python -m pip install --disable-pip-version-check numpy==1.26.4 scipy==1.14.1 scikit-learn==1.5.2
+      - name: Verify original source SHA, withheld TEST and four negative mutations
+        run: python -m unittest discover -s research/logos_001 -p test_r13.py -v
