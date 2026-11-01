@@ -24,11 +24,11 @@ def _pseudo_random(split, i):
 def oracle(case, x, split, i):
     # Written independently, never imported from the dataset generator.
     if case=="C01":return 3/4+(3/2)*x
-    if case=="C02":return -1/4+x/2+5*x*x/4
+    if case=="C02":return -0.25+0.5*x+1.25*x*x
     if case=="C03":return 2/5+(6/5)*math.sin(math.pi*x)
     if case=="C04":return 1/10-x+(3/2)*x*x*x
     if case=="N01":return _pseudo_random(split,i)
-    if case=="N02":return -1/10+3*x*x/4+(1.0 if split=="test" else 0.0)
+    if case=="N02":return -0.1+0.75*x*x+(1.0 if split=="test" else 0.0)
     raise ValueError("Unexpected case")
 
 def reconstruct_train_validation():
