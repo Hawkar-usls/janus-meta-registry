@@ -89,8 +89,8 @@ A successful collector is not proof of useful work or full autonomy.
 - **P0.5** SCOUT_MODEL_SYNTHESIS_DEGRADED: {"snapshots": 17, "synthesis": 0, "expected": 17}
 - **P2** SELF_WRITER_REVIEWED_TASKS_REMAINING: {"accepted": 9, "admitted": 10}
 - **P3** RECENT_TRAINING_ALL_REJECTED: 64
-- **P0.2** WORKFLOW_NOT_SUCCESS_CROSS_ORGAN_WITNESS: {"repository": "Hawkar-usls/janus-meta-registry", "workflow": "janus-cross-organ-source-witness.yml", "status": "OBSERVED", "run_id": 41351981170, "run_attempt": 1, "event": "workflow_run", "conclusion": "failure", "head_sha": "5f819ea204f80f6b81db9a00b004cffb7390e668", "created_at": "2026-11-01T21:26:03Z", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/41351981170"}
-- **P0.2** WORKFLOW_NOT_SUCCESS_ROWAN_WITNESS: {"repository": "Hawkar-usls/janus-meta-registry", "workflow": "janus-rowan-ecosystem-sync-witness.yml", "status": "OBSERVED", "run_id": 41351981208, "run_attempt": 1, "event": "workflow_run", "conclusion": "failure", "head_sha": "5f819ea204f80f6b81db9a00b004cffb7390e668", "created_at": "2026-11-01T21:26:03Z", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/41351981208"}
+- **P0.2** WORKFLOW_NOT_SUCCESS_CROSS_ORGAN_WITNESS: {"conclusion": "failure", "created_at": "2026-11-01T21:26:03Z", "event": "workflow_run", "head_sha": "5f819ea204f80f6b81db9a00b004cffb7390e668", "repository": "Hawkar-usls/janus-meta-registry", "run_attempt": 1, "run_id": 41351981170, "status": "OBSERVED", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/41351981170", "workflow": "janus-cross-organ-source-witness.yml"}
+- **P0.2** WORKFLOW_NOT_SUCCESS_ROWAN_WITNESS: {"conclusion": "failure", "created_at": "2026-11-01T21:26:03Z", "event": "workflow_run", "head_sha": "5f819ea204f80f6b81db9a00b004cffb7390e668", "repository": "Hawkar-usls/janus-meta-registry", "run_attempt": 1, "run_id": 41351981208, "status": "OBSERVED", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/41351981208", "workflow": "janus-rowan-ecosystem-sync-witness.yml"}
 
 ## Continuation
 
