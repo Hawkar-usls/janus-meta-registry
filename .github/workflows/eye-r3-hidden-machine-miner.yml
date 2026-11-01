@@ -11,6 +11,9 @@ on:
       - '!EYE/r3/generated/**'
       - '!assets/hrain-full-memory/**'
       - '!assets/hrain-registry-index.json'
+      - '!assets/site-feed.json'
+      - '!data/autonomy_loop/**'
+      - '!data/JANUS-NEURAL-LINK/**'
 
 permissions:
   contents: write
@@ -89,8 +92,9 @@ jobs:
 
           candidates = json.loads(required[0].read_text(encoding='utf-8'))
           receipt = json.loads(required[-1].read_text(encoding='utf-8'))
-          forbidden_prefixes = ('EYE/generated/', 'EYE/r2/generated/', 'EYE/r3/generated/', 'assets/hrain-full-memory/')
-          forbidden_exact = {'assets/hrain-registry-index.json'}
+          forbidden_prefixes = ('EYE/generated/', 'EYE/r2/generated/', 'EYE/r3/generated/',
+                                'assets/hrain-full-memory/', 'data/autonomy_loop/')
+          forbidden_exact = {'assets/hrain-registry-index.json', 'assets/site-feed.json'}
 
           if candidates['method']['named_target_bonus'] is not False:
               raise SystemExit('R3_TARGET_WAS_BOOSTED')

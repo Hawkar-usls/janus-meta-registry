@@ -10,6 +10,10 @@ on:
       - '!EYE/r2/generated/**'
       - '!assets/hrain-full-memory/**'
       - '!assets/hrain-registry-index.json'
+      - '!EYE/r3/generated/**'
+      - '!assets/site-feed.json'
+      - '!data/autonomy_loop/**'
+      - '!data/JANUS-NEURAL-LINK/**'
 
 permissions:
   contents: write
@@ -73,8 +77,9 @@ jobs:
           c = json.loads((out/'EYE-R2-NOVEL-BRIDGE-CANDIDATES.json').read_text(encoding='utf-8'))
           b = json.loads((out/'EYE-R2-OPERATOR-BACKBONE.json').read_text(encoding='utf-8'))
           r = json.loads((out/'EYE-R2-RECEIPT.json').read_text(encoding='utf-8'))
-          forbidden_prefixes = ('EYE/generated/', 'EYE/r2/generated/', 'assets/hrain-full-memory/')
-          forbidden_exact = {'assets/hrain-registry-index.json'}
+          forbidden_prefixes = ('EYE/generated/', 'EYE/r2/generated/',
+                                'EYE/r3/generated/', 'assets/hrain-full-memory/', 'data/autonomy_loop/')
+          forbidden_exact = {'assets/hrain-registry-index.json', 'assets/site-feed.json'}
 
           if r['status'] not in {'PASS', 'OPEN_NO_NOVEL_PAIR_CANDIDATES'}:
               raise SystemExit('R2_BAD_STATUS')

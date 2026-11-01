@@ -18,8 +18,9 @@ TEXT_EXTENSIONS = {
     ".ini", ".cfg", ".csv", ".tsv", ".html", ".htm", ".js", ".ts", ".tsx",
     ".jsx", ".css", ".scss", ".sh", ".ps1", ".xml", ".jsonl", ".ndjson"
 }
-FORBIDDEN_PREFIXES = ("EYE/generated/", "EYE/r2/generated/", "assets/hrain-full-memory/")
-FORBIDDEN_EXACT = {"assets/hrain-registry-index.json"}
+FORBIDDEN_PREFIXES = ("EYE/generated/", "EYE/r2/generated/", "EYE/r3/generated/",
+                      "assets/hrain-full-memory/", "data/autonomy_loop/")
+FORBIDDEN_EXACT = {"assets/hrain-registry-index.json", "assets/site-feed.json"}
 TOKEN_RE = re.compile(r"[A-Za-zА-Яа-яЁё0-9][A-Za-zА-Яа-яЁё0-9_.:+/-]{2,}", re.UNICODE)
 DATE_VERSION_RE = re.compile(r"(?:^|[-_.])(?:20\d{2}(?:[-_.]\d{2}){0,2}|v?\d+(?:[._-]\d+){0,3})(?:$|[-_.])", re.I)
 
