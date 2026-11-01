@@ -2,17 +2,17 @@
 
 Automatically rebuilt from pinned public evidence.
 
-Status: **AUTONOMY_PARTIAL** · observed 2026-11-01T15:29:46Z
+Status: **AUTONOMY_PARTIAL** · observed 2026-11-01T16:19:22Z
 
-Current phase: **P0.3**
+Current phase: **P0.2**
 
 A successful collector is not proof of useful work or full autonomy.
 
 | Order | Phase | State | Objective |
 |---|---|---|---|
 | 1 | P0.1 | DONE | [One verified source-pinned status snapshot](https://github.com/Hawkar-usls/janus-meta-registry/issues/364) |
-| 2 | P0.2 | DONE | [One Rowan generation through AURA, council, Cosmos and witnesses](https://github.com/Hawkar-usls/janus-meta-registry/issues/365) |
-| 3 | P0.3 | ACTIVE | [Beetle delivery and current Cloud HOME](https://github.com/Hawkar-usls/Janus_Genesis/issues/164) |
+| 2 | P0.2 | ACTIVE_RECHECK | [One Rowan generation through AURA, council, Cosmos and witnesses](https://github.com/Hawkar-usls/janus-meta-registry/issues/365) |
+| 3 | P0.3 | WAITING_FOR_PREVIOUS | [Beetle delivery and current Cloud HOME](https://github.com/Hawkar-usls/Janus_Genesis/issues/164) |
 | 4 | P0.4 | WAITING_FOR_PREVIOUS | Deduplicate patch queue and preserve superseded attempts |
 | 5 | P0.5 | WAITING_FOR_PREVIOUS | Separate snapshots, model synthesis, useful work and idle |
 | 6 | P0.6 | WAITING_FOR_PREVIOUS | Restore local Habitat adapter without recreating HOME |
@@ -78,6 +78,12 @@ A successful collector is not proof of useful work or full autonomy.
 
 ## Evidence-driven tasks
 
+- **P0.2** ROWAN_GENERATION_DRIFT_AURA: 41278703904
+- **P0.2** ROWAN_GENERATION_DRIFT_COUNCIL: 41278703904
+- **P0.2** ROWAN_GENERATION_DRIFT_COORDINATION: 41278703904
+- **P0.2** ROWAN_GENERATION_DRIFT_COSMOS: 41278703904
+- **P0.2** AURA_CANONICAL_DIGEST_DRIFT: "aura"
+- **P0.2** COUNCIL_CANONICAL_DIGEST_DRIFT: "council"
 - **P0.3** BEETLE_DELIVERY_PENDING: {"total_pending": 11, "receiver_states": {"STALE": 10, "UP_TO_DATE": 8, "ACK_UNAVAILABLE": 1}}
 - **P0.3** BEETLE_ROUTING_HELD: "HOLD_STALE_RECEIVER_ACK"
 - **P0.3** EXTERNAL_WITNESS_SKINGPT_ACK: "UNKNOWN"
