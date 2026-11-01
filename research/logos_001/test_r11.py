@@ -35,6 +35,9 @@ class NistR11Tests(unittest.TestCase):
         result=r11_witness.check(self.output)
         self.assertEqual(result["corrupted_pairing_controls_rejected"],2)
         self.assertEqual(result["verdict"],"PASS_SCIENTIFIC_EVALUATION_INTEGRITY")
+        self.assertFalse(result["research_model_promotion_allowed"])
+        self.assertIn(result["scientific_performance"],(
+            "COMPETITIVE_ALL_TESTED_5PCT","BASELINE_NOT_BEATEN__NO_MODEL_PROMOTION"))
 
     def test_tampered_evidence_rejected(self):
         t=r11_witness.tamper_checks(self.output)
