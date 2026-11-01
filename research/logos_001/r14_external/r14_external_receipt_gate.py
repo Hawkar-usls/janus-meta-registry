@@ -87,7 +87,10 @@ def main():
     p.add_argument("--sig-base64-file",required=True)
     p.add_argument("--out",required=True)
     a=p.parse_args()
-    reg=json.loads(Path(a.registration).read_text(encoding="utf-8"))
+    canonical_trust_root=Path(__file__).resolve().parents[3]/"data"/"JANUS-LOGOS-001-R14-CUSTODIAN-REGISTRATION-v1.0.json"
+    if Path(a.registration).resolve()!=canonical_trust_root.resolve():
+        raise ValueError("Untrusted registration path: only the reviewed Meta Registry trust root is authorized")
+    reg=json.loads(canonical_trust_root.read_text(encoding="utf-8"))
     result=verify_receipt(reg,Path(a.receipt).read_bytes(),
                           Path(a.sig_base64_file).read_text().strip())
     Path(a.out).write_text(json.dumps(result,indent=2,sort_keys=True)+"\n",encoding="utf-8")
