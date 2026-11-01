@@ -39,7 +39,8 @@ class RealSelfWriterWakeRepairTests(unittest.TestCase):
         self.assertRegex(self.consumer, r"(?m)^name:\s*" + re.escape(NAME) + r"$")
         allow = admitted_completed_wakers(self.src)
         self.assertEqual(allow, frozenset({
-            "JANUS Rowan Durable Observer", "JANUS Beetle Memory Receiver", NAME
+            "JANUS Rowan Durable Observer", "JANUS Beetle Memory Receiver", NAME,
+            "JANUS Rowan AURA Demiurge autonomous council reconciliation"
         }))
         self.assertIn("types: [completed]", self.src)
         self.assertIn("branches: [main]", self.src)
@@ -48,6 +49,20 @@ class RealSelfWriterWakeRepairTests(unittest.TestCase):
         self.assertIn("github.event.workflow_run.head_repository.full_name == github.repository", self.src)
         self.assertIn("github.event.workflow_run.event != 'pull_request'", self.src)
         self.assertIn("github.event_name != 'pull_request'", self.src)
+
+    def test_council_completion_wakes_current_p02_recheck_without_cross_repo_dispatch(self):
+        council_name = "JANUS Rowan AURA Demiurge autonomous council reconciliation"
+        council = ROOT / ".github/workflows/rowan-coordination-autonomous-reconcile.yml"
+        text = council.read_text(encoding="utf-8")
+        self.assertIn("name: " + council_name, text)
+        self.assertIn(council_name, admitted_completed_wakers(self.src))
+        self.assertIn('"' + council_name + '") ;;', self.src)
+        self.assertIn("github.event.workflow_run.event != 'pull_request'", self.src)
+        event = self.src.split("\n  push:\n", 1)[1].split("\n  pull_request:\n", 1)[0]
+        self.assertIn("'data/rowan/CANONICAL_STATE.json'", event)
+        self.assertIn("'data/rowan/coordination/LATEST_COORDINATION_STATE.json'", event)
+        self.assertNotIn("data/autonomy_loop/", event)
+        self.assertNotIn("repository_dispatch:", self.src)
 
     def test_no_model_assigned_permissions_or_live_fix_fabrication(self):
         self.assertIn("permissions:\n  contents: read", self.src)
