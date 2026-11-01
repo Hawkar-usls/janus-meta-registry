@@ -46,8 +46,12 @@ def evaluate_custodian_private(data,runner=produce_predictions):
         predictions=runner(predictor_input)
         if set(predictions).intersection({"test_y","test","ground_truth","labels"}):
             raise ValueError("Prohibited data return from participant")
-        if predictions.get("protocol")!=PROTOCOL or predictions.get("domain_id")!=domain["domain_id"] or predictions.get("production_model_promotion_allowed") is not False:
-            raise ValueError("Participant returned unapproved protocol")
+        if (predictions.get("protocol")!=PROTOCOL or
+            predictions.get("domain_id")!=domain["domain_id"] or
+            predictions.get("frozen_learner_blob_sha")!="97094ba3ef7461ff1b0eb44541d4a926260c239b" or
+            predictions.get("n_test")!=len(test) or
+            predictions.get("production_model_promotion_allowed") is not False):
+            raise ValueError("Participant returned unapproved protocol or unpinned model")
         bx=r13_witness.choose_baseline(train,valid)
         val_x=[x for x,y in valid];val_y=[y for x,y in valid]
         test_x=[x for x,y in test];test_y=[y for x,y in test]
