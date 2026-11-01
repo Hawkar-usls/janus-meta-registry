@@ -74,8 +74,9 @@ jobs:
           index = json.loads(required[0].read_text(encoding='utf-8'))
           if receipt['counts']['files_indexed'] <= 0:
               raise SystemExit('EYE_EMPTY_CORPUS')
-          forbidden_exact = {'assets/hrain-registry-index.json'}
-          forbidden_prefixes = ('assets/hrain-full-memory/', 'EYE/generated/', 'data/autonomy_loop/')
+          forbidden_exact = {'assets/hrain-registry-index.json', 'assets/site-feed.json'}
+          forbidden_prefixes = ('assets/hrain-full-memory/', 'EYE/generated/',
+                                'EYE/r2/generated/', 'EYE/r3/generated/', 'data/autonomy_loop/')
           leaked = [
               r.get('path') for r in index.get('records', [])
               if r.get('path') in forbidden_exact
