@@ -1,7 +1,7 @@
 name: JANUS Autonomous Roadmap and Continuation
 on:
   workflow_run:
-    workflows: ["JANUS Rowan Durable Observer", "JANUS Beetle Memory Receiver", "JANUS Self-Writer Real Operational Consumer"]
+    workflows: ["JANUS Rowan Durable Observer", "JANUS Beetle Memory Receiver", "JANUS Self-Writer Real Operational Consumer", "JANUS Rowan AURA Demiurge autonomous council reconciliation"]
     types: [completed]
     branches: [main]
   schedule:
@@ -11,6 +11,8 @@ on:
     branches: [main]
     paths:
       - 'modules/autonomy_loop/**'
+      - 'data/rowan/CANONICAL_STATE.json'
+      - 'data/rowan/coordination/LATEST_COORDINATION_STATE.json'
       - 'tests/test_autonomy_*.py'
       - '.github/workflows/janus-autonomy-roadmap-loop.yml'
   pull_request:
@@ -74,7 +76,7 @@ jobs:
           test "$UPSTREAM_CONCLUSION" = success
           test "$UPSTREAM_BRANCH" = main
           case "$UPSTREAM_NAME" in
-            "JANUS Rowan Durable Observer"|"JANUS Beetle Memory Receiver"|"JANUS Self-Writer Real Operational Consumer") ;;
+            "JANUS Rowan Durable Observer"|"JANUS Beetle Memory Receiver"|"JANUS Self-Writer Real Operational Consumer"|"JANUS Rowan AURA Demiurge autonomous council reconciliation") ;;
             *) echo 'JANUS_WAKER_UNADMITTED_SOURCE'; exit 1 ;;
           esac
           [[ "$UPSTREAM_SHA" =~ ^[0-9a-f]{40}$ ]]
