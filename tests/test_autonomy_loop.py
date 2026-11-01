@@ -325,6 +325,74 @@ class ContinuationTests(unittest.TestCase):
         self.assertEqual(client.pin("Janus-Demiurge", "main"), "a"*40)
         self.assertEqual(client.pin("Janus-Demiurge", "main"), "a"*40)
         self.assertEqual(len(calls), 1)
+    def test_workflow_attempt_pin_survives_later_rerun_of_same_id(self):
+        # The unqualified GitHub run endpoint changes after a rerun; the
+        # specific completed attempt is the only reproducible observation.
+        class AttemptPinnedClient(ReplayClient):
+            def __init__(self):
+                self.paths = []
+            def get(self, repo, path):
+                self.paths.append(path)
+                if "/attempts/1" not in path:
+                    raise AssertionError("MUTABLE_WORKFLOW_RUN_ENDPOINT_DISALLOWED")
+                return {"id": 101, "run_attempt": 1, "status": "completed",
+                        "event": "schedule", "conclusion": "success",
+                        "head_sha": "a"*40,
+                        "created_at": "2026-10-30T10:00:00Z",
+                        "html_url": "https://github.com/example/run"}
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            sources, workflows = fixture()
+            for item in workflows.values():
+                item["run_attempt"] = 1
+            receipt = m.summarize(sources, workflows, "2026-10-30T15:00:00Z", "d"*40)
+            m.persist(root, receipt)
+            client = AttemptPinnedClient()
+            result = m.verify_persisted(root, client, True)
+            self.assertEqual(result["status"], "PASS_STATUS_CAPTURE_ONLY")
+            self.assertEqual(len(client.paths), len(m.WORKFLOWS))
+            self.assertTrue(all(p.endswith("/attempts/1") for p in client.paths))
+
+    def test_replay_rejects_attempt_rebinding_even_if_status_success(self):
+        class WrongAttempt(ReplayClient):
+            def get(self, repo, path):
+                return {"id": 101, "run_attempt": 2, "status": "completed",
+                        "event": "schedule", "conclusion": "success",
+                        "head_sha": "a"*40,
+                        "created_at": "2026-10-30T10:00:00Z",
+                        "html_url": "https://github.com/example/run"}
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            sources, workflows = fixture()
+            for item in workflows.values():
+                item["run_attempt"] = 1
+            m.persist(root, m.summarize(sources, workflows, "2026-10-30T15:00:00Z", "d"*40))
+            with self.assertRaisesRegex(m.Hold, "INDEPENDENT_WORKFLOW_REPLAY_MISMATCH"):
+                m.verify_persisted(root, WrongAttempt(), True)
+
+    def test_collector_rejects_inflight_or_drifted_attempt(self):
+        class AttemptClient:
+            def pin(self, *args):
+                raise m.Hold("not required for workflow contract")
+            def get(self, repo, path):
+                if "/actions/workflows/" in path:
+                    return {"workflow_runs": [{"id": 101, "run_attempt": 1,
+                             "event": "schedule", "conclusion": "success",
+                             "head_sha": "a"*40,
+                             "created_at": "2026-10-30T10:00:00Z",
+                             "html_url": "https://github.com/example/run"}]}
+                if path.endswith("/attempts/1"):
+                    return {"id": 101, "run_attempt": 1,
+                            "status": "in_progress", "event": "schedule",
+                            "conclusion": None, "head_sha": "a"*40,
+                            "created_at": "2026-10-30T10:00:00Z",
+                            "html_url": "https://github.com/example/run"}
+                raise AssertionError("unexpected path " + path)
+        _, workflows = m.collect(AttemptClient())
+        self.assertTrue(all(v["status"] == "UNKNOWN" for v in workflows.values()))
+        self.assertTrue(all(v["error_class"] == "Hold" for v in workflows.values()))
+
     def test_source_exception_text_never_enters_public_snapshot(self):
         class Unavailable:
             def pin(self, *args):
