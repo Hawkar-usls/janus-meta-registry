@@ -393,6 +393,37 @@ class ContinuationTests(unittest.TestCase):
         self.assertTrue(all(v["status"] == "UNKNOWN" for v in workflows.values()))
         self.assertTrue(all(v["error_class"] == "Hold" for v in workflows.values()))
 
+    def test_rerun_original_creation_time_does_not_fake_attempt_drift(self):
+        # Real GitHub list /runs reports original run.created_at, while
+        # /runs/{id}/attempts/2 reports the later retry's created_at.
+        class RerunClient:
+            def pin(self, *args):
+                raise m.Hold("not needed")
+            def get(self, repo, path):
+                if "/actions/workflows/" in path:
+                    return {"workflow_runs": [{
+                        "id": 41252334708, "run_attempt": 2,
+                        "status": "completed", "event": "workflow_run",
+                        "conclusion": "success", "head_sha": "a"*40,
+                        "created_at": "2026-10-31T23:23:29Z",
+                        "html_url": "https://github.com/example/run"}]}
+                if path.endswith("/runs/41252334708/attempts/2"):
+                    return {"id": 41252334708, "run_attempt": 2,
+                            "status": "completed", "event": "workflow_run",
+                            "conclusion": "success", "head_sha": "a"*40,
+                            "created_at": "2026-11-01T00:12:35Z",
+                            "html_url": "https://github.com/example/run"}
+                raise AssertionError("unexpected GitHub access " + path)
+        sources, workflows = m.collect(RerunClient())
+        self.assertTrue(all(value["status"] == "OBSERVED"
+                            for value in workflows.values()))
+        self.assertTrue(all(value["run_attempt"] == 2
+                            for value in workflows.values()))
+        self.assertTrue(all(value["created_at"] == "2026-11-01T00:12:35Z"
+                            for value in workflows.values()))
+        self.assertTrue(all(value["status"] == "UNKNOWN"
+                            for value in sources.values()))
+
     def test_source_exception_text_never_enters_public_snapshot(self):
         class Unavailable:
             def pin(self, *args):
