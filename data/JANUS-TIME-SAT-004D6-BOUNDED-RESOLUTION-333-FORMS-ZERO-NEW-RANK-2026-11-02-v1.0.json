@@ -1,0 +1,169 @@
+{
+  "schema": "janus.meta_registry.time_sat_004d6_source_resolution_and_rank_falsification_v1",
+  "id": "JANUS-TIME-SAT-004D6-BOUNDED-RESOLUTION-AND-004D6R-ZERO-RANK-20261102",
+  "date_utc": "2026-11-02",
+  "scientific_status": "ORIGINAL_SOURCE_PROOF_REPLAY_PASS_333_NEW_SYNTAX_REPRESENTATIONS_ZERO_INCREMENTAL_GF2_RANK_NO_SPEEDUP",
+  "parent": "data/JANUS-TIME-SAT-004D5-BINARY-SCC-IMPLICIT-XOR-NULL-REAL-CNF-2026-11-01-v1.0.json",
+  "origin": {
+    "source": "SAT Competition 2026 four already reused PUBLIC CNFs",
+    "status": "REUSED_PUBLIC_DEVELOPMENT_NOT_HIDDEN",
+    "origin_prereg_004D4B_git_blob": "0cbf0eee23aa77b399ad2057f113ac1e48bd8405",
+    "previous_004D5_prereg_git_blob": "7e9c15aa9206dae147c6d318ccc8f1b9de093d78",
+    "frozen_004D6_prereg_git_blob": "150d16f6cc90551afba81e964adc09ad0fe7c032",
+    "source_original_CNF_hashes": {
+      "linear-equations": "dd2e52c12cafa012316052c6c2ac06ea48ccf1c999a5ae57a25c5f208e1cb9bc",
+      "xor-shifting": "03bae774557f351990c0348c7b11933d8760f4d7a8cf60455f1d4754fe9739c0",
+      "minimum-disagreement-parity": "6e054967f4c71d900b2bba2508fea2054ac13de78fa0b0b6a94753f66e9e95fc",
+      "binary-tree-parity": "8d94924bef8978b28a2bf95472556b280bef5d98b6833c6db33554098f52d2d8"
+    }
+  },
+  "research_implementation": {
+    "draft_PR": "https://github.com/Hawkar-usls/Janus-Fundamentum/pull/592",
+    "branch": "research/time-sat-004d6-bounded-source-resolution-20261102",
+    "resolution_source": "experiments/direct/janus_time_sat_004d6_bounded_resolution.py",
+    "proof_checker": "experiments/direct/janus_time_sat_004d6_replay.py",
+    "rank_checker": "experiments/direct/janus_time_sat_004d6_rank_audit.py",
+    "method": "Exact classical source-entailed resolution DAG; complete XOR sign-mask blocks; only append derived logical consequences while retaining every original CNF clause.",
+    "preregistered_resource_caps": {
+      "rounds": 2,
+      "pivots_per_round": 128,
+      "positive_parents_per_pivot": 8,
+      "negative_parents_per_pivot": 8,
+      "pairs_per_pivot": 64,
+      "new_resolvents_per_CNF": 2000,
+      "max_antecedent_width": 4,
+      "max_derived_width": 4,
+      "max_source_rows": 30000,
+      "max_source_literals": 120000,
+      "workers": [
+        "Ubuntu 22.04",
+        "Ubuntu 24.04"
+      ]
+    },
+    "proof_boundary": "Separate same-GitHub-administration code rechecks every source resolution edge and independently reconstitutes each complete parity sign-mask group. Not DRUP/LRAT or external independent witness."
+  },
+  "source_dual_worker_evidence": {
+    "CI": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/41355380127",
+    "CI_run_id": 41355380127,
+    "tested_HEAD": "f191948ae9c0b5bf20420d57afdbcfdc35b72592",
+    "workers_2_of_2": "SUCCESS",
+    "new_tests_per_worker": 8,
+    "previous_004D5_tests_per_worker": 9,
+    "previous_004D4D_tests_per_worker": 9,
+    "existing_C023_serialized_verifier": "PASS_BOTH",
+    "real_SHA_pinned_sources_replayed": 4,
+    "new_derivations_total": 4060,
+    "new_complete_source_entailed_parity_representations": 333,
+    "new_independent_GF2_equations": "NOT_ESTABLISHED_BY_004D6_ONLY",
+    "original_CNF_kept_verbatim": true,
+    "SAT_or_UNSAT_solver_runs": 0,
+    "speed_claim": "NONE",
+    "cases": [
+      {
+        "family": "linear-equations",
+        "binary_resolution_derived_clauses": 0,
+        "new_XOR_representations": 0,
+        "hit_2000_clause_limit": false
+      },
+      {
+        "family": "xor-shifting",
+        "binary_resolution_derived_clauses": 2000,
+        "new_XOR_representations": 169,
+        "hit_2000_clause_limit": true
+      },
+      {
+        "family": "minimum-disagreement-parity",
+        "binary_resolution_derived_clauses": 60,
+        "new_XOR_representations": 0,
+        "hit_2000_clause_limit": false
+      },
+      {
+        "family": "binary-tree-parity",
+        "binary_resolution_derived_clauses": 2000,
+        "new_XOR_representations": 164,
+        "hit_2000_clause_limit": true
+      }
+    ]
+  },
+  "permanent_original_research_archive": {
+    "archiving_CI": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/41355595936",
+    "archiving_CI_conclusion": "SUCCESS",
+    "archived_commit": "d78a13196b138b428777583d58560e52d09ef9ef",
+    "archive_summary": "experiments/time_sat_004_external/time_sat_004d6_evidence/summary.json",
+    "original_zip_sha256": {
+      "ubuntu22": "a26df26b3183c8809f382188a5f6177b46e5908041032e1a460953f825d9762a",
+      "ubuntu24": "58e418d1532b318b9f8ce8eb0d8cd43f00fca18100cb3e38c88f9404ddf522c9"
+    },
+    "original_full_json_sha256": {
+      "ubuntu22": "1d44abe0e9e2a08aa0baea68b8674092114a62aaa9624a800fe80f779edcc7ef",
+      "ubuntu24": "2c395a88df2be8bded8e6333dceb4ac2b58bbbc4cc7831f4e6e9c1fa3e56f3d8"
+    },
+    "complete_resolution_proof_replay_on_archive": "PASS"
+  },
+  "posthoc_004D6R": {
+    "status": "ALL_333_ADDITIONAL_PARITY_REPRESENTATIONS_LINEARLY_REDUNDANT",
+    "nature": "Post-hoc analysis, not blinded holdout and not a preregistered speed test",
+    "CI": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/41355778801",
+    "CI_conclusion": "SUCCESS",
+    "rank_report": "experiments/time_sat_004_external/time_sat_004d6_rank/rank.json",
+    "rank_commit": "1f5dcbc3805eb18fd15458b43b5f57e641eec444",
+    "source_verification": "Rebuilt every new sign mask and rechecked original proof DAG",
+    "rank_type": "Exact GF2 coefficient and augmented-rank, using explicit original full-mask XORs as baseline",
+    "rank_results": [
+      {
+        "family": "linear-equations",
+        "new_forms": 0,
+        "original_rank": 0,
+        "after_rank": 0,
+        "rank_delta": 0,
+        "augmented_rank_delta": 0
+      },
+      {
+        "family": "xor-shifting",
+        "new_forms": 169,
+        "original_rank": 1643,
+        "after_rank": 1643,
+        "rank_delta": 0,
+        "augmented_rank_delta": 0
+      },
+      {
+        "family": "minimum-disagreement-parity",
+        "new_forms": 0,
+        "original_rank": 639,
+        "after_rank": 639,
+        "rank_delta": 0,
+        "augmented_rank_delta": 0
+      },
+      {
+        "family": "binary-tree-parity",
+        "new_forms": 164,
+        "original_rank": 857,
+        "after_rank": 857,
+        "rank_delta": 0,
+        "augmented_rank_delta": 0
+      }
+    ],
+    "total_incremental_coefficient_rank": 0,
+    "total_incremental_augmented_rank": 0,
+    "no_baseline_GF2_contradictions": true,
+    "claim": "333 new explicit CNF parity representations carry ZERO newly independent linear equations relative to source direct XOR equations on the tested cases."
+  },
+  "limitations": [
+    "Both positive source instances hit the preregistered 2000-resolvent cap, so this does not exhaust implied XOR space.",
+    "No new independent GF2 rank was discovered in the four already used public instances.",
+    "No full-process SAT benchmark, memory-tail evaluation, hidden holdout, portable UNSAT proof or independent-admin witness.",
+    "New syntactic implied XORs are not a new P=NP algorithm or a generalized acceleration result.",
+    "The physical chaos/time analogy remains philosophical and not a computational proof."
+  ],
+  "next_gate": "Pre-register fresh external-origin mixed-family CNF cases where source explicit XOR rank is sparse, measure provable rank delta and full-process net cost against native-XOR/unchanged CNF/CDCL controls; do not raise current cap merely to enumerate algebraically redundant equations.",
+  "gates": {
+    "TIME_SAT_004C": "OPEN_INDEPENDENT_WITNESS",
+    "TIME_SAT_004D": "SOURCE_CORRECTNESS_POSITIVE_PERFORMANCE_UNPROVEN",
+    "TIME_SAT_004E": "NET_PROFIT_OPEN",
+    "TIME_SAT_004F": "NOT_READY"
+  },
+  "production_C023": "UNCHANGED",
+  "paid_Rowans": "NONE",
+  "NAS_or_PC_compute": "NONE",
+  "append_only": true
+}

@@ -1,0 +1,121 @@
+{
+  "schema": "janus.meta_registry.time_sat_003abc_result.v1",
+  "artifact_id": "JANUS-TIME-SAT-003ABC-RESOLUTION-FORECAST-DRUP-2026-11-01",
+  "date_utc": "2026-11-01",
+  "status": "CORRECTNESS_PASS_SAT_SPEEDUP_FAIL_SYNTHETIC_DRUP_PASS_EXTERNAL_BLIND_NOT_TESTED",
+  "scientific_parent": {
+    "merged_time_entropy_causality": "data/JANUS-ENTROPY-TIME-CAUSALITY-REGISTRY-SYNTHESIS-2026-11-01-v1.0.json",
+    "time_sat001_negative": "data/JANUS-TIME-SAT-PARTIAL-001-STRONG-CDCL-NEGATIVE-RESULT-2026-11-01-v1.0.json",
+    "time_sat002_negative": "data/JANUS-TIME-SAT-PARTIAL-002-ADAPTIVE-ADMISSION-NEGATIVE-RESULT-2026-11-01-v1.0.json"
+  },
+  "implementations": {
+    "repo": "Hawkar-usls/Janus-Fundamentum",
+    "research_pr": 574,
+    "draft": true,
+    "code_003ab": "experiments/direct/janus_time_sat_003.py",
+    "proof_replay_003c": "experiments/direct/janus_time_sat_003_drup_witness.py",
+    "benchmark": "experiments/direct/janus_time_sat_003_benchmark.py",
+    "test": "tests/test_time_sat_003.py",
+    "scientific_document": "docs/TIME_SAT_003_RESEARCH.md",
+    "dual_host_evidence": "experiments/TIME_SAT_003_ABC_EVIDENCE_20261101.json",
+    "workflow": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/41315201470",
+    "measured_pr_head": "9fec44ab9b5a876ef9a8b9b85d1bf0fbd42596c3",
+    "worker_checkout_merge_ref_sha": "cac6ae986274ebe912bc70b0c594147fa29b7caa",
+    "archive": {
+      "ubuntu22": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/41315201470/artifacts/13087185767",
+      "ubuntu24": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/41315201470/artifacts/13087505475",
+      "retention_days": 30,
+      "contains_complete_original_CNF_and_DRUP_text": true,
+      "rss_isolated_processes": true
+    }
+  },
+  "methods": {
+    "A": "Direct binary resolution (a OR b) AND (a OR NOT b) logically implies a, with original-clause index witness, separate local replay and CDCL entailment check.",
+    "B": "Frozen uncalibrated expected work cost gate uses source features and no test answers, declines extras unless estimated net positive.",
+    "C": "Glucose4 DRUP on original CNF, separate no-solver Boolean unit-propagation RUP replay and source+proof digest; child-isolated memory measurement.",
+    "arms": [
+      "raw_cold_CDCL",
+      "direct_resolution",
+      "frozen_cost_forecast",
+      "legacy_adaptive"
+    ],
+    "fixed_known_cases": 68,
+    "new_synthetic_cases": 7,
+    "generator_seed": 20261101003,
+    "new_input_manifest_sha256": "5c65a017c8dd732029030dbee64bd66a98ca9c98e9a29df1a58027733cca90aa",
+    "excluded_claims": [
+      "PHYSICAL_TACHYON",
+      "CAUSALITY_REVERSAL",
+      "P_EQUALS_NP",
+      "EXTERNAL_BLIND_INDEPENDENCE"
+    ]
+  },
+  "verified_evidence": {
+    "hosts": [
+      "Ubuntu22.04_GitHub_runner",
+      "Ubuntu24.04_GitHub_runner"
+    ],
+    "test_groups_each": {
+      "time_sat003": "8/8 PASS",
+      "time_sat002": "7/7 PASS",
+      "C023_verifier": "PASS"
+    },
+    "full_wall_ratios_medians_on_new_cases": {
+      "ubuntu22": {
+        "CaDiCaL195": {
+          "direct": 1.3007060978865204,
+          "forecast": 1.1094814016144199
+        },
+        "Glucose4": {
+          "direct": 1.3033759561301919,
+          "forecast": 1.1221214318150479
+        }
+      },
+      "ubuntu24": {
+        "CaDiCaL195": {
+          "direct": 1.305812615078163,
+          "forecast": 1.1195206835788338
+        },
+        "Glucose4": {
+          "direct": 1.3244794159671522,
+          "forecast": 1.1376146044728994
+        }
+      }
+    },
+    "all_seven_new_were_slower_than_raw": true,
+    "new_direct_units_generated_in_four_cases": 4,
+    "new_forecast_admissions": 0,
+    "DRUP_proof_pass": [
+      {
+        "n": 128,
+        "proof_additions": 8,
+        "hash_sha256": "2b503f4a2dddc95baed1a96fa31b2fc1a36206dd97ca56a892aefaef3e184a8c"
+      },
+      {
+        "n": 220,
+        "proof_additions": 8,
+        "hash_sha256": "5e6713aa0b9026ef0947a165ddb7e387679202e82de2097a6dd3551b6c69359f"
+      },
+      {
+        "n": 240,
+        "proof_additions": 12,
+        "hash_sha256": "a9195bcaaa5eb8c4c407397a5d0a162c093416bb2396210159869d2dd865bca2"
+      }
+    ],
+    "source_seed_not_external_blind": true,
+    "independent_checker_is_same_administrator": true,
+    "native_memory_isolated_measurement_scope": "whole_python_child_process_with_interpreter_imports",
+    "original_C023_unchanged": true
+  },
+  "decision": {
+    "validity": "PASS_TESTED",
+    "net_CDCL_speedup": "FAIL",
+    "independent_new_UNSAT_evidence": "PASS_ON_EASY_SYNTHETIC_CORES_ONLY",
+    "external_secret_hard_challenge": "NOT_DONE",
+    "third_party_owned_witness": "NOT_DONE",
+    "production": "NOT_READY",
+    "P_vs_NP": "OPEN",
+    "next_step": "Re-evaluate source cost gate on externally hidden SAT families with third-party administered independent proof replay, compare against modern CDCL built-in simplification; retain negatives."
+  },
+  "append_only": true
+}
