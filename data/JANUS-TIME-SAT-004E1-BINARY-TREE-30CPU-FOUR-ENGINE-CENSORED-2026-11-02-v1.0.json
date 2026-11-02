@@ -1,0 +1,90 @@
+{
+  "schema": "janus.meta_registry.time_sat_004e1_fixed_public_source_cold_benchmark_v1",
+  "id": "JANUS-TIME-SAT-004E1-BINARY-TREE-COLD-SOLVING-30CPU-20261102",
+  "date_utc": "2026-11-02",
+  "status": "BOTH_UBUNTU_CI_PASS_FOUR_VALID_SAT_MODELS_TWELVE_30CPU_CENSORED_NO_FINITE_RATIO",
+  "links": {
+    "research_draft_PR": "https://github.com/Hawkar-usls/Janus-Fundamentum/pull/598",
+    "original_test_CI": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/41417001461",
+    "original_archive_CI": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/41417546834",
+    "source_archive": "experiments/time_sat_004_external/time_sat_004e1_evidence/summary.json",
+    "preregistered_protocol": "experiments/time_sat_004_external/PREREGISTERED_004E1_FULL_COST_BINARY_TREE_20261102.json",
+    "preregistered_git_blob": "42d4dc9b4e596209d6f0806ee47abfae3e0d8512",
+    "tested_head": "8a3feced3c5e9d1171286a41b83f900fc7c83fec",
+    "archive_head": "550f449dc75b08359bdef5c9397d0882bb366373"
+  },
+  "source": {
+    "family": "binary-tree-parity",
+    "GBD_id_NOT_SHA256": "7db30d12cb06f0dc2f30abff80d96d6a",
+    "decoded_SHA256": "8d94924bef8978b28a2bf95472556b280bef5d98b6833c6db33554098f52d2d8",
+    "original_n": 1023,
+    "original_m": 4088,
+    "complete_source_proven_xor_equations": 857,
+    "unaltered_original_residual_clauses": 660,
+    "full_source_SAT_model_verified_before_trial": true,
+    "public_preseen_not_blind": true
+  },
+  "method": {
+    "arms": [
+      "JANUS+native-XOR CryptoMiniSat 5.15.0",
+      "CryptoMiniSat 5.15.0 original CNF",
+      "CaDiCaL195 original CNF",
+      "Glucose4 original CNF"
+    ],
+    "ubuntu_workers": [
+      "22.04",
+      "24.04"
+    ],
+    "repeats_per_arm_worker": 2,
+    "trials": 16,
+    "individual_fresh_child_cpu_limit_seconds": 30,
+    "individual_wall_timeout_seconds": 36,
+    "individual_memory_AS_bytes": 2147483648,
+    "full_cost": "Cold Python startup/import+original bytes SHA+strict DIMACS+source SAT model preflight+XOR extraction+solver input+solve+SAT original clause replay",
+    "no_new_rank_zero_resolution_equations_added": true
+  },
+  "results": {
+    "CI_ubuntu22": "SUCCESS",
+    "CI_ubuntu24": "SUCCESS",
+    "new_tests_each_worker": 5,
+    "original_004D4_tests_each_worker": 10,
+    "original_C023_verifier": "PASS_BOTH",
+    "JANUS_all_original_SAT_models_verified": 4,
+    "raw_CMS_censored_CPU_SIGXCPU": 4,
+    "raw_CaDiCaL195_censored_CPU_SIGXCPU": 4,
+    "raw_Glucose4_censored_CPU_SIGXCPU": 4,
+    "mixed_median_full_wall_seconds": {
+      "ubuntu22": 3.6388310025000123,
+      "ubuntu24": 3.0269311784999964
+    },
+    "mixed_median_full_CPU_seconds": {
+      "ubuntu22": 3.6242583405,
+      "ubuntu24": 3.0133956924999996
+    },
+    "mixed_peak_RSS_KiB": {
+      "ubuntu22": 36992,
+      "ubuntu24": 38416
+    },
+    "finite_speedup_ratio": "NOT_DEFINED_BASELINE_CPU_LIMITED",
+    "original_two_worker_action_artifact_ZIP_SHA256": {
+      "ubuntu22": "fd5e3c43271f01a232f59c8dbab9c3f321fefc4799e8b9619bf009df3ff8da68",
+      "ubuntu24": "2671238a2ba77ad7e1a465f6ce0e8fa01dc5a6a667a7f6be02f2b39b150266c6"
+    },
+    "original_archive_commit": "550f449dc75b08359bdef5c9397d0882bb366373",
+    "first_failed_CI": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/41416894804",
+    "first_failure": "pip YAML multiline command missing shell continuation, corrected prior to measured successful CI"
+  },
+  "interpretation": [
+    "This confirms source-verifiable completion on ONE previously seen development SAT instance with a 30-second CPU cap, and extends the 8-second censored prior result.",
+    "No finite same-instance speedup multiple because all original-source solver controls time out, even at 30 CPU seconds; no population claim.",
+    "Exact GF2 rank of 004D6 redundant new equations stayed zero; no claim of universal SAT acceleration or P=NP.",
+    "No externally selected hidden validation, no outside-admin witness, no production C023/main changes or paid Rowan jobs."
+  ],
+  "gates": {
+    "004C": "OPEN",
+    "004D": "PARTIAL",
+    "004E": "PUBLIC_ONE_CASE_COST_SIGNAL_NOT_NET_PROFIT_PROVEN",
+    "004F": "NOT_READY"
+  },
+  "append_only": true
+}
