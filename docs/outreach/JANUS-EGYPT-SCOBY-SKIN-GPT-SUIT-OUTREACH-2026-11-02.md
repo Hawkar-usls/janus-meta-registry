@@ -45,4 +45,15 @@ JANUS independent research
 
 ---
 
-**Dispatch log:** Only the permission-channel inquiry to KOJIMA PRODUCTIONS has been sent; the concept art itself, public fan-community post, and science-partner email drafts have **not** been sent.
+**Dispatch log (updated):** Concept art and research emails sent to Modern Synthesis and BIOFABRICATE. KOJIMA PRODUCTIONS received only a permission-channel inquiry. No concept artwork sent directly to Kojima. Public fan-community post not published.
+
+## Dispatch update — 2026-11-02 (confirmed sent)
+
+| Recipient | Action | Gmail confirmation | Art attached |
+|---|---|---|---|
+| KOJIMA PRODUCTIONS | **Permission-channel inquiry only**, no unsolicited art or concepts | [Sent email](https://mail.google.com/mail/u/?authuser=hawkarlol%40gmail.com#all/1a19e1f9016f5303) | No |
+| Modern Synthesis — collaborate@modernsynthesis.com | Research materials and design inquiry | [Sent email](https://mail.google.com/mail/u/?authuser=hawkarlol%40gmail.com#all/1a19e34d65564a24) | Yes, original JPEG |
+| BIOFABRICATE — hello@biofabricate.co | Biofabrication and creative community inquiry | [Sent email](https://mail.google.com/mail/u/?authuser=hawkarlol%40gmail.com#all/1a19e35cbb20159c) | Yes, original JPEG |
+
+**Unsent:** no direct concept/artwork pitch to Hideo Kojima, no public X/Twitter post, no Bambu Lab email. Gmail SENT confirms outgoing message status, not external delivery/read/interest.
+
