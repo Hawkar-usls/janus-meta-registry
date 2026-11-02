@@ -1,0 +1,217 @@
+{
+  "schema": "JANUS_SCOBY_SKINGPT_PLA_SCAFFOLD_STAGE0_v1",
+  "experiment_id": "SCOBY-SKINGPT-PLA-SCAFFOLD-STAGE0-001",
+  "version": "1.0",
+  "date": "2026-11-02",
+  "status": "PROPOSED_EXPERIMENT_NOT_EXECUTED",
+  "parent_programs": [
+    "data/SCOBY-D0-D1-CANONICAL-RESEARCH-PROGRAM-v2.0.json",
+    "experiments/SCOBY-D1-STAGE1-SCREENING-01-v1.1.json",
+    "data/SCOBY-D1-REINFORCEMENT-COMPARISON-v1.0.json",
+    "registry/research_portfolio/SKINGPT-BIODERIVED-TACTILE-THERMAL-SKIN-DOSSIER-v1.0.0.json",
+    "data/SKYBU-SKINGPT-CIRCULAR-BIOMANUFACTURING-CONCEPT-v1.0.json",
+    "data/JANUS_PLA_GLOW_ESP32_OPTICAL_MEMORY_001.json"
+  ],
+  "upstream_repositories": {
+    "SCOBY_D0": "Hawkar-usls/SCOBY-D0",
+    "SkinGPT": "Hawkar-usls/SkinGPT (private; v0.3 research prototype)",
+    "Meta_Registry": "Hawkar-usls/janus-meta-registry"
+  },
+  "hypothesis_ru": "На границе жидкости и воздуха бактериальная целлюлоза из SCOBY-культуры сможет образовать физически зацепленную оболочку вокруг напечатанной PLA-решётки. Это может повысить сопротивление разрыву/проколу и управляемость формы, но может ухудшить гибкость, адгезию и долговечность при циклических нагрузках.",
+  "key_separations": [
+    "Рост SCOBY/производство BC не эквивалентны механическому армированию",
+    "Визуальное обрастание не эквивалентно прочной границе соединения",
+    "Прочность всей решётки не эквивалентна улучшению свойств самой BC",
+    "Послесвечение PLA Glow не является доказательством полезного действия на культуру",
+    "Статическая культура формирует основную BC-пелликулу у границы воздух/жидкость, а не обязательно в объёме"
+  ],
+  "stage0_design": {
+    "type": "geometry-feasibility and mechanism screen",
+    "printed_material": "Обычный однотипный неокрашенный PLA из одной партии, без Glow и неизвестных функциональных наполнителей",
+    "sample_geometry_nominal": {
+      "shape": "плоский съёмный квадрат с закруглёнными краями; размеры подстраиваются под одинаковые ёмкости",
+      "nominal_outer_size_mm": [
+        70,
+        70
+      ],
+      "nominal_rib_width_mm": 1.2,
+      "nominal_thickness_mm": 0.8,
+      "nominal_clear_opening_mm": "6–8",
+      "open_area": "измерить по фактической CAD-геометрии и сохранить",
+      "position": "вблизи поверхности жидкости без герметичного перекрытия доступа воздуха",
+      "note": "Геометрия является начальной инженерной гипотезой, не оптимизированным рецептом; не допускать погружения электроники"
+    },
+    "variants": [
+      {
+        "id": "A",
+        "name": "BC_ONLY",
+        "role": "биологический контроль",
+        "intervention": "та же культура/площадь/условия, без PLA"
+      },
+      {
+        "id": "B",
+        "name": "SMOOTH_PLA_LATTICE",
+        "role": "контроль базового армирования",
+        "intervention": "гладкая FDM-решётка с фиксированной площадью отверстий"
+      },
+      {
+        "id": "C",
+        "name": "TEXTURED_PLA_LATTICE",
+        "role": "эксперимент механического зацепления",
+        "intervention": "тот же рисунок и сопоставимая масса PLA; небольшие рельефные выступы/перемычки, которые могут удерживать целлюлозу"
+      },
+      {
+        "id": "D",
+        "name": "POST_ASSEMBLED_BC_PLA",
+        "role": "контроль эффекта совместного роста",
+        "intervention": "BC выращивается отдельно, затем механически накладывается на такую же решётку; не выдавать за in-situ выращенный композит"
+      },
+      {
+        "id": "E",
+        "name": "PLA_ONLY",
+        "role": "механический контроль каркаса",
+        "intervention": "та же решётка без целлюлозы"
+      }
+    ],
+    "pilot": "По одному сосуду для A/B/C для проверки геометрии и формирования плёнки; результаты пилота не считать проверкой воспроизводимости.",
+    "followup_replication": "После фиксации геометрии минимум три независимых культуральных сосуда на каждый ростовой вариант, желательно в разных независимых партиях; кусочки одной плёнки — технические субобразцы, а не биологические повторности.",
+    "condition_matching": [
+      "Происхождение стартовой культуры, партия и начальное состояние",
+      "Одинаковые ёмкости, площадь открытой поверхности и глубина жидкости",
+      "Одинаковая партия среды и неизменные исходные параметры",
+      "Сопоставимое положение каркаса относительно воздух-жидкость",
+      "Одинаковый режим окружающей температуры и света",
+      "Одинаковый уход, критерии окончания и история отбора"
+    ],
+    "observational_days_proposed": [
+      0,
+      3,
+      7,
+      10,
+      14
+    ],
+    "note": "Не смешивать пищевую культуру и исследовательские материалы; любые культуры после контакта с PLA — только лабораторная непищевая линия."
+  },
+  "growth_measurements": [
+    "Фото сверху/сбоку с масштабом и одинаковыми условиями освещения",
+    "Площадь покрытия PLA целлюлозой и доля заполненных отверстий",
+    "Состояние границы: сквозное вплетение/обхват, только налёт или отсутствие контакта",
+    "Толщина пелликулы в одинаковых точках",
+    "Масса влажной BC и сухая масса BC после документированного отделения от PLA или отдельного контрольного эквивалента; не смешивать с массой каркаса",
+    "pH и температура по времени; наблюдаемая контаминация",
+    "Масса/поверхность/размеры PLA до и после; признаки трещин и разрушения"
+  ],
+  "mechanical_measurements": {
+    "conditions": [
+      "сразу после подготовки / влажное состояние",
+      "после стандартизованного высушивания и кондиционирования"
+    ],
+    "priority_tests": [
+      "Удержание BC на каркасе при одинаковой мягкой промывке/переносе",
+      "Отслоение или выдёргивание из ячейки с фиксированной геометрией нагрузки",
+      "Сопротивление проколу на одинаковой площади",
+      "Изгиб при фиксированном радиусе и остаточная деформация",
+      "Нагрузка до разрыва и удлинение при разрыве, только при сопоставимой форме образцов",
+      "Повторные циклы умеренного изгиба с документированным числом циклов и типом разрушения"
+    ],
+    "comparison_invariants": [
+      "BC_ONLY vs each composite at matched effective specimen dimensions",
+      "PLA_ONLY vs composite to distinguish mere plastic load-bearing",
+      "grown-on vs post-assembled BC on PLA to test integration",
+      "Report both absolute and thickness/area/density-normalized results",
+      "Compare stiffness together with bendability and failure mode; no isolated strength-winner claim",
+      "Use measured loads/displacements; no estimates presented as observations"
+    ]
+  },
+  "skingpt_integration": {
+    "current_capability": "SkinGPT v0.3: ESP32-S3, 8 NTC zones through CD74HC4067, one protected piezo input, optional MPU6050/AMG8833; TCP NDJSON logging and SHA-256 session provenance",
+    "phase1": "Сначала эксперимент роста и материал без датчиков внутри культуры; отдельная камера/внешний мониторинг среды",
+    "phase2": "После получения, очистки/стабилизации материала — прототип сенсорного купона: одинаковая подложка и расположение NTC и защищённого пьезоканала на A/B/C/D/E образцах",
+    "telemetry": [
+      "sample_id",
+      "batch_id",
+      "material_state_wet_or_dry",
+      "ambient_temperature",
+      "humidity_if_available",
+      "external_stimulus_ground_truth",
+      "thermal_zones",
+      "piezo_peak_rms",
+      "timestamps",
+      "boot_id",
+      "firmware_git_sha",
+      "raw_log_sha256"
+    ],
+    "no_claims": [
+      "No validated living sensing skin",
+      "Rule-based classifier not a trained GPT",
+      "One piezo channel cannot localize impact",
+      "No self-repair claim without regeneration tests"
+    ],
+    "electrical_isolation": "Никаких открытых ESP32, контактов электродов или незащищённых проводников во влажной среде SCOBY; датчики в изолированных карманах либо вне сосуда."
+  },
+  "glow_boundary": {
+    "immediate_use": "NO_DIRECT_CONTACT",
+    "reason": "SrAl2O4:Eu,Dy может быть влагочувствительным, состав SUNLU и миграция компонентов не подтверждены",
+    "later_use": "Возможен отдельный внешний оптический модуль (через стенку ёмкости), не смешиваемый с эффектом механического армирования",
+    "note": "Синий/UV свет не использовать как неконтролируемое воздействие на живую культуру."
+  },
+  "interpretation_matrix": [
+    {
+      "observation": "BC не перекрывает отверстия / растёт только у поверхности",
+      "conclusion": "Пересмотреть положение каркаса и геометрию; не считать материал биосовместимым или несовместимым на основании одного опыта"
+    },
+    {
+      "observation": "BC покрывает PLA, но легко отслаивается",
+      "conclusion": "Есть колонизация/осаждение, но доказательства пригодного армирования нет"
+    },
+    {
+      "observation": "Композит прочнее BC-only, но близок PLA-only",
+      "conclusion": "Пластиковая решётка несёт нагрузку; специфическая интеграция BC не доказана"
+    },
+    {
+      "observation": "grown-on превосходит post-assembled при равной PLA массе и BC толщине",
+      "conclusion": "Кандидат эффекта механического зацепления, требует повторов и структурного подтверждения"
+    },
+    {
+      "observation": "Прочность растёт, изгиб и усталостная стойкость ухудшаются",
+      "conclusion": "Компромисс; не продвижение к функциональной коже без оценки назначения"
+    },
+    {
+      "observation": "Влияние рельефа на прочность отсутствует",
+      "conclusion": "Отрицательный результат сохраняется; не объявлять textured лучшим"
+    }
+  ],
+  "evidence_and_prior_art": [
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9657219/",
+      "title": "Preparation of 3D Printed Polylactic Acid/Bacterial Cellulose Composite Scaffold for Tissue Engineering Applications",
+      "note": "66.49 MPa composite vs 25.61 MPa BC in prepared composite system; NOT evidence for direct in-situ SCOBY growth on FDM PLA"
+    },
+    {
+      "url": "https://www.nature.com/articles/s41598-021-98705-2",
+      "title": "Surface-microstructured cellulose via guided assembly biolithography",
+      "note": "BC growth geometry is sensitive to oxygen and air/liquid interface"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10935214/",
+      "title": "Investigation of Hydrolytic Degradation Kinetics of 3D-Printed PLA Structures",
+      "note": "Accelerated-degradation research; do not extrapolate directly to room-temperature culture"
+    }
+  ],
+  "safety": {
+    "food_use": "FORBIDDEN_FOR_EXPERIMENTAL_CULTURE_AND_OUTPUT",
+    "material_handling": "Не употреблять напиток и культуру; не возвращать их в пищевую линию",
+    "contamination": "Плесень или необычный запах — остановка опыта и безопасная утилизация; не использовать как доказательство полезной колонизации",
+    "chemical": "Без PLA Glow, непроверенных добавок и жидких электродов на первом шаге",
+    "sensor": "Электрическое разделение влажной среды и электроники обязательно",
+    "sample_conditioning": "Любые потенциально агрессивные процедуры очистки и инактивации выполняются отдельно по проверенным лабораторным SOP; не являются частью домашней инструкции"
+  },
+  "governance": {
+    "expected_current_result": "UNKNOWN",
+    "observed_data_count": 0,
+    "publication_claim_ceiling": "PROPOSED_GEOMETRY_AND_CONTROLLED_SCREEN_ONLY",
+    "next_gate": "Fabricate identical pilot geometry; document actual culture-interface position and photos; only then freeze full replicated test plan",
+    "positive_and_negative_results_required": true,
+    "hash_semantics": "Integrity/provenance, not evidence of scientific truth"
+  }
+}
