@@ -1,0 +1,64 @@
+{
+  "schema": "janus.meta_registry.time_sat_004b_exit_status_addendum.v1",
+  "date_utc": "2026-11-01",
+  "status": "OFFLINE_SIGXCPU_CLASSIFICATION_REGRESSION_PASS_NO_NEW_SAT_BENCHMARK",
+  "appendix_to": "data/JANUS-TIME-SAT-004B-SATCOMP26-PUBLIC-CNF-SHA-PCENTER-DRUP-2026-11-01-v1.0.json",
+  "linked_issue": "https://github.com/Hawkar-usls/Janus-Fundamentum/issues/575",
+  "scientific_context": {
+    "public_original_DIMACS_candidates": 12,
+    "candidate_origins_verified_by_two_GitHub_runners": true,
+    "baselines_attempted": 9,
+    "baselines_both_SIGXCPU": 8,
+    "baseline_individual_SIGXCPU_terminations": 16,
+    "size_skipped": 3,
+    "original_pcenter_CNF_n": 2320,
+    "original_pcenter_CNF_clauses": 8620,
+    "original_pcenter_DRUP_7_RUP_additions": 7,
+    "original_pcenter_DRUP_deletions_ignored": 1517,
+    "original_pcenter_source_and_proof_sha256": "e860c2a8593099c64b0d603404c8f28b050549252f4e945e7cf7a88aaf622ada",
+    "scientific_limit": "P-center fast proof, not evidence of hard-SAT advantage"
+  },
+  "original_evidence": {
+    "original_pilot_run": 41322622378,
+    "original_interpretation": "experiments/time_sat_004_external/pilot_20261101/scientific_interpretation.json",
+    "original_raw_receipt": "experiments/time_sat_004_external/pilot_20261101/screen.original.json",
+    "original_source_proof_archive": "experiments/time_sat_004_external/pcenter_011984fd82_verified/manifest.json",
+    "original_raw_and_scientific_evidence_unchanged": true
+  },
+  "future_receipt_patch": {
+    "repo": "Hawkar-usls/Janus-Fundamentum",
+    "draft_pr": "https://github.com/Hawkar-usls/Janus-Fundamentum/pull/579",
+    "branch": "research/time-sat-004b-sigxcpu-evidence-20261101",
+    "tested_head_sha": "24288a61fcf32315ccdf6b5593bb85fd6745cffb",
+    "base_draft_pr": 578,
+    "changed_source": "experiments/direct/janus_time_sat_004b_baselines.py",
+    "changed_tests": "tests/test_time_sat_004b.py",
+    "offline_workflow": ".github/workflows/validate-time-sat-004b-signals.yml",
+    "test_run": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/41325434872",
+    "test_run_status": "SUCCESS_ONE_UBUNTU_24_04_JOB",
+    "new_behavior": {
+      "negative_SIGXCPU": "UNKNOWN_CPU_LIMIT_SIGXCPU",
+      "negative_other_signal": "UNKNOWN_PROCESS_SIGNAL",
+      "positive_nonzero_exit": "ENGINE_NONZERO_EXIT",
+      "parent_wall_clock_limit": "UNKNOWN_WALL_TIMEOUT",
+      "SIGKILL": "UNSPECIFIED_CAUSE_NOT_ASSUMED_OOM_OR_CPU"
+    },
+    "claims": "Classification regression tested offline; no rerun of external CNF or strong CDCL in this patch"
+  },
+  "boundaries": [
+    "Original initial report is intentionally retained with generic ENGINE_ERROR_OR_RESOURCE_LIMIT and raw -24 process receipts",
+    "Historical interpreted report already correctly mapped -24 to UNKNOWN_CPU_LIMIT_SIGXCPU",
+    "SIGXCPU is process CPU resource exhaustion, not SAT algorithm correctness verdict",
+    "No newly solved hard formula, independent third-party witness, or measured JANUS net speedup",
+    "All PRs remain draft; protected C023/main and original source evidence not modified"
+  ],
+  "gates": {
+    "TIME_SAT_004A": "PASS",
+    "TIME_SAT_004B": "EXTERNAL_PUBLIC_SCREEN_PASS_HARD_BLIND_HOLDOUT_OPEN",
+    "TIME_SAT_004C": "OPEN",
+    "TIME_SAT_004D": "OPEN",
+    "TIME_SAT_004E": "OPEN",
+    "TIME_SAT_004F": "NOT_READY"
+  },
+  "append_only": true
+}

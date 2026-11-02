@@ -1,0 +1,97 @@
+{
+  "schema": "janus.meta_registry.time_sat_004d0_large_cnf_research_v1",
+  "id": "JANUS-TIME-SAT-004D0-LARGE-CNF-ALL-CPU-LIMIT-ZERO-BINARY-WEDGES-2026-11-01",
+  "date_utc": "2026-11-01",
+  "status": "ENGINEERING_PASS_PERFORMANCE_NOT_DEMONSTRATED_ALL_CENSORED",
+  "references": {
+    "issue": "https://github.com/Hawkar-usls/Janus-Fundamentum/issues/575",
+    "adapter_PR": "https://github.com/Hawkar-usls/Janus-Fundamentum/pull/580",
+    "durable_evidence_PR": "https://github.com/Hawkar-usls/Janus-Fundamentum/pull/581",
+    "dual_run": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/41326432087",
+    "dual_run_tested_HEAD": "1c07c58ca513180453c28a87f6f520c6e790b129",
+    "archive_run": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/41326950377",
+    "source_frozen_archive": "experiments/time_sat_004_external/time_sat_004d0_evidence/summary.json",
+    "source_only_witness_diagnostic": "evidence/time_sat_004d0_diagnostics/diagnostics.json",
+    "scientific_report": "docs/TIME_SAT_004D0_LARGE_CNF_FEASIBILITY_20261101.md"
+  },
+  "method": {
+    "experimental_algorithm": "Existing JANUS-003 binary 2-clause resolution, NOT full JANUS UFR solver",
+    "original_CNF_unchanged": true,
+    "frozen_sources": "First known 004B CPU-limited public metadata-SAT and metadata-UNSAT cases",
+    "public_not_blind": true,
+    "arms": [
+      "raw CDCL",
+      "feature_only",
+      "JANUS direct",
+      "JANUS frozen uncalibrated forecast"
+    ],
+    "CDCL_engines": [
+      "CaDiCaL195",
+      "Glucose4"
+    ],
+    "separate_ubuntu_cloud_hosts": [
+      "22.04",
+      "24.04"
+    ],
+    "repetitions_per_arm": 1,
+    "max_cpu_seconds_per_child": 6,
+    "max_wall_seconds_per_child": 9,
+    "max_virtual_memory_bytes_per_child": 2147483648
+  },
+  "observed": {
+    "original_artifact_SHA256": {
+      "ubuntu-22.04": "ba8e44993e354c99d2086366619673db4bac4d1262a7cc77716b9f93dbba2b64",
+      "ubuntu-24.04": "73290cee54abe215d20d93f52cb5199cb1b29aeccb2b8b9d325796e89acfed79"
+    },
+    "all_runs": 32,
+    "CPU_limit_SIGXCPU_UNKNOWN": 32,
+    "SAT_or_UNSAT_decisions": 0,
+    "completed_original_proof": 0,
+    "new_tests_per_host": "7/7 PASS",
+    "predecessor_tests_per_host": "6/6 PASS",
+    "original_source_sha256_identical_between_hosts": true,
+    "source_only_diagnostics": [
+      {
+        "family": "lights-out",
+        "n": 625,
+        "m": 9216,
+        "original_literals_scanned": 45312,
+        "binary_wedges": 0,
+        "forecast_admit": false,
+        "forecast_net_abstract_units": -90624,
+        "original_decoded_sha256": "6be9bfe6b44454a061a2e93350f589643f8a16f5bca6babdaa50a2d3d7069361"
+      },
+      {
+        "family": "greentao",
+        "n": 527,
+        "m": 12692,
+        "original_literals_scanned": 38748,
+        "binary_wedges": 0,
+        "forecast_admit": false,
+        "forecast_net_abstract_units": -77496,
+        "original_decoded_sha256": "622732d1d213e930a7711270aefa079c9329cb9a446b4f24d848fea2cab6b5a7"
+      }
+    ]
+  },
+  "epistemic_limits": [
+    "All 32 solver observations are CPU-censored; do not compute a solution speedup ratio.",
+    "Source-only cheap stage found zero applicable binary resolvents on BOTH real CNFs.",
+    "Safe skip is not positive net speedup; the scan has nonzero overhead.",
+    "Single repetition plus common GitHub admin is not an independent scientific trial.",
+    "Direct binary resolution is a classical existing inference, not full JANUS SAT at scale.",
+    "Both publicly known external-origin benchmark labels remain unverified under this six-second window.",
+    "Independent external trusted Witness, stronger native solver simplification comparator, actual held-out sealed sources and new UNSAT certificates remain OPEN.",
+    "Linked YouTube video titled Настоящего не существует | ALI is philosophical context, not a claim of physical retrocausality."
+  ],
+  "milestone_gates": {
+    "TIME_SAT_004A": "PASS",
+    "TIME_SAT_004B": "PUBLIC_INPUT_PILOT_ONLY",
+    "TIME_SAT_004C": "NOT_DONE",
+    "TIME_SAT_004D": "OPEN_FEASIBILITY_ONLY",
+    "TIME_SAT_004E": "NOT_CALIBRATED",
+    "TIME_SAT_004F": "NOT_READY",
+    "C023_main": "UNCHANGED",
+    "P_equals_NP": "OPEN"
+  },
+  "append_only": true
+}
