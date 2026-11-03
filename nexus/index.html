@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090e1d">
+  <meta name="description" content="JANUS NEXUS — read-only evidence dashboard from the public JANUS Meta Registry.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'">
+  <title>JANUS NEXUS · Evidence Console</title>
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Навигация">
+      <a class="identity" href="../" aria-label="Meta Registry">
+        <span class="identity-icon">Ⅺ</span>
+        <span><strong>JANUS</strong><small>NEXUS / v1.0</small></span>
+      </a>
+      <div class="sidebar-label">МОНИТОРИНГ</div>
+      <nav class="side-nav">
+        <a class="active" href="#overview"><span class="nav-icon">◈</span> Обзор</a>
+        <a href="#constellation"><span class="nav-icon">⌘</span> Органы</a>
+        <a href="#roadmap"><span class="nav-icon">▤</span> Автономность</a>
+        <a href="#evidence"><span class="nav-icon">⌁</span> Свидетельства</a>
+      </nav>
+      <div class="sidebar-label">ИСТОЧНИКИ</div>
+      <nav class="side-nav secondary-nav">
+        <a href="../data/autonomy_loop/LATEST.json" target="_blank" rel="noopener noreferrer">LATEST.json <span>↗</span></a>
+        <a href="../data/autonomy_loop/CHECKPOINT.json" target="_blank" rel="noopener noreferrer">CHECKPOINT.json <span>↗</span></a>
+        <a href="../data/autonomy_loop/ROADMAP.md" target="_blank" rel="noopener noreferrer">ROADMAP.md <span>↗</span></a>
+        <a href="https://github.com/Hawkar-usls/janus-meta-registry" target="_blank" rel="noopener noreferrer">GitHub <span>↗</span></a>
+      </nav>
+      <div class="sidebar-foot">
+        <div class="tiny-marker"><i></i> PUBLIC · READ ONLY</div>
+        <p>Ни одна кнопка не запускает модель, worker или изменение репозитория.</p>
+      </div>
+    </aside>
+
+    <main id="overview" class="content">
+      <header class="topbar">
+        <div class="breadcrumbs"><span>JANUS ECOSYSTEM</span><span class="chev">/</span><strong>Evidence Console</strong></div>
+        <div class="top-actions"><span id="connection" class="connection pending" role="status">Загрузка данных</span><button id="refresh" type="button">↻ Обновить</button></div>
+      </header>
+
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-grid"></div>
+        <div class="hero-copy">
+          <div class="eyebrow"><span class="live-pulse"></span> СИСТЕМА НАБЛЮДЕНИЯ · НЕ КОНТРОЛЛЕР</div>
+          <h1 id="hero-title">Одна экосистема.<br><em>Проверяемое состояние.</em></h1>
+          <p>JANUS NEXUS показывает только опубликованные свидетельства Meta Registry. Неизвестное остаётся неизвестным. Данные не дают системе новых полномочий.</p>
+          <div class="hero-strip"><span>Эпоха наблюдения</span><strong id="observed">Ожидание…</strong><span class="hero-separator"></span><span>Последняя проверка браузером</span><strong id="checked">—</strong></div>
+        </div>
+        <div class="orbital-art" aria-hidden="true"><div class="orbit orbit-a"></div><div class="orbit orbit-b"></div><div class="orbit orbit-c"></div><div class="orbital-core">Ⅰ<span>◈</span>Ⅱ</div><div class="orbital-dot dot-one"></div><div class="orbital-dot dot-two"></div></div>
+      </section>
+
+      <section aria-labelledby="metrics-title" class="section">
+        <div class="section-heading"><div><div class="section-kicker">01 / ТЕЛЕМЕТРИЯ</div><h2 id="metrics-title">Контур автономности</h2></div><span class="section-note">Данные только из опубликованного snapshot</span></div>
+        <div class="metrics">
+          <article class="metric metric-primary"><div class="metric-label">Статус экосистемы <span>◉</span></div><strong id="status-value">—</strong><span id="status-sub" class="metric-sub">Нет подтверждённых данных</span></article>
+          <article class="metric"><div class="metric-label">Текущая фаза <span>◇</span></div><strong id="phase-value">—</strong><span class="metric-sub">Проверяется отдельно от статуса</span></article>
+          <article class="metric"><div class="metric-label">Ожидающие доставки Жука <span>↗</span></div><strong id="beetle-value">—</strong><span id="beetle-sub" class="metric-sub">Данные не получены</span></article>
+          <article class="metric"><div class="metric-label">Scout · синтез модели <span>⌁</span></div><strong id="scout-value">—</strong><span id="scout-sub" class="metric-sub">Данные не получены</span></article>
+        </div>
+      </section>
+
+      <section class="two-up section" id="constellation">
+        <article class="panel organism">
+          <div class="panel-header"><div><div class="section-kicker">02 / АРХИТЕКТУРА</div><h2>Органы JANUS</h2></div><span class="mini-tag">SOURCE-BINDING</span></div>
+          <p class="panel-desc">Свечение узла означает наличие упоминания источника в опубликованном свидетельстве — не исправность сервиса и не успешный запуск.</p>
+          <svg class="network" viewBox="0 0 560 300" role="img" aria-labelledby="network-title">
+            <title id="network-title">Связи Meta Registry с органами JANUS</title>
+            <defs><linearGradient id="wire" x1="0" x2="1"><stop stop-color="#7757e9"/><stop offset="1" stop-color="#5ce7d3"/></linearGradient><radialGradient id="core"><stop stop-color="#1a3348"/><stop offset="1" stop-color="#101b32"/></radialGradient></defs>
+            <g class="network-wires">
+              <path d="M280 146 L110 67 M280 146 L280 44 M280 146 L450 67 M280 146 L110 228 M280 146 L280 258 M280 146 L450 228"/>
+            </g>
+            <g class="network-nodes">
+              <g class="node" id="node-aura" transform="translate(110 67)"><circle r="30"/><text y="5">AURA</text></g>
+              <g class="node" id="node-demiurge" transform="translate(280 44)"><circle r="34"/><text y="5">DEMIURGE</text></g>
+              <g class="node" id="node-beetle" transform="translate(450 67)"><circle r="30"/><text y="5">BEETLE</text></g>
+              <g class="node" id="node-hrain" transform="translate(110 228)"><circle r="30"/><text y="5">HRAiN</text></g>
+              <g class="node" id="node-home" transform="translate(280 258)"><circle r="30"/><text y="5">HOME</text></g>
+              <g class="node" id="node-keymaster" transform="translate(450 228)"><circle r="37"/><text y="4">KEYMASTER</text></g>
+            </g>
+            <g class="network-center" transform="translate(280 146)"><circle class="halo" r="67"/><circle r="52"/><text class="mark" y="-5">◈</text><text y="21">META REGISTRY</text></g>
+          </svg>
+          <div class="legend"><span><i class="legend-dot attested"></i> Источник указан</span><span><i class="legend-dot"></i> Нет свидетельства</span><span><i class="legend-dot warned"></i> Есть предупреждение</span></div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-header"><div><div class="section-kicker">03 / ОРГАНЫ</div><h2>Реестр состояний</h2></div><span class="mini-tag">НЕ LIVE-HEALTH</span></div>
+          <div id="organ-list" class="organ-list" aria-live="polite"><div class="empty">Ожидание свидетельств…</div></div>
+          <p class="panel-footnote">Состояния показывают наличие источников в последнем receipt, а не реальную доступность удалённых процессов.</p>
+        </article>
+      </section>
+
+      <section class="two-up section" id="roadmap">
+        <article class="panel">
+          <div class="panel-header"><div><div class="section-kicker">04 / МАРШРУТ</div><h2>Ступени автономности</h2></div><a class="text-link" href="../data/autonomy_loop/ROADMAP.md" target="_blank" rel="noopener noreferrer">Roadmap ↗</a></div>
+          <div id="phases" class="phase-list"><div class="empty">Получение дорожной карты…</div></div>
+        </article>
+        <article class="panel">
+          <div class="panel-header"><div><div class="section-kicker">05 / ДОКАЗАТЕЛЬСТВА</div><h2>Работа и ограничения</h2></div><span class="mini-tag">NO CLAIM PROMOTION</span></div>
+          <div class="work-grid">
+            <div><span>Патчей в ожидании</span><strong id="patches">—</strong></div>
+            <div><span>Принятых модулей</span><strong id="modules">—</strong></div>
+            <div><span>Попытки обучения</span><strong id="training">—</strong></div>
+            <div><span>Принятые Champion</span><strong id="promotions">—</strong></div>
+          </div>
+          <div class="gate"><div class="gate-mark">!</div><div><strong>Полная автономность не подтверждена</strong><p id="gate-detail">До успешной независимой проверки фазы остаются закрытыми.</p></div></div>
+          <div class="source-fingerprint"><span>State SHA-256</span><code id="state-hash">—</code><button type="button" id="copy-hash" title="Копировать SHA-256" disabled>Копировать</button></div>
+        </article>
+      </section>
+
+      <section class="section" id="evidence">
+        <div class="section-heading"><div><div class="section-kicker">06 / ПРОТОКОЛ</div><h2>Незакрытые наблюдения</h2></div><a class="text-link" id="receipt-link" href="../data/autonomy_loop/LATEST.json" target="_blank" rel="noopener noreferrer">Открыть receipt ↗</a></div>
+        <div class="panel findings-panel"><div class="findings-title"><span>Фаза / Причина</span><span>Свидетельство</span></div><div id="findings" class="finding-list" aria-live="polite"><div class="empty">Нет загруженного протокола</div></div></div>
+      </section>
+
+      <footer class="footer"><span>JANUS NEXUS · STATIC OBSERVER · ZERO AUTHORITY DELTA</span><span>GitHub Pages / Vanilla JS / Public JSON</span><a href="../">Meta Registry ↗</a></footer>
+    </main>
+  </div>
+</body>
+</html>
