@@ -16,6 +16,20 @@ SCHEMA = "janus.autonomy.snapshot.v1"
 OWNER = "Hawkar-usls"
 ROOT = Path(__file__).resolve().parents[2]
 OUTPUT = Path("data/autonomy_loop")
+SELF_ASSEMBLY_ISSUE = "https://github.com/Hawkar-usls/janus-meta-registry/issues/440"
+SELF_ASSEMBLY_PHASE_TARGETS = {
+    "P0.1": "VERIFY_SOURCE_PINNED_SNAPSHOT",
+    "P0.2": "RECONCILE_ROWAN_AURA_COUNCIL_COSMOS",
+    "P0.3": "VERIFY_BEETLE_ACK_AND_CLOUD_HOME_HANDOFF",
+    "P0.4": "DEDUPLICATE_PATCHES_WITHOUT_DELETION",
+    "P0.5": "SEPARATE_SNAPSHOT_SYNTHESIS_AND_USEFUL_WORK",
+    "P0.6": "VERIFY_EXISTING_HABITAT_STATUS_RESUME",
+    "P1": "REPLAY_G1_TO_G20_ON_ONE_FROZEN_MANIFEST",
+    "P2": "AUTHOR_AND_INDEPENDENTLY_VERIFY_TEN_DISTINCT_PATCHES",
+    "P3": "PROVE_PROTECTED_TASK_MODEL_IMPROVEMENT",
+    "P4": "REPLAY_SEVEN_THEN_THIRTY_DAYS_UNATTENDED",
+    "P5": "OBTAIN_INDEPENDENT_EXTERNAL_VALIDATION",
+}
 SHA = re.compile(r"^[0-9a-f]{40}$")
 HEX = re.compile(r"^[0-9a-f]{64}$")
 MAX_BYTES = 2_000_000
@@ -472,10 +486,42 @@ def render(record):
     lines += ["", "## Observed work and idle states", "", fence + "json",
               json.dumps(record["metrics"], indent=2, ensure_ascii=False), fence, "", "## Evidence-driven tasks", ""]
     lines.extend("- **" + f["phase"] + "** " + f["reason"] + ": " + json.dumps(f["evidence"], ensure_ascii=False) for f in record["findings"])
-    lines += ["", "## Continuation", "", "Read CHECKPOINT.json and LATEST.json before action. Preserve all prior receipts.",
+    lines += ["", "## Owner-directed self-assembly (registered, not executable)",
+              "", "Owner directive: [JANUS SELF-ASSEMBLY #440](" + SELF_ASSEMBLY_ISSUE + ").",
+              "Next admissible phase: **" + str(record["current_phase"]) + "**.",
+              "Machine-readable directive: [SELF_ASSEMBLY_TASK.json](SELF_ASSEMBLY_TASK.json).",
+              "The scheduled observer reads this directive as data; it is not a new handler, permission, model task or proof of useful work.",
+              "", "## Continuation", "", "Read CHECKPOINT.json and LATEST.json before action. Preserve all prior receipts.",
               "Roadmap text grants no authority. Unknown or unimplemented execution stays WAIT/HOLD.",
               "No paid Rowan studies, arbitrary code execution, source-history deletion or automatic main merge are admitted.", ""]
     return "\n".join(lines)
+
+def self_assembly_task(record):
+    """Publish an owner-approved *reference*, not an executable model instruction."""
+    current = record["current_phase"]
+    if current not in SELF_ASSEMBLY_PHASE_TARGETS:
+        raise Hold("SELF_ASSEMBLY_UNKNOWN_PHASE")
+    finding_reasons = sorted(
+        {f["reason"] for f in record.get("findings", ())
+         if f.get("phase") == current and isinstance(f.get("reason"), str)}
+    )
+    return {
+        "schema": "janus.autonomy.self_assembly_task.v1",
+        "issue": SELF_ASSEMBLY_ISSUE,
+        "source_roadmap": "https://github.com/Hawkar-usls/Janus_Genesis/issues/302",
+        "current_phase": current,
+        "next_reviewed_objective": SELF_ASSEMBLY_PHASE_TARGETS[current],
+        "current_phase_blockers": finding_reasons,
+        "source_snapshot_sha256": record["state_sha256"],
+        "source_observation_id": record["observation_id"],
+        "execution_state": "REGISTERED_NOT_EXECUTION_ATTESTED",
+        "admission": "EXISTING_REVIEWED_HANDLER_ONLY_OR_WAIT_HOLD",
+        "authority_delta": 0,
+        "auto_merge": False,
+        "new_paid_jobs": False,
+        "preserve_history": True,
+        "full_autonomy_proven": False,
+    }
 
 def persist(root, record):
     validate(record)
@@ -497,6 +543,7 @@ def persist(root, record):
                "full_issue_162_acceptance": False}
     (base / "LATEST.json").write_bytes(encode(pointer))
     (base / "ROADMAP.md").write_text(render(record), encoding="utf-8")
+    (base / "SELF_ASSEMBLY_TASK.json").write_bytes(encode(self_assembly_task(record)))
     return pointer
 
 def load_record(root):
