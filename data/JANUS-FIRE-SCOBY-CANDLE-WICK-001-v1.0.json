@@ -396,6 +396,24 @@
       "title": "Kombucha-Derived Bacterial Cellulose for Active and Biodegradable Food Packaging",
       "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13567363/",
       "supports": "Raw pellicle vs purified cellulose and composition differences"
+    },
+    {
+      "id": "SCOBY_OIL_PROGRAM_2258",
+      "title": "SCOBY OIL-SPILL SORBENT SPONGE v1.1 (2026-08-19)",
+      "url": "https://github.com/Hawkar-usls/SCOBY-D0/blob/main/JANUS_SCOBY_OIL_SPILL_SORBENT_SPONGE_2258_v1.1.json",
+      "supports": "D5 microwave branch, field blocking rule and requirements"
+    },
+    {
+      "id": "SCOBY_CEDRE_PRESCREEN",
+      "title": "SCOBY-D0 Cedre-compatible preregistered prescreen (2026-09-10)",
+      "url": "https://github.com/Hawkar-usls/SCOBY-D0/blob/main/JANUS_SCOBY_CEDRE_COMPATIBLE_PRESCREEN_2026-09-10_v1.0.json",
+      "supports": "Program targets are preregistered controls, not physical data"
+    },
+    {
+      "id": "SCOBY_ECONOMIC_GATE",
+      "title": "SCOBY preliminary economic gate (2026-08-20)",
+      "url": "https://github.com/Hawkar-usls/SCOBY-D0/blob/main/JANUS_SCOBY_OIL_BOOM_PRELIMINARY_ECONOMIC_GATE_1851_v1.0.json",
+      "supports": "Oil uptake g/g scenario model rather than measured sample performance"
     }
   ],
   "claim_ceiling": [
@@ -405,12 +423,69 @@
     "WATER_ABSORPTION != MOLTEN_WAX_WICKING",
     "MATERIAL_DEGRADATION_TEMPERATURE != IGNITION_TEMPERATURE",
     "DIMENSIONLESS_SWEEP != REAL_COMBUSTION_EXPERIMENT",
-    "REGISTRY_ENTRY != VERIFIED_PHYSICAL_RESULT"
+    "REGISTRY_ENTRY != VERIFIED_PHYSICAL_RESULT",
+    "MICROWAVE_SC0BY_BRANCH != VALIDATED_OIL_SORBENT",
+    "OIL_SORPTION_CAPACITY != SUSTAINED_MOLTEN_WAX_FLOW",
+    "OIL_LOADED_SORBENT != SAFE_WICK"
   ],
   "next_gate": {
     "gate_id": "FIRE-SCOBY-WICK-LAB-001",
     "status": "OPEN_EXTERNAL_OR_PHYSICAL_LAB_REQUIRED",
     "acceptance_requirement": "Material-identified, matched-control capillary/wax and safely supervised combustion measurements with full data, video and negative results.",
     "automated_execution_allowed": false
+  },
+  "recovered_prior_project": {
+    "discovery_date": "2026-11-03",
+    "primary_repository": "Hawkar-usls/SCOBY-D0",
+    "authoritative_document": "https://github.com/Hawkar-usls/SCOBY-D0/blob/main/JANUS_SCOBY_OIL_SPILL_SORBENT_SPONGE_2258_v1.1.json",
+    "record_date": "2026-08-19",
+    "specific_historical_arm": {
+      "id": "D5_MICROWAVE_TRANSFORMED_BC",
+      "epistemic_status": "BLIND_MATERIAL_IDENTITY_BRANCH_ONLY; BLOCKED_FOR_FIELD_PRODUCT",
+      "product_validation": false,
+      "documented_d5_oil_uptake_measurements": 0,
+      "documented_d5_flame_wick_measurements": 0,
+      "archival_note": "A proposed characterization branch was found, not an executed oil sorption or fire experiment.",
+      "safeguards": [
+        "Do not microwave oil/petroleum-loaded material.",
+        "Do not interpret porous appearance as proof of engineered aerogel or hydrophobicity.",
+        "No household microwave recipes for dried biopolymer treatment or unknown residues.",
+        "No new functional claims without sample identity, process history, density, porosity, surface chemistry, oil/water uptake, emissions and contaminants."
+      ]
+    },
+    "background_oil_sorbent_program": {
+      "record_2233": "https://github.com/Hawkar-usls/SCOBY-D0/blob/main/JANUS_SCOBY_OIL_SPILL_SORBENT_SPONGE_2233_v1.0.json",
+      "record_2258": "https://github.com/Hawkar-usls/SCOBY-D0/blob/main/JANUS_SCOBY_OIL_SPILL_SORBENT_SPONGE_2258_v1.1.json",
+      "economic_gate": "https://github.com/Hawkar-usls/SCOBY-D0/blob/main/JANUS_SCOBY_OIL_BOOM_PRELIMINARY_ECONOMIC_GATE_1851_v1.0.json",
+      "cedre_internal_prescreen": "https://github.com/Hawkar-usls/SCOBY-D0/blob/main/JANUS_SCOBY_CEDRE_COMPATIBLE_PRESCREEN_2026-09-10_v1.0.json",
+      "meta_registry_oil_historical": "https://github.com/Hawkar-usls/janus-meta-registry/blob/main/data/JANUS-SCOBY-MUMMY-OIL-SORPTION-DECAY-GATE-2026-08-19-v1.0.json",
+      "reported_scenarios_g_per_g": [
+        10,
+        20,
+        40,
+        80
+      ],
+      "plausible_aspirational_uptake_range_g_per_g": [
+        20,
+        40
+      ],
+      "scenario_status": "NOT_USER_SAMPLE_MEASUREMENTS",
+      "field_ready": false,
+      "cedre_tested_scoby": false,
+      "literature_high_capacity_belongs_to": "Engineered bacterial-cellulose aerogels in third-party literature, not raw or microwaved SCOBY-D0."
+    },
+    "cross_hypothesis": {
+      "oil_sorption_is_not_candle_fuel_transport": true,
+      "distinction": "Oil spill remediation favors high uptake and retention plus preferential oil-over-water wettability. A candle wick must provide sustained directed molten wax transport through a thermally exposed wick with an appropriate capillary network and stable charring behavior. The optimum pore geometry/surface chemistry may differ, or be in tension, between the two applications.",
+      "identified_confounds": [
+        "Porosity can improve initial uptake without supplying directional continuous liquid flow.",
+        "Hydrophobic treatment may increase oil-water selectivity, but may change molten wax wetting and emissions.",
+        "Microwave-generated char, chemical heterogeneity and damaged networks may be poor wick material even when visually porous.",
+        "Residual contaminated sorbent must never be burned as a wick."
+      ],
+      "followup_candidate": "Only consider controlled, characterized, uncontaminated D5 specimens for a separate materials review; do not elevate D5 to physical candle tests on the basis of prior oil-sorbent hypotheses alone.",
+      "hypothesis_status": "RESEARCH_LINK_DOCUMENTED; NO_CROSS_APPLICATION_PERFORMANCE_ESTABLISHED"
+    },
+    "provenance_limit": "Current search covered exact project records, research lineage and designated oil sorption files; this is not a complete forensic scan of all offline NAS or legacy raw laboratory media."
   }
 }
