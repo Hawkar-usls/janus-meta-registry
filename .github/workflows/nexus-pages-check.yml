@@ -1,0 +1,68 @@
+name: JANUS NEXUS Pages Contract
+
+on:
+  pull_request:
+    paths:
+      - "nexus/**"
+      - ".github/workflows/nexus-pages-check.yml"
+  push:
+    branches: [main]
+    paths:
+      - "nexus/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            nexus
+            .github/workflows/nexus-pages-check.yml
+      - name: Validate JS syntax and manifest
+        run: |
+          node --check nexus/app.js
+          node --check nexus/sw.js
+          python -m json.tool nexus/manifest.webmanifest >/dev/null
+      - name: Verify Pages safety contract
+        run: |
+          python - <<'PY'
+          from html.parser import HTMLParser
+          from pathlib import Path
+          import json
+          class Resources(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.scripts=[]
+                  self.styles=[]
+              def handle_starttag(self, tag, attrs):
+                  d=dict(attrs)
+                  if tag=="script": self.scripts.append(d)
+                  if tag=="link" and d.get("rel")=="stylesheet": self.styles.append(d.get("href"))
+          root=Path("nexus")
+          parser=Resources()
+          page=(root/"index.html").read_text(encoding="utf-8")
+          parser.feed(page)
+          assert len(parser.scripts)==1 and parser.scripts[0].get("src")=="./app.js"
+          assert parser.styles==["./styles.css"]
+          assert "connect-src 'self'" in page
+          assert "PUBLIC" in page and "READ ONLY" in page
+          assert all((root/p).is_file() for p in ("app.js","styles.css","sw.js","icon.svg","manifest.webmanifest","README.md"))
+          app=(root/"app.js").read_text(encoding="utf-8")
+          assert "textContent" in app and "innerHTML" not in app
+          assert "RECEIPT_RE" in app and "receipt.current_phase !== latest.current_phase" in app
+          assert "navigator.clipboard" in app and "fetch(" in app
+          for blocked in ("Authorization:", "github_pat_", "ghp_", "method: \"POST\"", "method: \"PATCH\"", "method: \"DELETE\"", "eval(", "innerHTML"):
+              assert blocked not in app, blocked
+          sw=(root/"sw.js").read_text(encoding="utf-8")
+          assert "Evidence files are NEVER cached" in sw
+          assert "autonomy_loop" not in sw
+          manifest=json.loads((root/"manifest.webmanifest").read_text(encoding="utf-8"))
+          assert manifest["scope"]=="./"
+          print("NEXUS_PAGES_CONTRACT_PASS")
+          PY
