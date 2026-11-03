@@ -91,6 +91,35 @@ jobs:
           git pull --ff-only origin main
           echo "code_commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
           echo "JANUS_LOOP_CODE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+      - name: Read owner self-assembly directive as data only (never execution authority)
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          root = Path("data/autonomy_loop")
+          path = root / "SELF_ASSEMBLY_TASK.json"
+          if not path.is_file():
+              print("JANUS_SELF_ASSEMBLY=AWAITING_FIRST_PERSISTED_DIRECTIVE")
+              raise SystemExit(0)
+          task = json.loads(path.read_text(encoding="utf-8"))
+          latest = json.loads((root / "LATEST.json").read_text(encoding="utf-8"))
+          if (task.get("schema") != "janus.autonomy.self_assembly_task.v1"
+                  or task.get("issue") != "https://github.com/Hawkar-usls/janus-meta-registry/issues/440"
+                  or task.get("authority_delta") != 0
+                  or task.get("auto_merge") is not False
+                  or task.get("new_paid_jobs") is not False
+                  or task.get("full_autonomy_proven") is not False
+                  or task.get("execution_state") != "REGISTERED_NOT_EXECUTION_ATTESTED"):
+              raise SystemExit("JANUS_SELF_ASSEMBLY_UNTRUSTED_DIRECTIVE")
+          if task.get("source_snapshot_sha256") != latest.get("state_sha256"):
+              print("JANUS_SELF_ASSEMBLY=STALE_RECHECK_REQUIRED")
+              raise SystemExit(0)
+          print("JANUS_SELF_ASSEMBLY=READ_ONLY_DIRECTIVE_OBSERVED")
+          print("JANUS_SELF_ASSEMBLY_PHASE=" + str(task["current_phase"]))
+          print("JANUS_SELF_ASSEMBLY_TARGET=" + str(task["next_reviewed_objective"]))
+          print("JANUS_SELF_ASSEMBLY_AUTHORITY_DELTA=0")
+          PY
       - name: Observe, regenerate evidence-driven roadmap and preserve checkpoint
         env:
           GH_TOKEN: ${{ github.token }}
