@@ -139,7 +139,7 @@
   }
 
   function roadmapMetrics(text) {
-    const match = String(text || "").match(/``jsons*([sS]*?)s*```/i);
+    const match = String(text || "").match(new RegExp("`{3}json\\s*([\\s\\S]*?)\\s*`{3}", "i"));
     if (!match) return {};
     try { return JSON.parse(match[1]); } catch (_) { return {}; }
   }
