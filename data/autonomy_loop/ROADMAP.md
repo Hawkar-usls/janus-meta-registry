@@ -2,7 +2,7 @@
 
 Automatically rebuilt from pinned public evidence.
 
-Status: **AUTONOMY_PARTIAL** · observed 2026-11-03T21:03:36Z
+Status: **AUTONOMY_PARTIAL** · observed 2026-11-03T21:29:40Z
 
 Current phase: **P0.3**
 
@@ -27,9 +27,9 @@ A successful collector is not proof of useful work or full autonomy.
 ```json
 {
   "native_model": {
-    "attempt_count": 1684,
+    "attempt_count": 1685,
     "promotion_count": 61,
-    "rejection_count": 1623,
+    "rejection_count": 1624,
     "checkpoint_sha256": "fc767adb812ac3bea54c44cbccfa9680941f95e2c8a77120559b41da044d9463",
     "last_training_status": "REJECTED",
     "retained_history_count": 64,
@@ -55,7 +55,7 @@ A successful collector is not proof of useful work or full autonomy.
     "waiting": 38
   },
   "home": {
-    "sequence": 256,
+    "sequence": 257,
     "source_main_sha": "cd628ee23326d6130cfae6898814775a881c23e4"
   },
   "beetle_delivery": {
@@ -79,13 +79,12 @@ A successful collector is not proof of useful work or full autonomy.
 ## Evidence-driven tasks
 
 - **P0.3** BEETLE_DELIVERY_PENDING: {"total_pending": 13, "receiver_states": {"PENDING": 12, "UP_TO_DATE": 6, "ACK_UNAVAILABLE": 1}}
-- **P0.3** EXTERNAL_WITNESS_BEETLE_GENESIS_WATCHDOG: "SCHEDULE_SILENCE"
+- **P0.3** EXTERNAL_WITNESS_GENESIS_HIGHWATER: "ANCHOR_PENDING_WITHIN_GRACE"
 - **P0.3** EXTERNAL_WITNESS_SKINGPT_ACK: "UNKNOWN"
 - **P0.4** PATCHES_WAITING: 38
 - **P0.5** SCOUT_MODEL_SYNTHESIS_DEGRADED: {"snapshots": 17, "synthesis": 0, "expected": 17}
 - **P2** SELF_WRITER_REVIEWED_TASKS_REMAINING: {"accepted": 9, "admitted": 10}
 - **P3** RECENT_TRAINING_ALL_REJECTED: 64
-- **P0.2** WORKFLOW_NOT_SUCCESS_ROWAN_WITNESS: {"conclusion": "failure", "created_at": "2026-11-03T18:24:07Z", "event": "workflow_run", "head_sha": "06a4dd022a94fd042eeebda5621278625dfb94fa", "repository": "Hawkar-usls/janus-meta-registry", "run_attempt": 1, "run_id": 41693454458, "status": "OBSERVED", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/41693454458", "workflow": "janus-rowan-ecosystem-sync-witness.yml"}
 
 ## Continuation
 
