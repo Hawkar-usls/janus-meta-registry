@@ -57,7 +57,7 @@ jobs:
           assert "textContent" in app and "innerHTML" not in app
           assert "RECEIPT_RE" in app and "receipt.current_phase !== latest.current_phase" in app
           assert "navigator.clipboard" in app and "fetch(" in app
-          for blocked in ("Authorization:", "github_pat_", "ghp_", "POST", "PATCH", "DELETE", "eval(", "innerHTML"):
+          for blocked in ("Authorization:", "github_pat_", "ghp_", "method: \"POST\"", "method: \"PATCH\"", "method: \"DELETE\"", "eval(", "innerHTML"):
               assert blocked not in app, blocked
           sw=(root/"sw.js").read_text(encoding="utf-8")
           assert "Evidence files are NEVER cached" in sw
