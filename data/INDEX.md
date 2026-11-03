@@ -95,6 +95,8 @@ For historical executable-code risks, use [`../docs/RUNTIME_SOURCE_TRIAGE_2026-0
 
 ## 3. Useful conceptual design patterns
 
+- [`JANUS-SCOBY-MICROWAVE-OIL-SORBENT-ARCHIVE-2026-11-03-v1.0.json`](JANUS-SCOBY-MICROWAVE-OIL-SORBENT-ARCHIVE-2026-11-03-v1.0.json) — reconstruction of SCOBY-D0 D5 microwave-transformed bacterial-cellulose oil-sorbent branch, environmental remediation aims, quantitative targets, existing Cedre-compatible prescreen and missing empirical data. **D5 oil sorption is not proven; this is an evidence audit, not a microwave-processing procedure.**
+
 ### Candle flame morphology / SCOBY cellulose wick
 
 - [`JANUS-FIRE-SCOBY-CANDLE-WICK-001-v1.0.json`](JANUS-FIRE-SCOBY-CANDLE-WICK-001-v1.0.json) — wax-candle flame shape and sprite-rendering analogy; 15-case hypothetical Darcy sensitivity screen for dried SCOBY pellicle wick, with controlled lab-test preregistration. **No physical burn test has been performed; wick function is unverified.** Relates to [`SKYBU / SkinGPT`](SKYBU-SKINGPT-CIRCULAR-BIOMANUFACTURING-CONCEPT-v1.0.json) only by shared bacterial-cellulose material context.
