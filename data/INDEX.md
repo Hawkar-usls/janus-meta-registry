@@ -95,6 +95,12 @@ For historical executable-code risks, use [`../docs/RUNTIME_SOURCE_TRIAGE_2026-0
 
 ## 3. Useful conceptual design patterns
 
+### Candle flame morphology / SCOBY cellulose wick
+
+- [`JANUS-FIRE-SCOBY-CANDLE-WICK-001-v1.0.json`](JANUS-FIRE-SCOBY-CANDLE-WICK-001-v1.0.json) — wax-candle flame shape and sprite-rendering analogy; 15-case hypothetical Darcy sensitivity screen for dried SCOBY pellicle wick, with controlled lab-test preregistration. **No physical burn test has been performed; wick function is unverified.** Relates to [`SKYBU / SkinGPT`](SKYBU-SKINGPT-CIRCULAR-BIOMANUFACTURING-CONCEPT-v1.0.json) only by shared bacterial-cellulose material context.
+
+
+
 ### Искусство невидимых отличий / The Art of Invisible Differences
 
 - [`JANUS-INVISIBLE-DIFFERENCES-AESTHETICS-2026-10-28-v1.0.json`](JANUS-INVISIBLE-DIFFERENCES-AESTHETICS-2026-10-28-v1.0.json) — философско-эстетическая онтология тонкой персональной кастомизации: 5D-спираль, типология, методология проверки HCI, граница между личной ценностью и функциональной пользой, предлагаемые связи HRAiN/iNaiHR/Tranception/LAPIS. **Концептуальная запись, не эмпирический результат и не доказательство P vs NP.**
