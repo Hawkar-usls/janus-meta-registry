@@ -1,0 +1,182 @@
+{
+  "schema": "JANUS_SCOBY_COMPOSITE_SENSITIVITY_COMPARISON_V2",
+  "id": "JANUS-SCOBY-HEMP-vs-PLA-CHAINMAIL-COMPUTED-002",
+  "created_utc_date": "2026-11-03",
+  "status": "EXECUTED_NUMERICAL_SCENARIO_NOT_VALIDATED_MATERIAL_TEST",
+  "biological_samples": 0,
+  "old_source": {
+    "archived_filename": "zayava_MOU_Ahapov_SCOBY_signed_expanded_2026-06-30.pdf",
+    "source_date": "2026-06-30",
+    "materials": "Dried 3-layer bacterial cellulose SCOBY with ~20% hemp reinforcement",
+    "press_temperature_C_approx": 88,
+    "press_pressure_MPa_approx": 0.58,
+    "post_cure_hours_approx": 8,
+    "reported_historical_estimate": {
+      "tensile_strength_MPa": 346,
+      "Young_modulus_GPa": 13,
+      "density_g_cm3": 1.45
+    },
+    "evidence": "ONLY_HISTORICAL_SYNTHETIC_ESTIMATES_NOT_EXPERIMENTS",
+    "unrecovered": [
+      "original_algorithm_code",
+      "raw_test_files",
+      "original_sample_thickness",
+      "calibration"
+    ]
+  },
+  "new_source": {
+    "prior_model": "experiments/SCOBY-SKINGPT-NASA-FABRIC-SIM-001.json",
+    "design": "Dried or conditioned bacterial cellulose layer with articulated print-in-place PLA NASA-inspired chainmail",
+    "actual_print_not_made": true,
+    "PLA_Glow_in_wet_culture": false
+  },
+  "comparison_basis": {
+    "mass_comparison_area_m2": 1,
+    "thickness_envelope_mm": 1.3,
+    "old_original_thickness_known": false,
+    "nominal_envelope_matches_artificially": true,
+    "assumptions_NOT_MEASURED": {
+      "Ebc": 500,
+      "tbc": 0.5,
+      "rhobc": 1.5,
+      "Epla": 2000,
+      "tpla": 0.8,
+      "rhopla": 1.24,
+      "phi": 0.35,
+      "Eold": 13000,
+      "rhoold": 1.45,
+      "told": 1.3
+    },
+    "reference_model": "BC + q times PLA load path (axial); BC + b times PLA unconstrained bending proxy; q and b are uncalibrated",
+    "units": "E MPa, thickness mm, areal mass kg/m², axial K N/mm, bending D N·mm",
+    "equations": {
+      "old_mass": "rhoold*told",
+      "new_mass": "rhobc*tbc+rhopla*tpla*phi",
+      "old_K": "Eold*told",
+      "new_K": "Ebc*tbc+q*Epla*tpla*phi",
+      "old_D": "Eold*told^3/12",
+      "new_D": "Ebc*tbc^3/12+b*Epla*tpla^3*phi/12"
+    },
+    "bending_caveat": "Toy parallel layer local bending term only, neglecting neutral-axis terms, interfaces, geometry and true hinge rotation"
+  },
+  "computed": {
+    "old_areal_mass_kg_m2": 1.885,
+    "new_areal_mass_kg_m2": 1.0972,
+    "new_areal_mass_reduction_percent": 41.79,
+    "old_axial_K_N_per_mm": 16900,
+    "old_bending_D_Nmm": 2380.083333,
+    "BC_only_axial_K_N_per_mm": 250,
+    "BC_only_bending_D_Nmm": 5.208333,
+    "scenarios": [
+      {
+        "id": "MOBILE",
+        "q": 0.05,
+        "b": 0.01,
+        "axial_K_N_per_mm": 278,
+        "bending_D_Nmm": 5.507,
+        "K_over_old": 0.0164,
+        "D_over_old": 0.0023,
+        "K_over_BC_only": 1.112,
+        "D_over_BC_only": 1.057
+      },
+      {
+        "id": "PARTIAL_INTERLOCK",
+        "q": 0.25,
+        "b": 0.1,
+        "axial_K_N_per_mm": 390,
+        "bending_D_Nmm": 8.195,
+        "K_over_old": 0.0231,
+        "D_over_old": 0.0034,
+        "K_over_BC_only": 1.56,
+        "D_over_BC_only": 1.573
+      },
+      {
+        "id": "LOCKED",
+        "q": 0.75,
+        "b": 0.6,
+        "axial_K_N_per_mm": 670,
+        "bending_D_Nmm": 23.128333,
+        "K_over_old": 0.0396,
+        "D_over_old": 0.0097,
+        "K_over_BC_only": 2.68,
+        "D_over_BC_only": 4.441
+      },
+      {
+        "id": "RIGID_GRID_CONTROL",
+        "q": 0.8,
+        "b": 0.85,
+        "axial_K_N_per_mm": 698,
+        "bending_D_Nmm": 30.595,
+        "K_over_old": 0.0413,
+        "D_over_old": 0.0129,
+        "K_over_BC_only": 2.792,
+        "D_over_BC_only": 5.874
+      }
+    ],
+    "sensitivity": {
+      "E_BC_MPa": [
+        428,
+        500,
+        3000,
+        13000,
+        18600
+      ],
+      "E_PLA_MPa": [
+        750,
+        2000,
+        2400
+      ],
+      "q": [
+        0,
+        0.05,
+        0.25,
+        0.75,
+        1
+      ],
+      "grid_points": 75,
+      "min_axial_K_N_per_mm": 214,
+      "max_axial_K_N_per_mm": 9972,
+      "range_old_fraction": [
+        0.0127,
+        0.5901
+      ]
+    }
+  },
+  "what_cannot_be_concluded": [
+    "Strength of novel BC+PLA composite in MPa is UNKNOWN; modulus cannot establish fracture strength",
+    "Old 346 MPa is not a physical benchmark and is not transferable to new article",
+    "New mass saving assumes completely hypothetical densities, cover fraction and same external thickness",
+    "The geometry of mobile PLA joints has not been simulated mechanically",
+    "No impacts, fragments, bullets or protective classification have been simulated; not certified PPE",
+    "No physical growth of bacterial cellulose on chainmail tested"
+  ],
+  "external_literature": [
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9657219/",
+      "note": "Different PLA/BC prepared scaffold reported 66.49 vs 25.61 MPa; not directly transferable"
+    },
+    {
+      "url": "https://www.sciencedirect.com/science/article/pii/S2238785421000570",
+      "note": "Compressed bacterial cellulose at different humidity shows large changes in stiffness"
+    },
+    {
+      "url": "https://www.mdpi.com/2079-4991/12/2/192",
+      "note": "BC mechanical properties strongly condition-dependent"
+    },
+    {
+      "url": "https://link.springer.com/article/10.1007/s40964-024-00704-y",
+      "note": "FDM PLA anisotropic and print-dependent"
+    }
+  ],
+  "study_next": [
+    "Fabricate nonfood BC-only, fixed grid, NASA-chainmail, PLA-only and post-assembled comparison coupons",
+    "Measure geometry, areal mass, tensile curves, deformation, bending at wet/dry conditioning",
+    "Test hinge mobility and delamination before and after BC growth, with matched replicates",
+    "Collect actual raw curves and independent specimens; no ballistic claims prior to accredited testing"
+  ],
+  "related_records": [
+    "data/JANUS-SCOBY-NASA-FABRIC-SKINGPT-INTEGRATED-CONCEPT-2026-11-02-v1.0.json",
+    "https://github.com/Hawkar-usls/janus-meta-registry/pull/435",
+    "https://github.com/Hawkar-usls/janus-meta-registry/pull/436"
+  ]
+}
