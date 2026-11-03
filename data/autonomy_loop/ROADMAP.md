@@ -2,7 +2,7 @@
 
 Automatically rebuilt from pinned public evidence.
 
-Status: **AUTONOMY_PARTIAL** · observed 2026-11-03T21:29:40Z
+Status: **AUTONOMY_PARTIAL** · observed 2026-11-03T21:53:44Z
 
 Current phase: **P0.3**
 
@@ -85,6 +85,13 @@ A successful collector is not proof of useful work or full autonomy.
 - **P0.5** SCOUT_MODEL_SYNTHESIS_DEGRADED: {"snapshots": 17, "synthesis": 0, "expected": 17}
 - **P2** SELF_WRITER_REVIEWED_TASKS_REMAINING: {"accepted": 9, "admitted": 10}
 - **P3** RECENT_TRAINING_ALL_REJECTED: 64
+
+## Owner-directed self-assembly (registered, not executable)
+
+Owner directive: [JANUS SELF-ASSEMBLY #440](https://github.com/Hawkar-usls/janus-meta-registry/issues/440).
+Next admissible phase: **P0.3**.
+Machine-readable directive: [SELF_ASSEMBLY_TASK.json](SELF_ASSEMBLY_TASK.json).
+The scheduled observer reads this directive as data; it is not a new handler, permission, model task or proof of useful work.
 
 ## Continuation
 
