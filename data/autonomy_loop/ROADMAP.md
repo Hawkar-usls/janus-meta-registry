@@ -2,7 +2,7 @@
 
 Automatically rebuilt from pinned public evidence.
 
-Status: **AUTONOMY_PARTIAL** · observed 2026-11-04T22:14:16Z
+Status: **AUTONOMY_PARTIAL** · observed 2026-11-04T22:16:39Z
 
 Current phase: **P0.3**
 
@@ -61,9 +61,9 @@ A successful collector is not proof of useful work or full autonomy.
   "beetle_delivery": {
     "status": "ALERT",
     "observed_at": "2026-11-04T21:15:15.712996Z",
-    "health_age_minutes": 59,
+    "health_age_minutes": 61,
     "health_clock": "VERIFIED_TIMESTAMP",
-    "routing_gate_age_minutes": 59,
+    "routing_gate_age_minutes": 61,
     "routing_gate_clock": "VERIFIED_TIMESTAMP",
     "max_health_age_minutes": 120,
     "total_pending": 11,
@@ -94,8 +94,6 @@ A successful collector is not proof of useful work or full autonomy.
 - **P0.5** SCOUT_MODEL_SYNTHESIS_DEGRADED: {"snapshots": 17, "synthesis": 0, "expected": 17}
 - **P2** SELF_WRITER_REVIEWED_TASKS_REMAINING: {"accepted": 9, "admitted": 10}
 - **P3** RECENT_TRAINING_ALL_REJECTED: 64
-- **P0.2** WORKFLOW_NOT_SUCCESS_CROSS_ORGAN_WITNESS: {"conclusion": "failure", "created_at": "2026-11-04T22:06:33Z", "event": "workflow_run", "head_sha": "0634fef1e4304cab628d5bc75762b9feee62a493", "repository": "Hawkar-usls/janus-meta-registry", "run_attempt": 1, "run_id": 41922275720, "status": "OBSERVED", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/41922275720", "workflow": "janus-cross-organ-source-witness.yml"}
-- **P0.2** WORKFLOW_NOT_SUCCESS_ROWAN_WITNESS: {"conclusion": "failure", "created_at": "2026-11-04T22:06:33Z", "event": "workflow_run", "head_sha": "0634fef1e4304cab628d5bc75762b9feee62a493", "repository": "Hawkar-usls/janus-meta-registry", "run_attempt": 1, "run_id": 41922275845, "status": "OBSERVED", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/41922275845", "workflow": "janus-rowan-ecosystem-sync-witness.yml"}
 
 ## Owner-directed self-assembly (registered, not executable)
 
