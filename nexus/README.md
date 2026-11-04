@@ -6,7 +6,7 @@ GitHub Pages URL: https://hawkar-usls.github.io/janus-meta-registry/nexus/
 
 - Host: existing Hawkar-usls/janus-meta-registry Pages site, no new server, worker, or NAS process.
 - UI: nexus/index.html, nexus/styles.css, nexus/app.js; vanilla JavaScript, no external libraries.
-- Evidence: public data/autonomy_loop/LATEST.json, CHECKPOINT.json, ROADMAP.md and the receipt referenced by LATEST.json.
+- Evidence: public data/autonomy_loop/LATEST.json, CHECKPOINT.json and the immutable receipt referenced by LATEST.json. ROADMAP.md is a navigation link only; statistics and phase rows come exclusively from the verified receipt.
 - Refresh: on load, on manual request, on tab visibility, and every two minutes while visible.
 - PWA: sw.js caches only the static UI shell. Evidence is always fetched from the network.
 - Authority delta: ZERO. No tokens, API writes, remote commands, model launches, paid actions, CAS updates, or auto-merges.
@@ -20,12 +20,14 @@ The displayed native-model promotion counter is not a count of independently val
 ## Security invariants
 
 1. Only accept receipt paths within the predefined data/autonomy_loop/receipts/ directory and 24 lowercase hex stem.
-2. Latest JSON schema and receipt phase/status must agree.
+2. The browser independently SHA-256 hashes the exact raw receipt bytes and compares the result with LATEST.receipt_sha256. The receipt phase, status, observation ID, timestamp and state SHA must agree with LATEST; unsupported crypto fails closed.
 3. Insert untrusted strings using textContent, never as HTML.
 4. No private-repository sources, auth secrets, GitHub write API or arbitrary remote URLs.
 5. On fetch failure, replace metrics with UNKNOWN; do not present old numbers as live.
 6. The dashboard does not change the source-of-truth or grant new authority.
-7. Data fetches are restricted by a same-origin Content Security Policy.
+7. Data fetches are restricted by a same-origin Content Security Policy. Mixed-epoch ROADMAP metrics are forbidden: every displayed metric is from the same verified receipt.
+
+Offline integrity and tamper tests: node --test nexus/receipt_integrity.test.cjs
 
 ## Deployment
 

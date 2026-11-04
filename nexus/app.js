@@ -115,36 +115,27 @@
     }
   }
 
-  function renderPhases(text) {
+  function renderPhases(phases) {
     const list = el("phases");
     clearNode(list);
-    const rows = [];
-    for (const line of String(text || "").split("\n")) {
-      const match = line.match(/^\|\s*\d+\s*\|\s*([A-Z][A-Z0-9.]*)\s*\|\s*([A-Z_]+)\s*\|\s*(.+?)\s*\|\s*$/);
-      if (match) rows.push({ id: match[1], state: match[2], goal: match[3] });
-    }
-    if (!rows.length) {
-      list.appendChild(tag("div", "empty", "Не удалось проверить дорожную карту"));
+    if (!Array.isArray(phases) || !phases.length) {
+      list.appendChild(tag("div", "empty", "Нет проверенной дорожной карты в receipt"));
       return;
     }
-    for (const phase of rows.slice(0, 12)) {
+    for (const phase of phases.slice(0, 12)) {
+      if (!phase || typeof phase !== "object"
+          || typeof phase.phase !== "string" || !/^P(?:0\.[1-6]|[1-5])$/.test(phase.phase)) continue;
       const row = tag("div", "phase-row");
-      row.appendChild(tag("span", "phase-id", phase.id));
-      const goal = phase.goal.replace(/\[([^\]]+)\]\(https?:\/\/[^)]+\)/g, "$1");
-      row.appendChild(tag("span", "phase-target", goal.slice(0, 180)));
-      const kind = phase.state === "DONE" ? "done" : phase.state.includes("ACTIVE") ? "active" : "";
-      row.appendChild(tag("span", "phase-status " + kind, phase.state));
+      row.appendChild(tag("span", "phase-id", phase.phase));
+      row.appendChild(tag("span", "phase-target", value(phase.objective).slice(0, 180)));
+      const status = typeof phase.state === "string" ? phase.state : "UNKNOWN";
+      const kind = status === "DONE" ? "done" : status.includes("ACTIVE") ? "active" : "";
+      row.appendChild(tag("span", "phase-status " + kind, status));
       list.appendChild(row);
     }
   }
 
-  function roadmapMetrics(text) {
-    const match = String(text || "").match(new RegExp("`{3}json\\s*([\\s\\S]*?)\\s*`{3}", "i"));
-    if (!match) return {};
-    try { return JSON.parse(match[1]); } catch (_) { return {}; }
-  }
-
-  function renderEvidence(latest, checkpoint, receipt, roadmap) {
+  function renderEvidence(latest, checkpoint, receipt) {
     const observedAt = latest.last_observed_at_utc;
     set("observed", localTime(observedAt));
     set("checked", localTime(new Date().toISOString()));
@@ -169,7 +160,8 @@
       set("scout-sub", "Свидетельство отсутствует");
     }
 
-    const metrics = roadmapMetrics(roadmap);
+    // All status, metrics, phases and findings belong to ONE byte-verified receipt.
+    const metrics = receipt.metrics && typeof receipt.metrics === "object" ? receipt.metrics : {};
     const patchFinding = findings.find(f => f && f.reason === "PATCHES_WAITING");
     set("patches", fmtCount(patchFinding && patchFinding.evidence));
     set("modules", fmtCount(metrics.self_writer && metrics.self_writer.accepted_pure_modules));
@@ -187,7 +179,7 @@
     if (receiptHref) el("receipt-link").href = receiptHref;
     renderOrgans(receipt);
     renderFindings(receipt);
-    renderPhases(roadmap);
+    renderPhases(receipt.roadmap);
   }
 
   function resetDashboard(message) {
@@ -201,7 +193,8 @@
     el("copy-hash").disabled = true;
     renderOrgans(null);
     renderFindings(null);
-    renderPhases("");
+    renderPhases(null);
+    el("receipt-link").href = ROOT + "LATEST.json";
   }
 
   async function read(url, asText = false) {
@@ -211,31 +204,55 @@
     return asText ? res.text() : res.json();
   }
 
+  async function readVerifiedReceipt(url, expectedSha256) {
+    if (!HASH_RE.test(expectedSha256 || "")
+        || typeof crypto === "undefined" || !crypto.subtle
+        || typeof TextDecoder === "undefined") {
+      throw new Error("SHA-256 verification unavailable");
+    }
+    const res = await fetch(url + "?ts=" + Date.now(), { cache: "no-store" });
+    if (!res.ok) throw new Error("Receipt HTTP " + res.status);
+    const raw = await res.arrayBuffer();
+    if (!raw.byteLength || raw.byteLength > 2_000_000) throw new Error("Receipt size invalid");
+    const digest = await crypto.subtle.digest("SHA-256", raw);
+    const actual = Array.from(new Uint8Array(digest),
+      byte => byte.toString(16).padStart(2, "0")).join("");
+    if (actual !== expectedSha256.toLowerCase()) throw new Error("Receipt SHA-256 mismatch");
+    return JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(raw));
+  }
+
   async function refresh() {
     if (isBusy) return;
     isBusy = true;
     el("refresh").disabled = true;
     setConnection("pending", "Чтение публичных данных");
     try {
-      const [latest, checkpoint, roadmap] = await Promise.all([
-        read(ROOT + "LATEST.json"), read(ROOT + "CHECKPOINT.json"),
-        read(ROOT + "ROADMAP.md", true)
+      const [latest, checkpoint] = await Promise.all([
+        read(ROOT + "LATEST.json"), read(ROOT + "CHECKPOINT.json")
       ]);
       if (!latest || latest.schema !== "janus.autonomy.latest.v1"
           || typeof latest.current_phase !== "string"
           || typeof latest.ecosystem_status !== "string"
-          || !linkForReceipt(latest.receipt_path)) {
+          || !linkForReceipt(latest.receipt_path)
+          || !HASH_RE.test(latest.receipt_sha256 || "")
+          || !HASH_RE.test(latest.state_sha256 || "")) {
         throw new Error("Invalid LATEST schema or receipt path");
       }
-      const receipt = await read(linkForReceipt(latest.receipt_path));
+      const receipt = await readVerifiedReceipt(linkForReceipt(latest.receipt_path), latest.receipt_sha256);
+      const expectedId = latest.receipt_path.split("/").pop().slice(0, 24);
       if (!receipt || receipt.current_phase !== latest.current_phase
-          || receipt.ecosystem_status !== latest.ecosystem_status) {
+          || receipt.ecosystem_status !== latest.ecosystem_status
+          || receipt.state_sha256 !== latest.state_sha256
+          || receipt.observation_id !== expectedId
+          || receipt.observed_at_utc !== latest.last_observed_at_utc
+          || receipt.full_issue_162_acceptance !== latest.full_issue_162_acceptance
+          || !receipt.authority || receipt.authority.delta !== 0) {
         throw new Error("LATEST / receipt mismatch");
       }
-      renderEvidence(latest, checkpoint, receipt, roadmap);
+      renderEvidence(latest, checkpoint, receipt);
       const drift = checkpoint && checkpoint.current_phase && checkpoint.current_phase !== latest.current_phase;
       setConnection(drift ? "warning" : stale(latest.last_observed_at_utc) ? "warning" : "ok",
-        drift ? "Несовпадение фаз" : stale(latest.last_observed_at_utc) ? "Устаревший snapshot" : "Свидетельство загружено");
+        drift ? "Несовпадение фаз" : stale(latest.last_observed_at_utc) ? "Устаревший snapshot" : "Байты receipt совпали с SHA-256");
     } catch (err) {
       console.warn("JANUS NEXUS: public evidence unavailable", err);
       resetDashboard("Сбой чтения данных · статус неизвестен");
