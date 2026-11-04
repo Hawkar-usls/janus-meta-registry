@@ -410,6 +410,23 @@ def summarize(sources, workflows, observed_at, code_sha, previous=None, action=N
             for f in findings))
     if reopened:
         current = "P0.2"
+        # A newly synchronized source set is only a *candidate* for a new
+        # independent proof. A successful collector or matching run IDs alone
+        # must not advance the persisted checkpoint.
+        mismatched = any(
+            f["phase"] == "P0.2" and
+            ("GENERATION_DRIFT" in f["reason"] or "DIGEST_DRIFT" in f["reason"])
+            for f in findings
+        )
+        if historical_run != run and not mismatched:
+            action_state = action or {}
+            if action_state.get("p02_proof") is not None:
+                add("P0.2", "COHORT_READY_INDEPENDENT_REPLAY_REQUIRED",
+                    {"canonical_run": run, "historical_run": historical_run})
+            else:
+                add("P0.2", "COHORT_NOT_READY_FOR_INDEPENDENT_REPLAY",
+                    {"canonical_run": run, "historical_run": historical_run,
+                     "status": action_state.get("cohort_status", "NO_VERIFIABLE_PROOF")})
     plan = [{"order": i + 1, "phase": pid, "objective": objective, "issue": issue,
              "state": "ACTIVE_RECHECK" if pid == current and pid in completed else "DONE" if pid in completed else "ACTIVE" if pid == current else "WAITING_FOR_PREVIOUS",
              "tasks": [f for f in findings if f["phase"] == pid]}
