@@ -85,7 +85,7 @@ A successful collector is not proof of useful work or full autonomy.
 - **P0.5** SCOUT_MODEL_SYNTHESIS_DEGRADED: {"snapshots": 17, "synthesis": 0, "expected": 17}
 - **P2** SELF_WRITER_REVIEWED_TASKS_REMAINING: {"accepted": 9, "admitted": 10}
 - **P3** RECENT_TRAINING_ALL_REJECTED: 64
-- **P0.3** WORKFLOW_NOT_SUCCESS_HOME_SCHEDULE: {"repository": "Hawkar-usls/Janus_Genesis", "workflow": "janus-habitat-cloud-home-v1.yml", "status": "OBSERVED", "run_id": 41820118579, "run_attempt": 1, "event": "workflow_dispatch", "conclusion": "failure", "head_sha": "cd628ee23326d6130cfae6898814775a881c23e4", "created_at": "2026-11-04T11:20:37Z", "url": "https://github.com/Hawkar-usls/Janus_Genesis/actions/runs/41820118579"}
+- **P0.3** WORKFLOW_NOT_SUCCESS_HOME_SCHEDULE: {"conclusion": "failure", "created_at": "2026-11-04T11:20:37Z", "event": "workflow_dispatch", "head_sha": "cd628ee23326d6130cfae6898814775a881c23e4", "repository": "Hawkar-usls/Janus_Genesis", "run_attempt": 1, "run_id": 41820118579, "status": "OBSERVED", "url": "https://github.com/Hawkar-usls/Janus_Genesis/actions/runs/41820118579", "workflow": "janus-habitat-cloud-home-v1.yml"}
 
 ## Owner-directed self-assembly (registered, not executable)
 
