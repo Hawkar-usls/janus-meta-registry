@@ -2,7 +2,7 @@
 
 Automatically rebuilt from pinned public evidence.
 
-Status: **AUTONOMY_PARTIAL** · observed 2026-11-04T11:42:39Z
+Status: **AUTONOMY_PARTIAL** · observed 2026-11-04T14:21:45Z
 
 Current phase: **P0.3**
 
@@ -55,20 +55,20 @@ A successful collector is not proof of useful work or full autonomy.
     "waiting": 38
   },
   "home": {
-    "sequence": 263,
-    "source_main_sha": "cd628ee23326d6130cfae6898814775a881c23e4"
+    "sequence": 264,
+    "source_main_sha": "c62d5e7cedc061c2aefd00384b428556e96190d3"
   },
   "beetle_delivery": {
-    "status": "WARN",
-    "observed_at": "2026-11-04T09:58:57.082630Z",
-    "total_pending": 14,
+    "status": "ALERT",
+    "observed_at": "2026-11-04T13:00:35.558778Z",
+    "total_pending": 11,
     "receiver_states": {
-      "PENDING": 13,
-      "UP_TO_DATE": 5,
+      "STALE": 10,
+      "UP_TO_DATE": 8,
       "ACK_UNAVAILABLE": 1
     },
-    "routing_allowed": true,
-    "routing_reason": "ROUTING_ALLOWED",
+    "routing_allowed": false,
+    "routing_reason": "HOLD_STALE_RECEIVER_ACK",
     "runtime_consumption_attested": false
   },
   "native_decision": "NO_ACTION",
@@ -78,14 +78,14 @@ A successful collector is not proof of useful work or full autonomy.
 
 ## Evidence-driven tasks
 
-- **P0.3** BEETLE_DELIVERY_PENDING: {"total_pending": 14, "receiver_states": {"PENDING": 13, "UP_TO_DATE": 5, "ACK_UNAVAILABLE": 1}}
+- **P0.3** BEETLE_DELIVERY_PENDING: {"total_pending": 11, "receiver_states": {"STALE": 10, "UP_TO_DATE": 8, "ACK_UNAVAILABLE": 1}}
+- **P0.3** BEETLE_ROUTING_HELD: "HOLD_STALE_RECEIVER_ACK"
 - **P0.3** EXTERNAL_WITNESS_GENESIS_HOME: "SCHEDULE_SILENCE"
 - **P0.3** EXTERNAL_WITNESS_SKINGPT_ACK: "UNKNOWN"
 - **P0.4** PATCHES_WAITING: 38
 - **P0.5** SCOUT_MODEL_SYNTHESIS_DEGRADED: {"snapshots": 17, "synthesis": 0, "expected": 17}
 - **P2** SELF_WRITER_REVIEWED_TASKS_REMAINING: {"accepted": 9, "admitted": 10}
 - **P3** RECENT_TRAINING_ALL_REJECTED: 64
-- **P0.3** WORKFLOW_NOT_SUCCESS_HOME_SCHEDULE: {"conclusion": "failure", "created_at": "2026-11-04T11:20:37Z", "event": "workflow_dispatch", "head_sha": "cd628ee23326d6130cfae6898814775a881c23e4", "repository": "Hawkar-usls/Janus_Genesis", "run_attempt": 1, "run_id": 41820118579, "status": "OBSERVED", "url": "https://github.com/Hawkar-usls/Janus_Genesis/actions/runs/41820118579", "workflow": "janus-habitat-cloud-home-v1.yml"}
 
 ## Owner-directed self-assembly (registered, not executable)
 
