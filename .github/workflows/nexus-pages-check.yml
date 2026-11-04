@@ -28,6 +28,7 @@ jobs:
         run: |
           node --check nexus/app.js
           node --check nexus/sw.js
+          node --test nexus/receipt_integrity.test.cjs
           python -m json.tool nexus/manifest.webmanifest >/dev/null
       - name: Verify Pages safety contract
         run: |
@@ -56,6 +57,8 @@ jobs:
           app=(root/"app.js").read_text(encoding="utf-8")
           assert "textContent" in app and "innerHTML" not in app
           assert "RECEIPT_RE" in app and "receipt.current_phase !== latest.current_phase" in app
+          assert "crypto.subtle.digest" in app and "latest.receipt_sha256" in app
+          assert "receipt.state_sha256 !== latest.state_sha256" in app
           assert "navigator.clipboard" in app and "fetch(" in app
           for blocked in ("Authorization:", "github_pat_", "ghp_", "method: \"POST\"", "method: \"PATCH\"", "method: \"DELETE\"", "eval(", "innerHTML"):
               assert blocked not in app, blocked
