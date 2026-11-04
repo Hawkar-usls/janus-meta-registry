@@ -92,6 +92,26 @@ def encode(obj):
 def utcnow():
     return datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
 
+MAX_BEETLE_TELEMETRY_AGE_MINUTES = 120
+
+def source_age_minutes(observed_at, source_at):
+    """Time-bound public telemetry, never invent freshness or alter queues.
+
+    Return (age_minutes, status). Invalid/naive/future timestamps are UNKNOWN.
+    Synthetic offline fixture clocks without ISO timestamps stay UNKNOWN.
+    """
+    try:
+        now = datetime.fromisoformat(observed_at.replace("Z", "+00:00"))
+        stamp = datetime.fromisoformat(source_at.replace("Z", "+00:00"))
+        if now.tzinfo is None or stamp.tzinfo is None:
+            return None, "UNVERIFIABLE_CLOCK"
+        age_seconds = (now - stamp).total_seconds()
+        if age_seconds < -300:
+            return None, "FUTURE_SOURCE_CLOCK"
+        return max(0, int(age_seconds // 60)), "VERIFIED_TIMESTAMP"
+    except (AttributeError, ValueError, TypeError, OverflowError):
+        return None, "UNVERIFIABLE_CLOCK"
+
 class NoRedirect(HTTPRedirectHandler):
     def redirect_request(self, *args, **kwargs):
         raise Hold("PUBLIC_API_REDIRECT_DENIED")
@@ -288,6 +308,21 @@ def summarize(sources, workflows, observed_at, code_sha, previous=None, action=N
         add("P0.3", "HOME_SOURCE_HEAD_DIFFERS", d["home"].get("source_main_sha"))
     delivery = d["beetle_delivery"]
     gate = d["beetle_gate"]
+    delivery_age, delivery_clock = source_age_minutes(observed_at, delivery.get("at"))
+    gate_age, gate_clock = source_age_minutes(observed_at, gate.get("at"))
+    # Preserve actual pending and routing flags; report when data is too old
+    # to authorize any assertion that delivery has RECENTLY recovered.
+    now_parsed, _ = source_age_minutes(observed_at, observed_at)
+    if now_parsed is not None:
+        for label, age, clock in (
+            ("BEETLE_DELIVERY_HEALTH", delivery_age, delivery_clock),
+            ("BEETLE_ROUTING_GATE", gate_age, gate_clock),
+        ):
+            if age is None:
+                add("P0.3", label + "_TIMESTAMP_UNKNOWN", clock)
+            elif age > MAX_BEETLE_TELEMETRY_AGE_MINUTES:
+                add("P0.3", label + "_STALE",
+                    {"age_minutes": age, "max_minutes": MAX_BEETLE_TELEMETRY_AGE_MINUTES})
     receivers = delivery.get("repositories", {})
     valid_delivery = (delivery.get("schema") == "janus.beetle.delivery_health.v1" and
                       delivery.get("ack_semantics") == "INBOX_DURABLE_ONLY_NOT_RUNTIME_CONSUMPTION" and
@@ -448,6 +483,11 @@ def summarize(sources, workflows, observed_at, code_sha, previous=None, action=N
                     "home": {"sequence": d["home"].get("sequence"), "source_main_sha": d["home"].get("source_main_sha")},
                     "beetle_delivery": {"status": delivery.get("status") if valid_delivery else "UNVERIFIED",
                                         "observed_at": delivery.get("at"),
+                                        "health_age_minutes": delivery_age,
+                                        "health_clock": delivery_clock,
+                                        "routing_gate_age_minutes": gate_age,
+                                        "routing_gate_clock": gate_clock,
+                                        "max_health_age_minutes": MAX_BEETLE_TELEMETRY_AGE_MINUTES,
                                         "total_pending": delivery.get("total_pending") if valid_delivery else None,
                                         "receiver_states": receiver_states,
                                         "routing_allowed": gate.get("routing_allowed") if valid_gate else None,
