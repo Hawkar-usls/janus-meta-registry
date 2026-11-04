@@ -15,7 +15,7 @@ function fixture() {
     schema: "janus.autonomy.snapshot.v1",
     current_phase: "P0.3", ecosystem_status: "AUTONOMY_PARTIAL",
     state_sha256: STATE, observation_id: ID,
-    observed_at_utc: "2026-11-04T11:42:39Z",
+    observed_at_utc: new Date().toISOString(),
     full_issue_162_acceptance: false, authority: {delta: 0},
     findings: [
       {phase:"P0.3", reason:"BEETLE_DELIVERY_PENDING", evidence:{total_pending:14}},
@@ -93,7 +93,7 @@ test("valid byte-pinned receipt renders live metrics from the same immutable rec
   assert.equal(out.get("patches").textContent,"38");
   assert.equal(out.get("modules").textContent,"9");
   assert.equal(out.get("phases").children.length,2);
-  assert.equal(out.get("connection").textContent,"Устаревший snapshot".includes(out.get("connection").textContent)?"Устаревший snapshot":"Байты receipt совпали с SHA-256");
+  assert.equal(out.get("connection").textContent,"Байты receipt совпали с SHA-256");
   assert.equal(out.requests.filter(u=>u.includes("ROADMAP.md")).length,0);
 });
 
@@ -124,7 +124,7 @@ test("absent browser SHA-256 engine fails closed, never silently skips hashing",
 
 test("snapshot observation id and timestamp remain bound to the pointer",async()=>{
   const f=fixture();
-  f.latest.last_observed_at_utc="2026-11-04T12:42:39Z";
+  f.latest.last_observed_at_utc="2010-01-01T00:00:00Z";
   const out=await render(f);
   assert.equal(out.get("status-value").textContent,"—");
 });
