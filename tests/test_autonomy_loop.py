@@ -71,6 +71,52 @@ class LoopTests(unittest.TestCase):
         self.assertIn("BEETLE_ROUTING_HELD", {f["reason"] for f in r["findings"]})
         self.assertNotIn("opaque_private_receiver", m.encode(r).decode())
 
+    def test_real_P03_backlog_old_telemetry_cannot_look_current(self):
+        s,w=fixture()
+        # All hashes and queue counts may be correct but the publicly
+        # persisted summary can be several hours behind the live receiver.
+        s["beetle_delivery"]["data"].update(
+            at="2026-11-04T17:58:03Z", status="WARN", total_pending=14,
+            repositories={"public": {"pending": 13, "status": "PENDING"},
+                          "private": {"pending": 1, "status": "ACK_UNAVAILABLE"}})
+        s["beetle_gate"]["data"].update(
+            at="2026-11-04T17:58:02Z",routing_allowed=False,
+            reason="HOLD_DELIVERY_BACKPRESSURE")
+        r=m.summarize(s,w,"2026-11-04T20:39:17Z","d"*40,
+                      {"accepted_phases":{"P0.1":{"status":"PASS_STATUS_CAPTURE_ONLY"},
+                                          "P0.2":{"status":"PASS_SOURCE_COHORT_ONLY",
+                                                  "canonical_run":123}}})
+        reasons={x["reason"] for x in r["findings"]}
+        self.assertIn("BEETLE_DELIVERY_HEALTH_STALE",reasons)
+        self.assertIn("BEETLE_ROUTING_GATE_STALE",reasons)
+        self.assertEqual(r["metrics"]["beetle_delivery"]["total_pending"],14)
+        self.assertGreater(r["metrics"]["beetle_delivery"]["health_age_minutes"],120)
+        self.assertEqual(r["current_phase"],"P0.3")
+        self.assertEqual(r["ecosystem_status"],"AUTONOMY_PARTIAL")
+
+    def test_fresh_beetle_observation_does_not_raise_stale_alarm(self):
+        s,w=fixture()
+        s["beetle_delivery"]["data"]["at"]="2026-11-04T20:29:00Z"
+        s["beetle_gate"]["data"]["at"]="2026-11-04T20:28:00Z"
+        r=m.summarize(s,w,"2026-11-04T20:39:17Z","d"*40)
+        self.assertFalse(any("BEETLE_" in x["reason"] and
+                             ("_STALE" in x["reason"] or "_TIMESTAMP_UNKNOWN" in x["reason"])
+                             for x in r["findings"]))
+        self.assertEqual(r["metrics"]["beetle_delivery"]["health_age_minutes"],10)
+
+    def test_unknown_or_future_beetle_timestamp_is_not_fresh(self):
+        s,w=fixture()
+        s["beetle_delivery"]["data"]["at"]="2099-01-01T00:00:00Z"
+        s["beetle_gate"]["data"]["at"]="2026-11-04T20:35:00"
+        r=m.summarize(s,w,"2026-11-04T20:39:17Z","d"*40)
+        reasons={x["reason"] for x in r["findings"]}
+        self.assertIn("BEETLE_DELIVERY_HEALTH_TIMESTAMP_UNKNOWN",reasons)
+        self.assertIn("BEETLE_ROUTING_GATE_TIMESTAMP_UNKNOWN",reasons)
+        self.assertEqual(r["metrics"]["beetle_delivery"]["health_clock"],"FUTURE_SOURCE_CLOCK")
+        self.assertEqual(r["metrics"]["beetle_delivery"]["routing_gate_clock"],"UNVERIFIABLE_CLOCK")
+        self.assertIsNone(r["metrics"]["beetle_delivery"]["health_age_minutes"])
+        self.assertFalse(r["full_issue_162_acceptance"])
+
     def test_malformed_delivery_totals_do_not_report_clear(self):
         s, w = fixture()
         s["beetle_delivery"]["data"]["total_pending"] = 1
