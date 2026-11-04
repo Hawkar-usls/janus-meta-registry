@@ -226,6 +226,37 @@ class ContinuationTests(unittest.TestCase):
         self.assertEqual(r["roadmap"][1]["state"], "ACTIVE_RECHECK")
         self.assertIn("P0.2", r["accepted_phases"])
 
+    def test_repaired_source_cohort_still_requires_independent_replay(self):
+        s, w = fixture()
+        current = 124
+        s["canonical"]["data"]["latest_durable_external_run"] = current
+        s["aura"]["data"]["source"].update(
+            upstream_run=current, state_sha256=m.digest(s["canonical"]["data"]))
+        s["council"]["data"]["sources"]["meta_registry"].update(
+            canonical_run=current, sha256=m.digest(s["canonical"]["data"]))
+        s["council"]["data"]["sources"]["aura_oracle"]["packet_sha256"] = m.digest(s["aura"]["data"])
+        s["coordination"]["data"]["meta_canonical_run"] = current
+        s["cosmos"]["data"]["canonical_rowan_run"] = current
+        previous = {"accepted_phases": {
+            "P0.1": {"status": "PASS_STATUS_CAPTURE_ONLY"},
+            "P0.2": {"status": "PASS_SOURCE_COHORT_ONLY",
+                     "canonical_run": 123, "proof_sha256": "a"*64}}}
+        pending = m.summarize(s, w, "now", "d"*40, previous,
+                              action={"cohort_status":"WAIT_INDEPENDENT_SOURCE_COHORT"})
+        reasons = {z["reason"] for z in pending["findings"]}
+        self.assertIn("COHORT_NOT_READY_FOR_INDEPENDENT_REPLAY", reasons)
+        self.assertEqual(pending["current_phase"], "P0.2")
+        self.assertEqual(pending["accepted_phases"]["P0.2"]["canonical_run"], 123)
+        candidate = m.summarize(s, w, "now", "d"*40, previous,
+                                 action={"p02_proof": {"status":"UNVERIFIED_ONLY"}})
+        ready_reasons = {z["reason"] for z in candidate["findings"]}
+        self.assertIn("COHORT_READY_INDEPENDENT_REPLAY_REQUIRED", ready_reasons)
+        self.assertNotIn("COHORT_NOT_READY_FOR_INDEPENDENT_REPLAY", ready_reasons)
+        self.assertEqual(candidate["current_phase"], "P0.2")
+        self.assertEqual(candidate["accepted_phases"]["P0.2"]["canonical_run"], 123)
+        self.assertFalse(candidate["full_issue_162_acceptance"])
+        self.assertEqual(candidate["ecosystem_status"], "AUTONOMY_PARTIAL")
+
     def test_matching_new_sources_still_recheck_old_checkpoint_proof(self):
         s, w = fixture()
         new_run = 124
