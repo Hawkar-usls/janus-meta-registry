@@ -2,7 +2,7 @@
 
 Automatically rebuilt from pinned public evidence.
 
-Status: **AUTONOMY_PARTIAL** · observed 2026-11-04T15:41:44Z
+Status: **AUTONOMY_PARTIAL** · observed 2026-11-04T16:38:28Z
 
 Current phase: **P0.2**
 
@@ -27,9 +27,9 @@ A successful collector is not proof of useful work or full autonomy.
 ```json
 {
   "native_model": {
-    "attempt_count": 1702,
+    "attempt_count": 1703,
     "promotion_count": 61,
-    "rejection_count": 1641,
+    "rejection_count": 1642,
     "checkpoint_sha256": "fc767adb812ac3bea54c44cbccfa9680941f95e2c8a77120559b41da044d9463",
     "last_training_status": "REJECTED",
     "retained_history_count": 64,
@@ -55,7 +55,7 @@ A successful collector is not proof of useful work or full autonomy.
     "waiting": 38
   },
   "home": {
-    "sequence": 264,
+    "sequence": 265,
     "source_main_sha": "c62d5e7cedc061c2aefd00384b428556e96190d3"
   },
   "beetle_delivery": {
@@ -78,12 +78,11 @@ A successful collector is not proof of useful work or full autonomy.
 
 ## Evidence-driven tasks
 
-- **P0.2** ROWAN_GENERATION_DRIFT_AURA: 41747845324
 - **P0.2** ROWAN_GENERATION_DRIFT_COUNCIL: 41747845324
 - **P0.2** ROWAN_GENERATION_DRIFT_COORDINATION: 41747845324
 - **P0.2** ROWAN_GENERATION_DRIFT_COSMOS: 41747845324
-- **P0.2** AURA_CANONICAL_DIGEST_DRIFT: "aura"
 - **P0.2** COUNCIL_CANONICAL_DIGEST_DRIFT: "council"
+- **P0.2** COUNCIL_AURA_DIGEST_DRIFT: "council"
 - **P0.3** BEETLE_DELIVERY_PENDING: {"total_pending": 11, "receiver_states": {"STALE": 10, "UP_TO_DATE": 8, "ACK_UNAVAILABLE": 1}}
 - **P0.3** BEETLE_ROUTING_HELD: "HOLD_STALE_RECEIVER_ACK"
 - **P0.3** EXTERNAL_WITNESS_GENESIS_HOME: "SCHEDULE_SILENCE"
@@ -92,6 +91,9 @@ A successful collector is not proof of useful work or full autonomy.
 - **P0.5** SCOUT_MODEL_SYNTHESIS_DEGRADED: {"snapshots": 17, "synthesis": 0, "expected": 17}
 - **P2** SELF_WRITER_REVIEWED_TASKS_REMAINING: {"accepted": 9, "admitted": 10}
 - **P3** RECENT_TRAINING_ALL_REJECTED: 64
+- **P0.2** WORKFLOW_NOT_SUCCESS_COSMOS_WITNESS: {"repository": "Hawkar-usls/Janus-Cosmos", "workflow": "cosmos-rowan-ecosystem-witness.yml", "status": "OBSERVED", "run_id": 41869053282, "run_attempt": 1, "event": "workflow_run", "conclusion": "failure", "head_sha": "5b7b91fa2c4ce4051c32886ab8309f52cd03004d", "created_at": "2026-11-04T16:36:46Z", "url": "https://github.com/Hawkar-usls/Janus-Cosmos/actions/runs/41869053282"}
+- **P0.2** WORKFLOW_NOT_SUCCESS_CROSS_ORGAN_WITNESS: {"repository": "Hawkar-usls/janus-meta-registry", "workflow": "janus-cross-organ-source-witness.yml", "status": "OBSERVED", "run_id": 41860683501, "run_attempt": 1, "event": "workflow_run", "conclusion": "failure", "head_sha": "c7a165ca8f6b363ede0c924986ee8638a6a5b681", "created_at": "2026-11-04T15:43:23Z", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/41860683501"}
+- **P0.2** WORKFLOW_NOT_SUCCESS_ROWAN_WITNESS: {"repository": "Hawkar-usls/janus-meta-registry", "workflow": "janus-rowan-ecosystem-sync-witness.yml", "status": "OBSERVED", "run_id": 41860683348, "run_attempt": 1, "event": "workflow_run", "conclusion": "failure", "head_sha": "c7a165ca8f6b363ede0c924986ee8638a6a5b681", "created_at": "2026-11-04T15:43:23Z", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/41860683348"}
 
 ## Owner-directed self-assembly (registered, not executable)
 
