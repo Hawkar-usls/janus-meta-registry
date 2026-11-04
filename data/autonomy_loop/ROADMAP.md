@@ -2,7 +2,7 @@
 
 Automatically rebuilt from pinned public evidence.
 
-Status: **AUTONOMY_PARTIAL** · observed 2026-11-03T23:46:59Z
+Status: **AUTONOMY_PARTIAL** · observed 2026-11-04T01:21:50Z
 
 Current phase: **P0.2**
 
@@ -78,7 +78,6 @@ A successful collector is not proof of useful work or full autonomy.
 
 ## Evidence-driven tasks
 
-- **P0.2** ROWAN_GENERATION_DRIFT_COSMOS: 41660344693
 - **P0.3** BEETLE_DELIVERY_PENDING: {"total_pending": 15, "receiver_states": {"PENDING": 12, "UP_TO_DATE": 6, "ACK_UNAVAILABLE": 1}}
 - **P0.3** EXTERNAL_WITNESS_GENESIS_HIGHWATER: "ANCHOR_PENDING_WITHIN_GRACE"
 - **P0.3** EXTERNAL_WITNESS_SKINGPT_ACK: "UNKNOWN"
@@ -86,8 +85,8 @@ A successful collector is not proof of useful work or full autonomy.
 - **P0.5** SCOUT_MODEL_SYNTHESIS_DEGRADED: {"snapshots": 17, "synthesis": 0, "expected": 17}
 - **P2** SELF_WRITER_REVIEWED_TASKS_REMAINING: {"accepted": 9, "admitted": 10}
 - **P3** RECENT_TRAINING_ALL_REJECTED: 64
-- **P0.2** WORKFLOW_NOT_SUCCESS_CROSS_ORGAN_WITNESS: {"conclusion": "failure", "created_at": "2026-11-03T23:37:44Z", "event": "workflow_run", "head_sha": "15173eb1ac8c0eb0a5f90422cb77af1faccb3ac8", "repository": "Hawkar-usls/janus-meta-registry", "run_attempt": 1, "run_id": 41740651653, "status": "OBSERVED", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/41740651653", "workflow": "janus-cross-organ-source-witness.yml"}
-- **P0.2** WORKFLOW_NOT_SUCCESS_ROWAN_WITNESS: {"conclusion": "failure", "created_at": "2026-11-03T23:37:44Z", "event": "workflow_run", "head_sha": "15173eb1ac8c0eb0a5f90422cb77af1faccb3ac8", "repository": "Hawkar-usls/janus-meta-registry", "run_attempt": 1, "run_id": 41740651665, "status": "OBSERVED", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/41740651665", "workflow": "janus-rowan-ecosystem-sync-witness.yml"}
+- **P0.2** WORKFLOW_NOT_SUCCESS_CROSS_ORGAN_WITNESS: {"repository": "Hawkar-usls/janus-meta-registry", "workflow": "janus-cross-organ-source-witness.yml", "status": "OBSERVED", "run_id": 41741986609, "run_attempt": 1, "event": "workflow_run", "conclusion": "failure", "head_sha": "c5d3e9fa9a04843906ac2f2d803425aa6d2d1206", "created_at": "2026-11-03T23:48:10Z", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/41741986609"}
+- **P0.2** WORKFLOW_NOT_SUCCESS_ROWAN_WITNESS: {"repository": "Hawkar-usls/janus-meta-registry", "workflow": "janus-rowan-ecosystem-sync-witness.yml", "status": "OBSERVED", "run_id": 41741986230, "run_attempt": 1, "event": "workflow_run", "conclusion": "failure", "head_sha": "c5d3e9fa9a04843906ac2f2d803425aa6d2d1206", "created_at": "2026-11-03T23:48:10Z", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/41741986230"}
 
 ## Owner-directed self-assembly (registered, not executable)
 
