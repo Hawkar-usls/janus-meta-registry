@@ -2,7 +2,7 @@
 
 Automatically rebuilt from pinned public evidence.
 
-Status: **AUTONOMY_PARTIAL** · observed 2026-11-04T22:16:39Z
+Status: **AUTONOMY_PARTIAL** · observed 2026-11-04T22:39:01Z
 
 Current phase: **P0.3**
 
@@ -61,9 +61,9 @@ A successful collector is not proof of useful work or full autonomy.
   "beetle_delivery": {
     "status": "ALERT",
     "observed_at": "2026-11-04T21:15:15.712996Z",
-    "health_age_minutes": 61,
+    "health_age_minutes": 83,
     "health_clock": "VERIFIED_TIMESTAMP",
-    "routing_gate_age_minutes": 61,
+    "routing_gate_age_minutes": 83,
     "routing_gate_clock": "VERIFIED_TIMESTAMP",
     "max_health_age_minutes": 120,
     "total_pending": 11,
@@ -85,10 +85,6 @@ A successful collector is not proof of useful work or full autonomy.
 
 - **P0.3** BEETLE_DELIVERY_PENDING: {"total_pending": 11, "receiver_states": {"STALE": 10, "UP_TO_DATE": 8, "ACK_UNAVAILABLE": 1}}
 - **P0.3** BEETLE_ROUTING_HELD: "HOLD_STALE_RECEIVER_ACK"
-- **P0.3** EXTERNAL_WITNESS_BEETLE_GENESIS_WATCHDOG: "SCHEDULE_SILENCE"
-- **P0.3** EXTERNAL_WITNESS_BEETLE_PRODUCER: "SCHEDULE_SILENCE"
-- **P0.3** EXTERNAL_WITNESS_GENESIS_HIGHWATER: "ANCHOR_PENDING_WITHIN_GRACE"
-- **P0.3** EXTERNAL_WITNESS_GENESIS_HOME: "SCHEDULE_SILENCE"
 - **P0.3** EXTERNAL_WITNESS_SKINGPT_ACK: "UNKNOWN"
 - **P0.4** PATCHES_WAITING: 38
 - **P0.5** SCOUT_MODEL_SYNTHESIS_DEGRADED: {"snapshots": 17, "synthesis": 0, "expected": 17}
