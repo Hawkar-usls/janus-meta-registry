@@ -2,7 +2,7 @@
 
 Automatically rebuilt from pinned public evidence.
 
-Status: **AUTONOMY_PARTIAL** · observed 2026-11-04T22:39:01Z
+Status: **AUTONOMY_PARTIAL** · observed 2026-11-04T23:35:44Z
 
 Current phase: **P0.3**
 
@@ -59,21 +59,21 @@ A successful collector is not proof of useful work or full autonomy.
     "source_main_sha": "40c7a0fa025965e162b6dca9047b6654cb674d20"
   },
   "beetle_delivery": {
-    "status": "ALERT",
-    "observed_at": "2026-11-04T21:15:15.712996Z",
-    "health_age_minutes": 83,
+    "status": "WARN",
+    "observed_at": "2026-11-04T23:35:09.984951Z",
+    "health_age_minutes": 0,
     "health_clock": "VERIFIED_TIMESTAMP",
-    "routing_gate_age_minutes": 83,
+    "routing_gate_age_minutes": 0,
     "routing_gate_clock": "VERIFIED_TIMESTAMP",
     "max_health_age_minutes": 120,
-    "total_pending": 11,
+    "total_pending": 14,
     "receiver_states": {
-      "STALE": 10,
-      "UP_TO_DATE": 8,
+      "PENDING": 13,
+      "UP_TO_DATE": 5,
       "ACK_UNAVAILABLE": 1
     },
-    "routing_allowed": false,
-    "routing_reason": "HOLD_STALE_RECEIVER_ACK",
+    "routing_allowed": true,
+    "routing_reason": "ROUTING_ALLOWED",
     "runtime_consumption_attested": false
   },
   "native_decision": "NO_ACTION",
@@ -83,8 +83,7 @@ A successful collector is not proof of useful work or full autonomy.
 
 ## Evidence-driven tasks
 
-- **P0.3** BEETLE_DELIVERY_PENDING: {"total_pending": 11, "receiver_states": {"STALE": 10, "UP_TO_DATE": 8, "ACK_UNAVAILABLE": 1}}
-- **P0.3** BEETLE_ROUTING_HELD: "HOLD_STALE_RECEIVER_ACK"
+- **P0.3** BEETLE_DELIVERY_PENDING: {"total_pending": 14, "receiver_states": {"PENDING": 13, "UP_TO_DATE": 5, "ACK_UNAVAILABLE": 1}}
 - **P0.3** EXTERNAL_WITNESS_SKINGPT_ACK: "UNKNOWN"
 - **P0.4** PATCHES_WAITING: 38
 - **P0.5** SCOUT_MODEL_SYNTHESIS_DEGRADED: {"snapshots": 17, "synthesis": 0, "expected": 17}
