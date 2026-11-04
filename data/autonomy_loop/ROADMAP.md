@@ -2,17 +2,17 @@
 
 Automatically rebuilt from pinned public evidence.
 
-Status: **AUTONOMY_PARTIAL** · observed 2026-11-04T01:21:50Z
+Status: **AUTONOMY_PARTIAL** · observed 2026-11-04T01:41:20Z
 
-Current phase: **P0.3**
+Current phase: **P0.2**
 
 A successful collector is not proof of useful work or full autonomy.
 
 | Order | Phase | State | Objective |
 |---|---|---|---|
 | 1 | P0.1 | DONE | [One verified source-pinned status snapshot](https://github.com/Hawkar-usls/janus-meta-registry/issues/364) |
-| 2 | P0.2 | DONE | [One Rowan generation through AURA, council, Cosmos and witnesses](https://github.com/Hawkar-usls/janus-meta-registry/issues/365) |
-| 3 | P0.3 | ACTIVE | [Beetle delivery and current Cloud HOME](https://github.com/Hawkar-usls/Janus_Genesis/issues/164) |
+| 2 | P0.2 | ACTIVE_RECHECK | [One Rowan generation through AURA, council, Cosmos and witnesses](https://github.com/Hawkar-usls/janus-meta-registry/issues/365) |
+| 3 | P0.3 | WAITING_FOR_PREVIOUS | [Beetle delivery and current Cloud HOME](https://github.com/Hawkar-usls/Janus_Genesis/issues/164) |
 | 4 | P0.4 | WAITING_FOR_PREVIOUS | Deduplicate patch queue and preserve superseded attempts |
 | 5 | P0.5 | WAITING_FOR_PREVIOUS | Separate snapshots, model synthesis, useful work and idle |
 | 6 | P0.6 | WAITING_FOR_PREVIOUS | Restore local Habitat adapter without recreating HOME |
@@ -27,9 +27,9 @@ A successful collector is not proof of useful work or full autonomy.
 ```json
 {
   "native_model": {
-    "attempt_count": 1689,
+    "attempt_count": 1690,
     "promotion_count": 61,
-    "rejection_count": 1628,
+    "rejection_count": 1629,
     "checkpoint_sha256": "fc767adb812ac3bea54c44cbccfa9680941f95e2c8a77120559b41da044d9463",
     "last_training_status": "REJECTED",
     "retained_history_count": 64,
@@ -55,7 +55,7 @@ A successful collector is not proof of useful work or full autonomy.
     "waiting": 38
   },
   "home": {
-    "sequence": 258,
+    "sequence": 260,
     "source_main_sha": "cd628ee23326d6130cfae6898814775a881c23e4"
   },
   "beetle_delivery": {
@@ -78,6 +78,10 @@ A successful collector is not proof of useful work or full autonomy.
 
 ## Evidence-driven tasks
 
+- **P0.1** SOURCE_UNKNOWN_AURA: "aura"
+- **P0.2** ROWAN_GENERATION_DRIFT_AURA: null
+- **P0.2** AURA_CANONICAL_DIGEST_DRIFT: "aura"
+- **P0.2** COUNCIL_AURA_DIGEST_DRIFT: "council"
 - **P0.3** BEETLE_DELIVERY_PENDING: {"total_pending": 15, "receiver_states": {"PENDING": 12, "UP_TO_DATE": 6, "ACK_UNAVAILABLE": 1}}
 - **P0.3** EXTERNAL_WITNESS_GENESIS_HIGHWATER: "ANCHOR_PENDING_WITHIN_GRACE"
 - **P0.3** EXTERNAL_WITNESS_SKINGPT_ACK: "UNKNOWN"
@@ -85,13 +89,11 @@ A successful collector is not proof of useful work or full autonomy.
 - **P0.5** SCOUT_MODEL_SYNTHESIS_DEGRADED: {"snapshots": 17, "synthesis": 0, "expected": 17}
 - **P2** SELF_WRITER_REVIEWED_TASKS_REMAINING: {"accepted": 9, "admitted": 10}
 - **P3** RECENT_TRAINING_ALL_REJECTED: 64
-- **P0.2** WORKFLOW_NOT_SUCCESS_CROSS_ORGAN_WITNESS: {"conclusion": "failure", "created_at": "2026-11-03T23:48:10Z", "event": "workflow_run", "head_sha": "c5d3e9fa9a04843906ac2f2d803425aa6d2d1206", "repository": "Hawkar-usls/janus-meta-registry", "run_attempt": 1, "run_id": 41741986609, "status": "OBSERVED", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/41741986609", "workflow": "janus-cross-organ-source-witness.yml"}
-- **P0.2** WORKFLOW_NOT_SUCCESS_ROWAN_WITNESS: {"conclusion": "failure", "created_at": "2026-11-03T23:48:10Z", "event": "workflow_run", "head_sha": "c5d3e9fa9a04843906ac2f2d803425aa6d2d1206", "repository": "Hawkar-usls/janus-meta-registry", "run_attempt": 1, "run_id": 41741986230, "status": "OBSERVED", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/41741986230", "workflow": "janus-rowan-ecosystem-sync-witness.yml"}
 
 ## Owner-directed self-assembly (registered, not executable)
 
 Owner directive: [JANUS SELF-ASSEMBLY #440](https://github.com/Hawkar-usls/janus-meta-registry/issues/440).
-Next admissible phase: **P0.3**.
+Next admissible phase: **P0.2**.
 Machine-readable directive: [SELF_ASSEMBLY_TASK.json](SELF_ASSEMBLY_TASK.json).
 The scheduled observer reads this directive as data; it is not a new handler, permission, model task or proof of useful work.
 
