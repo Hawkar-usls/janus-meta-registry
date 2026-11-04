@@ -22,7 +22,7 @@ def spec(path):
     m=re.search(r"(?m)^name:\s*(.+)$",doc)
     if m is None:
         raise AssertionError("Workflow missing immutable name")
-    name=m.group(1).strip().strip("'\\"")
+    name=m.group(1).strip().strip(chr(39)).strip(chr(34))
     m=re.search(r"(?m)^  workflow_run:\s*\n    workflows:\s*(\[[^\n]+\])",doc)
     if m is None:
         raise AssertionError("A reviewed witness workflow lost its explicit trigger allowlist")
