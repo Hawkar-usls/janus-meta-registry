@@ -85,7 +85,7 @@ A successful collector is not proof of useful work or full autonomy.
 - **P0.5** SCOUT_MODEL_SYNTHESIS_DEGRADED: {"snapshots": 17, "synthesis": 0, "expected": 17}
 - **P2** SELF_WRITER_REVIEWED_TASKS_REMAINING: {"accepted": 9, "admitted": 10}
 - **P3** RECENT_TRAINING_ALL_REJECTED: 64
-- **P0.2** WORKFLOW_NOT_SUCCESS_CROSS_ORGAN_WITNESS: {"repository": "Hawkar-usls/janus-meta-registry", "workflow": "janus-cross-organ-source-witness.yml", "status": "OBSERVED", "run_id": 41755910757, "run_attempt": 1, "event": "workflow_run", "conclusion": "skipped", "head_sha": "846a05128a8bae02c41d0fecd9167360c5e96e42", "created_at": "2026-11-04T01:42:44Z", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/41755910757"}
+- **P0.2** WORKFLOW_NOT_SUCCESS_CROSS_ORGAN_WITNESS: {"conclusion": "skipped", "created_at": "2026-11-04T01:42:44Z", "event": "workflow_run", "head_sha": "846a05128a8bae02c41d0fecd9167360c5e96e42", "repository": "Hawkar-usls/janus-meta-registry", "run_attempt": 1, "run_id": 41755910757, "status": "OBSERVED", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/41755910757", "workflow": "janus-cross-organ-source-witness.yml"}
 
 ## Owner-directed self-assembly (registered, not executable)
 
