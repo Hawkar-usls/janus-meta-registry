@@ -2,17 +2,17 @@
 
 Automatically rebuilt from pinned public evidence.
 
-Status: **AUTONOMY_PARTIAL** · observed 2026-11-04T21:57:58Z
+Status: **AUTONOMY_PARTIAL** · observed 2026-11-04T22:05:01Z
 
-Current phase: **P0.3**
+Current phase: **P0.2**
 
 A successful collector is not proof of useful work or full autonomy.
 
 | Order | Phase | State | Objective |
 |---|---|---|---|
 | 1 | P0.1 | DONE | [One verified source-pinned status snapshot](https://github.com/Hawkar-usls/janus-meta-registry/issues/364) |
-| 2 | P0.2 | DONE | [One Rowan generation through AURA, council, Cosmos and witnesses](https://github.com/Hawkar-usls/janus-meta-registry/issues/365) |
-| 3 | P0.3 | ACTIVE | [Beetle delivery and current Cloud HOME](https://github.com/Hawkar-usls/Janus_Genesis/issues/164) |
+| 2 | P0.2 | ACTIVE_RECHECK | [One Rowan generation through AURA, council, Cosmos and witnesses](https://github.com/Hawkar-usls/janus-meta-registry/issues/365) |
+| 3 | P0.3 | WAITING_FOR_PREVIOUS | [Beetle delivery and current Cloud HOME](https://github.com/Hawkar-usls/Janus_Genesis/issues/164) |
 | 4 | P0.4 | WAITING_FOR_PREVIOUS | Deduplicate patch queue and preserve superseded attempts |
 | 5 | P0.5 | WAITING_FOR_PREVIOUS | Separate snapshots, model synthesis, useful work and idle |
 | 6 | P0.6 | WAITING_FOR_PREVIOUS | Restore local Habitat adapter without recreating HOME |
@@ -27,9 +27,9 @@ A successful collector is not proof of useful work or full autonomy.
 ```json
 {
   "native_model": {
-    "attempt_count": 1707,
+    "attempt_count": 1708,
     "promotion_count": 61,
-    "rejection_count": 1646,
+    "rejection_count": 1647,
     "checkpoint_sha256": "fc767adb812ac3bea54c44cbccfa9680941f95e2c8a77120559b41da044d9463",
     "last_training_status": "REJECTED",
     "retained_history_count": 64,
@@ -61,9 +61,9 @@ A successful collector is not proof of useful work or full autonomy.
   "beetle_delivery": {
     "status": "ALERT",
     "observed_at": "2026-11-04T21:15:15.712996Z",
-    "health_age_minutes": 42,
+    "health_age_minutes": 49,
     "health_clock": "VERIFIED_TIMESTAMP",
-    "routing_gate_age_minutes": 42,
+    "routing_gate_age_minutes": 49,
     "routing_gate_clock": "VERIFIED_TIMESTAMP",
     "max_health_age_minutes": 120,
     "total_pending": 11,
@@ -83,6 +83,12 @@ A successful collector is not proof of useful work or full autonomy.
 
 ## Evidence-driven tasks
 
+- **P0.2** ROWAN_GENERATION_DRIFT_AURA: 41857726922
+- **P0.2** ROWAN_GENERATION_DRIFT_COUNCIL: 41857726922
+- **P0.2** ROWAN_GENERATION_DRIFT_COORDINATION: 41857726922
+- **P0.2** ROWAN_GENERATION_DRIFT_COSMOS: 41857726922
+- **P0.2** AURA_CANONICAL_DIGEST_DRIFT: "aura"
+- **P0.2** COUNCIL_CANONICAL_DIGEST_DRIFT: "council"
 - **P0.3** BEETLE_DELIVERY_PENDING: {"total_pending": 11, "receiver_states": {"STALE": 10, "UP_TO_DATE": 8, "ACK_UNAVAILABLE": 1}}
 - **P0.3** BEETLE_ROUTING_HELD: "HOLD_STALE_RECEIVER_ACK"
 - **P0.3** EXTERNAL_WITNESS_BEETLE_GENESIS_WATCHDOG: "SCHEDULE_SILENCE"
@@ -98,7 +104,7 @@ A successful collector is not proof of useful work or full autonomy.
 ## Owner-directed self-assembly (registered, not executable)
 
 Owner directive: [JANUS SELF-ASSEMBLY #440](https://github.com/Hawkar-usls/janus-meta-registry/issues/440).
-Next admissible phase: **P0.3**.
+Next admissible phase: **P0.2**.
 Machine-readable directive: [SELF_ASSEMBLY_TASK.json](SELF_ASSEMBLY_TASK.json).
 The scheduled observer reads this directive as data; it is not a new handler, permission, model task or proof of useful work.
 
