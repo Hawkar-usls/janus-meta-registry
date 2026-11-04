@@ -2,7 +2,7 @@
 
 Automatically rebuilt from pinned public evidence.
 
-Status: **AUTONOMY_PARTIAL** · observed 2026-11-04T09:12:00Z
+Status: **AUTONOMY_PARTIAL** · observed 2026-11-04T11:42:39Z
 
 Current phase: **P0.3**
 
@@ -27,9 +27,9 @@ A successful collector is not proof of useful work or full autonomy.
 ```json
 {
   "native_model": {
-    "attempt_count": 1697,
+    "attempt_count": 1701,
     "promotion_count": 61,
-    "rejection_count": 1636,
+    "rejection_count": 1640,
     "checkpoint_sha256": "fc767adb812ac3bea54c44cbccfa9680941f95e2c8a77120559b41da044d9463",
     "last_training_status": "REJECTED",
     "retained_history_count": 64,
@@ -55,20 +55,20 @@ A successful collector is not proof of useful work or full autonomy.
     "waiting": 38
   },
   "home": {
-    "sequence": 262,
+    "sequence": 263,
     "source_main_sha": "cd628ee23326d6130cfae6898814775a881c23e4"
   },
   "beetle_delivery": {
     "status": "WARN",
-    "observed_at": "2026-11-04T02:44:36.345039Z",
-    "total_pending": 13,
+    "observed_at": "2026-11-04T09:58:57.082630Z",
+    "total_pending": 14,
     "receiver_states": {
-      "PENDING": 12,
-      "UP_TO_DATE": 6,
+      "PENDING": 13,
+      "UP_TO_DATE": 5,
       "ACK_UNAVAILABLE": 1
     },
-    "routing_allowed": false,
-    "routing_reason": "HOLD_DELIVERY_BACKPRESSURE",
+    "routing_allowed": true,
+    "routing_reason": "ROUTING_ALLOWED",
     "runtime_consumption_attested": false
   },
   "native_decision": "NO_ACTION",
@@ -78,14 +78,14 @@ A successful collector is not proof of useful work or full autonomy.
 
 ## Evidence-driven tasks
 
-- **P0.3** BEETLE_DELIVERY_PENDING: {"total_pending": 13, "receiver_states": {"PENDING": 12, "UP_TO_DATE": 6, "ACK_UNAVAILABLE": 1}}
-- **P0.3** BEETLE_ROUTING_HELD: "HOLD_DELIVERY_BACKPRESSURE"
+- **P0.3** BEETLE_DELIVERY_PENDING: {"total_pending": 14, "receiver_states": {"PENDING": 13, "UP_TO_DATE": 5, "ACK_UNAVAILABLE": 1}}
 - **P0.3** EXTERNAL_WITNESS_GENESIS_HOME: "SCHEDULE_SILENCE"
 - **P0.3** EXTERNAL_WITNESS_SKINGPT_ACK: "UNKNOWN"
 - **P0.4** PATCHES_WAITING: 38
 - **P0.5** SCOUT_MODEL_SYNTHESIS_DEGRADED: {"snapshots": 17, "synthesis": 0, "expected": 17}
 - **P2** SELF_WRITER_REVIEWED_TASKS_REMAINING: {"accepted": 9, "admitted": 10}
 - **P3** RECENT_TRAINING_ALL_REJECTED: 64
+- **P0.3** WORKFLOW_NOT_SUCCESS_HOME_SCHEDULE: {"repository": "Hawkar-usls/Janus_Genesis", "workflow": "janus-habitat-cloud-home-v1.yml", "status": "OBSERVED", "run_id": 41820118579, "run_attempt": 1, "event": "workflow_dispatch", "conclusion": "failure", "head_sha": "cd628ee23326d6130cfae6898814775a881c23e4", "created_at": "2026-11-04T11:20:37Z", "url": "https://github.com/Hawkar-usls/Janus_Genesis/actions/runs/41820118579"}
 
 ## Owner-directed self-assembly (registered, not executable)
 
