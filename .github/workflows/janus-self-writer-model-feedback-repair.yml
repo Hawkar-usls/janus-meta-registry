@@ -1,0 +1,130 @@
+name: JANUS Self-Writer Bounded Model Feedback Repair
+
+on:
+  pull_request:
+    paths:
+      - 'modules/autonomy_coder/real_bug_repair_feedback.py'
+      - '.github/workflows/janus-self-writer-model-feedback-repair.yml'
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: janus-real-model-repair-feedback-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  one-feedback-model-retry:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Retrieve EXACT pre-registered first model outputs and rejection
+        uses: actions/download-artifact@v4
+        with:
+          repository: Hawkar-usls/janus-meta-registry
+          run-id: 41146877435
+          github-token: ${{ github.token }}
+          name: janus-real-bug-model-authored-raw-variants
+          path: prior
+      - name: Retrieve independent first-round negative verdict
+        uses: actions/download-artifact@v4
+        with:
+          repository: Hawkar-usls/janus-meta-registry
+          run-id: 41146877435
+          github-token: ${{ github.token }}
+          name: janus-real-bug-independent-repair-verdict
+          path: prior
+      - name: Freeze first run by byte hash; absolutely no altered feedback
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo 'ad86af023af4f1282d7aa3be92340e8afc6f81f6eedc6139227dcd6d1c0e76f1  prior/BUNDLE.json' | sha256sum -c -
+          echo '67b838ff5b1dae3899b57b625739395f0f0e9d23d62c86b474febfbe46112ab3  prior/EVALUATION.json' | sha256sum -c -
+          PYTHONPATH=modules/autonomy_coder python - <<'PY'
+          from real_bug_repair_feedback import load_prior
+          old,review=load_prior('prior/BUNDLE.json','prior/EVALUATION.json')
+          assert review['selected_index'] is None
+          print('PRIOR_REJECTED_MODEL_BYTES_VERIFIED=TRUE')
+          PY
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/janus-open-coder
+          key: janus-open-coder-ea3f2471cf1b1f0db85067f1ef93848e38e88c25
+      - name: Install bounded pinned CPU inference dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cpu
+          python -m pip install transformers==4.57.1 huggingface-hub==0.36.0 safetensors==0.6.2
+      - name: Ask SAME pinned Qwen to correct its own independently rejected code ONCE
+        env:
+          HF_HUB_DISABLE_TELEMETRY: '1'
+          HF_HUB_DISABLE_XET: '1'
+          TOKENIZERS_PARALLELISM: 'false'
+        run: |
+          set -euo pipefail
+          python modules/autonomy_coder/real_bug_repair_feedback.py \
+            --root . \
+            --cache "$HOME/.cache/janus-open-coder" \
+            --prior-bundle prior/BUNDLE.json \
+            --prior-evaluation prior/EVALUATION.json \
+            --out feedback-output/BUNDLE.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-repair-one-feedback-model-raw-variants
+          path: feedback-output/BUNDLE.json
+          retention-days: 30
+          if-no-files-found: error
+
+  independent-second-review:
+    needs: one-feedback-model-retry
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: janus-repair-one-feedback-model-raw-variants
+          path: feedback-output
+      - name: Freeze independent sandbox image
+        run: docker pull python@sha256:1148dbb014615300fa7e713b2f94f550c0d1c69780c0805f84f093ceee34dd0b
+      - name: Reuse same strict AST oracle and 417 signed-age cases, no relaxation
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p feedback-review
+          timeout 120 docker run --rm --network none --read-only \
+            --user 65534:65534 --cap-drop ALL \
+            --security-opt no-new-privileges --memory 256m \
+            --cpus 1 --pids-limit 32 --ulimit cpu=10:10 \
+            --mount "type=bind,src=$PWD/modules/autonomy_coder,dst=/suite,readonly" \
+            --mount "type=bind,src=$PWD/feedback-output,dst=/input,readonly" \
+            python@sha256:1148dbb014615300fa7e713b2f94f550c0d1c69780c0805f84f093ceee34dd0b \
+            python -I -B /suite/real_bug_repair_oracle.py --bundle /input/BUNDLE.json \
+            > feedback-review/EVALUATION.json
+          python - <<'PY'
+          import json
+          r=json.load(open('feedback-review/EVALUATION.json'))
+          assert r['authority_delta']==0 and not r['installed_into_production']
+          print('JANUS_REAL_REPAIR_MODEL_FEEDBACK_VERDICT='+r['status'])
+          print('selected_index='+str(r['selected_index']))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-repair-one-feedback-independent-verdict
+          path: feedback-review/EVALUATION.json
+          retention-days: 30
+          if-no-files-found: error
