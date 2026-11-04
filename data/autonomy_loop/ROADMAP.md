@@ -2,7 +2,7 @@
 
 Automatically rebuilt from pinned public evidence.
 
-Status: **AUTONOMY_PARTIAL** · observed 2026-11-04T20:46:09Z
+Status: **AUTONOMY_PARTIAL** · observed 2026-11-04T21:57:58Z
 
 Current phase: **P0.3**
 
@@ -55,25 +55,25 @@ A successful collector is not proof of useful work or full autonomy.
     "waiting": 38
   },
   "home": {
-    "sequence": 266,
+    "sequence": 267,
     "source_main_sha": "c62d5e7cedc061c2aefd00384b428556e96190d3"
   },
   "beetle_delivery": {
-    "status": "WARN",
-    "observed_at": "2026-11-04T17:58:03.119254Z",
-    "health_age_minutes": 168,
+    "status": "ALERT",
+    "observed_at": "2026-11-04T21:15:15.712996Z",
+    "health_age_minutes": 42,
     "health_clock": "VERIFIED_TIMESTAMP",
-    "routing_gate_age_minutes": 168,
+    "routing_gate_age_minutes": 42,
     "routing_gate_clock": "VERIFIED_TIMESTAMP",
     "max_health_age_minutes": 120,
-    "total_pending": 14,
+    "total_pending": 11,
     "receiver_states": {
-      "PENDING": 13,
-      "UP_TO_DATE": 5,
+      "STALE": 10,
+      "UP_TO_DATE": 8,
       "ACK_UNAVAILABLE": 1
     },
     "routing_allowed": false,
-    "routing_reason": "HOLD_DELIVERY_BACKPRESSURE",
+    "routing_reason": "HOLD_STALE_RECEIVER_ACK",
     "runtime_consumption_attested": false
   },
   "native_decision": "NO_ACTION",
@@ -83,10 +83,8 @@ A successful collector is not proof of useful work or full autonomy.
 
 ## Evidence-driven tasks
 
-- **P0.3** BEETLE_DELIVERY_HEALTH_STALE: {"age_minutes": 168, "max_minutes": 120}
-- **P0.3** BEETLE_ROUTING_GATE_STALE: {"age_minutes": 168, "max_minutes": 120}
-- **P0.3** BEETLE_DELIVERY_PENDING: {"total_pending": 14, "receiver_states": {"PENDING": 13, "UP_TO_DATE": 5, "ACK_UNAVAILABLE": 1}}
-- **P0.3** BEETLE_ROUTING_HELD: "HOLD_DELIVERY_BACKPRESSURE"
+- **P0.3** BEETLE_DELIVERY_PENDING: {"total_pending": 11, "receiver_states": {"STALE": 10, "UP_TO_DATE": 8, "ACK_UNAVAILABLE": 1}}
+- **P0.3** BEETLE_ROUTING_HELD: "HOLD_STALE_RECEIVER_ACK"
 - **P0.3** EXTERNAL_WITNESS_BEETLE_GENESIS_WATCHDOG: "SCHEDULE_SILENCE"
 - **P0.3** EXTERNAL_WITNESS_BEETLE_PRODUCER: "SCHEDULE_SILENCE"
 - **P0.3** EXTERNAL_WITNESS_GENESIS_HIGHWATER: "ANCHOR_PENDING_WITHIN_GRACE"
