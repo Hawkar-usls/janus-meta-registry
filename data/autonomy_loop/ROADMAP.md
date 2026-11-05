@@ -4,15 +4,15 @@ Automatically rebuilt from pinned public evidence.
 
 Status: **AUTONOMY_PARTIAL** · observed 2026-11-05T11:23:28Z
 
-Current phase: **P0.2**
+Current phase: **P0.3**
 
 A successful collector is not proof of useful work or full autonomy.
 
 | Order | Phase | State | Objective |
 |---|---|---|---|
 | 1 | P0.1 | DONE | [One verified source-pinned status snapshot](https://github.com/Hawkar-usls/janus-meta-registry/issues/364) |
-| 2 | P0.2 | ACTIVE_RECHECK | [One Rowan generation through AURA, council, Cosmos and witnesses](https://github.com/Hawkar-usls/janus-meta-registry/issues/365) |
-| 3 | P0.3 | WAITING_FOR_PREVIOUS | [Beetle delivery and current Cloud HOME](https://github.com/Hawkar-usls/Janus_Genesis/issues/164) |
+| 2 | P0.2 | DONE | [One Rowan generation through AURA, council, Cosmos and witnesses](https://github.com/Hawkar-usls/janus-meta-registry/issues/365) |
+| 3 | P0.3 | ACTIVE | [Beetle delivery and current Cloud HOME](https://github.com/Hawkar-usls/Janus_Genesis/issues/164) |
 | 4 | P0.4 | WAITING_FOR_PREVIOUS | Deduplicate patch queue and preserve superseded attempts |
 | 5 | P0.5 | WAITING_FOR_PREVIOUS | Separate snapshots, model synthesis, useful work and idle |
 | 6 | P0.6 | WAITING_FOR_PREVIOUS | Restore local Habitat adapter without recreating HOME |
@@ -92,14 +92,13 @@ A successful collector is not proof of useful work or full autonomy.
 - **P0.5** SCOUT_MODEL_SYNTHESIS_DEGRADED: {"snapshots": 17, "synthesis": 0, "expected": 17}
 - **P2** SELF_WRITER_REVIEWED_TASKS_REMAINING: {"accepted": 9, "admitted": 10}
 - **P3** RECENT_TRAINING_ALL_REJECTED: 64
-- **P0.2** WORKFLOW_NOT_SUCCESS_CROSS_ORGAN_WITNESS: {"repository": "Hawkar-usls/janus-meta-registry", "workflow": "janus-cross-organ-source-witness.yml", "status": "OBSERVED", "run_id": 41987884726, "run_attempt": 1, "event": "workflow_run", "conclusion": "failure", "head_sha": "c9def311cb890b56176a706dfd4a0684e588e025", "created_at": "2026-11-05T07:31:58Z", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/41987884726"}
-- **P0.2** WORKFLOW_NOT_SUCCESS_ROWAN_WITNESS: {"repository": "Hawkar-usls/janus-meta-registry", "workflow": "janus-rowan-ecosystem-sync-witness.yml", "status": "OBSERVED", "run_id": 41987884720, "run_attempt": 1, "event": "workflow_run", "conclusion": "failure", "head_sha": "c9def311cb890b56176a706dfd4a0684e588e025", "created_at": "2026-11-05T07:31:58Z", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/41987884720"}
-- **P0.2** COHORT_READY_INDEPENDENT_REPLAY_REQUIRED: {"canonical_run": 41944469012, "historical_run": 41899410078}
+- **P0.2** WORKFLOW_NOT_SUCCESS_CROSS_ORGAN_WITNESS: {"conclusion": "failure", "created_at": "2026-11-05T07:31:58Z", "event": "workflow_run", "head_sha": "c9def311cb890b56176a706dfd4a0684e588e025", "repository": "Hawkar-usls/janus-meta-registry", "run_attempt": 1, "run_id": 41987884726, "status": "OBSERVED", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/41987884726", "workflow": "janus-cross-organ-source-witness.yml"}
+- **P0.2** WORKFLOW_NOT_SUCCESS_ROWAN_WITNESS: {"conclusion": "failure", "created_at": "2026-11-05T07:31:58Z", "event": "workflow_run", "head_sha": "c9def311cb890b56176a706dfd4a0684e588e025", "repository": "Hawkar-usls/janus-meta-registry", "run_attempt": 1, "run_id": 41987884720, "status": "OBSERVED", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/41987884720", "workflow": "janus-rowan-ecosystem-sync-witness.yml"}
 
 ## Owner-directed self-assembly (registered, not executable)
 
 Owner directive: [JANUS SELF-ASSEMBLY #440](https://github.com/Hawkar-usls/janus-meta-registry/issues/440).
-Next admissible phase: **P0.2**.
+Next admissible phase: **P0.3**.
 Machine-readable directive: [SELF_ASSEMBLY_TASK.json](SELF_ASSEMBLY_TASK.json).
 The scheduled observer reads this directive as data; it is not a new handler, permission, model task or proof of useful work.
 
