@@ -2,7 +2,7 @@
 
 Automatically rebuilt from pinned public evidence.
 
-Status: **AUTONOMY_PARTIAL** · observed 2026-11-05T12:20:50Z
+Status: **AUTONOMY_PARTIAL** · observed 2026-11-05T12:42:29Z
 
 Current phase: **P0.3**
 
@@ -61,9 +61,9 @@ A successful collector is not proof of useful work or full autonomy.
   "beetle_delivery": {
     "status": "WARN",
     "observed_at": "2026-11-05T11:36:29.988445Z",
-    "health_age_minutes": 44,
+    "health_age_minutes": 65,
     "health_clock": "VERIFIED_TIMESTAMP",
-    "routing_gate_age_minutes": 44,
+    "routing_gate_age_minutes": 66,
     "routing_gate_clock": "VERIFIED_TIMESTAMP",
     "max_health_age_minutes": 120,
     "total_pending": 14,
@@ -77,7 +77,28 @@ A successful collector is not proof of useful work or full autonomy.
     "runtime_consumption_attested": false
   },
   "native_decision": "NO_ACTION",
-  "forge": "SEARCHED_NO_NOVEL_FALLBACK_CANDIDATE"
+  "forge": "SEARCHED_NO_NOVEL_FALLBACK_CANDIDATE",
+  "p03_preflight": {
+    "schema": "janus.autonomy.p03_preflight.v1",
+    "status": "P03_PREFLIGHT_BLOCKED",
+    "blockers": [
+      "PUBLIC_RECEIVER_ACK_PENDING",
+      "PRIVATE_ACK_AUTH_UNKNOWN"
+    ],
+    "public_receiver_count": 18,
+    "public_receiver_pending": 13,
+    "public_receiver_lagging": 13,
+    "private_ack_visibility": "UNAVAILABLE",
+    "private_receiver_pending": 1,
+    "home_sequence": 272,
+    "home_model_call_attested": false,
+    "pre_route_gate_allowed": true,
+    "producer_after_route_pending": 14,
+    "authority_delta": 0,
+    "full_issue_162_acceptance": false,
+    "p03_acceptance": false,
+    "runtime_consumption_attested": false
+  }
 }
 ```
 
@@ -90,6 +111,7 @@ A successful collector is not proof of useful work or full autonomy.
 - **P0.5** SCOUT_MODEL_SYNTHESIS_DEGRADED: {"snapshots": 17, "synthesis": 0, "expected": 17}
 - **P2** SELF_WRITER_REVIEWED_TASKS_REMAINING: {"accepted": 9, "admitted": 10}
 - **P3** RECENT_TRAINING_ALL_REJECTED: 64
+- **P0.3** P03_SOURCE_PREFLIGHT_BLOCKED: ["PUBLIC_RECEIVER_ACK_PENDING", "PRIVATE_ACK_AUTH_UNKNOWN"]
 
 ## Owner-directed self-assembly (registered, not executable)
 
