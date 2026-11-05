@@ -130,6 +130,15 @@ def verify_cohort(root, client, proof):
             "canonical_run": actual["canonicalRun"], "authority_delta": 0,
             "full_issue_162_acceptance": False}
 
+def p03_preflight_report(sources):
+    """Import reviewed pure P0.3 preflight; it cannot touch Git or advance phases."""
+    path = Path(__file__).with_name("p03_preflight.py")
+    spec = importlib.util.spec_from_file_location("janus_p03_preflight_reviewed", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.preflight(sources)
+
+
 def execute(root, client, sources, previous):
     accepted = previous.get("accepted_phases", {})
     if (not isinstance(accepted, dict) or set(accepted) - {"P0.1", "P0.2"} or
@@ -153,4 +162,7 @@ def execute(root, client, sources, previous):
         result["cohort_status"] = "WAIT_INDEPENDENT_SOURCE_COHORT"
         reason = str(exc)
         result["cohort_hold"] = reason if re.fullmatch(r"[A-Z0-9_]{1,100}", reason) else type(exc).__name__
+    # Only a source-derived diagnostic. It never grants a P0.3 checkpoint.
+    if accepted.get("P0.2", {}).get("status") == "PASS_SOURCE_COHORT_ONLY":
+        result["p03_preflight"] = p03_preflight_report(sources)
     return result

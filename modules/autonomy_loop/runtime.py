@@ -462,6 +462,17 @@ def summarize(sources, workflows, observed_at, code_sha, previous=None, action=N
                 add("P0.2", "COHORT_NOT_READY_FOR_INDEPENDENT_REPLAY",
                     {"canonical_run": run, "historical_run": historical_run,
                      "status": action_state.get("cohort_status", "NO_VERIFIABLE_PROOF")})
+    # Verified source preflight is not formal P0.3 admission.
+    p03 = (action or {}).get("p03_preflight")
+    if p03 is not None:
+        if (not isinstance(p03, dict) or
+            p03.get("p03_acceptance") is not False or
+            p03.get("full_issue_162_acceptance") is not False or
+            p03.get("authority_delta") != 0):
+            raise Hold("P03_PREFLIGHT_ILLEGAL_AUTHORITY_PROMOTION")
+        if p03.get("status") != "P03_PREFLIGHT_CANDIDATE_ONLY":
+            add("P0.3", "P03_SOURCE_PREFLIGHT_BLOCKED",
+                p03.get("blockers", [p03.get("hold_reason", "UNVERIFIED")]))
     plan = [{"order": i + 1, "phase": pid, "objective": objective, "issue": issue,
              "state": "ACTIVE_RECHECK" if pid == current and pid in completed else "DONE" if pid in completed else "ACTIVE" if pid == current else "WAITING_FOR_PREVIOUS",
              "tasks": [f for f in findings if f["phase"] == pid]}
@@ -493,7 +504,7 @@ def summarize(sources, workflows, observed_at, code_sha, previous=None, action=N
                                         "routing_allowed": gate.get("routing_allowed") if valid_gate else None,
                                         "routing_reason": gate.get("reason") if valid_gate else "UNVERIFIED",
                                         "runtime_consumption_attested": False},
-                    "native_decision": d["native_decision"].get("status"),
+                     "native_decision": d["native_decision"].get("status"),
                     "forge": d["forge"].get("status")},
         "current_phase": current, "roadmap": plan, "accepted_phases": completed,
         "maintenance": action or {},
@@ -501,6 +512,9 @@ def summarize(sources, workflows, observed_at, code_sha, previous=None, action=N
                       "next": "VERIFY_P0_1_SNAPSHOT" if current == "P0.1" else "EXECUTE_REVIEWED_HANDLER_OR_WAIT",
                       "unimplemented_handlers_do_not_count_as_done": True},
     }
+    # Avoid redefining historical snapshot metrics that predate this handler.
+    if p03 is not None:
+        record["metrics"]["p03_preflight"] = p03
     identity = dict(record)
     identity.pop("observed_at_utc")
     record["state_sha256"] = digest(identity)
@@ -667,6 +681,9 @@ def verify_persisted(root, client, accept=False):
             continue
         repo, _ = WORKFLOWS[name]
         verify_workflow_observation(client, repo, obs)
+    p03_report = record.get("maintenance", {}).get("p03_preflight")
+    if p03_report is not None and p03_report != maintenance_module().p03_preflight_report(replayed):
+        raise Hold("P03_PREFLIGHT_INDEPENDENT_SOURCE_REPLAY_MISMATCH")
     rebuilt = summarize(replayed, record["workflows"], record["observed_at_utc"],
                         record["code_sha"], {"accepted_phases": record.get("accepted_phases", {})}, record.get("maintenance", {}))
     if rebuilt["state_sha256"] != record["state_sha256"]:
