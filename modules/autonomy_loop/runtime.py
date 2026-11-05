@@ -504,7 +504,6 @@ def summarize(sources, workflows, observed_at, code_sha, previous=None, action=N
                                         "routing_allowed": gate.get("routing_allowed") if valid_gate else None,
                                         "routing_reason": gate.get("reason") if valid_gate else "UNVERIFIED",
                                         "runtime_consumption_attested": False},
-                    "p03_preflight": p03,
                      "native_decision": d["native_decision"].get("status"),
                     "forge": d["forge"].get("status")},
         "current_phase": current, "roadmap": plan, "accepted_phases": completed,
@@ -513,6 +512,9 @@ def summarize(sources, workflows, observed_at, code_sha, previous=None, action=N
                       "next": "VERIFY_P0_1_SNAPSHOT" if current == "P0.1" else "EXECUTE_REVIEWED_HANDLER_OR_WAIT",
                       "unimplemented_handlers_do_not_count_as_done": True},
     }
+    # Avoid redefining historical snapshot metrics that predate this handler.
+    if p03 is not None:
+        record["metrics"]["p03_preflight"] = p03
     identity = dict(record)
     identity.pop("observed_at_utc")
     record["state_sha256"] = digest(identity)
