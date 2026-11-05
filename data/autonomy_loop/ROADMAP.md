@@ -2,7 +2,7 @@
 
 Automatically rebuilt from pinned public evidence.
 
-Status: **AUTONOMY_PARTIAL** · observed 2026-11-05T11:26:04Z
+Status: **AUTONOMY_PARTIAL** · observed 2026-11-05T11:32:34Z
 
 Current phase: **P0.3**
 
@@ -55,15 +55,15 @@ A successful collector is not proof of useful work or full autonomy.
     "waiting": 38
   },
   "home": {
-    "sequence": 271,
+    "sequence": 272,
     "source_main_sha": "40c7a0fa025965e162b6dca9047b6654cb674d20"
   },
   "beetle_delivery": {
     "status": "WARN",
     "observed_at": "2026-11-05T03:45:49.032462Z",
-    "health_age_minutes": 460,
+    "health_age_minutes": 466,
     "health_clock": "VERIFIED_TIMESTAMP",
-    "routing_gate_age_minutes": 460,
+    "routing_gate_age_minutes": 466,
     "routing_gate_clock": "VERIFIED_TIMESTAMP",
     "max_health_age_minutes": 120,
     "total_pending": 14,
@@ -83,8 +83,8 @@ A successful collector is not proof of useful work or full autonomy.
 
 ## Evidence-driven tasks
 
-- **P0.3** BEETLE_DELIVERY_HEALTH_STALE: {"age_minutes": 460, "max_minutes": 120}
-- **P0.3** BEETLE_ROUTING_GATE_STALE: {"age_minutes": 460, "max_minutes": 120}
+- **P0.3** BEETLE_DELIVERY_HEALTH_STALE: {"age_minutes": 466, "max_minutes": 120}
+- **P0.3** BEETLE_ROUTING_GATE_STALE: {"age_minutes": 466, "max_minutes": 120}
 - **P0.3** BEETLE_DELIVERY_PENDING: {"total_pending": 14, "receiver_states": {"PENDING": 13, "UP_TO_DATE": 5, "ACK_UNAVAILABLE": 1}}
 - **P0.3** BEETLE_ROUTING_HELD: "HOLD_DELIVERY_BACKPRESSURE"
 - **P0.3** EXTERNAL_WITNESS_SKINGPT_ACK: "UNKNOWN"
