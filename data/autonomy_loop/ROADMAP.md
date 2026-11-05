@@ -79,25 +79,25 @@ A successful collector is not proof of useful work or full autonomy.
   "native_decision": "NO_ACTION",
   "forge": "SEARCHED_NO_NOVEL_FALLBACK_CANDIDATE",
   "p03_preflight": {
-    "schema": "janus.autonomy.p03_preflight.v1",
-    "status": "P03_PREFLIGHT_BLOCKED",
+    "authority_delta": 0,
     "blockers": [
       "PUBLIC_RECEIVER_ACK_PENDING",
       "PRIVATE_ACK_AUTH_UNKNOWN"
     ],
-    "public_receiver_count": 18,
-    "public_receiver_pending": 13,
-    "public_receiver_lagging": 13,
+    "full_issue_162_acceptance": false,
+    "home_model_call_attested": false,
+    "home_sequence": 274,
+    "p03_acceptance": false,
+    "pre_route_gate_allowed": true,
     "private_ack_visibility": "UNAVAILABLE",
     "private_receiver_pending": 1,
-    "home_sequence": 274,
-    "home_model_call_attested": false,
-    "pre_route_gate_allowed": true,
     "producer_after_route_pending": 14,
-    "authority_delta": 0,
-    "full_issue_162_acceptance": false,
-    "p03_acceptance": false,
-    "runtime_consumption_attested": false
+    "public_receiver_count": 18,
+    "public_receiver_lagging": 13,
+    "public_receiver_pending": 13,
+    "runtime_consumption_attested": false,
+    "schema": "janus.autonomy.p03_preflight.v1",
+    "status": "P03_PREFLIGHT_BLOCKED"
   }
 }
 ```
