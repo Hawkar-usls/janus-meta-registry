@@ -1,0 +1,120 @@
+{
+  "artifact_id": "JANUS-PHYSICAL-DELAYED-CHOICE-T0-T1-PROTOCOL-2026-11-06-v1.0",
+  "schema_version": "1.0",
+  "date": "2026-11-06",
+  "language": "ru",
+  "registry": {
+    "repository": "Hawkar-usls/janus-meta-registry",
+    "path": "registry/uap/JANUS-PHYSICAL-DELAYED-CHOICE-T0-T1-PROTOCOL-2026-11-06-v1.0.json",
+    "mode": "APPEND_ONLY",
+    "submission_status": "DRAFT_PR_REVIEW_REQUIRED"
+  },
+  "parent_artifacts": [
+    "registry/uap/JANUS-TEMPORAL-SIGNAL-SEARCH-77-AND-DEUTSCH-CTC-2026-11-06-v1.0.json",
+    "registry/uap/JANUS-RETRO-BYTE-CAMPAIGN-2026-11-06-v1.0.json",
+    "registry/uap/JANUS-OCB-PROCESS-MATRIX-CAUSAL-INEQUALITY-2026-11-06-v1.0.json"
+  ],
+  "status": "PHYSICAL_TIME_ORDER_CONFIGURATION_FOUND_IN_LITERATURE__JANUS_HARDWARE_NOT_BUILT__NO_BACKWARD_SIGNAL_EVIDENCE",
+  "research_question": "Can a physically recorded early photonic measurement A be statistically dependent on an independently chosen later measurement setting B without postselection, forward leakage or chronological ambiguity?",
+  "direct_empirical_precedent": {
+    "title": "Experimental delayed-choice entanglement swapping",
+    "authors": [
+      "Xiao-song Ma",
+      "Stefan Zotter",
+      "Johannes Kofler",
+      "Rupert Ursin",
+      "Thomas Jennewein",
+      "Caslav Brukner",
+      "Anton Zeilinger"
+    ],
+    "venue": "Nature Physics 8, 479-484 (2012)",
+    "doi": "10.1038/nphys2294",
+    "url": "https://www.nature.com/articles/nphys2294",
+    "evidenced_claim": "Real experimental arrangement with earlier registrations of photons 1 and 4, later quantum RNG decision between Bell-state and separable-state measurements on photons 2 and 3, with choice made in the timelike future of the early detections.",
+    "hardware_in_paper": [
+      "two pairs of entangled photons",
+      "104 m optical fiber delay for photons 2 and 3",
+      "quantum random number generator",
+      "fast tunable bipartite-state analyzer",
+      "electro-optic modulators",
+      "time-resolved single-photon detection"
+    ],
+    "interpretation": "Quantum correlations grouped by later measurements; paper does not demonstrate that an early observer can read a future message unconditionally.",
+    "note_on_sampling": "Original entanglement-swapping coincidence-based analysis is not a substitute for JANUS primary no-postselection trial accounting."
+  },
+  "modern_context": [
+    {
+      "title": "Existence of processes violating causal inequalities on time-delocalised subsystems",
+      "authors": "Wechs, Branciard, Oreshkov",
+      "year": 2023,
+      "doi": "10.1038/s41467-023-36893-3",
+      "role": "Theoretical model for time-delocalised subsystems; not a timestamped backwards message."
+    },
+    {
+      "title": "Experimental violation of a Bell-like inequality for causal order",
+      "authors": "Guo et al.",
+      "year": 2026,
+      "doi": "10.1126/sciadv.aee2912",
+      "role": "Photonic quantum-switch Bell-like inequality violation, with acknowledged assumptions/loopholes; does not realize bipartite OCB W or future-to-past communication."
+    },
+    {
+      "title": "Experimental violation of a Bell-like causal inequality in a photonic quantum switch",
+      "year": 2026,
+      "doi": "10.1126/sciadv.aee9271",
+      "role": "24-sigma Bell-like witness with remaining loopholes, distinct from proof of past-directed channel."
+    }
+  ],
+  "janus_proposed_instrument": {
+    "tier_1_minimal": "Entangled photon pair; record Alice's fixed-basis measurement a and hardware timestamp; store other photon in optical delay; afterwards let independent hardware QRNG select Bob's Z or X measurement via fast optical modulator. This tests unconditional independence of early a from future freely selected b. Secondary analysis: Alice/Bob outcome correlations after both records exist.",
+    "tier_2_precise_replication": "Four-photon two-source delayed-choice entanglement swapping akin to Ma et al.; Alice and Bob early detections, delayed photon pair and future QRNG-selectable Bell-state/separable-state analyzer. Requires established quantum-optics laboratory and timing control.",
+    "no_available_janus_device_claimed": true,
+    "no_assumed_access_to_optical_lab_or_qpu": true,
+    "do_not_treat_generic_CPU_simulator_as_physical_quantum_mechanism": true
+  },
+  "preregistration_proposal_not_activated": {
+    "trial_unit": "Pre-clocked source emission attempt or independently validated event-ready source attempt; record even when no early or late detector click.",
+    "per_trial_columns": [
+      "trial_id",
+      "source_pulse_time",
+      "t_A_hardware",
+      "A_raw_outcome_0_1_or_no_click",
+      "early_record_hash_chain_index",
+      "t_B_QRNG_generation",
+      "B_choice_setting_0_or_1",
+      "t_B_actuator",
+      "B_raw_outcome_or_no_click",
+      "calibration_flags",
+      "predefined_infrastructure_abort_reason"
+    ],
+    "chronology_gate": "Require independently calibrated hardware chronology t_B_QRNG_generation > t_A_hardware + epsilon_timing; latch/clock evidence independently audited. Do not mistake later Git timestamp for nanosecond chronology.",
+    "randomness_gate": "Fresh per-trial hardware entropy for B is generated only after t_A, no shared pseudorandom seed, lookahead, communication path, adaptive trigger keyed to A outcome, or access from early logger. Audit B's balance/serial dependence.",
+    "unconditional_primary": "Freeze an early-only decoder that outputs one bit prediction of later B on every trial, including early no-click, before any future choice exists; count every trial and compare to independent uniform B null P(correct)=1/2 using a preregistered fixed-N analysis. Primary is NOT conditional on late detection/herald or coincidence.",
+    "crosscheck_primary": "Compare empirical P(A_raw|B=0) and P(A_raw|B=1) for complete trinary raw early alphabet (0,1,no_click). Predefine tests and account for trial independence, detector drift and repeated look effects.",
+    "secondary_only": "After both logs are closed compare Bell correlations, setting-conditioned subensembles, delayed-choice entanglement-witness and efficiency. Never promote late-herald-selected coincidences to earlier-accessible information.",
+    "abort_policy": "Retain every scheduled trial and error. Mark INFRA_ABORT according to fixed timing/device faults only; never outcome-conditioned retry or exclusion.",
+    "security_controls": [
+      "Separate early logger and later QRNG credentials, network paths and clocks",
+      "Read-only sealed early log; cryptographic hash chain and independent later verification",
+      "Calibrate timing-jitter margin before examining target data",
+      "Leakage-positive control must be detected and rejected",
+      "Compare pre-registered standard-CPTP no-signalling baseline"
+    ],
+    "prereg_status": "NOT_ACTIVATED_NO_LAB_OR_EXACT_SAMPLE_SIZE_APPROVED"
+  },
+  "mandatory_gates": {
+    "G1_physical_A_before_B": "DEMONSTRATED_BY_PUBLISHED_2012_CONFIGURATION; NOT_YET_BY_JANUS",
+    "G2_all_unfiltered_early_records": "PROPOSED_FOR_NEW_TEST; NOT_VERIFIED_BY_JANUS",
+    "G3_future_choice_independent_and_not_supplied_to_A": "PUBLISHED_QRNG_LATE_CHOICE_PRECEDENT; NEW_JANUS_IMPLEMENTATION_UNTESTED",
+    "G4_independent_numerical_and_physical_reproduction": "NOT_COMPLETED_BY_JANUS"
+  },
+  "technical_boundary": {
+    "standard_quantum_prediction": "Future local trace-preserving operations do not change earlier local reduced state; no unconditional future-to-past signalling in ordinary QM.",
+    "operational_witness": "D_TV(P(A_raw|B=0), P(A_raw|B=1)) for complete early outcomes, not late-herald-selected subsets.",
+    "future_byte_campaign_interaction": "Independent experimental lane; must not pool statistics or alter existing historical records of Retro Byte Campaign.",
+    "production_promotion": false,
+    "training_policy": "No use of late-herald-selected correlations, theoretical OCB game outputs or ideal CTC fixed points as real retrocausal labels.",
+    "physical_past_message_detected": false,
+    "scientific_classification": "FEASIBLE_CHRONOLOGY_TEST_NOT_PROVEN_RETROCAUSALITY"
+  },
+  "next_action": "Collaborate with or obtain authorized access to a quantum-optics laboratory with delayed photonic measurements and independently audited hardware QRNG; preregister exact fixed sample size, timestamps, baseline, inclusion criteria, and independent replication before collecting target data."
+}
