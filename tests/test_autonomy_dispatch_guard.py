@@ -78,6 +78,18 @@ class BoundedWakeTests(unittest.TestCase):
         self.lanes = guard.validate_policy(
             self.policy, self.latest, self.checkpoint)
 
+    def test_guardian_rechecks_current_trusted_main_after_checkout(self):
+        # A GitHub Actions event can become older than main during checkout.
+        # The data/code snapshot must be the refreshed trusted main, not
+        # an obsolete event SHA or any untrusted source branch.
+        workflow = (ROOT / ".github/workflows/janus-autonomy-bounded-wake-guardian.yml"
+                    ).read_text(encoding="utf-8")
+        self.assertIn("git fetch origin main", workflow)
+        self.assertIn('git checkout --detach "$(git rev-parse origin/main)"', workflow)
+        self.assertIn('test "$(git rev-parse HEAD)" = "$(git rev-parse origin/main)"', workflow)
+        self.assertNotIn("git reset --hard", workflow)
+        self.assertNotIn("git push", workflow)
+
     def test_exact_reviewed_workflow_names_and_dispatch_contract(self):
         guard.validate_workflow_sources(ROOT)
         self.assertEqual(
