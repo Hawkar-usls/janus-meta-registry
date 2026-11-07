@@ -1,0 +1,159 @@
+{
+  "artifact_id": "JANUS-RETRO-MA-JAMMING-HARDWARE-GATE-R8-2026-11-07-v1.0",
+  "schema_version": "1.0",
+  "date_utc": "2026-11-07",
+  "language": "ru",
+  "registry": {
+    "repo": "Hawkar-usls/janus-meta-registry",
+    "path": "registry/uap/JANUS-RETRO-MA-JAMMING-HARDWARE-GATE-R8-2026-11-07-v1.0.json",
+    "mode": "APPEND_ONLY",
+    "status": "DRAFT_REVIEW_NOT_MERGED"
+  },
+  "scientific_objective": "Discriminate genuine earlier joint-distribution dependence on an independently later physical intervention from standard delayed-choice quantum heralding, forward randomness, leakage and postselection.",
+  "research_sources": [
+    {
+      "doi": "10.1038/nphys2294",
+      "year": 2012,
+      "title": "Experimental delayed-choice entanglement swapping",
+      "verified_statement": "Four-photon actual late Victor QRNG choice after early Alice/Bob registrations, entanglement/separability distinguished after late measurement",
+      "limit": "The published conditional quantum correlations do not allow a message to be read in the past."
+    },
+    {
+      "doi": "10.1103/h31d-wqyg",
+      "year": 2026,
+      "title": "Theories with no superluminal signaling have greater information-processing power than theories with no superluminal causation",
+      "verified_statement": "Theory-only possibility of operationally certifiable violations of no-superluminal-causation via hypothetical jamming-type resources",
+      "limit": "No experimentally implemented postquantum jamming apparatus is demonstrated by the paper."
+    }
+  ],
+  "code": {
+    "repo": "Hawkar-usls/Janus-Demiurge",
+    "branch": "research/retro-ma-jamming-physical-gate-r8-20261107",
+    "pull_request": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/458",
+    "final_verified_commit": "2f839732839bb04c71710e4fabfe13381bef951b",
+    "exact_rational_quantum_model": "experiments/ocean_transformer/janus_ma_jamming_exact_r8.py",
+    "all_attempt_audit": "experiments/ocean_transformer/janus_ma_jamming_full_attempt_audit_r8.py",
+    "tests": "experiments/ocean_transformer/test_janus_ma_jamming_r8.py",
+    "physical_hardware_protocol": "experiments/ocean_transformer/janus_ma_jamming_hardware_prereg_r8.json",
+    "workflow": ".github/workflows/janus-ma-jamming-physical-gate-r8.yml",
+    "main_changed": false,
+    "NAS_used": false,
+    "production_changed": false
+  },
+  "verification": {
+    "github_actions_run": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/42372730899",
+    "run_id": 42372730899,
+    "status": "success",
+    "jobs_success": 6,
+    "jobs_total": 6,
+    "test_python": [
+      "3.11",
+      "3.12"
+    ],
+    "archived_result_artifacts": [
+      {
+        "name": "janus-r8-exact-quantum-not-physical",
+        "artifact_id": 13574282843
+      },
+      {
+        "name": "janus-r8-2048-full-attempt-normal",
+        "artifact_id": 13574377677
+      },
+      {
+        "name": "janus-r8-2048-full-attempt-quantum_heralded",
+        "artifact_id": 13574616235
+      },
+      {
+        "name": "janus-r8-2048-full-attempt-leak_injected",
+        "artifact_id": 13574113416
+      }
+    ],
+    "artifact_retention_days": 90,
+    "source_input_kind": "SYNTHETIC_CPU_NOT_PHYSICAL_DETECTORS"
+  },
+  "exact_ideal_4_photon_model": {
+    "assumed_initial_state": "|Phi+>12 tensor |Phi+>34",
+    "early_photons": "qubits 1, 4 measured in Z basis before Victor",
+    "late_photons": "qubits 2, 3 measured after independent Victor choice of BSM or SSM",
+    "unconditional_early_P_XZ_given_B": "Uniform for both future settings; each of 00,01,10,11 has probability 1/4",
+    "exact_unconditional_early_joint_total_variation_by_future_setting": 0,
+    "BSM_PHI_PLUS_heralded_conditional": "P(00|PHI+)=1/2; P(11|PHI+)=1/2; P(01)=P(10)=0, but only after late outcome is known",
+    "hypothetical_nonphysical_jamming_parity": "X XOR Z = later B; single earlier marginals unchanged; joint total-variation distance=1",
+    "jamming_future_bit_required_as_prior_CPU_input": true,
+    "standard_quantum_hardware_cannot_realize_hypothetical_jamming_by_workflow_alone": true,
+    "naive_postselection_trap": "Select only ordinary events with B=X XOR Z; discards 50% of initial attempts and creates the same selected joint table as hypothetical jamming.",
+    "physically_retrocausal_message_proven": false
+  },
+  "fixed_N_synthetic_control": {
+    "fixed_trials_per_scenario": 2048,
+    "primary_measure": "Total variation of all nine earlier joint X,Z categories including NO_CLICK, conditional on later B=0 versus B=1",
+    "fixed_permutations": 4999,
+    "one_sided_permutation_p_resolution": 0.0002,
+    "alpha_primary": 0.001,
+    "accepts_NO_CLICK_as_early_state": true,
+    "demands_all_fixed_N_attempts": true,
+    "no_postselection_by_late_herald_in_primary": true,
+    "internal_trial_hashes_and_order_checked": true,
+    "synthetic_false_positive_guards": [
+      "missing trial stops inference",
+      "duplicate/reorder trial stops inference",
+      "modified earlier digest stops inference",
+      "late field in early record forbidden",
+      "unfrozen alpha or permutation budget forbidden",
+      "clock order must hold within reported synthetic metadata"
+    ],
+    "cases": {
+      "normal_forward_control": {
+        "seed": 20261107,
+        "early_joint_TV": 0.03587662151795835,
+        "p": 0.5792,
+        "statistical_gate_pass": false,
+        "physical_signal": false
+      },
+      "quantum_late_heralded": {
+        "seed": 20261107,
+        "early_joint_TV": 0.03587662151795835,
+        "p": 0.5792,
+        "statistical_gate_pass": false,
+        "secondary_herald_early_parity_appears_perfect": true,
+        "secondary_conditional_excluded_from_primary": true,
+        "physical_signal": false
+      },
+      "planted_future_bit_before_early_CPU_generation": {
+        "seed": 20261107,
+        "early_joint_TV": 0.941094865717895,
+        "p": 0.0002,
+        "statistical_gate_pass": true,
+        "individual_early_marginals_nearly_unchanged": true,
+        "actual_cause": "B preloaded into early CPU simulation, intentionally breaks real chronology",
+        "physical_signal": false
+      }
+    },
+    "correlations_between_synthetic_scenarios": "The null and heralded controls deliberately share the same seeded early records and late B assignments. They are NOT two independent replications and their identical primary p-values must not be double-counted.",
+    "interpretation": "Significant synthetic positive control demonstrates statistic sensitivity only. Standard quantum model makes no unconditional earlier dependence. Neither implies actual future-to-past signalling."
+  },
+  "physical_hardware_preregistration": {
+    "status": "SPECIFICATION_ONLY__NO_LAB_HARDWARE_CONNECTION",
+    "requirements": [
+      "Four-photon preparation and separate earlier Alice/Bob photon event time tags",
+      "Independent physically later QRNG choice B and Victor BSM/SSM intervention",
+      "Complete trigger count and raw NO_CLICK/loss/abort data before B known",
+      "Independent hardware-time attestation with certified uncertainty and tamper-evident log",
+      "Fixed N=2048 and nine-category test locked before late choices, no postselection",
+      "Separate physically independent blind replication with external custody of all logs",
+      "Exclude forward causal leakage, common controllers, backdated time tags, predictable QRNG and later filtering before a physical interpretation"
+    ],
+    "critical_time_seal_caveat": "The 2012 Ma apparatus used nanosecond-scale ordering. Uploading SHA256 manifests to GitHub is far too slow and cannot itself seal earlier data before the late experimental choice; trusted independent hardware time-tagging or a much longer genuine quantum delay is required.",
+    "independent_physical_early_clock_witness_connected": false,
+    "physical_apparatus_control_access": false,
+    "real_late_QRNG_connected": false,
+    "independent_external_lab_replication": false
+  },
+  "conclusion": {
+    "engineering": "EXACT_IDEAL_QM_AND_POSITIVE_NEGATIVE_CONTROL_AUDITS_PASS",
+    "scientific": "NO_PHYSICALLY_REPRODUCIBLE_RETROCAUSAL_SIGNAL",
+    "next_scientific_hinge": "Obtain an actual independent hardware time-tagged early-and-late photon dataset with full NO_CLICK events and certified late choice chronology, or controlled optical apparatus to collect it; then run the already locked 2048-shot unfiltered analysis.",
+    "classification": "RESEARCH_ONLY",
+    "production_promotion_allowed": false
+  }
+}
