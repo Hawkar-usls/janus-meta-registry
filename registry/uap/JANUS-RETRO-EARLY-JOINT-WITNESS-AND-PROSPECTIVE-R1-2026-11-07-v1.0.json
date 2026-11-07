@@ -1,0 +1,130 @@
+{
+  "artifact_id": "JANUS-RETRO-EARLY-JOINT-WITNESS-AND-PROSPECTIVE-R1-2026-11-07-v1.0",
+  "schema_version": "1.0",
+  "date_utc": "2026-11-07",
+  "language": "ru",
+  "registry": {
+    "repository": "Hawkar-usls/janus-meta-registry",
+    "path": "registry/uap/JANUS-RETRO-EARLY-JOINT-WITNESS-AND-PROSPECTIVE-R1-2026-11-07-v1.0.json",
+    "mode": "APPEND_ONLY",
+    "status": "DRAFT_REVIEW_BRANCH_NOT_MERGED"
+  },
+  "parents": [
+    "registry/uap/JANUS-RETRO-BYTE-CAMPAIGN-2026-11-06-v1.0.json",
+    "registry/uap/JANUS-TEMPORAL-SIGNAL-SEARCH-77-AND-DEUTSCH-CTC-2026-11-06-v1.0.json",
+    "registry/uap/JANUS-CPU-QUANTUM-RETRO-EMULATOR-2026-11-06-v1.0.json"
+  ],
+  "status": "EXPLORATORY_JOINT_WITNESS_CPU_VERIFIED__NON_SIGNIFICANT__FUTURE_FIXED_N_SPEC_FROZEN_IN_DRAFT",
+  "goal": "Improve JANUS's ability to detect joint early-state associations with independently later-generated bits while eliminating outcome selection, lookahead and overfit. Does not create a physical retrocausal resource.",
+  "source_research": [
+    {
+      "title": "Theories with no superluminal signaling have greater information-processing power than theories with no superluminal causation",
+      "authors": "V. Vilasini, Roger Colbeck",
+      "journal": "Physical Review Research",
+      "year": 2026,
+      "doi": "10.1103/h31d-wqyg",
+      "note": "Hypothetical jamming/PR-box resources; not physically demonstrated. A joint association measured after B is not automatically an early-accessible message."
+    },
+    {
+      "title": "Device-independent certification of indefinite causal order in the quantum switch",
+      "journal": "Nature Communications",
+      "year": 2023,
+      "doi": "10.1038/s41467-023-40162-8",
+      "note": "Causal-order witness is different from verified time-reversed classical signalling."
+    }
+  ],
+  "code": {
+    "repository": "Hawkar-usls/Janus-Demiurge",
+    "pull_request": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/453",
+    "branch": "research/retro-audit-raw-recount-r1-20261107",
+    "latest_scientific_ci_commit": "bf10e3261c880f2cfc66b01f86399f3d903e51ed",
+    "workflow": ".github/workflows/janus-retro-raw-recount-r1.yml",
+    "retrospective_module": "experiments/ocean_transformer/janus_retro_early_joint_witness_r1.py",
+    "prospective_protocol": "experiments/ocean_transformer/janus_retro_prospective_joint_r1.json",
+    "prospective_evaluator": "experiments/ocean_transformer/janus_retro_prospective_joint_r1.py",
+    "parent_recount_module": "experiments/ocean_transformer/janus_retro_raw_recount_r1.py",
+    "production_changes": false,
+    "existing_ledger_mutated": false,
+    "existing_retro_lab_workflow_mutated": false,
+    "no_NAS_compute": true
+  },
+  "ci": {
+    "original_recount_run_url": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/42361325871",
+    "exploratory_joint_witness_run_url": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/42361779380",
+    "prospective_fixed_n_run_url": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/42362159297",
+    "final_run_conclusion": "success",
+    "final_run_jobs": 6,
+    "final_run_all_jobs_success": true,
+    "separate_python_versions": [
+      "3.11",
+      "3.12"
+    ],
+    "joint_witness_regression_tests_per_python": 8,
+    "prospective_regression_tests_per_python": 8,
+    "count_integrity_regression_tests_per_python": 12
+  },
+  "raw_historical_recount": {
+    "trials": 7,
+    "all_bits": 1792,
+    "correct_bits": 857,
+    "bit_accuracy": 0.47823660714285715,
+    "full_bytes": 224,
+    "matched_bytes": 2,
+    "one_sided_exact_bit_tail_p": 0.9690083471503503,
+    "one_sided_exact_byte_tail_p": 0.21829386513663426,
+    "late_entropy_source": "secrets.token_bytes on GitHub hosted OS",
+    "independent_external_entropy_certification": false,
+    "external_A_precommit_timestamp_signature": false,
+    "existing_7_trial_metadata_retained": true
+  },
+  "exploratory_joint_witness": {
+    "source": "7 fully completed archived trials, early.json + future.json, 1792 bit positions",
+    "earlier_A": "early pred_bits[i], integer 0/1",
+    "earlier_C": "1 if abs(early p1_model_probs[i]-0.5) >= 0.25 else 0",
+    "later_B": "future_bits[i] from later OS RNG, as saved in future.json",
+    "statistical_family": [
+      "TV(A|B)",
+      "TV(C|B)",
+      "TV(A,C|B)",
+      "TV(A,C|B)-max(TV(A|B),TV(C|B))"
+    ],
+    "permutations": 1999,
+    "shuffling": "shuffle B within each completed 256-bit trial",
+    "A_marginal_TV": 0.0435267857142857,
+    "C_marginal_TV": 0.032366071428571425,
+    "A_C_joint_TV": 0.04687499999999999,
+    "joint_excess_over_marginal_TV": 0.0033482142857142946,
+    "exploratory_p_joint": 0.127,
+    "exploratory_p_joint_excess": 0.449,
+    "bonferroni_min_p_two_tests": 0.254,
+    "significant": false,
+    "future_information_detected": false,
+    "synthetic_XOR_joint_only_leak_detection": "PASS, synthetic positive-control only",
+    "secondary_claim": "Two early values are derived from the same model output; no physically separate early detectors, no jamming resource, no precommitted retrospective hypothesis",
+    "statistical_caveat": "Retrospective exploratory analysis after history existed, with potential dependence/multiple looks; p-values are not confirmatory physical evidence."
+  },
+  "prospective_future_protocol": {
+    "protocol_id": "JANUS-JOINT-EARLY-SIGNAL-PROSPECTIVE-2026-11-07-R1",
+    "protocol_status": "FROZEN_IN_DRAFT_BRANCH__NOT_AUTOMATICALLY_ACTIVE_ON_MAIN",
+    "earliest_eligible_early_issue_time_utc": "2026-11-08T00:00:00Z",
+    "last_eligible_early_issue_time_exclusive_utc": "2026-11-21T00:00:00Z",
+    "fixed_n_completed_trial_attempts": 24,
+    "bits_per_trial": 256,
+    "bits_total": 6144,
+    "primary_exact_one_sided_alpha": 0.0001,
+    "secondary_joint_permutations": 9999,
+    "secondary_two_view_bonferroni_threshold": 0.001,
+    "source_checkpoint_sha256": "2c38788e8468a98e9377fcdb9058c488ec3ec17dfacfbf553402a9b1a86cd4ca",
+    "inclusion": "Choose first 24 early records by early issued_at timestamp and ID before reading any future labels. Failed/unfinished among first 24 causes HOLD. No substitution with later successes.",
+    "previous_7_trials_used_to_evaluate_prospective_p_value": false,
+    "has_24_new_trials_completed": false,
+    "no_data_dependent_change_after_prospective_start_allowed": true,
+    "required_external_early_timestamp_seal_missing": true,
+    "required_independent_future_rng_attestation_missing": true,
+    "independent_physical_replication_missing": true,
+    "physical_retrocausal_claim_prohibited": true
+  },
+  "next_technical_milestone": "Introduce externally audited delayed entropy source and independent timestamp sealing, then independently replicate any predeclared prospective anomaly. For a ~1 percentage-point improvement the 6144-bit sample is underpowered; create a separately registered larger-N experiment rather than reusing or tuning this frozen one.",
+  "scientific_conclusion": "NO_PROVEN_RETROCAUSAL_SIGNAL",
+  "promotion_allowed": false
+}
