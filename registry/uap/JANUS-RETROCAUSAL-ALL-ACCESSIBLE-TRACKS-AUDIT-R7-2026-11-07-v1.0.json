@@ -1,0 +1,238 @@
+{
+  "artifact_id": "JANUS-RETROCAUSAL-ALL-ACCESSIBLE-TRACKS-AUDIT-R7-2026-11-07-v1.0",
+  "schema_version": "1.0",
+  "created_date_utc": "2026-11-07",
+  "language": "ru",
+  "classification": "CONSOLIDATED_RESEARCH_AUDIT__MULTIPLE_CPU_TESTS_VERIFIED__NO_PHYSICAL_RETROCAUSAL_SIGNAL",
+  "storage": {
+    "repo": "Hawkar-usls/janus-meta-registry",
+    "path": "registry/uap/JANUS-RETROCAUSAL-ALL-ACCESSIBLE-TRACKS-AUDIT-R7-2026-11-07-v1.0.json",
+    "mode": "APPEND_ONLY",
+    "status": "DRAFT_PR_NOT_MERGED"
+  },
+  "question": "Проверить все доступные сейчас JANUS CPU-направления для возможности ретрокаузальности или ретрообусловленных корреляций, не подменяя физический результат компьютерной симуляцией.",
+  "paths_verified": [
+    {
+      "id": "RETRO_BYTE_HISTORICAL_RAW",
+      "source": "Hawkar-usls/Janus-Demiurge janus/retro-quantum-lab-ledger",
+      "research_pr": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/453",
+      "historical_completed_trials": 7,
+      "actual_trained_model_forecasts": true,
+      "total_bits": 1792,
+      "bit_matches": 857,
+      "accuracy": 0.47823660714285715,
+      "total_bytes": 224,
+      "byte_matches": 2,
+      "exploratory_exact_bit_one_sided_p": 0.9690083471503503,
+      "exploratory_exact_byte_one_sided_p": 0.21829386513663426,
+      "joint_witness_exploratory_p": 0.127,
+      "joint_interaction_exploratory_p": 0.449,
+      "joint_two_test_bonferroni_min_p": 0.254,
+      "conclusion": "NO_PREDICTIVE_SIGNAL_DETECTED",
+      "caveat": "Existing seven historical trials are exploratory for new joint-witness hypotheses; cannot backdate new endpoints."
+    },
+    {
+      "id": "R3_ADDRESSED_CLASSICAL_20_LANE",
+      "code_pr": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/454",
+      "github_run": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/42365673881",
+      "CI_jobs_success": 64,
+      "CI_jobs_total": 64,
+      "early_lanes": 20,
+      "late_lanes": 20,
+      "attempts_total": 1280,
+      "all_unfiltered_attempts_retained": true,
+      "experimental_design": "2x2 matched/control request × addressed/sham late route, 120-second job barrier",
+      "interaction_delta": 0.034375,
+      "paired_exact_p": 0.26552272473039634,
+      "within_lane_permutation_p": 0.342,
+      "two_test_bonferroni_p": 0.5310454494607927,
+      "classification": "VALID_CPU_PIPELINE__NULL_COMPATIBLE__NOT_PHYSICAL_RETROCAUSAL_INTERVENTION"
+    },
+    {
+      "id": "R4_EXTERNAL_FUTURE_SHA256_CONTROL",
+      "code_pr": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/455",
+      "github_run": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/42367674317",
+      "jobs_success": 5,
+      "source": "externally signed drand Quicknet beacon",
+      "round": 33749064,
+      "prediction_origin": "SHA256 baseline control, not the JANUS trained model",
+      "correct_bits": 127,
+      "total_bits": 256,
+      "accuracy": 0.49609375,
+      "one_sided_exact_p": 0.5743424702535425,
+      "BLS_verification_twice": true,
+      "physically_independent_signing_time_certified": false,
+      "classification": "EXTERNAL_BEACON_INTEGRATION_PASS__NO_SIGNAL"
+    },
+    {
+      "id": "R5_ACTUAL_TRAINED_JANUS_VS_EXTERNAL_DRAND",
+      "code_pr": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/456",
+      "github_run": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/42369248281",
+      "run_code_sha": "3ba9211a7ab6ad8129a1a4376bc249cca752f732",
+      "jobs_success": 5,
+      "original_model_source_run": 42125238873,
+      "trained_model_sha256": "2c38788e8468a98e9377fcdb9058c488ec3ec17dfacfbf553402a9b1a86cd4ca",
+      "training_snapshot_sha256": "1d7259bd6429fe5f29d2ad573c05822f8c8ed6686a254e643b32be8c9d56e1cd",
+      "original_model": "JanusTinyTransformer previously trained on 40-river weather data",
+      "source_external_future": "drand Quicknet threshold BLS-signed beacon",
+      "exact_beacon_round": 33749520,
+      "minimum_scheduled_future_separation_seconds": 180,
+      "original_RAW_bit_hits": 123,
+      "total_bits": 256,
+      "raw_accuracy": 0.48046875,
+      "four_precommitted_decoders": [
+        "RAW",
+        "INVERTED",
+        "CONFIDENCE_HIGH_FLIP",
+        "CONFIDENCE_LOW_FLIP"
+      ],
+      "four_way_bonferroni_min_p": 1,
+      "independent_second_BLS_verification": true,
+      "original_early_model_record_sha256_verified": true,
+      "plan_contains_no_early_forecast_bits": true,
+      "late_generator_does_not_download_early_predictions": true,
+      "data_artifact_names": [
+        "janus-r5-trained-early-42369248281",
+        "janus-r5-future-plan-42369248281",
+        "janus-r5-signed-future-42369248281",
+        "janus-r5-independent-score-42369248281"
+      ],
+      "scientific_caveats": [
+        "Drand output is SHA256 of one future BLS signature; 256 bits are not 256 independently measured physical events",
+        "This model was trained to forecast weather, not to predict drand",
+        "GitHub chronological job dependency is not third-party hardware early-time attestation",
+        "Any small nominal p-value from one signature would require a separate pre-registered multiple-round replication"
+      ],
+      "classification": "TRAINED_MODEL_AGAINST_SIGNED_EXTERNAL_FUTURE_COMPLETED__NO_IMPROVEMENT__NO_PHYSICAL_CHANNEL"
+    },
+    {
+      "id": "R6_ZENODO_QUANTUM_SWITCH_PUBLIC_ARCHIVE",
+      "code_pr": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/457",
+      "github_run": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/42370065899",
+      "source": "https://zenodo.org/records/21916346",
+      "data_doi": "10.5281/zenodo.21916346",
+      "verified_archive_sha256": "ea778d4d3044b0eb98a29e0fe774b36d81c68e4cb4c83b1be28c97a88df3a9c9",
+      "archive_size_bytes": 28764,
+      "total_files": 14,
+      "original_author_data_txt_files": 4,
+      "original_author_python_files": 10,
+      "observed_data_files": [
+        {
+          "name": "data_A.txt",
+          "header": "ANGLE-SWEPT QUANTUM MEASUREMENT - MATRIX RESULTS",
+          "declared_measurement_series": 11,
+          "lines": 164
+        },
+        {
+          "name": "data_D.txt",
+          "header": "ANGLE-SWEPT QUANTUM MEASUREMENT - MATRIX RESULTS",
+          "declared_measurement_series": 12,
+          "lines": 164
+        },
+        {
+          "name": "data_H.txt",
+          "header": "ANGLE-SWEPT QUANTUM MEASUREMENT - MATRIX RESULTS",
+          "declared_measurement_series": 10,
+          "lines": 164
+        },
+        {
+          "name": "data_V.txt",
+          "header": "ANGLE-SWEPT QUANTUM MEASUREMENT - MATRIX RESULTS",
+          "declared_measurement_series": 10,
+          "lines": 164
+        }
+      ],
+      "external_author_scripts_executed": false,
+      "actual_full_numeric_physics_reproduction_completed": false,
+      "raw_early_late_hardware_shot_timestamps_verified": false,
+      "classification": "PUBLIC_AUTHENTIC_ARCHIVE_RETRIEVED_AND_INSPECTED__NOT_TIME_REVERSED_MESSAGE"
+    },
+    {
+      "id": "R6_DRYAD_QU_2026_PUBLIC_DATA",
+      "code_pr": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/457",
+      "source": "https://doi.org/10.5061/dryad.8kprr4z24",
+      "paper_doi": "10.1126/sciadv.aee9271",
+      "published_files_expected": 16,
+      "source_description": "16 setting-specific CSV files of conditional probabilities and errorbars for photonic quantum switch",
+      "live_endpoint_http_status": 401,
+      "data_access": "NOT_RUN__DOWNLOAD_REQUIRES_AUTHORIZATION",
+      "synthetic_parser_tests_pass_on_python_versions": [
+        "3.11",
+        "3.12"
+      ],
+      "actual_16_csv_contents_verified": false,
+      "authors_reported_inequality": 1.809,
+      "authors_reported_standard_error": 0.0024,
+      "fixed_causal_order_bound": 1.75,
+      "paper_claim": "24 standard deviations against particular definite-order models under fair sampling / spacetime assumptions",
+      "author_result_is_not_physical_backwards_message": true,
+      "next_action": "Authorized narrow Dryad bearer credential or independently confirmed accessible official mirror; do not invent/auth-bypass downloads.",
+      "classification": "FILE_ACCESS_BLOCKED__REPORTED_PHYSICAL_INDEFINITE_CAUSAL_ORDER_NOT_EARLY_MESSAGE"
+    },
+    {
+      "id": "CTC_OCB_CPU_MATHEMATICAL",
+      "source_code_pr": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/448",
+      "source_cpu_engine_pr": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/450",
+      "basis": "OCB mathematically valid noncausal process matrix and Deutsch-CTC fixed points, simulated on ordinary CPU",
+      "source_early_late_handshake_pr": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/454",
+      "previous_256_qubit_Clifford_simulation_verified": true,
+      "physically_executable_time_reversed_CTC_resource": false,
+      "late_choice_known_to_emulator_in_simulation": true,
+      "observed_operational_signal_into_past": false,
+      "classification": "MATHEMATICAL_INTERPRETATION_ONLY__PHYSICAL_TIME_SIGNAL_NOT_ESTABLISHED"
+    }
+  ],
+  "externally_published_candidates_not_claimed_as_reproduced": [
+    {
+      "source": "Ma et al., Experimental delayed-choice entanglement swapping, Nature Physics 2012",
+      "doi": "10.1038/nphys2294",
+      "physical_A_earlier_than_late_independent_choice_demonstrated_in_literature": true,
+      "earlier_unconditional_signal_observed": false,
+      "JANUS_owns_experimental_lab": false,
+      "status": "PHYSICAL_CHRONOLOGY_PRECEDENT__NO_MESSAGE_TO_PAST"
+    },
+    {
+      "source": "Vilasini and Colbeck, Physical Review Research 2026",
+      "doi": "10.1103/h31d-wqyg",
+      "describes": "Hypothetical postquantum jamming where joint earlier data can depend on later choice while marginals do not",
+      "implemented_physical_jamming_resource": false,
+      "status": "THEORETICAL_CANDIDATE__NO_REAL_WORLD_RESOURCE"
+    },
+    {
+      "source": "Radin and Cline, Does wavefunction collapse require a conscious observer? 2026",
+      "paper": "https://zenodo.org/records/20545084",
+      "code_data": "https://zenodo.org/records/20099018",
+      "authors_report_adjusted_p": 0.00007,
+      "sample": "1000 human and 1000 AI sessions reported in authors' preprint; analysis preprocessed, not independently reproduced by JANUS",
+      "caveats": "Authors' positive finding is a contested interpretation, not a verified earlier-accessible message of later independently chosen bits. Original detector timestamps and independent blinded replication would still be needed.",
+      "status": "POSITIVE_AUTHOR_CLAIM__INDEPENDENT_REPLICATION_OPEN"
+    },
+    {
+      "source": "Forward-time equivalent of future-boundary retrocausal models",
+      "doi": "10.1103/d1cs-3dw9",
+      "status": "FORWARD_TIME_OBSERVATIONAL_EQUIVALENCE_LIMITS_IDENTIFIABILITY"
+    }
+  ],
+  "operational_proof_gates": {
+    "G1": "Early data A physically registered, externally time-stamped and inaccessible to later manipulation",
+    "G2": "Later B is independently generated, auditably free of any classical leakage to A, with concrete late physical intervention",
+    "G3": "All early trials (including detector no-click/abort) included at a fixed preregistered sample size, no late coincidence postselection",
+    "G4": "Predeclared effect size, exact statistic and multiple-testing correction; no adaptive search promoted from exploratory history",
+    "G5": "Independent lab, fresh unexposed data and an experimental design ruling out all forward causal models under explicit assumptions",
+    "G6": "Demonstrate operational earlier-accessible information rather than merely a correlation reconstructed after learning B"
+  },
+  "summary": {
+    "experiments_completed_in_this_conversation": [
+      "Trained model + drand future BLS R5",
+      "Zenodo published public archive safe inspection R6",
+      "Dryad live access probe and fail-closed status R6"
+    ],
+    "next_priority": "Actual source of precommit physically certified optical early detector logs + future late QRNG; current CPU ability can only simulate and statistically analyze",
+    "scientific_claim": "NO_REPRODUCIBLE_PHYSICAL_RETROCAUSAL_SIGNAL",
+    "physical_channel_production_promotion": false,
+    "NAS_touched": false,
+    "production_repositories_touched": false,
+    "historical_R3_R4_scores_preserved": true,
+    "all_research_PRs_are_draft": true
+  }
+}
