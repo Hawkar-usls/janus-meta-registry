@@ -1,0 +1,98 @@
+name: JANUS Autonomy Bounded Wake Guardian
+
+# Independent cloud heartbeat; only admitted same-repo workflows may be woken.
+on:
+  schedule:
+    - cron: '47 * * * *'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Validate eligible wake without any dispatch'
+        type: boolean
+        required: false
+        default: true
+  push:
+    branches: [main]
+    paths:
+      - 'modules/autonomy_loop/dispatch_guard.py'
+      - 'tests/test_autonomy_dispatch_guard.py'
+      - 'data/autonomy_loop/BOUNDED_WAKE_POLICY.json'
+      - '.github/workflows/janus-autonomy-bounded-wake-guardian.yml'
+  pull_request:
+    paths:
+      - 'modules/autonomy_loop/dispatch_guard.py'
+      - 'tests/test_autonomy_dispatch_guard.py'
+      - 'data/autonomy_loop/BOUNDED_WAKE_POLICY.json'
+      - '.github/workflows/janus-autonomy-bounded-wake-guardian.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: janus-autonomy-bounded-wake-guardian
+  cancel-in-progress: false
+
+jobs:
+  contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run no-network adversarial and authority tests
+        run: |
+          set -euo pipefail
+          python -m py_compile modules/autonomy_loop/dispatch_guard.py tests/test_autonomy_dispatch_guard.py
+          python -m unittest discover -v -s tests -p test_autonomy_dispatch_guard.py
+
+  bounded-wake:
+    needs: contract
+    if: >-
+      ${{ (github.event_name == 'schedule' || github.event_name == 'push' ||
+           github.event_name == 'workflow_dispatch') &&
+          github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    permissions:
+      contents: read
+      actions: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify current trusted main source before wake
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          test "$(git rev-parse HEAD)" = "$(git rev-parse origin/main)"
+          echo "JANUS_BOUNDED_WAKE_CODE_SHA=$(git rev-parse HEAD)"
+      - name: Check trusted phase, bounded history and issue at most one wake
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}
+        run: |
+          set -euo pipefail
+          args=(--root . --out runtime/bounded-wake/RECEIPT.json)
+          if [[ "$DRY_RUN" == "true" ]]; then args+=(--dry-run); fi
+          python modules/autonomy_loop/dispatch_guard.py "${args[@]}"
+          cat runtime/bounded-wake/RECEIPT.json >> "$GITHUB_STEP_SUMMARY"
+      - name: Preserve per-run disposition even on HOLD
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-autonomy-bounded-wake-${{ github.run_id }}
+          path: runtime/bounded-wake/RECEIPT.json
+          if-no-files-found: warn
+          retention-days: 14
