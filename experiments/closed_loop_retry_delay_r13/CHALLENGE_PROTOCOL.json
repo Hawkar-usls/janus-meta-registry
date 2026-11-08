@@ -1,0 +1,33 @@
+{
+  "schema": "janus.closed_loop.retry_delay_challenge.v1",
+  "status": "PRE_REGISTERED_BEFORE_FIRST_R13_EXECUTION",
+  "purpose": "Cross-implementation timing replay with neutral same-function control and admission scope check",
+  "source_candidate_commit": "2652dd70d8f65385316cd309d4a74db2b948dc46",
+  "candidate_sha256": "a45bf9b5814e432a89334e46f8acac63a9fa1d2846dc393ed21e6dd6695b2611",
+  "source_reference_baseline_sha256": "1a76285172a0891f910b94d7dad51d111a82faf36a84c386dd88b14005e94da0",
+  "r12_proof_protocol_sha256": "05b54d4ff49d836c212a6d53228cc72b2d5ba5120279ac2d8446a879e9d25156",
+  "training_manifest_sha256": "217c36447ff903308e5b02544ab69355232a1f3601da3fc49c67f38912b209ab",
+  "r12_holdout_sha256": "edb171bc2b4b3dcbadf31004298bd2a1d42f8f97f2c178885e916495397309fe",
+  "challenge_seed": "janus-r13-independent-replay-20261108-fixed-v1",
+  "fresh_case_count": 24,
+  "independent_challenge_method": "Python random.Random(UTF8 string seed) with rejection of 91 prior training and 8 prior holdout input pairs; deterministic, not sealed from outside observers",
+  "statistic": "median of 7 timeit repeats each at 30000 calls per function with alternating call order; 24 paired cases",
+  "neutral_control": "same candidate function measured twice with alternating order on each case to quantify timing noise",
+  "comparison_limit": "R1.2 baseline is not admitted by current Coder AST policy; never compare as production baseline",
+  "cpu_limit": "1 CPU in existing SHA-pinned python Docker image",
+  "memory_limit_mb": 256,
+  "network": false,
+  "read_only": true,
+  "no_secrets": true,
+  "auto_merge": false,
+  "scientific_authority_delta": 0,
+  "production_authority_delta": 0,
+  "independence_level": "SEPARATE_IMPLEMENTATION_SAME_REPOSITORY_NOT_EXTERNAL_BLIND",
+  "allowed_conclusions": [
+    "RECORDED_REFERENCE_REPLAY",
+    "NO_REPLAY_GAIN",
+    "UNDETERMINED_NOISE",
+    "HOLD_INVALID"
+  ],
+  "result_does_not_prove_runtime_improvement": true
+}
