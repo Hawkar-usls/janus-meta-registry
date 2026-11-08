@@ -1,0 +1,63 @@
+{
+  "schema": "janus.closed_loop.actions_cost_optimization_protocol.v1",
+  "experiment": "R1.5/sparse-checkout-and-stale-PR-cancellation",
+  "status": "PREREGISTERED_BEFORE_WORKFLOW_CHANGE",
+  "repository": "Hawkar-usls/janus-meta-registry",
+  "baseline": {
+    "main_commit": "325f87bb06f765be3e34eb16553f6b7f202c03b0",
+    "workflow_file": ".github/workflows/janus-self-writer-real-operational-consumer.yml",
+    "workflow_git_blob_sha": "c3101ff4347cda8073ea8a20fb55faf490cddb30",
+    "consumer_git_blob_sha": "c787f96523442cf314f2327bf57af658a06e1a47",
+    "state_commit": "ccb2f82edb0f1c61c460aa0a4521a9991e8d5eb2",
+    "reference_run": 42503712794,
+    "reference_job": 128801707140,
+    "reference_event": "pull_request",
+    "reference_checkout_start_utc": "2026-11-08T17:11:34.1761659Z",
+    "reference_next_checkout_start_utc": "2026-11-08T17:11:41.3927216Z",
+    "reference_docker_pull_start_utc": "2026-11-08T17:11:43.3889002Z",
+    "reference_next_step_start_utc": "2026-11-08T17:11:48.4493771Z",
+    "reference_run_wall_clock_created_utc": "2026-11-08T17:11:29Z",
+    "reference_run_wall_clock_updated_utc": "2026-11-08T17:12:17Z",
+    "baseline_first_checkout_interval_seconds_approx": 7.217,
+    "baseline_docker_pull_interval_seconds_approx": 5.06,
+    "baseline_isolated_consumer_median_ms": 303.373,
+    "warning": "Baseline PR workflow had a separate one-off dependent R1.4 profiler job; its 48-second whole-workflow duration is NOT a single-job baseline nor billable runner-minutes."
+  },
+  "proposed_changes": {
+    "source_checkout": "Noncone sparse checkout: exact modules/autonomy_coder directory, one existing test file, public data/autonomy_loop/LATEST.json.",
+    "state_checkout": "Noncone sparse checkout: root STATE.json, MODULE_INDEX.json, complete attempts/, receipts/, self_modules/ historical provenance trees.",
+    "concurrency": "Cancel in-progress only for pull_request event; preserve scheduled, main push and workflow_dispatch executions without in-progress cancellation.",
+    "preserve": [
+      "cron 07 */6 * * *",
+      "main push paths",
+      "manual workflow_dispatch",
+      "contents:read",
+      "persist-credentials:false for both checkouts",
+      "exact immutable state commit",
+      "existing Python 3.12 setup",
+      "negative control tests",
+      "exact pinned Docker SHA and explicit docker pull",
+      "networkless read-only Docker with restricted user and capabilities",
+      "actual source-bound module_registry.verify",
+      "same read-only consumer receipt checks",
+      "same artifact retention"
+    ]
+  },
+  "acceptance": {
+    "status": "REVIEW_ONLY",
+    "never_bypass_model_safety": true,
+    "candidate_run_must_complete_success": true,
+    "source_shas_unchanged": true,
+    "actual_main_snapshot_and_model_state_must_be_accepted": true,
+    "actual_receipt_must_be_read_only": true,
+    "whole_pipeline_speedup_claim_requires_comparable_runner_samples": true,
+    "collect_first_checkout_and_docker_pull_start_end_from_original_run_logs": true,
+    "minimum_samples_for_confirmed_gain": 3,
+    "artifact_shas_or_time_missing": "UNKNOWN_NOT_GAIN",
+    "guard_or_schedule_silenced": "REJECT",
+    "production_merge_automated": false,
+    "scientific_authority_delta": 0,
+    "funding_or_paid_models": false,
+    "private_system_access": false
+  }
+}
