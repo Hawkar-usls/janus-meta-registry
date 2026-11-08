@@ -18,6 +18,8 @@ ROOT = Path(__file__).resolve().parents[2]
 R12 = ROOT / "experiments/closed_loop_retry_delay_r1"
 R13 = ROOT / "experiments/closed_loop_retry_delay_r13"
 RUN_ID = 42482603402
+RUN_PR_HEAD_SHA = "2ec50e0aede9ebc4331abfe4f5e45020dd5fb5de"
+RUN_CHECKOUT_MERGE_SHA = "02ebf0f5a4c693e5250cd7e40d2a67c833cef0e6"
 SOURCE_SHA = "a45bf9b5814e432a89334e46f8acac63a9fa1d2846dc393ed21e6dd6695b2611"
 BASE_SHA = "1a76285172a0891f910b94d7dad51d111a82faf36a84c386dd88b14005e94da0"
 PRECOMMIT = "0f6cc28fa20ce5e484440afdbadbef57e430c2ef"
@@ -69,7 +71,8 @@ def verify(root=ROOT):
             meta.get("status") != "completed" or meta.get("conclusion") != "success" or
             meta.get("event") != "pull_request" or
             type(meta.get("job_id")) is not int or meta["job_id"] < 1 or
-            not isinstance(meta.get("head_sha"), str) or not HEX40.fullmatch(meta["head_sha"])):
+            not isinstance(meta.get("head_sha"), str) or not HEX40.fullmatch(meta["head_sha"]) or
+            meta["head_sha"] != RUN_PR_HEAD_SHA):
         raise Hold("RECEIPT_RUN_PROVENANCE")
     if (type(art.get("id")) is not int or art["id"] < 1 or
             art.get("name") != f"janus-r13-cross-implementation-{RUN_ID}" or
@@ -117,7 +120,7 @@ def verify(root=ROOT):
     if (trial.get("schema") != "janus.closed_loop.r13_cross_implementation_replay.v1" or
             trial.get("status") != "RECORDED_REFERENCE_REPLAY" or
             trial.get("github_run_id") != str(RUN_ID) or
-            trial.get("source_head_sha") != meta["head_sha"] or
+            trial.get("source_head_sha") != RUN_CHECKOUT_MERGE_SHA or
             trial.get("candidate_source_sha256") != SOURCE_SHA or
             trial.get("reference_source_sha256") != BASE_SHA or
             trial.get("challenge_preregistration_commit") != PRECOMMIT or
