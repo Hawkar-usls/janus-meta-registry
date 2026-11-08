@@ -69,3 +69,33 @@ before any review of adoption.
    recovery, rollback rate, and unattended cycles.
 
 E12C4, Rowan, SkinGPT, HOME, C023, and scientific holdout gates are unchanged.
+
+
+## R1.1 — source-bound candidate triage (review-only)
+
+The existing patch queue has 42 proposals. At the observed 2026-11-08
+snapshot, four were VERIFY_PASS but targeted Hrain/iNaiHR; another 38
+were WAITING_FOR_TARGET_BRANCH in Hrain. These 38 are **not ready-to-run**
+patches. The index's blocked_count is a separate counter and does not
+represent the number of missing branches. No private HRAiN access or
+automatic creation of missing target branches is authorized by this change.
+
+An existing, non-private candidate was selected for a preflight only:
+PR #379 at reviewed head 2652dd70d8f65385316cd309d4a74db2b948dc46,
+candidate_modules/retry_delay/module.py, source SHA-256
+a45bf9b5814e432a89334e46f8acac63a9fa1d2846dc393ed21e6dd6695b2611.
+The proposal reports 291 independently verified cases from its historical
+authoring process; this R1.1 preflight does **not** independently confirm
+those historical runs.
+
+modules/autonomy_loop/candidate_preflight.py now checks the reviewed source's
+actual SHA-256 against the proposal, verifies the source-bound proposal digest,
+applies the existing strict AST admission policy, forbids authority escalation,
+and emits only READY_FOR_ISOLATED_BEHAVIOR_REPLAY_ONLY. It also classifies
+the public queue without dispatching workflows or touching Hrain.
+
+All such verdicts explicitly keep independent_replay_attested=false and
+improvement_attested=false. Neither a valid source fingerprint nor a green
+historical PR is a measured improvement. The next required steps remain a
+frozen baseline/holdout, actual isolated replay, and independent evidence
+replay before any possible runtime review.
