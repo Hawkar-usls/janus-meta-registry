@@ -261,3 +261,115 @@ jobs:
           retention-days: 30
       - run: cat CONSUMPTION.json >> "$GITHUB_STEP_SUMMARY"
 
+  closed-loop-retry-benchmark:
+    # PR-only source-bound experiment; no generation, publishing, or main changes.
+    needs: contract
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.number == 459 &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.head.ref == 'janus/closed-loop-proof-gate-r1-20261108'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout frozen review code without a persistent token
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Checkout exact previously reviewed candidate commit
+        uses: actions/checkout@v4
+        with:
+          repository: Hawkar-usls/janus-meta-registry
+          ref: 2652dd70d8f65385316cd309d4a74db2b948dc46
+          path: _candidate
+          persist-credentials: false
+          sparse-checkout: |
+            candidate_modules/retry_delay
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Reject changed reviewed candidate revision
+        run: |
+          test "$(git -C _candidate rev-parse HEAD)" = 2652dd70d8f65385316cd309d4a74db2b948dc46
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+      - name: Pull existing pinned networkless Coder sandbox image
+        run: docker pull python@sha256:1148dbb014615300fa7e713b2f94f550c0d1c69780c0805f84f093ceee34dd0b
+      - name: Run frozen correctness and paired timing only inside locked-down container
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p _trial
+          docker run --rm \
+            --network none --read-only --user 65534:65534 \
+            --cap-drop ALL --security-opt no-new-privileges \
+            --memory 256m --cpus 1 --pids-limit 32 --ulimit cpu=30:30 \
+            --tmpfs /tmp:rw,noexec,nosuid,size=16m \
+            --mount "type=bind,src=$PWD,dst=/src,readonly" \
+            python@sha256:1148dbb014615300fa7e713b2f94f550c0d1c69780c0805f84f093ceee34dd0b \
+            python -I -B /src/modules/autonomy_loop/benchmark_retry_delay.py \
+              --candidate-root /src/_candidate \
+              --evaluator-commit "$GITHUB_SHA" \
+              --run-id "$GITHUB_RUN_ID" > _trial/TRIAL.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          record=json.loads(Path("_trial/TRIAL.json").read_text())
+          assert record["execution_scope"]=="ISOLATED_DOCKER_NO_NETWORK"
+          assert record["independent_replay_attested"] is False
+          assert record["promotion"] is False
+          assert record["verified_train_holdout_disjoint"] is True
+          assert record["coder_oracle_cases_per_variant"]==291
+          Path("_trial/MEASUREMENT.json").write_text(
+              json.dumps(record["measurement"],sort_keys=True,indent=2)+"\n")
+          PY
+      - name: Fail-closed source-bound gain screening (negative outcomes are evidence)
+        shell: bash
+        run: |
+          set -euo pipefail
+          rc=0
+          python modules/autonomy_loop/proof_of_improvement.py \
+            experiments/closed_loop_retry_delay_r1/PROTOCOL.json \
+            _trial/MEASUREMENT.json > _trial/SCREEN.json || rc=$?
+          # Exit=1 means a valid negative comparison; exit=2 is invalid evidence.
+          test "$rc" -eq 0 -o "$rc" -eq 1
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          from modules.autonomy_loop.proof_of_improvement import digest
+          trial=json.loads(Path("_trial/TRIAL.json").read_text())
+          screen=json.loads(Path("_trial/SCREEN.json").read_text())
+          assert screen["schema"]=="janus.closed_loop.improvement_screen.v1"
+          assert screen["authority_delta"]==0 and screen["allow_auto_merge"] is False
+          assert screen["independent_replay_attested"] is False
+          assert screen["runtime_consumption_attested"] is False
+          assert screen["production_promotion"] is False
+          assert screen["measurement_sha256"]==digest(trial["measurement"])
+          print("JANUS_RETRY_TRIAL_JSON="+json.dumps(trial,sort_keys=True,separators=(",",":")))
+          print("JANUS_RETRY_SCREEN_JSON="+json.dumps(screen,sort_keys=True,separators=(",",":")))
+          with open(os.environ["GITHUB_STEP_SUMMARY"],"a") as out:
+              out.write("## JANUS retry_delay R1 frozen reference comparison\n\n")
+              out.write("- Correctness: 291 original oracle cases per variant, plus 91 training and 8 holdout cases.\n")
+              out.write("- Frozen holdout disjoint from training; all timing in networkless read-only Docker.\n")
+              out.write("- Measured result: **"+screen["status"]+"**\n")
+              out.write("- Mean paired gain (microseconds per call): "+str(screen["mean_paired_gain"])+"\n")
+              out.write("- Regressions: "+str(screen["regressions"])+"\n")
+              out.write("- **Not independently replayed; not a production baseline; no runtime promotion.**\n")
+          PY
+      - name: Retain exact measurement and negative-or-positive verdict
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-retry-delay-reference-trial-${{ github.run_id }}
+          path: |
+            _trial/TRIAL.json
+            _trial/MEASUREMENT.json
+            _trial/SCREEN.json
+            experiments/closed_loop_retry_delay_r1/PROTOCOL.json
+            experiments/closed_loop_retry_delay_r1/TRAIN_MANIFEST.json
+            experiments/closed_loop_retry_delay_r1/HOLDOUT_MANIFEST.json
+            experiments/closed_loop_retry_delay_r1/BASELINE.py
+          if-no-files-found: error
+          retention-days: 30
