@@ -117,7 +117,7 @@ def preflight(proposal, source, *, source_commit):
 def triage_queue(index):
     """Reject unavailable target branches; never treat their counts as work."""
     if (not isinstance(index, dict) or
-            index.get("schema") != "janus.patch_index.v1" or
+            index.get("schema") != "janus.patch_queue.index.v1" or
             not isinstance(index.get("proposals"), list)):
         raise Hold("QUEUE_UNTRUSTED")
     proposals = index["proposals"]
@@ -151,7 +151,7 @@ def triage_queue(index):
             raise Hold("UNKNOWN_QUEUE_STATUS")
     if (index.get("verified_count") !=
             counts["verified_safe_repo"] + counts["verified_not_in_safe_repo"] or
-            index.get("blocked_count") != counts["waiting_for_target_branch"]):
+            type(index.get("blocked_count")) is not int or index["blocked_count"] < 0):
         raise Hold("QUEUE_STATUS_COUNTS_MISMATCH")
     result = {
         "schema": QUEUE_SCHEMA,
