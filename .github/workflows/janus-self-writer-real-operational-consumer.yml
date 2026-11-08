@@ -37,7 +37,9 @@ jobs:
           sparse-checkout: |
             /modules/autonomy_coder/
             /tests/test_real_operational_self_writer_consumer.py
+            /tests/test_actions_cost_r15_checkout.py
             /data/autonomy_loop/LATEST.json
+            /.github/workflows/janus-self-writer-real-operational-consumer.yml
           sparse-checkout-cone-mode: false
       - uses: actions/checkout@v4
         with:
@@ -58,6 +60,7 @@ jobs:
       - name: Negative controls for genuine model-authored source and observation
         run: |
           python -m unittest discover -s _code/tests -p test_real_operational_self_writer_consumer.py -v
+          python -m unittest discover -s _code/tests -p test_actions_cost_r15_checkout.py -v
       - name: Fetch unchanged pinned networkless evaluation container
         run: docker pull python@sha256:1148dbb014615300fa7e713b2f94f550c0d1c69780c0805f84f093ceee34dd0b
       - name: Exact SHA provenance, clean isolated model-code execution and real LATEST
