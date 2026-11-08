@@ -17,6 +17,7 @@ from time import perf_counter_ns
 
 BASE = Path(__file__).resolve().parents[2]
 CODER = BASE / "modules" / "autonomy_coder"
+sys.path.insert(0, str(BASE))
 sys.path.insert(0, str(CODER))
 from checker import cases as oracle_cases
 from policy import validate_source
