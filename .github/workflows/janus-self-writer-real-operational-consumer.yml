@@ -72,3 +72,102 @@ jobs:
           path: runtime/real-operational-consumer/RECEIPT.json
           retention-days: 14
           if-no-files-found: error
+
+  r14-real-path-profile:
+    # PR-only one-time performance baseline of ACTUAL read-only is_fresh consumer.
+    needs: independent-operational-consumption
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.number == 459 &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.head.ref == 'janus/closed-loop-proof-gate-r1-20261108'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout experimental observer code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          path: _code
+          persist-credentials: false
+      - name: Checkout exact pre-registered R1.4 policy
+        uses: actions/checkout@v4
+        with:
+          ref: 6200377978184360868c0f328adcc1b95f1f56c8
+          path: _prereg
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            experiments/closed_loop_is_fresh_r14/PROTOCOL.json
+      - name: Checkout immutable real main consumer and actual public source
+        uses: actions/checkout@v4
+        with:
+          ref: a44942be5ed510d2aa58c4c3d33b580d771c29b8
+          path: _baseline
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            modules/autonomy_coder/real_operational_consumer.py
+            data/autonomy_loop/LATEST.json
+      - name: Checkout existing immutable isolated Coder module state
+        uses: actions/checkout@v4
+        with:
+          ref: ccb2f82edb0f1c61c460aa0a4521a9991e8d5eb2
+          path: _state
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Enforce source and preregistration by Git commit, not mutable branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C _code rev-parse HEAD)" = "$GITHUB_SHA"
+          test "$(git -C _prereg rev-parse HEAD)" = 6200377978184360868c0f328adcc1b95f1f56c8
+          test "$(git -C _baseline rev-parse HEAD)" = a44942be5ed510d2aa58c4c3d33b580d771c29b8
+          test "$(git -C _state rev-parse HEAD)" = ccb2f82edb0f1c61c460aa0a4521a9991e8d5eb2
+          cmp _code/experiments/closed_loop_is_fresh_r14/PROTOCOL.json _prereg/experiments/closed_loop_is_fresh_r14/PROTOCOL.json
+          cmp _code/modules/autonomy_coder/real_operational_consumer.py _baseline/modules/autonomy_coder/real_operational_consumer.py
+      - name: Pull existing pinned networkless model checker
+        run: docker pull python@sha256:1148dbb014615300fa7e713b2f94f550c0d1c69780c0805f84f093ceee34dd0b
+      - name: Profile actual real consumer three times; capture only public diagnostic metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p _r14
+          python _code/modules/autonomy_loop/r14_profile_real_consumer.py \
+            --state _state \
+            --latest _baseline/data/autonomy_loop/LATEST.json \
+            --main-source _baseline/modules/autonomy_coder/real_operational_consumer.py \
+            --head-sha "$GITHUB_SHA" \
+            --run-id "$GITHUB_RUN_ID" > _r14/R14_PROFILE.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report=json.loads(Path("_r14/R14_PROFILE.json").read_bytes())
+          assert report["schema"]=="janus.closed_loop.is_fresh_real_path_profile.v1"
+          assert report["status"]=="MEASURED_ACTUAL_SOURCE_CONSUMER_NO_CANDIDATE_COMPARISON"
+          assert report["baseline_main_sha"]=="a44942be5ed510d2aa58c4c3d33b580d771c29b8"
+          assert report["state_sha"]=="ccb2f82edb0f1c61c460aa0a4521a9991e8d5eb2"
+          assert report["source_module"]=="is_fresh" and len(report["profiles"])==3
+          assert report["candidate_improvement_proven"] is False
+          assert report["system_runtime_speedup"] is False
+          assert report["auto_merge"] is False and report["authority_delta"]==0
+          print("JANUS_R14_PROFILE_JSON="+json.dumps(report,sort_keys=True,separators=(",",":")))
+          with open(__import__("os").environ["GITHUB_STEP_SUMMARY"],"a") as f:
+              f.write("## JANUS R1.4 actual read-only is_fresh consumer baseline\n")
+              for key,value in report["medians"].items():
+                  f.write("- "+key+": "+str(value)+"\n")
+              f.write("- No candidate optimization, no claim of production speedup.\n")
+          PY
+      - name: Retain source-bound R1.4 baseline profile
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-r14-real-consumer-profile-${{ github.run_id }}
+          path: |
+            _r14/R14_PROFILE.json
+            _prereg/experiments/closed_loop_is_fresh_r14/PROTOCOL.json
+          if-no-files-found: error
+          retention-days: 30
