@@ -62,7 +62,12 @@ jobs:
       - name: Exact SHA provenance, clean isolated model-code execution and real LATEST
         run: |
           set -euo pipefail
+          test "$(git -C _code rev-parse HEAD)" = "$GITHUB_SHA"
           test "$(git -C _state rev-parse HEAD)" = ccb2f82edb0f1c61c460aa0a4521a9991e8d5eb2
+          for p in _code/modules/autonomy_coder/real_operational_consumer.py _code/tests/test_real_operational_self_writer_consumer.py _code/data/autonomy_loop/LATEST.json _state/STATE.json _state/MODULE_INDEX.json; do
+            test -f "$p"
+          done
+          for d in _state/attempts _state/receipts _state/self_modules; do test -d "$d"; done
           PYTHONPATH=_code/modules/autonomy_coder \
             python _code/modules/autonomy_coder/real_operational_consumer.py \
               --state _state \
