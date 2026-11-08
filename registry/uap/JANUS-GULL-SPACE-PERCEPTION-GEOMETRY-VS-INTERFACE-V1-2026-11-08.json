@@ -1,0 +1,164 @@
+{
+  "artifact_id": "JANUS-GULL-SPACE-PERCEPTION-GEOMETRY-VS-INTERFACE-V1-2026-11-08",
+  "schema_version": "1.0",
+  "created_date_utc": "2026-11-08",
+  "language": "ru",
+  "registry": {
+    "repository": "Hawkar-usls/janus-meta-registry",
+    "branch": "research/gull-geometry-interface-comparison-20261108",
+    "path": "registry/uap/JANUS-GULL-SPACE-PERCEPTION-GEOMETRY-VS-INTERFACE-V1-2026-11-08.json",
+    "mode": "APPEND_ONLY",
+    "state": "RESEARCH_DRAFT"
+  },
+  "source": {
+    "title": "Visual fields, foraging and collision vulnerability in gulls (Laridae)",
+    "doi": "10.1111/ibi.13360",
+    "year": 2024,
+    "authors": [
+      "Cantlay",
+      "Portugal",
+      "Martin"
+    ],
+    "n_individuals": 10,
+    "species": [
+      {
+        "name": "Larus argentatus",
+        "n": 4
+      },
+      {
+        "name": "Larus fuscus",
+        "n": 3
+      },
+      {
+        "name": "Rissa tridactyla",
+        "n": 3
+      }
+    ],
+    "published_cross_species_mean_and_SE_degrees": {
+      "binocular_max_width": [
+        35.1,
+        1.2
+      ],
+      "binocular_vertical_extent": [
+        111,
+        5.7
+      ],
+      "lateral_monocular_each_eye": [
+        142,
+        2
+      ],
+      "dorsal_anterior_blind_start": [
+        46,
+        1.3
+      ],
+      "binocular_peak_above_bill_axis": [
+        11.7,
+        1.7
+      ],
+      "overhead_blind_width": [
+        32.1,
+        5.5
+      ],
+      "rear_blind_width": [
+        40.7,
+        2.3
+      ]
+    },
+    "exact_individual_tables_name": "ibi13360-sup-0001-Tables.docx",
+    "original_individual_tables_imported": false,
+    "actual_neural_and_behavioral_trials_available": false,
+    "note": "Group measurements constrain optics only; maximum binocular width cannot be assumed constant over all elevations.",
+    "head_pitch_result": "The one-dimensional frontal proxy marks a horizontal forward ray blind at assumed 50° head-down pitch, consistent with published qualitative projection; NOT a validated 3D field map."
+  },
+  "hypotheses": [
+    {
+      "name": "Geometric spatial observer",
+      "criterion": "minimize squared azimuth reconstruction error with a 1-bit code; then optimize action given that code"
+    },
+    {
+      "name": "Hoffman-inspired fitness interface",
+      "criterion": "maximize expected action payoff with a 1-bit code; then measure angle reconstruction error"
+    }
+  ],
+  "synthetic_comparison": {
+    "input": "Same invented eight fully observed (prey/hazard, azimuth -12/-4/+4/+12 degrees) situations for both models",
+    "number_of_world_states": 8,
+    "exact_uniform_prior": "1/8",
+    "bits_per_code": 1,
+    "nontrivial_binary_encoders_exhaustively_checked": 127,
+    "exact_arithmetic": "Python Fraction; no random search",
+    "hazardous_utility_world": {
+      "utility_source": "Invented research task, not real gull observations",
+      "geometry_MSE_degrees_squared": "16",
+      "geometry_action_utility": "21/20",
+      "fitness_action_utility": "71/40",
+      "fitness_minus_geometry_utility": "29/40",
+      "payoff_units": "ARTIFICIAL"
+    },
+    "all_safe_utility_world": {
+      "geometry_utility": "3",
+      "fitness_utility": "3",
+      "difference": "0"
+    },
+    "theorem": "With the same raw observation Y, a fully unconstrained decision rule using Y can emulate any compressed interface C=f(Y). Therefore maximum unrestricted utility cannot be lower than utility from C.",
+    "empirical_behavioral_model_comparison_performed": false,
+    "real_gull_perception_theory_winner": null,
+    "inference": "The observed optical field geometry alone cannot distinguish geometry-oriented from payoff-oriented neural coding. A toy interface utility advantage is not empirical support for Hoffman's consciousness/spacetime hypothesis."
+  },
+  "relevant_science": [
+    {
+      "doi": "10.3758/s13423-015-0890-8",
+      "role": "Hoffman et al. interface theory (hypothesis)"
+    },
+    {
+      "doi": "10.1007/s10441-020-09400-0",
+      "role": "Fitness Beats Truth theorem under assumptions"
+    },
+    {
+      "doi": "10.1007/s13752-026-00531-0",
+      "role": "Mattes independent criticism (2026)"
+    }
+  ],
+  "code_evidence": {
+    "repo": "Hawkar-usls/Janus-Demiurge",
+    "code_PR": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/466",
+    "commit_sha": "a0a710ededd3bffc5e1f33230bf0d4b3bddbfd6f",
+    "source_data": "experiments/gull_space_models/laridae_visual_measurements_v1.json",
+    "model": "experiments/gull_space_models/janus_gull_geometry_interface_v1.py",
+    "test": "experiments/gull_space_models/test_janus_gull_geometry_interface_v1.py",
+    "workflow": ".github/workflows/janus-gull-space-geometry-interface-v1.yml",
+    "github_actions_run": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/42521990024",
+    "run_conclusion": "success",
+    "total_jobs_passed": 3,
+    "unit_tests_per_python": 12,
+    "test_pythons": [
+      "3.11",
+      "3.12"
+    ],
+    "total_unit_tests_passed": 24,
+    "uploaded_result_artifact": "janus-gull-space-evidence-and-exhaustive-comparison-42521990024",
+    "artifact_id": 13633299742,
+    "artifact_retention_days": 90,
+    "predecessor_science_corpus_PR": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/463",
+    "predecessor_meta_registry_PR": "https://github.com/Hawkar-usls/janus-meta-registry/pull/458",
+    "prior_native_candidate_research_gate": false
+  },
+  "proof_limitations": {
+    "full_3D_gull_retinal_view_generated": false,
+    "digitized_gull_brain_exists_in_this_work": false,
+    "behavioral_trials_reanalyzed": false,
+    "independent_individual_species_holdout": false,
+    "no_automatic_model_promotion": true,
+    "physical_space_hypothesis_verified": false,
+    "required_further_data": [
+      "Original individual tables with angle/elevation measurements",
+      "Head pitch and eye tracking paired to target detection",
+      "Trial-wise real prey/hazard and action/fitness outcomes",
+      "Predeclared loss functions and equal capacity",
+      "Independent birds and species for held-out behavior tests"
+    ],
+    "final_verdict": "PUBLISHED_GULL_OPTICAL_SUMMARY_CONSISTENCY_PASS__EXACT_SYNTHETIC_CAPACITY_TRADEOFF_PASS__NO_EMPIRICAL_HOFFMAN_VS_GEOMETRY_IDENTIFICATION",
+    "production_changed": false,
+    "NAS_changed": false
+  }
+}
