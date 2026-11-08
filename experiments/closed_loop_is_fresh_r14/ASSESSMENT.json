@@ -1,0 +1,57 @@
+{
+  "schema": "janus.closed_loop.r14_realtime_consumer_assessment.v1",
+  "status": "REAL_OPERATIONAL_BASELINE_PROFILE_VERIFIED_NO_OPTIMIZATION_TESTED",
+  "observed_at_source": "2026-11-08T17:11:29Z",
+  "experiment": {
+    "pr": 459,
+    "github_run_id": 42503712794,
+    "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/42503712794",
+    "job_id": 128801800944,
+    "baseline_main_sha": "a44942be5ed510d2aa58c4c3d33b580d771c29b8",
+    "source_state_sha": "ccb2f82edb0f1c61c460aa0a4521a9991e8d5eb2",
+    "model_task": "is_fresh",
+    "model_sha256": "30a35a12b9c864af6ff066fe30dd94ece681e81fa6e8b95c3c4a43dc3fd9c5a2",
+    "pre_registration_commit": "6200377978184360868c0f328adcc1b95f1f56c8",
+    "receipt_path": "experiments/closed_loop_is_fresh_r14/receipts/github-run-42503712794.json",
+    "artifact_sha256": "69170cda6cdb8dfbabc99f7aea819864222a13178ecd2ec8c6b01537e5d48ef1"
+  },
+  "baseline_results": {
+    "status": "FRESH_SOURCE_DIAGNOSTIC_ONLY",
+    "same_snapshot_all_repeats": true,
+    "behavioral_cases_per_repeat": 270,
+    "repeats": 3,
+    "individual_total_ms": [
+      397.139557,
+      303.372955,
+      296.297887
+    ],
+    "median_total_ms": 303.372955,
+    "median_catalog_ms": 10.102389,
+    "median_networkless_docker_ms": 292.466645,
+    "median_preflight_ms": 0.901216,
+    "median_receipt_serialization_ms": 0.030275,
+    "percent_of_consumer_call_in_networkless_docker": 96.405,
+    "source_workflow_wall_clock_seconds_approx": 48
+  },
+  "interpretation": {
+    "finding": "The existing Docker oracle dominates the local Python consumer call, but consumes only around 0.3s; whole CI run including two sequential jobs and GitHub setup took approximately 48s. Optimize workflow scheduling and runner overhead before weakening or caching provenance checks.",
+    "live_production_source": true,
+    "live_production_runtime_modified": false,
+    "run_from_pr_read_only": true,
+    "independently_governed_performance_validation": false,
+    "candidate_gain_measured": false,
+    "whole_workflow_compared": false,
+    "github_runner_minutes_measurement": "NOT_YET_SEPARATELY_ATTESTED",
+    "model_authorship": "EXTERNAL_OPEN_WEIGHTS_NOT_NATIVE_JANUS",
+    "status_does_not_establish_delivery_or_scientific_proof": true
+  },
+  "protection": {
+    "workflow_benchmark_job_retired": true,
+    "no_auto_merge": true,
+    "no_human_gate_bypass": true,
+    "no_private_skin_gpt": true,
+    "no_scientific_promotion": true,
+    "authority_delta": 0
+  },
+  "next_milestone": "Run a source-pinned, pre-registered review-only comparison of complete GitHub Actions setup and model-consumer execution; measure total charged runner seconds and preserved safety/behavior. Do not optimize 0.3s oracle by bypassing independent proof."
+}
