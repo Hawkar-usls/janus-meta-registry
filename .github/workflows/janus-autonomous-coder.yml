@@ -261,3 +261,98 @@ jobs:
           retention-days: 30
       - run: cat CONSUMPTION.json >> "$GITHUB_STEP_SUMMARY"
 
+  r13-reference-replay:
+    # One-time PR-only cross-implementation replay. No runtime/model adoption.
+    needs: contract
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.number == 459 &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.head.ref == 'janus/closed-loop-proof-gate-r1-20261108'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout observed PR source without persisted credentials
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Checkout original immutable R1.3 protocol commit
+        uses: actions/checkout@v4
+        with:
+          ref: 0f6cc28fa20ce5e484440afdbadbef57e430c2ef
+          path: _prereg
+          persist-credentials: false
+          sparse-checkout: |
+            experiments/closed_loop_retry_delay_r13/CHALLENGE_PROTOCOL.json
+      - name: Checkout exact older reviewed candidate from PR 379
+        uses: actions/checkout@v4
+        with:
+          ref: 2652dd70d8f65385316cd309d4a74db2b948dc46
+          path: _candidate
+          persist-credentials: false
+          sparse-checkout: |
+            candidate_modules/retry_delay
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Enforce preregistration byte identity and source pins
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test "$(git -C _candidate rev-parse HEAD)" = 2652dd70d8f65385316cd309d4a74db2b948dc46
+          test "$(git -C _prereg rev-parse HEAD)" = 0f6cc28fa20ce5e484440afdbadbef57e430c2ef
+          cmp _prereg/experiments/closed_loop_retry_delay_r13/CHALLENGE_PROTOCOL.json experiments/closed_loop_retry_delay_r13/CHALLENGE_PROTOCOL.json
+      - name: Pull existing pinned networkless Python image
+        run: docker pull python@sha256:1148dbb014615300fa7e713b2f94f550c0d1c69780c0805f84f093ceee34dd0b
+      - name: Execute alternate timeit methodology and same-function neutral control in Docker
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p _r13
+          docker run --rm \
+            --network none --read-only --user 65534:65534 \
+            --cap-drop ALL --security-opt no-new-privileges \
+            --memory 256m --cpus 1 --pids-limit 32 --ulimit cpu=45:45 \
+            --tmpfs /tmp:rw,noexec,nosuid,size=16m \
+            --mount "type=bind,src=$PWD,dst=/src,readonly" \
+            python@sha256:1148dbb014615300fa7e713b2f94f550c0d1c69780c0805f84f093ceee34dd0b \
+            python -I -B /src/modules/autonomy_loop/r13_independent_retry_replay.py \
+              --candidate-root /src/_candidate \
+              --source-head "$GITHUB_SHA" \
+              --run-id "$GITHUB_RUN_ID" > _r13/R13_REPORT.json
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+          r=json.loads(Path("_r13/R13_REPORT.json").read_bytes())
+          claimed=r.pop("report_sha256")
+          raw=json.dumps(r,sort_keys=True,separators=(",",":"),ensure_ascii=False,allow_nan=False).encode()
+          assert claimed==hashlib.sha256(raw).hexdigest()
+          assert r["schema"]=="janus.closed_loop.r13_cross_implementation_replay.v1"
+          assert r["challenge_preregistration_commit"]=="0f6cc28fa20ce5e484440afdbadbef57e430c2ef"
+          assert r["case_count"]==24
+          assert r["correctness_oracle_cases_per_variant"]==291
+          assert r["candidate_admitted_by_current_coder_policy"] is True
+          assert r["baseline_admitted_by_current_coder_policy"] is False
+          assert r["externally_independent_blind"] is False
+          assert r["reference_is_production_baseline"] is False
+          assert r["runtime_consumption_attested"] is False
+          assert r["production_promotion"] is False
+          assert r["auto_merge"] is False
+          assert r["authority_delta"]==0
+          r["report_sha256"]=claimed
+          print("JANUS_R13_REPORT_JSON="+json.dumps(r,sort_keys=True,separators=(",",":")))
+          PY
+      - name: Retain neutral-control raw timings for review, positive or negative
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-r13-cross-implementation-${{ github.run_id }}
+          path: |
+            _r13/R13_REPORT.json
+            experiments/closed_loop_retry_delay_r13/CHALLENGE_PROTOCOL.json
+          if-no-files-found: error
+          retention-days: 30
