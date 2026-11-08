@@ -213,3 +213,68 @@ auto-merge PR #379 or claim an autonomous, runtime-relevant improvement.
 The next justified performance study must use the **actual** operational
 consumer and its current production baseline with independent acceptance,
 and should optimize runner startup/overhead before nanosecond-scale helpers.
+
+
+## R1.4 — actual real operational is_fresh consumer (2026-11-08)
+
+Unlike the earlier retry_delay microbenchmark, this experiment used the
+**actual source from production main** and an existing model-authored module
+used by JANUS: is_fresh. The deployed main consumer source remained
+byte-identical, and no improved variant was proposed or evaluated.
+
+Pre-registered source bindings **before execution**:
+- Protocol commit: 6200377978184360868c0f328adcc1b95f1f56c8
+- Exact main consumer/snapshot commit: a44942be5ed510d2aa58c4c3d33b580d771c29b8
+- Exact autonomous model catalog commit:
+  ccb2f82edb0f1c61c460aa0a4521a9991e8d5eb2
+- is_fresh model-source SHA-256:
+  30a35a12b9c864af6ff066fe30dd94ece681e81fa6e8b95c3c4a43dc3fd9c5a2
+
+The existing GitHub Actions self-writer consumer workflow was used for a
+**one-time PR-only profile**, never for a manual production dispatch.
+The standard independent-operational-consumption job passed first;
+the additional profile job called the real Python consumer three times,
+including the regular SHA-verified registry verification and pinned
+**networkless** Docker checker with 270 behavioral cases per invocation.
+All three calls used the same real source snapshot and a frozen clock, and
+returned the same FRESH_SOURCE_DIAGNOSTIC_ONLY receipt SHA.
+
+Run and artifact:
+- https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/42503712794
+- Artifact SHA-256: 69170cda6cdb8dfbabc99f7aea819864222a13178ecd2ec8c6b01537e5d48ef1
+- Trial report SHA-256: eab25f1d8ab4c3b8b5179d57e8b54166f82023ebae9d80153da67264ea6e6f40
+
+Median stage timings over three real calls:
+
+| Component | Median |
+| --- | ---: |
+| Whole Python consumer probe | 303.373 ms |
+| Source-bound model catalog verification | 10.102 ms |
+| Networkless Docker oracle including startup and 270 checks | 292.467 ms |
+| Other preflight/timestamp work | 0.901 ms |
+| Receipt serialization (separately timed) | 0.030 ms |
+
+The Docker oracle accounts for ~96.4% **of one Python probe**, but this is
+only ~0.3 seconds per invocation. The full **two-job PR Actions run** wall
+clock from GitHub run creation to update was around 48 seconds, and this is
+not a precise billed runner-minutes total. The next engineering optimization
+should measure whole-workflow setup/checkout/image pull/runs before attempting
+to shave fractions of a second from an isolation boundary.
+
+Complete immutable research receipts:
+- experiments/closed_loop_is_fresh_r14/receipts/github-run-42503712794.json
+- experiments/closed_loop_is_fresh_r14/ASSESSMENT.json
+
+Recalculate stored source binding and timing arithmetic without network:
+
+    python modules/autonomy_loop/verify_r14_real_consumer.py
+
+The verifier does **not** independently remeasure CPU time or attest a
+candidate speedup; its adversarial tests reject fabricated medians, changed
+source SHAs, disabled model review and unjustified authority claims.
+
+The one-time experimental job was removed after the successful trial.
+The original production workflow was restored byte-for-byte. No change to
+main, scientific gates, model admission, private ACK gates, or runtime
+authority was made. R1.4 conclusion: **REAL_BASELINE_MEASURED,
+OPTIMIZATION_AND_EXTERNAL_INDEPENDENT_GAIN_OPEN**.
