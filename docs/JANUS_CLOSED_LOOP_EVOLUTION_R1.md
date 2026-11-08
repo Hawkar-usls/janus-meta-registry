@@ -99,3 +99,54 @@ improvement_attested=false. Neither a valid source fingerprint nor a green
 historical PR is a measured improvement. The next required steps remain a
 frozen baseline/holdout, actual isolated replay, and independent evidence
 replay before any possible runtime review.
+
+
+## R1.2 — completed reference microbenchmarks (2026-11-08)
+
+The measurement protocol was committed at
+4e688f25c96590e1b70062bc336d84aba728e49e **before** the first trial.
+Frozen sources: BASELINE.py SHA-256
+1a76285172a0891f910b94d7dad51d111a82faf36a84c386dd88b14005e94da0;
+candidate PR #379 commit 2652dd70d8f65385316cd309d4a74db2b948dc46,
+source SHA-256 a45bf9b5814e432a89334e46f8acac63a9fa1d2846dc393ed21e6dd6695b2611.
+The baseline uses min(cap, pow(2, attempt)); the candidate uses
+min(cap, 2 ** attempt). **The baseline is a frozen reference, not a
+verified current JANUS production implementation.**
+
+Three separate GitHub Actions PR jobs used the existing pinned Coder Python
+image, networkless, read-only, no-new-privileges, with a CPU and memory bound.
+Each checked the established 291-case oracle for both versions, 91 frozen
+training cases, an eight-case disjoint holdout, and eight paired timing
+measurements (median over five rounds of 40,000 calls per arm per case).
+
+| Run ID | Reference us/call | Candidate us/call | Difference | Regressions |
+| --- | ---: | ---: | ---: | ---: |
+| 42480998405 | 0.212325 | 0.202253 | -4.74% | 0 |
+| 42481202400 | 0.117771 | 0.114528 | -2.75% | 0 |
+| 42481453000 | 0.179658 | 0.172082 | -4.22% | 0 |
+
+All three screens reported ELIGIBLE_FOR_INDEPENDENT_REPLAY, **not**
+INDEPENDENTLY_REPLAYED, PRODUCTION_IMPROVED, or AUTO_MERGE_ELIGIBLE.
+Run-to-run latencies varied substantially, so this is an exploratory
+reference microbenchmark, not a reliable end-to-end performance improvement.
+
+Each run's full trial, raw paired values, input SHA references, screen verdict,
+Actions run/job IDs, and artifact archive digest is durably stored **as a new,
+never-overwritten JSON file** in
+experiments/closed_loop_retry_delay_r1/receipts/github-run-<RUN_ID>.json.
+
+Replay integrity offline with no GitHub token:
+
+    python modules/autonomy_loop/verify_retry_receipts.py
+
+This verifier checks the frozen protocol, exact input SHA bindings, disjoint
+train/holdout pairs, paired-screen arithmetic, immutable trial/verdict digests,
+run/artifact metadata, and non-escalation. It **does not rerun CPU timing** or
+independently attest the original worker; those must be checked separately by
+a different independently governed evaluator before any claim of adopted
+runtime optimization.
+
+The temporary PR-only benchmark job was removed from the proposed workflow
+after these three trials, restoring the existing production workflow unchanged.
+No main merge, runtime change, model promotion, private data access, paid model
+invocation, or scientific authority change was made.
