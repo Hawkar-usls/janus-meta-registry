@@ -10,7 +10,7 @@ IMAGE = "python@sha256:1148dbb014615300fa7e713b2f94f550c0d1c69780c0805f84f093cee
 CODE_PATHS = ("/modules/autonomy_coder/", "/tests/test_real_operational_self_writer_consumer.py",
               "/data/autonomy_loop/LATEST.json")
 STATE_PATHS = ("/STATE.json", "/MODULE_INDEX.json",
-               "/attempts/", "/receipts/", "/self_modules/")
+               "/attempts/", "/generated/", "/receipts/", "/self_modules/")
 
 
 def check(text):

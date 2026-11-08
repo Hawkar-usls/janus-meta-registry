@@ -48,6 +48,7 @@ jobs:
             /STATE.json
             /MODULE_INDEX.json
             /attempts/
+            /generated/
             /receipts/
             /self_modules/
           sparse-checkout-cone-mode: false
@@ -67,7 +68,7 @@ jobs:
           for p in _code/modules/autonomy_coder/real_operational_consumer.py _code/tests/test_real_operational_self_writer_consumer.py _code/data/autonomy_loop/LATEST.json _state/STATE.json _state/MODULE_INDEX.json; do
             test -f "$p"
           done
-          for d in _state/attempts _state/receipts _state/self_modules; do test -d "$d"; done
+          for d in _state/attempts _state/generated _state/receipts _state/self_modules; do test -d "$d"; done
           PYTHONPATH=_code/modules/autonomy_coder \
             python _code/modules/autonomy_coder/real_operational_consumer.py \
               --state _state \

@@ -49,3 +49,18 @@ reduced test coverage or loss of checksum verification. No changes to
 Secret Persistence Guard (push+PR dual guards remain), HOME, SkinGPT,
 Rowan, TIME-SAT E12C4/C023, private HRAiN, or scientific permissions.
 Do not auto-merge.
+
+
+## R1.5 correction: actual first fail-closed trial
+
+The first draft PR run 42514829305 failed in the real consumer's
+module_registry.verify call. It legitimately required the immutable
+generated/retry_delay/*.py source, so a sparse state tree without
+generated/ was **incomplete**. No runtime promotion or state change
+occurred. The source-bound guard caught this before admission.
+
+A separate, append-only amendment at
+experiments/actions_cost_r15/AMENDMENT_001.json records the failure
+and includes generated/ in the required state checkout. All original
+attempts/, receipts/, self_modules/, MODULE_INDEX.json and STATE.json
+checks remain mandatory. Do not retroactively rewrite PROTOCOL.json.
