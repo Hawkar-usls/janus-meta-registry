@@ -21,7 +21,7 @@ permissions:
 
 concurrency:
   group: janus-self-writer-real-consumer-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   independent-operational-consumption:
@@ -34,11 +34,23 @@ jobs:
         with:
           path: _code
           persist-credentials: false
+          sparse-checkout: |
+            /modules/autonomy_coder/
+            /tests/test_real_operational_self_writer_consumer.py
+            /data/autonomy_loop/LATEST.json
+          sparse-checkout-cone-mode: false
       - uses: actions/checkout@v4
         with:
           ref: ccb2f82edb0f1c61c460aa0a4521a9991e8d5eb2
           path: _state
           persist-credentials: false
+          sparse-checkout: |
+            /STATE.json
+            /MODULE_INDEX.json
+            /attempts/
+            /receipts/
+            /self_modules/
+          sparse-checkout-cone-mode: false
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
