@@ -150,3 +150,66 @@ The temporary PR-only benchmark job was removed from the proposed workflow
 after these three trials, restoring the existing production workflow unchanged.
 No main merge, runtime change, model promotion, private data access, paid model
 invocation, or scientific authority change was made.
+
+
+## R1.3 — separate timeit implementation and neutral timing control
+
+The alternate measurement policy was immutably preregistered at
+0f6cc28fa20ce5e484440afdbadbef57e430c2ef **before** the R1.3
+GitHub Actions run. This is a separate implementation within the same
+repository/organization, **not** an external blind independent evaluation.
+
+- R1.3 run: https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/42482603402
+- Source PR head: 2ec50e0aede9ebc4331abfe4f5e45020dd5fb5de
+- GitHub PR-event checkout **synthetic merge** SHA: 02ebf0f5a4c693e5250cd7e40d2a67c833cef0e6
+- The two SHAs are intentionally distinct; GitHub commit metadata confirms
+  that the synthetic merge includes the PR head as part of its merge message.
+- Source artifact archive SHA-256:
+  0b5f0d3baeb6ecdfcd66a3b52fdf20c59f3e83efbfd56483108013ba42e40c01
+- Trial report SHA-256: 5caadddd01a4b7912fd95ac726ea8e132588b51ed39800efbb30e71a33df540e
+
+The separate implementation uses Python's timeit, 24 newly generated
+challenge inputs disjoint from the *R1.2 comparison's* training/holdout
+manifest, seven repetitions of 30,000 operations per case, alternating
+execution order, and a same-function-versus-itself neutral timing control.
+
+| R1.3 source | Mean microseconds/call |
+| --- | ---: |
+| Frozen pow(2, attempt) reference | 0.170690 |
+| Qwen-authored 2 ** attempt candidate | 0.165693 |
+| Difference | 0.004997 (2.93%) |
+| Mean absolute same-function neutral control difference | 0.002811 |
+
+All 24 measured pairs favoured the candidate; in 5/24, the same-function
+neutral difference was at least the observed candidate/reference gain.
+The reported gain is too small to infer production benefit from these
+measurements alone.
+
+**Critical applicability fact:** the current reviewed JANUS Coder AST
+admission policy rejects pow() calls. The R1.2/R1.3 frozen reference
+is therefore not an admissible generated Coder module. The actual
+source-pinned real_operational_consumer.py uses the model-authored
+is_fresh module, not retry_delay. This experiment provides **zero proof**
+that retry_delay changes the performance of the live operational path.
+
+The 24 paired raw timing arrays, control arrays, preregistration binding,
+GitHub source run/job and artifact archive digest are preserved in
+experiments/closed_loop_retry_delay_r13/receipts/github-run-42482603402.json.
+A separately maintained, offline **arithmetic** replayer is available at:
+
+    python modules/autonomy_loop/verify_r13_receipt.py
+
+It recalculates medians/means, checks challenge input regeneration,
+identities and authority boundaries, and rejects forged raw timings
+even if an attacker changes the report's own digest. It does **not**
+produce an independent physical timing run or an externally signed witness.
+
+The final no-production-admission assessment is stored in
+experiments/closed_loop_retry_delay_r13/ASSESSMENT.json.
+
+The one-time benchmarking GitHub Actions job was retired and the original
+workflow restored byte-for-byte. Do **not** use this experiment to
+auto-merge PR #379 or claim an autonomous, runtime-relevant improvement.
+The next justified performance study must use the **actual** operational
+consumer and its current production baseline with independent acceptance,
+and should optimize runner startup/overhead before nanosecond-scale helpers.
