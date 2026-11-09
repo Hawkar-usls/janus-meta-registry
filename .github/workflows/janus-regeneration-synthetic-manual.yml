@@ -1,0 +1,49 @@
+name: JANUS | Regeneration synthetic E01-E02 (manual, bounded)
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: janus-regeneration-synthetic
+  cancel-in-progress: true
+
+jobs:
+  synthetic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: E01 — abstract model, fixed seeds
+        run: |
+          python3 research/regeneration/janus_regeneration_v1.py --output janus_regeneration_E01_results.json
+      - name: E02 — alternate causal structure
+        run: |
+          python3 research/regeneration/janus_regeneration_topology_E02.py --output janus_regeneration_E02_results.json
+      - name: Assert model checks and result integrity
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, hashlib
+          with open("janus_regeneration_E01_results.json", encoding="utf-8") as f:
+              a=json.load(f)
+          with open("janus_regeneration_E02_results.json", encoding="utf-8") as f:
+              b=json.load(f)
+          assert all(a["internal_checks"].values())
+          assert len(a["summaries"])==11 and a["total_runs"]==2816
+          assert len(b["results"])==4 and b["total_runs"]==3584
+          assert b["results"]["product"]["ablate_nerve"]["organized_tissue_proxy"] < b["results"]["geometric_mean"]["ablate_nerve"]["organized_tissue_proxy"]
+          for name in ("janus_regeneration_E01_results.json", "janus_regeneration_E02_results.json"):
+              with open(name,"rb") as f:
+                  print(name,hashlib.sha256(f.read()).hexdigest())
+          PY
+      - name: Upload machine-readable evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-regeneration-synthetic-e01-e02
+          path: |
+            janus_regeneration_E01_results.json
+            janus_regeneration_E02_results.json
+          retention-days: 7
