@@ -1,0 +1,368 @@
+{
+  "schema": "janus.meta_registry.cousteau.argo_holdout_evidence.v1",
+  "artifact_id": "JANUS-COUSTEAU-ARGO-90-BLOCKED-STRESS-TEST-2026-11-09",
+  "recorded_on": "2026-11-09",
+  "status": "REAL_ARGO_DATA_EVALUATED__NOT_PROMOTED",
+  "source_run": "42585534673",
+  "test_run": "42590615767",
+  "test_run_url": "https://github.com/Hawkar-usls/Janus-Cosmos/actions/runs/42590615767",
+  "repository": "Hawkar-usls/Janus-Cosmos",
+  "branch": "experiment/cousteau-southern-ocean-20261109",
+  "source_path": "data/cousteau/southern_ocean/argo_holdout_stress/argo-90-external-holdout-42585534673.json",
+  "source_blob_sha": "a2c0b69038179ea8477c8492b1c9d124a12b6f0b",
+  "test_type": "Retrospective float-disjoint geographic, seasonal, and year split stress tests",
+  "late_note": "These tests were designed after inspection of initial training results; exploratory posthoc analyses not preregistered independent external test.",
+  "results": {
+    "limitations": [
+      "Convenience sample of 90 floats, not representative of all Southern Ocean.",
+      "Year-heldout test is a retrospective period split, not immutable future observations.",
+      "Geographic heldout tests measure extrapolation across sparse sampled regions, not glacier melt.",
+      "No source data from IBCSO/MEOP/BGC are used in this benchmark.",
+      "Seasonal group holdout is a deliberate distribution shift and must not be described as one-month future forecast.",
+      "Individual depth levels interpolated between observed pressure levels per predeclared QC rule."
+    ],
+    "model_losses_against_baseline": [],
+    "model_promotion_authorized": false,
+    "model_spec": "unchanged fixed alpha=10 Ridge, 9 predictors; training-only standardization; heldout group",
+    "sample_float_count": 90,
+    "scenarios": [
+      {
+        "claims": "RETROSPECTIVE_GEO_TEMPORAL_STRESS_TEST_ONLY",
+        "models": {
+          "psal_psu": {
+            "depth_only_training_mean": {
+              "mae": 0.17278,
+              "rmse": 0.214021
+            },
+            "fixed_alpha": 10,
+            "n_test_levels": 250,
+            "n_train_levels": 189,
+            "ridge": {
+              "mae": 0.153649,
+              "rmse": 0.199991
+            },
+            "ridge_beats_baseline": true,
+            "rmse_delta_baseline_minus_ridge": 0.01403,
+            "status": "EVALUATED"
+          },
+          "temp_c": {
+            "depth_only_training_mean": {
+              "mae": 2.087813,
+              "rmse": 2.818014
+            },
+            "fixed_alpha": 10,
+            "n_test_levels": 250,
+            "n_train_levels": 189,
+            "ridge": {
+              "mae": 1.283784,
+              "rmse": 1.757301
+            },
+            "ridge_beats_baseline": true,
+            "rmse_delta_baseline_minus_ridge": 1.060713,
+            "status": "EVALUATED"
+          }
+        },
+        "name": "future_year_2024_vs_2022_2023",
+        "status": "EVALUATED",
+        "test_float_count": 51,
+        "train_float_count": 39
+      },
+      {
+        "claims": "RETROSPECTIVE_GEO_TEMPORAL_STRESS_TEST_ONLY",
+        "models": {
+          "psal_psu": {
+            "depth_only_training_mean": {
+              "mae": 0.172161,
+              "rmse": 0.202346
+            },
+            "fixed_alpha": 10,
+            "n_test_levels": 75,
+            "n_train_levels": 364,
+            "ridge": {
+              "mae": 0.143761,
+              "rmse": 0.182859
+            },
+            "ridge_beats_baseline": true,
+            "rmse_delta_baseline_minus_ridge": 0.019487,
+            "status": "EVALUATED"
+          },
+          "temp_c": {
+            "depth_only_training_mean": {
+              "mae": 1.607523,
+              "rmse": 2.374299
+            },
+            "fixed_alpha": 10,
+            "n_test_levels": 75,
+            "n_train_levels": 364,
+            "ridge": {
+              "mae": 1.150826,
+              "rmse": 1.383999
+            },
+            "ridge_beats_baseline": true,
+            "rmse_delta_baseline_minus_ridge": 0.9903,
+            "status": "EVALUATED"
+          }
+        },
+        "name": "winter_JJA_vs_other_seasons",
+        "status": "EVALUATED",
+        "test_float_count": 15,
+        "train_float_count": 75
+      },
+      {
+        "claims": "RETROSPECTIVE_GEO_TEMPORAL_STRESS_TEST_ONLY",
+        "models": {
+          "psal_psu": {
+            "depth_only_training_mean": {
+              "mae": 0.216508,
+              "rmse": 0.254642
+            },
+            "fixed_alpha": 10,
+            "n_test_levels": 110,
+            "n_train_levels": 329,
+            "ridge": {
+              "mae": 0.162932,
+              "rmse": 0.200347
+            },
+            "ridge_beats_baseline": true,
+            "rmse_delta_baseline_minus_ridge": 0.054295,
+            "status": "EVALUATED"
+          },
+          "temp_c": {
+            "depth_only_training_mean": {
+              "mae": 3.335076,
+              "rmse": 3.868649
+            },
+            "fixed_alpha": 10,
+            "n_test_levels": 110,
+            "n_train_levels": 329,
+            "ridge": {
+              "mae": 1.472389,
+              "rmse": 1.808
+            },
+            "ridge_beats_baseline": true,
+            "rmse_delta_baseline_minus_ridge": 2.060649,
+            "status": "EVALUATED"
+          }
+        },
+        "name": "lat_60S_or_south_vs_north_of_60S",
+        "status": "EVALUATED",
+        "test_float_count": 23,
+        "train_float_count": 67
+      },
+      {
+        "claims": "RETROSPECTIVE_GEO_TEMPORAL_STRESS_TEST_ONLY",
+        "models": {
+          "psal_psu": {
+            "depth_only_training_mean": {
+              "mae": 0.209237,
+              "rmse": 0.260953
+            },
+            "fixed_alpha": 10,
+            "n_test_levels": 329,
+            "n_train_levels": 110,
+            "ridge": {
+              "mae": 0.170819,
+              "rmse": 0.230391
+            },
+            "ridge_beats_baseline": true,
+            "rmse_delta_baseline_minus_ridge": 0.030562,
+            "status": "EVALUATED"
+          },
+          "temp_c": {
+            "depth_only_training_mean": {
+              "mae": 3.301958,
+              "rmse": 4.288456
+            },
+            "fixed_alpha": 10,
+            "n_test_levels": 329,
+            "n_train_levels": 110,
+            "ridge": {
+              "mae": 1.946184,
+              "rmse": 2.800399
+            },
+            "ridge_beats_baseline": true,
+            "rmse_delta_baseline_minus_ridge": 1.488057,
+            "status": "EVALUATED"
+          }
+        },
+        "name": "lat_50_to_60S_vs_south_of_60S",
+        "status": "EVALUATED",
+        "test_float_count": 67,
+        "train_float_count": 23
+      },
+      {
+        "claims": "RETROSPECTIVE_GEO_TEMPORAL_STRESS_TEST_ONLY",
+        "models": {
+          "psal_psu": {
+            "depth_only_training_mean": {
+              "mae": 0.191778,
+              "rmse": 0.242603
+            },
+            "fixed_alpha": 10,
+            "n_test_levels": 134,
+            "n_train_levels": 305,
+            "ridge": {
+              "mae": 0.164095,
+              "rmse": 0.220986
+            },
+            "ridge_beats_baseline": true,
+            "rmse_delta_baseline_minus_ridge": 0.021617,
+            "status": "EVALUATED"
+          },
+          "temp_c": {
+            "depth_only_training_mean": {
+              "mae": 2.385072,
+              "rmse": 3.12819
+            },
+            "fixed_alpha": 10,
+            "n_test_levels": 134,
+            "n_train_levels": 305,
+            "ridge": {
+              "mae": 1.34263,
+              "rmse": 1.646311
+            },
+            "ridge_beats_baseline": true,
+            "rmse_delta_baseline_minus_ridge": 1.481879,
+            "status": "EVALUATED"
+          }
+        },
+        "name": "longitude_-180_-90E_vs_others",
+        "status": "EVALUATED",
+        "test_float_count": 27,
+        "train_float_count": 63
+      },
+      {
+        "claims": "RETROSPECTIVE_GEO_TEMPORAL_STRESS_TEST_ONLY",
+        "models": {
+          "psal_psu": {
+            "depth_only_training_mean": {
+              "mae": 0.160783,
+              "rmse": 0.189251
+            },
+            "fixed_alpha": 10,
+            "n_test_levels": 76,
+            "n_train_levels": 363,
+            "ridge": {
+              "mae": 0.138946,
+              "rmse": 0.161078
+            },
+            "ridge_beats_baseline": true,
+            "rmse_delta_baseline_minus_ridge": 0.028173,
+            "status": "EVALUATED"
+          },
+          "temp_c": {
+            "depth_only_training_mean": {
+              "mae": 1.293596,
+              "rmse": 1.871599
+            },
+            "fixed_alpha": 10,
+            "n_test_levels": 76,
+            "n_train_levels": 363,
+            "ridge": {
+              "mae": 1.245082,
+              "rmse": 1.456566
+            },
+            "ridge_beats_baseline": true,
+            "rmse_delta_baseline_minus_ridge": 0.415033,
+            "status": "EVALUATED"
+          }
+        },
+        "name": "longitude_-90_0E_vs_others",
+        "status": "EVALUATED",
+        "test_float_count": 16,
+        "train_float_count": 74
+      },
+      {
+        "claims": "RETROSPECTIVE_GEO_TEMPORAL_STRESS_TEST_ONLY",
+        "models": {
+          "psal_psu": {
+            "depth_only_training_mean": {
+              "mae": 0.186599,
+              "rmse": 0.212591
+            },
+            "fixed_alpha": 10,
+            "n_test_levels": 98,
+            "n_train_levels": 341,
+            "ridge": {
+              "mae": 0.169506,
+              "rmse": 0.202188
+            },
+            "ridge_beats_baseline": true,
+            "rmse_delta_baseline_minus_ridge": 0.010403,
+            "status": "EVALUATED"
+          },
+          "temp_c": {
+            "depth_only_training_mean": {
+              "mae": 1.849931,
+              "rmse": 2.291106
+            },
+            "fixed_alpha": 10,
+            "n_test_levels": 98,
+            "n_train_levels": 341,
+            "ridge": {
+              "mae": 1.011419,
+              "rmse": 1.371562
+            },
+            "ridge_beats_baseline": true,
+            "rmse_delta_baseline_minus_ridge": 0.919544,
+            "status": "EVALUATED"
+          }
+        },
+        "name": "longitude_0_90E_vs_others",
+        "status": "EVALUATED",
+        "test_float_count": 20,
+        "train_float_count": 70
+      },
+      {
+        "claims": "RETROSPECTIVE_GEO_TEMPORAL_STRESS_TEST_ONLY",
+        "models": {
+          "psal_psu": {
+            "depth_only_training_mean": {
+              "mae": 0.173617,
+              "rmse": 0.19996
+            },
+            "fixed_alpha": 10,
+            "n_test_levels": 131,
+            "n_train_levels": 308,
+            "ridge": {
+              "mae": 0.140487,
+              "rmse": 0.175344
+            },
+            "ridge_beats_baseline": true,
+            "rmse_delta_baseline_minus_ridge": 0.024616,
+            "status": "EVALUATED"
+          },
+          "temp_c": {
+            "depth_only_training_mean": {
+              "mae": 2.518464,
+              "rmse": 3.210584
+            },
+            "fixed_alpha": 10,
+            "n_test_levels": 131,
+            "n_train_levels": 308,
+            "ridge": {
+              "mae": 1.511784,
+              "rmse": 1.919907
+            },
+            "ridge_beats_baseline": true,
+            "rmse_delta_baseline_minus_ridge": 1.290677,
+            "status": "EVALUATED"
+          }
+        },
+        "name": "longitude_90_180E_vs_others",
+        "status": "EVALUATED",
+        "test_float_count": 27,
+        "train_float_count": 63
+      }
+    ],
+    "schema": "janus.cousteau.argo_stress_holdout.v1",
+    "source_obs_sha256": "bb6d3f30f80dd57d6eb5159d5b1fccdf3fad0a1edcc9afca320b7ec02b726497",
+    "source_run": "42585534673",
+    "status": "REPRODUCED_STRATIFIED_RESTROSPECTIVE_QC_STRESS_TEST",
+    "unevaluable_splits": [],
+    "validation_scopes": "No tuning on any holdout, distinct WMO floats across train/test"
+  },
+  "interpretation": "Reported 'beats baseline' only against fixed train-only depth mean; does not certify extrapolation to the full Southern Ocean or validate physical heat transport, glacier melt, or causal forecast.",
+  "promote_allowed": false,
+  "future_gate": "Independent external floats/years not used during design and uncensored calibration/evaluation of confidence intervals before any production use"
+}
