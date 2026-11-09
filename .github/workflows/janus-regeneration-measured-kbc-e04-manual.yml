@@ -1,0 +1,44 @@
+name: JANUS | E04 Measured SCOBY physical properties (manual)
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: janus-measured-kbc-e04
+  cancel-in-progress: true
+
+jobs:
+  reproduce-measured-analysis:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Recompute E04 with stdlib Python
+        run: |
+          python3 research/regeneration/janus_regeneration_materials_E04.py \
+            --output JANUS_E04_KBC_MEASURED_MATERIALS_RESULTS.json
+      - name: Check boundaries and published mean calculations
+        run: |
+          python3 - <<'PY'
+          import json, math, pathlib
+          r = json.loads(pathlib.Path("JANUS_E04_KBC_MEASURED_MATERIALS_RESULTS.json").read_text())
+          assert r["clinical_regeneration_claim_permitted"] is False
+          assert r["n_reported_primary_properties"] == 17
+          a = r["same_study_nominal_ratios"]
+          assert math.isclose(a["lyophilized_vs_wet_tensile_strength_ratio"], 14.36/1.66, abs_tol=0.00001)
+          assert math.isclose(a["glycerol_vs_unmodified_swelling_ratio"], 321.20/95, abs_tol=0.00001)
+          u = r["one_gram_dry_mass_normalized_uptake"]
+          assert u["unmodified"]["water_added_g_from_published_swelling"] == 0.95
+          assert u["glycerol"]["water_added_g_from_published_swelling"] == 3.212
+          assert r["gating"]["human_skin_wound_repair_effect_measured"] is False
+          print("E04 PASS: measured values recomputed, clinical claim closed")
+          PY
+      - name: Save verification results
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-regeneration-measured-e04
+          path: JANUS_E04_KBC_MEASURED_MATERIALS_RESULTS.json
+          retention-days: 7
