@@ -1,0 +1,181 @@
+{
+  "schema": "janus.research.open009e_historical_diagnostic.v1",
+  "record_id": "JANUS-OPEN-CAUSALITY-009E-HISTORICAL-NOAA-LATE-CHOICE-RESULT-2026-11-10",
+  "parent_program": "JANUS-OPEN-CAUSALITY-009",
+  "record_type": "APPEND_ONLY_RETROSPECTIVE_DIAGNOSTIC_RESULT",
+  "date_utc": "2026-11-10",
+  "status": "COMPLETE_OFFLINE_DIAGNOSTIC__NO_RETROCAUSALITY_EVIDENCE",
+  "code_repository": "Hawkar-usls/Janus-Demiurge",
+  "code_pr": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/497",
+  "code_pr_draft_at_evidence": true,
+  "source_head_commit": "5691385213882304e11fad4a20f7c62c3087d994",
+  "source_script": "experiments/ocean_transformer/open_causality_009/backtest_009e.py",
+  "source_workflow": ".github/workflows/janus-ocean-009e-historical.yml",
+  "workflow_run_url": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/42779892552",
+  "workflow_run_id": 42779892552,
+  "workflow_job_id": 129707114117,
+  "workflow_conclusion": "success",
+  "offline_existing_unit_tests": {
+    "suite1_pass": 27,
+    "suite2_pass": 23,
+    "total_pass": 50
+  },
+  "evidence_artifact": {
+    "id": 13745567621,
+    "name": "janus-open009e-historical-evidence-42779892552",
+    "size_bytes": 6812,
+    "sha256": "87da359fa52b7b16e9c033652050d2b2f8f0f7b5e4df4c3e87d956f13720bf39",
+    "expires_at_utc": "2026-12-10T08:05:23Z",
+    "files": [
+      "noaa_early_hist_009e.json",
+      "noaa_backtest_result_009e.json",
+      "calibrator_early_009e.json",
+      "calibrator_control_result_009e.json"
+    ]
+  },
+  "noaa": {
+    "source": "NOAA SURFRAD Bondville, Illinois, official daily 1-min irradiance",
+    "source_url_pattern": "https://gml.noaa.gov/aftp/data/radiation/surfrad/bon/2025/bon25DDD.dat",
+    "kind": "REAL_HISTORICAL_PHYSICAL_MEASUREMENTS",
+    "test_class": "RETROSPECTIVE_CHRONOLOGICAL_HOLDOUT_NOT_INDEPENDENTLY_EARLY_PRECOMMITTED",
+    "training_policy": "For each target date T fixed 2025-11-01..08, forecast from original fixed noaa_009a.forecast with source days T-9 through T-6, no target read until local early manifest fsynced.",
+    "target_dates": [
+      "2025-11-01",
+      "2025-11-02",
+      "2025-11-03",
+      "2025-11-04",
+      "2025-11-05",
+      "2025-11-06",
+      "2025-11-07",
+      "2025-11-08"
+    ],
+    "n_days": 8,
+    "n_hours": 192,
+    "all_target_hours_valid": true,
+    "early_manifest_canonical_sha256": "964d528104ef68c82cf8ad64acc396a618b6b0efca205060ad4ffc11ceb66e53",
+    "primary_metric": "MAE_W_M2_LOWER_IS_BETTER",
+    "pooled_mae_W_m2": {
+      "JANUS_PHYSICS_HEURISTIC": 35.485273,
+      "clear_sky_Haurwitz": 20.058196,
+      "diurnal_4day": 34.643825,
+      "persistence": 42.813361
+    },
+    "comparison": {
+      "janus_beats_all_baselines": false,
+      "janus_percent_worse_than_clear_sky": 76.911588,
+      "janus_percent_better_than_persistence": 17.116358,
+      "janus_percent_worse_than_diurnal": 2.428854
+    },
+    "daily": [
+      {
+        "date": "2025-11-01",
+        "janus": 37.60433,
+        "clear_sky": 41.1721,
+        "diurnal": 35.444208,
+        "persistence": 47.385972,
+        "source_sha256": "b8abc16f1a2978f459160e29466c63daa5a420de590dd2da4831244b4ee7f911"
+      },
+      {
+        "date": "2025-11-02",
+        "janus": 44.370729,
+        "clear_sky": 14.508804,
+        "diurnal": 43.891992,
+        "persistence": 43.315938,
+        "source_sha256": "0fdfc522e40e77b6830b7f3ebab87afe71551cdf4ac34865f63c98358cfa3e9b"
+      },
+      {
+        "date": "2025-11-03",
+        "janus": 72.288626,
+        "clear_sky": 9.584027,
+        "diurnal": 65.618593,
+        "persistence": 93.644652,
+        "source_sha256": "81436969b2cedd392bd89671c606722321a3c7cb6c57a0a7d39253cea70cc5c2"
+      },
+      {
+        "date": "2025-11-04",
+        "janus": 22.505506,
+        "clear_sky": 24.105955,
+        "diurnal": 20.733472,
+        "persistence": 26.179444,
+        "source_sha256": "4419d5610d1c072e1f2403894188aeba298c85334d5e52a5a604a4fb6ef73958"
+      },
+      {
+        "date": "2025-11-05",
+        "janus": 22.253933,
+        "clear_sky": 5.111214,
+        "diurnal": 20.667101,
+        "persistence": 19.046528,
+        "source_sha256": "943248789940a3382634432f3abe2c476a4fddbe034b2ebe480352ce70dbbcdb"
+      },
+      {
+        "date": "2025-11-06",
+        "janus": 21.004107,
+        "clear_sky": 9.915851,
+        "diurnal": 22.948212,
+        "persistence": 8.924722,
+        "source_sha256": "a97f2380cbecbad5c4598e4dcb7e5b5ca2afaeb5c23945a9cece585b5ce0b8a0"
+      },
+      {
+        "date": "2025-11-07",
+        "janus": 12.351895,
+        "clear_sky": 8.054586,
+        "diurnal": 14.649236,
+        "persistence": 43.827846,
+        "source_sha256": "4bd592ae73dea668693a7c0d7d173a7950240b453573eef75a2d04507a17c8bb"
+      },
+      {
+        "date": "2025-11-08",
+        "janus": 51.503058,
+        "clear_sky": 48.013034,
+        "diurnal": 53.197785,
+        "persistence": 60.181787,
+        "source_sha256": "0f0d889842212d15b201d5efa51e5772407919db8da63380f7b38c8bdf8fe680"
+      }
+    ],
+    "interpretation": "Fixed JANUS solar heuristic loses to clear-sky and four-day mean on historical holdout; no hidden retuning, no replacement of failed days. Retrospective split tests code skill but does not independently establish a 2025 prospective forecast."
+  },
+  "calibrator": {
+    "kind": "SOFTWARE_SIMULATION_DIAGNOSTIC_NOT_JANUSTINYTRANSFORMER",
+    "training": "4096-step Markov chain p_same=0.72, public fixed seed 0x4A414E5553, learn Laplace/Beta-smoothed p_stay",
+    "learned_p_stay": 0.7195508908957774,
+    "n_future_bits": 1024,
+    "early_commit_mode": "local fsync before later OS token_bytes, archive witness created only after both phases",
+    "independent_late_random_bits": {
+      "matches": 537,
+      "accuracy": 0.52441406,
+      "one_sided_binom_p": 0.06283311215067007,
+      "brier": 0.28748234
+    },
+    "predictable_markov_positive_control": {
+      "matches": 719,
+      "accuracy": 0.70214844,
+      "one_sided_binom_p_under_iid_fair_null": 1.847294065062396e-39,
+      "brier": 0.20943885
+    },
+    "deliberate_dependency_positive_control": {
+      "matches": 596,
+      "accuracy": 0.58203125,
+      "one_sided_binom_p_under_iid_fair_null": 8.475468621158988e-8,
+      "brier": 0.26218253
+    },
+    "fair_baseline_brier": 0.25,
+    "independent_anomaly_at_alpha_0p001": false,
+    "conclusion": "No anomalous prediction of independent late choice. Positive controls validate response to built-in statistical dependence; they are NOT physical evidence of future-to-past influence.",
+    "limitations": [
+      "Local OS RNG is not an independently chosen physical later intervention.",
+      "The early forecast is hashed and fsynced but not independently witnessed before the late random choice.",
+      "Markov toy is not the full two-phase Principle of Janus implementation.",
+      "Injected correlation is an explicitly synthetic positive control.",
+      "No QPU or actual optical detector used."
+    ]
+  },
+  "scientific_boundaries": {
+    "retrospective_trial_not_prospective": true,
+    "future_public_NOAA_009A_data_not_fetched": true,
+    "future_public_drand_009B_009D_not_fetched": true,
+    "original_009A_009B_009C_009D_forecasts_unchanged": true,
+    "retrocausality_proven": false,
+    "independent_custodian_signed": false,
+    "result_tuning_into_existing_preregistration_prohibited": true
+  }
+}
