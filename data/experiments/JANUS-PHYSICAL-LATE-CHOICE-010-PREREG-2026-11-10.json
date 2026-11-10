@@ -1,0 +1,92 @@
+{
+  "schema": "janus.research.physical_late_choice_010_prereg.v1",
+  "record_id": "JANUS-PHYSICAL-LATE-CHOICE-010-PREREG-2026-11-10",
+  "date_utc": "2026-11-10",
+  "phase": "BEFORE_ANY_PHYSICAL_DATA",
+  "status": "SOFTWARE_SIMULATION_PASS__PHYSICAL_EXPERIMENT_NOT_STARTED",
+  "scientific_scope": "Falsifiable operational test of effect of independently physically generated late choice C on all earlier raw physical A outcomes. No physical retrocausality result claimed.",
+  "H0": "P(A=1|do(C=0))=P(A=1|do(C=1)) for genuinely independent later choice C",
+  "standard_quantum_prediction": "Tr_B[(I tensor E_C)(rho_AB)]=Tr_B(rho_AB) for every local trace-preserving E_C",
+  "primary": {
+    "predeclared_n": 16384,
+    "fixed_alpha": 0.001,
+    "two_sided_test": "Fisher exact conditional 2x2, unconditioned on Bob outcome B",
+    "predeclared_effect": "P(A=1|C=1)-P(A=1|C=0)",
+    "missing_policy": "REFUSE_SCORING_IF_ANY_PREDECLARED_HERALDED_TRIAL_MISSING_OR_REORDERED",
+    "postselection_allowed": false,
+    "adaptive_stopping_allowed": false,
+    "outcome_conditioning_on_late_B_allowed": false
+  },
+  "physical_admission": {
+    "system": "Entangled photon heralded trials with Alice early detector, delayed Bob photon and late physical choice C of Bob measurement setting",
+    "choice": "Physical QRNG generated only after A has been independently logged on every trial, and physically applied before Bob B readout",
+    "chronology": "t_A+u_A < t_C-u_C and t_C+u_C < t_B-u_B on independently calibrated common timebase",
+    "independent_signed_append_only_early_witness_required": true,
+    "independent_QRNG_entropy_and_timing_audit_required": true,
+    "isolation_and_crosstalk_audit_required": true,
+    "source_and_firmware_digest_audit_required": true,
+    "all_shots_and_no_clicks_included": true,
+    "independent_analyst_and_new_lab_replication_required": true
+  },
+  "software": {
+    "repo": "Hawkar-usls/Janus-Demiurge",
+    "draft_pr": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/498",
+    "code_head_commit_at_admission": "0b3ac49d683cfdb90f2d93370f76dda09319f5f8",
+    "protocol_path": "experiments/ocean_transformer/late_choice_010/PROTOCOL_010.md",
+    "scorer_path": "experiments/ocean_transformer/late_choice_010/late_choice_010.py",
+    "ci_run": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/42784343021",
+    "ci_jobs_passed": 1,
+    "unit_tests_passed": 13,
+    "artifact_id": 13748281019,
+    "artifact_sha256": "4732a28cc19324f87aa445ba20485ea0f372a01538d8cee541378ff1b4a5b057",
+    "mode": "SIMULATION_ONLY"
+  },
+  "simulation": {
+    "n": 4096,
+    "raw_unconditional_C_by_A": [
+      [
+        1036,
+        1008
+      ],
+      [
+        1006,
+        1046
+      ]
+    ],
+    "unconditional_two_sided_fisher_p": 0.3024200272111925,
+    "raw_difference_P_A1": 0.016595903762450348,
+    "engineered_B": "B=A XOR C after late OS random C; synthetic, not entangled photons",
+    "postselected_B0_n": 2082,
+    "postselected_C_by_A": [
+      [
+        1036,
+        0
+      ],
+      [
+        0,
+        1046
+      ]
+    ],
+    "conditional_p_underflow_in_float": true,
+    "result": "NONE_OF_RAW_UNCONDITIONAL_CORRELATION_PASSED_ALPHA; POSTSELECTION_CREATES_FALSE_RETROCORRELATION"
+  },
+  "barriers": {
+    "actual_early_physical_measurements": 0,
+    "actual_late_physical_QRNG_choices": 0,
+    "actual_quantum_hardware_runs": 0,
+    "independent_external_custodian_signed": false,
+    "external_physical_replication": false,
+    "retrocausality_proven": false
+  },
+  "integrity": {
+    "original_OPEN009A_B_C_D_E_F_unchanged": true,
+    "QPU005_LIGHT008_unchanged": true,
+    "NAS_and_protected_containers_unchanged": true
+  },
+  "references": [
+    "https://doi.org/10.1103/PhysRevLett.84.1",
+    "https://doi.org/10.1007/s40509-024-00328-5",
+    "https://doi.org/10.1103/PhysRevLett.115.250402",
+    "https://csrc.nist.gov/pubs/sp/800/22/r1/upd1/final"
+  ]
+}
