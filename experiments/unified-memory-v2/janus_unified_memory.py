@@ -187,6 +187,12 @@ def verify(root: Path, db: Path) -> dict:
         c.close()
 
 def search(db: Path, phrase: str, limit: int=10):
+    # FTS5 punctuation is query syntax, not literal text. Treat user input as
+    # bounded phrase tokens so hyphens, quotes and colons cannot break search.
+    tokens = re.findall(r"\w+", phrase, flags=re.UNICODE)[:20]
+    if not tokens:
+        return []
+    safe_query = " AND ".join('"' + token + '"' for token in tokens)
     c = view(db)
     c.row_factory = sqlite3.Row
     try:
@@ -194,7 +200,7 @@ def search(db: Path, phrase: str, limit: int=10):
             SELECT d.path,d.title,d.namespace,d.sha256,d.source_url,
               snippet(docs_fts,2,'[',']','...',18) excerpt
             FROM docs_fts JOIN documents d ON d.id=docs_fts.rowid
-            WHERE docs_fts MATCH ? ORDER BY rank LIMIT ?""", (phrase, min(100,max(1,limit))))]
+            WHERE docs_fts MATCH ? ORDER BY rank LIMIT ?""", (safe_query, min(100,max(1,limit))))]
     finally:
         c.close()
 
