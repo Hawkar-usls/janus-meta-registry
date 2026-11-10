@@ -1,0 +1,66 @@
+name: JANUS Unified Memory v2 isolated full-corpus acceptance
+on:
+  pull_request:
+    paths:
+      - 'experiments/unified-memory-v2/**'
+      - '.github/workflows/janus-unified-memory-v2-isolated.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: janus-umv2-isolated-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  full-current-readonly:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Isolated fixture tests
+        run: python -m unittest discover -s experiments/unified-memory-v2/tests -v
+      - name: Build and verify real full-current registry
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/janus-umv2"
+          cd "$RUNNER_TEMP/janus-umv2"
+          ENGINE="$GITHUB_WORKSPACE/experiments/unified-memory-v2/janus_unified_memory.py"
+          python "$ENGINE" build --registry-root "$GITHUB_WORKSPACE" --db index.sqlite | tee build-report.json
+          python "$ENGINE" verify --registry-root "$GITHUB_WORKSPACE" --db index.sqlite | tee verify-report.json
+          python "$ENGINE" search --db index.sqlite --query SCOBY | tee search-scoby.json
+          python "$ENGINE" rebuild-verify --registry-root "$GITHUB_WORKSPACE" --db index.sqlite | tee recovery-report.json
+          python "$ENGINE" export --db index.sqlite --output graph.json | tee export-report.json
+      - name: Fail closed on incomplete coverage or mismatched recovery
+        shell: bash
+        run: |
+          python - <<'PY'
+          import os, json, pathlib
+          p=pathlib.Path(os.environ['RUNNER_TEMP'])/'janus-umv2'
+          b=json.loads((p/'build-report.json').read_text())
+          v=json.loads((p/'verify-report.json').read_text())
+          r=json.loads((p/'recovery-report.json').read_text())
+          e=json.loads((p/'export-report.json').read_text())
+          assert b['coverage_complete'] and b['read_only']
+          assert b['indexed_json']+b['excluded_self_export_json']==b['total_tracked_json']
+          assert b['indexed_json']==v['fts_rows']==r['indexed_json']==e['nodes']
+          assert b['explicit_relations']==v['explicit_relations']==e['links']
+          assert b['source_manifest_sha256']==r['source_manifest_sha256']
+          assert v['sqlite_integrity']=='PASS' and v['sha256_integrity']=='PASS'
+          assert r['recovery']=='PASS'
+          print('JANUS_UNIFIED_MEMORY_V2_REAL_CORPUS_PASS', b['indexed_json'],b['source_commit'])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-unified-memory-v2-readonly-proof
+          path: |
+            ${{ runner.temp }}/janus-umv2/*-report.json
+            ${{ runner.temp }}/janus-umv2/search-scoby.json
+            ${{ runner.temp }}/janus-umv2/graph.json
+          retention-days: 7
+          if-no-files-found: error
