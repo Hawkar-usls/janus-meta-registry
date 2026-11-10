@@ -2,7 +2,7 @@
 
 Automatically rebuilt from pinned public evidence.
 
-Status: **AUTONOMY_PARTIAL** · observed 2026-11-10T01:31:27Z
+Status: **AUTONOMY_PARTIAL** · observed 2026-11-10T01:47:52Z
 
 Current phase: **P0.2**
 
@@ -27,9 +27,9 @@ A successful collector is not proof of useful work or full autonomy.
 ```json
 {
   "native_model": {
-    "attempt_count": 1831,
+    "attempt_count": 1833,
     "promotion_count": 61,
-    "rejection_count": 1770,
+    "rejection_count": 1772,
     "checkpoint_sha256": "fc767adb812ac3bea54c44cbccfa9680941f95e2c8a77120559b41da044d9463",
     "last_training_status": "REJECTED",
     "retained_history_count": 64,
@@ -55,15 +55,15 @@ A successful collector is not proof of useful work or full autonomy.
     "waiting": 38
   },
   "home": {
-    "sequence": 312,
+    "sequence": 314,
     "source_main_sha": "d19db049b7e02eccd0b7e870c6dcf133f2c701ab"
   },
   "beetle_delivery": {
     "status": "WARN",
     "observed_at": "2026-11-09T20:09:21.861597Z",
-    "health_age_minutes": 322,
+    "health_age_minutes": 338,
     "health_clock": "VERIFIED_TIMESTAMP",
-    "routing_gate_age_minutes": 322,
+    "routing_gate_age_minutes": 338,
     "routing_gate_clock": "VERIFIED_TIMESTAMP",
     "max_health_age_minutes": 120,
     "total_pending": 2,
@@ -78,38 +78,35 @@ A successful collector is not proof of useful work or full autonomy.
   "native_decision": "NO_ACTION",
   "forge": "SEARCHED_NO_NOVEL_FALLBACK_CANDIDATE",
   "p03_preflight": {
-    "authority_delta": 0,
+    "schema": "janus.autonomy.p03_preflight.v1",
+    "status": "P03_PREFLIGHT_BLOCKED",
     "blockers": [
       "PRIVATE_ACK_AUTH_UNKNOWN",
       "PRODUCER_ROUTING_HELD"
     ],
-    "full_issue_162_acceptance": false,
-    "home_model_call_attested": false,
-    "home_sequence": 312,
-    "p03_acceptance": false,
-    "pre_route_gate_allowed": false,
+    "public_receiver_count": 18,
+    "public_receiver_pending": 0,
+    "public_receiver_lagging": 0,
     "private_ack_visibility": "UNAVAILABLE",
     "private_receiver_pending": 2,
+    "home_sequence": 314,
+    "home_model_call_attested": false,
+    "pre_route_gate_allowed": false,
     "producer_after_route_pending": 2,
-    "public_receiver_count": 18,
-    "public_receiver_lagging": 0,
-    "public_receiver_pending": 0,
-    "runtime_consumption_attested": false,
-    "schema": "janus.autonomy.p03_preflight.v1",
-    "status": "P03_PREFLIGHT_BLOCKED"
+    "authority_delta": 0,
+    "full_issue_162_acceptance": false,
+    "p03_acceptance": false,
+    "runtime_consumption_attested": false
   }
 }
 ```
 
 ## Evidence-driven tasks
 
-- **P0.2** ROWAN_GENERATION_DRIFT_COUNCIL: 42571682047
 - **P0.2** ROWAN_GENERATION_DRIFT_COORDINATION: 42571682047
 - **P0.2** ROWAN_GENERATION_DRIFT_COSMOS: 42571682047
-- **P0.2** COUNCIL_CANONICAL_DIGEST_DRIFT: "council"
-- **P0.2** COUNCIL_AURA_DIGEST_DRIFT: "council"
-- **P0.3** BEETLE_DELIVERY_HEALTH_STALE: {"age_minutes": 322, "max_minutes": 120}
-- **P0.3** BEETLE_ROUTING_GATE_STALE: {"age_minutes": 322, "max_minutes": 120}
+- **P0.3** BEETLE_DELIVERY_HEALTH_STALE: {"age_minutes": 338, "max_minutes": 120}
+- **P0.3** BEETLE_ROUTING_GATE_STALE: {"age_minutes": 338, "max_minutes": 120}
 - **P0.3** BEETLE_DELIVERY_PENDING: {"total_pending": 2, "receiver_states": {"UP_TO_DATE": 18, "ACK_UNAVAILABLE": 1}}
 - **P0.3** BEETLE_ROUTING_HELD: "HOLD_SINGLE_RECEIVER_BACKLOG"
 - **P0.3** EXTERNAL_WITNESS_BEETLE_LOCAL_RECEIVER: "SCHEDULE_SILENCE"
@@ -121,8 +118,9 @@ A successful collector is not proof of useful work or full autonomy.
 - **P0.5** SCOUT_MODEL_SYNTHESIS_DEGRADED: {"snapshots": 17, "synthesis": 0, "expected": 17}
 - **P2** SELF_WRITER_REVIEWED_TASKS_REMAINING: {"accepted": 9, "admitted": 10}
 - **P3** RECENT_TRAINING_ALL_REJECTED: 64
-- **P0.2** WORKFLOW_NOT_SUCCESS_CROSS_ORGAN_WITNESS: {"conclusion": "failure", "created_at": "2026-11-10T01:30:03Z", "event": "workflow_run", "head_sha": "101a75ed1a34f9c2a48e8a5907e85849b16be43a", "repository": "Hawkar-usls/janus-meta-registry", "run_attempt": 1, "run_id": 42736200614, "status": "OBSERVED", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/42736200614", "workflow": "janus-cross-organ-source-witness.yml"}
-- **P0.2** WORKFLOW_NOT_SUCCESS_ROWAN_WITNESS: {"conclusion": "failure", "created_at": "2026-11-10T01:30:03Z", "event": "workflow_run", "head_sha": "101a75ed1a34f9c2a48e8a5907e85849b16be43a", "repository": "Hawkar-usls/janus-meta-registry", "run_attempt": 1, "run_id": 42736200967, "status": "OBSERVED", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/42736200967", "workflow": "janus-rowan-ecosystem-sync-witness.yml"}
+- **P0.2** WORKFLOW_NOT_SUCCESS_COSMOS_WITNESS: {"repository": "Hawkar-usls/Janus-Cosmos", "workflow": "cosmos-rowan-ecosystem-witness.yml", "status": "OBSERVED", "run_id": 42738147683, "run_attempt": 1, "event": "workflow_run", "conclusion": "failure", "head_sha": "7e0d6db9516cfb586d15202c91d4e3799e720422", "created_at": "2026-11-10T01:46:29Z", "url": "https://github.com/Hawkar-usls/Janus-Cosmos/actions/runs/42738147683"}
+- **P0.2** WORKFLOW_NOT_SUCCESS_CROSS_ORGAN_WITNESS: {"repository": "Hawkar-usls/janus-meta-registry", "workflow": "janus-cross-organ-source-witness.yml", "status": "OBSERVED", "run_id": 42736549796, "run_attempt": 1, "event": "workflow_run", "conclusion": "failure", "head_sha": "e4de3fea26b4312eebdfbaf0c424956efd73d794", "created_at": "2026-11-10T01:32:55Z", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/42736549796"}
+- **P0.2** WORKFLOW_NOT_SUCCESS_ROWAN_WITNESS: {"repository": "Hawkar-usls/janus-meta-registry", "workflow": "janus-rowan-ecosystem-sync-witness.yml", "status": "OBSERVED", "run_id": 42736549910, "run_attempt": 1, "event": "workflow_run", "conclusion": "failure", "head_sha": "e4de3fea26b4312eebdfbaf0c424956efd73d794", "created_at": "2026-11-10T01:32:55Z", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/42736549910"}
 - **P0.3** P03_SOURCE_PREFLIGHT_BLOCKED: ["PRIVATE_ACK_AUTH_UNKNOWN", "PRODUCER_ROUTING_HELD"]
 
 ## Owner-directed self-assembly (registered, not executable)
