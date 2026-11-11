@@ -44,6 +44,10 @@ def fixture():
             return json.dumps({"results":[{"title":"Causality in quantum systems",
                 "doi":"https://doi.org/10.1234/demo","publication_date":"2022-01-01"}]}).encode()
         if host=="api.github.com":
+            if "/Janus-Demiurge/" in url:
+                return json.dumps({"workflow_runs":[{"id":43052765103,
+                    "head_sha":"7acccb8e52dddc4521fd14238284443c0d3057af",
+                    "status":"in_progress","conclusion":None}]}).encode()
             return json.dumps({"workflow_runs":[{"id":43038783896,
                 "head_sha":"2b9cc8c0e28f1922f51c2f0d645d58072499e9af",
                 "status":"completed","conclusion":"success"}]}).encode()
@@ -52,16 +56,19 @@ def fixture():
 
 
 class PublicIntake(unittest.TestCase):
-    def test_synthetic_four_source_receipt(self):
+    def test_synthetic_five_source_receipt(self):
         record=collect(fetch=fixture(),at="2026-11-11T15:00:00+00:00")
         self.assertEqual(record["schema"],SCHEMA)
-        self.assertEqual(record["source_count_success"],4)
-        self.assertEqual(record["source_count_attempted"],4)
+        self.assertEqual(record["source_count_success"],5)
+        self.assertEqual(record["source_count_attempted"],5)
         self.assertEqual(record["sources"]["gdelt_gkg"]["sample"]["first_row_field_count"],27)
         self.assertEqual(record["sources"]["gdelt_gkg"]["compressed_bytes"],len(make_gkg()))
         self.assertTrue(record["sources"]["gdelt_gkg"]["source_manifest_md5_verified"])
         self.assertIsNotNone(record["sources"]["wikipedia"]["article_metadata"])
         self.assertEqual(record["sources"]["tachyon_action"]["run_id"],43038783896)
+        self.assertEqual(record["sources"]["ocean_action"]["run_id"],43052765103)
+        self.assertFalse(record["sources"]["ocean_action"]["scientific_quality_of_model_verified"])
+        self.assertFalse(record["sources"]["ocean_action"]["candidate_auto_promoted"])
         self.assertFalse(record["training_permitted"])
         self.assertFalse(record["factual_claims_verified"])
         validate_receipt(record)
@@ -202,11 +209,33 @@ class PublicIntake(unittest.TestCase):
                 raise IntakeError("UPSTREAM_HTTP_429")
             return good(url,limit)
         r=collect(fetch=degraded)
-        self.assertEqual(r["source_count_success"],3)
+        self.assertEqual(r["source_count_success"],4)
         self.assertEqual(r["sources"]["openalex"]["status"],"PROVIDER_UNAVAILABLE")
         self.assertEqual(r["sources"]["openalex"]["reason"],"UPSTREAM_HTTP_429")
         self.assertEqual(r["sources"]["gdelt_gkg"]["status"],"PUBLIC_GKG_BATCH_STRUCTURALLY_READABLE")
         validate_receipt(r)
+
+    def test_ocean_action_unavailable_is_not_a_false_scientific_result(self):
+        good=fixture()
+        def no_ocean(url,limit):
+            if "/Janus-Demiurge/" in url:
+                raise IntakeError("UPSTREAM_HTTP_403")
+            return good(url,limit)
+        record=collect(fetch=no_ocean)
+        self.assertEqual(record["sources"]["ocean_action"]["status"],
+                         "PROVIDER_UNAVAILABLE")
+        self.assertEqual(record["source_count_attempted"],5)
+        self.assertEqual(record["source_count_success"],4)
+        self.assertFalse(record["training_permitted"])
+        validate_receipt(record)
+
+    def test_ocean_unauthorized_host_never_allowlisted(self):
+        self.assertFalse(safe_url(
+            "https://evil.example/repos/Hawkar-usls/Janus-Demiurge/actions/"
+            "workflows/janus-ocean-meta-next.yml/runs"))
+        self.assertTrue(safe_url(
+            "https://api.github.com/repos/Hawkar-usls/Janus-Demiurge/actions/"
+            "workflows/janus-ocean-meta-next.yml/runs?per_page=1"))
 
     def test_all_failed_is_not_false_claim_receipt(self):
         def blocked(url,limit):raise IntakeError("UPSTREAM_HTTP_429")
