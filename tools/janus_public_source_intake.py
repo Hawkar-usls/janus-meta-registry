@@ -23,6 +23,11 @@ OUTPUT_PREFIX = "JANUS-PUBLIC-SOURCES-"
 REGISTRY_PATH = "data/observations/public_source_quarantine/"
 USER_AGENT = "JANUS-Public-Source-Intake/0.1 (https://github.com/Hawkar-usls/janus-meta-registry)"
 GDELT_MANIFEST = "https://data.gdeltproject.org/gdeltv2/lastupdate.txt"
+GDELT_MASTER = "https://data.gdeltproject.org/gdeltv2/masterfilelist.txt"
+GDELT_TAIL_BYTES = 196608
+# GDELT publishes batches about every 15 min. Range fetch reads only the tail.
+# Never download the full master (hundreds of MB) in Actions.
+GDELT_FALLBACK_MAX_AGE_SLOTS = 96
 GDELT_ZIP_RE = re.compile(
     r"^https://data\.gdeltproject\.org/gdeltv2/(20\d{12})\.gkg\.csv\.zip$")
 SHA_RE = re.compile(r"^[0-9a-f]{64}$")
@@ -64,7 +69,7 @@ def safe_url(url: str) -> bool:
                 and p.password is None and p.port in (None, 443)
                 and p.fragment == ""):
             return False
-        if url == GDELT_MANIFEST or GDELT_ZIP_RE.fullmatch(url):
+        if url in (GDELT_MANIFEST, GDELT_MASTER) or GDELT_ZIP_RE.fullmatch(url):
             return True
         return ((p.hostname == "ru.wikipedia.org" and p.path == "/w/api.php")
                 or (p.hostname == "api.openalex.org" and p.path == "/works")
@@ -82,14 +87,23 @@ class RejectRedirect(urllib.request.HTTPRedirectHandler):
 
 def http_read(url: str, max_bytes: int) -> bytes:
     need(safe_url(url), "NOT_AN_ALLOWLISTED_SOURCE")
-    req = urllib.request.Request(url, headers={
+    headers = {
         "Accept": "application/json, text/plain, application/zip",
         "User-Agent": USER_AGENT,
-    }, method="GET")
+    }
+    if url == GDELT_MASTER:
+        need(max_bytes == GDELT_TAIL_BYTES, "GDELT_MASTER_RANGE_LIMIT")
+        headers["Range"] = f"bytes=-{GDELT_TAIL_BYTES}"
+    req = urllib.request.Request(url, headers=headers, method="GET")
     opener = urllib.request.build_opener(RejectRedirect)
     try:
         with opener.open(req, timeout=15) as response:
-            need(response.status == 200, "UPSTREAM_NOT_200")
+            if url == GDELT_MASTER:
+                need(response.status == 206 and
+                     response.headers.get("Content-Range", "").startswith("bytes "),
+                     "GDELT_MASTER_RANGE_NOT_SUPPORTED")
+            else:
+                need(response.status == 200, "UPSTREAM_NOT_200")
             data = response.read(max_bytes + 1)
             need(len(data) <= max_bytes, "UPSTREAM_TOO_LARGE")
             return data
@@ -167,17 +181,77 @@ def sample_gkg_zip(raw: bytes) -> dict:
             "first_row_field_count": 27, "raw_text_copied": False}
 
 
+def gdelt_master_fallback(raw: bytes, newer_stamp: str) -> tuple[str, int, str, str]:
+    """Choose exactly one prior GKG *advertised* in a bounded official master tail.
+
+    Reject incomplete first line (suffix Range can start midline), malformed
+    source URLs, future timestamps, missing manifest checksums and old windows.
+    """
+    need(len(raw) <= GDELT_TAIL_BYTES, "MASTER_TAIL_TOO_LARGE")
+    try:
+        lines = raw.decode("utf-8").splitlines()
+    except UnicodeDecodeError:
+        raise IntakeError("MASTER_TAIL_NOT_UTF8") from None
+    need(len(lines) >= 2, "MASTER_TAIL_TOO_SHORT")
+    from datetime import datetime, timedelta
+    ts = datetime.strptime(newer_stamp, "%Y%m%d%H%M%S")
+    eligible = []
+    for line in lines[1:]:
+        parts = line.split()
+        if len(parts) != 3:
+            continue
+        size_str, md5, raw_link = parts
+        if not (size_str.isdigit() and re.fullmatch(r"[0-9a-fA-F]{32}", md5)):
+            continue
+        if raw_link.startswith("http://data.gdeltproject.org/"):
+            raw_link = "https://" + raw_link[len("http://"):]
+        match = GDELT_ZIP_RE.fullmatch(raw_link)
+        if not match:
+            continue
+        try:
+            size = int(size_str)
+            stamp = datetime.strptime(match.group(1), "%Y%m%d%H%M%S")
+        except ValueError:
+            continue
+        if (0 < size <= ARCHIVE_LIMIT and
+                timedelta(0) < ts - stamp <= timedelta(
+                    minutes=15 * GDELT_FALLBACK_MAX_AGE_SLOTS)):
+            eligible.append((stamp, raw_link, size, md5.lower(), match.group(1)))
+    need(bool(eligible), "NO_MANIFESTED_PRIOR_GKG_BATCH")
+    _, url, size, md5, stamp = max(eligible, key=lambda row: row[0])
+    return url, size, md5, stamp
+
+
 def get_gdelt(fetch) -> dict:
     raw_manifest = fetch(GDELT_MANIFEST, 20_000)
     url, expected_size, md5, stamp = gdelt_manifest_row(raw_manifest)
-    raw_zip = fetch(url, ARCHIVE_LIMIT)
+    selected_manifest_url = GDELT_MANIFEST
+    selected_manifest_sha = digest(raw_manifest)
+    latest_404 = False
+    try:
+        raw_zip = fetch(url, ARCHIVE_LIMIT)
+    except IntakeError as exc:
+        if str(exc) != "UPSTREAM_HTTP_404":
+            raise
+        # Only 404 from the just-advertised ZIP may trigger ONE prior-file
+        # request. No tight retry loop and never use an invented archive URL.
+        latest_404 = True
+        master_tail = fetch(GDELT_MASTER, GDELT_TAIL_BYTES)
+        url, expected_size, md5, stamp = gdelt_master_fallback(
+            master_tail, stamp)
+        selected_manifest_url = GDELT_MASTER
+        selected_manifest_sha = digest(master_tail)
+        raw_zip = fetch(url, ARCHIVE_LIMIT)
     need(len(raw_zip) == expected_size, "GDELT_ZIP_SIZE_MISMATCH")
     need(hashlib.md5(raw_zip, usedforsecurity=False).hexdigest() == md5,
          "GDELT_ZIP_MANIFEST_MD5_MISMATCH")
     sample = sample_gkg_zip(raw_zip)
     return {"status": "PUBLIC_GKG_BATCH_STRUCTURALLY_READABLE",
-            "manifest_url": GDELT_MANIFEST,
-            "manifest_sha256": digest(raw_manifest),
+            "manifest_url": selected_manifest_url,
+            "manifest_sha256": selected_manifest_sha,
+            "latest_manifest_sha256": digest(raw_manifest),
+            "latest_advertised_gkg_url_returned_404": latest_404,
+            "fallback_from_official_master_tail": latest_404,
             "gkg_url": url, "feed_filename_timestamp_utc": stamp,
             "feed_timestamp_is_article_publish_time": False,
             "compressed_bytes": len(raw_zip),
