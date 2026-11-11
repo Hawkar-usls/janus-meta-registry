@@ -10,8 +10,9 @@ from urllib.parse import urlsplit
 import zipfile
 
 from tools.janus_public_source_intake import (
-    ARCHIVE_LIMIT, GDELT_MANIFEST, GDELT_ZIP_RE, SCHEMA,
-    IntakeError, collect, digest, gdelt_manifest_row, sample_gkg_zip,
+    ARCHIVE_LIMIT, GDELT_MANIFEST, GDELT_MASTER, GDELT_ZIP_RE, SCHEMA,
+    IntakeError, collect, digest, gdelt_manifest_row, gdelt_master_fallback,
+    get_gdelt, sample_gkg_zip,
     safe_url, validate_receipt, write_new,
 )
 
@@ -125,6 +126,74 @@ class PublicIntake(unittest.TestCase):
             z.writestr("bad.gkg.csv",b"not\t27\tfields\n")
         with self.assertRaisesRegex(IntakeError,"GDELT_GKG_ROW_SHAPE"):
             sample_gkg_zip(buf.getvalue())
+
+    def test_official_master_fallback_once_on_latest_404(self):
+        latest="20261111144500"
+        previous="20261111143000"
+        prior_url=f"https://data.gdeltproject.org/gdeltv2/{previous}.gkg.csv.zip"
+        z=make_gkg()
+        raw=(
+            "incomplete first line\n"
+            +f"{len(z)} {hashlib.md5(z,usedforsecurity=False).hexdigest()} "
+             f"http://data.gdeltproject.org/gdeltv2/{previous}.gkg.csv.zip\n"
+            +f"{len(z)} {hashlib.md5(z,usedforsecurity=False).hexdigest()} "
+             f"http://data.gdeltproject.org/gdeltv2/{latest}.gkg.csv.zip\n"
+        ).encode()
+        manifest=(f"{len(z)} {hashlib.md5(z,usedforsecurity=False).hexdigest()} "
+                  f"http://data.gdeltproject.org/gdeltv2/{latest}.gkg.csv.zip\n").encode()
+        calls=[]
+        def fake(url,limit):
+            calls.append(url)
+            if url==GDELT_MANIFEST:return manifest
+            if url==GDELT_MASTER:return raw
+            if url==prior_url:return z
+            if latest in url:raise IntakeError("UPSTREAM_HTTP_404")
+            raise AssertionError("unexpected outbound call")
+        outcome=get_gdelt(fake)
+        self.assertTrue(outcome["latest_advertised_gkg_url_returned_404"])
+        self.assertTrue(outcome["fallback_from_official_master_tail"])
+        self.assertEqual(outcome["gkg_url"],prior_url)
+        self.assertEqual(outcome["manifest_url"],GDELT_MASTER)
+        self.assertTrue(outcome["source_manifest_md5_verified"])
+        self.assertEqual(len(calls),4)
+        self.assertEqual(calls.count(GDELT_MASTER),1)
+
+    def test_master_tail_rejects_invented_or_stale_batch(self):
+        old="20261001140000"
+        invalid=(f"partial\n10 0123456789abcdef0123456789abcdef "
+                 f"https://data.gdeltproject.org/gdeltv2/{old}.gkg.csv.zip\n").encode()
+        with self.assertRaisesRegex(IntakeError,"NO_MANIFESTED_PRIOR_GKG_BATCH"):
+            gdelt_master_fallback(invalid,"20261111144500")
+        spoof=(b"partial\n120 0123456789abcdef0123456789abcdef "
+               b"https://evil.example/gdeltv2/20261111143000.gkg.csv.zip\n")
+        with self.assertRaisesRegex(IntakeError,"NO_MANIFESTED_PRIOR_GKG_BATCH"):
+            gdelt_master_fallback(spoof,"20261111144500")
+
+    def test_checksum_mismatch_never_falls_silently(self):
+        z=make_gkg()
+        latest="20261111144500"
+        manifest=(f"{len(z)} {'0'*32} "
+                  f"http://data.gdeltproject.org/gdeltv2/{latest}.gkg.csv.zip\n").encode()
+        def fake(url,limit):
+            if url==GDELT_MANIFEST:return manifest
+            if url.endswith(".gkg.csv.zip"):return z
+            raise AssertionError("must never use fallback for integrity error")
+        with self.assertRaisesRegex(IntakeError,"GDELT_ZIP_MANIFEST_MD5_MISMATCH"):
+            get_gdelt(fake)
+
+    def test_only_404_uses_fallback_not_rate_limit(self):
+        z=make_gkg()
+        latest="20261111144500"
+        manifest=(f"{len(z)} {hashlib.md5(z,usedforsecurity=False).hexdigest()} "
+                  f"http://data.gdeltproject.org/gdeltv2/{latest}.gkg.csv.zip\n").encode()
+        calls=[]
+        def fake(url,limit):
+            calls.append(url)
+            if url==GDELT_MANIFEST:return manifest
+            raise IntakeError("UPSTREAM_HTTP_429")
+        with self.assertRaisesRegex(IntakeError,"UPSTREAM_HTTP_429"):
+            get_gdelt(fake)
+        self.assertNotIn(GDELT_MASTER,calls)
 
     def test_one_provider_unavailable_while_others_preserved(self):
         good=fixture()
