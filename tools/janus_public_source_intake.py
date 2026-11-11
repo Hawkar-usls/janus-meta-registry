@@ -58,16 +58,21 @@ def digest(data: bytes) -> str:
 
 def safe_url(url: str) -> bool:
     """Fixed provider routes only. No redirect, arbitrary URL or local HTTP."""
-    p = urllib.parse.urlsplit(url)
-    need(p.scheme == "https" and p.username is None and p.password is None
-         and p.port in (None, 443) and p.fragment == "", "UNTRUSTED_SOURCE_URL")
-    if url == GDELT_MANIFEST or GDELT_ZIP_RE.fullmatch(url):
-        return True
-    return ((p.hostname == "ru.wikipedia.org" and p.path == "/w/api.php")
-            or (p.hostname == "api.openalex.org" and p.path == "/works")
-            or (p.hostname == "api.github.com" and p.path ==
-                "/repos/Hawkar-usls/Demi_Head/actions/workflows/"
-                "tachyon-r2h-parallel-research.yml/runs"))
+    try:
+        p = urllib.parse.urlsplit(url)
+        if not (p.scheme == "https" and p.username is None
+                and p.password is None and p.port in (None, 443)
+                and p.fragment == ""):
+            return False
+        if url == GDELT_MANIFEST or GDELT_ZIP_RE.fullmatch(url):
+            return True
+        return ((p.hostname == "ru.wikipedia.org" and p.path == "/w/api.php")
+                or (p.hostname == "api.openalex.org" and p.path == "/works")
+                or (p.hostname == "api.github.com" and p.path ==
+                    "/repos/Hawkar-usls/Demi_Head/actions/workflows/"
+                    "tachyon-r2h-parallel-research.yml/runs"))
+    except ValueError:
+        return False
 
 
 class RejectRedirect(urllib.request.HTTPRedirectHandler):
