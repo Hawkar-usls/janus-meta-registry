@@ -60,7 +60,7 @@ jobs:
             python tools/janus_public_source_intake.py --verify "$f"
             name="$(basename "$f")"
             qname="${name/JANUS-PUBLIC-SOURCES-/JANUS-R3-QUALITY-}"
-            python tools/janus_r3_evaluate.py --input "$f" \
+            python -m tools.janus_r3_evaluate --input "$f" \
               --history data/observations/public_source_quarantine \
               --out "$RUNNER_TEMP/quality/$qname"
           done
@@ -96,7 +96,7 @@ jobs:
             python tools/janus_public_source_intake.py --verify "$f"
             name="$(basename "$f")"
             qname="${name/JANUS-PUBLIC-SOURCES-/JANUS-R3-QUALITY-}"
-            python tools/janus_r3_evaluate.py --input "$f" \
+            python -m tools.janus_r3_evaluate --input "$f" \
               --history data/observations/public_source_quarantine \
               --out "$RUNNER_TEMP/quality/$qname"
           done
@@ -150,7 +150,7 @@ jobs:
           qsrc="incoming/$qname"
           test -f "$qsrc"
           python tools/janus_public_source_intake.py --verify "$src"
-          python tools/janus_r3_evaluate.py --input "$src" \
+          python -m tools.janus_r3_evaluate --input "$src" \
             --history data/observations/public_source_quarantine \
             --out "$RUNNER_TEMP/recomputed-quality.json"
           cmp -- "$qsrc" "$RUNNER_TEMP/recomputed-quality.json"
