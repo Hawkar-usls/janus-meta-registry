@@ -1,0 +1,221 @@
+name: JANUS Public Evidence Intake — Quarantine and Review PR
+
+on:
+  pull_request:
+    paths:
+      - "tools/janus_public_source_intake.py"
+      - "tests/test_public_source_intake.py"
+      - "tests/test_janus_r3_evaluate.py"
+      - "tools/janus_r3_evaluate.py"
+      - "EYE/training/train_eye_registry.py"
+      - ".github/workflows/eye-meta-registry-train.yml"
+      - ".github/workflows/janus-public-source-intake.yml"
+      - "docs/JANUS_PUBLIC_SOURCE_INTAKE.md"
+  workflow_dispatch:
+  schedule:
+    - cron: "27 6 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: janus-public-source-intake-one-cycle
+  cancel-in-progress: false
+
+jobs:
+  source-contracts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Offline fail-closed provenance, GDELT and EYE quarantine checks
+        run: |
+          python -m unittest discover -s tests -p test_public_source_intake.py -v
+          python -m unittest discover -s tests -p test_janus_r3_evaluate.py -v
+          python -m py_compile tools/janus_public_source_intake.py tools/janus_r3_evaluate.py
+
+  collect:
+    needs: source-contracts
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Collect at most one public snapshot from each approved source
+        run: |
+          python tools/janus_public_source_intake.py --live --outdir "$RUNNER_TEMP/public-intake"
+          for f in "$RUNNER_TEMP"/public-intake/*.json; do
+            python tools/janus_public_source_intake.py --verify "$f"
+            name="$(basename "$f")"
+            qname="${name/JANUS-PUBLIC-SOURCES-/JANUS-R3-QUALITY-}"
+            python -m tools.janus_r3_evaluate --input "$f" \
+              --history data/observations/public_source_quarantine \
+              --out "$RUNNER_TEMP/quality/$qname"
+          done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-public-source-quarantine-snapshot
+          path: |
+            ${{ runner.temp }}/public-intake/*.json
+            ${{ runner.temp }}/quality/*.json
+          retention-days: 14
+          if-no-files-found: error
+
+  # A PR checks real public endpoints once, with only read permission.
+  # Scheduled/dispatch collection is the only path that can propose a PR.
+  public-pr-smoke:
+    needs: source-contracts
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: One-shot public live-source smoke, no model training or publication
+        run: |
+          python tools/janus_public_source_intake.py --live --outdir "$RUNNER_TEMP/public-intake"
+          for f in "$RUNNER_TEMP"/public-intake/*.json; do
+            python tools/janus_public_source_intake.py --verify "$f"
+            name="$(basename "$f")"
+            qname="${name/JANUS-PUBLIC-SOURCES-/JANUS-R3-QUALITY-}"
+            python -m tools.janus_r3_evaluate --input "$f" \
+              --history data/observations/public_source_quarantine \
+              --out "$RUNNER_TEMP/quality/$qname"
+          done
+      - name: Validate official masterfile fallback with one fault-injected 404
+        run: |
+          python - <<'PY'
+          from tools.janus_public_source_intake import (
+              GDELT_MANIFEST, http_read, gdelt_manifest_row,
+              get_gdelt, IntakeError
+          )
+          manifest=http_read(GDELT_MANIFEST,20_000)
+          latest,_,_,_=gdelt_manifest_row(manifest)
+          faults={'count':0}
+          def injected(url,limit):
+              if url==latest:
+                  faults['count']+=1
+                  raise IntakeError('UPSTREAM_HTTP_404')
+              return http_read(url,limit)
+          result=get_gdelt(injected)
+          assert faults['count']==1
+          assert result['fallback_from_official_master_tail'] is True
+          assert result['latest_advertised_gkg_url_returned_404'] is True
+          assert result['source_manifest_md5_verified'] is True
+          assert result['gkg_url']!=latest
+          print('R3_GDELT_OFFICIAL_FALLBACK_REAL_RANGE_AND_ZIP_PASS',
+                {'fallback_zip_sha256':result['zip_sha256'],
+                 'bytes':result['compressed_bytes'],
+                 'gkg_url':result['gkg_url']})
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: janus-public-source-pr-readonly-smoke
+          path: |
+            ${{ runner.temp }}/public-intake/*.json
+            ${{ runner.temp }}/quality/*.json
+          retention-days: 14
+          if-no-files-found: warn
+
+  propose-review-pr:
+    needs: [source-contracts, collect]
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/download-artifact@v4
+        with:
+          name: janus-public-source-quarantine-snapshot
+          path: incoming
+      - name: Verify append-only JSON and propose review PR without auto-merge
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          count="$(find incoming -maxdepth 1 -type f -name 'JANUS-PUBLIC-SOURCES-*.json' | wc -l)"
+          qcount="$(find incoming -maxdepth 1 -type f -name 'JANUS-R3-QUALITY-*.json' | wc -l)"
+          if [ "$count" -ne 1 ] || [ "$qcount" -ne 1 ]; then
+            echo "JANUS_EXPECTED_ONE_SOURCE_AND_QUALITY_RECEIPT" >&2
+            exit 1
+          fi
+          src="$(find incoming -maxdepth 1 -type f -name 'JANUS-PUBLIC-SOURCES-*.json' -print -quit)"
+          name="$(basename "$src")"
+          suffix="$(printf '%s' "$name" | sed 's/^JANUS-PUBLIC-SOURCES-//;s/\.json$//')"
+          qname="JANUS-R3-QUALITY-$suffix.json"
+          qsrc="incoming/$qname"
+          test -f "$qsrc"
+          python tools/janus_public_source_intake.py --verify "$src"
+          python -m tools.janus_r3_evaluate --input "$src" \
+            --history data/observations/public_source_quarantine \
+            --out "$RUNNER_TEMP/recomputed-quality.json"
+          cmp -- "$qsrc" "$RUNNER_TEMP/recomputed-quality.json"
+          dest="data/observations/public_source_quarantine/$name"
+          qdest="data/observations/public_source_quality/$qname"
+          if [ -e "$dest" ] || [ -e "$qdest" ]; then
+            if [ -e "$dest" ] && [ -e "$qdest" ]; then
+              echo "JANUS_PUBLIC_SOURCE_INTAKE_ALREADY_ARCHIVED"
+              exit 0
+            fi
+            echo "JANUS_PARTIAL_DUPLICATE_DETECTED" >&2
+            exit 1
+          fi
+          branch="janus/public-intake-$suffix"
+          if git ls-remote --exit-code --heads origin "refs/heads/$branch" >/dev/null 2>&1; then
+            echo "JANUS_SOURCE_INTAKE_EXISTING_REVIEW_BRANCH=$branch"
+            exit 0
+          fi
+          mkdir -p data/observations/public_source_quarantine data/observations/public_source_quality
+          git switch -c "$branch"
+          cp -- "$src" "$dest"
+          cp -- "$qsrc" "$qdest"
+          git config user.name "janus-public-source-intake[bot]"
+          git config user.email "janus-public-source-intake[bot]@users.noreply.github.com"
+          git add -- "$dest" "$qdest"
+          staged="$(git diff --cached --name-only)"
+          expected="$(printf '%s\n%s\n' "$dest" "$qdest" | LC_ALL=C sort)"
+          if [ "$staged" != "$expected" ]; then
+            echo "JANUS_QUARANTINE_WRITE_SCOPE_VIOLATION" >&2
+            exit 1
+          fi
+          git diff --cached --check
+          git commit -m "quarantine(public-source): $name"
+          git push origin "HEAD:refs/heads/$branch"
+          if gh pr create --base main --head "$branch" \
+            --title "JANUS public evidence intake (untrusted review): $name" \
+            --body "Two append-only JSON records: source metadata and linked R3 quality/novelty receipt. Public GDELT, OpenAlex, Wikipedia and R2H pointers remain QUARANTINED and excluded from automatic model training. Review source provenance, new DOI/URL metadata and quality status before merge; never auto-merge or scientifically admit."; then
+            echo "JANUS_PUBLIC_SOURCE_PR_CREATED=$branch" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "JANUS_PUBLIC_SOURCE_PR_CREATION_BLOCKED=$branch" >> "$GITHUB_STEP_SUMMARY"
+            echo "GitHub repository settings may disallow Actions-created PRs; review branch exists, no merge."
+          fi

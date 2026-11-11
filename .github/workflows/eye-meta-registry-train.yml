@@ -14,6 +14,8 @@ on:
       - '!EYE/r3/generated/**'
       - '!assets/site-feed.json'
       - '!data/JANUS-NEURAL-LINK/**'
+      - '!data/observations/public_source_quarantine/**'
+      - '!data/observations/public_source_quality/**'
 
 permissions:
   contents: write
@@ -76,7 +78,9 @@ jobs:
               raise SystemExit('EYE_EMPTY_CORPUS')
           forbidden_exact = {'assets/hrain-registry-index.json', 'assets/site-feed.json'}
           forbidden_prefixes = ('assets/hrain-full-memory/', 'EYE/generated/',
-                                'EYE/r2/generated/', 'EYE/r3/generated/', 'data/autonomy_loop/')
+                                'EYE/r2/generated/', 'EYE/r3/generated/', 'data/autonomy_loop/',
+                                'data/observations/public_source_quarantine/',
+                                'data/observations/public_source_quality/')
           leaked = [
               r.get('path') for r in index.get('records', [])
               if r.get('path') in forbidden_exact
@@ -121,7 +125,9 @@ jobs:
           if receipt['counts']['files_indexed'] <= 0:
               raise SystemExit('EYE_EMPTY_CORPUS')
           forbidden_exact = {'assets/hrain-registry-index.json'}
-          forbidden_prefixes = ('assets/hrain-full-memory/', 'EYE/generated/', 'data/autonomy_loop/')
+          forbidden_prefixes = ('assets/hrain-full-memory/', 'EYE/generated/', 'data/autonomy_loop/',
+                                'data/observations/public_source_quarantine/',
+                                'data/observations/public_source_quality/')
           leaked = [
               r.get('path') for r in index.get('records', [])
               if r.get('path') in forbidden_exact
