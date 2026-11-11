@@ -100,6 +100,32 @@ jobs:
               --history data/observations/public_source_quarantine \
               --out "$RUNNER_TEMP/quality/$qname"
           done
+      - name: Validate official masterfile fallback with one fault-injected 404
+        run: |
+          python - <<'PY'
+          from tools.janus_public_source_intake import (
+              GDELT_MANIFEST, http_read, gdelt_manifest_row,
+              get_gdelt, IntakeError
+          )
+          manifest=http_read(GDELT_MANIFEST,20_000)
+          latest,_,_,_=gdelt_manifest_row(manifest)
+          faults={'count':0}
+          def injected(url,limit):
+              if url==latest:
+                  faults['count']+=1
+                  raise IntakeError('UPSTREAM_HTTP_404')
+              return http_read(url,limit)
+          result=get_gdelt(injected)
+          assert faults['count']==1
+          assert result['fallback_from_official_master_tail'] is True
+          assert result['latest_advertised_gkg_url_returned_404'] is True
+          assert result['source_manifest_md5_verified'] is True
+          assert result['gkg_url']!=latest
+          print('R3_GDELT_OFFICIAL_FALLBACK_REAL_RANGE_AND_ZIP_PASS',
+                {'fallback_zip_sha256':result['zip_sha256'],
+                 'bytes':result['compressed_bytes'],
+                 'gkg_url':result['gkg_url']})
+          PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
