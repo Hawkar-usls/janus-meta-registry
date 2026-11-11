@@ -1,0 +1,71 @@
+{
+  "schema": "janus.meta_registry.r31b.neural_formula_train_public_development.v1",
+  "record_id": "TACHYON-R31B-REAL-CPU-NEURAL-FORMAL-MATH-2026-11-11",
+  "date_utc": "2026-11-11",
+  "research_scope": "TINY_REAL_NEURAL_FORMULA_APPROXIMATION_NOT_GENERAL_PHYSICS",
+  "repo": "Hawkar-usls/Demi_Head",
+  "draft_pr": "https://github.com/Hawkar-usls/Demi_Head/pull/82",
+  "parent_corpus_pr": "https://github.com/Hawkar-usls/Demi_Head/pull/81",
+  "github_actions_run": "https://github.com/Hawkar-usls/Demi_Head/actions/runs/43057568871",
+  "source_pack_sha256": "5d9be310f1dd7f17505e69a31697ae06b1c00ae8fe7a4ae24b72f4ba74dfbea2",
+  "train_pack_receipt_sha256": "fddfbe893ce0629cda03e99f10de6782751d7533bc7d21de9bda8be1e5ce9b3f",
+  "experiment_method": {
+    "architecture": "2 input scalar and family sign / tanh24 / tanh24 / sigmoid scalar",
+    "seed": 20261111,
+    "optimizer": "AdamW, 1200 steps max, learning rate 0.012, batch includes all 16 training rows",
+    "train_cases": 16,
+    "calibration_cases": 8,
+    "selected_checkpoint_by": "minimum calibration MSE, no public test labels",
+    "selected_step": 1180,
+    "calibration_mse": 0.0006332154734991491,
+    "public_author_development_test_cases": 12,
+    "holdout_first_scored_after_checkpoint_written": true,
+    "model_training_data": "FORMAL_EQUATION_LABELS_FROM_OPENSTAX_AND_IBM_QUANTUM_NOT_EMPIRICAL_CLOCK_DATA",
+    "private_holdout_not_read": true
+  },
+  "observed": {
+    "actual_neural_weights_trained": true,
+    "neural_mae": 0.012747526,
+    "train_mean_constant_baseline_mae": 0.217424151,
+    "exact_equation_baseline_mae": 0,
+    "neural_within_absolute_0p015": 10,
+    "total_cases": 12,
+    "public_development_improvement_over_mean_baseline": true,
+    "neural_did_not_beat_exact_formula": true,
+    "worst_case": {
+      "case_id": "public_unseen_dev-sr_proper_time_ratio-05",
+      "estimated_absolute_error": 0.10584,
+      "interpretation": "High v/c near 0.94 challenges extrapolation beyond the largest SR train parameter v/c=0.83."
+    },
+    "other_numeric_failure": {
+      "case_id": "public_unseen_dev-sr_proper_time_ratio-04",
+      "estimated_absolute_error": 0.01965
+    },
+    "unit_tests_passed": 11,
+    "scientific_admission": "HOLD",
+    "general_physics_source_family_transfer_verified": false,
+    "physical_retrocausality_proven": false
+  },
+  "checkpoint": {
+    "sha256": "b3b36dfb3e8c1d0d4a1ae1b867978cfa5f8f28d6768d1a42efac02a4d2e47f01",
+    "receipt_sha256": "89acca003691d7723ed5ca026f764ff0006c6fddec8195db360fa7254ae2ca34",
+    "auto_deployed": false
+  },
+  "archive": {
+    "github_artifact_id": 13872945401,
+    "github_zip_sha256": "308ec7f5128e58588992205c582195bfbedefb766b7400bfe6c0c5b84d1aec00",
+    "google_drive_url": "https://drive.google.com/file/d/1IpKvvx3BUm750mlyq9EDBOMGU2Za6SvT/view?usp=drivesdk",
+    "drive_size_metadata_verified": true,
+    "drive_zip_sha256_readback_verified": false,
+    "local_original_zip_checksum_checked_against_github": false
+  },
+  "limitations": [
+    "Two formula families only; test uses different parameter values but no novel independent source families.",
+    "Public author-known split and math-derived answers; not a third-party blind challenge or laboratory measurement.",
+    "The exact deterministic formula remains superior in mathematical precision.",
+    "Worst-case near-lightspeed SR ratio numerical error is substantial; do not deploy regressor to answer physics questions.",
+    "No retrocausality or future-to-past signal evidence."
+  ],
+  "next": "Introduce truly external source-family tasks and lab measurements, preregistered blind evaluation and calibrated OOD/physics-rule controls before any science acceptance.",
+  "registry_operation": "APPEND_ONLY_DRAFT"
+}
