@@ -119,8 +119,8 @@ def evaluate(record,history=()):
     source_ids,metrics=fingerprinted_sources(record)
     known=set()
     for prior in history:
-        if prior.get("source_digest_sha256")==record["source_digest_sha256"]:
-            continue
+        # The same exact source observation in history is a duplicate and
+        # must contribute to the known set, never count as new material.
         ids,_=fingerprinted_sources(prior)
         known.update(ids)
     new_ids=source_ids-known
