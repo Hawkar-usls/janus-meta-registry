@@ -6,7 +6,7 @@ import unittest
 
 from tools.janus_r3_evaluate import evaluate,validate_quality,fingerprinted_sources
 from tools.janus_public_source_intake import IntakeError
-from tests.test_public_source_intake import fixture
+from test_public_source_intake import fixture
 from tools.janus_public_source_intake import collect,canonical,digest
 
 
