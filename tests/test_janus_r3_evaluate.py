@@ -26,12 +26,37 @@ class R3Quality(unittest.TestCase):
     def test_valid_public_metadata_is_review_only(self):
         r=evaluate(self.base)
         validate_quality(r,self.base)
-        self.assertEqual(r["metadata_sources_with_integrity"],4)
+        self.assertEqual(r["metadata_sources_with_integrity"],5)
         self.assertGreater(r["new_metadata_id_count"],0)
         self.assertEqual(r["review_decision"],"NEW_METADATA_REQUIRES_CURATOR_REVIEW")
         self.assertFalse(r["model_training_authorized"])
         self.assertFalse(r["scientific_knowledge_promoted"])
         self.assertFalse(r["article_claims_independently_verified"])
+
+    def test_ocean_run_provenance_only_not_independent_science(self):
+        report=evaluate(self.base)
+        ocean=report["source_statuses"]["ocean_action"]
+        self.assertTrue(ocean["integrity_passed"])
+        self.assertEqual(ocean["records"],1)
+        self.assertFalse(report["model_training_authorized"])
+        self.assertFalse(report["neural_model_improved"])
+
+    def test_ocean_action_repo_spoof_is_rejected_after_resigning(self):
+        fake=copy.deepcopy(self.base)
+        fake["sources"]["ocean_action"]["repository"]="Hawkar-usls/evil"
+        self._resign(fake)
+        with self.assertRaisesRegex(IntakeError,"R3_ACTION_REPOSITORY_SPOOF"):
+            evaluate(fake)
+
+    def test_legacy_four_provider_history_remains_valid(self):
+        legacy=copy.deepcopy(self.base)
+        legacy["sources"].pop("ocean_action")
+        self._resign(legacy)
+        old_report=evaluate(legacy)
+        self.assertEqual(old_report["metadata_sources_with_integrity"],4)
+        new_report=evaluate(self.base,[legacy])
+        self.assertEqual(new_report["new_metadata_id_count"],1)
+        self.assertFalse(new_report["model_training_dispatched"])
 
     def test_repeat_metadata_never_triggers_training(self):
         one=copy.deepcopy(self.base)
