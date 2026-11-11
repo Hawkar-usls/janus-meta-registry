@@ -34,6 +34,9 @@ SHA_RE = re.compile(r"^[0-9a-f]{64}$")
 GITHUB_RUNS = (
     "https://api.github.com/repos/Hawkar-usls/Demi_Head/"
     "actions/workflows/tachyon-r2h-parallel-research.yml/runs")
+OCEAN_RUNS = (
+    "https://api.github.com/repos/Hawkar-usls/Janus-Demiurge/"
+    "actions/workflows/janus-ocean-meta-next.yml/runs")
 WIKI = "https://ru.wikipedia.org/w/api.php"
 OPENALEX = "https://api.openalex.org/works"
 # Strict request limits. No retry loops or elevated runner privileges.
@@ -73,9 +76,11 @@ def safe_url(url: str) -> bool:
             return True
         return ((p.hostname == "ru.wikipedia.org" and p.path == "/w/api.php")
                 or (p.hostname == "api.openalex.org" and p.path == "/works")
-                or (p.hostname == "api.github.com" and p.path ==
+                or (p.hostname == "api.github.com" and p.path in {
                     "/repos/Hawkar-usls/Demi_Head/actions/workflows/"
-                    "tachyon-r2h-parallel-research.yml/runs"))
+                    "tachyon-r2h-parallel-research.yml/runs",
+                    "/repos/Hawkar-usls/Janus-Demiurge/actions/workflows/"
+                    "janus-ocean-meta-next.yml/runs"}))
     except ValueError:
         return False
 
@@ -327,8 +332,38 @@ def get_training_runs(fetch) -> dict:
             "candidate_auto_promoted": False}
 
 
+def get_ocean_runs(fetch) -> dict:
+    """Observe public GitHub Ocean research run, never infer model quality."""
+    doc = request_json(fetch, OCEAN_RUNS, {"per_page": "1"})
+    runs = doc.get("workflow_runs", [])
+    need(isinstance(runs, list) and runs, "OCEAN_PUBLIC_RUN_NOT_FOUND")
+    row = runs[0]
+    need(isinstance(row, dict) and type(row.get("id")) is int
+         and row["id"] > 0
+         and re.fullmatch(r"[a-f0-9]{40}", str(row.get("head_sha", ""))),
+         "OCEAN_PUBLIC_RUN_BAD")
+    need(row.get("status") in {"queued","in_progress","completed",
+                              "waiting","pending","requested"},
+         "OCEAN_PUBLIC_RUN_STATE_BAD")
+    need(row.get("conclusion") in (None,"success","failure",
+                                  "cancelled","skipped","neutral",
+                                  "timed_out","action_required","stale"),
+         "OCEAN_PUBLIC_RUN_RESULT_BAD")
+    return {"status": "PUBLIC_ACTION_RUN_METADATA_ONLY",
+            "repository": "Hawkar-usls/Janus-Demiurge",
+            "workflow": "janus-ocean-meta-next.yml",
+            "run_id": row["id"], "head_sha": row["head_sha"],
+            "run_status": row["status"],
+            "run_conclusion": row.get("conclusion"),
+            "scientific_quality_of_model_verified": False,
+            "candidate_auto_promoted": False,
+            "model_weights_or_metrics_independently_verified": False,
+            "trained_on_unreviewed_r3_source_text": False}
+
+
 SOURCES = (("gdelt_gkg", get_gdelt), ("wikipedia", get_wikipedia),
-           ("openalex", get_openalex), ("tachyon_action", get_training_runs))
+           ("openalex", get_openalex), ("tachyon_action", get_training_runs),
+           ("ocean_action", get_ocean_runs))
 
 
 def collect(fetch=http_read, at: str | None = None) -> dict:
