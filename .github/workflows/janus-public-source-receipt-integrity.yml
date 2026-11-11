@@ -1,0 +1,59 @@
+name: JANUS Public Source Quarantine Integrity
+
+on:
+  pull_request:
+    paths:
+      - 'data/observations/public_source_quarantine/**'
+      - 'tools/janus_public_source_intake.py'
+      - '.github/workflows/janus-public-source-receipt-integrity.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'data/observations/public_source_quarantine/**'
+      - 'tools/janus_public_source_intake.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-source-quarantine:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify append-only quarantined source receipt hashes and science firewall
+        run: |
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          from tools.janus_public_source_intake import validate_receipt
+          import json
+          base=Path('data/observations/public_source_quarantine')
+          if not base.exists():
+              print('JANUS_SOURCE_QUARANTINE_EMPTY')
+              raise SystemExit(0)
+          files=sorted(base.iterdir())
+          assert len(files)<=1000,'QUARANTINE_COUNT_REVIEW_REQUIRED'
+          for path in files:
+              assert path.is_file() and re.fullmatch(
+                  r'JANUS-PUBLIC-SOURCES-[a-f0-9]{20}\.json',path.name), \
+                  'UNEXPECTED_QUARANTINE_FILE'
+              data=json.loads(path.read_text(encoding='utf-8'))
+              validate_receipt(data)
+              assert data['training_permitted'] is False
+              assert data['factual_claims_verified'] is False
+          print('JANUS_QUARANTINE_SHA_POLICY_VERIFIED',len(files))
+          PY
+      - name: Quarantine never enters EYE derived training
+        run: |
+          python - <<'PY'
+          from EYE.training.train_eye_registry import EXCLUDED_PREFIXES
+          assert 'data/observations/public_source_quarantine/' in EXCLUDED_PREFIXES
+          print('EYE_PUBLIC_QUARANTINE_FIREWALL_PASS')
+          PY
