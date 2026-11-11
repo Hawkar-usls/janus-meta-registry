@@ -1,0 +1,120 @@
+{
+  "schema": "janus.meta_registry.r35.typed_si_research_architecture_training.v1",
+  "record_id": "TACHYON-R35-TYPED-SI-FORMULA-RESEARCH-2026-11-11",
+  "date_utc": "2026-11-11",
+  "repository": "Hawkar-usls/Demi_Head",
+  "research_pull_request": "https://github.com/Hawkar-usls/Demi_Head/pull/86",
+  "github_actions_run": "https://github.com/Hawkar-usls/Demi_Head/actions/runs/43073429418",
+  "status": "TRAINING_EXECUTED_PUBLIC_DEVELOPER_TEST_NOT_INDEPENDENT_BLIND",
+  "architecture": {
+    "type": "SI_DIMENSION_AND_PHYSICAL_ROLE_AWARE_SMALL_TORCH_REGRESSOR",
+    "raw_inputs": "2 slots, each normalized numerical value, physical role one-hot and four-axis SI dimensions; family one-hot and output dimensions",
+    "network": "2×48 tanh hidden, scalar output; 2 deterministic CPU candidates",
+    "units": "Explicit unit factor and dimensions for A/mA, Ω/kΩ, V/mV, m/cm, km/h/m/s, s/ms/µs, MeV/c, %, W",
+    "seeds": [
+      20261111,
+      20261112
+    ],
+    "max_steps_per_seed": 1200,
+    "selected_seed": 20261111,
+    "selected_step": 280,
+    "selected_calibration_mse": 0.001132231904193759,
+    "frozen_selected_candidate_sha256": "b631748974acd786f8ede06c5e016cbb5e41015f362e03fa3288b2c95d01234a",
+    "second_candidate_sha256": "7c7d995471daf4309a1164da0344ea1ed82863538676a957d6106d6ff4cb9ca8",
+    "source_manifest_sha256": "b959ac81019872a15c4487caba57749a1b8da90b19b2a096e8c0e7abc6e4d34a",
+    "outcome_receipt_sha256": "ac54956d49f3f2c6860e219bb1d578a78310e6d84026724022646d109b6d3ea1"
+  },
+  "dataset": {
+    "training_source_class": "AUTHOR_CONSTRUCTED_TEXTBOOK_EQUATION_LABELS_ONLY",
+    "training_cases": 48,
+    "calibration_cases": 16,
+    "public_author_development_cases": 30,
+    "public_training_family_test_cases": 24,
+    "public_whole_family_holdout_cases": 6,
+    "trained_families": [
+      "SR_PROPER_TIME_RATIO",
+      "TWO_LEVEL_BORN_PROBABILITY",
+      "OHMIC_VOLTAGE",
+      "CONSTANT_VELOCITY_DISPLACEMENT"
+    ],
+    "unseen_family": "ELECTRIC_POWER_IV",
+    "actual_instrument_measurement_samples_used_for_training": 0,
+    "training_from_GDELT_or_quarantine": false,
+    "curator_approved_real_laboratory_pack_exists": false,
+    "independently_blind": false
+  },
+  "per_family_public_development_mae_SI": {
+    "SR_PROPER_TIME_RATIO": {
+      "unit": "1",
+      "neural": 0.042846097899218526,
+      "constant_train_mean": 0.27071623594020217,
+      "exact_formula": 0,
+      "worst_neural_error": 0.14918476462364194
+    },
+    "TWO_LEVEL_BORN_PROBABILITY": {
+      "unit": "1",
+      "neural": 0.013212351004282636,
+      "constant_train_mean": 0.30833333333333335,
+      "exact_formula": 0,
+      "worst_neural_error": 0.03375105142593382
+    },
+    "OHMIC_VOLTAGE": {
+      "unit": "V",
+      "neural": 0.8221521635850273,
+      "constant_train_mean": 9,
+      "exact_formula": 0,
+      "worst_neural_error": 1.9526352882385254
+    },
+    "CONSTANT_VELOCITY_DISPLACEMENT": {
+      "unit": "m",
+      "neural": 1.157090599338214,
+      "constant_train_mean": 17.225,
+      "exact_formula": 0,
+      "worst_neural_error": 3.6054463863372845
+    }
+  },
+  "observed": {
+    "unit_and_provenance_tests_pass": 15,
+    "two_real_torch_cpu_candidate_checkpoints": true,
+    "neural_better_than_constant_baseline_on_author_public_cases": true,
+    "exact_formula_baseline_superior_on_known_laws": true,
+    "new_family_neural_numeric_predictions": 0,
+    "withheld_power_family_abstentions": 6,
+    "external_scientific_generalization_shown": false,
+    "neural_numerical_issue_high_beta_0p96_error_approx": 0.14918476462364194,
+    "exact_formula_priority_recommended": true,
+    "zero_laboratory_data_gradient": true,
+    "no_scientific_retrocausality_claims": true
+  },
+  "measurement_interface": {
+    "pinned_sources": [
+      "https://zenodo.org/records/15081911",
+      "https://zenodo.org/records/13142016"
+    ],
+    "typed_experimental_observation_support": true,
+    "momentum_MeV_per_c_and_delay_microseconds": true,
+    "SOC_percent_and_OCV_volts": true,
+    "published_lab_source_sha_check": true,
+    "laboratory_gradient_admission_status": "HOLD_CURATOR_RIGHTS_REVIEW_MISSING",
+    "fabricated_curator_approval_rejected": true,
+    "no_raw_lab_samples_republished": true
+  },
+  "archive": {
+    "github_artifact_id": 13877624933,
+    "original_github_zip_sha256": "bab8013d176c33966ca79a73e813aa9b50b60407b0438e095ef4298b4ee58484",
+    "local_zip_sha256_verified_against_github": true,
+    "original_size_bytes": 36194,
+    "drive_url": "https://drive.google.com/file/d/18EoYQgKjofTRfp0PrdVEOor3pXymueqL/view?usp=drivesdk",
+    "drive_metadata_size_verified": true,
+    "independent_drive_download_sha256_verified": false
+  },
+  "required_next_steps": [
+    "Obtain curator-signed rights/quality-reviewed measured-data pack separate from quarantine, with source-family holdouts.",
+    "Use a candidate-aware external custodian scorer and independently timestamped, sealed model answers.",
+    "Evaluate raw neural values independently of deterministic physical formula fallback; never count formula successes as neural generalization.",
+    "No automatic deployment or scientific admission until new truly blind source-family evidence and baseline gain."
+  ],
+  "scientific_admission": "HOLD",
+  "production_model_promoted": false,
+  "registry_operation": "APPEND_ONLY_DRAFT_REVIEW_ONLY"
+}
