@@ -1,0 +1,164 @@
+{
+  "schema": "janus.meta_registry.r38.public_eight_device_lobo_physical_baselines.v1",
+  "id": "TACHYON-R38-8-BATTERY-LOBO-PUBLIC-REAL-CROSSVAL-2026-11-11",
+  "date_utc": "2026-11-11",
+  "research_code_pr": "https://github.com/Hawkar-usls/Demi_Head/pull/90",
+  "final_actions_run": "https://github.com/Hawkar-usls/Demi_Head/actions/runs/43084840481",
+  "first_public_run": "https://github.com/Hawkar-usls/Demi_Head/actions/runs/43084288832",
+  "source": {
+    "owner": "BulyK47/battery-datasets",
+    "doi": "10.21227/651q-8v82",
+    "source_url": "https://github.com/BulyK47/battery-datasets",
+    "authors": "Iulian-Teodor Voicila; Bogdan-Adrian Enache; Irina Vilciu; George-Calin Seritan, National University of Science and Technology POLITEHNICA Bucharest",
+    "source_license": "CC BY 4.0; attribution required",
+    "original_source_files_sha_verified": 16,
+    "original_voltage_curves": 30,
+    "distinct_tested_battery_devices": 8,
+    "independent_source_publication_count": 1,
+    "source_reused_from_r37": true,
+    "source_files_committed_to_meta_registry": false,
+    "source_files_returned_in_artifact": false
+  },
+  "experiment": {
+    "type": "RETROSPECTIVE_PUBLIC_BATTERY_GROUP_LEAVE_ONE_OUT_CROSS_VALIDATION",
+    "model_coefficients_fitted_per_trace_first_four_hours": true,
+    "twenty_hour_forecast_horizon": true,
+    "public_battery_groups": [
+      "APR",
+      "BSE",
+      "SG",
+      "LG",
+      "OEM",
+      "LI",
+      "AR",
+      "AU"
+    ],
+    "independent_external_custodian_connected": false,
+    "public_data_previously_seen_in_R37": true,
+    "eight_folds_not_eight_statistically_independent_experiments": true,
+    "incumbent_models": [
+      "constant_last",
+      "single_exp",
+      "double_exp"
+    ],
+    "tested_challengers": [
+      "triple_exp",
+      "stretched_exp",
+      "diffusion_tail"
+    ],
+    "chosen_challenger_each_fold": "diffusion_tail",
+    "chosen_incumbent_each_fold": "double_exp",
+    "candidate_selection_using_only_other_seven_batteries": true,
+    "challenger_selection_relative_MAE_gain_minimum": 0.05,
+    "outer_win_relative_MAE_gain_minimum": 0.05,
+    "device_wins": 6,
+    "device_losses": 2,
+    "publicly_preregistered_six_of_eight_consistency_test_pass": true,
+    "externally_blind_scientific_evidence_pass": false,
+    "per_device_MAE_volts": [
+      {
+        "battery": "APR",
+        "incumbent": 0.0025251915873375445,
+        "challenger": 0.0021851735704112255,
+        "relative_reduction_pct": 13.47,
+        "passed": true
+      },
+      {
+        "battery": "BSE",
+        "incumbent": 0.0029938879908948846,
+        "challenger": 0.0024499284592143923,
+        "relative_reduction_pct": 18.17,
+        "passed": true
+      },
+      {
+        "battery": "SG",
+        "incumbent": 0.007015627781054636,
+        "challenger": 0.0020420366977578104,
+        "relative_reduction_pct": 70.89,
+        "passed": true
+      },
+      {
+        "battery": "LG",
+        "incumbent": 0.01835118474109569,
+        "challenger": 0.006754214205754382,
+        "relative_reduction_pct": 63.19,
+        "passed": true
+      },
+      {
+        "battery": "OEM",
+        "incumbent": 0.01252102605077285,
+        "challenger": 0.008110554617879007,
+        "relative_reduction_pct": 35.22,
+        "passed": true
+      },
+      {
+        "battery": "LI",
+        "incumbent": 0.012295176653627005,
+        "challenger": 0.018658744881703323,
+        "relative_reduction_pct": -51.756623002233184,
+        "passed": false
+      },
+      {
+        "battery": "AR",
+        "incumbent": 0.009308071320877536,
+        "challenger": 0.010110129852427322,
+        "relative_reduction_pct": -8.616806896943404,
+        "passed": false
+      },
+      {
+        "battery": "AU",
+        "incumbent": 0.010588545813961991,
+        "challenger": 0.008521306278033419,
+        "relative_reduction_pct": 19.52,
+        "passed": true
+      }
+    ],
+    "worst_device": "LI",
+    "worst_device_MAE_increase_pct": 51.756623002233184,
+    "strong_warning": "Six wins do not establish safe generalized predictive model; severe 51.76 percent per-device loss violates practical reliability aspirations."
+  },
+  "posthoc_safety_addendum": {
+    "added_after_initial_public_run": true,
+    "was_preregistered": false,
+    "cannot_be_retroactively_used_as_independent_hypothesis_test": true,
+    "warning_greater_than_ten_percent_error_increase": true,
+    "preexisting_folds_selection_unchanged": true,
+    "all_initial_result_provenance_retained": true
+  },
+  "independent_holdout": {
+    "control_contract_file": "data/tachyon/r38/external_custodian_control_not_provided.json",
+    "source_code_pr": "https://github.com/Hawkar-usls/Demi_Head/pull/90",
+    "status": "NOT_PROVIDED_BY_INDEPENDENT_LAB",
+    "custodian_identity_attested": false,
+    "private_original_measurement_question_and_gold_received": false,
+    "signed_experimental_commitment_received": false,
+    "original_source_and_device_group_to_be_new": true,
+    "no_leakage_into_public_github": true
+  },
+  "safety": {
+    "technical_unit_tests_pass": 10,
+    "actual_original_source_hashes_verified": true,
+    "neural_weights_trained": false,
+    "machine_self_generated_labels_as_truth": false,
+    "candidate_auto_promoted": false,
+    "production_Ocean_changed": false,
+    "NAS_containers_changed": false,
+    "external_independent_physics_verified": false,
+    "scientifically_new_law_discovered": false,
+    "scientific_admission": "HOLD"
+  },
+  "artifact": {
+    "original_github_artifact_id": 13886226187,
+    "original_zip_sha256": "2fe85c0f86999b1b944db2e4306927342f0667addd4bab6eb53a5e03cb10b5a5",
+    "actual_local_zip_sha256_reverified": true,
+    "original_zip_size_bytes": 4180,
+    "report_receipt_sha256": "a3dd9ca1d293bab10dc5fd084600398fc389a44068d65e25c0104f2f39afccdb",
+    "source_manifest_sha256": "74bd6a4fe656c05da301ac7e08af5155c500c2dfb8687e61505b0cfa4ee962e0",
+    "configuration_sha256": "1ebc6c66240ae9d1336e2156674c1816df2a100f3e2e9c2f077ab3e546e12266",
+    "separate_external_custodian_slot_sha256": "ee4de3824d1d1e68f2c243cc62b57b37b42879a823eeed9520f8612e62054b7b",
+    "google_drive_archive_url": "https://drive.google.com/file/d/1hzD1QBYk5uHo5gZf7w-krdv9Tq7jUbeS/view?usp=drivesdk",
+    "Drive_zip_rehash_not_independently_done": true
+  },
+  "next_step": "Prospective independent new device/chemistry laboratory holdout with independent attested gold and predeclared worst-device regression constraints; richer physically justified baselines and source quality/rights review; only then separately approved bounded neural research training.",
+  "registry_operation": "APPEND_ONLY_DRAFT_NEGATIVE_RESULTS_AND_POSTHOC_WARNING_INCLUDED"
+}
