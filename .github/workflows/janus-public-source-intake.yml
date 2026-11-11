@@ -5,6 +5,8 @@ on:
     paths:
       - "tools/janus_public_source_intake.py"
       - "tests/test_public_source_intake.py"
+      - "tests/test_janus_r3_evaluate.py"
+      - "tools/janus_r3_evaluate.py"
       - "EYE/training/train_eye_registry.py"
       - ".github/workflows/eye-meta-registry-train.yml"
       - ".github/workflows/janus-public-source-intake.yml"
@@ -34,7 +36,8 @@ jobs:
       - name: Offline fail-closed provenance, GDELT and EYE quarantine checks
         run: |
           python -m unittest discover -s tests -p test_public_source_intake.py -v
-          python -m py_compile tools/janus_public_source_intake.py
+          python -m unittest discover -s tests -p test_janus_r3_evaluate.py -v
+          python -m py_compile tools/janus_public_source_intake.py tools/janus_r3_evaluate.py
 
   collect:
     needs: source-contracts
@@ -55,11 +58,18 @@ jobs:
           python tools/janus_public_source_intake.py --live --outdir "$RUNNER_TEMP/public-intake"
           for f in "$RUNNER_TEMP"/public-intake/*.json; do
             python tools/janus_public_source_intake.py --verify "$f"
+            name="$(basename "$f")"
+            qname="${name/JANUS-PUBLIC-SOURCES-/JANUS-R3-QUALITY-}"
+            python tools/janus_r3_evaluate.py --input "$f" \
+              --history data/observations/public_source_quarantine \
+              --out "$RUNNER_TEMP/quality/$qname"
           done
       - uses: actions/upload-artifact@v4
         with:
           name: janus-public-source-quarantine-snapshot
-          path: ${{ runner.temp }}/public-intake/*.json
+          path: |
+            ${{ runner.temp }}/public-intake/*.json
+            ${{ runner.temp }}/quality/*.json
           retention-days: 14
           if-no-files-found: error
 
@@ -84,12 +94,19 @@ jobs:
           python tools/janus_public_source_intake.py --live --outdir "$RUNNER_TEMP/public-intake"
           for f in "$RUNNER_TEMP"/public-intake/*.json; do
             python tools/janus_public_source_intake.py --verify "$f"
+            name="$(basename "$f")"
+            qname="${name/JANUS-PUBLIC-SOURCES-/JANUS-R3-QUALITY-}"
+            python tools/janus_r3_evaluate.py --input "$f" \
+              --history data/observations/public_source_quarantine \
+              --out "$RUNNER_TEMP/quality/$qname"
           done
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: janus-public-source-pr-readonly-smoke
-          path: ${{ runner.temp }}/public-intake/*.json
+          path: |
+            ${{ runner.temp }}/public-intake/*.json
+            ${{ runner.temp }}/quality/*.json
           retention-days: 14
           if-no-files-found: warn
 
@@ -121,32 +138,47 @@ jobs:
         run: |
           set -euo pipefail
           count="$(find incoming -maxdepth 1 -type f -name 'JANUS-PUBLIC-SOURCES-*.json' | wc -l)"
-          if [ "$count" -ne 1 ]; then
-            echo "JANUS_EXPECTED_SINGLE_RECEIPT_FILE" >&2
+          qcount="$(find incoming -maxdepth 1 -type f -name 'JANUS-R3-QUALITY-*.json' | wc -l)"
+          if [ "$count" -ne 1 ] || [ "$qcount" -ne 1 ]; then
+            echo "JANUS_EXPECTED_ONE_SOURCE_AND_QUALITY_RECEIPT" >&2
             exit 1
           fi
           src="$(find incoming -maxdepth 1 -type f -name 'JANUS-PUBLIC-SOURCES-*.json' -print -quit)"
           name="$(basename "$src")"
-          python tools/janus_public_source_intake.py --verify "$src"
-          dest="data/observations/public_source_quarantine/$name"
-          if [ -e "$dest" ]; then
-            echo "JANUS_PUBLIC_SOURCE_INTAKE_ALREADY_ARCHIVED"
-            exit 0
-          fi
           suffix="$(printf '%s' "$name" | sed 's/^JANUS-PUBLIC-SOURCES-//;s/\.json$//')"
+          qname="JANUS-R3-QUALITY-$suffix.json"
+          qsrc="incoming/$qname"
+          test -f "$qsrc"
+          python tools/janus_public_source_intake.py --verify "$src"
+          python tools/janus_r3_evaluate.py --input "$src" \
+            --history data/observations/public_source_quarantine \
+            --out "$RUNNER_TEMP/recomputed-quality.json"
+          cmp -- "$qsrc" "$RUNNER_TEMP/recomputed-quality.json"
+          dest="data/observations/public_source_quarantine/$name"
+          qdest="data/observations/public_source_quality/$qname"
+          if [ -e "$dest" ] || [ -e "$qdest" ]; then
+            if [ -e "$dest" ] && [ -e "$qdest" ]; then
+              echo "JANUS_PUBLIC_SOURCE_INTAKE_ALREADY_ARCHIVED"
+              exit 0
+            fi
+            echo "JANUS_PARTIAL_DUPLICATE_DETECTED" >&2
+            exit 1
+          fi
           branch="janus/public-intake-$suffix"
           if git ls-remote --exit-code --heads origin "refs/heads/$branch" >/dev/null 2>&1; then
             echo "JANUS_SOURCE_INTAKE_EXISTING_REVIEW_BRANCH=$branch"
             exit 0
           fi
-          mkdir -p data/observations/public_source_quarantine
+          mkdir -p data/observations/public_source_quarantine data/observations/public_source_quality
           git switch -c "$branch"
           cp -- "$src" "$dest"
+          cp -- "$qsrc" "$qdest"
           git config user.name "janus-public-source-intake[bot]"
           git config user.email "janus-public-source-intake[bot]@users.noreply.github.com"
-          git add -- "$dest"
+          git add -- "$dest" "$qdest"
           staged="$(git diff --cached --name-only)"
-          if [ "$staged" != "$dest" ]; then
+          expected="$(printf '%s\n%s\n' "$dest" "$qdest" | LC_ALL=C sort)"
+          if [ "$staged" != "$expected" ]; then
             echo "JANUS_QUARANTINE_WRITE_SCOPE_VIOLATION" >&2
             exit 1
           fi
@@ -155,7 +187,7 @@ jobs:
           git push origin "HEAD:refs/heads/$branch"
           if gh pr create --base main --head "$branch" \
             --title "JANUS public evidence intake (untrusted review): $name" \
-            --body "Append-only public-source metadata from bounded daily GitHub Actions: GDELT GKG batch integrity, OpenAlex and Wikipedia metadata, and R2H run metadata. These observations are QUARANTINED, excluded from EYE learning and not verified scientific facts. Review provenance and provider errors before merge. Never auto-promote, auto-train or auto-merge."; then
+            --body "Two append-only JSON records: source metadata and linked R3 quality/novelty receipt. Public GDELT, OpenAlex, Wikipedia and R2H pointers remain QUARANTINED and excluded from automatic model training. Review source provenance, new DOI/URL metadata and quality status before merge; never auto-merge or scientifically admit."; then
             echo "JANUS_PUBLIC_SOURCE_PR_CREATED=$branch" >> "$GITHUB_STEP_SUMMARY"
           else
             echo "JANUS_PUBLIC_SOURCE_PR_CREATION_BLOCKED=$branch" >> "$GITHUB_STEP_SUMMARY"
