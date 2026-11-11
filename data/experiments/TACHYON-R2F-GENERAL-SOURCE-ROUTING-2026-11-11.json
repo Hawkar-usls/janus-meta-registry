@@ -1,0 +1,61 @@
+{
+  "schema": "janus.meta_registry.tachyon_r2f_general_source_routing.v1",
+  "record_id": "TACHYON-R2F-2026-11-11-RUN-43026934534",
+  "created_date_utc": "2026-11-11",
+  "origin": {
+    "repo": "Hawkar-usls/Demi_Head",
+    "pr": "https://github.com/Hawkar-usls/Demi_Head/pull/76",
+    "head_commit": "287a539e2462742d02be7f2a41a1a20d4a747cbb",
+    "ci_run": "https://github.com/Hawkar-usls/Demi_Head/actions/runs/43026934534"
+  },
+  "problem": "A physics-only R2D evaluator correctly abstained on 4/4 general queries, but an end-user JANUS query router should not treat all nonphysics topics as terminal refusals.",
+  "change": {
+    "new_module": "tachyon/r2f_general_router.py",
+    "new_index": "data/tachyon/r2f/general_source_cards.json",
+    "training_modified": false,
+    "physics_only_benchmark_changed": false,
+    "general_source_index_isolated_from_physics_training": true,
+    "source_domains": [
+      "energy.gov",
+      "energystar.gov",
+      "extension.missouri.edu",
+      "extension.umd.edu",
+      "kingarthurbaking.com"
+    ],
+    "out_of_scope_behavior": "Attempt source-backed general answer; where no local source, emit external search request; for ambiguous live events ask for the missing identifying information."
+  },
+  "ci": {
+    "status": "SUCCESS",
+    "tests_passed": 8,
+    "tests_total": 8,
+    "public_development_cases": 18,
+    "former_ood_cases": {
+      "nas": "GENERAL_SOURCE_ANSWER",
+      "garden": "GENERAL_SOURCE_ANSWER",
+      "cooking": "GENERAL_SOURCE_ANSWER",
+      "football": "NEEDS_CLARIFICATION"
+    },
+    "unknown_subject": "EXTERNAL_SEARCH_REQUIRED",
+    "specific_live_sports": "EXTERNAL_SEARCH_REQUIRED",
+    "external_live_search_wired_into_CI": false,
+    "independent_blind_scientific_test": false
+  },
+  "archive": {
+    "original_github_artifact_id": 13858885286,
+    "github_zip_sha256": "56e34073bdc1f3aa8736e1d33d58475e31d7e8e8a8c91a375c3df50e06a5cd26",
+    "drive_file_id": "1UzlOXDs9dEu3QScTi8QXf46aaDQP3ku7",
+    "drive_url": "https://drive.google.com/file/d/1UzlOXDs9dEu3QScTi8QXf46aaDQP3ku7/view?usp=drivesdk",
+    "size_bytes": 5552,
+    "read_back_status": "METADATA_VERIFIED_NOT_REHASHED"
+  },
+  "limitation": "3 general responses are curated evidence-backed examples, not general neural knowledge. The football query is ambiguous and cannot be answered responsibly without identifying the match. Dynamic online search is not implemented in this isolated research workflow.",
+  "status": "ROUTER_CI_PASS_RESEARCH_ONLY",
+  "scientific_admission": "HOLD",
+  "production": {
+    "main_modified": false,
+    "janus_ocean_modified": false,
+    "model_deployed": false,
+    "authority_delta": 0
+  },
+  "registry_operation": "APPEND_ONLY_DRAFT"
+}
