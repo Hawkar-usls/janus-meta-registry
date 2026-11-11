@@ -4,13 +4,17 @@ on:
   pull_request:
     paths:
       - 'data/observations/public_source_quarantine/**'
+      - 'data/observations/public_source_quality/**'
       - 'tools/janus_public_source_intake.py'
+      - 'tools/janus_r3_evaluate.py'
       - '.github/workflows/janus-public-source-receipt-integrity.yml'
   push:
     branches: [main]
     paths:
       - 'data/observations/public_source_quarantine/**'
+      - 'data/observations/public_source_quality/**'
       - 'tools/janus_public_source_intake.py'
+      - 'tools/janus_r3_evaluate.py'
   workflow_dispatch:
 
 permissions:
@@ -49,6 +53,32 @@ jobs:
               assert data['training_permitted'] is False
               assert data['factual_claims_verified'] is False
           print('JANUS_QUARANTINE_SHA_POLICY_VERIFIED',len(files))
+          PY
+      - name: Validate all R3 quality receipts and corresponding quarantine sources
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          from tools.janus_r3_evaluate import validate_quality
+          quarantine=Path('data/observations/public_source_quarantine')
+          quality=Path('data/observations/public_source_quality')
+          reports=sorted(quality.glob('JANUS-R3-QUALITY-*.json')) if quality.exists() else []
+          assert len(reports)<=1000,'R3_QUALITY_RECORD_COUNT_REVIEW_REQUIRED'
+          for p in reports:
+              suffix=p.stem.removeprefix('JANUS-R3-QUALITY-')
+              source=quarantine/('JANUS-PUBLIC-SOURCES-'+suffix+'.json')
+              assert source.is_file(),('ORPHAN_QUALITY_REPORT',p)
+              q=json.loads(p.read_text(encoding='utf8'))
+              original=json.loads(source.read_text(encoding='utf8'))
+              validate_quality(q,original)
+          # Only the original pre-R3 observation is allowed without quality.
+          legacy={'JANUS-PUBLIC-SOURCES-5277ff2d788de4b43f27.json'}
+          if quarantine.exists():
+              for src in quarantine.glob('JANUS-PUBLIC-SOURCES-*.json'):
+                  suffix=src.stem.removeprefix('JANUS-PUBLIC-SOURCES-')
+                  counterpart=quality/('JANUS-R3-QUALITY-'+suffix+'.json')
+                  assert src.name in legacy or counterpart.is_file(),('MISSING_R3_QUALITY',src)
+          print('JANUS_R3_LINKED_QUALITY_RECEIPTS_PASS',len(reports))
           PY
       - name: Quarantine never enters EYE derived training
         run: |
