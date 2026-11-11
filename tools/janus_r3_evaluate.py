@@ -34,7 +34,10 @@ def fingerprinted_sources(record):
     """Validate metadata types, domain scopes and integrity; return unique IDs."""
     validate_receipt(record)
     sources=record["sources"]
-    need(set(sources)=={"gdelt_gkg","wikipedia","openalex","tachyon_action"},
+    original={"gdelt_gkg","wikipedia","openalex","tachyon_action"}
+    # Historical R3 v1 source receipts have four providers; do not invalidate
+    # append-only records when a fifth provider is added.
+    need(set(sources) in (original,original|{"ocean_action"}),
          "R3_UNEXPECTED_SOURCES")
     names=set()
     metrics={}
@@ -51,7 +54,8 @@ def fingerprinted_sources(record):
             "gdelt_gkg":"PUBLIC_GKG_BATCH_STRUCTURALLY_READABLE",
             "wikipedia":"PUBLIC_ENCYCLOPEDIA_METADATA",
             "openalex":"BIBLIOGRAPHIC_METADATA_ONLY",
-            "tachyon_action":"PUBLIC_ACTION_RUN_METADATA_ONLY"
+            "tachyon_action":"PUBLIC_ACTION_RUN_METADATA_ONLY",
+            "ocean_action":"PUBLIC_ACTION_RUN_METADATA_ONLY"
         }[typ],"R3_CROSS_SOURCE_STATUS_SPOOF")
         if typ=="gdelt_gkg":
             u=item.get("gkg_url","")
@@ -102,14 +106,27 @@ def fingerprinted_sources(record):
                 names.add("doi:"+url.lower())
             count=len(data)
         else:
+            target={
+                "tachyon_action":("Hawkar-usls/Demi_Head",
+                                  "tachyon-r2h-parallel-research.yml"),
+                "ocean_action":("Hawkar-usls/Janus-Demiurge",
+                                "janus-ocean-meta-next.yml")
+            }[typ]
+            need((item.get("repository"),item.get("workflow"))==target,
+                 "R3_ACTION_REPOSITORY_SPOOF")
             need(item.get("candidate_auto_promoted") is False and
                  item.get("scientific_quality_of_model_verified") is False,
                  "R3_ACTION_RUN_NOT_A_SCIENCE_PASS")
-            need(isinstance(item.get("run_id"),int) and
+            need(type(item.get("run_id")) is int and
                  item["run_id"]>0 and GITHUB_SHA_RE.fullmatch(
                      str(item.get("head_sha",""))) is not None,
                  "R3_INVALID_RUN_PROVENANCE")
-            names.add("github-run:"+str(item["run_id"])+":"+item["head_sha"])
+            if typ=="ocean_action":
+                need(item.get("model_weights_or_metrics_independently_verified")
+                     is False and
+                     item.get("trained_on_unreviewed_r3_source_text") is False,
+                     "R3_OCEAN_RUN_NOT_A_SCIENCE_PASS")
+            names.add(typ+":github-run:"+str(item["run_id"])+":"+item["head_sha"])
             count=1
         metrics[typ]={"status":status,"records":count,
                       "integrity_passed":True}
