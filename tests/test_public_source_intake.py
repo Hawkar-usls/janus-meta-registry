@@ -216,10 +216,14 @@ class PublicIntake(unittest.TestCase):
     def test_model_indexes_must_exclude_quarantine(self):
         from EYE.training.train_eye_registry import EXCLUDED_PREFIXES, iter_files
         self.assertIn("data/observations/public_source_quarantine/", EXCLUDED_PREFIXES)
+        self.assertIn("data/observations/public_source_quality/", EXCLUDED_PREFIXES)
         with tempfile.TemporaryDirectory() as root:
             directory=Path(root)/"data/observations/public_source_quarantine"
             directory.mkdir(parents=True)
             (directory/"JANUS-PUBLIC-SOURCES-test.json").write_text("{}")
+            quality=Path(root)/"data/observations/public_source_quality"
+            quality.mkdir(parents=True)
+            (quality/"JANUS-R3-QUALITY-test.json").write_text("{}")
             (Path(root)/"allowed.json").write_text("{}")
             included={p.relative_to(root).as_posix() for p in iter_files(Path(root))}
             self.assertEqual(included,{"allowed.json"})
