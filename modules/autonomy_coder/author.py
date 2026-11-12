@@ -96,7 +96,7 @@ def generate(state, run_id, cache, need_gate=None):
     prompt = (f"Write one Python function: def {task}({', '.join(args)}):\n{description}\n"
               "Return only Python code. No imports, no I/O, no external functions, no decorators. "
               "Use only Python builtins and local variables. Do not include tests or a main program."
-              + "\\nJANUS CODER RULES:\\n" + "\\n".join(
+              + "\nJANUS CODER RULES:\n" + "\n".join(
                   f"{index}. {rule}" for index, rule in enumerate(rules["authoring_rules"], 1)))
     for index in range(2):
         messages = [{"role": "system", "content": "You write short, correct, pure Python functions."},
