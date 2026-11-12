@@ -62,7 +62,7 @@ class CoderTests(unittest.TestCase):
                 p.validate_source(source, "retry_delay")
 
     def test_source_trailing_whitespace_is_rejected_before_model_admission(self):
-        dirty = GOOD.replace("    return", "    \\n    return")
+        dirty = GOOD.replace("    return", "    \n    return")
         self.assertNotEqual(p.source_digest(dirty), p.source_digest(GOOD))
         with self.assertRaisesRegex(ValueError, "SOURCE_TRAILING_WHITESPACE"):
             p.validate_source(dirty, "retry_delay")
