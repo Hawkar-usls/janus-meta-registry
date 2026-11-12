@@ -65,7 +65,7 @@ def validate_source(source, task):
         raise ValueError("SOURCE_SIZE_OR_TASK")
     # Git's diff --check rejects trailing spaces in accepted immutable model bytes.
     # Reject before evaluation and publishing; do not silently rewrite model output.
-    if any(line.rstrip(" \\t") != line for line in source.splitlines()):
+    if any(line.rstrip(" \t") != line for line in source.splitlines()):
         raise ValueError("SOURCE_TRAILING_WHITESPACE")
     tree = ast.parse(source)
     if len(tree.body) != 1 or not isinstance(tree.body[0], ast.FunctionDef):
