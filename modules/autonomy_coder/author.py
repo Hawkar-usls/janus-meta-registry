@@ -9,6 +9,19 @@ import time
 from policy import (MODEL_ID, MODEL_REVISION, WEIGHTS_SHA256, TASKS, digest, empty_state,
                     next_task, extract_source, source_digest, validate_bundle)
 
+RULES_FILE = Path(__file__).with_name("CODER_RULES_v1.json")
+
+def load_coder_rules():
+    """Local reviewed curriculum manifest; no downloads or imported third-party code."""
+    rules = json.loads(RULES_FILE.read_text(encoding="utf-8"))
+    if (rules.get("schema") != "janus.autonomous_coder.rules.v1" or
+        rules.get("execution_mode") != "PROPOSE_VERIFY_ISOLATED" or
+        not isinstance(rules.get("authoring_rules"), list) or
+        len(rules["authoring_rules"]) != 9 or
+        not all(isinstance(s, str) and 0 < len(s) <= 240 for s in rules["authoring_rules"])):
+        raise ValueError("CODER_RULES_MANIFEST_INVALID")
+    return rules
+
 FILES = {"config.json": "e2aa18293b0dd66539341467fa454878a5adb2be",
          "generation_config.json": "c28f9c697cbc09f047434efec57556505af31111",
          "merges.txt": "20024bfe7c83998e9aeaf98a0cd6a2ce6306c2f0",
@@ -78,9 +91,13 @@ def generate(state, run_id, cache, need_gate=None):
     torch, tokenizer, model, versions = load_model(cache)
     result["runtime_versions"] = versions
     args, description = TASKS[task]
+    rules = load_coder_rules()
+    result["rules_sha256"] = digest(rules)
     prompt = (f"Write one Python function: def {task}({', '.join(args)}):\n{description}\n"
               "Return only Python code. No imports, no I/O, no external functions, no decorators. "
-              "Use only Python builtins and local variables. Do not include tests or a main program.")
+              "Use only Python builtins and local variables. Do not include tests or a main program."
+              + "\\nJANUS CODER RULES:\\n" + "\\n".join(
+                  f"{index}. {rule}" for index, rule in enumerate(rules["authoring_rules"], 1)))
     for index in range(2):
         messages = [{"role": "system", "content": "You write short, correct, pure Python functions."},
                     {"role": "user", "content": prompt + (" Prefer a different implementation." if index else "")}]
