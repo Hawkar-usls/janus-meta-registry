@@ -61,6 +61,13 @@ class CoderTests(unittest.TestCase):
             with self.subTest(source=source), self.assertRaises((ValueError, SyntaxError)):
                 p.validate_source(source, "retry_delay")
 
+    def test_source_trailing_whitespace_is_rejected_before_model_admission(self):
+        dirty = GOOD.replace("    return", "    \\n    return")
+        self.assertNotEqual(p.source_digest(dirty), p.source_digest(GOOD))
+        with self.assertRaisesRegex(ValueError, "SOURCE_TRAILING_WHITESPACE"):
+            p.validate_source(dirty, "retry_delay")
+        self.assertEqual(p.validate_source(GOOD, "retry_delay"), GOOD)
+
     def test_set_add_only_for_single_initialized_local_builtin_set(self):
         good = ("def stable_unique(values):\n"
                 "    seen = set()\n"
