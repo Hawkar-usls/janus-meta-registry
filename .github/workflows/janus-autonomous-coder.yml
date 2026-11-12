@@ -8,6 +8,8 @@ on:
     paths:
       - 'modules/autonomy_coder/**'
       - 'tests/test_autonomy_coder.py'
+      - 'tests/test_coder_rules_v1.py'
+      - 'modules/autonomy_coder/CODER_RULES_v1.json'
       - 'tests/test_autonomy_module_registry.py'
       - 'tests/test_rex_need_intake.py'
       - '.github/workflows/janus-autonomous-coder.yml'
@@ -37,6 +39,7 @@ jobs:
       - name: Offline admission, provenance, conflict and exactly-once controls
         run: |
           python -m unittest discover -v -s tests -p test_autonomy_coder.py
+          python -m unittest discover -v -s tests -p test_coder_rules_v1.py
           python -m unittest discover -v -s tests -p test_autonomy_module_registry.py
           python -m unittest discover -v -s tests -p test_rex_need_intake.py
       - name: Pull exact isolated evaluation runtime
