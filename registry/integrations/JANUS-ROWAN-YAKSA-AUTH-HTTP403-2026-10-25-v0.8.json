@@ -1,0 +1,43 @@
+{
+  "schema_id": "janus.meta_registry.rowan_local_auth_probe.v0.8",
+  "artifact_id": "JANUS-ROWAN-YAKSA-PROJECT-KEY-AUTH-GATE-2026-10-25-v0.8",
+  "date_local": "2026-10-25",
+  "evidence_status": "ACTUAL_PROVIDER_READ_ONLY_REQUESTS_FAILED_403",
+  "owner_repo": "Hawkar-usls/Janus",
+  "project": "Tranception × Rowan → TOPA",
+  "folder_uuid": "70480946-24c3-4078-91d1-ad99009262bf",
+  "local_runtime": {
+    "device": "Yaksa",
+    "device_connection": "ONLINE",
+    "sdk": "rowan-python 3.2.3",
+    "key_store": "Windows-current-user-DPAPI-outside-Git",
+    "new_local_key_received": true,
+    "master_key_not_used": true
+  },
+  "tests": {
+    "local_encrypted_key_read": "PASS",
+    "key_format": "HAS_ROWAN_SK_PREFIX_LENGTH_GE_20_NO_WHITESPACE",
+    "sdk_get_api_key_equals_env": "PASS",
+    "endpoint_whoami_read_only": {
+      "attempted": true,
+      "http_status": 403,
+      "accepted": false
+    },
+    "endpoint_retrieve_folder_read_only": {
+      "attempted": true,
+      "http_status": 403,
+      "accepted": false
+    },
+    "backend_authentication": "NOT_ESTABLISHED",
+    "folder_contents": "NOT_OBTAINED",
+    "account_credits": "NOT_OBTAINED",
+    "jobs_submitted": 0
+  },
+  "interpretation": "Both read-only account and folder requests rejected by provider (HTTP 403). This alone cannot distinguish revoked/expired/scoped key from platform access restriction; SDK detects the configured key. No claim that credentials are invalid rather than insufficiently authorized.",
+  "next_action": "Inspect key expiry, status, read scope, project restriction and account/folder ownership in Rowan Account/API Keys. Use local hidden entry for an authorized project key; never paste keys into GitHub or chat. Retry read-only only before any credit use.",
+  "science": {
+    "rowan_live_cofolding": "NOT_RUN",
+    "tranception_fitness": "NOT_RUN",
+    "topa_review": "OPEN"
+  }
+}
