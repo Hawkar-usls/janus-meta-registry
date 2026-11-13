@@ -54,3 +54,7 @@ not private deployment status. An unreachable GitHub endpoint produces an
 explicit hold or incomplete finding rather than fabricated PASS.
 
 Non-public connected repositories are assessed in their **own repositories' GitHub CI**; this public Meta Registry audit does not publish their names, commits, test data or paths. An independent success in a separate private repository is not counted among the 48 public successes.
+
+## Central fallback for incomplete public repositories
+
+When an otherwise pinned public repository does not yet carry its own `.janus/essence/fixture.json`, the central GitHub audit uses **exactly the known Git-blob-pinned synthetic fixture** from Meta Registry. The report marks `fixture_origin=PUBLIC_META_REGISTRY_FALLBACK_NOT_REPO_LOCAL` and counts such repos separately. Thus the six-role *contract* can pass independently, but that repo is still **not self-contained**. Native repository-level read-only CI must pass and be merged before the local fixture gap closes. Failures in an unrelated app build remain visible and are not bypassed by this audit.
