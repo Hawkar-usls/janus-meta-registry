@@ -1,0 +1,61 @@
+name: ESSENCE v1.3 GitHub Peer Research Exchange
+
+on:
+  pull_request:
+    paths:
+      - "data/essence/v13/JANUS_ESSENCE_GITHUB_PEER_LINEAGE_2026-11-14.json"
+      - "tools/essence_v13_github_peer_exchange.py"
+      - ".github/workflows/essence-v13-github-peer-exchange.yml"
+  workflow_dispatch:
+  schedule:
+    - cron: '53 4 * * *'
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: essence-v13-peer-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verified-data-only-offers:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Enforce source immutability, no runtime rights and negative mutation controls
+        run: python tools/essence_v13_github_peer_exchange.py --selftest
+      - name: Load previous same-repository peer artifact, if present
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          mkdir -p .peer_previous
+          while read -r run_id; do
+            [ -n "$run_id" ] || continue
+            gh run download "$run_id" -n essence-v13-peer-offers -D .peer_previous >/dev/null 2>&1 || continue
+            if [ -s .peer_previous/ci_peer_offers.json ]; then
+              echo "PREVIOUS_PEER=.peer_previous/ci_peer_offers.json" >> "$GITHUB_ENV"
+              break
+            fi
+          done < <(gh run list --workflow essence-v13-github-peer-exchange.yml --branch main --status success --limit 4 --json databaseId --jq '.[].databaseId' 2>/dev/null || true)
+      - name: Prepare data-only offers or hold repeated evidence
+        shell: bash
+        run: |
+          args=()
+          if [ -n "${PREVIOUS_PEER:-}" ]; then
+            args+=(--previous "$PREVIOUS_PEER")
+          fi
+          python tools/essence_v13_github_peer_exchange.py \
+            --out research/essence/v13/ci_peer_offers.json "${args[@]}"
+      - name: Upload peer receipts for manual evaluation by other repositories
+        uses: actions/upload-artifact@v4
+        with:
+          name: essence-v13-peer-offers
+          path: research/essence/v13/ci_peer_offers.json
+          if-no-files-found: error
+          retention-days: 30
