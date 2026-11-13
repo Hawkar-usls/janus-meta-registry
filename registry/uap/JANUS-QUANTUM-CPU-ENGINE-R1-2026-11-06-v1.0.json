@@ -1,0 +1,133 @@
+{
+  "artifact_id": "JANUS-QUANTUM-CPU-ENGINE-R1-2026-11-06-v1.0",
+  "version": "1.0",
+  "date": "2026-11-06",
+  "language": "ru",
+  "registry": {
+    "repository": "Hawkar-usls/janus-meta-registry",
+    "path": "registry/uap/JANUS-QUANTUM-CPU-ENGINE-R1-2026-11-06-v1.0.json",
+    "mode": "APPEND_ONLY",
+    "status": "DRAFT_BRANCH_UNMERGED"
+  },
+  "parent_artifacts": [
+    "registry/uap/JANUS-CPU-QUANTUM-RETRO-EMULATOR-2026-11-06-v1.0.json",
+    "registry/uap/JANUS-TEMPORAL-SIGNAL-SEARCH-77-AND-DEUTSCH-CTC-2026-11-06-v1.0.json",
+    "registry/uap/JANUS-RETRO-BYTE-CAMPAIGN-2026-11-06-v1.0.json"
+  ],
+  "classification": "CPU_QUANTUM_BACKEND_R1_VERIFIED__NO_PHYSICAL_RETROCAUSAL_SIGNAL",
+  "user_goal": "Create a general CPU-only quantum-computing emulator for JANUS and search for independently verifiable future-to-past signals without a QPU.",
+  "implementation": {
+    "repo": "Hawkar-usls/Janus-Demiurge",
+    "branch": "research/janus-quantum-engine-cpu-r1-20261106",
+    "code_pr": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/450",
+    "code_file": "experiments/ocean_transformer/janus_quantum_cpu_engine_r1.py",
+    "tests_file": "experiments/ocean_transformer/test_janus_quantum_cpu_engine_r1.py",
+    "workflow_file": ".github/workflows/janus-quantum-cpu-engine-r1.yml",
+    "code_head_sha": "ddec715dcbaa2fda6de8fb5d640e847fc64c4cc6",
+    "engine": "Classical CPU-only adaptive circuit interpreter. Stim for Clifford; NumPy complex128 for circuits containing non-Clifford T; no physical quantum hardware.",
+    "circuit_ir": "Little-endian n qubits, gates {name,qubits}, H,X,Z,S,T,CX,CZ,SWAP.",
+    "backend_selection": {
+      "clifford": "Stim 1.16.0 tableau/stabilizer",
+      "non_clifford": "NumPy 2.3.3 vectorized dense statevector"
+    },
+    "resource_limits": {
+      "max_dense_qubits": 20,
+      "max_stabilizer_qubits": 512,
+      "verified_stabilizer_qubits": 256,
+      "max_gates": 20000
+    },
+    "architecture_inspiration": [
+      {
+        "name": "Qiskit Aer",
+        "url": "https://qiskit.github.io/qiskit-aer/stubs/qiskit_aer.AerSimulator.html",
+        "feature": "Adaptive backends: statevector, density matrix, stabilizer, matrix product state"
+      },
+      {
+        "name": "Google qsim",
+        "url": "https://github.com/quantumlib/qsim",
+        "feature": "Vectorization and gate fusion; not yet added to R1"
+      },
+      {
+        "name": "Stim",
+        "url": "https://github.com/quantumlib/Stim",
+        "feature": "Fast stabilizer tableaux/Clifford circuits"
+      }
+    ],
+    "production_mutated": false,
+    "NAS_utilized": false,
+    "existing_retro_byte_campaign_mutated": false
+  },
+  "exact_verification": {
+    "workflow_run_id": 42273544354,
+    "workflow_run_url": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/42273544354",
+    "workflow_conclusion": "success",
+    "jobs": [
+      {
+        "python": "3.11",
+        "conclusion": "success"
+      },
+      {
+        "python": "3.12",
+        "conclusion": "success"
+      }
+    ],
+    "unit_tests_per_job": 12,
+    "test_classes": [
+      "single qubit Bloch expectations",
+      "non-Clifford T phase via NumPy",
+      "256-qubit GHZ via Stim",
+      "independent Stim vs NumPy 6-qubit observable comparisons",
+      "CX and SWAP semantics",
+      "Bell late-choice no-signalling",
+      "eight-Bell-pair late-choice no-signalling",
+      "forbidden future manipulation of early register rejected",
+      "extra early fields rejected",
+      "invalid gate indices/arity rejected",
+      "backend memory budgets respected",
+      "research-only claim gates"
+    ],
+    "largest_verified_clifford_case": {
+      "qubits": 256,
+      "GHZ_gates": 256,
+      "backend": "stim",
+      "single_worker_wall_clock_seconds": 0.001921,
+      "timing_note": "From Python 3.12 GitHub worker log, only engine time, not full CI; not an apples-to-apples speedup vs old 16-qubit Python script."
+    },
+    "independently_crosschecked_qubits": 6,
+    "maximum_cross_backend_bloch_component_difference": 4.440892098500626e-16,
+    "dense_nonclifford_case": {
+      "qubits": 16,
+      "backend": "numpy"
+    },
+    "artifacts": [
+      "janus-quantum-engine-r1-py3.11",
+      "janus-quantum-engine-r1-py3.12"
+    ],
+    "no_signal_for_early_bell_and_eight_pair_choice": true,
+    "physical_retrocausal_signal_demonstrated": false
+  },
+  "scientific_boundary": {
+    "cpu_emulation_is_forward_causal_execution": true,
+    "independent_future_bit_not_provided_by_emulator": true,
+    "hypothetical_ctc_fixed_point_only_if_future_value_already_given": true,
+    "postselection_as_primary_evidence": false,
+    "quantum_advantage_or_real_exponential_speedup_claimed": false,
+    "physically_early_result_independently_sealed_before_future_choice": false,
+    "physical_time_travel_implemented": false,
+    "no_production_promotion": true,
+    "status": "RESEARCH_ONLY",
+    "why": "A CPU emulating the quantum state implements classical rules in ordinary time. An unknown independently generated late bit cannot be obtained by running those rules without a physical resource or information leak. Outputs may validate a mathematical retrocausal hypothesis but cannot independently prove a physical channel."
+  },
+  "next_milestones": [
+    "R2: introduce additional backends (Qiskit Aer MPS or qsim), conditioned on workload metrics and independent reference tests.",
+    "R3: specify and search hypothetical non-CPTP/CTC/process-matrix candidates with exact accounting for normalization and leak/selection controls; record mathematical-only labels.",
+    "R4: freeze every real prior CPU generated candidate's *early* bit prediction, obtain independent late entropy in a separate externally sealed stage, verify all unselected trials, and retain controls.",
+    "R5: require physically authenticated timing, independent replication and no classical leakage before any physical retrocausal signal claim."
+  ],
+  "candidate_validation": {
+    "late_local_X_on_entangled_pair": "NO_UNCONDITIONAL_EARLY_SIGNAL",
+    "late_local_X_on_eight_entangled_pairs": "NO_UNCONDITIONAL_EARLY_SIGNAL",
+    "structural_guard": "Late branch gates cannot touch earlier registered qubits in simulated chronology.",
+    "real_physical_resource": "NONE"
+  }
+}
