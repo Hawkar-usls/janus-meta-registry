@@ -1,0 +1,58 @@
+{
+  "schema": "janus.nist010ij.source_dependency_audit.v1",
+  "id": "JANUS-NIST-010I-J-MISSING-SYNC-SOURCE-2026-11-10",
+  "date_utc": "2026-11-10",
+  "status": "ORIGINAL_NIST_SOURCE_ARCHIVE_VERIFIED__CLOCK_OFFSET_ALGORITHM_DEPENDENCY_MISSING",
+  "source": {
+    "url": "https://s3.amazonaws.com/nist-belltestdata/belldata/code/analysis/bell_analysis_code.zip",
+    "zip_sha256": "80b452b55ce44bb46e37ffbcd1f1684ba3293aaf0b6445c36743da4a5d37c52d",
+    "zip_bytes": 787181075,
+    "scanned_source_files": 39
+  },
+  "findings": [
+    "sync_hdf5.py/getOffsets invokes build_file.find_ttag_offset from build_file_txt.py",
+    "Full original NIST ZIP has no build_file_txt.py among its Python source paths",
+    "NIST source code saves discovered initial source-record cuts in offsets/firstsync and offsets/lastidx in intermediate .sync.hdf5",
+    "Original corrected 03_43 .build.hdf5 inspection found only alice,bob,config top-level groups; no offsets/firstsync metadata",
+    "build_file_hdf5.py sets bitoffset Alice=28+bitdelay and Bob=37+bitdelay, uses it as Pockels laser pulse slot offset, NOT physical inter-station clock shift",
+    "Original build_file.yaml includes alice.ttag_offset=412877607557458, bob.ttag_offset=155367676929660, abDelay=1192 with original comment 'changed after 10MHz PD died'; these are UNVERIFIED configuration constants",
+    "Explicit 010J required-dependency check refused with missing original source file"
+  ],
+  "source_code_paths": [
+    "bell_analysis_code/sync_hdf5.py",
+    "bell_analysis_code/build_file_hdf5.py",
+    "bell_analysis_code/build_file.yaml"
+  ],
+  "evidence": {
+    "PR_010I": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/504",
+    "CI_010I": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/42807704431",
+    "tests_010I": 3,
+    "PR_010J": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/505",
+    "CI_010J_source_extract": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/42808144068",
+    "CI_010J_missing_dependency": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/42808383100",
+    "actual_hardware_retrocausal_measurements": 0
+  },
+  "scientific_boundaries": {
+    "independently_recovered_absolute_clock_offset": false,
+    "common_UTC_second_index_verified": false,
+    "bitoffset_is_not_clock_offset": true,
+    "hardware_ttag_offset_provenance_verified": false,
+    "retrocausality_proven": false,
+    "previous_sealed_research_unchanged": true,
+    "NAS_untouched": true
+  },
+  "external_request": {
+    "recipient": "belltest@nist.gov",
+    "Gmail_draft_updated": true,
+    "Gmail_draft_sent": false,
+    "requested": [
+      "build_file_txt.py",
+      "03_43 intermediate .sync.hdf5 offsets/firstsync and lastidx",
+      "UTC-second anchor and latency uncertainty",
+      "original configuration calibration provenance",
+      "channel 64 meaning"
+    ]
+  },
+  "next_step": "Get source-author verified original clock-selection code and independently measured UTC reference; only then reproduce alignment on corrected NIST raw streams without outcome-dependent time fitting.",
+  "append_only": true
+}
