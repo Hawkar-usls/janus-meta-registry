@@ -1,0 +1,32 @@
+name: ESSENCE v1.2 Cross-Repo Independent Output Witness
+
+on:
+  pull_request:
+    paths:
+      - "data/JANUS-ESSENCE-V12-CROSSREPO-FROZEN-REAL-ALGO-CORPUS-2026-11-13.json"
+      - "data/essence/v12/**"
+      - "tools/essence_v12_verify_crossrepo_ci.py"
+      - ".github/workflows/essence-v12-crossrepo-witness.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-independent-frozen-oracle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Recalculate expected outputs without imports from Genesis/Demiurge
+        run: python tools/essence_v12_verify_crossrepo_ci.py --selftest --out research/essence/v12/crossrepo_witness.json
+      - name: Preserve deterministic third-repo witness
+        uses: actions/upload-artifact@v4
+        with:
+          name: essence-v12-crossrepo-frozen-oracle
+          path: research/essence/v12/crossrepo_witness.json
+          if-no-files-found: error
+          retention-days: 30
