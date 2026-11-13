@@ -1,0 +1,142 @@
+{
+  "artifact_id": "JANUS-OCB-PROCESS-MATRIX-CAUSAL-INEQUALITY-2026-11-06-v1.0",
+  "schema_version": "1.0",
+  "date": "2026-11-06",
+  "language": "ru",
+  "registry": {
+    "repository": "Hawkar-usls/janus-meta-registry",
+    "path": "registry/uap/JANUS-OCB-PROCESS-MATRIX-CAUSAL-INEQUALITY-2026-11-06-v1.0.json",
+    "mode": "APPEND_ONLY",
+    "submission_state": "DRAFT_PR_NOT_MERGED"
+  },
+  "parent_artifacts": [
+    "registry/uap/JANUS-TEMPORAL-SIGNAL-SEARCH-77-AND-DEUTSCH-CTC-2026-11-06-v1.0.json",
+    "registry/uap/JANUS-RETRO-BYTE-CAMPAIGN-2026-11-06-v1.0.json",
+    "registry/uap/JANUS-RETROCAUSAL-QUANTUM-RESEARCH-CORRIDORS-2026-11-06-v1.0.json"
+  ],
+  "classification": "MATHEMATICAL_MODEL_VALIDATED_BY_TWO_CLOUD_RUNNERS__NO_PHYSICAL_BACKWARD_COMMUNICATION",
+  "question": "Can an Oreshkov-Costa-Brukner noncausal process matrix produce unconditional bidirectional input-output correlations and violate a causal inequality, and does this constitute a physically recorded earlier output from a later independently chosen input?",
+  "source": {
+    "paper": "Oreshkov, Costa and Brukner, Quantum correlations with no causal order",
+    "venue": "Nature Communications 3, 1092 (2012)",
+    "doi": "10.1038/ncomms2076"
+  },
+  "process_model": {
+    "type": "BIPARTITE_OCB_PROCESS_MATRIX",
+    "tensor_order": [
+      "A_in",
+      "A_out",
+      "B_in",
+      "B_out"
+    ],
+    "W": "1/4 [I + v/sqrt(2) (I Z Z I + Z I X Z)]",
+    "visibility_interval": [
+      0,
+      1
+    ],
+    "validity": "Trace W = 4. Anticommuting Pauli terms imply eigenvalues (1-v)/4 and (1+v)/4, each eightfold; positive semidefinite for 0<=v<=1.",
+    "local_alice_instrument": "Measure Z with outcome x, reprepare Z eigenstate a",
+    "local_bob_instrument_task0": "Measure X with outcome y, reprepare Z eigenstate b XOR y",
+    "local_bob_instrument_task1": "Measure Z with outcome y, reprepare Z eigenstate 0",
+    "primary_statistic": "Average of P(x=b|task=0) and P(y=a|task=1), retaining all outcomes",
+    "definite_causal_order_bound": 0.75,
+    "threshold_visibility_for_violation": 0.7071067811865475
+  },
+  "results": {
+    "theoretical_model_rows": [
+      {
+        "visibility": 0,
+        "causal_game_success_probability": 0.5,
+        "ocb_B_to_A_marginal_TV": 0,
+        "violates_standard_causal_inequality": false
+      },
+      {
+        "visibility": 0.5,
+        "causal_game_success_probability": 0.6767766952966369,
+        "ocb_B_to_A_marginal_TV": 0.35355339059327373,
+        "violates_standard_causal_inequality": false
+      },
+      {
+        "visibility": 0.75,
+        "causal_game_success_probability": 0.7651650429449552,
+        "ocb_B_to_A_marginal_TV": 0.5303300858899106,
+        "violates_standard_causal_inequality": true
+      },
+      {
+        "visibility": 1,
+        "causal_game_success_probability": 0.8535533905932737,
+        "ocb_B_to_A_marginal_TV": 0.7071067811865475,
+        "violates_standard_causal_inequality": true
+      }
+    ],
+    "analytic_ideal_score": "(2 + v*sqrt(2)) / 4",
+    "comparison_methods": [
+      "full 16x16 matrix generalized Born rule",
+      "factorized Pauli contraction",
+      "closed analytic probabilities"
+    ],
+    "numerical_method_agreement_tolerance": 1e-12,
+    "local_unit_tests": "7/7 passed on prototype",
+    "cloud_ci": "SUCCESS",
+    "cloud_run_id": 42264992796,
+    "cloud_run_url": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/42264992796",
+    "cloud_jobs": [
+      {
+        "python": "3.11",
+        "conclusion": "success"
+      },
+      {
+        "python": "3.12",
+        "conclusion": "success"
+      }
+    ],
+    "code_repository": "Hawkar-usls/Janus-Demiurge",
+    "code_branch": "research/ocb-process-matrix-r1-20261106",
+    "code_pr_url": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/448",
+    "code_head_sha": "ea1d036f80aaa055ba79b77a37a6408d4f97bca2",
+    "code_file": "experiments/ocean_transformer/janus_ocb_process_matrix_probe.py",
+    "tests_file": "experiments/ocean_transformer/test_janus_ocb_process_matrix_probe.py",
+    "workflow_file": ".github/workflows/janus-ocb-process-matrix-research.yml",
+    "existing_retro_byte_campaign_untouched": true,
+    "production_untouched": true
+  },
+  "four_mandatory_scientific_gates": [
+    {
+      "gate": "G1",
+      "requirement": "Late genuinely independent choice occurs strictly after the recorded early output",
+      "status": "NOT_MET_NO_PHYSICAL_LAB_CHRONOLOGY",
+      "note": "The formal OCB process has no certified A-before-B laboratory clock order. CPU is given b before calculating model probabilities."
+    },
+    {
+      "gate": "G2",
+      "requirement": "All early outcomes are available without any postselection",
+      "status": "PASS_MATHEMATICAL_MODEL_ONLY",
+      "note": "The causal game includes all x,y outcome branches."
+    },
+    {
+      "gate": "G3",
+      "requirement": "Early receiver is not given future message through parameters, data, seeds or leakage",
+      "status": "NOT_MET_FOR_OPERATIONAL_RECEIVER",
+      "note": "The model's conditional P(x,y|a,b,task) explicitly receives Bob's b as input. No truly early physical receiver was tested."
+    },
+    {
+      "gate": "G4",
+      "requirement": "Independent calculation then independent physical reproduction",
+      "status": "PARTIAL_CPU_CROSS_CHECK_PASS__INDEPENDENT_PHYSICAL_REPLICATION_NOT_DONE",
+      "note": "Three CPU mathematics methods on two hosted Python runners; no physical OCB resource, clock attestation or independent laboratory."
+    }
+  ],
+  "interpretation": {
+    "causal_inequality_violation_in_mathematical_model": true,
+    "model_input_to_A_marginal_dependence": true,
+    "earlier_physical_record_from_later_choice_observed": false,
+    "real_QPU_used": false,
+    "physical_OCB_process_realized": false,
+    "experimental_future_to_past_channel": false,
+    "caution": "Violating the OCB causal inequality does not establish that any lab output was fixed before the later freely chosen bit. The model violates a constraint of definite causal ordering; it is not a usable spacetime retro-message protocol.",
+    "status": "RESEARCH_ONLY",
+    "promote_to_JANUS_production": false,
+    "feed_simulation_as_future_information_into_self_learning": false
+  },
+  "next_test": "Identify a physically realizable process that can be independently timestamped before a subsequently independent source selects the message; test all unfiltered early records and exclude both forward leakage and postselection before any claim of backward signaling."
+}
