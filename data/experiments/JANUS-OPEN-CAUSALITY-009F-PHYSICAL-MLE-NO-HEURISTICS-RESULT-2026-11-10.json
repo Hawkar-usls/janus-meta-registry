@@ -1,0 +1,179 @@
+{
+  "schema": "janus.research.open009f_physics_mle_exact_null_result.v1",
+  "record_id": "JANUS-OPEN-CAUSALITY-009F-PHYSICAL-MLE-NO-HEURISTIC-RETROSPECTIVE-2026-11-10",
+  "parent_program": "JANUS-OPEN-CAUSALITY-009",
+  "research_class": "RETROSPECTIVE_CHRONOLOGICAL_BACKTEST_AND_LOCAL_OS_RANDOM_DIAGNOSTIC",
+  "date_utc": "2026-11-10",
+  "epistemic_status": "REAL_HISTORICAL_NOAA_MEASUREMENTS_PLUS_LOCAL_SOFTWARE_RANDOMNESS__NOT_PROSPECTIVE__NO_RETROCAUSAL_SIGNAL",
+  "implementation": {
+    "code_repo": "Hawkar-usls/Janus-Demiurge",
+    "code_pr": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/497",
+    "draft_pr_unmerged_at_record": true,
+    "code_head_sha": "741da90514d5b75f6e87daf4b2f6aa3337415e07",
+    "source_files": [
+      "experiments/ocean_transformer/open_causality_009/physical_mle_009f.py",
+      "experiments/ocean_transformer/open_causality_009/no_signalling_009f.py",
+      "experiments/ocean_transformer/open_causality_009/test_open009f.py",
+      ".github/workflows/janus-ocean-009f-physics-mle.yml"
+    ],
+    "github_actions_run_id": 42781988116,
+    "github_actions_run_url": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/42781988116",
+    "github_actions_job_id": 129713960454,
+    "conclusion": "success",
+    "unit_tests_passed": 9,
+    "evidence_artifact_id": 13747200893,
+    "evidence_artifact_name": "janus-open009f-physics-evidence-42781988116",
+    "artifact_digest_sha256": "e847bfec75820db91908829816f0b1c40441d905c376b4a90ff2b20cfa375578",
+    "artifact_expires_at_utc": "2027-01-09T08:21:36Z"
+  },
+  "noaa": {
+    "source": "NOAA SURFRAD Bondville IL 1-minute data, QC valid hourly aggregation",
+    "reality": "ACTUAL_PHYSICAL_HISTORICAL_MEASUREMENTS",
+    "test_dates_utc": [
+      "2025-12-01",
+      "2025-12-02",
+      "2025-12-03",
+      "2025-12-04",
+      "2025-12-05",
+      "2025-12-06",
+      "2025-12-07",
+      "2025-12-08"
+    ],
+    "heldout_days": 8,
+    "heldout_hours": 192,
+    "complete_all_targets": true,
+    "source_selection": "Fixed dates different from earlier OPEN-009E historical test; target values fetched after local forecast file write+fsync, not independently historically preregistered",
+    "training": "For each target T, prior 28 days T-33 through T-6; no target source included in training",
+    "physical_model": "GHI(d,h) = tau * 1361 W m^-2 * max(0,cos(theta_z(d,h))) + epsilon; solar geometry computed from NOAA code",
+    "likelihood": "Constrained Gaussian maximum-likelihood tau=clamp(sum(E0*y)/sum(E0^2),0,1); sigma2=sum((y-tau*E0)^2)/N",
+    "not_manual_blend": true,
+    "fitted_parameters": [
+      "tau",
+      "sigma2"
+    ],
+    "fixed_methodological_choices": [
+      "training_28_days",
+      "last_train_day_T_minus_6",
+      "solar_constant_1361_W_m2",
+      "90_percent_Gaussian_predictive_interval"
+    ],
+    "pretarget_local_manifest_sha256": "6f29a52dd017df33ba67ccfb3423466840a82982ea48f064d4441142fb02129b",
+    "pooled_mean_absolute_error_W_m2": {
+      "JANUS_PHYSICAL_MLE": 22.13871678352588,
+      "Haurwitz_clear_sky": 29.023528488078515,
+      "sample_mean_28day": 25.431069285133628,
+      "persistence_T_minus_6": 32.37930204984902
+    },
+    "descriptive_reduction_in_MAE_vs_Haurwitz_fraction": 0.23721484130989065,
+    "one_sided_exact_day_level_sign_flip_p": {
+      "vs_Haurwitz": 0.19140625,
+      "vs_sample_mean_28day": 0.14453125,
+      "vs_persistence_T_minus_6": 0.15234375
+    },
+    "statistical_inference": "None of three exact day-level sign flip p-values passes alpha=0.05; requires sign symmetry and new independent days for confirmatory superiority",
+    "nominal_90percent_prediction_interval_empirical_hourly_coverage": 0.9583333333333334,
+    "interval_caution": "Hourly points dependent, nighttime observations easy; pooled 95.83% coverage does not establish calibration",
+    "daily_MAE_W_m2": [
+      {
+        "date": "2025-12-01",
+        "MLE": 22.615230697799845,
+        "Haurwitz": 41.67020954084591,
+        "mean28": 34.09194613284805,
+        "persistence": 48.80916666666666,
+        "raw_sha256": "7d8571ed0b7cafb494f79eab694baa8091e065d238cde5db55c368a8cc3ec39a"
+      },
+      {
+        "date": "2025-12-02",
+        "MLE": 10.255455106926528,
+        "Haurwitz": 29.842512564494616,
+        "mean28": 20.433625200308366,
+        "persistence": 37.38944444444444,
+        "raw_sha256": "ff94f116ab1d5ddef5c3b9f6c37b96c226f69804dcc01e4bb4272ebf03941c41"
+      },
+      {
+        "date": "2025-12-03",
+        "MLE": 8.244278068840297,
+        "Haurwitz": 29.620552031922248,
+        "mean28": 17.228803771736917,
+        "persistence": 38.59854166666668,
+        "raw_sha256": "d6f4c65450a995c1703d751bd05a2f066a207f138f9c5c235972fd1df1a9bbfb"
+      },
+      {
+        "date": "2025-12-04",
+        "MLE": 37.611287889774395,
+        "Haurwitz": 14.844881098778181,
+        "mean28": 26.48696582253173,
+        "persistence": 8.511916398792147,
+        "raw_sha256": "f939b3d09e708299d6657bb11124396d95677e486e34571863e17ac6c8c4acfa"
+      },
+      {
+        "date": "2025-12-05",
+        "MLE": 14.66789446885023,
+        "Haurwitz": 26.856332422838182,
+        "mean28": 19.197262848103218,
+        "persistence": 48.25527777777776,
+        "raw_sha256": "3f4d0ac17eb01d55f2570fdf5d9606c90bf2851e22098d2ce0f308c5ddbb61f8"
+      },
+      {
+        "date": "2025-12-06",
+        "MLE": 13.813392224847517,
+        "Haurwitz": 21.05324585853163,
+        "mean28": 15.209848819032766,
+        "persistence": 15.351458333333326,
+        "raw_sha256": "90600762fe2641dc1ce9d26c06c1abf4f8a16a385cc4c8035090f33fb41ead88"
+      },
+      {
+        "date": "2025-12-07",
+        "MLE": 28.695680122582356,
+        "Haurwitz": 55.86525744182237,
+        "mean28": 38.712775028005076,
+        "persistence": 24.235972222222212,
+        "raw_sha256": "2a734cd786c2e65eca85a9edb9724788744b6824c34bba1a8888cfdc3634b680"
+      },
+      {
+        "date": "2025-12-08",
+        "MLE": 41.20651568858587,
+        "Haurwitz": 12.435236945394996,
+        "mean28": 32.08732665850288,
+        "persistence": 37.8826388888889,
+        "raw_sha256": "64e3c20997b22b40fc8041b05889b51d43af99d6bd38915792012493e0b442b6"
+      }
+    ],
+    "limits": [
+      "Physical geometry is approximated; physical solar constant is a reference not real-time irradiance.",
+      "Constant mean atmospheric transmission over 28 days is an explicit model assumption.",
+      "Gaussian iid noise assumption need not hold for correlated clouds/weather.",
+      "No exogenous cloud/weather forecast features used.",
+      "Dates are historical, so code chronology is not independently pre-event timestamped.",
+      "Results are preliminary exploratory, not a new preregistered prospective trial."
+    ]
+  },
+  "late_choice": {
+    "data_type": "LOCAL_OS_CSPRNG_RANDOMNESS_NOT_PHYSICAL_LATE_INTERVENTION",
+    "training_method": "Ordinary conditional Bernoulli maximum likelihood on 4096 independent past OS random bits",
+    "predictions_frozen_before_late_generation": true,
+    "early_file_fsync_before_late": true,
+    "n": 1024,
+    "matches": 495,
+    "accuracy": 0.4833984375,
+    "brier": 0.2500302893294024,
+    "fair_brier_reference": 0.25,
+    "eprocess_specification": "E_t = product_{i<=t} 2*[p_i if y_i=1 else (1-p_i)]; under conditional iid fair null E_t is nonnegative martingale",
+    "log_e_final": -0.06203261603631121,
+    "log_e_running_max": 0.02863395520443751,
+    "anytime_valid_p_upper_bound": 0.9717721114951474,
+    "predeclared_alpha": 0.001,
+    "threshold_crossed": false,
+    "conclusion": "No evidence of predictive signal beyond conditional fair randomness",
+    "important_limit": "Independent OS randomness not real late human/physical intervention, and no independent external timestamp witness. Trained model is conditional MLE rather than JanusTinyTransformer."
+  },
+  "integration": {
+    "original_009A_009B_009C_009D_sealed_predictions_touched": false,
+    "old_009E_diagnostic_record_touched": false,
+    "QPU_005_or_LIGHT_008_touched": false,
+    "NAS_containers_touched": false,
+    "hypothesis_not_promoted_to_discovery": true,
+    "next_requirement": "Predeclare untouched prospective period and physics model; audit Gaussian interval coverage by daytime/cloud regimes; execute independent external late choice physically if targeting retrocausality."
+  },
+  "retrocausality_proven": false
+}
