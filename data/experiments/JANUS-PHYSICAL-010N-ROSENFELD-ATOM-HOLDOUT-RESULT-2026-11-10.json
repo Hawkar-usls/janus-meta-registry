@@ -1,0 +1,115 @@
+{
+  "schema": "janus.physical010n.rosenfeld_heldout_atom_bell.v1",
+  "record_id": "JANUS-PHYSICAL-010N-ROSENFELD-ATOM-HOLDOUT-RESULT-2026-11-10",
+  "date_utc": "2026-11-10",
+  "append_only": true,
+  "preregistration": {
+    "frozen_commit": "ee8ff5fdd4ae9844cf4e4fc94c52c07cdabd64c6",
+    "frozen_before_source_zip_inspection": true,
+    "code_PR": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/509",
+    "separately_preserved_predata_json": "data/experiments/JANUS-PHYSICAL-010N-ROSENFELD-ATOM-FROZEN-PREREG-2026-11-10.json"
+  },
+  "external_source": {
+    "paper": "Rosenfeld et al., Event-Ready Bell Test Using Entangled Atoms Simultaneously Closing Detection and Locality Loopholes, PRL 119 010402 (2017)",
+    "paper_doi": "10.1103/PhysRevLett.119.010402",
+    "source_data_doi": "10.5281/zenodo.22936124",
+    "dataset_recovered_and_deposited_date": "2026-09-24",
+    "physical_platform": "Two remotely entangled neutral atoms, LMU Munich; original 2016 historical experiments",
+    "April_calibration": {
+      "file": "Bell_2016-04-15.zip",
+      "verified_archive_md5": "53544819317d4dcfbe5c63e039a8aa38",
+      "computed_sha256": "da9e1125034e5e61a177ae1796f6362ab312bbfbc5947aeec0b09a85e67b8656"
+    },
+    "June_validation": {
+      "file": "Bell_2016-06-14.zip",
+      "verified_archive_md5": "030ce1a0c6c6cc7f1107e1cd608cce77",
+      "computed_sha256": "b24fb1693dfd14bc4d2b05df6bb23a53fc1e77b3d932c67668c2b7b9515bd84a"
+    }
+  },
+  "all_original_attempts_audit": {
+    "April": {
+      "Alice": 10218,
+      "Bob": 10248,
+      "excluded_Alice": 17,
+      "excluded_Bob": 45,
+      "author_matched_valid_pairs": 10201
+    },
+    "June": {
+      "Alice": 10534,
+      "Bob": 10673,
+      "excluded_Alice": 332,
+      "excluded_Bob": 471,
+      "author_matched_valid_pairs": 10202
+    },
+    "warning": "Original source lab_1 and lab_2 contain all measurement attempts. Author pairs contain ONLY valid events, matched by preexisting +-100 ms computer-clock window with instrument exclusions. No unpaired original attempts were silently relabeled as missing outcomes or included in paired model scoring."
+  },
+  "fixed_analysis": {
+    "training": "April previously selected valid event-ready pairs",
+    "validation": "June entire previously selected valid event-ready pairs",
+    "model_M0": "Local Bernoulli by own measurement setting only",
+    "model_Mjanus": "Local Bernoulli by own and remote measurement setting",
+    "fitting": "Equal Jeffreys Beta(0.5,0.5) smoothing in each model",
+    "model_Mpost": "Explicitly secondary positive-other-outcome conditioning artifact, not used in the primary prediction",
+    "exploratory_marginal_tests": "Four own-setting local-by-remote binomial z contrasts with Holm correction alpha=0.001"
+  },
+  "observed": {
+    "valid_June_pairs": 10202,
+    "Mjanus_minus_M0_bits_per_heldout_pair": {
+      "Alice": -0.00012435866,
+      "Bob": 0.000079625284
+    },
+    "four_exploratory_contrasts": [
+      {
+        "wing": "Alice",
+        "setting": 0,
+        "delta": 0.008072117229470432,
+        "holm_p": 0.7450390072749044,
+        "postselected_delta": 0.07160558003947154
+      },
+      {
+        "wing": "Alice",
+        "setting": 1,
+        "delta": 0.017743324040398634,
+        "holm_p": 0.7450390072749044,
+        "postselected_delta": -0.004582854621331012
+      },
+      {
+        "wing": "Bob",
+        "setting": 0,
+        "delta": -0.01858690504288235,
+        "holm_p": 0.7450390072749044,
+        "postselected_delta": 0.30126307023225685
+      },
+      {
+        "wing": "Bob",
+        "setting": 1,
+        "delta": 0.016361905511429686,
+        "holm_p": 0.7450390072749044,
+        "postselected_delta": 0.22630477946390584
+      }
+    ],
+    "source_valid_pair_secondary_familywise_rejection": false
+  },
+  "strict_scientific_gate": {
+    "primary_unconditional_all_heralded_trials_test_eligible": false,
+    "status": "INELIGIBLE_PRIMARY_DATA_ONLY",
+    "reason": "Author valid matched pairs are a selected subset of original attempts; incomplete cross-wing joint all-attempt table and timing uncertainty preclude unconditional primary no-signalling causal inference.",
+    "physical_late_free_setting_generated_after_committed_early_A_verified": false,
+    "independent_cross_station_absolute_clock_and_path_latency_calibrated": false,
+    "future_to_past_signal_observed": false,
+    "retrocausality_proven": false,
+    "historical_archive_not_new_physical_measurements": true,
+    "independent_lab_platform_from_ETH_010M": true
+  },
+  "reproducibility": {
+    "code_workflow": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/42818121018",
+    "job_id": 129836347396,
+    "tests_passed": 6,
+    "code_PR": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/509",
+    "aggregate_artifact_id": 13764408499,
+    "aggregate_artifact_sha256": "b371cc1ef970731c42c9cd7fe1f44098afbd61b3dfce873f2f0a809a15229533",
+    "original_data_redistributed": false,
+    "sealed_010_protocol_unchanged": true,
+    "NAS_unmodified": true
+  }
+}
