@@ -1,0 +1,47 @@
+{
+  "schema": "janus.meta_registry.gdelt_keyless_bulk_verification.v1",
+  "record_id": "JANUS-GDELT-RAW-GKG-ZIP-PUBLIC-VERIFY-2026-11-11",
+  "utc_date": "2026-11-11",
+  "source": "GDELT Project",
+  "attribution_url": "https://www.gdeltproject.org/",
+  "experiment_type": "READ_ONLY_PUBLIC_DATA_NETWORK_INTEGRITY_TEST_NOT_A_NEWS_FACT_CHECK",
+  "request_context": "Fallback to permitted public GDELT 15-minute batch feeds after DOC API HTTP429",
+  "network_source_type": "USER_AUTHORIZED_DESKTOP_NON_GITHUB_NETWORK_NOT_PRODUCTION_SERVER",
+  "observed": {
+    "gdelt_doc2_api": {
+      "query": "earthquake",
+      "http_status": 429,
+      "records": 0,
+      "provider_access_status": "RATE_LIMITED",
+      "did_not_retry_for_quota_evasion": true
+    },
+    "gdelt_public_latest_manifest": {
+      "url": "https://data.gdeltproject.org/gdeltv2/lastupdate.txt",
+      "http_status": 200,
+      "manifest_entries": 3
+    },
+    "gdelt_gkg_zip": {
+      "url": "https://data.gdeltproject.org/gdeltv2/20261111144500.gkg.csv.zip",
+      "bytes_read": 6094407,
+      "zip_file_count": 1,
+      "first_record_tab_fields": 27,
+      "first_record_bytes": 25686,
+      "in_memory_zip_open_test": "SUCCESS",
+      "complete_dataset_semantic_index_created": false,
+      "data_written_to_user_file_system": false
+    }
+  },
+  "interpretation": "The GDELT DOC search API is rate-limited on both GitHub Actions and the authorized non-GitHub client. A public official GKG batch ZIP is downloadable and structurally readable without a key. This is evidence for a permitted batch-based future ingestion path, not proof that arbitrary news search or fact verification works.",
+  "limits": [
+    "Only a 15-minute GKG batch ZIP and one sample row inspected",
+    "No full source provenance/rights verification or multi-hour index",
+    "No deployed JANUS server was accessed",
+    "No scientific/retrocausal claim verified",
+    "No unreviewed GDELT content fed into model training"
+  ],
+  "recommended_followup": "Build a bounded, cached, attributable GKG batch metadata index; never evade DOC API rate limits. Keep metadata separate from trusted physics-training labels and independent clock holdouts.",
+  "scientifically_admitted": false,
+  "nas_containers_modified": false,
+  "gateway_production_deployed": false,
+  "registry_operation": "APPEND_ONLY_DRAFT"
+}
