@@ -1,0 +1,207 @@
+{
+  "schema": "janus.scoby-nasa.fabric-synthetic-gate.v1",
+  "id": "JANUS-SCOBY-NASA-FABRIC-SYNTHETIC-001",
+  "date": "2026-11-02",
+  "status": "SYNTHETIC_ONLY_NO_PHYSICAL_DATA",
+  "data_class": "UNCALIBRATED_SCENARIO_SENSITIVITY_NOT_OBSERVATION",
+  "linked_experiment": "experiments/SCOBY-SKINGPT-PLA-SCAFFOLD-STAGE0-2026-11-02-v1.0.json",
+  "sources": [
+    "experiments/SCOBY-D1-STAGE1-SCREENING-01-v1.1.json",
+    "data/SCOBY-D0-D1-CANONICAL-RESEARCH-PROGRAM-v2.0.json",
+    "registry/research_portfolio/SKINGPT-BIODERIVED-TACTILE-THERMAL-SKIN-DOSSIER-v1.0.0.json",
+    "Hawkar-usls/SCOBY-D0/PROJECT_STATUS.json",
+    "Hawkar-usls/SkinGPT/README.md"
+  ],
+  "archival_prior_model": {
+    "source": "User-owned historical June 30 / July 1, 2026 SCOBY defense-material application and technical appendix (not uploaded)",
+    "model": "~20% hemp, three-layer laminated SCOBY; estimated 1.45 g/cm^3, 346 MPa, Young modulus 13 GPa",
+    "claim": "LEGACY_SYNTHETIC_NOT_OBSERVED",
+    "reusable_as_calibration": false
+  },
+  "license_inventory": [
+    {
+      "source": "https://makerworld.com/en/models/122006",
+      "name": "NASA Fabric V2",
+      "creator": "RileyDesigns",
+      "license": "Standard Digital File License",
+      "condition": "Personal printing only; no STL redistribution assumed."
+    },
+    {
+      "source": "https://makerworld.com/en/models/1455845",
+      "name": "NASA Chainmail fabric",
+      "creator": "Pejdro",
+      "license": "CC0 according to 3dgo.app metadata",
+      "condition": "Verify live original model license before remix/redistribution; independent original verification blocked."
+    },
+    {
+      "source": "https://www.thingiverse.com/thing:2437081",
+      "name": "NASA Chainmail Fabric",
+      "creator": "ConnorMPrints",
+      "license": "CC BY per independent mirror (not verified on original)",
+      "condition": "Verify original author/license and attribution details before public distribution."
+    }
+  ],
+  "scientific_context": [
+    "NASA/JPL space fabric is metallic and foldable, not equivalent to printed PLA or validated body armor.",
+    "Growth near the air/liquid interface may bridge chainmail joints; this might increase stiffness but remove flexibility.",
+    "No scientific claim about useful reinforcement until comparison with PLA-only and post-assembly controls.",
+    "A PLA/BC tensile result from a differently prepared composite is not a measured result of living-SCOBY growth."
+  ],
+  "surrogate_model": {
+    "description": "Toy 1D parallel tensile-load path and bending-stiffness upper-bound proxy; unknown q,b joint engagement parameters. Neither calibrated, validated FEM, nor actual geometry-dependent calculation.",
+    "assumed_material_inputs_NOT_MEASURED": {
+      "E_BC_MPa": 500,
+      "t_BC_mm": 0.5,
+      "E_PLA_MPa": 2000,
+      "t_PLA_mm": 0.8,
+      "projected_PLA_fraction": 0.35
+    },
+    "equations": {
+      "K_BC": "E_BC * t_BC",
+      "K_PLA_full": "E_PLA * t_PLA * projected_PLA_fraction",
+      "K_ratio": "(K_BC + q*K_PLA_full) / K_BC",
+      "D_BC": "E_BC * t_BC^3 / 12",
+      "D_PLA_full": "E_PLA * t_PLA^3 * projected_PLA_fraction / 12",
+      "D_ratio": "(D_BC + b*D_PLA_full) / D_BC"
+    },
+    "q_and_b_semantics": "q and b are arbitrary illustrative coefficients in [0,1], not probabilities or empirically identified parameters. q=effective tensile load engagement; b=effective bending lock-up",
+    "scenario_results": [
+      {
+        "id": "BC_ONLY",
+        "q_assumed": 0,
+        "b_assumed": 0,
+        "relative_axial_stiffness": 1,
+        "relative_bending_stiffness": 1
+      },
+      {
+        "id": "BC_PLUS_NASA_MOBILE",
+        "q_assumed": 0.05,
+        "b_assumed": 0.01,
+        "relative_axial_stiffness": 1.112,
+        "relative_bending_stiffness": 1.057
+      },
+      {
+        "id": "BC_PLUS_NASA_PARTIAL_INTERLOCK",
+        "q_assumed": 0.25,
+        "b_assumed": 0.1,
+        "relative_axial_stiffness": 1.56,
+        "relative_bending_stiffness": 1.573
+      },
+      {
+        "id": "BC_PLUS_NASA_STRONG_LOCK",
+        "q_assumed": 0.75,
+        "b_assumed": 0.6,
+        "relative_axial_stiffness": 2.68,
+        "relative_bending_stiffness": 4.441
+      },
+      {
+        "id": "BC_PLUS_RIGID_LATTICE",
+        "q_assumed": 0.8,
+        "b_assumed": 0.85,
+        "relative_axial_stiffness": 2.792,
+        "relative_bending_stiffness": 5.874
+      }
+    ],
+    "sweep": {
+      "q_values": [
+        0,
+        0.05,
+        0.25,
+        0.5,
+        0.75,
+        1
+      ],
+      "b_values": [
+        0,
+        0.01,
+        0.1,
+        0.3,
+        0.6,
+        1
+      ],
+      "computation": "Reproduce 36 grid combinations using linked simulator",
+      "interpolation_or_certainty": "NONE"
+    },
+    "reproducibility_script": "experiments/SCOBY-SKINGPT-NASA-FABRIC-SIM-001.py",
+    "conclusion": "For the illustrative inputs, increased participation of PLA increases tensile-stiffness proxy and locked PLA joints increase bending-stiffness proxy. This does not show which design performs better physically.",
+    "NOT_TESTED": [
+      "cellulose growth",
+      "material adhesion",
+      "wet stiffness",
+      "fracture/rupture strength",
+      "energy absorption",
+      "real ballistic impact",
+      "SkinGPT electronics",
+      "biological safety"
+    ]
+  },
+  "physical_plan": {
+    "id": "SCOBY-SKINGPT-NASA-PHYSICAL-001",
+    "status": "NOT_STARTED",
+    "goal": "Investigate BC intergrowth of print-in-place PLA chainmail while preserving joint mobility",
+    "material": "plain unfilled PLA; phosphor Glow PLA excluded from wet culture",
+    "initial_specimen_mm": [
+      70,
+      70
+    ],
+    "geometry": "Measure exact STL scale, projected link coverage, open fraction and free joint mobility before physical printing. Nominal dimensions not validated.",
+    "growth_conditions": [
+      {
+        "id": "A",
+        "name": "BC-only in glass"
+      },
+      {
+        "id": "B",
+        "name": "BC grown with rigid PLA grid in glass"
+      },
+      {
+        "id": "C",
+        "name": "BC grown with mobile linked PLA NASA fabric in glass"
+      }
+    ],
+    "mechanical_controls": [
+      {
+        "id": "D",
+        "name": "Uncolonized PLA NASA fabric"
+      },
+      {
+        "id": "E",
+        "name": "Separately grown BC loosely assembled over PLA NASA fabric"
+      }
+    ],
+    "repetitions": "At least 3 independent culture vessels per growth condition after pilot. Technical cuts from one pellicle are not independent culture replicates.",
+    "confound_controls": [
+      "Identical feed batch and initial inoculum provenance",
+      "equal air-liquid interface and liquid depth",
+      "same area and growth observation period",
+      "matched PLA mass/contact area when comparing grid to chainmail",
+      "no new UV light/Glow chemicals in culture"
+    ],
+    "culture_endpoints": [
+      "pellicle appearance and thickness by day",
+      "pH trajectory",
+      "dry BC mass",
+      "percent joint coverage",
+      "interlock vs superficial coating",
+      "observed contamination or failure"
+    ],
+    "physical_endpoints": [
+      "measured link freedom before/after",
+      "peel/delamination",
+      "low-energy controlled puncture",
+      "tensile strength and strain at break with matched geometry",
+      "cyclic bending/fatigue",
+      "wet/dry response",
+      "separate isolated SkinGPT v0.3 signal and calibration"
+    ],
+    "acceptance": "Only independent repeatable physical observations can establish any benefit; growth and mechanical claims must have separate controls.",
+    "safety": "Non-food culture only; do not ingest or recycle into kombucha. No bare sensor wiring in wet culture. No ballistic or protective performance claims without relevant accredited testing."
+  },
+  "result_boundary": {
+    "observed_sample_count": 0,
+    "bench_experiments_performed": 0,
+    "no_claim_of_armor": true,
+    "no_claim_of_real_growth": true,
+    "negative_results_are_first_class": true
+  }
+}
