@@ -1,0 +1,164 @@
+{
+  "schema": "janus.research.011f.real_measured_au_ag_absorbers_and_temporal_artifact_control.v1",
+  "record_id": "JANUS-RETRO-011F-MEASURED-JOHNSON-CHRISTY-ABSORBERS-NO-ADVANCED-BOUNDARY-2026-11-11",
+  "created_date_local": "2026-11-11",
+  "append_only": true,
+  "status": "PUBLISHED_SPECTRAL_MEASUREMENTS_VERIFIED__IDEAL_FILM_MODEL_PASS__PHYSICAL_ADVANCED_BOUNDARY_NOT_IDENTIFIED",
+  "provenance": {
+    "source_paper": "Johnson and Christy, Optical Constants of the Noble Metals, Phys Rev B 6, 4370 (1972)",
+    "paper_doi": "10.1103/PhysRevB.6.4370",
+    "original_measurement_type": "Reflection and transmission of vacuum-evaporated gold and silver films, tabulated n and k; not pulse transmission experiment",
+    "original_pinned_public_database_commit": "e6d15e364f70de1cad8a96a20f75689f2fba8b21",
+    "source_database": "polyanskiy/refractiveindex.info-database",
+    "license_as_given_by_source": "CC0 1.0",
+    "source_file_wavelength_range_um": [
+      0.1879,
+      1.937
+    ],
+    "measured_rows_per_element": 49,
+    "exact_total_tabulated_original_nk_rows": 98,
+    "source_previewed_before_method_freeze": true,
+    "method_frozen_before_first_numerical_replay": true,
+    "method_first_commit": "5de271046c479cc528c2a7d2c6f8532f1232851a",
+    "Au": {
+      "source_path": "database/data/main/Au/nk/Johnson.yml",
+      "sha256_original_source_bytes": "9f4bdab6bd49f7c6a1c48b5fb5482c7448caf4b6de39594a34ecd66dcf592774"
+    },
+    "Ag": {
+      "source_path": "database/data/main/Ag/nk/Johnson.yml",
+      "sha256_original_source_bytes": "8c79d5e2529e4d3a51e1502b42f2e96e63b3cb49e1036c66b86eb9dbdd0c65a5"
+    }
+  },
+  "frozen_model": {
+    "optical_index": "N=n+i*k, wave phase exp(i*k_z*z-i*omega*t)",
+    "ideal_geometry": "freestanding homogeneous plane parallel vacuum-metal-vacuum film, normal incidence, coherent multiple reflections, no substrate/roughness/scattering",
+    "primary_thickness_nm": 40,
+    "secondary_thickness_nm": [
+      30,
+      50
+    ],
+    "primary_original_measured_wavelengths_um": [
+      0.4509,
+      0.5486,
+      0.7045,
+      0.892
+    ],
+    "intensity_absorption_coefficient": "alpha=4*pi*k/lambda",
+    "intensity_skin_depth": "1/alpha",
+    "thin_film_coefficients": "r01=(1-N)/(1+N), r12=-r01, t01=2/(1+N), t12=2N/(1+N), z=exp(i*2*pi*N*d/lambda), r=(r01+r12*z^2)/(1+r01*r12*z^2), t=t01*t12*z/(1+r01*r12*z^2); R=|r|^2, T=|t|^2, A=1-R-T",
+    "not_directly_measured": "Ideal-film R, T, A and 3-point transmission phase group delay are derived, not raw observations",
+    "optical_group_delay_not_causal_front": true,
+    "finite_spectral_band_cannot_fix_full_Kramers_Kronig_response": true
+  },
+  "original_data_derived_model_results_40nm": [
+    {
+      "material": "Au",
+      "wavelength_um": 0.4509,
+      "reflectance": 0.374515,
+      "transmittance": 0.110515,
+      "absorptance": 0.514969
+    },
+    {
+      "material": "Au",
+      "wavelength_um": 0.5486,
+      "reflectance": 0.605268,
+      "transmittance": 0.151577,
+      "absorptance": 0.243156
+    },
+    {
+      "material": "Au",
+      "wavelength_um": 0.7045,
+      "reflectance": 0.915581,
+      "transmittance": 0.046279,
+      "absorptance": 0.03814
+    },
+    {
+      "material": "Au",
+      "wavelength_um": 0.892,
+      "reflectance": 0.953401,
+      "transmittance": 0.019985,
+      "absorptance": 0.026614
+    },
+    {
+      "material": "Ag",
+      "wavelength_um": 0.4509,
+      "reflectance": 0.88717,
+      "transmittance": 0.088706,
+      "absorptance": 0.024125
+    },
+    {
+      "material": "Ag",
+      "wavelength_um": 0.5486,
+      "reflectance": 0.938164,
+      "transmittance": 0.040568,
+      "absorptance": 0.021269
+    },
+    {
+      "material": "Ag",
+      "wavelength_um": 0.7045,
+      "reflectance": 0.971208,
+      "transmittance": 0.020633,
+      "absorptance": 0.008159
+    },
+    {
+      "material": "Ag",
+      "wavelength_um": 0.892,
+      "reflectance": 0.983764,
+      "transmittance": 0.011364,
+      "absorptance": 0.004873
+    }
+  ],
+  "temporal_artifact_controls": {
+    "true_causal_delta_impulse_at_step": 5,
+    "exact_full_band_early_implicit_output": 0,
+    "finite_two_sided_frequency_band": "[-pi/2, pi/2], exact causal delta converted into sinc mathematical reconstruction",
+    "apparent_reconstructed_pre_event_amplitude_at_t4": 0.3183098861837907,
+    "synthetic_centered_filter_pre_event_at_t3": 0.2,
+    "strictly_causal_trailing_filter_pre_event_at_t3": 0,
+    "incorrect_clock_offset_steps": -6,
+    "true_physical_impulse_t": 5,
+    "incorrectly_displayed_impulse_t": -1,
+    "neither_frequency_truncation_nor_smoothing_is_a_physical_advanced_wave": true
+  },
+  "science_decisions": {
+    "measured_absorber_spectra_used": true,
+    "spectral_passivity_balance_verified": true,
+    "measurable_material_specific_dispersion_estimated": true,
+    "full_band_physical_causal_impulse_measured": false,
+    "global_radiation_or_wheeler_feynman_absorber_boundary_derived": false,
+    "physically_selected_advanced_wave_coefficient_identified": false,
+    "independent_late_C_random_setting_after_committed_early_A": false,
+    "externally_signed_early_measurement": false,
+    "physically_authenticated_time_source_or_cable_calibration": false,
+    "new_physical_laboratory_trials": 0,
+    "measured_retrocausal_information_capacity": null,
+    "physical_retrocausality_proven": false,
+    "conclusion": "Finite-band measured n,k from real absorbing media constrain normal dispersion, reflection, transmittance and absorption in a specified slab model. They do not independently determine global advanced-wave boundary conditions or yield a usable retrocausal channel. Apparent precursors can arise from finite-band inverse reconstruction, noncausal offline filtering and miscalibrated clocks.",
+    "retrocausal_information_capacity_status": "NOT_MEASURED_OR_IDENTIFIABLE_FROM_SPECTRAL_NK"
+  },
+  "execution": {
+    "repo": "Hawkar-usls/Janus-Demiurge",
+    "draft_code_pr": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/519",
+    "code_branch": "janus/011f-measured-optical-absorbers-causality-20261111",
+    "script": "experiments/ocean_transformer/late_choice_010/measured_absorber_011f.py",
+    "tests": "experiments/ocean_transformer/late_choice_010/test_measured_absorber_011f.py",
+    "method_protocol": "experiments/ocean_transformer/late_choice_010/PROTOCOL_011F_MEASURED_ABSORBERS_FROZEN.md",
+    "workflow": ".github/workflows/janus-011f-real-optical-absorbers.yml",
+    "code_test_fix_commit": "d04b0e61ed6fb16409f5f4f380a18628389c302d",
+    "initial_CI_roundoff_strict_test_failure": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/42922652409",
+    "successful_replay": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/42922751104",
+    "CI_job_id": 130201429721,
+    "CI_tests_passed": 12,
+    "full_two_element_original_nk_table_replayed": true,
+    "artifact_id": 13812432332,
+    "artifact_sha256": "acede1eef056e6eb2fbb98b83804b6882d487feb67acfdb6fd6a47d84f3a42c2",
+    "original_sealed_JANUS010_and_prior_011A_E_unchanged": true,
+    "NAS_containers_QPU_untouched": true
+  },
+  "next_research_gate": "Obtain independently measured broadband causal complex transfer impulse and clock calibration of a real specified material, plus a genuinely later randomized source choice and precommitted early detector, before testing any claimed advanced field; otherwise do not choose future absorber λ by fitting the result.",
+  "sources": [
+    "https://doi.org/10.1103/PhysRevB.6.4370",
+    "https://github.com/polyanskiy/refractiveindex.info-database",
+    "https://doi.org/10.1103/RevModPhys.17.157"
+  ]
+}
