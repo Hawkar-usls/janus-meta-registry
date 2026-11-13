@@ -1,0 +1,108 @@
+{
+  "artifact_id": "JANUS-GULL-R12-REAL-INDIVIDUAL-OPTICS-BEHAVIOR-SOURCE-AUDIT-2026-11-09-v1.0",
+  "schema_version": "1.0",
+  "created_date": "2026-11-09",
+  "language": "ru",
+  "status": "SOURCE_ACQUISITION_PARTIAL__CROSS_BIRD_BEHAVIOR_EVALUATION_IN_CI__EYE_SUPPLEMENT_BLOCKED",
+  "production_promotion_allowed": false,
+  "append_only": true,
+  "project": {
+    "source_repo": "Hawkar-usls/Janus-Demiurge",
+    "branch": "research/janus-gull-real-evidence-v2-20261109",
+    "draft_pull_request": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/468",
+    "parent_research_PR": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/466",
+    "approved_changes_scope": "research source manifests, source checksums, data-only parsers, no NAS, no production JANUS checkpoint changes"
+  },
+  "papers_and_public_sources": [
+    {
+      "doi": "10.1111/ibi.13360",
+      "paper": "Cantlay, Portugal, Martin 2024 gull visual fields",
+      "evidence": "Publisher supporting information explicitly describes individual S1 n=3 Rissa tridactyla, S2 n=4 Larus argentatus, S3 n=3 Larus fuscus",
+      "supplement": "ibi13360-sup-0001-Tables.docx",
+      "original_bytes_downloaded": false,
+      "external_source_problem": "HTTP_403 on both public publisher URL patterns; these URL patterns were inferred from published filename, actual download link still to verify",
+      "individual_measurement_table_INGESTED": false
+    },
+    {
+      "doi": "10.5061/dryad.3jf80g4",
+      "paper": "Goumas et al. 2019 human gaze behavior",
+      "evidence": "74 individual gulls targeted; 19 completed paired trials; raw gulldata.txt and pairs.txt identified",
+      "metadata_anonymously_fetched": true,
+      "version_id_resolved": 28267,
+      "file_catalog_count": 8,
+      "actual_behavior_trials_downloaded": false,
+      "limitation": "File catalog items need further schema resolution; metadata alone not raw behavioral data"
+    },
+    {
+      "doi": "10.5061/dryad.bnzs7h469",
+      "paper": "Goumas et al. 2020 human-handled food choice",
+      "evidence": "all-gull-data.txt publicly described",
+      "metadata_anonymously_fetched": true,
+      "actual_raw_trials_downloaded": false,
+      "limitation": "Current API version candidate returned 404; source work open"
+    },
+    {
+      "doi": "10.5281/zenodo.23923176",
+      "source": "HG_TEXEL 31 herring gulls, released Nov 4 2026",
+      "five_original_selected_files_checksum_verified": true,
+      "files": [
+        "datapackage.json",
+        "HG_TEXEL-reference-data.csv",
+        "HG_TEXEL-accessory-measurements-2016.csv.gz",
+        "HG_TEXEL-accessory-measurements-2019.csv.gz",
+        "HG_TEXEL-gps-2019.csv.gz"
+      ],
+      "real_2019_machine_behavior_events": 74118,
+      "real_2019_GPS_events": 76872,
+      "unique_2019_birds_with_GPS": 3,
+      "real_2016_machine_labels": 1019854,
+      "real_2016_human_labels": 124,
+      "human_label_scored_GPS_match_count": 124,
+      "humans_with_GPS_matched_individuals": 1,
+      "controlled_human_label_cross_bird_evaluation": "NOT_SCORABLE_ONLY_ONE_BIRD",
+      "scientific_caution": "All 124 human 2016 annotations match earlier GPS but only a single individual; 31 total tagged birds does not imply 31 independently human-labeled birds."
+    },
+    {
+      "doi": "10.5281/zenodo.23942209",
+      "source": "LBBG_TEXEL lesser black-backed gulls 95 tracked adults, released Nov 4 2026",
+      "published_human_annotated_behaviors_across_2012_2014": 3503,
+      "original_2012_2014_accessory_GPS_publisher_md5_pinned_in_code": true,
+      "source_acquisition_test_status": "LATEST_RESEARCH_CI_42536352593_PENDING_AS_OF_RECORD",
+      "evaluation_claim": "NO_METRIC_YET__NEVER_INFER_TRAIN_TEST_LABELS_FROM_DATASET_DESCRIPTION"
+    }
+  ],
+  "CI_evidence": [
+    {
+      "run": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/42534892215",
+      "conclusion": "success",
+      "source_files_checksum_verified": 5,
+      "three_jobs_passed": true
+    },
+    {
+      "run": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/42535137859",
+      "conclusion": "success",
+      "full_2016_human_label_scan": true,
+      "unique_human_matched_individuals": 1
+    },
+    {
+      "run": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/42535796759",
+      "conclusion": "failure",
+      "reason": "CI summary typo after correctly computed one-bird NOT_SCORABLE real data outcome; no scientific inference suppressed",
+      "human_only_scoring_artifact_id": 13638449612
+    },
+    {
+      "run": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/42536352593",
+      "conclusion": "PENDING_AT_RECORD_CREATION",
+      "new_LBBG_crossbird_human_behavior_audit": true
+    }
+  ],
+  "software_experiments": {
+    "human_source_file": "experiments/gull_space_models/janus_gull_human_gps_holdout_v2.py",
+    "lbbg_file": "experiments/gull_space_models/janus_lbbg_real_human_holdout_v3.py",
+    "original_DOI_and_checksums_file": "experiments/gull_space_models/real_gull_source_manifest_v2.json",
+    "test_policy": "Only original human-labeled classes, GPS before label timestamp from same individual within <=120 s, no exact animal GPS locations exported, leave ENTIRE individuals out in every fold.",
+    "matched_prediction_models": "Two equal one-bit representations of ground speed, one minimizes train-only speed MSE, other maximizes train-only label-balanced accuracy. No behavior utility actually measured; this is a cognitive representation proxy, NOT proof of Hoffman's ontology.",
+    "case_for_retinal_map_to_action_joint_hypothesis": "NOT_IDENTIFIABLE: eye fields and observed behavior belong to different gull cohorts."
+  },
+  "scientific_next_gate": "Download original 10-gull eye DOCX via verified official link or author, and obtain physically matched visual stimulus/head/gaze plus action/reward data from the same birds. Independently replicated held-out bird behavior score is a partial prerequisite, not evidence that spatial reality is an illusion."
+}
