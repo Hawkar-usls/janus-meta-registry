@@ -1,0 +1,152 @@
+{
+  "artifact_id": "JANUS-DELAYED-CHOICE-HARDWARE-READINESS-R0-2026-11-06-v1.0",
+  "schema_version": "1.0",
+  "date": "2026-11-06",
+  "language": "ru",
+  "registry": {
+    "repo": "Hawkar-usls/janus-meta-registry",
+    "path": "registry/uap/JANUS-DELAYED-CHOICE-HARDWARE-READINESS-R0-2026-11-06-v1.0.json",
+    "mode": "APPEND_ONLY",
+    "status": "DRAFT_PR_447_NOT_MERGED"
+  },
+  "parents": [
+    "registry/uap/JANUS-PHYSICAL-DELAYED-CHOICE-T0-T1-PROTOCOL-2026-11-06-v1.0.json",
+    "registry/uap/JANUS-RETRO-BYTE-CAMPAIGN-2026-11-06-v1.0.json",
+    "registry/uap/JANUS-TEMPORAL-SIGNAL-SEARCH-77-AND-DEUTSCH-CTC-2026-11-06-v1.0.json"
+  ],
+  "classification": "SOFTWARE_RECORD_AUDIT_TESTED__PHYSICAL_LAB_ACCESS_UNVERIFIED__NO_RETRO_SIGNAL",
+  "purpose": "Implement fail-closed all-trial audit of a prospective physically timed A-before-B delayed-choice experiment without postselection. Scope is software only.",
+  "code": {
+    "repo": "Hawkar-usls/Janus-Demiurge",
+    "research_branch": "research/delayed-choice-hardware-readiness-r0-20261106",
+    "pull_request": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/449",
+    "entrypoint": "experiments/ocean_transformer/janus_delayed_choice_clock_audit.py",
+    "tests": "experiments/ocean_transformer/test_janus_delayed_choice_clock_audit.py",
+    "workflow": ".github/workflows/janus-delayed-choice-clock-audit.yml",
+    "source_head_commit": "20d26f93bdc6cc400c091074c8cecee9666ff985",
+    "first_ci": {
+      "run_url": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/42271860783",
+      "conclusion": "failure",
+      "reason": "Malformed-identity synthetic control raised CLOCK_ORDER_FAIL before LATE_TRIAL_DUPLICATE; no research inference affected"
+    },
+    "fixed_ci": {
+      "run_url": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/42272052851",
+      "conclusion": "success",
+      "workers": [
+        {
+          "python": "3.11",
+          "status": "success"
+        },
+        {
+          "python": "3.12",
+          "status": "success"
+        }
+      ],
+      "test_cases_per_worker": 10
+    },
+    "user_NAS_touched": false,
+    "production_files_touched": false,
+    "existing_retro_byte_campaign_touched": false
+  },
+  "data_contract": {
+    "mode": "SYNTHETIC_DRY_RUN_ONLY",
+    "inputs": [
+      "manifest JSON",
+      "early log JSON",
+      "late log JSON"
+    ],
+    "manifest": [
+      "planned_trials",
+      "minimum_timing_margin_ns",
+      "alpha",
+      "early_log_sha256"
+    ],
+    "early_record": [
+      "trial_id",
+      "early_a 0|1|NO_CLICK",
+      "early_window_closed_ns",
+      "predict_b 0|1"
+    ],
+    "late_record": [
+      "trial_id",
+      "late_b 0|1|NULL",
+      "late_qrng_ns int|NULL",
+      "status OK|INFRA_ABORT"
+    ],
+    "retain_all_scheduled_trials": true,
+    "no_clicks_included": true,
+    "infra_abort_not_silently_excluded": true,
+    "fixed_N_if_any_abort": "INVALID_NO_INFERENCE",
+    "hash_rule": "SHA256 of canonical JSON early list, compared to manifest",
+    "hash_not_external_timestamp_attestation": true,
+    "timing_rule": "late_qrng_ns > early_window_closed_ns + manifest timing margin; assumes clocks are calibrated, cannot verify physical chronology",
+    "chronology_not_independently_proven": true,
+    "safety_guard": "Reject unexpected late fields inside early records, duplicates, missing trials, clock-order violations, invalid bits and hash mismatches."
+  },
+  "primary_statistic": {
+    "test": "One-sided exact binomial tail for precommitted early guess of later QRNG setting, across all planned trials",
+    "null": "Independent uniformly random fair late B, P(correct)=0.5",
+    "important_limitations": "Fairness and independence of hardware QRNG not verified by software; fixed sample size must be prospectively approved. Abort invalidates fixed-N inference."
+  },
+  "secondary_statistic": {
+    "test": "Unconditional total variation TV(P(A including NO_CLICK|B=0), P(A including NO_CLICK|B=1))",
+    "limit": "Descriptive only in R0; no preregistered significance for repeated secondary measures and no filtering on late heralds."
+  },
+  "positive_and_negative_controls": [
+    "All scheduled early outcomes retained including NO_CLICK",
+    "Artificial future-bit leakage detected as suspicious, not granted physical validity",
+    "Early log modification after manifest digest rejected",
+    "Duplicate and missing late trial IDs rejected before timing checks",
+    "Impossible or reversed timestamp ordering rejected",
+    "INFRA_ABORT retained and fixed-N significance disabled",
+    "Null data check uses deterministic pseudorandom software, not authenticated late entropy"
+  ],
+  "real_hardware_status": {
+    "source_of_entangled_photons_connected": false,
+    "hardware_QRNG_connected": false,
+    "independently_calibrated_time_tagger_connected": false,
+    "independent_early_seal_attestation_verified": false,
+    "externally_free_late_choice_verified": false,
+    "physical_future_to_past_information_observed": false,
+    "production_promotion": false
+  },
+  "potential_platforms": {
+    "quandela_cloud": {
+      "official": "https://cloud.quandela.dev/",
+      "assessment": "Real photonic cloud processors are documented, but independent post-A QRNG control, raw per-attempt detector time tags, no-click record and external signed early seal are not confirmed to be offered to users. Do not assume platform sufficient for JANUS timing protocol.",
+      "source": "https://www.quandela.com/wp-content/uploads/2026/02/Product-catalogue-Quandela-Q12026.pdf"
+    },
+    "ibm_quantum": {
+      "official": "https://qiskit.qotlabs.org/docs/guides/execute-dynamic-circuits",
+      "assessment": "Mid-circuit measurement and classical feed-forward are available on supported backends. User-level independent external time certification and QRNG choice after externally sealed A are not established by the cited documentation."
+    },
+    "external_photonics_lab": {
+      "precedent": "Ma et al., Experimental delayed-choice entanglement swapping, Nature Physics 8 (2012), DOI 10.1038/nphys2294",
+      "assessment": "Four-photon time-like-future measurement decision with hardware QRNG demonstrated in literature; no present access to a lab has been obtained by JANUS.",
+      "necessary_resources": [
+        "Photon-pair source",
+        "detectors and full attempt logging",
+        "optical delay or storage",
+        "fast basis selector",
+        "post-A independent QRNG",
+        "calibrated electronic timing and time-tagger",
+        "independent seal and audit",
+        "independent replication"
+      ]
+    }
+  },
+  "promotion_gates": {
+    "G1": "NOT_MET_IN_JANUS: no independently attested physical A-before-B sequence",
+    "G2": "SOFTWARE_CHECK_PASS: all registered early outcomes kept, synthetic only",
+    "G3": "NOT_MET: no external late QRNG or leakage isolation attested",
+    "G4": "PARTIAL: two separate GitHub CPU versions pass; no real optical experiment or independent physical replication"
+  },
+  "experimental_status": "RESEARCH_ONLY",
+  "next_action": "Seek an authorized quantum-optics laboratory or verified cloud provider able to deliver raw per-pulse/no-click records, hardware timestamps, later QRNG setting and independent pre-choice sealing; preregister N, no-loss policy, effect thresholds and independent replication before physical run.",
+  "do_not_claim": [
+    "Software data-contract tests constitute a physical experiment",
+    "Matching SHA256 in two JSON files proves pre-commit timing",
+    "Significant prediction accuracy proves retrocausality without independent entropy and leakage audit",
+    "Quantum-switch or OCB inequality violation is an operational message to the past"
+  ]
+}
