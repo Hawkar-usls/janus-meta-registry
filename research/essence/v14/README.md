@@ -1,6 +1,6 @@
 # ESSENCE v1.4 — owner-wide Github-only fleet audit
 
-This audit inspects **all 51 owner repositories currently returned by GitHub**,
+This audit inspects **all 48 publicly enumerable owner repositories currently returned by GitHub**,
 including projects whose primary purpose is games, hardware or infrastructure.
 This is a read-only audit, not approval to install or execute new code in them.
 
@@ -52,3 +52,5 @@ artifact. Partial results are retained even when the gate fails.
 Data is public GitHub commit metadata and synthetic test receipts only,
 not private deployment status. An unreachable GitHub endpoint produces an
 explicit hold or incomplete finding rather than fabricated PASS.
+
+Non-public connected repositories are assessed in their **own repositories' GitHub CI**; this public Meta Registry audit does not publish their names, commits, test data or paths. An independent success in a separate private repository is not counted among the 48 public successes.
