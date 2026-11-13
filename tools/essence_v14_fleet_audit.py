@@ -40,20 +40,20 @@ DENIED={"network","shell","repo_write","workflow_dispatch","secrets","hardware"}
 ROLES={"sensing","memory","planning","verification","recovery","coding"}
 KNOWN_NAMES=tuple(sorted((
  "Hrain","aura-oracle-tg","Simptomat","iNaiHR","BFain","-Terminal-for-Janus",
- "Janus-Cosmos","SLOT","SSlot","JanusMMORPG","DIVINE_REALM","Janus",
+ "Janus-Cosmos","SLOT","SSlot","DIVINE_REALM","Janus",
  "Janus_Genesis","RadioPlayerV3","player","janus-meta-registry","clawdbot",
  "M5Unit-ENV","AI-Cardputer-adv-A-Portable-AI-Assistant","arduino-ide",
  "Cardputer-Game-Station-Emulators","Arduino-AI-Chat-Library","emoji",
  "Janus-Demiurge","xiaozhi-esp32","ATOM-ELITE-1989---M5stack-ATOMS3R-2026-",
  "vcmi","ATOM-RPG","janus-first-followers-club-",
- "janus-distributed-ai-swarm","janus-io","janus-io-public","tranception",
- "janus-lapis","ESP32-TWAI-CAN","SkinGPT","Janus-Fundamentum","AIFC",
+ "janus-distributed-ai-swarm","janus-io-public","tranception",
+ "janus-lapis","ESP32-TWAI-CAN","Janus-Fundamentum","AIFC",
  "Hawkar-usls","Fast-CAT-SHAiTan","SCOBY-D0","lineara.xyz",
  "Linear-A-decipherment-programme","Demi_Head","The-Voice-of-Janus",
  "Echo-Pyramid","TOPA","Janus-HELIOS","JANUS-MACHINE-MARKET",
  "HotdRemake_ArcadePlugin","neuromorphic-vision-sensor"
 )))
-assert len(KNOWN_NAMES)==51 and len(set(KNOWN_NAMES))==51
+assert len(KNOWN_NAMES)==48 and len(set(KNOWN_NAMES))==48
 
 def canonical(obj):
     return json.dumps(obj,sort_keys=True,ensure_ascii=False,
@@ -271,7 +271,7 @@ def run_fleet():
         "github_repo_count_current":len(live),
         "planned_snapshot_count":len(KNOWN_NAMES),
         "audited_repo_count":len(ordered),
-        "missing_since_snapshot":sorted(planned-observed),
+        "missing_public_since_snapshot":sorted(planned-observed),
         "new_since_snapshot":sorted(observed-planned),
         "baseline_synthetic_replay_pass":count(lambda x:x.get("baseline_contract")=="PASS_REPLAY_SYNTHETIC"),
         "baseline_provenance_and_mutation_pass":count(lambda x:x.get("security_mutations_held") is True),
@@ -294,7 +294,8 @@ def run_fleet():
     report={
         "schema":SCHEMA,
         "read_only":True,
-        "scope":"ALL_PUBLIC_GITHUB_OWNER_REPOS_AT_RUN_TIME",
+        "scope":"ALL_48_PUBLIC_GITHUB_OWNER_REPOS_AT_RUN_TIME",
+        "other_connected_nonpublic_repositories_audited_here":False,
         "run_utc":dt.datetime.now(dt.timezone.utc).isoformat(),
         "status":status,
         "canonical_kernel_blob":BASE_KERNEL_BLOB,
