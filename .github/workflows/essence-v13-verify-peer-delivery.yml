@@ -1,0 +1,37 @@
+name: ESSENCE v1.3 Verify GitHub Peer Delivery
+
+on:
+  pull_request:
+    paths:
+      - "data/essence/v13/JANUS_ESSENCE_GITHUB_PEER_DELIVERY_2026-11-14.json"
+      - "tools/essence_v13_verify_peer_delivery.py"
+      - ".github/workflows/essence-v13-verify-peer-delivery.yml"
+  workflow_dispatch:
+  schedule:
+    - cron: '23 6 * * *'
+
+permissions:
+  contents: read
+
+jobs:
+  independently-check-public-github-commits:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Validate fixed six-core peer source claims and forged input controls
+        run: python tools/essence_v13_verify_peer_delivery.py --selftest
+      - name: Independently verify exact inbox and verifier Git blobs from Github
+        run: |
+          python tools/essence_v13_verify_peer_delivery.py --live \
+            --out research/essence/v13/github_peer_delivery_witness.json
+      - name: Publish read-only GitHub provenance witness artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: essence-v13-github-peer-delivery-witness
+          path: research/essence/v13/github_peer_delivery_witness.json
+          if-no-files-found: error
+          retention-days: 30
