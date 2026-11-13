@@ -1,0 +1,86 @@
+{
+  "schema": "janus.research.nist010l.dual_acquisition_clock_admission.v1",
+  "record_id": "JANUS-PHYSICAL-NIST-010L-MISSING-SOURCE-AND-INDEPENDENT-UTC-2026-11-10",
+  "date_utc": "2026-11-10",
+  "record_type": "APPEND_ONLY_EXTERNAL_AUTHOR_OUTREACH_AND_INDEPENDENT_TIMEBASE_PROVENANCE_GATING",
+  "status": "TWO_NIST_INQUIRIES_SENT__UTC_COUNTER_EPOCH_STILL_NOT_VERIFIED",
+  "scientific_class": "EXTERNAL_SOURCE_AND_CALIBRATION_REQUESTS_NOT_HARDWARE_MEASUREMENT",
+  "original_experiment": "Shalm et al., A strong loophole-free test of local realism, 2015, DOI 10.1103/PhysRevLett.115.250402",
+  "first_path_original_2015_source": {
+    "goal": "Obtain original build_file_txt.py/find_ttag_offset and original 03_43 .sync.hdf5 with offsets/firstsync/lastidx and per-run YAML",
+    "original_NIST_source_archive_sha256": "80b452b55ce44bb46e37ffbcd1f1684ba3293aaf0b6445c36743da4a5d37c52d",
+    "original_2015_source_provenance": "MISSING_IN_PUBLIC_ZIP",
+    "generic_belltest_contact": "belltest@nist.gov",
+    "official_project_contacts": [
+      "lynden.shalm@nist.gov",
+      "martin.stevens@nist.gov"
+    ],
+    "gmail_request_to_generic_sent": true,
+    "gmail_request_to_named_author_sent": true,
+    "gmail_provider_result_labels": [
+      "SENT"
+    ],
+    "source_received": false,
+    "source_authenticated": false,
+    "response_received": false,
+    "private_gmail_identifiers_not_published": true,
+    "public_contact_grounding": "https://www.nist.gov/pml/applied-physics-division/bell-test-research-software-and-data"
+  },
+  "second_path_independent_physical_timebase": {
+    "goal": "Independently matched NIST Bell Alice/Bob GPS PPS event UTC-second indices and NIST-specific cable/clock/QRNG switching delay calibration",
+    "original_2015_NIST_10MHz_common_frequency_reference": true,
+    "local_counters_start_different_times": true,
+    "hardware_timetag_tick_ps": 78.125,
+    "GPS_PPS_typical_jitter_ns_approx": 10,
+    "GPS_PPS_possible_jumps_ns_approx": 100,
+    "GPS_PPS_UTC_second_indices_in_original_raw_data": "NOT_PRESENT_AS_EXTERNALLY_CERTIFIED_LABELS",
+    "selected_existing_raw_pair_source": "NIST 2015-09-18 00_44/run3 known faulty timing instrument negative control",
+    "actual_source_zip_sha256": {
+      "alice": "d581080c9fa6853a1bfb8ce511782563f433512f3ce7efb612202a5179c5ee6c",
+      "bob": "f42204b41289c26ef779d39957062604c8d4008a4892724b7f2078afd7ddd5d4"
+    },
+    "station_PPS_marks_each": 417,
+    "true_matched_UTC_PPS_pairs_available": 0,
+    "external_NIST_GPS_satellite_archive": "https://www.nist.gov/pml/time-and-frequency-division/services/gps-data-archive",
+    "GPS_satellite_archive_limits": "Third-party observations of GPS satellites vs UTC(NIST), not experiment-specific proof of which PPS edges corresponded to which historical raw counter ticks",
+    "published_2015_spacelike_margin_five_laser_pulses_ns": 38.3,
+    "published_margin_uncertainty_ns": 3.7,
+    "publication_note": "Bell locality/space-like error budget is distinct from PPS clock jitter and NOT an absolute counter alignment",
+    "NIST_reference": "https://s3.amazonaws.com/nist-belltestdata/belldata/File_Folder_Descriptions.pdf",
+    "NIST_Bell_paper": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5815856/",
+    "GPS_metrology_methodology": "https://www.nist.gov/publications/evaluating-frequency-and-time-uncertainty-gps-disciplined-oscillators-and-clocks"
+  },
+  "engineering": {
+    "code_repo": "Hawkar-usls/Janus-Demiurge",
+    "source_branch": "janus/nist-010l-utc-clock-custody-gate-20261110",
+    "source_PR": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/507",
+    "script": "experiments/ocean_transformer/late_choice_010/nist_utc_clock_gate_010l.py",
+    "unit_tests": "experiments/ocean_transformer/late_choice_010/test_nist_utc_clock_gate_010l.py",
+    "github_actions_run": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/42811334808",
+    "github_actions_run_id": 42811334808,
+    "tests_passed": 7,
+    "output_status": "BLOCKED_NO_INDEPENDENT_UTC_PPS_PAIRING",
+    "absolute_clock_offset_certified": false,
+    "persisted_artifact_id": 13762690513,
+    "persisted_artifact_sha256": "59860768e882e4914564e65f19c8ef75c6642ee6c6acc8b45a96f14787c0b06b",
+    "artifact_expires_utc": "2027-01-09T11:55:01Z",
+    "source_stdout": "NIST_010L_RESULT: absolute_A_B_clock_offset_certified=false, utc_pair_count=0",
+    "no_original_photon_data_download_in_010L": true,
+    "no_original_dataset_mutation": true,
+    "all_prior_closed_protocols_unchanged": true
+  },
+  "scientific_boundary": {
+    "original_2015_build_file_txt_found": false,
+    "relative_clock_frequency_estimation_not_absolute_epoch": true,
+    "hardware_cable_delays_verified": false,
+    "independent_lab_UTC_anchor_received": false,
+    "later_2022_2023_author_code_coincidence_fitting_rejected_as_independent_source": true,
+    "later_physical_choice_experiment_performed": false,
+    "retrocausal_physical_signal_observed": false,
+    "retrocausality_proven": false,
+    "deliberately_no_fabricated_timestamp_labels": true,
+    "no_NAS_edits": true
+  },
+  "next_gate": "Follow up on NIST response. Verify code and custody hashes, independently matched UTC PPS-numbered original edges plus lab-specific delay/uncertainty, then run on a correctly timed NIST source without fitting photon coincidences or altering preregistration.",
+  "append_only": true
+}
