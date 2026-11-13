@@ -21,6 +21,7 @@ ROOT=Path(__file__).resolve().parents[1]
 FIX=ROOT/"data"/"JANUS-ESSENCE-V12-CROSSREPO-FROZEN-REAL-ALGO-CORPUS-2026-11-13.json"
 GENESIS=ROOT/"data"/"essence"/"v12"/"CI_GENESIS_REAL_ALGORITHM_RECEIPT_2026-11-13.json"
 DEMIURGE=ROOT/"data"/"essence"/"v12"/"CI_DEMIURGE_REAL_ALGORITHM_RECEIPT_2026-11-13.json"
+ARCHIVED=ROOT/"data"/"essence"/"v12"/"CI_META_INDEPENDENT_ORACLE_WITNESS_2026-11-13.json"
 CORPUS_BLOB="71f23a157a9849998dc9655bc6bdf15c08d9934a"
 FREEZE_COMMIT="5fcd50ad7fc26f9e26aef6ff25ebcb42ef7c8f28"
 SOURCE_BLOB="11e359e89d3946895b2e0d6817c54253f09dfed1"
@@ -213,6 +214,8 @@ def main():
     args=parser.parse_args()
     if args.selftest:selftest()
     report=verify_all()
+    if not ARCHIVED.is_file() or load(ARCHIVED)!=report:
+        raise ValueError("ARCHIVED_INDEPENDENT_WITNESS_REPLAY_MISMATCH")
     if args.out:
         p=Path(args.out)
         p.parent.mkdir(parents=True,exist_ok=True)
