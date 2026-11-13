@@ -1,0 +1,108 @@
+{
+  "schema": "janus.meta_registry.time_sat_004d4d_paged_source_exhaustion_v1",
+  "id": "JANUS-TIME-SAT-004D4D-FULL-PAGED-SOURCE-XOR-NO-EXPLICIT-LINEAR-MASK-20261101",
+  "date_utc": "2026-11-01",
+  "evidence_status": "REPRODUCED_BOTH_UBUNTU_WORKERS_SOURCE_ONLY_COMPLETE_EXPLICIT_MASK_SCAN",
+  "study_type": "source-only representation-preserving structural analysis; no SAT/CDCL runtime",
+  "predecessor": "data/JANUS-TIME-SAT-004D4C-BOUNDED-SUPPORT-SOURCE-ONLY-NO-NEW-XOR-2026-11-01-v1.0.json",
+  "research_lineage": [
+    "TIME-SAT-004D4B frozen four reused public SATComp2026 CNF sources",
+    "TIME-SAT-004D4C first 20k-support admission fallback",
+    "TIME-SAT-004D4D bounded multi-pass complete source support inspection"
+  ],
+  "provenance": {
+    "source_origin": "satcompetition/2026 public Main Track; previously seen by JANUS, NOT heldout",
+    "frozen_cohort_git_blob": "0cbf0eee23aa77b399ad2057f113ac1e48bd8405",
+    "code_draft_pr": "https://github.com/Hawkar-usls/Janus-Fundamentum/pull/590",
+    "code_branch": "research/time-sat-004d4d-paged-full-support-20261101",
+    "source_test_ci": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/41347280844",
+    "source_test_run_id": 41347280844,
+    "tested_head_sha": "28c486ae19f47b6978e03b1be2911eb9c667be88",
+    "host_os": [
+      "Ubuntu 22.04",
+      "Ubuntu 24.04"
+    ],
+    "both_runners_conclusion": "SUCCESS",
+    "new_exhaustive_equivalence_tests_each_host": 9,
+    "prior_bounded_support_tests_each_host": 8,
+    "prior_mixed_xor_tests_each_host": 10,
+    "C023_serialized_verifier_both_runners": "PASS_UNMODIFIED",
+    "archive_ci": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/41347518380",
+    "archive_ci_conclusion": "SUCCESS",
+    "research_archive_commit": "1133ca0f0a5571e00a770230dec179b3473bc10d",
+    "archive_json": "experiments/time_sat_004_external/time_sat_004d4d_evidence/summary.json",
+    "original_zip_sha256": {
+      "ubuntu22": "7e4ea05a5bf348295e4a3fcb91964699183c115065067844ec8a615efc506437",
+      "ubuntu24": "36457ebd6e0c4b7a550b21167df9e6c37bc97e7eddc28cb5b4dec0afa39db28d"
+    },
+    "original_receipt_json_sha256": {
+      "ubuntu22": "4c2835fe08c4d24970079206e68775d835cef68e7bb51a17be977b9d833f7321",
+      "ubuntu24": "4e5ad9d43780ca69003ab160d7d743655f6bc0b73bf3887d6076755c477b2ac0"
+    }
+  },
+  "scientific_method": {
+    "indexing": "sequential fresh support dictionary per pass; never more than 20000 distinct variable-support entries in any single index",
+    "retention": "all original clauses accounted for exactly once, as complete XOR sign-mask groups or verbatim residual CNF",
+    "width_limit": 6,
+    "source_validation": "verify frozen upstream record, SHA256 of original exact DIMACS, strict n/m/shape; replay structural partition on both same-admin workers",
+    "recognized_parity": "for each support of k<=6, every one of the 2^(k-1) complete sign masks of a parity class must occur in original CNF; no pattern inference from family name",
+    "scope": "complete enumeration of eligible explicit source sign-mask parity groups, not all mathematically entailed XOR relations",
+    "peak_memory_increase": "NOT_MEASURED; only fixed per-pass dictionary support-count limit verified",
+    "UNSAT_proof": "NONE; no SAT/UNSAT engine invoked",
+    "independent_external_administration": "NOT_PERFORMED"
+  },
+  "observations": {
+    "linear_equations": {
+      "original_CNF_SHA256": "dd2e52c12cafa012316052c6c2ac06ea48ccf1c999a5ae57a25c5f208e1cb9bc",
+      "variables": 1200,
+      "clauses": 21040,
+      "original_literal_occurrences": 81360,
+      "max_clause_width": 4,
+      "previous_first_page_indexed_support_limit": 20000,
+      "previously_unindexed_clause_rows": 1040,
+      "support_pages": 2,
+      "remaining_unindexed_clause_rows": 0,
+      "complete_explicit_XOR_equations": 0,
+      "original_CNF_residual_clauses": 21040,
+      "same_result_on_both_runners": true,
+      "inference": "No complete explicitly encoded source sign-mask XOR blocks for widths <=6. Not evidence that the source contains no other XOR-related structure."
+    },
+    "xor_shifting": {
+      "complete_XOR_equations": 1643,
+      "original_CNF_residual_clauses": 1890,
+      "support_pages": 1,
+      "regression": "NONE"
+    },
+    "minimum_disagreement_parity": {
+      "complete_XOR_equations": 639,
+      "original_CNF_residual_clauses": 2237,
+      "support_pages": 1,
+      "regression": "NONE"
+    },
+    "binary_tree_parity": {
+      "complete_XOR_equations": 857,
+      "original_CNF_residual_clauses": 660,
+      "support_pages": 1,
+      "regression": "NONE"
+    }
+  },
+  "interpretation": [
+    "004D4C limited-index uncertainty was resolved for supported explicit mask patterns in the 21040-clause linear-equations instance.",
+    "The new paged support algorithm found zero new complete XOR equations, including after processing the remaining 1040 clauses.",
+    "All three previously positive cross-family public source extractions retained exactly their prior source clause partition and counts.",
+    "No speedup, universal algorithm, P=NP or production readiness inference follows from this correctness check.",
+    "Possible next research direction is studying alternative parity encodings or bounded derived-XOR recovery with sound verification; must pre-register costs and compare raw solver baselines."
+  ],
+  "gates": {
+    "TIME_SAT_004A": "PASS_PRIOR",
+    "TIME_SAT_004B": "PUBLIC_DEVELOPMENT_DATA_NOT_HIDDEN",
+    "TIME_SAT_004C": "INDEPENDENT_WITNESS_OPEN",
+    "TIME_SAT_004D": "SOURCE_CORRECTNESS_SUBGATE_PASS_OVERALL_PERFORMANCE_PARTIAL",
+    "TIME_SAT_004E": "NET_PROFIT_OPEN",
+    "TIME_SAT_004F": "NOT_READY"
+  },
+  "production_C023": "UNCHANGED",
+  "paid_Rowans": "NONE",
+  "NAS_or_PC_compute": "NONE",
+  "append_only": true
+}

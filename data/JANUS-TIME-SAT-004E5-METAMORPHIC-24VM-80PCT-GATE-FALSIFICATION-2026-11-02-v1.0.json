@@ -1,0 +1,90 @@
+{
+  "schema": "JANUS_META_REGISTRY_TIME_SAT_004E5_SAT_EQUIVALENT_REPRESENTATION_ROBUSTNESS_V1",
+  "date_utc": "2026-11-02",
+  "status": "VALIDATED_24_VMS_96_TRIALS_SAT_EQUIVALENT_INPUT_80PCT_GATE_FALSIFIED_NO_PRODUCTION_PROMOTION",
+  "research": {
+    "repo": "Hawkar-usls/Janus-Fundamentum",
+    "draft_PR": "https://github.com/Hawkar-usls/Janus-Fundamentum/pull/602",
+    "research_branch": "research/time-sat-004e5-metamorphic-threshold-stress-20261102",
+    "frozen_protocol": "experiments/time_sat_004_external/PREREGISTERED_004E5_SAT_EQUIVALENT_PADDING_20261102.json",
+    "frozen_protocol_git_blob": "a417e339d2f1fa6214e43d8a3554191de0c51f77",
+    "original_CI": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/41439466935",
+    "original_scientific_tested_HEAD": "c7df96852d168305a9c74d6347fd8371758c132c",
+    "original_CI_result": "SUCCESS_26_OF_26",
+    "archive_CI": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/41439720477",
+    "archive_CI_result": "SUCCESS",
+    "archive_commit": "380bc7e56d6f9d0e7ff3cf2af7b859730d09432c",
+    "source_proof_archive": "experiments/time_sat_004_external/time_sat_004e5_evidence/SUMMARY.json",
+    "source_proof_archive_git_blob": "180daf1dc9ede54137e1c844e3b1136dc22047ff",
+    "append_only_posthoc": "experiments/time_sat_004_external/time_sat_004e5_evidence/POSTHOC_SAT_EQUIVALENT_PADDING_FALSIFICATION_20261102.json"
+  },
+  "frozen_test": {
+    "preseen_SAT_original_family_count": 2,
+    "family_original_SHA256": {
+      "lights_out": "6be9bfe6b44454a061a2e93350f589643f8a16f5bca6babdaa50a2d3d7069361",
+      "binary_tree_parity": "8d94924bef8978b28a2bf95472556b280bef5d98b6833c6db33554098f52d2d8"
+    },
+    "transform": "Deterministic variable bijection and polarity flips, clause/literal shuffling, plus exact 0,5,30 percent syntactically tautological CNF padding. Source and generated full SAT models replayed before child solver and every SAT response.",
+    "padding_percent": [
+      0,
+      5,
+      30
+    ],
+    "candidate_policies": [
+      "native_all",
+      "adaptive_80"
+    ],
+    "paired_original_CNF_raw_CryptoMiniSat": true,
+    "host_images": [
+      "ubuntu-22.04",
+      "ubuntu-24.04"
+    ],
+    "matrix_jobs": 24,
+    "maximum_requested_parallel_jobs": 20,
+    "observed_actual_peak_concurrent_jobs": 18,
+    "verified_distinct_GitHub_hosted_VM_runner_ids": 24,
+    "total_GitHub_jobs_including_preflight_audit": 26,
+    "original_Github_artifact_ZIPs_SHA_checked": 25,
+    "paired_repeats_each_worker": 2,
+    "full_cold_child_count": 96,
+    "CPU_soft_seconds_each": 6,
+    "wall_timeout_seconds_each": 10,
+    "RLIMIT_AS_bytes": 2147483648,
+    "no_paid_Rowan": true,
+    "no_NAS_PC_compute": true,
+    "original_C023_unchanged_and_passing": true
+  },
+  "original_outcomes": {
+    "SAT_models_verified_full_generated_original_CNF": 64,
+    "unknown_SIGXCPU_not_UNSAT": 32,
+    "binary_tree_original_full_XOR_coverage_before_padding": 0.8385518590998043,
+    "binary_tree_5pct_padding_full_XOR_coverage": 0.7985092010249243,
+    "binary_tree_30pct_padding_full_XOR_coverage": 0.6449670743179681,
+    "binary_tree_original_XOR_equations_unchanged": 857,
+    "binary_tree_5pct_adaptive_80_verified_SAT": 0,
+    "binary_tree_5pct_native_all_verified_SAT": 4,
+    "binary_tree_30pct_adaptive_80_verified_SAT": 0,
+    "binary_tree_30pct_native_all_verified_SAT": 4,
+    "lights_out_original_XOR_equations_unchanged": 625,
+    "lights_out_30pct_padding_full_XOR_coverage": 0.7692179283866122,
+    "lights_out_30pct_adaptive_80_solver_selection": "raw_after_scan",
+    "lights_out_30pct_native_all_selection": "native_xor",
+    "lights_out_Pad30_adaptive_SAT": "4_OF_4_BUT_WITH_RAW_NOT_NATIVE",
+    "lights_out_same_VM_paired_wall_ratio_when_finite": "~8-10x native on these sign/permutation-transformed variants, not equivalent to earlier 004E4 ratio ~20x; never merge populations or report universal speedup",
+    "scientific_finding": "The 80% denominator includes irrelevant tautological clauses; it can silently change which representation JANUS selects even when the logical SAT instance is exactly equivalent and the full previous parity decomposition remains available."
+  },
+  "scientific_limit": [
+    "Artificial tautology padding and variable renaming were selected to probe a hypothesis and are not independently curated unseen SAT instances or representative of SAT Competition distributions.",
+    "Different candidate algorithms on separate ephemeral GitHub runners cannot establish a global champion by raw wall-time across VMs. CPU-censored baselines cannot enter finite speed ratios.",
+    "On binary-tree variant+pad, direct native finishes, while adaptive times out; indicates a selector weakness, not wrong SAT correctness or general complexity separation.",
+    "Even if corrected policy excludes tautologies, evaluating that new policy on these same six generated formulas is development only, not unbiased validation. Freeze and test different source/transform families before any promotion.",
+    "Original main and C023 stay unchanged; external 004C Witness remains OPEN, P=NP not proven."
+  ],
+  "gates": {
+    "004C": "OPEN",
+    "004D": "PARTIAL",
+    "004E": "STATIC_COVERAGE_GATE_NOT_ROBUST",
+    "004F": "NOT_READY"
+  },
+  "append_only": true
+}

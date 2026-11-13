@@ -1,0 +1,100 @@
+{
+  "schema": "janus.registry.experimental_negative_result.v1",
+  "artifact_id": "JANUS-TIME-SAT-PARTIAL-002-ADAPTIVE-ADMISSION-2026-11-01-v1.0",
+  "date_utc": "2026-11-01",
+  "parent": "data/JANUS-TIME-SAT-PARTIAL-001-STRONG-CDCL-NEGATIVE-RESULT-2026-11-01-v1.0.json",
+  "scientific_origin": "data/JANUS-ENTROPY-TIME-CAUSALITY-REGISTRY-SYNTHESIS-2026-11-01-v1.0.json",
+  "status": "CORRECTNESS_PASS_GATE_CAN_SKIP_PERFORMANCE_FAIL_UNBLINDED",
+  "provenance": {
+    "repo": "Hawkar-usls/Janus-Fundamentum",
+    "PR": 574,
+    "draft": true,
+    "validated_head": "349508e3e07514ac186280eda3eb6d1c0f7145f3",
+    "two_host_ci": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/41312735704",
+    "machine_evidence": "experiments/TIME_SAT_PARTIAL_002_CLOUD_EVIDENCE_20261101.json",
+    "full_results_ubuntu22": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/41312735704/artifacts/13086356583",
+    "full_results_ubuntu24": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/41312735704/artifacts/13086530704",
+    "protocol_comment": "https://github.com/Hawkar-usls/Janus-Fundamentum/pull/574#issuecomment-6558660800"
+  },
+  "frozen_gate": {
+    "source_features": [
+      "variable_count",
+      "clause_count",
+      "unit_clause_count",
+      "binary_clause_density",
+      "short_clause_count",
+      "polarity_imbalance",
+      "binary_complementary_wedge_count"
+    ],
+    "admission_conditions": "n<=32, clauses<=512, zero source unit clauses, at least one complementary binary wedge and >=25% binary density",
+    "probe_max_clause_visits": 7000,
+    "soundness": "Every derived clause needs independent CaDiCaL entailment check under negation; unfinished probe yields no inference",
+    "fallback": "Original source strong CDCL if gate skips or preparation is interrupted"
+  },
+  "observations": {
+    "frozen_small_count": 60,
+    "previous_large_controls": 5,
+    "added_mechanism_controls": 3,
+    "original_small_suite_sha256": "865af20c649740dc7847a7204d9cd0c36470ddb66777c4e92c26bde33c58c53b",
+    "source_CNF_manifest_sha256": "3ef6f607c641d72653fee3e0503728cb397331b0c92b13dd90c0d8e5e3cc6583",
+    "cloud_machines": [
+      "ubuntu-22.04",
+      "ubuntu-24.04"
+    ],
+    "solvers": [
+      "CaDiCaL195",
+      "Glucose4"
+    ],
+    "test_groups_each_machine": {
+      "new": "7/7 PASS",
+      "prior": "7/7 PASS",
+      "C023_verifier": "PASS"
+    },
+    "admitted": 22,
+    "skipped": 38,
+    "admitted_with_units": 13,
+    "admitted_no_units": 9,
+    "skipped_where_counterfactual_units": 2,
+    "median_full_wall_ratio_to_pure_CDCL": {
+      "ubuntu22": {
+        "CaDiCaL195": {
+          "adaptive": 1.2028982017168084,
+          "unconditional": 2.7844666588404223
+        },
+        "Glucose4": {
+          "adaptive": 1.295745662621723,
+          "unconditional": 3.186714090047631
+        }
+      },
+      "ubuntu24": {
+        "CaDiCaL195": {
+          "adaptive": 1.191894168315235,
+          "unconditional": 2.865537664951325
+        },
+        "Glucose4": {
+          "adaptive": 1.2989932329421756,
+          "unconditional": 3.1901795448029655
+        }
+      }
+    },
+    "large_cases": "On n18 MAJ3-K4, generated n220/240 SAT and generated n220/240 UNSAT, adaptive gate avoids the old ~7001 charged clause visits but remains slower or statistically unclear vs pure CDCL.",
+    "negative_control_correction": "Original CI negative test incorrectly treated (1 OR 2),(1 OR 3),(NOT 1 OR 2) as wedge-free; this formula entails 2. Replaced with genuinely wedge-free example; corrected CI passed both runners.",
+    "result": "No proven whole-pipeline acceleration vs raw CaDiCaL or Glucose4"
+  },
+  "epistemic_restrictions": [
+    "All benchmarks are public previously used instances and synthetic mechanism controls, NOT external blind held-out data",
+    "Statistical paired bootstraps are descriptive on public cases; do not claim externally generalizable significance",
+    "Process-wide RSS is not per-arm peak RSS; memory requirement remains open",
+    "New portable UNSAT certificates were not generated or independently replayed",
+    "Logical unit yield is not equivalent to time-profitability",
+    "Physical retrocausality, tachyons, quantum advantage, and P=NP not established",
+    "No Demiurge live authority, no C023 production modification",
+    "Original TIME-SAT-PARTIAL-001 negative findings retained verbatim"
+  ],
+  "decision": {
+    "development": "KEEP_AS_RESEARCH_ONLY",
+    "production": "NO_PROMOTION",
+    "next_research": "Externally sealed hard CNF sources and zero-cost-ish direct structural unit extraction versus modern CDCL built-in preprocessing; measure isolated per-arm RSS and independently verified UNSAT proofs"
+  },
+  "append_only": true
+}
