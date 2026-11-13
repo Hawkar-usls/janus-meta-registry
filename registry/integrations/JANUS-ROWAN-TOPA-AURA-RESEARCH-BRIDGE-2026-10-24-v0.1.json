@@ -1,0 +1,103 @@
+{
+  "schema": "janus.meta_registry.integration_candidate.v1",
+  "artifact_id": "JANUS-ROWAN-TOPA-AURA-RESEARCH-BRIDGE-2026-10-24-v0.1",
+  "created_date_utc": "2026-10-24",
+  "class": "RESEARCH_INFRASTRUCTURE_PROTOTYPE_NOT_SCIENTIFIC_RESULT",
+  "status": "IMPLEMENTATION_MERGED_LIVE_ROWAN_NOT_VERIFIED",
+  "scope": "JANUS/GOLEM/AURA hypotheses -> Rowan pKa predictions -> TOPA review -> candidate archival receipt",
+  "implementation": {
+    "repository": "Hawkar-usls/Janus",
+    "draft_pull_request": "https://github.com/Hawkar-usls/Janus/pull/15",
+    "branch": "research/janus-rowan-topa-bridge-20261024",
+    "entrypoint": "integrations/rowan/janus_rowan_bridge.py",
+    "input_schema": "integrations/rowan/research_case_v1.schema.json",
+    "docs": "integrations/rowan/README.md",
+    "test_suite": "integrations/rowan/tests/test_bridge.py",
+    "provider_capabilities_implemented": [
+      "pka_plan_offline",
+      "pka_remote_draft_opt_in",
+      "pka_submit_credit_capped_explicit",
+      "pka_collect_opt_in",
+      "read_only_whoami_and_credit_check",
+      "offline_hash_linked_topa_and_registry_envelopes"
+    ],
+    "provider_capabilities_not_implemented": [
+      "docking",
+      "fep",
+      "protein_design",
+      "molecular_dynamics",
+      "virtual_screening",
+      "admet",
+      "production_agent_invocation"
+    ],
+    "pipeline_entrypoint": "integrations/rowan/janus_science_pipeline.py",
+    "candidate_outputs": [
+      "rowan.receipt.json",
+      "topa.review-request.json",
+      "meta-registry.candidate.json"
+    ],
+    "manual_workflow": ".github/workflows/rowan-research-manual.yml",
+    "model_input_firewall": "SMILES-only pKa methods; 3D-only models forbidden until a typed 3D input adapter exists",
+    "main_merge_commit_sha": "c5d6cad37aa15b986460749d02be66d6b5c9f4ff",
+    "pr_merged": true
+  },
+  "peer_authority": {
+    "aura": "https://github.com/Hawkar-usls/aura-oracle-tg",
+    "aura_role": "hypothesis or sealed precommitment; no automatic truth promotion",
+    "topa": "https://github.com/Hawkar-usls/TOPA/blob/main/protocols/TOPA_FOUNDATION.json",
+    "topa_role": "source provenance, independent measurements, alternatives, falsification and scientific review",
+    "meta_registry_role": "versioned archival provenance only; archive entry is not a scientific result"
+  },
+  "rowan_provider": {
+    "docs": "https://docs.rowansci.com/api/python/v3/",
+    "pka_api": "https://docs.rowansci.com/api/python/v3/workflows/pka/",
+    "authentication": "ROWAN_API_KEY in trusted environment only",
+    "live_account_or_credential_attested": false,
+    "live_calculation_verified": false,
+    "model_prediction_verifies_efficacy_or_safety": false
+  },
+  "safety_gates": {
+    "offline_default": true,
+    "secrets_in_repository": false,
+    "spend_requires_explicit_runtime_flag": true,
+    "per_job_credit_limit_min": 1,
+    "per_job_credit_limit_max": 10,
+    "auto_publish_to_registry": false,
+    "auto_run_in_ci": false,
+    "auto_promote_to_empirical_truth": false,
+    "reject_unknown_workflow": true,
+    "receipt_contains_plaintext_smiles": false,
+    "possible_duplicate_after_partial_remote_failure": "requires_manual_account_check_before_retry"
+  },
+  "validation": {
+    "type": "OFFLINE_MOCK_ONLY",
+    "github_run_url": "https://github.com/Hawkar-usls/Janus/actions/runs/40133930352",
+    "github_workflow": "Rowan bridge offline tests",
+    "workflow_conclusion": "success",
+    "scientific_validation": "NOT_ATTEMPTED",
+    "paid_or_free_provider_calculation": "NOT_ATTEMPTED",
+    "offline_tests": "15/15 PASS",
+    "sdk_v3_signature_test": "PASS"
+  },
+  "next_gates": [
+    "Configure ROWAN_API_KEY as a protected GitHub Actions environment secret or an authorized local runtime, then perform read-only whoami credit check",
+    "Perform one benign phenol pKa calculation with verified input, correct method and job receipt",
+    "Independently compare with empirical chemistry reference and disclose model uncertainty",
+    "Run TOPA provenance/falsification review and archive reviewed result without clinical or novelty claims"
+  ],
+  "epistemic_firewalls": [
+    "AI_HYPOTHESIS_NOT_EVIDENCE",
+    "ROWAN_WORKFLOW_ID_NOT_EMPIRICAL_TRUTH",
+    "CI_PASS_NOT_PROVIDER_INTEGRATION_TEST",
+    "MODEL_PREDICTION_NOT_CAUSALITY_OR_MEDICAL_EFFICACY",
+    "SHA256_INTEGRITY_NOT_SOURCE_AUTHENTICATION",
+    "REGISTRY_ENTRY_NOT_SCIENTIFIC_DISCOVERY"
+  ],
+  "updated_at_utc": "2026-10-24",
+  "execution_environment": {
+    "remote_desktop_connected": false,
+    "account_credential_in_GitHub_Secrets_verified": false,
+    "remote_spend_attempted": false,
+    "reason": "Remote Desktop Commander device offline; no authorized connector action to configure GitHub Actions secrets"
+  }
+}
