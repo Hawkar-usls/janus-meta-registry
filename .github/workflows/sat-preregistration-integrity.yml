@@ -1,0 +1,53 @@
+name: JANUS SAT preregistration integrity (draft only)
+
+on:
+  pull_request:
+    paths:
+      - 'data/sat_reproducibility/**'
+      - 'docs/SAT_REPRODUCIBILITY_001.md'
+      - 'tools/verify_sat_preregistration.py'
+      - 'tests/test_sat_preregistration.py'
+      - 'tools/verify_sat_witness.py'
+      - 'tests/test_sat_witness.py'
+      - '.github/workflows/sat-preregistration-integrity.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'data/sat_reproducibility/**'
+      - 'docs/SAT_REPRODUCIBILITY_001.md'
+      - 'tools/verify_sat_preregistration.py'
+      - 'tests/test_sat_preregistration.py'
+      - 'tools/verify_sat_witness.py'
+      - 'tests/test_sat_witness.py'
+      - '.github/workflows/sat-preregistration-integrity.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sat-prereg-integrity-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Check no false freeze or unverified result promotion
+        run: python tools/verify_sat_preregistration.py
+      - name: Test adversarial tampering and separation of claims
+        run: python -m unittest discover -s tests -p 'test_sat_preregistration.py' -v
+      - name: Validate synthetic SAT certificates and reject false UNSAT claims
+        run: python -m unittest discover -s tests -p 'test_sat_witness.py' -v
+      - name: State exact meaning of CI result
+        run: |
+          echo 'SAT_PREREG_CI=DESIGN_INTEGRITY_ONLY'
+          echo 'HISTORICAL_SAT_CLAIM=UNVERIFIED'
+          echo 'EXPERIMENT=NOT_STARTED'
+          echo 'INDEPENDENT_CUSTODIAN=NOT_APPOINTED'
+          echo 'SCIENCE_PASS=NOT_GRANTED'
