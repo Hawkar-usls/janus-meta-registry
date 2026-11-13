@@ -1,0 +1,121 @@
+{
+  "artifact_id": "JANUS-MINIMAL-RETROCAUSAL-AXIOMS-EXACT-R10-2026-11-07-v1.0",
+  "schema_version": "1.0",
+  "date_utc": "2026-11-07",
+  "language": "ru",
+  "registry": {
+    "repo": "Hawkar-usls/janus-meta-registry",
+    "path": "registry/uap/JANUS-MINIMAL-RETROCAUSAL-AXIOMS-EXACT-R10-2026-11-07-v1.0.json",
+    "mode": "APPEND_ONLY",
+    "state": "DRAFT_NOT_MERGED"
+  },
+  "goal": "Find minimal mathematical axiom/resource beyond the independent-future CPU no-go, with a rigorous formal distinction between backwards causal intervention and purely observational predictability.",
+  "antecedents": [
+    {
+      "repo": "Hawkar-usls/Janus-Demiurge",
+      "pr": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/459",
+      "result": "R9 exact Q(sqrt2) OCB process-matrix existence proof and forward-only independent future no-go"
+    },
+    {
+      "source": "https://doi.org/10.1103/h31d-wqyg",
+      "year": 2026,
+      "relation": "Vilasini-Colbeck hypothetical jamming, NSS vs NSC operational task; the R10 parity family is NOT a reconstruction of the full paper or a novel certified physical protocol"
+    }
+  ],
+  "theorem": {
+    "family": "For x,z,b in {0,1}, 0<=eta<=1: P_eta(x,z,b)=[1+eta*(-1)^(x XOR z XOR b)]/8",
+    "proof_technique": "Exact coefficient matching in Q[eta] for all eight joint cells; every term affine in eta; five rational examples for cross-check; no floating point",
+    "result_1": "Two causal structures generate the identical observational joint P_eta for all real eta in [0,1], even eta=1.",
+    "forward_model": {
+      "upstream": "X and Z independent Bernoulli(1/2); N independent Bernoulli with P(N=0)=(1+eta)/2",
+      "late_equation": "B = X XOR Z XOR N",
+      "chronological_meaning": "All early X,Z exist before the late generated B. Strong forward-origin control, NOT a future message.",
+      "observational_predictability": "P(B=X XOR Z)=(1+eta)/2",
+      "under_do_B": "Intervening to externally fix B leaves early joint P(X,Z)=1/4, TV between do(B=0),do(B=1) equals 0"
+    },
+    "backward_formal_model": {
+      "exogenous": "B,X independent Bernoulli(1/2); N independent noise with P(N=0)=(1+eta)/2",
+      "equation": "Z = X XOR B XOR N",
+      "computational_order": "CPU must supply B before generating Z; this is not actual temporal retrocommunication",
+      "under_do_B": "P(X=x,Z=z|do(B=b))=[1+eta*(-1)^(x XOR z XOR b)]/4; joint total variation between do(B=0),do(B=1) equals eta"
+    },
+    "shared_single_marginals": "P(X=0|B=b)=P(Z=0|B=b)=1/2 for all b, eta, so marginal no-signalling alone cannot exclude joint correlations.",
+    "proof_results": {
+      "observational_equivalence_exact_all_eta": true,
+      "observational_TV_given_B": "eta",
+      "forward_interventional_TV": "0",
+      "backward_formal_interventional_TV": "eta",
+      "parity_B_accuracy": "(1+eta)/2",
+      "observational_mutual_information": "I(B;X,Z)=1-h_2((1-eta)/2), bits, for the symmetric binary channel",
+      "nonidentifiability_limit": "Observation of an entire P(X,Z,B), including perfect parity, cannot identify arrow direction without an external intervention/causal assumptions."
+    },
+    "global_two_boundary_filter": {
+      "original_independent_uniform_joint": "P(X,Z,B)=1/8 for each of 8 triples",
+      "acceptance_weight": "[1+eta*(-1)^(X XOR Z XOR B)]/2",
+      "unconditional_acceptance": "1/2",
+      "conditional_after_acceptance": "Exactly P_eta",
+      "implication": "This calculation is an ordinary late-conditioned postselection model; it cannot send information to a complete immutable early ledger."
+    },
+    "minimal_axiom_gap": {
+      "impossible_joint_assumptions": [
+        "Early record is immutable and generated from complete earlier information R",
+        "Later B is independent of entire earlier R and externally free",
+        "No backward resource, no hidden shared source, no selected/removed trials",
+        "eta>0 joint future-choice dependence"
+      ],
+      "logic": "Those four assumptions contradict the probability factorization P(R,B)=P(R)P(B). To achieve eta>0, at least one must fail. Ordinary forward model violates late B joint exogeneity; backwards-formal model takes B as prior computational input; global selection violates all-attempt preservation.",
+      "new_software_resource_created": false,
+      "new_physical_resource_demonstrated": false,
+      "result_type": "Logical necessary condition / observational equivalence theorem, not a time machine."
+    }
+  },
+  "GitHub_evidence": {
+    "repo": "Hawkar-usls/Janus-Demiurge",
+    "branch": "research/janus-minimal-retrocausal-axioms-r10-20261107",
+    "pull_request": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/460",
+    "commit_at_success": "ce8f66c118ae7c2ffd639e4b73a78b59a2156cca",
+    "module": "experiments/ocean_transformer/janus_minimal_retro_axioms_exact_r10.py",
+    "tests": "experiments/ocean_transformer/test_janus_minimal_retro_axioms_exact_r10.py",
+    "workflow": ".github/workflows/janus-minimal-retro-axioms-r10.yml",
+    "CI_url": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/42375831234",
+    "run_id": 42375831234,
+    "conclusion": "success",
+    "jobs_success": 2,
+    "jobs_total": 2,
+    "unit_tests_per_worker": 13,
+    "unit_tests_total": 26,
+    "Python_versions": [
+      "3.11",
+      "3.12"
+    ],
+    "exact_certificate_artifacts": [
+      {
+        "name": "janus-r10-minimal-axioms-exact-py3.11",
+        "id": 13575642719
+      },
+      {
+        "name": "janus-r10-minimal-axioms-exact-py3.12",
+        "id": 13576075204
+      }
+    ],
+    "symbolic_eight_cell_verification_pass": true,
+    "rational_eta_witnesses": [
+      "0",
+      "1/4",
+      "1/2",
+      "3/4",
+      "1"
+    ],
+    "research_only": true,
+    "production_unchanged": true,
+    "NAS_untouched": true
+  },
+  "future_research": {
+    "priority": "Identify a nontrivial causal resource with explicit do(B) semantics that is not mathematically implementable by ordinary forward computation of already-fixed early records, while proving no forbidden filtering or hidden common causes.",
+    "mathematical_test": "Compare interventional, not just observational distributions; derive a no-go or existence theorem for resource closure under composition, independent late settings and exact chronology.",
+    "physical_claim_limit": "Without a physical realization or an independently defined axiom connecting the model to the actual world, mathematical consistency does not establish time reversal in nature.",
+    "not_a_new_physical_discovery": true
+  },
+  "verdict": "EXACT_ALL_ETA_NONIDENTIFIABILITY_AND_DO_B_SEPARATION_PASS__MINIMAL_AXIOM_GAP_IDENTIFIED__NO_ACTUAL_RETROCAUSAL_RESOURCE_PROVEN",
+  "production_promotion_allowed": false
+}
