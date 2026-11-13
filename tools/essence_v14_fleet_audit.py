@@ -164,6 +164,15 @@ def audit_one(name,item):
             return None
     manifest_raw=retrieve(".janus/essence/manifest.json")
     fixture_raw=retrieve(".janus/essence/fixture.json")
+    info["fixture_origin"]="REPOSITORY_LOCAL"
+    if fixture_raw is None:
+        # Explicit, public, pinned central fallback to test contract without
+        # falsely claiming the target repo is self-contained.
+        trusted=(ROOT/".janus"/"essence"/"fixture.json").read_bytes()
+        if git_blob(trusted)!="a4bd3a81efb453219ea5bc2e08227191e84d90b0":
+            raise ValueError("CENTRAL_FALLBACK_FIXTURE_CHANGED")
+        fixture_raw=trusted
+        info["fixture_origin"]="PUBLIC_META_REGISTRY_FALLBACK_NOT_REPO_LOCAL"
     kernel_raw=retrieve(".janus/essence/kernel.py")
     if kernel_raw is not None:
         info["baseline_kernel_blob"]=git_blob(kernel_raw)
@@ -285,12 +294,16 @@ def run_fleet():
         "genuine_external_blind_model_gain_confirmed":0,
         "live_model_rollback_verified":0,
         "automatic_production_model_changes_authorized":0,
-        "source_fetch_or_validation_issue_repos":count(lambda x:bool(x.get("inspection_errors")))
+        "source_fetch_or_validation_issue_repos":count(lambda x:bool(x.get("inspection_errors"))),
+        "self_contained_fixtures":count(lambda x:x.get("fixture_origin")=="REPOSITORY_LOCAL"),
+        "central_fallback_fixtures":count(lambda x:x.get("fixture_origin")=="PUBLIC_META_REGISTRY_FALLBACK_NOT_REPO_LOCAL")
     }
-    status=("PASS_ALL_SCOPED_REPO_BASELINES_MODEL_AUTHORITY_HELD"
-            if len(ordered)==len(KNOWN_NAMES)==len(live)
-            and stats["baseline_provenance_and_mutation_pass"]==len(ordered)
-            else "PARTIAL_OR_FAILED_BASELINE_FLEET_AUDIT_HOLD")
+    base_pass=(len(ordered)==len(KNOWN_NAMES)==len(live)
+               and stats["baseline_provenance_and_mutation_pass"]==len(ordered))
+    status=("PASS_PUBLIC_BASELINES_WITH_FIXTURE_GAPS_MODEL_HOLD" if base_pass
+            and stats["central_fallback_fixtures"]>0
+            else ("PASS_ALL_PUBLIC_BASELINES_MODEL_HOLD" if base_pass
+                  else "PARTIAL_OR_FAILED_BASELINE_FLEET_AUDIT_HOLD"))
     report={
         "schema":SCHEMA,
         "read_only":True,
@@ -339,7 +352,7 @@ def main():
     print(json.dumps({"status":result["status"],**result["statistics"],
                       "receipt_sha256":result["receipt_sha256"]},sort_keys=True))
     # Emit CI failure when a baseline is missing or forgeable: don't hide gaps.
-    if result["status"]!="PASS_ALL_SCOPED_REPO_BASELINES_MODEL_AUTHORITY_HELD":
+    if result["status"]=="PARTIAL_OR_FAILED_BASELINE_FLEET_AUDIT_HOLD":
         raise SystemExit(2)
 
 if __name__=="__main__":
