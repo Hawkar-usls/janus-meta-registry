@@ -132,11 +132,14 @@ def produce(ledger,previous=None):
             or previous.get("receipt_sha256")!=seal({k:v for k,v in previous.items() if k!="receipt_sha256"})
             or previous.get("production_authority") is not False
             or previous.get("automatic_merge") is not False
-            or previous.get("source_lineage_sha256")!=fingerprint):
+            or not is_hash(previous.get("source_lineage_sha256"),64)):
             raise ValueError("PEER_PREVIOUS_PROVENANCE_CHANGED")
-        # A new event without new input evidence must not create another generation.
-        state="HOLD_NO_NEW_PEER_EVIDENCE"
-        offers=[]
+        if previous["source_lineage_sha256"]==fingerprint:
+            # New schedule tick without evidence is not a new generation.
+            state="HOLD_NO_NEW_PEER_EVIDENCE"
+            offers=[]
+        else:
+            state="RESEARCH_OFFERS_PREPARED_CHANGED_SOURCE_ONLY"
     else:
         state="RESEARCH_OFFERS_PREPARED_NOT_DELIVERED"
     result={
