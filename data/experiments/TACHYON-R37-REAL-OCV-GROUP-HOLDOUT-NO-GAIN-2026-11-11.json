@@ -1,0 +1,131 @@
+{
+  "schema": "janus.meta_registry.r37.real_measured_ocv_formula_benchmark.v1",
+  "record_id": "TACHYON-R37-REAL-OCV-EIGHT-BATTERY-GROUP-FORECAST-2026-11-11",
+  "date_utc": "2026-11-11",
+  "experiment": "JANUS-R3.7-REAL-SOURCE-GROUP-HOLDOUT",
+  "code_research_pr": "https://github.com/Hawkar-usls/Demi_Head/pull/89",
+  "github_actions_run": "https://github.com/Hawkar-usls/Demi_Head/actions/runs/43081346663",
+  "source": {
+    "origin": "Third-party published laboratory measurements; public repository mirrors IEEE DataPort original",
+    "repository": "https://github.com/BulyK47/battery-datasets",
+    "original_dataset_doi": "10.21227/651q-8v82",
+    "name": "24-hour Raw OCV Relaxation Dataset for Rechargeable Batteries with Different Chemistries",
+    "authors": [
+      "Iulian-Teodor Voicila",
+      "Bogdan-Adrian Enache",
+      "Irina Vilciu",
+      "George-Calin Seritan"
+    ],
+    "affiliated_institution": "National University of Science and Technology POLITEHNICA Bucharest",
+    "license": "CC BY 4.0, attribution required",
+    "related_publication": "https://www.mdpi.com/2313-0105/11/5/186",
+    "files": 16,
+    "original_csv_git_blobs_verified": 16,
+    "actual_bytes_sha256_per_file_saved_in_action_receipt": true,
+    "laboratory_raw_rows_republished_in_meta_registry": false,
+    "laboratory_raw_rows_used_for_neural_gradient": false,
+    "source_quality_independent_curator_signed": false
+  },
+  "evaluation": {
+    "intent": "Forecast open-circuit voltage of each battery for hours (4,24] using only early measured voltage 0..4h.",
+    "measured_voltage_unit": "V",
+    "measurement_clock_unit": "h",
+    "groups_selected_before_evaluation": true,
+    "training_developer_battery_groups": [
+      "APR",
+      "BSE",
+      "SG",
+      "LG"
+    ],
+    "validation_battery_groups": [
+      "OEM",
+      "LI"
+    ],
+    "heldout_test_battery_groups": [
+      "AR",
+      "AU"
+    ],
+    "train_traces": 22,
+    "validation_traces": 4,
+    "heldout_test_traces": 4,
+    "total_traces": 30,
+    "withheld_measurements_points_per_test_trace": 1200,
+    "group_order": "train+validation source bytes downloaded before model selection; SHA sealed to disk; heldout TEST raw bytes downloaded after",
+    "pretest_source_manifest_sha256": "74bd6a4fe656c05da301ac7e08af5155c500c2dfb8687e61505b0cfa4ee962e0",
+    "pretest_model_selection_sha256": "a539216337cfebedc66777754f1bae9a3b894496a7acb5b70997bbc183553b0b",
+    "independent_external_blinded_custodian": false,
+    "publicly_known_heldout_battery_identity": true,
+    "physics_source_family_truly_new": false,
+    "source_scope": "Battery OCV relaxation; not temperature resistance law from R3.6",
+    "device_heldout_not_timepoint_random_shuffle": true
+  },
+  "models": {
+    "established_physics_inspired_baselines": [
+      "constant_last",
+      "single_exp",
+      "double_exp"
+    ],
+    "challengers": [
+      "log_relax",
+      "exp_plus_drift"
+    ],
+    "selection_criterion": "Lowest validation per-trace mean absolute voltage error; challenger only if >=5% gain over strongest baseline",
+    "selected_family": "double_exp",
+    "strongest_standard_baseline": "double_exp",
+    "validation_MAE_V": {
+      "constant_last": 0.028822478750000165,
+      "single_exp": 0.03290738127144442,
+      "double_exp": 0.012408101352199927,
+      "log_relax": 0.017582112244049555,
+      "exp_plus_drift": 0.13591583761726023
+    },
+    "test_MAE_V": {
+      "constant_last": 0.01751482062500006,
+      "single_exp": 0.024324584441944644,
+      "double_exp": 0.009948308567419763,
+      "log_relax": 0.012498679569315238,
+      "exp_plus_drift": 0.0741668000233318
+    },
+    "heldout_battery_results": {
+      "AR": {
+        "baseline_double_exp_MAE_V": 0.009308071320877536,
+        "challenger_log_relax_MAE_V": 0.016848280900468953
+      },
+      "AU": {
+        "baseline_double_exp_MAE_V": 0.010588545813961991,
+        "challenger_log_relax_MAE_V": 0.008149078238161522
+      }
+    },
+    "challenger_best_consistent_across_both_batteries": false,
+    "challenger_strong_baseline_gain": 0,
+    "new_formula_outperforms_best_existing_on_holdout": false,
+    "technical_outcome": "VALIDATED_REAL_DATA_PIPELINE_BUT_NO_STRONG_BASELINE_GAIN",
+    "model_parameters_fit_on_real_early_measurements_only": true,
+    "formula_structure_selected_only_from_val_battery_groups": true,
+    "technical_ci_tests_passed": 7
+  },
+  "science_policy": {
+    "source_license_verified_by_original_mirror_license": true,
+    "source_quality_independent_scientist_review_completed": false,
+    "neural_training_started": false,
+    "neural_training_permitted": false,
+    "independently_sealed_blind_physical_test_completed": false,
+    "output_not_fundamental_physics_discovery": true,
+    "scientific_admission": "HOLD",
+    "production_promotion": false,
+    "JANUS_Ocean_weights_unchanged": true,
+    "NAS_containers_unchanged": true,
+    "no_predictions_used_as_ground_truth": true
+  },
+  "provenance": {
+    "report_receipt_sha256": "eb2b8b594fa513165e84b53ddb660564020e3197156aeda8590f9065fddd02b1",
+    "source_artifact_github_id": 13884252173,
+    "original_github_zip_sha256": "13c6805e8ef05d9404402c6245a550ac9e61dbe7557b65b61c526734e66c92b8",
+    "original_zip_sha256_verified_in_runtime": true,
+    "google_drive_archive_url": "https://drive.google.com/file/d/1HzGkoJtVx4WmipdWoggC8zhf9DrJXSpF/view?usp=drivesdk",
+    "drive_metadata_size_verified": true,
+    "drive_bytes_sha256_independent_readback_verified": false
+  },
+  "next_scientific_gate": "Use independent device/chemistry groups with richer physically motivated electrochemical/RC baselines, source-uncertainty modeling and separate signed external custodian. Approve a distinct curated training pack only after verified empirical baseline improvement; do not pretend adapting per-curve coefficients is R3.5 neural retraining.",
+  "registry_operation": "APPEND_ONLY_DRAFT_NEGATIVE_RESULT_RETAINED"
+}
