@@ -1,0 +1,36 @@
+name: ESSENCE v1.7 Independent GitHub Model Admission HOLD Witness
+
+on:
+  pull_request:
+    paths:
+      - 'data/essence/v17/**'
+      - 'tools/essence_v17_independent_source_witness.py'
+      - 'tests/test_essence_v17_independent_source_witness.py'
+      - '.github/workflows/essence-v17-independent-source-witness.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  public-cross-repository-pinned-evidence:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify no-authority model-admission status and source restrictions
+        run: python -m unittest -v tests.test_essence_v17_independent_source_witness
+      - name: Inspect exact public merged code and checkpoint bytes, without execution
+        run: python tools/essence_v17_independent_source_witness.py
+      - name: Archive immutable source witness and explicit HOLD
+        uses: actions/upload-artifact@v4
+        with:
+          name: essence-v17-independent-github-source-readiness-hold
+          path: runtime/essence_v17/independent_source_witness.json
+          if-no-files-found: error
+          retention-days: 30
