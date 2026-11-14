@@ -1,0 +1,57 @@
+name: ESSENCE v1.6.4 Prospective External GitHub INT8 Replay
+
+on:
+  pull_request:
+    paths:
+      - 'data/essence/v164/**'
+      - 'tools/essence_v164_prospective_external_replay.py'
+      - 'tests/test_essence_v164_prospective_external_replay.py'
+      - '.github/workflows/essence-v164-prospective-external-replay.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: essence-v164-prospective-int8-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  new-public-source-prospective-cross-repo-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout immutable Meta Registry experiment
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Checkout pinned independent JANUS model source (not active main)
+        uses: actions/checkout@v4
+        with:
+          repository: Hawkar-usls/Janus-Demiurge
+          ref: edc4f104c4da43411d3987616c8de2d1cbd3a99d
+          path: runtime/essence_v164/demiurge
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install CPU neural runtime from pinned PyTorch build
+        run: |
+          python -m pip install --disable-pip-version-check 'torch==2.7.1+cpu' \
+            --index-url https://download.pytorch.org/whl/cpu
+      - name: Verify locked cohort provenance, exact SHA and native operators
+        run: python -m unittest -v tests/test_essence_v164_prospective_external_replay.py
+      - name: Evaluate original FP32 on frozen external source blobs
+        run: python tools/essence_v164_prospective_external_replay.py --baseline
+      - name: Evaluate chosen 3-layer true INT8 in a fresh independent CPU process
+        run: python tools/essence_v164_prospective_external_replay.py --candidate
+      - name: Independently compare actual metrics without production admission
+        run: python tools/essence_v164_prospective_external_replay.py --combine
+      - name: Preserve all evidence even when candidate is HELD
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: essence-v164-prospective-github-sources-int8-witness
+          path: runtime/essence_v164/result/
+          if-no-files-found: warn
+          retention-days: 30
