@@ -1,0 +1,52 @@
+name: ESSENCE v1.4 All Repository Read-Only Fleet Audit
+
+on:
+  pull_request:
+    paths:
+      - "tools/essence_v14_fleet_audit.py"
+      - ".github/workflows/essence-v14-fleet-audit.yml"
+      - "research/essence/v14/**"
+  push:
+    paths:
+      - "tools/essence_v14_fleet_audit.py"
+      - ".github/workflows/essence-v14-fleet-audit.yml"
+      - "research/essence/v14/**"
+  workflow_dispatch:
+  schedule:
+    - cron: '13 6 * * *'
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: essence-v14-fleet-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  owner-wide-baseline-and-model-readiness:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Verify original ESSENCE microkernel and synthetic mutation controls
+        run: |
+          python -m unittest discover -s tests -p 'test_essence_kernel.py' -q
+          python tools/essence_v14_fleet_audit.py --selftest
+      - name: Pin owner repository heads and run 51 separate read-only baseline audits
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python tools/essence_v14_fleet_audit.py --live \
+            --out research/essence/v14/ci_fleet_report.json
+      - name: Preserve both full and partial evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: essence-v14-all-owner-repo-fleet-audit
+          path: research/essence/v14/ci_fleet_report.json
+          if-no-files-found: warn
+          retention-days: 30
