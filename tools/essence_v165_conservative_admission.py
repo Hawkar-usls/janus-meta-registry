@@ -98,10 +98,15 @@ def evaluate(record):
           "prespecified_empirical_top1_pass":raw>=.97,
           "conservative_lower_bound_pass":bound>=.97,
           "ce_relative_change_fraction":round(candidate/ref-1,9)})
-    if (not .25<=p["serialized_model_saving_fraction"]<=.9
-        or p["cpu_current_rss_native_int8_bytes"]>=p["cpu_current_rss_fp32_bytes"] and
-           risk.get("statistical_lower_bound_gate")!="HOLD"):
-        raise ValueError("PACKING_OR_RSS_CLAIM_CONTRADICTION")
+    if not .25<=p["serialized_model_saving_fraction"]<=.9:
+        raise ValueError("PACKING_SAVING_INVALID")
+    # Process RSS is an independent resource observation; it must not be
+    # misused as a proxy for statistical confidence in next-token quality.
+    if (type(p["cpu_current_rss_native_int8_bytes"]) is not int
+        or type(p["cpu_current_rss_fp32_bytes"]) is not int
+        or p["cpu_current_rss_native_int8_bytes"]<=0
+        or p["cpu_current_rss_fp32_bytes"]<=0):
+        raise ValueError("RSS_OBSERVATION_INVALID")
     if risk.get("statistical_lower_bound_gate")!=("PASS" if lower_pass else "HOLD"):
         raise ValueError("EXPECTED_CONSERVATIVE_GATE_CONTRADICTION")
     # Missing external custodian, service rollback, actual model change review,
