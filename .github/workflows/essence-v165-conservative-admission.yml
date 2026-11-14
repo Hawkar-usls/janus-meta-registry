@@ -1,0 +1,36 @@
+name: ESSENCE v1.6.5 Conservative Real Model Admission Witness
+
+on:
+  pull_request:
+    paths:
+      - 'data/essence/v165/**'
+      - 'tools/essence_v165_conservative_admission.py'
+      - 'tests/test_essence_v165_conservative_admission.py'
+      - '.github/workflows/essence-v165-conservative-admission.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '59 4 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  independent-read-only-conservative-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Reject forged production authority and statistical inputs
+        run: python -m unittest -v tests/test_essence_v165_conservative_admission.py
+      - name: Quantify optimistic Wilson lower bound without production promotion
+        run: python tools/essence_v165_conservative_admission.py
+      - name: Archive conservative evidence with unchanged upstream receipts
+        uses: actions/upload-artifact@v4
+        with:
+          name: essence-v165-real-int8-reliability-hold
+          path: runtime/essence_v165/risk_review.json
+          if-no-files-found: error
+          retention-days: 30
