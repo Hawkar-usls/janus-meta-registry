@@ -1,0 +1,129 @@
+{
+  "schema": "JANUS_META_REGISTRY_TIME_SAT_004E7_SOURCE_LOCKED_FIVE_PRESEEN_FAMILY_NEGATIVE_COST_TEST_V1",
+  "date_utc": "2026-11-02",
+  "scientific_status": "ORIGINAL_SOURCE_VERIFIED_20_DISTINCT_GITHUB_VMS_200_UNKNOWN_CPU_LIMITS_NO_SAT_OR_PORTABLE_UNSAT_NO_NET_PROFIT_WIN",
+  "research": {
+    "PR": "https://github.com/Hawkar-usls/Janus-Fundamentum/pull/605",
+    "branch": "research/time-sat-004e7-other-five-families-20vm-20261102",
+    "precommit_manifest": "experiments/time_sat_004_external/PREREGISTERED_004E7_FIVE_OTHER_PUBLIC_SOURCES_20261102.json",
+    "precommit_git_blob_SHA": "48740d947f678ff11894033b8cbe91ef6f4d6c59",
+    "registered_before_first_source_trial": true,
+    "original_scientific_CI": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/41444587786",
+    "original_scientific_tested_HEAD": "f7b9bef8d39f469b5bfa594b9948a03217c46693",
+    "original_CI_result": "SUCCESS_22_OF_22",
+    "archive_CI": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/41445120522",
+    "archive_result": "SUCCESS",
+    "original_archive_commit": "668f421f0c709e5689c0e6a2b54a644e7c24eb2b",
+    "permanent_archive": "experiments/time_sat_004_external/time_sat_004e7_evidence/SUMMARY.json",
+    "archive_summary_git_blob": "3a29a7b7d7d2fb9ea012b43a4cff357a3dd1008e"
+  },
+  "original_cases": {
+    "linear-equations": {
+      "source_original_SHA256": "dd2e52c12cafa012316052c6c2ac06ea48ccf1c999a5ae57a25c5f208e1cb9bc",
+      "source_extracted_complete_XORs": "ABSTAIN_GROUP_BUDGET",
+      "normalized_decision": "RAW_CNF"
+    },
+    "xor-shifting": {
+      "source_original_SHA256": "03bae774557f351990c0348c7b11933d8760f4d7a8cf60455f1d4754fe9739c0",
+      "complete_proven_XOR_equations": 1643,
+      "original_clause_coverage_fraction": 0.7740855845087258,
+      "normalized_decision": "RAW_CNF_BELOW_80_PERCENT"
+    },
+    "minimum-disagreement-parity": {
+      "source_original_SHA256": "6e054967f4c71d900b2bba2508fea2054ac13de78fa0b0b6a94753f66e9e95fc",
+      "complete_proven_XOR_equations": 639,
+      "original_clause_coverage_fraction": 0.6888734353268429,
+      "normalized_decision": "RAW_CNF_BELOW_80_PERCENT"
+    },
+    "or_randxor": {
+      "source_original_SHA256": "d63fa30fbe7003f7a2eff5939ab29c6064819d818115b630f57228cc86eedce1",
+      "complete_proven_XOR_equations": 0,
+      "normalized_decision": "RAW_CNF"
+    },
+    "greentao": {
+      "source_original_SHA256": "622732d1d213e930a7711270aefa079c9329cb9a446b4f24d848fea2cab6b5a7",
+      "complete_proven_XOR_equations": 0,
+      "normalized_decision": "RAW_CNF"
+    }
+  },
+  "original_distributed_comparison": {
+    "five_families": 5,
+    "two_presentations": [
+      "unaltered",
+      "20pct tautology +10pct original clause duplicate"
+    ],
+    "hosts": [
+      "ubuntu-22.04",
+      "ubuntu-24.04"
+    ],
+    "requested_max_parallel": 20,
+    "verified_GitHub_VM_ids": 20,
+    "observed_max_simultaneously_active": 20,
+    "original_total_GitHub_jobs_including_preflight_and_auditor": 22,
+    "original_ZIP_artifact_SHA256_verified_count": 21,
+    "original_raw_worker_JSON_verified": 20,
+    "arms": [
+      "new_semantic80",
+      "old_adaptive80",
+      "native_all",
+      "raw_cms",
+      "cadical195_original"
+    ],
+    "repeats_per_arm_worker": 2,
+    "original_cold_child_results": 200,
+    "verified_original_CNF_SAT_models": 0,
+    "UNSAT_solver_only_unproven": 0,
+    "UNKNOWN_SIGXCPU": 200,
+    "WALL_timeout": 0,
+    "unexpected_solver_errors": 0,
+    "CPU_soft_s_per_child": 6,
+    "WALL_timeout_s_per_child": 10,
+    "RLIMIT_AS_bytes": 2147483648,
+    "all_exact_original_source_and_transformed_SHA_matched": true,
+    "new_normalized_semantic_core_correctly_removed": {
+      "linear-equations": {
+        "tautology_clauses": 4208,
+        "original_duplicate_clauses": 2104
+      },
+      "xor-shifting": {
+        "tautology_clauses": 1674,
+        "original_duplicate_clauses": 837
+      },
+      "minimum-disagreement-parity": {
+        "tautology_clauses": 1438,
+        "original_duplicate_clauses": 719
+      },
+      "or_randxor": {
+        "tautology_clauses": 1619,
+        "original_duplicate_clauses": 810
+      },
+      "greentao": {
+        "tautology_clauses": 2539,
+        "original_duplicate_clauses": 1270
+      }
+    },
+    "normalization_full_cost_accounted": true,
+    "finite_speedup_ratios": "NOT_DEFINED_ALL_200_SOLVER_TRIALS_CPU_CENSORED"
+  },
+  "interpretation": [
+    "On five OTHER previously seen public source CNF families, all five arms (repaired/old/direct XOR/native CMS/CaDiCaL195) exhausted CPU6 seconds; this is an honest negative result and cannot be called algorithmic advantage or slowdown.",
+    "Semantic normalization repaired E6 padding sensitivity in its narrow syntactic regime but the 80% original-semantic-clause threshold rejects XOR-shifting (77.4%) and minimum-disagreement-parity (68.9%), despite many source-proven XOR equations. This does not establish that selecting XOR would solve them: unconditional native_all also timed out.",
+    "The numerical 20.28x prior Lights-out local median cannot be carried over to these five families.",
+    "The 20 runner IDs and 20 actual peak concurrency show real GitHub parallel infrastructure, not independent hidden SAT sources.",
+    "No original SAT models or portable UNSAT certificates for these five sources were submitted to this experiment; any solver UNSAT would be SOLVER_ONLY, none completed.",
+    "Bounded CPU6 means UNKNOWN, not proof that any algorithm fails to solve with more resources. Since all arms censored, no finite net-profit ratio or champion can be established.",
+    "Future studies must pre-register genuinely independent source benchmarks with externally verified models/proofs or new SAT-capable source classes, stronger baselines and proper CPU budgets, rather than multiplying the same censored cohorts."
+  ],
+  "gates": {
+    "004C_external_custodian": "OPEN",
+    "004D": "PARTIAL",
+    "004E": "NO_CROSS_FAMILY_COMPLETION_OR_NET_PROFIT_PROOF",
+    "004F": "NOT_READY"
+  },
+  "research_only": true,
+  "append_only": true,
+  "production_main_C023": "UNCHANGED",
+  "paid_Rowan": "NONE",
+  "user_NAS_PC": "UNUSED",
+  "P_equals_NP": "NOT_PROVEN"
+}

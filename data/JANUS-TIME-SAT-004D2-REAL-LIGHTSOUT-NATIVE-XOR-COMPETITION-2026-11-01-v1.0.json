@@ -1,0 +1,98 @@
+{
+  "schema": "janus.meta_registry.time_sat_004d2_native_xor_competition_v1",
+  "id": "JANUS-TIME-SAT-004D2-REAL-LIGHTSOUT-NATIVE-XOR-COMPETITION-20261101",
+  "date_utc": "2026-11-01",
+  "status": "ONE_PUBLIC_XOR_SOURCE_COMPARATIVE_ENGINEERING_PASS_NO_GENERALIZATION",
+  "source": {
+    "GBD_id": "01d6fa8efd18ebfecd06af408958477b",
+    "original_sha256": "6be9bfe6b44454a061a2e93350f589643f8a16f5bca6babdaa50a2d3d7069361",
+    "n": 625,
+    "m": 9216,
+    "XOR_equations": 625,
+    "public_seen": true
+  },
+  "provenance": {
+    "issue": "https://github.com/Hawkar-usls/Janus-Fundamentum/issues/575",
+    "algorithm_PR_582": "https://github.com/Hawkar-usls/Janus-Fundamentum/pull/582",
+    "comparison_PR_583": "https://github.com/Hawkar-usls/Janus-Fundamentum/pull/583",
+    "archive_PR_584": "https://github.com/Hawkar-usls/Janus-Fundamentum/pull/584",
+    "cloud_CI": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/41330327931",
+    "original_tested_SHA": "3f9c415f3579aa34510dd124364d4d9084894eb1",
+    "archive_CI": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/41330600482",
+    "evidence_file": "experiments/time_sat_004_external/time_sat_004d2_evidence/summary.json",
+    "scientific_report": "docs/TIME_SAT_004D2_XOR_SPECIALIZED_COMPARISON_20261101.md"
+  },
+  "method": {
+    "arms": [
+      "JANUS_GF2",
+      "CryptoMiniSat_5.15.0_native_XOR_full_extraction_cost",
+      "CryptoMiniSat_5.15.0_original_CNF",
+      "CaDiCaL195_raw_CNF",
+      "Glucose4_raw_CNF"
+    ],
+    "source_CNF_unchanged": true,
+    "pinned_PySAT_version": "1.9.dev17",
+    "n_repeats_each_host": 3,
+    "hosts": [
+      "Ubuntu22.04",
+      "Ubuntu24.04"
+    ],
+    "CPU_seconds": 8,
+    "wall_seconds": 11,
+    "RLIMIT_AS_bytes": 2147483648,
+    "threads_per_native_solver": 1,
+    "full_cost": "fresh process start+Python imports+read original and SHA+input conversion/recognition+solve+model verification"
+  },
+  "observed": {
+    "n_child_trials": 30,
+    "original_CNF_models_independently_replayed_PASS": 18,
+    "raw_CDCL_CPU_SIGXCPU_UNKNOWN": 12,
+    "medians_seconds": {
+      "Ubuntu22": {
+        "JANUS_GF2": 0.11339494300000297,
+        "CryptoMiniSat_native_XOR": 0.15994898199998886,
+        "CryptoMiniSat_original_CNF": 5.869162818999996,
+        "CaDiCaL195": null,
+        "Glucose4": null
+      },
+      "Ubuntu24": {
+        "JANUS_GF2": 0.10205716000000109,
+        "CryptoMiniSat_native_XOR": 0.1323402990000062,
+        "CryptoMiniSat_original_CNF": 4.634381485999995,
+        "CaDiCaL195": null,
+        "Glucose4": null
+      }
+    },
+    "native_XOR_to_JANUS_median_ratio": {
+      "Ubuntu22": 1.410547752557049,
+      "Ubuntu24": 1.2967272359921127
+    },
+    "original_worker_zip_SHA256": {
+      "Ubuntu22": "389b84b3dccc24a6b2a9261d645c7652426faf0fa7d9aa6a82b8acf27044d61f",
+      "Ubuntu24": "8c4b9b5f6f5d8ecf4cda97a9018da8f96706caaf31aa369cbd2eb72d597d3898"
+    },
+    "both_hosts_original_ZIPs_and_JSONs_durable": true,
+    "new_offline_tests_per_host": "6/6 PASS",
+    "C023_independent_legacy_verifier": "PASS"
+  },
+  "caveats": [
+    "ONE already known PUBLIC external source is NOT a hidden blind exam.",
+    "Three repeats per worker cannot yield robust population confidence intervals.",
+    "Python GF2 vs C++ CryptoMiniSat measurement includes different runtime overhead; no algorithmic asymptotic advantage is established.",
+    "CaDiCaL195 and Glucose4 have 12 CPU-censored UNKNOWN outcomes; no finite solve-time speedup ratio may be computed against these.",
+    "CryptoMiniSat native XOR itself solves fast, and original CNF within the cap; XOR algebra is standard mathematics.",
+    "No independently administered outside-GitHub Witness, multi-family generalization, proven memory gain against CPU-killed children, or production readiness.",
+    "One initial CI failed a flawed synthetic repeated-support test fixture; only successful followup provides performance data; algorithm code unchanged."
+  ],
+  "gates": {
+    "004A": "PASS",
+    "004B": "PUBLIC_PILOT",
+    "004C": "OPEN",
+    "004D": "PARTIAL_ONLY",
+    "004E": "OPEN",
+    "004F": "NOT_READY",
+    "C023": "UNCHANGED",
+    "P_equals_NP": "OPEN"
+  },
+  "append_only": true
+}
