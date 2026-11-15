@@ -1,0 +1,131 @@
+name: JANUS v5.0 verified JSON intake → EYE Meta Registry
+
+on:
+  pull_request:
+    paths:
+      - 'tools/janus_v50_verified_json_intake.py'
+      - 'tests/test_janus_v50_verified_json_intake.py'
+      - '.github/workflows/janus-v50-verified-json-intake.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'tools/janus_v50_verified_json_intake.py'
+      - 'tests/test_janus_v50_verified_json_intake.py'
+      - '.github/workflows/janus-v50-verified-json-intake.yml'
+  schedule:
+    - cron: '52 */2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: janus-v50-meta-verified-intake
+  cancel-in-progress: false
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Defend TOPA and source verification against fabricated model science
+        run: |
+          python -m compileall -q tools/janus_v50_verified_json_intake.py tests/test_janus_v50_verified_json_intake.py
+          python -m unittest -v tests.test_janus_v50_verified_json_intake
+
+  receive:
+    if: github.event_name != 'pull_request' && vars.JANUS_V50_META_PAUSED != 'true'
+    needs: test
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Read source packet from isolated Demiurge state branch without cross-repo token
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p runtime/janus-v50
+          git clone --quiet --depth 1 --branch janus-v50-agency-state https://github.com/Hawkar-usls/Janus-Demiurge.git runtime/janus-v50/source-state
+          python - <<'PY'
+          import json,re
+          from pathlib import Path
+          root=Path('runtime/janus-v50/source-state/research/janus_v50_agent')
+          index=json.loads((root/'LATEST.json').read_text())
+          key=index.get('packet_id','')
+          if not re.fullmatch('[0-9a-f]{64}',key):
+              raise SystemExit('UNTRUSTED_PACKET_ID')
+          packet=root/'packets'/(key+'.json')
+          if not packet.is_file() or packet.stat().st_size>180000:
+              raise SystemExit('MISSING_SOURCE_VERIFICATION_PACKET')
+          print('LATEST_VERIFIED_PACKET_ID='+key)
+          Path('runtime/janus-v50/packet_path.txt').write_text(str(packet))
+          PY
+      - name: Clone ONLY source SHA from original Demiurge (no test or model output execution)
+        shell: bash
+        run: |
+          set -euo pipefail
+          PACKET_PATH="$(cat runtime/janus-v50/packet_path.txt)"
+          SOURCE_COMMIT="$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["source_commit"])' "$PACKET_PATH")"
+          [[ "$SOURCE_COMMIT" =~ ^[0-9a-f]{40}$ ]] || exit 1
+          git clone --quiet --depth 1 --filter=blob:none --sparse https://github.com/Hawkar-usls/Janus-Demiurge.git runtime/janus-v50/source-main
+          git -C runtime/janus-v50/source-main fetch --quiet --depth 1 origin "$SOURCE_COMMIT"
+          git -C runtime/janus-v50/source-main checkout --quiet --detach "$SOURCE_COMMIT"
+          git -C runtime/janus-v50/source-main sparse-checkout set --no-cone research/essence/peer_v49/FIRST_PROSPECTIVE_READOUT.json
+          test "$(git -C runtime/janus-v50/source-main rev-parse HEAD)" = "$SOURCE_COMMIT"
+      - name: Recheck TOPA source, SHA256 and original negative research outcome
+        id: validate
+        shell: bash
+        run: |
+          set -euo pipefail
+          KEY="$(python -c 'import json; print(json.load(open("runtime/janus-v50/source-state/research/janus_v50_agent/LATEST.json"))["packet_id"])')"
+          OUT="data/janus_ai_verified/v50/JANUS-V50-$(echo "$KEY" | cut -c1-20).json"
+          python tools/janus_v50_verified_json_intake.py \
+            --latest runtime/janus-v50/source-state/research/janus_v50_agent/LATEST.json \
+            --packet "$(cat runtime/janus-v50/packet_path.txt)" \
+            --source runtime/janus-v50/source-main/research/essence/peer_v49/FIRST_PROSPECTIVE_READOUT.json \
+            --out "$OUT"
+          echo "path=$OUT" >> "$GITHUB_OUTPUT"
+          python -m json.tool "$OUT" >/dev/null
+      - name: Persist create-only verified JSON facts to Meta Registry
+        id: persist
+        env:
+          OUTPUT: ${{ steps.validate.outputs.path }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'JANUS Meta JSON Witness'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f -- "$OUTPUT"
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'NEW_JSON=FALSE Existing verified item already indexed'
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          test "$(git diff --cached --name-only)" = "$OUTPUT"
+          git commit -m "JANUS: record TOPA-rechecked JSON facts for EYE indexing (no proof authority)"
+          git pull --rebase origin main
+          git push origin HEAD:main
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+          echo 'META_REGISTRY_VERIFIED_JSON_PERSISTED'
+      - name: Explain EYE retraining boundary
+        run: |
+          echo '### Meta Registry JSON intake' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Source byte SHA and TOPA semantic identity verified independently.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'EYE meta-registry-train workflow will run on main source addition when new.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'This updates a derivative associative JSON index, not neural weights, empirical truth, or Sentinel.' >> "$GITHUB_STEP_SUMMARY"
