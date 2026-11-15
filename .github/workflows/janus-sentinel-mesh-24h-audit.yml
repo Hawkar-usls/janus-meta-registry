@@ -1,0 +1,56 @@
+name: JANUS Sentinel Fleet · 24h Real-Cron Independent Witness
+
+on:
+  schedule:
+    - cron: '5,35 * * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/janus_sentinel_mesh_24h_audit.py'
+      - 'tests/test_janus_sentinel_mesh_24h_audit.py'
+      - '.github/workflows/janus-sentinel-mesh-24h-audit.yml'
+  pull_request:
+    paths:
+      - 'tools/janus_sentinel_mesh_24h_audit.py'
+      - 'tests/test_janus_sentinel_mesh_24h_audit.py'
+      - '.github/workflows/janus-sentinel-mesh-24h-audit.yml'
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: janus-sentinel-crossrepo-24h-audit
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Negative-control tests for missed runs, bad history, artificial success
+        run: |
+          python -m py_compile tools/janus_sentinel_mesh_24h_audit.py
+          python -m unittest discover -v -s tests -p test_janus_sentinel_mesh_24h_audit.py
+      - name: Query real GitHub schedule events for three independently deployed Sentinel jobs
+        if: github.event_name != 'pull_request'
+        env:
+          GH_READ_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p runtime/sentinel-mesh
+          python tools/janus_sentinel_mesh_24h_audit.py --out runtime/sentinel-mesh/fleet-24h.json
+      - name: Preserve sha256 sealed original observation
+        if: always() && github.event_name != 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: sentinel-crossrepo-fleet-24h-${{ github.run_id }}
+          path: runtime/sentinel-mesh/fleet-24h.json
+          if-no-files-found: warn
+          retention-days: 30
