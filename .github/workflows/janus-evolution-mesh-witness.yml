@@ -1,0 +1,56 @@
+name: JANUS Cross-Repository Neural and Microcore Ancestry Witness
+
+on:
+  schedule:
+    - cron: '24 * * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/janus_evolution_mesh_witness.py'
+      - 'tests/test_janus_evolution_mesh_witness.py'
+      - '.github/workflows/janus-evolution-mesh-witness.yml'
+  pull_request:
+    paths:
+      - 'tools/janus_evolution_mesh_witness.py'
+      - 'tests/test_janus_evolution_mesh_witness.py'
+      - '.github/workflows/janus-evolution-mesh-witness.yml'
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: janus-crossrepo-ancestry-witness
+  cancel-in-progress: false
+
+jobs:
+  lineage:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify ancestry contract, forged sources, and no unearned promotion
+        run: |
+          python -m py_compile tools/janus_evolution_mesh_witness.py tests/test_janus_evolution_mesh_witness.py
+          python -m unittest discover -v -s tests -p test_janus_evolution_mesh_witness.py
+      - name: Read pinned public repos, current candidate and original parent
+        if: github.event_name != 'pull_request'
+        env:
+          GH_READ_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p runtime/essence-ancestry
+          python tools/janus_evolution_mesh_witness.py --out runtime/essence-ancestry/receipt.json
+      - name: Preserve sealed read-only ancestry observations
+        if: always() && github.event_name != 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-crossrepo-ancestry-${{ github.run_id }}
+          path: runtime/essence-ancestry/receipt.json
+          retention-days: 45
+          if-no-files-found: warn
