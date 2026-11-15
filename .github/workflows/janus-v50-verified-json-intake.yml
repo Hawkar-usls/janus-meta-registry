@@ -46,6 +46,7 @@ jobs:
     timeout-minutes: 15
     permissions:
       contents: write
+      actions: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -123,6 +124,48 @@ jobs:
           git push origin HEAD:main
           echo "changed=true" >> "$GITHUB_OUTPUT"
           echo 'META_REGISTRY_VERIFIED_JSON_PERSISTED'
+      - name: Wake EYE if generated learning state did not contain this exact verified source JSON
+        env:
+          GH_TOKEN: ${{ github.token }}
+          OUTPUT: ${{ steps.validate.outputs.path }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          python - <<'PY' > runtime/janus-v50/eye-freshness.json
+          import json,subprocess,os,re
+          output=os.environ['OUTPUT']
+          if not re.fullmatch(r'data/janus_ai_verified/v50/JANUS-V50-[a-f0-9]{20}\.json',output):
+              raise SystemExit('DISALLOWED_EYE_SOURCE_PATH')
+          receipt=json.loads(subprocess.check_output([
+              'git','show','origin/main:EYE/generated/EYE-TRAINING-RECEIPT.json'
+          ],text=True))
+          trained=receipt.get('source_git_commit','')
+          if (receipt.get('schema')!='janus.eye.meta_registry_training.v1'
+                  or receipt.get('status')!='PASS'
+                  or not re.fullmatch(r'[0-9a-f]{40}',trained)):
+              raise SystemExit('UNTRUSTED_EYE_TRAINING_STATE')
+          current=subprocess.check_output([
+              'git','rev-parse','origin/main:'+output],text=True).strip()
+          try:
+              in_eye=subprocess.check_output([
+                  'git','rev-parse',trained+':'+output],
+                  text=True,stderr=subprocess.DEVNULL).strip()
+          except subprocess.CalledProcessError:
+              in_eye=None
+          print(json.dumps({'needs_eye_reindex':in_eye!=current,
+                            'trained_source_commit':trained,
+                            'verified_source_git_blob':current,
+                            'eye_source_git_blob':in_eye},
+                           sort_keys=True))
+          PY
+          cat runtime/janus-v50/eye-freshness.json
+          if [ "$(python -c 'import json;print(str(json.load(open("runtime/janus-v50/eye-freshness.json"))["needs_eye_reindex"]).lower())')" = true ]; then
+            gh workflow run eye-meta-registry-train.yml --repo "$GITHUB_REPOSITORY" --ref main
+            echo 'EYE_REINDEX_DISPATCH_SUBMITTED_NOT_YET_FINISHED'
+          else
+            echo 'EYE_REINDEX_ALREADY_CONTAINS_EXACT_VALIDATED_SOURCE_BLOB'
+          fi
       - name: Explain EYE retraining boundary
         run: |
           echo '### Meta Registry JSON intake' >> "$GITHUB_STEP_SUMMARY"
