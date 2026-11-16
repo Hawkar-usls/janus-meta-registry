@@ -1,0 +1,56 @@
+name: ESSENCE v5.2 public fleet workflow security census (read only)
+
+on:
+  pull_request:
+    paths:
+      - 'tools/essence_v52_security_fleet.py'
+      - 'tests/test_essence_v52_security_fleet.py'
+      - '.github/workflows/essence-v52-security-fleet.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'tools/essence_v52_security_fleet.py'
+      - 'tests/test_essence_v52_security_fleet.py'
+      - '.github/workflows/essence-v52-security-fleet.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '25 4 * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: essence-v52-owner-public-security-readonly
+  cancel-in-progress: false
+
+jobs:
+  static-public-audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5 SHA
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6 SHA
+        with:
+          python-version: '3.11'
+      - name: Offline adversarial scanner regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/essence_v52_security_fleet.py tests/test_essence_v52_security_fleet.py
+          python -m unittest discover -s tests -p test_essence_v52_security_fleet.py -v
+          python tools/essence_v52_security_fleet.py --selftest
+      - name: Read-only pinned public owner workflow audit, excluding private repositories
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python tools/essence_v52_security_fleet.py --live --out runtime/essence-v52-public-security-census.json
+      - name: Preserve source-pinned risks for human review (no source or secret values)
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4 SHA
+        with:
+          name: essence-v52-public-security-census-${{ github.run_id }}
+          path: runtime/essence-v52-public-security-census.json
+          if-no-files-found: warn
+          retention-days: 30
