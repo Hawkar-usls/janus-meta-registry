@@ -28,7 +28,8 @@ SHA40 = re.compile(r"^[a-f0-9]{40}$")
 MAX_REPOS = 100
 MAX_FILES_PER_REPO = 600
 MAX_WORKFLOWS = 2000
-PRIVATE_NOT_SCANNED = ["JanusMMORPG", "SkinGPT", "janus-io"]
+# Public audit excludes private repositories and must not disclose private names.
+PRIVATE_EXCLUDED_COUNT = 3
 RULES = {
     "ACTION_REF_NOT_SHA_PINNED": "medium",
     "PULL_REQUEST_TARGET_REVIEW": "high",
@@ -181,7 +182,7 @@ def run_live():
         "repo_inventory_pinned": len(entries),
         "workflow_files_planned": len(sources),
         "workflow_files_read": len(sources) - sum(p["phase"] == "file" for p in problems),
-        "private_repo_count_excluded": len(PRIVATE_NOT_SCANNED),
+        "private_repo_count_excluded": PRIVATE_EXCLUDED_COUNT,
         "potential_findings_for_review": len(findings),
         "unique_repos_flagged": len({x["repository"] for x in findings}),
         "rules": dict(sorted(count.items())),
@@ -193,7 +194,7 @@ def run_live():
         "generated_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
         "scope": "PUBLIC_OWNER_REPO_WORKFLOW_STATIC_HYGIENE_ONLY",
         "public_source_pinned_per_repository": True,
-        "private_repository_names_not_scanned": PRIVATE_NOT_SCANNED,
+        "private_repository_count_not_scanned": PRIVATE_EXCLUDED_COUNT,
         "vulnerability_exploitability_confirmed": False,
         "private_files_or_secret_values_exposed": False,
         "code_from_other_repositories_executed": False,
