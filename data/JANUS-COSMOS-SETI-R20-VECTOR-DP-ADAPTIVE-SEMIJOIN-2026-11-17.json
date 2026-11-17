@@ -1,0 +1,45 @@
+{
+  "schema": "janus.cosmos.seti.r20.optimization.v1",
+  "date": "2026-11-17",
+  "status": "RUNNING_UNVERIFIED",
+  "production_adoption": false,
+  "prior": "https://github.com/Hawkar-usls/janus-meta-registry/commit/db51b9e6d460f9f54c6821f2bb020bd3e1953421",
+  "r20a": {
+    "run": "https://github.com/Hawkar-usls/Janus-Cosmos/actions/runs/44147570754",
+    "protocol_commit": "7282732ced36dec30d504213544ca29c32212208",
+    "code_commit": "43b8c63126be9ab1e2bebef57fdf0b15c667cd20",
+    "launch_commit": "6551eeb8312399e73a965479998a32280dc6a2f8",
+    "status": "IN_PROGRESS",
+    "planned_samples": 1024,
+    "planned_modes": 7,
+    "weak_amplitudes": [
+      0.75,
+      1.25,
+      2,
+      3
+    ],
+    "scope": "batched float64 DP with witness trace, score-only and admissible early upper/lower bound; new archive cohorts; exact finite model decisions compared to legacy; real origin inference forbidden"
+  },
+  "r20b": {
+    "run": "https://github.com/Hawkar-usls/Janus-Cosmos/actions/runs/44147896684",
+    "protocol_commit": "2347f99f6aef26bde8835762e16817b5ba4dd245",
+    "code_commit": "bff299c542faab603730747ed2aa50953fc90d73",
+    "launch_commit": "a17eed8f60791edc65c43d569d05a7f06fb6baa9",
+    "status": "IN_PROGRESS",
+    "planned_calibration_cases": 32,
+    "planned_holdout_cases": 64,
+    "scope": "cached exact common supports and frozen cost-based dispatcher; compare full cube, old semijoin, cached, adaptive, include router cost; synthetic stress plus same archive replay"
+  },
+  "analysis": {
+    "r19e_evaluation_load_seconds": 164.57745926400014,
+    "r19e_dp_scoring_seconds": 0.4149927860000844,
+    "interpretation": "Archive I/O dominates scoring on pilot, plan artifact reuse with sealed manifest and exact per-slice SHA; no current I/O acceleration claim"
+  },
+  "next": [
+    "verify R20A and R20B outcomes",
+    "independent weak-signal/real positive holdout",
+    "cache immutable tiles for same-data ablations with explicit cold/warm measurement",
+    "separate low-alert NN retraining on curved examples, no deployment"
+  ],
+  "confirmed_technosignatures": 0
+}
