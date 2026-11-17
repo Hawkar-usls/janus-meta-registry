@@ -557,9 +557,666 @@
     "summary": "All six accessible original and nearby other-target files read full 16 time rows; three repeat files cover eight groups. Three attempted different-day repeat files lacked coverage; Parkes file unresolved. Descriptive peaks also occur in control windows."
   },
   "r5": {
-    "status": "QUEUED_OR_RUNNING_UNVERIFIED",
+    "status": "COMPLETE_NEGATIVE_ON_CONTROL_ON_SCREEN",
     "run": "https://github.com/Hawkar-usls/Janus-Cosmos/actions/runs/44042478935",
     "commit": "b12611e2e575198f906b944c15c0c0eb87fb0906",
-    "method": "Frozen R4 zip SHA256 and array SHA256 checks; row normalization; shifted-track reference; fixed corridor search around catalog drift; compare fixed-frequency and continuous extrapolated tracks against nearby control and same-session repeat. Synthetic recovery smoke. Scores descriptive, not calibrated p-values; no flux-calibrated sensitivity or barycentric independent repeat."
+    "method": "Frozen R4 zip SHA256 and array SHA256 checks; row normalization; shifted-track reference; fixed corridor search around catalog drift; compare fixed-frequency and continuous extrapolated tracks against nearby control and same-session repeat. Synthetic recovery smoke. Scores descriptive, not calibrated p-values; no flux-calibrated sensitivity or barycentric independent repeat.",
+    "run_conclusion": "success",
+    "synthetic_smoke": "PASS",
+    "summary": {
+      "schema": "janus.seti.r5.track_screen.v1",
+      "source_run": 44041795339,
+      "targets": 7,
+      "groups": 12,
+      "counts": {
+        "CONTROL_TRACK_PRESENT_RFI_CONCERN": 9,
+        "HOLD_ORIGINAL_NARROW_TRACK_NOT_RECOVERED": 2,
+        "HOLD_MISSING_REQUIRED_DATA": 1
+      },
+      "independent_reobservation_confirmed": 0,
+      "confirmed_technosignatures": 0,
+      "caveats": [
+        "Robust shifted-track score is descriptive, not calibrated SNR or p-value. Search max selection not calibrated.",
+        "Fixed candidate line selected in R4; limited 1200 Hz window may clip fast drifting signals.",
+        "Nearby different target is not verified beam OFF; no absolute flux sensitivity comparison.",
+        "Different-day comparison at same topocentric frequency is not barycentric re-detection.",
+        "No new observations or independent experimental confirmation."
+      ]
+    },
+    "artifacts": [
+      {
+        "id": 14310670183,
+        "name": "janus-seti-r5-track-screen",
+        "digest": "sha256:faef6cbea53c120d3ac7e86dfdb844425d2ffd31e4afb6bb8aa8558de883f4ae",
+        "bytes": 3372
+      }
+    ],
+    "groups": [
+      {
+        "target": "HIP11029",
+        "group_mhz": 2256.1067255,
+        "frequency_mhz": 2256.140007,
+        "catalog_drift_hz_s": -0.440059,
+        "status": "CONTROL_TRACK_PRESENT_RFI_CONCERN",
+        "tests": [
+          {
+            "role": "NEARBY_OTHER_TARGET_CONTROL",
+            "url": "https://bldata.berkeley.edu/pipeline/AGBT16B_999_86/holding/spliced_blc0001020304050607_guppi_57728_08863_HIP10172_0040.gpuspec.0000.h5",
+            "status": "DESCRIPTIVE_TRACK_COMPARISON",
+            "delta_seconds": 336.99999956879765,
+            "same_fixed_topocentric_window": {
+              "score": 2.714979410171509,
+              "row_excess_fraction": 0,
+              "null_tracks": 125,
+              "intercept_hz": 8.261257648468018,
+              "drift_hz_s": -0.440059,
+              "rows": 16,
+              "channel_hz": 2.7939677238464355
+            },
+            "continuous_track": {
+              "score": 25.33197593688965,
+              "row_excess_fraction": 0.875,
+              "null_tracks": 123,
+              "intercept_hz": -149.06539478980076,
+              "drift_hz_s": -0.45026325574104004,
+              "rows": 16,
+              "channel_hz": 2.7939677238464355
+            },
+            "predicted_intercept_hz": -151.79903975211155,
+            "fixed_window_strong": false,
+            "continuous_strong": true,
+            "sensitivity_note": "Equal channel spacing, integration and rows; gain normalized, not flux calibrated."
+          },
+          {
+            "role": "DIFFERENT_DAY_SAME_TARGET_REPEAT",
+            "url": "https://bldata.berkeley.edu/pipeline/AGBT16A_999_215/holding/spliced_blc0001020304050607_guppi_57544_54845_HIP11029_0042.gpuspec.0000.h5",
+            "status": "HOLD_NO_COMPARABLE_SLICE"
+          }
+        ],
+        "anchor": {
+          "score": 109.08895111083984,
+          "row_excess_fraction": 1,
+          "null_tracks": 124,
+          "intercept_hz": -0.06032276153564453,
+          "drift_hz_s": -0.45026325574104004,
+          "rows": 16,
+          "channel_hz": 2.7939677238464355
+        }
+      },
+      {
+        "target": "HIP40875",
+        "group_mhz": 1678.070112,
+        "frequency_mhz": 1678.060977,
+        "catalog_drift_hz_s": -2.898646,
+        "status": "HOLD_ORIGINAL_NARROW_TRACK_NOT_RECOVERED",
+        "tests": [],
+        "anchor": null
+      },
+      {
+        "target": "HIP40875",
+        "group_mhz": 1677.971553,
+        "frequency_mhz": 1677.963856,
+        "catalog_drift_hz_s": -2.88908,
+        "status": "HOLD_ORIGINAL_NARROW_TRACK_NOT_RECOVERED",
+        "tests": [],
+        "anchor": null
+      },
+      {
+        "target": "HIP42418",
+        "group_mhz": 1853.89998,
+        "frequency_mhz": 1853.983643,
+        "catalog_drift_hz_s": 0.009566,
+        "status": "CONTROL_TRACK_PRESENT_RFI_CONCERN",
+        "tests": [
+          {
+            "role": "NEARBY_OTHER_TARGET_CONTROL",
+            "url": "https://bldata.berkeley.edu/pipeline/AGBT18A_999_14/holding/spliced_blc1011121314151617_guppi_58174_24009_HIP41648_0027.gpuspec.0000.h5",
+            "status": "DESCRIPTIVE_TRACK_COMPARISON",
+            "delta_seconds": 335.9999999636784,
+            "same_fixed_topocentric_window": {
+              "score": 26.290769577026367,
+              "row_excess_fraction": 0.75,
+              "null_tracks": 138,
+              "intercept_hz": 2.6733222007751465,
+              "drift_hz_s": 0.009566,
+              "rows": 16,
+              "channel_hz": 2.7939677238464355
+            },
+            "continuous_track": {
+              "score": 24.694568634033203,
+              "row_excess_fraction": 0.75,
+              "null_tracks": 138,
+              "intercept_hz": 3.728192681353643,
+              "drift_hz_s": -0.0006382557410400426,
+              "rows": 16,
+              "channel_hz": 2.7939677238464355
+            },
+            "predicted_intercept_hz": 6.582483166735723,
+            "fixed_window_strong": true,
+            "continuous_strong": true,
+            "sensitivity_note": "Equal channel spacing, integration and rows; gain normalized, not flux calibrated."
+          },
+          {
+            "role": "SAME_SESSION_ON_REPEAT",
+            "url": "https://bldata.berkeley.edu/pipeline/AGBT18A_999_14/holding/spliced_blc1011121314151617_guppi_58174_24345_HIP42418_0028.gpuspec.0000.h5",
+            "status": "DESCRIPTIVE_TRACK_COMPARISON",
+            "delta_seconds": 671.9999999273568,
+            "same_fixed_topocentric_window": {
+              "score": 99.76790618896484,
+              "row_excess_fraction": 1,
+              "null_tracks": 139,
+              "intercept_hz": 5.467289924621582,
+              "drift_hz_s": 0.009566,
+              "rows": 16,
+              "channel_hz": 2.7939677238464355
+            },
+            "continuous_track": {
+              "score": 97.10130310058594,
+              "row_excess_fraction": 1,
+              "null_tracks": 139,
+              "intercept_hz": 7.577030885778575,
+              "drift_hz_s": -0.0006382557410400426,
+              "rows": 16,
+              "channel_hz": 2.7939677238464355
+            },
+            "predicted_intercept_hz": 13.22528909500709,
+            "fixed_window_strong": true,
+            "continuous_strong": true,
+            "sensitivity_note": "Equal channel spacing, integration and rows; gain normalized, not flux calibrated."
+          }
+        ],
+        "anchor": {
+          "score": 60.057708740234375,
+          "row_excess_fraction": 0.9375,
+          "null_tracks": 138,
+          "intercept_hz": -0.06032276153564453,
+          "drift_hz_s": 0.019770255741040042,
+          "rows": 16,
+          "channel_hz": 2.7939677238464355
+        }
+      },
+      {
+        "target": "HIP42418",
+        "group_mhz": 1853.503343,
+        "frequency_mhz": 1853.50353,
+        "catalog_drift_hz_s": 0.009566,
+        "status": "CONTROL_TRACK_PRESENT_RFI_CONCERN",
+        "tests": [
+          {
+            "role": "NEARBY_OTHER_TARGET_CONTROL",
+            "url": "https://bldata.berkeley.edu/pipeline/AGBT18A_999_14/holding/spliced_blc1011121314151617_guppi_58174_24009_HIP41648_0027.gpuspec.0000.h5",
+            "status": "DESCRIPTIVE_TRACK_COMPARISON",
+            "delta_seconds": 335.9999999636784,
+            "same_fixed_topocentric_window": {
+              "score": 17.076446533203125,
+              "row_excess_fraction": 0.5625,
+              "null_tracks": 139,
+              "intercept_hz": 5.467289924621582,
+              "drift_hz_s": -0.0006382557410400426,
+              "rows": 16,
+              "channel_hz": 2.7939677238464355
+            },
+            "continuous_track": {
+              "score": 17.076446533203125,
+              "row_excess_fraction": 0.5625,
+              "null_tracks": 139,
+              "intercept_hz": 5.25283599565531,
+              "drift_hz_s": -0.0006382557410400426,
+              "rows": 16,
+              "channel_hz": 2.7939677238464355
+            },
+            "predicted_intercept_hz": 5.313158757190955,
+            "fixed_window_strong": true,
+            "continuous_strong": true,
+            "sensitivity_note": "Equal channel spacing, integration and rows; gain normalized, not flux calibrated."
+          },
+          {
+            "role": "SAME_SESSION_ON_REPEAT",
+            "url": "https://bldata.berkeley.edu/pipeline/AGBT18A_999_14/holding/spliced_blc1011121314151617_guppi_58174_24345_HIP42418_0028.gpuspec.0000.h5",
+            "status": "DESCRIPTIVE_TRACK_COMPARISON",
+            "delta_seconds": 671.9999999273568,
+            "same_fixed_topocentric_window": {
+              "score": 94.99590301513672,
+              "row_excess_fraction": 1,
+              "null_tracks": 139,
+              "intercept_hz": 8.261257648468018,
+              "drift_hz_s": -0.0006382557410400426,
+              "rows": 16,
+              "channel_hz": 2.7939677238464355
+            },
+            "continuous_track": {
+              "score": 94.99590301513672,
+              "row_excess_fraction": 1,
+              "null_tracks": 139,
+              "intercept_hz": 7.832349790535474,
+              "drift_hz_s": -0.0006382557410400426,
+              "rows": 16,
+              "channel_hz": 2.7939677238464355
+            },
+            "predicted_intercept_hz": 5.098704828224683,
+            "fixed_window_strong": true,
+            "continuous_strong": true,
+            "sensitivity_note": "Equal channel spacing, integration and rows; gain normalized, not flux calibrated."
+          }
+        ],
+        "anchor": {
+          "score": 82.93513488769531,
+          "row_excess_fraction": 1,
+          "null_tracks": 139,
+          "intercept_hz": 5.527612686157227,
+          "drift_hz_s": -0.0006382557410400426,
+          "rows": 16,
+          "channel_hz": 2.7939677238464355
+        }
+      },
+      {
+        "target": "HIP42748",
+        "group_mhz": 2029.928548,
+        "frequency_mhz": 2029.979289,
+        "catalog_drift_hz_s": -0.038266,
+        "status": "CONTROL_TRACK_PRESENT_RFI_CONCERN",
+        "tests": [
+          {
+            "role": "NEARBY_OTHER_TARGET_CONTROL",
+            "url": "https://bldata.berkeley.edu/pipeline/AGBT17A_999_46/holding/spliced_blc0001020304050607_guppi_57860_80059_HIP41585_0003.gpuspec.0000.h5",
+            "status": "DESCRIPTIVE_TRACK_COMPARISON",
+            "delta_seconds": 340.9999998752028,
+            "same_fixed_topocentric_window": {
+              "score": 16.13112449645996,
+              "row_excess_fraction": 0.5625,
+              "null_tracks": 137,
+              "intercept_hz": -14.090484142303467,
+              "drift_hz_s": -0.038266,
+              "rows": 16,
+              "channel_hz": 2.7939677238464355
+            },
+            "continuous_track": {
+              "score": 14.205561637878418,
+              "row_excess_fraction": 0.5625,
+              "null_tracks": 137,
+              "intercept_hz": -13.169351518295798,
+              "drift_hz_s": -0.038266,
+              "rows": 16,
+              "channel_hz": 2.7939677238464355
+            },
+            "predicted_intercept_hz": -13.109028756760154,
+            "fixed_window_strong": true,
+            "continuous_strong": true,
+            "sensitivity_note": "Equal channel spacing, integration and rows; gain normalized, not flux calibrated."
+          },
+          {
+            "role": "DIFFERENT_DAY_SAME_TARGET_REPEAT",
+            "url": "https://bldata.berkeley.edu/pipeline/AGBT16B_999_102/holding/spliced_blc0001020304050607_guppi_57750_20815_HIP42748_0037.gpuspec.0000.h5",
+            "status": "HOLD_NO_COMPARABLE_SLICE"
+          }
+        ],
+        "anchor": {
+          "score": 79.30278778076172,
+          "row_excess_fraction": 1,
+          "null_tracks": 138,
+          "intercept_hz": -0.06032276153564453,
+          "drift_hz_s": -0.038266,
+          "rows": 16,
+          "channel_hz": 2.7939677238464355
+        }
+      },
+      {
+        "target": "HIP47425_S",
+        "group_mhz": 3426.114709,
+        "frequency_mhz": 3426.208251,
+        "catalog_drift_hz_s": 0.009566,
+        "status": "HOLD_MISSING_REQUIRED_DATA",
+        "tests": []
+      },
+      {
+        "target": "HIP83601",
+        "group_mhz": 1820.621109,
+        "frequency_mhz": 1820.650864,
+        "catalog_drift_hz_s": 0.019133,
+        "status": "CONTROL_TRACK_PRESENT_RFI_CONCERN",
+        "tests": [
+          {
+            "role": "NEARBY_OTHER_TARGET_CONTROL",
+            "url": "https://bldata.berkeley.edu/pipeline/AGBT17A_999_82/holding/spliced_blc3031323334353637_guppi_57915_30679_HIP82913_0039.gpuspec.0000.h5",
+            "status": "DESCRIPTIVE_TRACK_COMPARISON",
+            "delta_seconds": 340.00000027008355,
+            "same_fixed_topocentric_window": {
+              "score": 26.096370697021484,
+              "row_excess_fraction": 0.8125,
+              "null_tracks": 138,
+              "intercept_hz": 8.261257648468018,
+              "drift_hz_s": 0.019133,
+              "rows": 16,
+              "channel_hz": 2.7939677238464355
+            },
+            "continuous_track": {
+              "score": 29.165159225463867,
+              "row_excess_fraction": 0.6875,
+              "null_tracks": 138,
+              "intercept_hz": 6.38457448209622,
+              "drift_hz_s": 0.02933725574104004,
+              "rows": 16,
+              "channel_hz": 2.7939677238464355
+            },
+            "predicted_intercept_hz": 9.2388649674783,
+            "fixed_window_strong": true,
+            "continuous_strong": true,
+            "sensitivity_note": "Equal channel spacing, integration and rows; gain normalized, not flux calibrated."
+          },
+          {
+            "role": "SAME_SESSION_ON_REPEAT",
+            "url": "https://bldata.berkeley.edu/pipeline/AGBT17A_999_82/holding/spliced_blc3031323334353637_guppi_57915_31019_HIP83601_0040.gpuspec.0000.h5",
+            "status": "DESCRIPTIVE_TRACK_COMPARISON",
+            "delta_seconds": 680.0000005401671,
+            "same_fixed_topocentric_window": {
+              "score": 92.20272064208984,
+              "row_excess_fraction": 1,
+              "null_tracks": 138,
+              "intercept_hz": 13.849193096160889,
+              "drift_hz_s": 0.019133,
+              "rows": 16,
+              "channel_hz": 2.7939677238464355
+            },
+            "continuous_track": {
+              "score": 95.05480194091797,
+              "row_excess_fraction": 1,
+              "null_tracks": 138,
+              "intercept_hz": 15.683762211110164,
+              "drift_hz_s": 0.008928744258959958,
+              "rows": 16,
+              "channel_hz": 2.7939677238464355
+            },
+            "predicted_intercept_hz": 15.744084972645808,
+            "fixed_window_strong": true,
+            "continuous_strong": true,
+            "sensitivity_note": "Equal channel spacing, integration and rows; gain normalized, not flux calibrated."
+          }
+        ],
+        "anchor": {
+          "score": 98.63368225097656,
+          "row_excess_fraction": 1,
+          "null_tracks": 138,
+          "intercept_hz": 2.733644962310791,
+          "drift_hz_s": 0.019133,
+          "rows": 16,
+          "channel_hz": 2.7939677238464355
+        }
+      },
+      {
+        "target": "HIP83601",
+        "group_mhz": 1821.0966645,
+        "frequency_mhz": 1821.078065,
+        "catalog_drift_hz_s": 0.019133,
+        "status": "CONTROL_TRACK_PRESENT_RFI_CONCERN",
+        "tests": [
+          {
+            "role": "NEARBY_OTHER_TARGET_CONTROL",
+            "url": "https://bldata.berkeley.edu/pipeline/AGBT17A_999_82/holding/spliced_blc3031323334353637_guppi_57915_30679_HIP82913_0039.gpuspec.0000.h5",
+            "status": "DESCRIPTIVE_TRACK_COMPARISON",
+            "delta_seconds": 340.00000027008355,
+            "same_fixed_topocentric_window": {
+              "score": 22.341733932495117,
+              "row_excess_fraction": 0.8125,
+              "null_tracks": 137,
+              "intercept_hz": 5.467289924621582,
+              "drift_hz_s": 0.02933725574104004,
+              "rows": 16,
+              "channel_hz": 2.7939677238464355
+            },
+            "continuous_track": {
+              "score": 27.672304153442383,
+              "row_excess_fraction": 0.9375,
+              "null_tracks": 138,
+              "intercept_hz": 7.0600537129594,
+              "drift_hz_s": 0.019133,
+              "rows": 16,
+              "channel_hz": 2.7939677238464355
+            },
+            "predicted_intercept_hz": 9.91434419834148,
+            "fixed_window_strong": true,
+            "continuous_strong": true,
+            "sensitivity_note": "Equal channel spacing, integration and rows; gain normalized, not flux calibrated."
+          },
+          {
+            "role": "SAME_SESSION_ON_REPEAT",
+            "url": "https://bldata.berkeley.edu/pipeline/AGBT17A_999_82/holding/spliced_blc3031323334353637_guppi_57915_31019_HIP83601_0040.gpuspec.0000.h5",
+            "status": "DESCRIPTIVE_TRACK_COMPARISON",
+            "delta_seconds": 680.0000005401671,
+            "same_fixed_topocentric_window": {
+              "score": 71.6892318725586,
+              "row_excess_fraction": 0.875,
+              "null_tracks": 138,
+              "intercept_hz": 11.055225372314453,
+              "drift_hz_s": 0.02933725574104004,
+              "rows": 16,
+              "channel_hz": 2.7939677238464355
+            },
+            "continuous_track": {
+              "score": 61.192909240722656,
+              "row_excess_fraction": 1,
+              "null_tracks": 138,
+              "intercept_hz": 11.446785225143653,
+              "drift_hz_s": 0.02933725574104004,
+              "rows": 16,
+              "channel_hz": 2.7939677238464355
+            },
+            "predicted_intercept_hz": 19.889011158218604,
+            "fixed_window_strong": true,
+            "continuous_strong": true,
+            "sensitivity_note": "Equal channel spacing, integration and rows; gain normalized, not flux calibrated."
+          }
+        ],
+        "anchor": {
+          "score": 58.85437774658203,
+          "row_excess_fraction": 0.9375,
+          "null_tracks": 138,
+          "intercept_hz": -0.06032276153564453,
+          "drift_hz_s": 0.02933725574104004,
+          "rows": 16,
+          "channel_hz": 2.7939677238464355
+        }
+      },
+      {
+        "target": "HIP83601",
+        "group_mhz": 1820.389546,
+        "frequency_mhz": 1820.317452,
+        "catalog_drift_hz_s": 0.019133,
+        "status": "CONTROL_TRACK_PRESENT_RFI_CONCERN",
+        "tests": [
+          {
+            "role": "NEARBY_OTHER_TARGET_CONTROL",
+            "url": "https://bldata.berkeley.edu/pipeline/AGBT17A_999_82/holding/spliced_blc3031323334353637_guppi_57915_30679_HIP82913_0039.gpuspec.0000.h5",
+            "status": "DESCRIPTIVE_TRACK_COMPARISON",
+            "delta_seconds": 340.00000027008355,
+            "same_fixed_topocentric_window": {
+              "score": 27.145362854003906,
+              "row_excess_fraction": 0.8125,
+              "null_tracks": 138,
+              "intercept_hz": 8.261257648468018,
+              "drift_hz_s": 0.019133,
+              "rows": 16,
+              "channel_hz": 2.7939677238464355
+            },
+            "continuous_track": {
+              "score": 28.169052124023438,
+              "row_excess_fraction": 0.875,
+              "null_tracks": 138,
+              "intercept_hz": 7.0600537129594,
+              "drift_hz_s": 0.019133,
+              "rows": 16,
+              "channel_hz": 2.7939677238464355
+            },
+            "predicted_intercept_hz": 9.91434419834148,
+            "fixed_window_strong": true,
+            "continuous_strong": true,
+            "sensitivity_note": "Equal channel spacing, integration and rows; gain normalized, not flux calibrated."
+          },
+          {
+            "role": "SAME_SESSION_ON_REPEAT",
+            "url": "https://bldata.berkeley.edu/pipeline/AGBT17A_999_82/holding/spliced_blc3031323334353637_guppi_57915_31019_HIP83601_0040.gpuspec.0000.h5",
+            "status": "DESCRIPTIVE_TRACK_COMPARISON",
+            "delta_seconds": 680.0000005401671,
+            "same_fixed_topocentric_window": {
+              "score": 84.00869750976562,
+              "row_excess_fraction": 1,
+              "null_tracks": 138,
+              "intercept_hz": 13.849193096160889,
+              "drift_hz_s": 0.019133,
+              "rows": 16,
+              "channel_hz": 2.7939677238464355
+            },
+            "continuous_track": {
+              "score": 67.13704681396484,
+              "row_excess_fraction": 0.9375,
+              "null_tracks": 139,
+              "intercept_hz": 14.240752948990089,
+              "drift_hz_s": 0.019133,
+              "rows": 16,
+              "channel_hz": 2.7939677238464355
+            },
+            "predicted_intercept_hz": 19.889011158218604,
+            "fixed_window_strong": true,
+            "continuous_strong": true,
+            "sensitivity_note": "Equal channel spacing, integration and rows; gain normalized, not flux calibrated."
+          }
+        ],
+        "anchor": {
+          "score": 86.49053955078125,
+          "row_excess_fraction": 0.875,
+          "null_tracks": 138,
+          "intercept_hz": -0.06032276153564453,
+          "drift_hz_s": 0.02933725574104004,
+          "rows": 16,
+          "channel_hz": 2.7939677238464355
+        }
+      },
+      {
+        "target": "HIP83601",
+        "group_mhz": 1820.8861205,
+        "frequency_mhz": 1820.83889,
+        "catalog_drift_hz_s": 0.019133,
+        "status": "CONTROL_TRACK_PRESENT_RFI_CONCERN",
+        "tests": [
+          {
+            "role": "NEARBY_OTHER_TARGET_CONTROL",
+            "url": "https://bldata.berkeley.edu/pipeline/AGBT17A_999_82/holding/spliced_blc3031323334353637_guppi_57915_30679_HIP82913_0039.gpuspec.0000.h5",
+            "status": "DESCRIPTIVE_TRACK_COMPARISON",
+            "delta_seconds": 340.00000027008355,
+            "same_fixed_topocentric_window": {
+              "score": 26.740568161010742,
+              "row_excess_fraction": 0.8125,
+              "null_tracks": 138,
+              "intercept_hz": 8.261257648468018,
+              "drift_hz_s": 0.008928744258959958,
+              "rows": 16,
+              "channel_hz": 2.7939677238464355
+            },
+            "continuous_track": {
+              "score": 25.02836799621582,
+              "row_excess_fraction": 0.75,
+              "null_tracks": 138,
+              "intercept_hz": 8.503062975079475,
+              "drift_hz_s": 0.008928744258959958,
+              "rows": 16,
+              "channel_hz": 2.7939677238464355
+            },
+            "predicted_intercept_hz": 5.769418012768684,
+            "fixed_window_strong": true,
+            "continuous_strong": true,
+            "sensitivity_note": "Equal channel spacing, integration and rows; gain normalized, not flux calibrated."
+          },
+          {
+            "role": "SAME_SESSION_ON_REPEAT",
+            "url": "https://bldata.berkeley.edu/pipeline/AGBT17A_999_82/holding/spliced_blc3031323334353637_guppi_57915_31019_HIP83601_0040.gpuspec.0000.h5",
+            "status": "DESCRIPTIVE_TRACK_COMPARISON",
+            "delta_seconds": 680.0000005401671,
+            "same_fixed_topocentric_window": {
+              "score": 67.90995025634766,
+              "row_excess_fraction": 0.8125,
+              "null_tracks": 138,
+              "intercept_hz": 13.849193096160889,
+              "drift_hz_s": 0.019133,
+              "rows": 16,
+              "channel_hz": 2.7939677238464355
+            },
+            "continuous_track": {
+              "score": 78.67637634277344,
+              "row_excess_fraction": 1,
+              "null_tracks": 138,
+              "intercept_hz": 11.538836025537368,
+              "drift_hz_s": 0.02933725574104004,
+              "rows": 16,
+              "channel_hz": 2.7939677238464355
+            },
+            "predicted_intercept_hz": 8.805191063226577,
+            "fixed_window_strong": true,
+            "continuous_strong": true,
+            "sensitivity_note": "Equal channel spacing, integration and rows; gain normalized, not flux calibrated."
+          }
+        ],
+        "anchor": {
+          "score": 81.00089263916016,
+          "row_excess_fraction": 0.9375,
+          "null_tracks": 138,
+          "intercept_hz": 2.733644962310791,
+          "drift_hz_s": 0.008928744258959958,
+          "rows": 16,
+          "channel_hz": 2.7939677238464355
+        }
+      },
+      {
+        "target": "HIP88684",
+        "group_mhz": 2177.669081,
+        "frequency_mhz": 2177.673081,
+        "catalog_drift_hz_s": 0.028699,
+        "status": "CONTROL_TRACK_PRESENT_RFI_CONCERN",
+        "tests": [
+          {
+            "role": "NEARBY_OTHER_TARGET_CONTROL",
+            "url": "https://bldata.berkeley.edu/pipeline/AGBT17A_999_15/holding/spliced_blc0001020304050607_guppi_57811_53863_HIP87471_0021.gpuspec.0000.h5",
+            "status": "DESCRIPTIVE_TRACK_COMPARISON",
+            "delta_seconds": 343.0000003427267,
+            "same_fixed_topocentric_window": {
+              "score": 22.30693817138672,
+              "row_excess_fraction": 0.625,
+              "null_tracks": 138,
+              "intercept_hz": 5.467289924621582,
+              "drift_hz_s": 0.018494744258959958,
+              "rows": 16,
+              "channel_hz": 2.7939677238464355
+            },
+            "continuous_track": {
+              "score": 30.54245948791504,
+              "row_excess_fraction": 0.6875,
+              "null_tracks": 138,
+              "intercept_hz": 6.929143762918189,
+              "drift_hz_s": 0.018494744258959958,
+              "rows": 16,
+              "channel_hz": 2.7939677238464355
+            },
+            "predicted_intercept_hz": 9.783434248300269,
+            "fixed_window_strong": true,
+            "continuous_strong": true,
+            "sensitivity_note": "Equal channel spacing, integration and rows; gain normalized, not flux calibrated."
+          },
+          {
+            "role": "DIFFERENT_DAY_SAME_TARGET_REPEAT",
+            "url": "https://bldata.berkeley.edu/pipeline/AGBT16A_999_185/holding/spliced_blc0001020304050607_guppi_57520_35628_HIP88684_0013.gpuspec.0000.h5",
+            "status": "HOLD_NO_COMPARABLE_SLICE"
+          }
+        ],
+        "anchor": {
+          "score": 68.58570861816406,
+          "row_excess_fraction": 0.875,
+          "null_tracks": 138,
+          "intercept_hz": -0.06032276153564453,
+          "drift_hz_s": 0.028699,
+          "rows": 16,
+          "channel_hz": 2.7939677238464355
+        }
+      }
+    ],
+    "scientific_status": "NO_CANDIDATE_PASSED_PRELIMINARY_DIRECTIONAL_SCREEN",
+    "next_gate": "Recover HIP40875 using wider frequency windows and verify catalog drift/time convention; resolve missing Parkes exact file; calibrated multi-scan OFF and barycentric independent epochs only if appropriate."
   }
 }
