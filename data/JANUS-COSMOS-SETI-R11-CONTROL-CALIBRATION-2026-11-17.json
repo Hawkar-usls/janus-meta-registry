@@ -4534,12 +4534,1588 @@
   ],
   "disposition": "Forward candidate HIP47103 requires extra controls; same 3150 MHz window contains reverse OFF/ON/OFF candidate about 165 Hz away. Reverse passes demonstrate directional criterion is not sufficient. No discovery. Full-window recovery lower than R9 subtile recovery.",
   "r12": {
-    "status": "RUNNING_RESULT_UNVERIFIED",
+    "status": "COMPLETE_HOLD_INDEPENDENT_CONFIRMATION",
     "run": "https://github.com/Hawkar-usls/Janus-Cosmos/actions/runs/44076675000",
     "workflow_commit": "b2adb7dec11c5ec7fcfe47cc6bf907409d9fa502",
     "protocol": "https://github.com/Hawkar-usls/Janus-Cosmos/blob/950dd1de79e18cb88481ce00b7fc334a71f6b616/research/seti/r12_frozen_candidate.json",
     "method": "Verify immutable R11 zip and slices, replay all 16 scans at frozen forward candidate and separate reverse-control line; compare both target OFF scans and metadata-selected additional dates with fixed and constant barycentric frequency hypotheses; no changed thresholds.",
     "candidate_status": "HOLD_INDEPENDENT_CONFIRMATION",
-    "limitations": "Related OFF/ON/OFF line about 165 Hz away is not established same emitter; no absolute flux or beam calibration, no new independent observations."
+    "limitations": "Related OFF/ON/OFF line about 165 Hz away is not established same emitter; no absolute flux or beam calibration, no new independent observations.",
+    "run_conclusion": "success",
+    "summary": {
+      "schema": "janus.seti.r12.followup.v1",
+      "prior_scans": 16,
+      "extra_selected": 7,
+      "extra_completed": 7,
+      "cross_target_strong_tracks": 0,
+      "all_target_off_strong_tracks": 0,
+      "reverse_control_strong_scans": 2,
+      "barycentric_reference_mhz": 3149.8650521576155,
+      "status": "HOLD_INDEPENDENT_CONFIRMATION",
+      "confirmed_technosignatures": 0,
+      "independently_confirmed": 0,
+      "limitations": [
+        "R11 reverse OFF/ON/OFF pattern at a separate frequency about 165 Hz away is an interference concern, not the same emitter.",
+        "Fixed corridors and existing selection are descriptive; no absolute flux or blind false-alarm calibration.",
+        "Constant barycentric frequency is only one restrictive emission model; no correction for unknown source acceleration.",
+        "Archive S/R positions are not new independent observations; related frequency tracks do not establish common emitter."
+      ]
+    },
+    "manifest": {
+      "query": {
+        "url": "http://seti.berkeley.edu/opendata/api/query-files?target=HIP47103&telescope=Parkes&file-type=HDF5",
+        "rows": 284,
+        "fine": 92,
+        "sha256": "5ee07a6143715b1c0c078bee40f5a5d1a1ff2e5c1215ca16240bd4a13e65a73f"
+      },
+      "selected": [
+        {
+          "name": "Parkes_57782_55314_HIP47103_S_fine.h5",
+          "role": "EXTRA_SAME_DAY_S",
+          "day": 57782,
+          "seconds": 55314
+        },
+        {
+          "name": "Parkes_57763_67156_HIP47103_S_fine.h5",
+          "role": "EARLIER_ON1",
+          "day": 57763,
+          "seconds": 67156
+        },
+        {
+          "name": "Parkes_57763_67501_HIP47103_R_fine.h5",
+          "role": "EARLIER_OFF",
+          "day": 57763,
+          "seconds": 67501
+        },
+        {
+          "name": "Parkes_57763_67840_HIP47103_S_fine.h5",
+          "role": "EARLIER_ON2",
+          "day": 57763,
+          "seconds": 67840
+        },
+        {
+          "name": "Parkes_57789_44482_HIP47103_S_fine.h5",
+          "role": "LATER_ON1",
+          "day": 57789,
+          "seconds": 44482
+        },
+        {
+          "name": "Parkes_57789_44831_HIP47103_R_fine.h5",
+          "role": "LATER_OFF",
+          "day": 57789,
+          "seconds": 44831
+        },
+        {
+          "name": "Parkes_57789_45172_HIP47103_S_fine.h5",
+          "role": "LATER_ON2",
+          "day": 57789,
+          "seconds": 45172
+        }
+      ]
+    },
+    "prior": [
+      {
+        "target": "HIP48659",
+        "role": "ON1",
+        "name": "Parkes_57961_19492_HIP48659_S_fine.h5",
+        "mjd": 57961.22560185185,
+        "tests": {
+          "fixed_original_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0.010204255741040042,
+            "best": {
+              "score": 1.6393203735351562,
+              "persistence": 0,
+              "frequency_mhz": 3149.978141963482,
+              "drift_hz_s": 0
+            },
+            "strong": false
+          },
+          "fixed_zero_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0,
+            "best": {
+              "score": 1.6393203735351562,
+              "persistence": 0,
+              "frequency_mhz": 3149.978141963482,
+              "drift_hz_s": 0
+            },
+            "strong": false
+          },
+          "reverse_control_fixed": {
+            "predicted_mhz": 3149.9779942557216,
+            "predicted_drift_hz_s": -0.04081702296416017,
+            "best": {
+              "score": 2.5241637229919434,
+              "persistence": 0,
+              "frequency_mhz": 3149.977979913354,
+              "drift_hz_s": -0.04081702296416017
+            },
+            "strong": false
+          }
+        }
+      },
+      {
+        "target": "HIP48659",
+        "role": "OFF1",
+        "name": "Parkes_57961_19834_HIP48659_R_fine.h5",
+        "mjd": 57961.22956018519,
+        "tests": {
+          "fixed_original_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0.010204255741040042,
+            "best": {
+              "score": 1.4097118377685547,
+              "persistence": 0,
+              "frequency_mhz": 3149.9781782850623,
+              "drift_hz_s": 0.010204255741040042
+            },
+            "strong": false
+          },
+          "fixed_zero_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0,
+            "best": {
+              "score": 1.4097118377685547,
+              "persistence": 0,
+              "frequency_mhz": 3149.9781782850623,
+              "drift_hz_s": 0.010204255741040042
+            },
+            "strong": false
+          },
+          "reverse_control_fixed": {
+            "predicted_mhz": 3149.9779942557216,
+            "predicted_drift_hz_s": -0.04081702296416017,
+            "best": {
+              "score": 1.907018780708313,
+              "persistence": 0,
+              "frequency_mhz": 3149.9779715314507,
+              "drift_hz_s": -0.030612767223120126
+            },
+            "strong": false
+          }
+        }
+      },
+      {
+        "target": "HIP48659",
+        "role": "ON2",
+        "name": "Parkes_57961_20182_HIP48659_S_fine.h5",
+        "mjd": 57961.23358796296,
+        "tests": {
+          "fixed_original_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0.010204255741040042,
+            "best": {
+              "score": 2.3079628944396973,
+              "persistence": 0,
+              "frequency_mhz": 3149.9781838729978,
+              "drift_hz_s": 0
+            },
+            "strong": false
+          },
+          "fixed_zero_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0,
+            "best": {
+              "score": 2.541740894317627,
+              "persistence": 0,
+              "frequency_mhz": 3149.9781838729978,
+              "drift_hz_s": -0.010204255741040042
+            },
+            "strong": false
+          },
+          "reverse_control_fixed": {
+            "predicted_mhz": 3149.9779942557216,
+            "predicted_drift_hz_s": -0.04081702296416017,
+            "best": {
+              "score": 2.3906428813934326,
+              "persistence": 0,
+              "frequency_mhz": 3149.9780022650957,
+              "drift_hz_s": -0.05102127870520021
+            },
+            "strong": false
+          }
+        }
+      },
+      {
+        "target": "HIP48659",
+        "role": "OFF2",
+        "name": "Parkes_57961_20525_HIP48659_R_fine.h5",
+        "mjd": 57961.23755787037,
+        "tests": {
+          "fixed_original_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0.010204255741040042,
+            "best": {
+              "score": 1.8749144077301025,
+              "persistence": 0,
+              "frequency_mhz": 3149.9781447574496,
+              "drift_hz_s": 0
+            },
+            "strong": false
+          },
+          "fixed_zero_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0,
+            "best": {
+              "score": 2.157562255859375,
+              "persistence": 0,
+              "frequency_mhz": 3149.978169903159,
+              "drift_hz_s": -0.010204255741040042
+            },
+            "strong": false
+          },
+          "reverse_control_fixed": {
+            "predicted_mhz": 3149.9779942557216,
+            "predicted_drift_hz_s": -0.04081702296416017,
+            "best": {
+              "score": 2.656956434249878,
+              "persistence": 0,
+              "frequency_mhz": 3149.9780162349343,
+              "drift_hz_s": -0.030612767223120126
+            },
+            "strong": false
+          }
+        }
+      },
+      {
+        "target": "HIP47103",
+        "role": "ON1",
+        "name": "Parkes_57782_53912_HIP47103_S_fine.h5",
+        "mjd": 57782.62398148148,
+        "tests": {
+          "fixed_original_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0.010204255741040042,
+            "best": {
+              "score": 51.936153411865234,
+              "persistence": 0.625,
+              "frequency_mhz": 3149.9781590998173,
+              "drift_hz_s": 0.010204255741040042
+            },
+            "strong": true
+          },
+          "fixed_zero_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0,
+            "best": {
+              "score": 51.936153411865234,
+              "persistence": 0.625,
+              "frequency_mhz": 3149.9781590998173,
+              "drift_hz_s": 0.010204255741040042
+            },
+            "strong": true
+          },
+          "reverse_control_fixed": {
+            "predicted_mhz": 3149.9779942557216,
+            "predicted_drift_hz_s": -0.04081702296416017,
+            "best": {
+              "score": 1.517330527305603,
+              "persistence": 0,
+              "frequency_mhz": 3149.9780138134956,
+              "drift_hz_s": -0.05102127870520021
+            },
+            "strong": false
+          },
+          "continuous": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0.010204255741040042,
+            "best": {
+              "score": 51.936153411865234,
+              "persistence": 0.625,
+              "frequency_mhz": 3149.9781590998173,
+              "drift_hz_s": 0.010204255741040042
+            },
+            "strong": true
+          },
+          "constant_barycentric": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": -0.32981128975100543,
+            "best": {
+              "score": 12.339826583862305,
+              "persistence": 0.1875,
+              "frequency_mhz": 3149.9781870394945,
+              "drift_hz_s": -0.3163319279722413
+            },
+            "strong": false
+          }
+        }
+      },
+      {
+        "target": "HIP47103",
+        "role": "OFF1",
+        "name": "Parkes_57782_54265_HIP47103_R_fine.h5",
+        "mjd": 57782.628067129626,
+        "tests": {
+          "fixed_original_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0.010204255741040042,
+            "best": {
+              "score": 1.9525854587554932,
+              "persistence": 0,
+              "frequency_mhz": 3149.978139542043,
+              "drift_hz_s": 0.020408511482080085
+            },
+            "strong": false
+          },
+          "fixed_zero_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0,
+            "best": {
+              "score": 2.5589892864227295,
+              "persistence": 0,
+              "frequency_mhz": 3149.9781339541078,
+              "drift_hz_s": -0.010204255741040042
+            },
+            "strong": false
+          },
+          "reverse_control_fixed": {
+            "predicted_mhz": 3149.9779942557216,
+            "predicted_drift_hz_s": -0.04081702296416017,
+            "best": {
+              "score": 42.67051696777344,
+              "persistence": 0.5625,
+              "frequency_mhz": 3149.9779942557216,
+              "drift_hz_s": -0.04081702296416017
+            },
+            "strong": true
+          },
+          "continuous": {
+            "predicted_mhz": 3149.9781627019197,
+            "predicted_drift_hz_s": 0.010204255741040042,
+            "best": {
+              "score": 1.9525854587554932,
+              "persistence": 0,
+              "frequency_mhz": 3149.978139542043,
+              "drift_hz_s": 0.020408511482080085
+            },
+            "strong": false
+          },
+          "constant_barycentric": {
+            "predicted_mhz": 3149.9780426694456,
+            "predicted_drift_hz_s": -0.32993275925818843,
+            "best": {
+              "score": 35.21528244018555,
+              "persistence": 0.4375,
+              "frequency_mhz": 3149.978030577302,
+              "drift_hz_s": -0.32653618371328136
+            },
+            "strong": false
+          }
+        }
+      },
+      {
+        "target": "HIP47103",
+        "role": "ON2",
+        "name": "Parkes_57782_54613_HIP47103_S_fine.h5",
+        "mjd": 57782.63209490741,
+        "tests": {
+          "fixed_original_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0.010204255741040042,
+            "best": {
+              "score": 53.0378532409668,
+              "persistence": 0.625,
+              "frequency_mhz": 3149.978161893785,
+              "drift_hz_s": 0
+            },
+            "strong": true
+          },
+          "fixed_zero_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0,
+            "best": {
+              "score": 53.0378532409668,
+              "persistence": 0.625,
+              "frequency_mhz": 3149.978161893785,
+              "drift_hz_s": 0
+            },
+            "strong": true
+          },
+          "reverse_control_fixed": {
+            "predicted_mhz": 3149.9779942557216,
+            "predicted_drift_hz_s": -0.04081702296416017,
+            "best": {
+              "score": 3.1940815448760986,
+              "persistence": 0,
+              "frequency_mhz": 3149.977980285883,
+              "drift_hz_s": -0.05102127870520021
+            },
+            "strong": false
+          },
+          "continuous": {
+            "predicted_mhz": 3149.9781662530004,
+            "predicted_drift_hz_s": 0.010204255741040042,
+            "best": {
+              "score": 53.0378532409668,
+              "persistence": 0.625,
+              "frequency_mhz": 3149.978161893785,
+              "drift_hz_s": 0
+            },
+            "strong": true
+          },
+          "constant_barycentric": {
+            "predicted_mhz": 3149.977927853154,
+            "predicted_drift_hz_s": -0.3298706551346655,
+            "best": {
+              "score": 2.9054744243621826,
+              "persistence": 0,
+              "frequency_mhz": 3149.977899260819,
+              "drift_hz_s": -0.32653618371328136
+            },
+            "strong": false
+          }
+        }
+      },
+      {
+        "target": "HIP47103",
+        "role": "OFF2",
+        "name": "Parkes_57782_54963_HIP47103_R_fine.h5",
+        "mjd": 57782.636145833334,
+        "tests": {
+          "fixed_original_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0.010204255741040042,
+            "best": {
+              "score": 2.1100311279296875,
+              "persistence": 0,
+              "frequency_mhz": 3149.9781479239464,
+              "drift_hz_s": 0.010204255741040042
+            },
+            "strong": false
+          },
+          "fixed_zero_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0,
+            "best": {
+              "score": 2.1100311279296875,
+              "persistence": 0,
+              "frequency_mhz": 3149.9781479239464,
+              "drift_hz_s": 0.010204255741040042
+            },
+            "strong": false
+          },
+          "reverse_control_fixed": {
+            "predicted_mhz": 3149.9779942557216,
+            "predicted_drift_hz_s": -0.04081702296416017,
+            "best": {
+              "score": 37.6995735168457,
+              "persistence": 0.5625,
+              "frequency_mhz": 3149.9779942557216,
+              "drift_hz_s": -0.05102127870520021
+            },
+            "strong": true
+          },
+          "continuous": {
+            "predicted_mhz": 3149.97816982449,
+            "predicted_drift_hz_s": 0.010204255741040042,
+            "best": {
+              "score": 2.1100311279296875,
+              "persistence": 0,
+              "frequency_mhz": 3149.9781479239464,
+              "drift_hz_s": 0.010204255741040042
+            },
+            "strong": false
+          },
+          "constant_barycentric": {
+            "predicted_mhz": 3149.977812405675,
+            "predicted_drift_hz_s": -0.3296261266878867,
+            "best": {
+              "score": 2.150095224380493,
+              "persistence": 0,
+              "frequency_mhz": 3149.9777847081423,
+              "drift_hz_s": -0.32653618371328136
+            },
+            "strong": false
+          }
+        }
+      },
+      {
+        "target": "HIP52296",
+        "role": "ON1",
+        "name": "Parkes_57776_57127_HIP52296_S_fine.h5",
+        "mjd": 57776.66119212963,
+        "tests": {
+          "fixed_original_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0.010204255741040042,
+            "best": {
+              "score": 2.575737714767456,
+              "persistence": 0,
+              "frequency_mhz": 3149.9781671091914,
+              "drift_hz_s": 0.010204255741040042
+            },
+            "strong": false
+          },
+          "fixed_zero_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0,
+            "best": {
+              "score": 2.575737714767456,
+              "persistence": 0,
+              "frequency_mhz": 3149.9781671091914,
+              "drift_hz_s": 0.010204255741040042
+            },
+            "strong": false
+          },
+          "reverse_control_fixed": {
+            "predicted_mhz": 3149.9779942557216,
+            "predicted_drift_hz_s": -0.04081702296416017,
+            "best": {
+              "score": 2.094515562057495,
+              "persistence": 0,
+              "frequency_mhz": 3149.977968737483,
+              "drift_hz_s": -0.04081702296416017
+            },
+            "strong": false
+          }
+        }
+      },
+      {
+        "target": "HIP52296",
+        "role": "OFF1",
+        "name": "Parkes_57776_57484_HIP52296_R_fine.h5",
+        "mjd": 57776.66532407407,
+        "tests": {
+          "fixed_original_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0.010204255741040042,
+            "best": {
+              "score": 2.7779572010040283,
+              "persistence": 0.0625,
+              "frequency_mhz": 3149.9781447574496,
+              "drift_hz_s": 0
+            },
+            "strong": false
+          },
+          "fixed_zero_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0,
+            "best": {
+              "score": 2.7779572010040283,
+              "persistence": 0.0625,
+              "frequency_mhz": 3149.9781447574496,
+              "drift_hz_s": 0
+            },
+            "strong": false
+          },
+          "reverse_control_fixed": {
+            "predicted_mhz": 3149.9779942557216,
+            "predicted_drift_hz_s": -0.04081702296416017,
+            "best": {
+              "score": 2.887789726257324,
+              "persistence": 0.0625,
+              "frequency_mhz": 3149.97802182287,
+              "drift_hz_s": -0.030612767223120126
+            },
+            "strong": false
+          }
+        }
+      },
+      {
+        "target": "HIP52296",
+        "role": "ON2",
+        "name": "Parkes_57776_57845_HIP52296_S_fine.h5",
+        "mjd": 57776.66950231481,
+        "tests": {
+          "fixed_original_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0.010204255741040042,
+            "best": {
+              "score": 2.5699806213378906,
+              "persistence": 0,
+              "frequency_mhz": 3149.978130787611,
+              "drift_hz_s": 0.020408511482080085
+            },
+            "strong": false
+          },
+          "fixed_zero_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0,
+            "best": {
+              "score": 2.389603853225708,
+              "persistence": 0.0625,
+              "frequency_mhz": 3149.978130787611,
+              "drift_hz_s": 0
+            },
+            "strong": false
+          },
+          "reverse_control_fixed": {
+            "predicted_mhz": 3149.9779942557216,
+            "predicted_drift_hz_s": -0.04081702296416017,
+            "best": {
+              "score": 2.484712600708008,
+              "persistence": 0.0625,
+              "frequency_mhz": 3149.977968737483,
+              "drift_hz_s": -0.05102127870520021
+            },
+            "strong": false
+          }
+        }
+      },
+      {
+        "target": "HIP52296",
+        "role": "OFF2",
+        "name": "Parkes_57776_58207_HIP52296_R_fine.h5",
+        "mjd": 57776.67369212963,
+        "tests": {
+          "fixed_original_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0.010204255741040042,
+            "best": {
+              "score": 2.526815414428711,
+              "persistence": 0.0625,
+              "frequency_mhz": 3149.978169903159,
+              "drift_hz_s": 0
+            },
+            "strong": false
+          },
+          "fixed_zero_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0,
+            "best": {
+              "score": 2.526815414428711,
+              "persistence": 0.0625,
+              "frequency_mhz": 3149.978169903159,
+              "drift_hz_s": 0
+            },
+            "strong": false
+          },
+          "reverse_control_fixed": {
+            "predicted_mhz": 3149.9779942557216,
+            "predicted_drift_hz_s": -0.04081702296416017,
+            "best": {
+              "score": 2.2313411235809326,
+              "persistence": 0,
+              "frequency_mhz": 3149.9780162349343,
+              "drift_hz_s": -0.05102127870520021
+            },
+            "strong": false
+          }
+        }
+      },
+      {
+        "target": "HIP89211",
+        "role": "ON1",
+        "name": "Parkes_57956_45832_HIP89211_S_fine.h5",
+        "mjd": 57956.53046296296,
+        "tests": {
+          "fixed_original_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0.010204255741040042,
+            "best": {
+              "score": 1.8371391296386719,
+              "persistence": 0,
+              "frequency_mhz": 3149.9781866669655,
+              "drift_hz_s": 0.020408511482080085
+            },
+            "strong": false
+          },
+          "fixed_zero_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0,
+            "best": {
+              "score": 1.7751336097717285,
+              "persistence": 0,
+              "frequency_mhz": 3149.97818107903,
+              "drift_hz_s": -0.010204255741040042
+            },
+            "strong": false
+          },
+          "reverse_control_fixed": {
+            "predicted_mhz": 3149.9779942557216,
+            "predicted_drift_hz_s": -0.04081702296416017,
+            "best": {
+              "score": 2.5886051654815674,
+              "persistence": 0,
+              "frequency_mhz": 3149.978010646999,
+              "drift_hz_s": -0.05102127870520021
+            },
+            "strong": false
+          }
+        }
+      },
+      {
+        "target": "HIP89211",
+        "role": "OFF1",
+        "name": "Parkes_57956_46177_HIP89211_R_fine.h5",
+        "mjd": 57956.53445601852,
+        "tests": {
+          "fixed_original_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0.010204255741040042,
+            "best": {
+              "score": 2.6151976585388184,
+              "persistence": 0.0625,
+              "frequency_mhz": 3149.978150345385,
+              "drift_hz_s": 0.020408511482080085
+            },
+            "strong": false
+          },
+          "fixed_zero_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0,
+            "best": {
+              "score": 2.024186611175537,
+              "persistence": 0,
+              "frequency_mhz": 3149.9781335815787,
+              "drift_hz_s": 0.010204255741040042
+            },
+            "strong": false
+          },
+          "reverse_control_fixed": {
+            "predicted_mhz": 3149.9779942557216,
+            "predicted_drift_hz_s": -0.04081702296416017,
+            "best": {
+              "score": 2.5878665447235107,
+              "persistence": 0,
+              "frequency_mhz": 3149.978007853031,
+              "drift_hz_s": -0.04081702296416017
+            },
+            "strong": false
+          }
+        }
+      },
+      {
+        "target": "HIP89211",
+        "role": "ON2",
+        "name": "Parkes_57956_46525_HIP89211_S_fine.h5",
+        "mjd": 57956.5384837963,
+        "tests": {
+          "fixed_original_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0.010204255741040042,
+            "best": {
+              "score": 1.8381402492523193,
+              "persistence": 0,
+              "frequency_mhz": 3149.9781447574496,
+              "drift_hz_s": 0.010204255741040042
+            },
+            "strong": false
+          },
+          "fixed_zero_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0,
+            "best": {
+              "score": 1.8381402492523193,
+              "persistence": 0,
+              "frequency_mhz": 3149.9781447574496,
+              "drift_hz_s": 0.010204255741040042
+            },
+            "strong": false
+          },
+          "reverse_control_fixed": {
+            "predicted_mhz": 3149.9779942557216,
+            "predicted_drift_hz_s": -0.04081702296416017,
+            "best": {
+              "score": 3.102458953857422,
+              "persistence": 0,
+              "frequency_mhz": 3149.9779855012894,
+              "drift_hz_s": -0.05102127870520021
+            },
+            "strong": false
+          }
+        }
+      },
+      {
+        "target": "HIP89211",
+        "role": "OFF2",
+        "name": "Parkes_57956_46878_HIP89211_R_fine.h5",
+        "mjd": 57956.54256944444,
+        "tests": {
+          "fixed_original_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0.010204255741040042,
+            "best": {
+              "score": 2.592808485031128,
+              "persistence": 0,
+              "frequency_mhz": 3149.978169903159,
+              "drift_hz_s": 0.020408511482080085
+            },
+            "strong": false
+          },
+          "fixed_zero_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0,
+            "best": {
+              "score": 2.4769246578216553,
+              "persistence": 0,
+              "frequency_mhz": 3149.9781782850623,
+              "drift_hz_s": -0.010204255741040042
+            },
+            "strong": false
+          },
+          "reverse_control_fixed": {
+            "predicted_mhz": 3149.9779942557216,
+            "predicted_drift_hz_s": -0.04081702296416017,
+            "best": {
+              "score": 1.972731351852417,
+              "persistence": 0,
+              "frequency_mhz": 3149.977979913354,
+              "drift_hz_s": -0.04081702296416017
+            },
+            "strong": false
+          }
+        }
+      }
+    ],
+    "extra": [
+      {
+        "name": "Parkes_57782_55314_HIP47103_S_fine.h5",
+        "role": "EXTRA_SAME_DAY_S",
+        "url": "http://blpd8.ssl.berkeley.edu/dl/Parkes_57782_55314_HIP47103_S_fine.h5",
+        "status": "SCREEN_COMPLETE",
+        "tests": {
+          "fixed_original_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0.010204255741040042,
+            "best": {
+              "score": 45.2370491027832,
+              "persistence": 0.5,
+              "frequency_mhz": 3149.9781479239464,
+              "drift_hz_s": 0.010204255741040042
+            },
+            "strong": true,
+            "artifact": "9f16bad7334de3f068356d9e.npy",
+            "sha256": "f638b5f34a9416f90ae97982e3a85f67907d49656e8489da0464d620a5c539dd",
+            "tile": {
+              "channel0_mhz": 3149.9731578975916,
+              "df_hz": 2.7939677238464355,
+              "ts": 18.253611008
+            }
+          },
+          "fixed_zero_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0,
+            "best": {
+              "score": 45.2370491027832,
+              "persistence": 0.5,
+              "frequency_mhz": 3149.9781479239464,
+              "drift_hz_s": 0.010204255741040042
+            },
+            "strong": true,
+            "artifact": "9f16bad7334de3f068356d9e.npy",
+            "sha256": "f638b5f34a9416f90ae97982e3a85f67907d49656e8489da0464d620a5c539dd",
+            "tile": {
+              "channel0_mhz": 3149.9731578975916,
+              "df_hz": 2.7939677238464355,
+              "ts": 18.253611008
+            }
+          },
+          "reverse_control_fixed": {
+            "predicted_mhz": 3149.9779942557216,
+            "predicted_drift_hz_s": -0.04081702296416017,
+            "best": {
+              "score": 3.5151052474975586,
+              "persistence": 0.0625,
+              "frequency_mhz": 3149.9780054315925,
+              "drift_hz_s": -0.05102127870520021
+            },
+            "strong": false,
+            "artifact": "06cca8047af2b12798525704.npy",
+            "sha256": "84af9330e8a644d2c26da3aa665a0e8aee3532b8126442ad7f11585fa7e5c00b",
+            "tile": {
+              "channel0_mhz": 3149.972993053496,
+              "df_hz": 2.7939677238464355,
+              "ts": 18.253611008
+            }
+          },
+          "continuous": {
+            "predicted_mhz": 3149.978173406184,
+            "predicted_drift_hz_s": 0.010204255741040042,
+            "best": {
+              "score": 45.24134063720703,
+              "persistence": 0.5,
+              "frequency_mhz": 3149.9781479239464,
+              "drift_hz_s": 0.010204255741040042
+            },
+            "strong": true,
+            "artifact": "58b0b1172a6051d9c1e331d6.npy",
+            "sha256": "6c801eec371e2b52985065c5f1bd5103e1a0c805bc60bf1d35993caa22412706",
+            "tile": {
+              "channel0_mhz": 3149.97317186743,
+              "df_hz": 2.7939677238464355,
+              "ts": 18.253611008
+            }
+          },
+          "constant_barycentric": {
+            "predicted_mhz": 3149.9776967213406,
+            "predicted_drift_hz_s": -0.3291976808146763,
+            "best": {
+              "score": 2.555288791656494,
+              "persistence": 0,
+              "frequency_mhz": 3149.9776701554656,
+              "drift_hz_s": -0.33674043945432136
+            },
+            "strong": false,
+            "artifact": "7e073831fab505d4f2c55020.npy",
+            "sha256": "f1f8a0d996b2c863b0cf5f338e85b860b71d889a2b2a75dfd59f8d120f6f8259",
+            "tile": {
+              "channel0_mhz": 3149.972696892917,
+              "df_hz": 2.7939677238464355,
+              "ts": 18.253611008
+            }
+          }
+        },
+        "header": {
+          "source": "HIP47103_S",
+          "shape": [
+            16,
+            1,
+            251658240
+          ],
+          "f0": 2741.41796875,
+          "df": 0.0000027939677238464355,
+          "ts": 18.253611008,
+          "mjd": 57782.64020833333,
+          "bounds": [
+            2741.41796875,
+            3444.5429659560323
+          ],
+          "chunks": [
+            1,
+            1,
+            1048576
+          ],
+          "src_raj": "9.600444444444445",
+          "src_dej": "-20.339444444444446"
+        },
+        "bytes_read": 51068477
+      },
+      {
+        "name": "Parkes_57763_67156_HIP47103_S_fine.h5",
+        "role": "EARLIER_ON1",
+        "url": "http://blpd8.ssl.berkeley.edu/dl/Parkes_57763_67156_HIP47103_S_fine.h5",
+        "status": "SCREEN_COMPLETE",
+        "tests": {
+          "fixed_original_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0.010204255741040042,
+            "best": {
+              "score": 3.811554193496704,
+              "persistence": 0.0625,
+              "frequency_mhz": 3149.9781367480755,
+              "drift_hz_s": 0
+            },
+            "strong": false,
+            "artifact": "8a8cdb7dc6932a5907c5ea05.npy",
+            "sha256": "db329565fab823ddf47cd1aca740fa3127d5309338272d9a5d25f64014997e72",
+            "tile": {
+              "channel0_mhz": 3149.9731578975916,
+              "df_hz": 2.7939677238464355,
+              "ts": 18.253611008
+            }
+          },
+          "fixed_zero_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0,
+            "best": {
+              "score": 3.811554193496704,
+              "persistence": 0.0625,
+              "frequency_mhz": 3149.9781367480755,
+              "drift_hz_s": 0
+            },
+            "strong": false,
+            "artifact": "8a8cdb7dc6932a5907c5ea05.npy",
+            "sha256": "db329565fab823ddf47cd1aca740fa3127d5309338272d9a5d25f64014997e72",
+            "tile": {
+              "channel0_mhz": 3149.9731578975916,
+              "df_hz": 2.7939677238464355,
+              "ts": 18.253611008
+            }
+          },
+          "reverse_control_fixed": {
+            "predicted_mhz": 3149.9779942557216,
+            "predicted_drift_hz_s": -0.04081702296416017,
+            "best": {
+              "score": 2.4083638191223145,
+              "persistence": 0,
+              "frequency_mhz": 3149.977977491915,
+              "drift_hz_s": -0.05102127870520021
+            },
+            "strong": false,
+            "artifact": "9300581be50ec8cf9dab18a9.npy",
+            "sha256": "f7d189d6d7e1cd9a9341629638d664bc27cc7da0539de4a389326598c959ef27",
+            "tile": {
+              "channel0_mhz": 3149.972993053496,
+              "df_hz": 2.7939677238464355,
+              "ts": 18.253611008
+            }
+          },
+          "constant_barycentric": {
+            "predicted_mhz": 3150.0485255080557,
+            "predicted_drift_hz_s": -0.26904505975083826,
+            "best": {
+              "score": 2.1243832111358643,
+              "persistence": 0,
+              "frequency_mhz": 3150.048508413136,
+              "drift_hz_s": -0.2755149050080811
+            },
+            "strong": false,
+            "artifact": "d543d3e1b82de2fba849bf56.npy",
+            "sha256": "c1614bfb2e44c77c1cd7a10c4d6d61473391406a81e187225ed811654d5c2404",
+            "tile": {
+              "channel0_mhz": 3150.0435239747167,
+              "df_hz": 2.7939677238464355,
+              "ts": 18.253611008
+            }
+          }
+        },
+        "header": {
+          "source": "HIP47103_S",
+          "shape": [
+            16,
+            1,
+            251658240
+          ],
+          "f0": 2741.41796875,
+          "df": 0.0000027939677238464355,
+          "ts": 18.253611008,
+          "mjd": 57763.77726851852,
+          "bounds": [
+            2741.41796875,
+            3444.5429659560323
+          ],
+          "chunks": [
+            1,
+            1,
+            1048576
+          ],
+          "src_raj": "0.0",
+          "src_dej": "0.0"
+        },
+        "bytes_read": 51064970
+      },
+      {
+        "name": "Parkes_57763_67501_HIP47103_R_fine.h5",
+        "role": "EARLIER_OFF",
+        "url": "http://blpd8.ssl.berkeley.edu/dl/Parkes_57763_67501_HIP47103_R_fine.h5",
+        "status": "SCREEN_COMPLETE",
+        "tests": {
+          "fixed_original_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0.010204255741040042,
+            "best": {
+              "score": 4.792433261871338,
+              "persistence": 0.125,
+              "frequency_mhz": 3149.9781674817204,
+              "drift_hz_s": 0.010204255741040042
+            },
+            "strong": false,
+            "artifact": "470e6301f47069bc4941a228.npy",
+            "sha256": "059eace067c2457f461ade3afd82569972d9b753cc71d7e8f6ac27f6494e2bfc",
+            "tile": {
+              "channel0_mhz": 3149.9731578975916,
+              "df_hz": 2.7939677238464355,
+              "ts": 18.253611008
+            }
+          },
+          "fixed_zero_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0,
+            "best": {
+              "score": 4.792433261871338,
+              "persistence": 0.125,
+              "frequency_mhz": 3149.9781674817204,
+              "drift_hz_s": 0.010204255741040042
+            },
+            "strong": false,
+            "artifact": "470e6301f47069bc4941a228.npy",
+            "sha256": "059eace067c2457f461ade3afd82569972d9b753cc71d7e8f6ac27f6494e2bfc",
+            "tile": {
+              "channel0_mhz": 3149.9731578975916,
+              "df_hz": 2.7939677238464355,
+              "ts": 18.253611008
+            }
+          },
+          "reverse_control_fixed": {
+            "predicted_mhz": 3149.9779942557216,
+            "predicted_drift_hz_s": -0.04081702296416017,
+            "best": {
+              "score": 2.4041950702667236,
+              "persistence": 0,
+              "frequency_mhz": 3149.978019401431,
+              "drift_hz_s": -0.04081702296416017
+            },
+            "strong": false,
+            "artifact": "5a4cfd1bcca0d1c6f6bd8610.npy",
+            "sha256": "911296a331cdf6da4b027c06b960a5cc716f1393a832a2509c55e1153917cf98",
+            "tile": {
+              "channel0_mhz": 3149.972993053496,
+              "df_hz": 2.7939677238464355,
+              "ts": 18.253611008
+            }
+          },
+          "constant_barycentric": {
+            "predicted_mhz": 3150.04843283221,
+            "predicted_drift_hz_s": -0.2649371193632444,
+            "best": {
+              "score": 3.1472692489624023,
+              "persistence": 0,
+              "frequency_mhz": 3150.0484134182334,
+              "drift_hz_s": -0.25510639352600106
+            },
+            "strong": false,
+            "artifact": "42a4c2d9ef5883f6c482b453.npy",
+            "sha256": "b67684b78e3184aaef2bc27c25ff287b7d90797d9f23a26df9acb6fc5c8f9017",
+            "tile": {
+              "channel0_mhz": 3150.043431773782,
+              "df_hz": 2.7939677238464355,
+              "ts": 18.253611008
+            }
+          }
+        },
+        "header": {
+          "source": "HIP47103_R",
+          "shape": [
+            16,
+            1,
+            251658240
+          ],
+          "f0": 2741.41796875,
+          "df": 0.0000027939677238464355,
+          "ts": 18.253611008,
+          "mjd": 57763.78126157408,
+          "bounds": [
+            2741.41796875,
+            3444.5429659560323
+          ],
+          "chunks": [
+            1,
+            1,
+            1048576
+          ],
+          "src_raj": "0.0",
+          "src_dej": "0.0"
+        },
+        "bytes_read": 51119631
+      },
+      {
+        "name": "Parkes_57763_67840_HIP47103_S_fine.h5",
+        "role": "EARLIER_ON2",
+        "url": "http://blpd8.ssl.berkeley.edu/dl/Parkes_57763_67840_HIP47103_S_fine.h5",
+        "status": "SCREEN_COMPLETE",
+        "tests": {
+          "fixed_original_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0.010204255741040042,
+            "best": {
+              "score": 4.103978633880615,
+              "persistence": 0,
+              "frequency_mhz": 3149.9781339541078,
+              "drift_hz_s": 0
+            },
+            "strong": false,
+            "artifact": "a95e558c7ec7213f5e93701a.npy",
+            "sha256": "a5cc444f064590ae5a2adf1a611728deb199c5710f8cc809412de05d83fb7218",
+            "tile": {
+              "channel0_mhz": 3149.9731578975916,
+              "df_hz": 2.7939677238464355,
+              "ts": 18.253611008
+            }
+          },
+          "fixed_zero_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0,
+            "best": {
+              "score": 4.103978633880615,
+              "persistence": 0,
+              "frequency_mhz": 3149.9781339541078,
+              "drift_hz_s": 0
+            },
+            "strong": false,
+            "artifact": "a95e558c7ec7213f5e93701a.npy",
+            "sha256": "a5cc444f064590ae5a2adf1a611728deb199c5710f8cc809412de05d83fb7218",
+            "tile": {
+              "channel0_mhz": 3149.9731578975916,
+              "df_hz": 2.7939677238464355,
+              "ts": 18.253611008
+            }
+          },
+          "reverse_control_fixed": {
+            "predicted_mhz": 3149.9779942557216,
+            "predicted_drift_hz_s": -0.04081702296416017,
+            "best": {
+              "score": 3.025092601776123,
+              "persistence": 0,
+              "frequency_mhz": 3149.977991461754,
+              "drift_hz_s": -0.05102127870520021
+            },
+            "strong": false,
+            "artifact": "0105cf0fe973158ad4ce1913.npy",
+            "sha256": "5d7dd0133d6d1b5a35bf7be3aded2fb7cfe880b1c69d387a3417b13f6e40f0bd",
+            "tile": {
+              "channel0_mhz": 3149.972993053496,
+              "df_hz": 2.7939677238464355,
+              "ts": 18.253611008
+            }
+          },
+          "constant_barycentric": {
+            "predicted_mhz": 3150.0483431533044,
+            "predicted_drift_hz_s": -0.2607613947488342,
+            "best": {
+              "score": 1.659950613975525,
+              "persistence": 0,
+              "frequency_mhz": 3150.048335187137,
+              "drift_hz_s": -0.2755149050080811
+            },
+            "strong": false,
+            "artifact": "bc2f0c4c97f9ce9e0e709e8e.npy",
+            "sha256": "61166d17ba672559d29199d71cadcae02e17d81ec2befe1a26da88fdf51ba9c6",
+            "tile": {
+              "channel0_mhz": 3150.0433423668146,
+              "df_hz": 2.7939677238464355,
+              "ts": 18.253611008
+            }
+          }
+        },
+        "header": {
+          "source": "HIP47103_S",
+          "shape": [
+            16,
+            1,
+            251658240
+          ],
+          "f0": 2741.41796875,
+          "df": 0.0000027939677238464355,
+          "ts": 18.253611008,
+          "mjd": 57763.78518518519,
+          "bounds": [
+            2741.41796875,
+            3444.5429659560323
+          ],
+          "chunks": [
+            1,
+            1,
+            1048576
+          ],
+          "src_raj": "0.0",
+          "src_dej": "0.0"
+        },
+        "bytes_read": 51058956
+      },
+      {
+        "name": "Parkes_57789_44482_HIP47103_S_fine.h5",
+        "role": "LATER_ON1",
+        "url": "http://blpd8.ssl.berkeley.edu/dl/Parkes_57789_44482_HIP47103_S_fine.h5",
+        "status": "SCREEN_COMPLETE",
+        "tests": {
+          "fixed_original_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0.010204255741040042,
+            "best": {
+              "score": 8.01167106628418,
+              "persistence": 0.3125,
+              "frequency_mhz": 3149.9781671091914,
+              "drift_hz_s": 0
+            },
+            "strong": false,
+            "artifact": "3605f5c88ae227f246317cb8.npy",
+            "sha256": "91635cba201e22b271e139563dd26287f1f95eb69752a44161bce5e5675e35dd",
+            "tile": {
+              "channel0_mhz": 3149.9731575250626,
+              "df_hz": 2.7939677238464355,
+              "ts": 18.253611008
+            }
+          },
+          "fixed_zero_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0,
+            "best": {
+              "score": 8.01167106628418,
+              "persistence": 0.3125,
+              "frequency_mhz": 3149.9781671091914,
+              "drift_hz_s": 0
+            },
+            "strong": false,
+            "artifact": "3605f5c88ae227f246317cb8.npy",
+            "sha256": "91635cba201e22b271e139563dd26287f1f95eb69752a44161bce5e5675e35dd",
+            "tile": {
+              "channel0_mhz": 3149.9731575250626,
+              "df_hz": 2.7939677238464355,
+              "ts": 18.253611008
+            }
+          },
+          "reverse_control_fixed": {
+            "predicted_mhz": 3149.9779942557216,
+            "predicted_drift_hz_s": -0.04081702296416017,
+            "best": {
+              "score": 3.3893845081329346,
+              "persistence": 0.125,
+              "frequency_mhz": 3149.9780022650957,
+              "drift_hz_s": -0.030612767223120126
+            },
+            "strong": false,
+            "artifact": "094e2074fc9016d63648c079.npy",
+            "sha256": "08abb6b06f3beee710a8648b5f4b237cd07592a7415c80334fca7a4128eefcce",
+            "tile": {
+              "channel0_mhz": 3149.972992680967,
+              "df_hz": 2.7939677238464355,
+              "ts": 18.253611008
+            }
+          },
+          "constant_barycentric": {
+            "predicted_mhz": 3149.9500505194037,
+            "predicted_drift_hz_s": -0.2834266727207731,
+            "best": {
+              "score": 2.2496466636657715,
+              "persistence": 0,
+              "frequency_mhz": 3149.9500793516636,
+              "drift_hz_s": -0.2755149050080811
+            },
+            "strong": false,
+            "artifact": "665b3a24bd3453fe29cbdd6d.npy",
+            "sha256": "b7b279a38887034ca03e8199d12bae181eb612b3c74cb583327035fcf90fd308",
+            "tile": {
+              "channel0_mhz": 3149.9450502097607,
+              "df_hz": 2.7939677238464355,
+              "ts": 18.253611008
+            }
+          }
+        },
+        "header": {
+          "source": "HIP47103_S",
+          "shape": [
+            16,
+            1,
+            250609664
+          ],
+          "f0": 2743.95703125,
+          "df": 0.0000027939677238464355,
+          "ts": 18.253611008,
+          "mjd": 57789.51483796296,
+          "bounds": [
+            2743.95703125,
+            3444.1523409560323
+          ],
+          "chunks": [
+            1,
+            1,
+            1048576
+          ],
+          "src_raj": "9.600444444444445",
+          "src_dej": "-20.339444444444446"
+        },
+        "bytes_read": 51092323
+      },
+      {
+        "name": "Parkes_57789_44831_HIP47103_R_fine.h5",
+        "role": "LATER_OFF",
+        "url": "http://blpd8.ssl.berkeley.edu/dl/Parkes_57789_44831_HIP47103_R_fine.h5",
+        "status": "SCREEN_COMPLETE",
+        "tests": {
+          "fixed_original_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0.010204255741040042,
+            "best": {
+              "score": 2.368812322616577,
+              "persistence": 0.0625,
+              "frequency_mhz": 3149.978172697127,
+              "drift_hz_s": 0
+            },
+            "strong": false,
+            "artifact": "050ede8016ffde6cffe02085.npy",
+            "sha256": "c05221a9b2268d9ce8c4be55b0f156fe97f2c801b08a4816d9dbfd32d955a64f",
+            "tile": {
+              "channel0_mhz": 3149.9731575250626,
+              "df_hz": 2.7939677238464355,
+              "ts": 18.253611008
+            }
+          },
+          "fixed_zero_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0,
+            "best": {
+              "score": 2.368812322616577,
+              "persistence": 0.0625,
+              "frequency_mhz": 3149.978172697127,
+              "drift_hz_s": 0
+            },
+            "strong": false,
+            "artifact": "050ede8016ffde6cffe02085.npy",
+            "sha256": "c05221a9b2268d9ce8c4be55b0f156fe97f2c801b08a4816d9dbfd32d955a64f",
+            "tile": {
+              "channel0_mhz": 3149.9731575250626,
+              "df_hz": 2.7939677238464355,
+              "ts": 18.253611008
+            }
+          },
+          "reverse_control_fixed": {
+            "predicted_mhz": 3149.9779942557216,
+            "predicted_drift_hz_s": -0.04081702296416017,
+            "best": {
+              "score": 3.726860523223877,
+              "persistence": 0.0625,
+              "frequency_mhz": 3149.9779855012894,
+              "drift_hz_s": -0.04081702296416017
+            },
+            "strong": false,
+            "artifact": "f349726715aa6de6e2c9dacc.npy",
+            "sha256": "bbce7f94b9c45734b9bc6e086a559a314a4e1ad0ad4a288cc7f02fa8c9b87ebf",
+            "tile": {
+              "channel0_mhz": 3149.972992680967,
+              "df_hz": 2.7939677238464355,
+              "ts": 18.253611008
+            }
+          },
+          "constant_barycentric": {
+            "predicted_mhz": 3149.9499514538547,
+            "predicted_drift_hz_s": -0.287361602476768,
+            "best": {
+              "score": 2.691044807434082,
+              "persistence": 0,
+              "frequency_mhz": 3149.949922889471,
+              "drift_hz_s": -0.2857191607491212
+            },
+            "strong": false,
+            "artifact": "483cf2ccff0d9ed5c7dcbef3.npy",
+            "sha256": "742b28ed092d97ba8f99a57c2d4c03faec7bfda71aa58316a8ba754e690d2245",
+            "tile": {
+              "channel0_mhz": 3149.9449496269226,
+              "df_hz": 2.7939677238464355,
+              "ts": 18.253611008
+            }
+          }
+        },
+        "header": {
+          "source": "HIP47103_R",
+          "shape": [
+            16,
+            1,
+            250609664
+          ],
+          "f0": 2743.95703125,
+          "df": 0.0000027939677238464355,
+          "ts": 18.253611008,
+          "mjd": 57789.51887731482,
+          "bounds": [
+            2743.95703125,
+            3444.1523409560323
+          ],
+          "chunks": [
+            1,
+            1,
+            1048576
+          ],
+          "src_raj": "9.600444444444445",
+          "src_dej": "-20.839444444444446"
+        },
+        "bytes_read": 51109508
+      },
+      {
+        "name": "Parkes_57789_45172_HIP47103_S_fine.h5",
+        "role": "LATER_ON2",
+        "url": "http://blpd8.ssl.berkeley.edu/dl/Parkes_57789_45172_HIP47103_S_fine.h5",
+        "status": "SCREEN_COMPLETE",
+        "tests": {
+          "fixed_original_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0.010204255741040042,
+            "best": {
+              "score": 2.9697186946868896,
+              "persistence": 0.0625,
+              "frequency_mhz": 3149.9781335815787,
+              "drift_hz_s": 0.010204255741040042
+            },
+            "strong": false,
+            "artifact": "e31c336953d8a85758a12028.npy",
+            "sha256": "9952f9a8596822b0a18164a5461777b3c73adfdbd6010116420ba62ce71d8618",
+            "tile": {
+              "channel0_mhz": 3149.9731575250626,
+              "df_hz": 2.7939677238464355,
+              "ts": 18.253611008
+            }
+          },
+          "fixed_zero_drift": {
+            "predicted_mhz": 3149.9781590998173,
+            "predicted_drift_hz_s": 0,
+            "best": {
+              "score": 2.9697186946868896,
+              "persistence": 0.0625,
+              "frequency_mhz": 3149.9781335815787,
+              "drift_hz_s": 0.010204255741040042
+            },
+            "strong": false,
+            "artifact": "e31c336953d8a85758a12028.npy",
+            "sha256": "9952f9a8596822b0a18164a5461777b3c73adfdbd6010116420ba62ce71d8618",
+            "tile": {
+              "channel0_mhz": 3149.9731575250626,
+              "df_hz": 2.7939677238464355,
+              "ts": 18.253611008
+            }
+          },
+          "reverse_control_fixed": {
+            "predicted_mhz": 3149.9779942557216,
+            "predicted_drift_hz_s": -0.04081702296416017,
+            "best": {
+              "score": 2.578533172607422,
+              "persistence": 0,
+              "frequency_mhz": 3149.978019028902,
+              "drift_hz_s": -0.030612767223120126
+            },
+            "strong": false,
+            "artifact": "a2b2116f986a887dbbccbf3e.npy",
+            "sha256": "7b9c797fe2e9f8e6dbe9e709054724459c2fa70eea5d5b3644c414747aca7ebf",
+            "tile": {
+              "channel0_mhz": 3149.972992680967,
+              "df_hz": 2.7939677238464355,
+              "ts": 18.253611008
+            }
+          },
+          "constant_barycentric": {
+            "predicted_mhz": 3149.9498533378455,
+            "predicted_drift_hz_s": -0.2910588132665405,
+            "best": {
+              "score": 2.032640218734741,
+              "persistence": 0.0625,
+              "frequency_mhz": 3149.949864216149,
+              "drift_hz_s": -0.29592341649016124
+            },
+            "strong": false,
+            "artifact": "fd99bdc4eb142595495eedd9.npy",
+            "sha256": "3b1d79e5666f3492a5872522403271d9eed8d2614a29fd740a501d0f53263a9f",
+            "tile": {
+              "channel0_mhz": 3149.9448518380523,
+              "df_hz": 2.7939677238464355,
+              "ts": 18.253611008
+            }
+          }
+        },
+        "header": {
+          "source": "HIP47103_S",
+          "shape": [
+            16,
+            1,
+            250609664
+          ],
+          "f0": 2743.95703125,
+          "df": 0.0000027939677238464355,
+          "ts": 18.253611008,
+          "mjd": 57789.522824074076,
+          "bounds": [
+            2743.95703125,
+            3444.1523409560323
+          ],
+          "chunks": [
+            1,
+            1,
+            1048576
+          ],
+          "src_raj": "9.600444444444445",
+          "src_dej": "-20.339444444444446"
+        },
+        "bytes_read": 51094889
+      }
+    ],
+    "artifacts": [
+      {
+        "id": 14325217160,
+        "name": "janus-seti-r12-falsification",
+        "digest": "sha256:b606c5eb09e616f46f81baed0adad9ae8a05f3ae8b2572a84bcc5fe4d53c98f3",
+        "size": 4356775
+      }
+    ],
+    "disposition": "Same-session forward candidate at 3149.978159 MHz recovered in all 3 ON and not strong in either OFF under frozen tests; 12 other-target scans negative. No strong recovery in 4 ON scans across earlier and later days (fixed topocentric or constant barycentric model). Separate reverse-control line strong in 2 OFF scans; no common emitter established. Keep HOLD, not a discovery.",
+    "next_gate": "Precommit remaining distinct archive epochs and local wider-band interference morphology, compare contemporaneous nearby directions when available, independently calibrate beam and flux, and request independent observation before any promotion."
   }
 }
