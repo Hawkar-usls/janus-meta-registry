@@ -1,7 +1,7 @@
 {
   "schema": "janus.cosmos.seti.r24.odontocrystal.v1",
   "date": "2026-11-17",
-  "status": "R24A_COMPLETE_SENSITIVITY_HOLD",
+  "status": "R24A_COMPLETE_R24B_RUNNING_R24CD_PILOT_NEGATIVE",
   "production_adoption": false,
   "donor": {
     "registry": "https://github.com/Hawkar-usls/janus-meta-registry/commit/20944152b3951d9941be0bcc3dee76a12eecee26",
@@ -196,5 +196,50 @@
       "gap_clip": 1.336799438
     },
     "interpretation": "All alerts in persistent RFI regime. No genuine localization, no gain. Pooled threshold dominated by stationary interference. Strong negative control; no threshold changes on test. Local reproduction of recurrence, not external validation nor archive exam."
+  },
+  "r24b": {
+    "status": "IN_PROGRESS",
+    "run": "https://github.com/Hawkar-usls/Janus-Cosmos/actions/runs/44161667779",
+    "job": 134316827463,
+    "protocol_commit": "64338dcbfebb9837cdbc933175c27b718a3d2052",
+    "implementation_commit": "92ed6c42f3e3b201826b0f00f5500a2760bf66ff",
+    "launch_commit": "593ff11538c0f18f4cb60d5e2decfafbabd18f09",
+    "scope": "Fresh archive targets, Cousteau-inspired shape/scale residual correction and two strata, raw exact fast baseline; 1024 paired examples, stationary attenuation risk; no independent sonar code execution."
+  },
+  "r24cd": {
+    "status": "LOCAL_DEVELOPMENT_PILOT_NO_ADVANTAGE",
+    "protocol_sha256": "2b91ea2363c4a4f5ecb5721abea6aee278e0f6cf69caee7757617da7a06b1ae7",
+    "code_sha256": "9ad016102672d84ed784f28a25b56a376f069f34365ffdac7438acb33259a837",
+    "result_sha256": "c537ac6b4dd53d2760acd02d76b673acc64731d2f9d37e7793c4811769b47c6b",
+    "train_sequences_per_model": 128,
+    "test_sequences_per_model": 64,
+    "steps_per_model": 120,
+    "hologpt": {
+      "source_sha256": "bf26689525cdd1be7677a2ab72700a408c83053d7babc86d5290ffe3bc20bbbe",
+      "weights_sha256": "9c58001be4e5c7f962e3922fecd2e6341bfd0f659b846c629cfaeeb049b38da6",
+      "test_predictions": 448,
+      "mse": {
+        "HoloGPT_TEST2": 0.16066592406778418,
+        "ridge": 0.13485691027024052,
+        "neighbor_mean": 0.14593689580930172,
+        "zero": 0.25175747114178176
+      },
+      "train_seconds": 2.672262892,
+      "inference_seconds": 0.62804336
+    },
+    "fractalgpt": {
+      "source_sha256": "11e6c97ae7169a0fae4e0ad17f2fb7fb23b10265b04b4b057e3c968d6d0a3662",
+      "weights_sha256": "261fb3b506893937f52b90a9a85817cc6fa1048460d4e03d56e4a1535aaabca5",
+      "test_predictions": 320,
+      "mse_bins_squared": {
+        "FractalGPT": 3.8277887614478714,
+        "ridge": 1.0205942134168842,
+        "linear": 1.2108309539215114,
+        "persistence": 1.358579057005445
+      },
+      "train_seconds": 2.552188701,
+      "inference_seconds": 0.511872961
+    },
+    "scope": "Original Python donors executed locally with fresh synthetic sequence split. Not full archive detector integration; checkpoints and code in downloadable local archive, not uploaded to GitHub. No incremental gain demonstrated."
   }
 }
