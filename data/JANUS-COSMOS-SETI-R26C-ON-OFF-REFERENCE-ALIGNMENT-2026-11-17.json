@@ -1,7 +1,7 @@
 {
   "schema": "janus.cosmos.seti.r26c.reference_alignment.v1",
   "date": "2026-11-17",
-  "status": "R26C_LAUNCHED_TWO_JOBS_RESULTS_OPEN",
+  "status": "R26C_PAIRED_RUNNING_BLC_ROLE_FIX_RETRY",
   "scope": "Own JANUS mechanisms adapted to radio; external literature used for validation, not copied algorithm. Independent reference observation != independent instrument. No technosignature claim.",
   "r26b": {
     "status": "SYNTHETIC_ONLY",
@@ -40,7 +40,20 @@
       "blc_original_scans": 15
     },
     "status": "IN_PROGRESS",
-    "gate": "Exact physical frequency alignment before local bounded registration; compare raw and registered with same control-calibration budget. Preserve known BLC1 as detection positive but terrestrial RFI origin negative. No classification from ON/OFF alone. Sparse calibration stratum fallback logged; no posthoc retuning."
+    "gate": "Exact physical frequency alignment before local bounded registration; compare raw and registered with same control-calibration budget. Preserve known BLC1 as detection positive but terrestrial RFI origin negative. No classification from ON/OFF alone. Sparse calibration stratum fallback logged; no posthoc retuning.",
+    "blc_first_attempt": {
+      "run": 44167072018,
+      "job": 134335861977,
+      "status": "FAIL_ARCHIVE_ROLE_MAPPING",
+      "reason": "Historical files use CONTROL rather than OFF; no scientific result from failed attempt"
+    },
+    "blc_retry": {
+      "run": "https://github.com/Hawkar-usls/Janus-Cosmos/actions/runs/44167507835",
+      "fix_commit": "4032da48644694e8a4657b1b51c7e8ac3f529c81",
+      "workflow_commit": "12aa060b068698c5bebb3ff938bf0bcac80bf17d",
+      "status": "IN_PROGRESS"
+    },
+    "paired_status": "IN_PROGRESS_SELFTEST_AND_TARGET_FREEZE_PASSED"
   },
   "donor_scout": [
     {
@@ -98,12 +111,17 @@
     {
       "url": "https://turbo-seti.readthedocs.io/en/latest/find_event.html",
       "role": "external cadence benchmark only"
+    },
+    {
+      "url": "https://github.com/UCBerkeleySETI/turbo_seti/blob/master/README.md",
+      "role": "Known Voyager 1 test data drift and carrier comparator; no external algorithm imported"
     }
   ],
   "next": [
     "R26D harmonic/lookalike catalog with controlled nulls and independent time support",
     "R26E EYE competing cause classifier only after empirical calibration and independent test",
-    "Acquire independently known spacecraft transmission positive control; no known extraterrestrial positive"
+    "Acquire independently known spacecraft transmission positive control; no known extraterrestrial positive",
+    "Voyager1.single_coarse.fine_res.h5 known human spacecraft downlink from Berkeley: validate verified acquisition separately, no ON/OFF origin inference from single scan"
   ],
   "production_adoption": false,
   "confirmed_technosignatures": 0
