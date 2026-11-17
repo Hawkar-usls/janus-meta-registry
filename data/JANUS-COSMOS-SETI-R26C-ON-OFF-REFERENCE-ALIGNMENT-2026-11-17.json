@@ -1,7 +1,7 @@
 {
   "schema": "janus.cosmos.seti.r26c.reference_alignment.v1",
   "date": "2026-11-17",
-  "status": "R26C_D_F_COMPLETE_R26E_RUNNING_RESEARCH_ONLY",
+  "status": "R26C_D_E_F_COMPLETE_RESEARCH_ONLY_ORIGIN_HOLD",
   "scope": "Own JANUS mechanisms adapted to radio; external literature used for validation, not copied algorithm. Independent reference observation != independent instrument. No technosignature claim.",
   "r26b": {
     "status": "SYNTHETIC_ONLY",
@@ -853,10 +853,10 @@
     }
   ],
   "next": [
-    "R26E pattern posterior/abstention check",
-    "R27 fresh target heldout family exam and weak injected anchors with contamination controls",
-    "R27 actual cross-band BLC1 family from public raw observations and comparison with published lookalike list",
-    "R27 spacecraft vs terrestrial RFI external causally independent evidence; known-source samples and independent receiver metadata"
+    "R27A new independently selected archive targets, weak anchors 0.75–2 sigma, unknown spacing and time-varying/mirrored controls, expand calibration strata",
+    "R27B genuine broad-band BLC1 lookalike recovery and independent physical controls, no synthetic spacing oracle",
+    "R27C separate DC center instrumental spike from Voyager carrier while protecting unknown stationary signals",
+    "R27D real origin evidence calibration and independent custodian before EYE classification"
   ],
   "production_adoption": false,
   "confirmed_technosignatures": 0,
@@ -1184,10 +1184,167 @@
   "r26e": {
     "run": 44170024979,
     "job": 134346337185,
-    "status": "IN_PROGRESS",
+    "status": "COMPLETE_DEVELOPMENT_ABSTENTION_REQUIRED",
     "donor_commit": "3b33167ea61b4289aa95201b19a98c2c80815127",
     "protocol_commit": "0c719e6ec74ec2f07137157535767ac9fc6b947b",
     "code_commit": "5a19258df4e99336ea5aa764fc3fc621e4641ff1",
-    "workflow_commit": "f7b1c6eb403ff1d9954702f39f11dc2c294bcd27"
+    "workflow_commit": "f7b1c6eb403ff1d9954702f39f11dc2c294bcd27",
+    "artifact": {
+      "id": 14366737923,
+      "digest": "sha256:b979132b3fec81fc734dcecff519a9460e906641e35746f3ef43f011e1a3b472"
+    },
+    "result": {
+      "status": "DEVELOPMENT_ONLY",
+      "calibration_examples": 384,
+      "evaluation_examples": 768,
+      "model_count": 4,
+      "joint_outcome_count": 8,
+      "policy_status": "ROBUST_NON_IDENTIFIABLE_UNDER_DECLARED_MODEL_SET",
+      "real_origin_status": "ROBUST_NON_IDENTIFIABLE_UNDER_DECLARED_MODEL_SET",
+      "correct": 332,
+      "wrong": 0,
+      "abstain": 436,
+      "counts": {
+        "family": {
+          "examples": 128,
+          "anchor_localized": 128,
+          "abstain": 128,
+          "correct": 0,
+          "wrong": 0,
+          "outcome_counts": {
+            "100": 0,
+            "101": 0,
+            "110": 0,
+            "111": 21,
+            "000": 0,
+            "001": 0,
+            "010": 0,
+            "011": 107
+          }
+        },
+        "mirror": {
+          "examples": 128,
+          "anchor_localized": 128,
+          "abstain": 128,
+          "correct": 0,
+          "wrong": 0,
+          "outcome_counts": {
+            "100": 0,
+            "101": 0,
+            "110": 0,
+            "111": 20,
+            "000": 0,
+            "001": 0,
+            "010": 0,
+            "011": 108
+          }
+        },
+        "isolated": {
+          "examples": 128,
+          "anchor_localized": 128,
+          "abstain": 1,
+          "correct": 127,
+          "wrong": 0,
+          "outcome_counts": {
+            "100": 0,
+            "101": 0,
+            "110": 0,
+            "111": 0,
+            "000": 127,
+            "001": 1,
+            "010": 0,
+            "011": 0
+          }
+        },
+        "unrelated": {
+          "examples": 128,
+          "anchor_localized": 128,
+          "abstain": 50,
+          "correct": 78,
+          "wrong": 0,
+          "outcome_counts": {
+            "100": 12,
+            "101": 3,
+            "110": 8,
+            "111": 0,
+            "000": 78,
+            "001": 6,
+            "010": 17,
+            "011": 4
+          }
+        },
+        "repeat_only": {
+          "examples": 128,
+          "anchor_localized": 128,
+          "abstain": 1,
+          "correct": 127,
+          "wrong": 0,
+          "outcome_counts": {
+            "100": 0,
+            "101": 0,
+            "110": 0,
+            "111": 0,
+            "000": 127,
+            "001": 1,
+            "010": 0,
+            "011": 0
+          }
+        },
+        "on_only_comb": {
+          "examples": 128,
+          "anchor_localized": 128,
+          "abstain": 128,
+          "correct": 0,
+          "wrong": 0,
+          "outcome_counts": {
+            "100": 0,
+            "101": 0,
+            "110": 18,
+            "111": 3,
+            "000": 0,
+            "001": 0,
+            "010": 88,
+            "011": 19
+          }
+        }
+      },
+      "outcomes": {
+        "100": {
+          "target": null,
+          "minimum_model_confidence": 0.7857142857999999
+        },
+        "101": {
+          "target": null,
+          "minimum_model_confidence": 0.5000000001
+        },
+        "110": {
+          "target": null,
+          "minimum_model_confidence": 0.6875
+        },
+        "111": {
+          "target": null,
+          "minimum_model_confidence": 0.3688524591
+        },
+        "000": {
+          "target": "CONTROL_PATTERN",
+          "minimum_model_confidence": 0.9827586207
+        },
+        "001": {
+          "target": null,
+          "minimum_model_confidence": 0.75
+        },
+        "010": {
+          "target": null,
+          "minimum_model_confidence": 0.7350993379
+        },
+        "011": {
+          "target": null,
+          "minimum_model_confidence": 0.6023622046999999
+        }
+      },
+      "scope": "New injection seed on previously viewed R26C backgrounds. Fit thresholds and 8-outcome joint categorical likelihood only on 2 calibration targets. Treat correlated frequency, morphology and OFF scores as one test, not independent evidence; two per-target empirical models with two declared prior sensitivities. Finite synthetic pattern classes, no sky/terrestrial causal probabilities. Real archive test likelihood unavailable, must abstain. No automatic veto or production adoption.",
+      "production_adoption": false
+    },
+    "interpretation": "Zero wrong synthetic pattern decisions comes from abstention on 436/768 examples, including every family and ON-only comb. All 332 correct decisions are CONTROL_PATTERN, so no demonstrated family identification. Real origin remains unidentifiable; do not use as filter or verdict. Only 2 target calibration and reused archive backgrounds; new injections, not independent archive validation."
   }
 }
