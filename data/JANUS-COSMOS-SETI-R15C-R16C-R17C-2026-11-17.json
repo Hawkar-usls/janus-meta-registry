@@ -1,16 +1,24 @@
 {
   "schema": "janus.cosmos.seti.parallel_c.v1",
   "date": "2026-11-17",
-  "status": "RUNNING_OR_QUEUED_RESULTS_UNVERIFIED",
+  "status": "R16C_R17C_RUNNING_R15C2_REPAIR_RUNNING",
   "run": "https://github.com/Hawkar-usls/Janus-Cosmos/actions/runs/44125006847",
   "protocol": "https://github.com/Hawkar-usls/Janus-Cosmos/blob/687f8c871a784a8d479c966da01772045f7ec36e/research/seti/r15c_r16c_r17c_protocol.json",
   "workflow_commit": "8695ae54cf1a49540d51044aee89b3a50e40ac18",
   "lanes": {
     "R15C": {
-      "status": "PENDING_RESULT",
+      "status": "FIRST_ATTEMPT_FAILED_ARTIFACT_DIGEST_MISMATCH",
       "code_commit": "c668082c06902ed497c93acaf007f7a84e8742ed",
       "published_anchor": "blc03_ProxCen_S_2019-04-29T13:47:46.000.fil",
-      "scope": "Authenticate R15B artifact, strict single-IF float32 SIGPROC parser and exact HTTP byte range reads, same-day controls; targeted 5 kHz replay."
+      "scope": "Authenticate R15B artifact, strict single-IF float32 SIGPROC parser and exact HTTP byte range reads, same-day controls; targeted 5 kHz replay.",
+      "failure": "R15C refused R15B archive before metadata or spectral reads because downloaded ZIP SHA256 did not equal expected artifact digest; no integrity bypass.",
+      "repair": {
+        "status": "RUNNING_RESULT_UNVERIFIED",
+        "run": "https://github.com/Hawkar-usls/Janus-Cosmos/actions/runs/44125355557",
+        "code_commit": "22f097febd4afb938e08ee435ec18fa913a07b93",
+        "workflow_commit": "baa43c32767eab913fec7a17f6bd24a281ed732c",
+        "scope": "Re-query official ProxCen and 1421-490 public metadata and require exact prior R15B SHA256 values, strict single-IF 32-bit reader and synthetic decoder selftest, require published exact anchor. No frequency or threshold change."
+      }
     },
     "R16C": {
       "status": "PENDING_RESULT",
