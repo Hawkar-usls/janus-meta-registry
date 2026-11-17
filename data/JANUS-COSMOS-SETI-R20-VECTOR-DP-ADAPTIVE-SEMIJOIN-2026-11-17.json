@@ -1,7 +1,7 @@
 {
   "schema": "janus.cosmos.seti.r20.optimization.v1",
   "date": "2026-11-17",
-  "status": "RUNNING_UNVERIFIED",
+  "status": "R20B_COMPLETE_R20A_RUNNING",
   "production_adoption": false,
   "prior": "https://github.com/Hawkar-usls/janus-meta-registry/commit/db51b9e6d460f9f54c6821f2bb020bd3e1953421",
   "r20a": {
@@ -25,10 +25,68 @@
     "protocol_commit": "2347f99f6aef26bde8835762e16817b5ba4dd245",
     "code_commit": "bff299c542faab603730747ed2aa50953fc90d73",
     "launch_commit": "a17eed8f60791edc65c43d569d05a7f06fb6baa9",
-    "status": "IN_PROGRESS",
+    "status": "EXACT_PASS_CACHE_GAIN_ADAPTIVE_INCREMENT_HOLD",
     "planned_calibration_cases": 32,
     "planned_holdout_cases": 64,
-    "scope": "cached exact common supports and frozen cost-based dispatcher; compare full cube, old semijoin, cached, adaptive, include router cost; synthetic stress plus same archive replay"
+    "scope": "cached exact common supports and frozen cost-based dispatcher; compare full cube, old semijoin, cached, adaptive, include router cost; synthetic stress plus same archive replay",
+    "job": 134267911909,
+    "artifact": {
+      "id": 14358455021,
+      "digest": "sha256:ec098f2889d9eb9f3e6167d33bad2841b3336f00227278d1d582e39c91b523df"
+    },
+    "calibration": {
+      "cases": 32,
+      "seconds": 0.767931899,
+      "policy": {
+        "min_cube": 65536,
+        "max_ratio": 0.02
+      }
+    },
+    "holdout": {
+      "cases": 64,
+      "cube": 223415440,
+      "matches": 100797,
+      "mismatches": 0,
+      "metrics": {
+        "dense": [
+          0.427106019,
+          223415440
+        ],
+        "original_semijoin": [
+          0.137570123,
+          172235
+        ],
+        "cached_semijoin": [
+          0.035676734,
+          172235
+        ],
+        "adaptive": [
+          0.03514132,
+          223829
+        ]
+      },
+      "units": [
+        "sum_median_wall_seconds",
+        "expansion"
+      ],
+      "adaptive_routes": {
+        "dense": 16,
+        "cached": 48
+      }
+    },
+    "archive": {
+      "cases": 18,
+      "cube": 1310,
+      "matches": 13,
+      "adaptive_routes": {
+        "dense": 18,
+        "cached": 0
+      },
+      "dense_seconds": 0.000367096,
+      "adaptive_seconds": 0.000364289,
+      "scope": "nonempty-catalog windows only; omitted empty windows not new evidence"
+    },
+    "interpretation": "12.15x vs dense, 3.91x vs old semijoin on synthetic stress; cache is main gain, router ~1.5% faster than cache but not established independent gain; calibration cost not amortized; exact declared relation only."
   },
   "analysis": {
     "r19e_evaluation_load_seconds": 164.57745926400014,
