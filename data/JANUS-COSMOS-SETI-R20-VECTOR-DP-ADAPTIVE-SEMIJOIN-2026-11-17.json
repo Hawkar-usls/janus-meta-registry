@@ -1,7 +1,7 @@
 {
   "schema": "janus.cosmos.seti.r20.optimization.v1",
   "date": "2026-11-17",
-  "status": "R20ABC_COMPLETE_R20D_RUNNING",
+  "status": "R20ABCD_COMPLETE_DEVELOPMENT_ONLY",
   "production_adoption": false,
   "prior": "https://github.com/Hawkar-usls/janus-meta-registry/commit/db51b9e6d460f9f54c6821f2bb020bd3e1953421",
   "r20a": {
@@ -232,7 +232,7 @@
     "artifact_bytes": 92550155
   },
   "r20d": {
-    "status": "RETRY_QUEUED",
+    "status": "DEVELOPMENT_REPLAY_GAIN_TWO_PASS_EXACT",
     "run": "https://github.com/Hawkar-usls/Janus-Cosmos/actions/runs/44149465329",
     "protocol_commit": "a26161f3fa82e4f8281252bd8f90566be8b25515",
     "code_commit": "276a32bc5abbd53405f0c1cd3a8af0cc317f3b7b",
@@ -246,6 +246,93 @@
     "fix_commit": "6f7e421214aec1d83ec9c803b0f08d42d71021c7",
     "retry_commit": "9e391a09d25f806dbd53120a40b0e0d328cde1d9",
     "retry_run": "https://github.com/Hawkar-usls/Janus-Cosmos/actions/runs/44149646090",
-    "scientific_protocol_changed": false
+    "scientific_protocol_changed": false,
+    "job": 134274109923,
+    "artifact": {
+      "id": 14359280053,
+      "digest": "sha256:beeb9028cd65dcc7c951b2d1c46d1ae05607ede0a32076984fa9cffc0fe1fc4f"
+    },
+    "samples": 1024,
+    "mismatches": 0,
+    "metrics": {
+      "dp_trace": [
+        160,
+        9,
+        0.141261288,
+        169
+      ],
+      "dp_two_pass": [
+        160,
+        9,
+        0.111697471,
+        169
+      ],
+      "straight_scalar": [
+        119,
+        9,
+        1.441832195,
+        0
+      ],
+      "joint": [
+        190,
+        9,
+        0.485587708,
+        72
+      ],
+      "regularized_dp": [
+        215,
+        9,
+        1.12176669,
+        224
+      ],
+      "joint_regularized": [
+        223,
+        9,
+        1.384389332,
+        104
+      ]
+    },
+    "units": [
+      "detected",
+      "control_alerts",
+      "sum_target_median_seconds",
+      "dp_witnesses"
+    ],
+    "amplitude_counts": {
+      "amplitudes": [
+        0.75,
+        1.25,
+        2,
+        3
+      ],
+      "each": 128,
+      "dp": [
+        0,
+        8,
+        28,
+        124
+      ],
+      "joint": [
+        0,
+        8,
+        56,
+        126
+      ],
+      "regular": [
+        0,
+        9,
+        78,
+        128
+      ],
+      "joint_regular": [
+        0,
+        9,
+        86,
+        128
+      ]
+    },
+    "penalty": 0.7,
+    "brute_checks": 24,
+    "interpretation": "Two-pass exact certifies same positives with 169 instead of 1024 traces; novel regularized model improves development recall at same observed controls, not independent validation. 0.75 no detection; 1.25 nearly no gain."
   }
 }
