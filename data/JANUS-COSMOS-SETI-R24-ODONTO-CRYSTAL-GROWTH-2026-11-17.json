@@ -1,7 +1,7 @@
 {
   "schema": "janus.cosmos.seti.r24.odontocrystal.v1",
   "date": "2026-11-17",
-  "status": "R24A_MATH_TESTS_PASS_ARCHIVE_RUNNING_SYNTHETIC_STRESS_NEGATIVE",
+  "status": "R24A_COMPLETE_SENSITIVITY_HOLD",
   "production_adoption": false,
   "donor": {
     "registry": "https://github.com/Hawkar-usls/janus-meta-registry/commit/20944152b3951d9941be0bcc3dee76a12eecee26",
@@ -17,7 +17,7 @@
     "protocol_commit": "e62aacd22e45e770d578f5c050f504ea554c6d1c",
     "implementation_commit": "2c5ff8ac3133f2e1015a1a33d2a87bd92e1d6717",
     "launch_commit": "7fd91cf280b1457151533c5535d69554ac859169",
-    "status": "IN_PROGRESS_SELFTEST_PASS",
+    "status": "CORRECTNESS_PASS_SPEED_GAIN_SENSITIVITY_HOLD",
     "planned_samples": 1024,
     "amplitudes": [
       0.75,
@@ -49,7 +49,78 @@
       "Exact growth and independent finite enumeration tests",
       "Freeze metadata-only targets",
       "Upload frozen manifest"
-    ]
+    ],
+    "artifact": {
+      "id": 14362602404,
+      "digest": "sha256:9247b0edbe1a7db56660857bc6de6eadbde1faf5fc17d358648f95d5d70928eb"
+    },
+    "manifest": {
+      "id": 14361273789,
+      "digest": "sha256:36bebb1cbe5aea48248f5b0f9d8b997207bb92d35212d34fafa5992015693f62"
+    },
+    "targets": [
+      "HIP106440",
+      "HIP19884",
+      "HIP84405",
+      "HIP63550"
+    ],
+    "calibration_targets": [
+      "HIP69972",
+      "HIP110109"
+    ],
+    "samples": 1024,
+    "metrics": {
+      "straight": [
+        9,
+        0,
+        9,
+        0.206268014
+      ],
+      "regular": [
+        11,
+        0,
+        11,
+        1.112706609
+      ],
+      "joint_regular": [
+        11,
+        0,
+        11,
+        1.243369003
+      ],
+      "odonto_gap": [
+        11,
+        0,
+        11,
+        1.524223458
+      ],
+      "odonto_clip": [
+        11,
+        0,
+        11,
+        0.374660529
+      ],
+      "odonto_gap_clip": [
+        11,
+        0,
+        11,
+        1.529973668
+      ],
+      "joint_odonto": [
+        11,
+        0,
+        11,
+        0.502260852
+      ]
+    },
+    "units": [
+      "positive_alerts",
+      "localized_positives",
+      "control_alerts",
+      "sum_target_median_seconds"
+    ],
+    "selected": "odonto_clip",
+    "interpretation": "All detectors zero localized positives of 512. No sensitivity gain. Clip faster on different objective; max-plus zero-gap equivalence tested on 32 synthetic patches but not timed vs existing DP as an equivalent arm. Gap unused in eval alerts."
   },
   "next": [
     "seal actual R24A result",
