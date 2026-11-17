@@ -1,0 +1,110 @@
+{
+  "schema": "janus.cosmos.seti.r26c.reference_alignment.v1",
+  "date": "2026-11-17",
+  "status": "R26C_LAUNCHED_TWO_JOBS_RESULTS_OPEN",
+  "scope": "Own JANUS mechanisms adapted to radio; external literature used for validation, not copied algorithm. Independent reference observation != independent instrument. No technosignature claim.",
+  "r26b": {
+    "status": "SYNTHETIC_ONLY",
+    "length": 64,
+    "pairs": 640,
+    "raw_strata": {
+      "localized": 55,
+      "control_alerts": 73
+    },
+    "registered_strata": {
+      "localized": 107,
+      "control_alerts": 41
+    },
+    "weakest": {
+      "amp": 0.75,
+      "raw_strata": 2,
+      "registered_strata": 3,
+      "denominator": 160
+    },
+    "scope": "Local synthetic precursor; not archive results."
+  },
+  "r26c": {
+    "run": "https://github.com/Hawkar-usls/Janus-Cosmos/actions/runs/44167072018",
+    "jobs": {
+      "blc": 134335861977,
+      "paired": 134335862701
+    },
+    "protocol_commit": "c3665a07a2452fa84ec0b05156a792f87fbde0e4",
+    "code_commit": "7a957e3a1ecdcc13d7a4632c87c5855765b0a0a9",
+    "workflow_commit": "e3dd751f93c863258ffe151ad5035f31fc6e4df8",
+    "planned": {
+      "calibration_targets": 2,
+      "evaluation_targets": 4,
+      "examples": 1024,
+      "additional_reference_leak_cases": 128,
+      "blc_original_scans": 15
+    },
+    "status": "IN_PROGRESS",
+    "gate": "Exact physical frequency alignment before local bounded registration; compare raw and registered with same control-calibration budget. Preserve known BLC1 as detection positive but terrestrial RFI origin negative. No classification from ON/OFF alone. Sparse calibration stratum fallback logged; no posthoc retuning."
+  },
+  "donor_scout": [
+    {
+      "name": "Fermi V6-R1",
+      "path": "https://github.com/Hawkar-usls/Janus-Cosmos/blob/41c7e4efccbcf8506fa40b33b8ddd84dda054adc/workspace/janus_cosmos_fermi_spectral_v6r1.py",
+      "blob": "90773b1e3e8c0db408a6339d2228f85fb061c6a3",
+      "adaptation": "separate background intervals, withheld validation"
+    },
+    {
+      "name": "KUSTO support matching",
+      "path": "https://github.com/Hawkar-usls/Janus-Cosmos/blob/35bd5ca2cf032e3fb952a5e994897809b0defbd5/workspace/kusto_cand003_support_matched_sensitivity.py",
+      "blob": "22a85c8e9fa1656c4bf0b5ce845a40df2b0daa36",
+      "adaptation": "only common measured support; no interpolated power"
+    },
+    {
+      "name": "KUSTO acquisition regime and transfer",
+      "paths": [
+        "https://github.com/Hawkar-usls/Janus-Cosmos/blob/35bd5ca2cf032e3fb952a5e994897809b0defbd5/workspace/kusto_mar4deg02s_em12_acquisition_regime_calibration.py",
+        "https://github.com/Hawkar-usls/Janus-Cosmos/blob/35bd5ca2cf032e3fb952a5e994897809b0defbd5/workspace/kusto_first_unseen_residual_transfer_validation.py"
+      ],
+      "adaptation": "predeclared calibration by regime and fresh target"
+    },
+    {
+      "name": "Cousteau seven-control composite echo",
+      "path": "data/JANUS-ECHO-COUSTEAU-SEVEN-CONTROL-COMPOSITE-ECHO-CALIBRATION-2026-08-20-v1.1.json",
+      "blob": "237008673eb506a568cba3318daed128efa80515",
+      "status": "NEXT_RESEARCH",
+      "adaptation": "competing spectral families, harmonic/intermodulation lookalikes, held-out forward replay; single peak nonspecific"
+    },
+    {
+      "name": "HANNAH bidirectional convergence",
+      "path": "data/JANUS-HANNAH-BODC-COUSTEAU-INTEGRATION-RECEIPT-2026-08-25-v1.0.json",
+      "blob": "ce3552699f40c69354766317c9f36bde1bd49565",
+      "status": "NEXT_RESEARCH",
+      "adaptation": "two-sided temporal and common-support witnesses, artifact/physical alternatives separate"
+    },
+    {
+      "name": "EYE R4.4 robust witness planner",
+      "path": "EYE/r4_4/eye_r4_4_robust_witness_planner.py",
+      "receipt": "EYE/r4_4/generated/EYE-R4.4-VALIDATION-RECEIPT.json",
+      "receipt_blob": "0542fe0efa6d43232278d3a0909d840248787ed1",
+      "status": "NEXT_RESEARCH",
+      "adaptation": "select tests under calibrated competing causal models; abstain if nonidentifiable; finite models not true world"
+    }
+  ],
+  "external": [
+    {
+      "url": "https://www.nature.com/articles/s41550-021-01508-8",
+      "role": "BLC1 origin and lookalike validation"
+    },
+    {
+      "url": "https://doi.org/10.3847/1538-3881/ab65f1",
+      "role": "robust normalization and ON/OFF reference comparator"
+    },
+    {
+      "url": "https://turbo-seti.readthedocs.io/en/latest/find_event.html",
+      "role": "external cadence benchmark only"
+    }
+  ],
+  "next": [
+    "R26D harmonic/lookalike catalog with controlled nulls and independent time support",
+    "R26E EYE competing cause classifier only after empirical calibration and independent test",
+    "Acquire independently known spacecraft transmission positive control; no known extraterrestrial positive"
+  ],
+  "production_adoption": false,
+  "confirmed_technosignatures": 0
+}
