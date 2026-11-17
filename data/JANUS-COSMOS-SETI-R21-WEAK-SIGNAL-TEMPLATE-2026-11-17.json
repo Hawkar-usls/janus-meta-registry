@@ -1,7 +1,7 @@
 {
   "schema": "janus.cosmos.seti.r21.weak_signal.v1",
   "date": "2026-11-17",
-  "status": "R21A_R21E_COMPLETE_R21BC_RUNNING_R21D_CUSTODIAN_OPEN",
+  "status": "R21A_BC_E_COMPLETE_R21D_CUSTODIAN_OPEN",
   "production_adoption": false,
   "prior": "https://github.com/Hawkar-usls/janus-meta-registry/commit/3504e1c320161c82cbe9affc1ea6aff307191797",
   "r20d": {
@@ -166,7 +166,7 @@
   ],
   "confirmed_technosignatures": 0,
   "r21bc": {
-    "status": "IN_PROGRESS",
+    "status": "TIMESTAMP_ALIGNMENT_LOCALIZATION_GAIN_VS_SHAM_SINGLE_SCAN_DROPOUT_HOLD",
     "run": "https://github.com/Hawkar-usls/Janus-Cosmos/actions/runs/44152962521",
     "job": 134285966732,
     "protocol_commit": "436d07f95dc2c36f099545ca8cd9d1c7cd5c51b0",
@@ -174,7 +174,108 @@
     "launch_commit": "fd136145f6f8ce395516b26122d901e2272c5547",
     "planned_samples": 1024,
     "challenge_cases": 128,
-    "scope": "Real paired OFF scans plus off-grid constant drift synthetic injections; elapsed header times, two-scan noncoherent integration, missing-scan stratification, localization, exact finite shared-key semijoin, separate stationary RFI/discordant controls."
+    "scope": "Real paired OFF scans plus off-grid constant drift synthetic injections; elapsed header times, two-scan noncoherent integration, missing-scan stratification, localization, exact finite shared-key semijoin, separate stationary RFI/discordant controls.",
+    "artifact": {
+      "id": 14358994086,
+      "digest": "sha256:13e6f7dc965ae00d9bf10239c1f1c2ea9138a102fadb025eb20aa4431fe94e3e"
+    },
+    "manifest": {
+      "id": 14360076824,
+      "digest": "sha256:590b18eb2e3535c3bf9d0b8135cfa02642a4d3a59537410e40ee3971e8f146cd"
+    },
+    "targets": [
+      "HIP69454",
+      "HIP27072",
+      "HIP56998",
+      "HIP40702"
+    ],
+    "samples": 1024,
+    "metrics": {
+      "single1": [
+        228,
+        19,
+        212,
+        116,
+        112,
+        1.700314261
+      ],
+      "single_best": [
+        251,
+        23,
+        235,
+        141,
+        110,
+        3.184917206
+      ],
+      "unconstrained_sum": [
+        256,
+        25,
+        null,
+        143,
+        113,
+        3.193629245
+      ],
+      "timestamp_joint": [
+        215,
+        32,
+        188,
+        148,
+        67,
+        3.237753191
+      ],
+      "timestamp_zero_shift": [
+        136,
+        33,
+        40,
+        80,
+        56,
+        3.247264186
+      ],
+      "timestamp_joint_semijoin": [
+        215,
+        32,
+        188,
+        148,
+        67,
+        3.258264041
+      ]
+    },
+    "units": [
+      "detected_of_512",
+      "alerts_of_512_controls",
+      "localized_positive",
+      "both_present_detected_of_256",
+      "first_only_detected_of_256",
+      "sum_median_wall_seconds"
+    ],
+    "both_present_075": {
+      "single1": [
+        2,
+        2
+      ],
+      "timestamp_joint": [
+        10,
+        7
+      ],
+      "denominator": 64
+    },
+    "semijoin": {
+      "mismatches": 0,
+      "support": 574176,
+      "hypotheses": 21233664
+    },
+    "challenge_alerts": {
+      "timestamp_joint": {
+        "stationary_rfi": 64,
+        "discordant": 61,
+        "denominator_each": 64
+      },
+      "single1": {
+        "stationary_rfi": 64,
+        "discordant": 63
+      }
+    },
+    "interpretation": "True timestamp alignment clearly beats zero-shift sham; joint two-scan loses overall to best single scan due dropout and higher realized alerts. 0.75 both-present result 10 vs 7 controls not established weak recovery; RFI failure. Semijoin no speed gain despite support reduction, all maps computed. Need scan-quality calibration, dropout and origin tests. No astronomy claim."
   },
   "r21e": {
     "status": "DEVELOPMENT_TRAINED_NEURAL_GAIN_HOLD",
