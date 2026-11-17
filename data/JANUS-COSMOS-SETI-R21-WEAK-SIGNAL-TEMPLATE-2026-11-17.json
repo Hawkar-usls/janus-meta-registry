@@ -1,7 +1,7 @@
 {
   "schema": "janus.cosmos.seti.r21.weak_signal.v1",
   "date": "2026-11-17",
-  "status": "R21A_COMPLETE_R21BC_R21E_RUNNING_R21D_CUSTODIAN_OPEN",
+  "status": "R21A_R21E_COMPLETE_R21BC_RUNNING_R21D_CUSTODIAN_OPEN",
   "production_adoption": false,
   "prior": "https://github.com/Hawkar-usls/janus-meta-registry/commit/3504e1c320161c82cbe9affc1ea6aff307191797",
   "r20d": {
@@ -177,13 +177,55 @@
     "scope": "Real paired OFF scans plus off-grid constant drift synthetic injections; elapsed header times, two-scan noncoherent integration, missing-scan stratification, localization, exact finite shared-key semijoin, separate stationary RFI/discordant controls."
   },
   "r21e": {
-    "status": "IN_PROGRESS",
+    "status": "DEVELOPMENT_TRAINED_NEURAL_GAIN_HOLD",
     "run": "https://github.com/Hawkar-usls/Janus-Cosmos/actions/runs/44153359569",
     "job": 134287374834,
     "protocol_commit": "6594447fc92f9c8e4987f9a7da1545c873027747",
     "code_commit": "235e4834f5761d076e8f1f28180c552afc808c8d",
     "launch_commit": "845bc0648d8302bd17b5382a6cd928ff077e2080",
-    "scope": "R21A already viewed targets separated by train/cal/development roles (768/512/256 examples), no independent validation. Freeze model checkpoint and compare logistic, MLP, mathematical baseline, union."
+    "scope": "R21A already viewed targets separated by train/cal/development roles (768/512/256 examples), no independent validation. Freeze model checkpoint and compare logistic, MLP, mathematical baseline, union.",
+    "artifact": {
+      "id": 14359597773,
+      "digest": "sha256:c1443a98240ccc05c593fb004fc986a56f6f180770f9eea745d07750aaf9d8ec"
+    },
+    "weights_sha256": "b75078e9dbd50d3b4b2d8f6d20b29168f98a59570fe035b292f8e2cfd803132a",
+    "samples": {
+      "train": 768,
+      "calibration": 512,
+      "development": 256
+    },
+    "metrics": {
+      "math_joint": [
+        46,
+        8,
+        0.533852081
+      ],
+      "logistic": [
+        29,
+        4,
+        0.703476644
+      ],
+      "mlp": [
+        39,
+        7,
+        0.703069107
+      ],
+      "math_mlp_union": [
+        38,
+        8,
+        0.701000919
+      ]
+    },
+    "units": [
+      "detected_of_128",
+      "control_alerts_of_128",
+      "median_full_computation_seconds"
+    ],
+    "training_seconds": {
+      "logistic": 0.204828883,
+      "mlp": 0.390819671
+    },
+    "interpretation": "No incremental recall over math; previously inspected single development target, no fresh performance claim. Freeze checkpoint; no automatic veto or deployment."
   },
   "r21d": {
     "status": "AWAITING_INDEPENDENT_CUSTODIAN",
