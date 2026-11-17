@@ -1,7 +1,7 @@
 {
   "schema": "janus.cosmos.seti.r19bcd_r19e.receipt.v1",
   "date": "2026-11-17",
-  "status": "R19BCD_COMPLETE_R19E_RUNNING",
+  "status": "R19BCD_R19E_COMPLETE_RESEARCH_ONLY",
   "production_adoption": false,
   "previous": "https://github.com/Hawkar-usls/janus-meta-registry/commit/a1eb7ee65cf9bc182e69a8723182d3b1d804c251",
   "r19bcd": {
@@ -78,12 +78,79 @@
     "io_seconds": 11.676903854999987
   },
   "r19e": {
-    "status": "RUNNING",
+    "status": "DP_RECALL_GAIN_VECTOR_EXACT_HYBRID_GENERALIZATION_HOLD",
     "run": "https://github.com/Hawkar-usls/Janus-Cosmos/actions/runs/44140781479",
     "protocol_commit": "a672f97e74df33f3905aebe9698454dec481432e",
     "code_commit": "c7b82ad93a4dab6d08afaea11e73e13ef643582c",
     "launch_commit": "dfe91018a69f46e7643e3677b5c34ab7835d5946",
-    "scope": "prospective archive synthetic straight/curved and gaps, actual selective inference timing, no astronomical origin claim"
+    "scope": "prospective archive synthetic straight/curved and gaps, actual selective inference timing, no astronomical origin claim",
+    "job": 134242655111,
+    "artifact": {
+      "id": 14355056748,
+      "digest": "sha256:4294ff184104377f3b37e1f2492038a0671328c01e5ced48a4162f77175fe31a"
+    },
+    "targets": [
+      "HIP52462",
+      "HIP80018",
+      "HIP63490",
+      "HIP58345"
+    ],
+    "calibration_targets": [
+      "HIP55454",
+      "HIP16069"
+    ],
+    "samples": 1024,
+    "vector_mismatches": 0,
+    "metrics": {
+      "scalar_straight": [
+        499,
+        36,
+        1.132614716,
+        0
+      ],
+      "vector_straight": [
+        499,
+        36,
+        0.291728028,
+        0
+      ],
+      "curved_dp": [
+        512,
+        38,
+        0.414992786,
+        0
+      ],
+      "joint_matched_control": [
+        512,
+        38,
+        0.459329547,
+        0
+      ],
+      "full_hybrid": [
+        234,
+        1,
+        6.602141276,
+        1024
+      ],
+      "selective_hybrid": [
+        499,
+        36,
+        4.217281961,
+        489
+      ]
+    },
+    "metric_units": [
+      "detected_of_512",
+      "alerts_of_512_controls",
+      "sum_target_median_wall_seconds",
+      "AI_calls"
+    ],
+    "calibration_alerts_each": 12,
+    "calibration_controls": 256,
+    "calibration_seconds": 0.741467568,
+    "calibration_load_seconds": 90.652783198,
+    "evaluation_load_seconds": 164.577459264,
+    "interpretation": "DP detected all injected positives at 38/512 empirical OFF alerts; not 100% physical sensitivity. Hybrid much lower alerts but poor curved recall. Selective route no added detections and slower. Exact vector straight gain, DP vectorization next. No production adoption."
   },
   "confirmed_technosignatures": 0
 }
