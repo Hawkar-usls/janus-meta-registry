@@ -1,7 +1,7 @@
 {
   "schema": "janus.cosmos.seti.r24.odontocrystal.v1",
   "date": "2026-11-17",
-  "status": "R24A_RUNNING_UNVERIFIED",
+  "status": "R24A_MATH_TESTS_PASS_ARCHIVE_RUNNING_SYNTHETIC_STRESS_NEGATIVE",
   "production_adoption": false,
   "donor": {
     "registry": "https://github.com/Hawkar-usls/janus-meta-registry/commit/20944152b3951d9941be0bcc3dee76a12eecee26",
@@ -17,7 +17,7 @@
     "protocol_commit": "e62aacd22e45e770d578f5c050f504ea554c6d1c",
     "implementation_commit": "2c5ff8ac3133f2e1015a1a33d2a87bd92e1d6717",
     "launch_commit": "7fd91cf280b1457151533c5535d69554ac859169",
-    "status": "IN_PROGRESS",
+    "status": "IN_PROGRESS_SELFTEST_PASS",
     "planned_samples": 1024,
     "amplitudes": [
       0.75,
@@ -44,12 +44,86 @@
       "odonto_gap_clip",
       "joint_odonto"
     ],
-    "gate": "Separate two calibration targets, four new evaluation targets; 5% calibration control budget; select on localized weak recovery only on calibration; report realized false alerts and localization; exact finite-state score compared with brute force; no astronomy claim."
+    "gate": "Separate two calibration targets, four new evaluation targets; 5% calibration control budget; select on localized weak recovery only on calibration; report realized false alerts and localization; exact finite-state score compared with brute force; no astronomy claim.",
+    "verified_steps": [
+      "Exact growth and independent finite enumeration tests",
+      "Freeze metadata-only targets",
+      "Upload frozen manifest"
+    ]
   },
   "next": [
     "seal actual R24A result",
     "compare skip effects on genuinely intermittent and uninterrupted signals separately",
     "if useful, test cross-scan support with Cousteau calibration and exact TRUMP; independent blind custodian required"
   ],
-  "confirmed_technosignatures": 0
+  "confirmed_technosignatures": 0,
+  "local_stress": {
+    "status": "NEGATIVE_SYNTHETIC_DIAGNOSTIC",
+    "source_sha256": "b145a56a36198f7a04c6fea6e154710d397fd3fa39dbafdfe5293a073ac4b08d",
+    "result_sha256": "ee8b168552164c883a7e9181231b7f37e1fb9ae98bf2c3c373a0d141b3fd80ac",
+    "lock_sha256": "08c6f342fad6720b107ba015d7311419e02a44ab0ac79de411a846d5aaf72b55",
+    "calibration_pairs": 256,
+    "evaluation_pairs": 512,
+    "seeds": [
+      24021,
+      24022
+    ],
+    "noise": [
+      "white",
+      "colored",
+      "persistent_rfi",
+      "impulsive"
+    ],
+    "units": [
+      "positive_alerts",
+      "localized_positives",
+      "control_alerts"
+    ],
+    "metrics": {
+      "straight": [
+        27,
+        0,
+        32
+      ],
+      "regular": [
+        27,
+        0,
+        32
+      ],
+      "gap": [
+        27,
+        0,
+        32
+      ],
+      "clip": [
+        32,
+        0,
+        34
+      ],
+      "gap_clip": [
+        32,
+        0,
+        34
+      ],
+      "joint_regular": [
+        27,
+        0,
+        32
+      ],
+      "joint_clip": [
+        26,
+        0,
+        26
+      ]
+    },
+    "selected": "clip",
+    "compute_seconds": {
+      "straight": 0.245092869,
+      "regular": 0.294749886,
+      "gap": 1.324557227,
+      "clip": 0.334729731,
+      "gap_clip": 1.336799438
+    },
+    "interpretation": "All alerts in persistent RFI regime. No genuine localization, no gain. Pooled threshold dominated by stationary interference. Strong negative control; no threshold changes on test. Local reproduction of recurrence, not external validation nor archive exam."
+  }
 }
