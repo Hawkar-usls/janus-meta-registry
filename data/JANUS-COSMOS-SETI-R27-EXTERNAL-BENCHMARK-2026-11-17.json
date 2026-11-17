@@ -1,6 +1,6 @@
 {
   "schema": "janus.cosmos.seti.r27.external_benchmark.v1",
-  "status": "R27A_B_C_D_COMPLETE_R27A2_AND_BLISS_OPEN",
+  "status": "R27A_A2_B_C_D_COMPLETE_BLISS_BUILD_OPEN",
   "date": "2026-11-17",
   "production_adoption": false,
   "external_references": [
@@ -20,7 +20,7 @@
       "name": "BLISS",
       "source": "https://github.com/UCBerkeleySETI/bliss",
       "ref": "2b98afe960f13ee7e467aca499576d87ee7502f5",
-      "status": "CPU_BUILD_FEASIBILITY_RUNNING",
+      "status": "CPU_BUILD_IN_PROGRESS_NO_COMPARATIVE_RESULT",
       "run": 44172852580
     },
     {
@@ -38,10 +38,175 @@
   "r27a2": {
     "run": 44173277111,
     "job": 134357782271,
-    "status": "IN_PROGRESS",
+    "status": "COMPLETE_DEVELOPMENT_EQUAL_INPUT",
     "protocol_commit": "23e2d0abfc341f4b69c0648ae37a924a9cc1e1bd",
     "implementation_commit": "c848c027000bd6ea8ff14bf31a603ddeaa8092a1",
-    "workflow_commit": "0e3bc93cc0bf2a5cccf01429a82b0957835e213c"
+    "workflow_commit": "0e3bc93cc0bf2a5cccf01429a82b0957835e213c",
+    "artifact": {
+      "id": 14367834016,
+      "digest": "sha256:bff72e5ecb8cfb4adf1fda71c9fb05ec0d719c5583fa4a2323e3c0df0e91f5bf"
+    },
+    "result": {
+      "status": "DEVELOPMENT_EQUAL_INPUT_REPLAY",
+      "modes": {
+        "raw_exact": {
+          "localized": 39,
+          "controls": 11,
+          "seconds": 0.28398932099999996,
+          "weak_075_125": 0,
+          "retrospective_curve": {
+            "5": {
+              "localized": 0,
+              "controls": 5
+            },
+            "10": {
+              "localized": 31,
+              "controls": 10
+            },
+            "17": {
+              "localized": 115,
+              "controls": 17
+            },
+            "25": {
+              "localized": 129,
+              "controls": 25
+            }
+          }
+        },
+        "raw_taylor": {
+          "localized": 21,
+          "controls": 10,
+          "seconds": 0.603122140999993,
+          "weak_075_125": 0,
+          "retrospective_curve": {
+            "5": {
+              "localized": 0,
+              "controls": 5
+            },
+            "10": {
+              "localized": 74,
+              "controls": 10
+            },
+            "17": {
+              "localized": 107,
+              "controls": 17
+            },
+            "25": {
+              "localized": 127,
+              "controls": 25
+            }
+          }
+        },
+        "raw_linear": {
+          "localized": 21,
+          "controls": 10,
+          "seconds": 0.06614868899999493,
+          "weak_075_125": 0,
+          "retrospective_curve": {
+            "5": {
+              "localized": 0,
+              "controls": 5
+            },
+            "10": {
+              "localized": 86,
+              "controls": 10
+            },
+            "17": {
+              "localized": 104,
+              "controls": 17
+            },
+            "25": {
+              "localized": 136,
+              "controls": 25
+            }
+          }
+        },
+        "reg_exact": {
+          "localized": 115,
+          "controls": 17,
+          "seconds": 0.2737674269999957,
+          "weak_075_125": 8,
+          "retrospective_curve": {
+            "5": {
+              "localized": 0,
+              "controls": 5
+            },
+            "10": {
+              "localized": 71,
+              "controls": 10
+            },
+            "17": {
+              "localized": 120,
+              "controls": 17
+            },
+            "25": {
+              "localized": 129,
+              "controls": 25
+            }
+          }
+        },
+        "reg_taylor": {
+          "localized": 132,
+          "controls": 25,
+          "seconds": 0.5723833650000074,
+          "weak_075_125": 23,
+          "retrospective_curve": {
+            "5": {
+              "localized": 0,
+              "controls": 5
+            },
+            "10": {
+              "localized": 101,
+              "controls": 10
+            },
+            "17": {
+              "localized": 112,
+              "controls": 17
+            },
+            "25": {
+              "localized": 133,
+              "controls": 25
+            }
+          }
+        },
+        "reg_linear": {
+          "localized": 135,
+          "controls": 23,
+          "seconds": 0.05916363300000427,
+          "weak_075_125": 27,
+          "retrospective_curve": {
+            "5": {
+              "localized": 0,
+              "controls": 5
+            },
+            "10": {
+              "localized": 86,
+              "controls": 10
+            },
+            "17": {
+              "localized": 104,
+              "controls": 17
+            },
+            "25": {
+              "localized": 136,
+              "controls": 25
+            }
+          }
+        }
+      },
+      "thresholds": {
+        "raw_exact": 7.347090171543272,
+        "raw_taylor": 7.347090171543272,
+        "raw_linear": 7.346540866623784,
+        "reg_exact": 5.985002565824618,
+        "reg_taylor": 4.902034729781524,
+        "reg_linear": 4.902034729781523
+      },
+      "scope": "R27A deterministic replay, same ON/OFF patches/injections, same raw and registered inputs for both JANUS, native Taylor and simple linear reference. Calibration-only 5% threshold. Posthoc ranking curve diagnostic, not a tuned operating point. All score arrays saved for independent reanalysis; no new heldout claim.",
+      "eval_examples": 1024,
+      "production_adoption": false
+    },
+    "interpretation": "Same registered input: Odonto 115/512 localized, 17/512 controls; original Taylor 132,25; simple linear 135,23. Odonto recall lower by 12.88% vs Taylor and 14.81% vs linear, controls fewer 32% and 26.09%. At retrospective equal 17 controls Odonto120 Taylor112 linear104; at 10 controls Odonto71 Taylor101 linear86; diagnostic only, cannot claim a universal advantage. Raw at 10 controls Odonto31 Taylor74. Original Taylor wrapper per patch and shear overhead means timing not full pipeline speed comparison. Very weak <=1.25 sigma registered Odonto8 Taylor23 linear27 of256. Prior raw superiority at frozen calibration budget does not establish matched realized FPR superiority."
   },
   "claim_ceiling": "Kernel-level CPU comparison, equal calibration budget not equal realized controls; R27A registered JANUS has OFF reference not available to raw Taylor. No global rankings. No extraterrestrial claim.",
   "r27a": {
@@ -1577,5 +1742,11 @@
         "digest": "sha256:06ae70d10e3a871c18f95fad00d37613d854f5917c6cba72874304a0607382b5"
       }
     ]
-  }
+  },
+  "next": [
+    "Fresh preregistered common preprocessing hybrid straight+Odonto with fixed joint threshold; no reuse evaluation to claim new gain",
+    "Equal realized false alert diagnostic, then independent source-clustered test at predeclared operating points",
+    "BLISS native CPU comparison on same archived inputs after build; GPU HyperSETI and Ma full reproduction remain open",
+    "BLC1 blind family search in broad band and multiple independent known transmitter/source groups"
+  ]
 }
