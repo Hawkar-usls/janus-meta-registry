@@ -1,7 +1,7 @@
 {
   "schema": "janus.cosmos.seti.r21.weak_signal.v1",
   "date": "2026-11-17",
-  "status": "R21A_COMPLETE_FRESH_SYNTHETIC_RESEARCH_ONLY",
+  "status": "R21A_COMPLETE_R21BC_R21E_RUNNING_R21D_CUSTODIAN_OPEN",
   "production_adoption": false,
   "prior": "https://github.com/Hawkar-usls/janus-meta-registry/commit/3504e1c320161c82cbe9affc1ea6aff307191797",
   "r20d": {
@@ -164,5 +164,31 @@
     "if no 0.75/1.25 gain, compare long-duration incoherent integration on raw same-cadence scans with timestamps and physically justified drift alignment; no assumed noise independence or synthetic extension",
     "separate truly independent blind exam"
   ],
-  "confirmed_technosignatures": 0
+  "confirmed_technosignatures": 0,
+  "r21bc": {
+    "status": "IN_PROGRESS",
+    "run": "https://github.com/Hawkar-usls/Janus-Cosmos/actions/runs/44152962521",
+    "job": 134285966732,
+    "protocol_commit": "436d07f95dc2c36f099545ca8cd9d1c7cd5c51b0",
+    "code_commit": "15b2f577128ac5d82e9cb122182f0f6eff204b47",
+    "launch_commit": "fd136145f6f8ce395516b26122d901e2272c5547",
+    "planned_samples": 1024,
+    "challenge_cases": 128,
+    "scope": "Real paired OFF scans plus off-grid constant drift synthetic injections; elapsed header times, two-scan noncoherent integration, missing-scan stratification, localization, exact finite shared-key semijoin, separate stationary RFI/discordant controls."
+  },
+  "r21e": {
+    "status": "IN_PROGRESS",
+    "run": "https://github.com/Hawkar-usls/Janus-Cosmos/actions/runs/44153359569",
+    "job": 134287374834,
+    "protocol_commit": "6594447fc92f9c8e4987f9a7da1545c873027747",
+    "code_commit": "235e4834f5761d076e8f1f28180c552afc808c8d",
+    "launch_commit": "845bc0648d8302bd17b5382a6cd928ff077e2080",
+    "scope": "R21A already viewed targets separated by train/cal/development roles (768/512/256 examples), no independent validation. Freeze model checkpoint and compare logistic, MLP, mathematical baseline, union."
+  },
+  "r21d": {
+    "status": "AWAITING_INDEPENDENT_CUSTODIAN",
+    "contract": "https://github.com/Hawkar-usls/Janus-Cosmos/blob/3605452ba46d1103800a2eba42a28a6dc8980076/research/seti/r21d_external_blind_contract.json",
+    "commit": "3605452ba46d1103800a2eba42a28a6dc8980076",
+    "scope": "External hidden injection and signed commitments, >=12 independent pointings, paired localized recall gain and false-alert constraint; no external participation confirmed."
+  }
 }
