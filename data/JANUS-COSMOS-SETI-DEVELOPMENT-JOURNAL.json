@@ -1756,19 +1756,52 @@
       },
       "limitations": "No source classifier, no raw data read. Nominal duration not actual continuity; adjacent tapes and alternate band/polarization not independent sessions. Same broad band not exact same frequency. Natural control literature verified but matching raw spectrum unverified. No operational use or source label promotion.",
       "next_gate": "Read R37F1_SUMMARY; then independently verify documented counter continuity, separate observation epochs and original natural-control data on comparable grid. R38 HOLD."
+    },
+    {
+      "event_id": "20261118-R37F1-RESULT",
+      "date": "2026-11-18",
+      "stage": "R37F1",
+      "kind": "RESULT",
+      "status": "HOLD_ARCHIVE_ACCESS_AND_EXACT_NATURAL_JOIN",
+      "decision": "Actions completed; both Voyager DATA listings gave HTTP404 from runner. W3 517, W3OH 461 archive rows, no qualified exact publication epoch under initial filter; no continuity or line qualification. Direct official detached labels separately accessible in web source, not runner verified.",
+      "evidence": {
+        "run": 44306559063,
+        "job": 134809525039,
+        "artifact": 14428591531,
+        "artifact_sha256": "1ed1589c9fd3e1046d6d0026992fea432dab827597ef8ea2b157feb2beaa9fbe",
+        "receipt_commit": "f2b69a8e65eb55bdeacf581c2a5bf34c949a8bc2"
+      }
+    },
+    {
+      "event_id": "20261118-R37F1A-RECOVERY-LAUNCH",
+      "date": "2026-11-18",
+      "stage": "R37F1A",
+      "kind": "LAUNCH",
+      "status": "RUNNING_METADATA_REPAIR",
+      "decision": "Avoid Voyager listing dependency via known direct detached label URLs; independently probe PDS4 Cassini collection and PDS3 fallback. Expand W3 exact aliases, check archive epoch against filename, remove premature HTTPS-only filtering, check actual HDF5 headers and OH coverage; DR21 and NGC7538 ancillary natural control candidates. No waveform/power reads, no source classifier, no automatic veto.",
+      "evidence": {
+        "run": 44308615507,
+        "job": 134816589646,
+        "protocol_commit": "b4d500e838c5f1f4d544464222454b57382c01bd",
+        "implementation_commit": "04eae188451eb2ae525eea6bec47777a9bc1a6e0",
+        "workflow_commit": "b34583938a399a5635f887da64fbd7784da8436f",
+        "receipt_commit": "f2b69a8e65eb55bdeacf581c2a5bf34c949a8bc2"
+      },
+      "limitations": "Metadata-only; network error cause still unknown. Archive aliases not proof of line presence, separate dates not independent physical emitter qualification. Cassini individual products may remain unavailable. R38 and identity HOLD.",
+      "next_gate": "Read actual R37F1A_SUMMARY; distinguish verified grid from natural line presence and continuity, preserve protected natural controls."
     }
   ],
   "current": {
-    "stage": "R37E2",
-    "status": "PASS_AGGREGATE_OBSERVABILITY_ONLY",
-    "run": 44302684812,
+    "stage": "R37F1",
+    "status": "HOLD_ARCHIVE_ACCESS_AND_EXACT_NATURAL_JOIN",
+    "run": 44306559063,
     "production_adoption": false
   },
   "active_experiment": {
-    "stage": "R37F1",
-    "status": "RUNNING_METADATA_QUALIFICATION",
-    "run": 44306559063,
-    "job": 134809525039,
+    "stage": "R37F1A",
+    "status": "RUNNING_METADATA_REPAIR",
+    "run": 44308615507,
+    "job": 134816589646,
     "receipt": "data/JANUS-COSMOS-SETI-R37E-TRANSMITTER-IDENTITY-2026-11-18.json",
     "production_adoption": false
   },
