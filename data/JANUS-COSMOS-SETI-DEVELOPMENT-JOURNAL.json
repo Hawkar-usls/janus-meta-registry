@@ -4052,6 +4052,75 @@
         }
       },
       "next_gate": "Review R40K calibration, archive parity and all three arm results. Maintain R38 and production HOLD."
+    },
+    {
+      "event_id": "20261119-R40K-RESULT-R40L-LAUNCH",
+      "date": "2026-11-19",
+      "stage": "R40K / R40L",
+      "kind": "RESULT_AND_LAUNCH",
+      "status": "PASS_SHARED_RECOVERY__HOLD_CONTROL_BUDGET",
+      "decision": "R40K Joint Min adds 82 shared localizations and 18 weak shared, but 12 more control alerts. All three arms fail control budget. Test historical TOPA/KUSTO and learned shields as subset of Joint Min rescue. Preserve R40G and do not adopt.",
+      "evidence": {
+        "r40k": {
+          "fields": [
+            "localized",
+            "weak",
+            "control_alerts",
+            "shared_localized",
+            "shared_weak"
+          ],
+          "r40g": [
+            213,
+            41,
+            31,
+            29,
+            18
+          ],
+          "on_only": [
+            220,
+            44,
+            58,
+            78,
+            21
+          ],
+          "joint_min": [
+            215,
+            43,
+            43,
+            111,
+            36
+          ],
+          "joint_mean": [
+            218,
+            43,
+            49,
+            114,
+            37
+          ],
+          "parent_lost": 0,
+          "all_gates": false,
+          "calibration_controls": 256,
+          "calibration_parent_alerts": 10,
+          "calibration_additional_alerts": 0,
+          "thresholds": {
+            "on_only": 1.350306115814548,
+            "joint_min": 0.7661068370840325,
+            "joint_mean": 0.8909228307746216
+          },
+          "registered_exact": true,
+          "seconds": 1140.770129832
+        },
+        "r40l": {
+          "stage": "R40L",
+          "status": "RUNNING_UNMEASURED",
+          "run": 44419064003,
+          "receipt": "data/JANUS-COSMOS-SETI-R40L-JOINT-SHIELD-2026-11-19.json",
+          "receipt_commit": "5b0391badf113d6bd1ac0e041ff3402c92986d59",
+          "production_adoption": false,
+          "discovery_relaunch_allowed": false
+        }
+      },
+      "next_gate": "Check exact R40L calibration, replay and paired results; no production promotion, fresh independent tests still required."
     }
   ],
   "current": {
@@ -4061,11 +4130,11 @@
     "production_adoption": false
   },
   "active_experiment": {
-    "stage": "R40K",
+    "stage": "R40L",
     "status": "RUNNING_UNMEASURED",
-    "run": 44412191208,
-    "receipt": "data/JANUS-COSMOS-SETI-R40K-ON-OFF-SEPARATION-2026-11-18.json",
-    "receipt_commit": "2225708ec3eae000e3159522226bea7ff5a5856b",
+    "run": 44419064003,
+    "receipt": "data/JANUS-COSMOS-SETI-R40L-JOINT-SHIELD-2026-11-19.json",
+    "receipt_commit": "5b0391badf113d6bd1ac0e041ff3402c92986d59",
     "production_adoption": false,
     "discovery_relaunch_allowed": false
   },
