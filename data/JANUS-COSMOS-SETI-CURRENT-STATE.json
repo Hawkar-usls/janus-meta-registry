@@ -2,34 +2,48 @@
   "schema": "janus.context_bridge.current_state.v1",
   "project": "JANUS COSMOS / SETI",
   "updated_utc": "2026-11-18T09:39:47Z",
-  "as_of": "R33B4 original hit mapping and source metadata audit running; four measured passports remain review only",
+  "as_of": "R35A/C/D native comparisons complete; R35E no CUDA; R35F exact but no meaningful speed improvement; R35B running",
   "authority": {
     "repository": "Hawkar-usls/Janus-Cosmos",
     "research_branch": "research/seti-radio-candidate-search-20261117",
     "registry": "Hawkar-usls/janus-meta-registry",
     "journal": "data/JANUS-COSMOS-SETI-DEVELOPMENT-JOURNAL.json",
-    "journal_commit": "186e4cf2ecd93fa831803690920922f87cc94cee",
+    "journal_commit": "3710d5deb08cec3ae8888a395dab09e8a7807538",
     "continuity_protocol": "data/JANUS-PROJECT-CONTINUITY-LEDGER-HRAIN-INAIHR-PROTOCOL-2026-08-24-v1.0.json",
     "protocol_blob": "740065281c7c7b289c927db7661b9b000abb8c68"
   },
   "goal": "Increase weak narrowband radio signal recovery while separating background/RFI and preserving known physical signals, with independently reproducible scientific controls.",
   "current": {
-    "stage": "R33B3",
-    "status": "PASS_EXACT_MEASURED_DRIFT_REVALIDATION__REVIEW_REQUIRED",
-    "run": 44277919489,
-    "job": 134710696141,
-    "receipt": "data/JANUS-COSMOS-SETI-R33B2-HANNAH-DRIFT-REPLAY-2026-11-18.json",
-    "receipt_commit": "d3c76bbd0a8424ea31221c2102f76dafb7244c94",
-    "artifact": 14415726857,
-    "artifact_sha256": "1bad6869e0c7323214e6aee9df2033d43cd65a1123a0aad1713238af4acd0c8d",
+    "stage": "R35",
+    "status": "THREE_NATIVE_COMPARISONS_COMPLETE__JIT_NO_MEANINGFUL_GAIN__FRESH_RUNNING",
+    "receipt": "data/JANUS-COSMOS-SETI-R35-GRAND-BENCHMARK-2026-11-18.json",
+    "receipt_commit": "b857495611b583525fc94cec57d82d0144742cc0",
     "results": {
-      "published": 36,
-      "groups": 2,
-      "passports": 4,
-      "direct": 1,
-      "mirrored": 1,
-      "holds": 34,
-      "verified_promoted": 0
+      "r28": {
+        "localized": 164,
+        "weak": 20,
+        "controls": 12
+      },
+      "bliss": {
+        "localized": 125,
+        "weak": 19,
+        "controls": 11
+      },
+      "fastdd": {
+        "localized": 122,
+        "weak": 19,
+        "controls": 11
+      },
+      "turbo": {
+        "localized": 81,
+        "weak": 13,
+        "controls": 20
+      },
+      "jit": {
+        "warm_speedup": 1.0053946519595776,
+        "including_compile_speedup": 0.5249654453452212,
+        "mismatches": 0
+      }
     },
     "production_adoption": false
   },
@@ -243,11 +257,33 @@
         "voyager_native_grid_compatible": 0
       },
       "production_adoption": false
+    },
+    "R33B3": {
+      "stage": "R33B3",
+      "status": "PASS_EXACT_MEASURED_DRIFT_REVALIDATION__REVIEW_REQUIRED",
+      "run": 44277919489,
+      "job": 134710696141,
+      "receipt": "data/JANUS-COSMOS-SETI-R33B2-HANNAH-DRIFT-REPLAY-2026-11-18.json",
+      "receipt_commit": "d3c76bbd0a8424ea31221c2102f76dafb7244c94",
+      "artifact": 14415726857,
+      "artifact_sha256": "1bad6869e0c7323214e6aee9df2033d43cd65a1123a0aad1713238af4acd0c8d",
+      "results": {
+        "published": 36,
+        "groups": 2,
+        "passports": 4,
+        "direct": 1,
+        "mirrored": 1,
+        "holds": 34,
+        "verified_promoted": 0
+      },
+      "production_adoption": false
     }
   },
   "open_gates": [
-    "R33B4: original author hit identity AND membership mapping; rounded figure comparison insufficient. Figure6 exact source receipt and caption/file discrepancy; separate replay after qualified metadata.",
-    "R34: independently labelled source groups, protected compatible grid, frozen exam; alias metadata scout running, no exam.",
+    "R35B: actual new weak-signal and nonlinear matched-budget metrics; exact JUXTAPOSE decision-only ablation.",
+    "R35G: frozen common-input native comparison on fresh archive targets, exact calibration inputs plus eval, equal operating costs and same hardware; compare real wide/long data; no use of historic labels for tuning.",
+    "R35F JIT no meaningful speed improvement; optimize exact computation, retain R28 until verified gain.",
+    "R35E HyperSETI blocked by absent CUDA; no paid GPU provision.",
     "R32 HOLD; retain Hybrid R28, no automatic production veto",
     "Extend bounded observation hook to other trusted legacy acquisition paths only after controlled verification",
     "R30B all scientific gates failed: keep Full R28; no hard KUSTO/TOPA filter; separately test protected raw union shared-signal recovery",
@@ -255,9 +291,10 @@
     "R29B diagnose reward and lane collapse against ORBIT-only and fixed-five at equal proxy budget; no reuse of viewed exams for prospective claims",
     "BLISS repair API and verify actual original kernel on saved equal inputs",
     "Independent source-labelled origin evaluation; EYE remains HOLD",
-    "Retain raw paths when OFF contains signal"
+    "Retain raw paths when OFF contains signal",
+    "R33B4 original hit mapping HOLD, Figure6 exact file available; R34 independently labelled inputs and protected compatible grid still HOLD."
   ],
-  "next_allowed": "CHECK read-only verify R33B4 job 134717935578, run 44280025167, R33B4_SUMMARY and artifacts. On continuation inspect exact metadata and author mapping; preserve candidates until exact evidence; replay Figure6 only on verified scan/cadence and no independent family claim. R34 after qualified independent sources and protected grid.",
+  "next_allowed": "CHECK read-only verify R35B job 134724062458 and R35B_SUMMARY/artifacts, plus recorded R35A/C/D/E/F. On continuation seal B and conduct R35G fresh full native comparison, exact speed ablation and complementarity; do not promote R35F JIT or claim matched-FAP dominance. Preserve R28 and G4, R34 label gates.",
   "claim_ceiling": "Synthetic injections on real measured backgrounds; not independent real source labels. CPU kernel comparisons only, no proof of whole pipeline superiority. No confirmed extraterrestrial technosignatures.",
   "startup": [
     "Read this current-state JSON from GitHub main each new COSMOS conversation.",
@@ -296,14 +333,14 @@
     "eta_policy": "Observed min/max historical comparable duration minus elapsed, descriptive not prediction interval; unknown when elapsed exceeds all examples or scope differs. No invented percent progress; explicit checkpoint artifacts only."
   },
   "active_experiment": {
-    "stage": "R33B4",
-    "status": "RUNNING_METADATA_AUDIT",
-    "run": 44280025167,
-    "job": 134717935578,
-    "workflow_commit": "549db4839607e505e09a06e7eac41eb290c8ba54",
-    "receipt": "data/JANUS-COSMOS-SETI-R33B4-SOURCE-IDENTITY-2026-11-18.json",
-    "receipt_commit": "0468dba32f56fe9f1f63541822c215d58d56be50",
-    "design": "Audit scan-start frequency residuals; locate original author hit IDs and membership, Figure6 exact raw filename versus caption discrepancy; R34 aliases metadata only",
+    "stage": "R35B",
+    "status": "RUNNING_UNMEASURED",
+    "run": 44281785113,
+    "job": 134724062458,
+    "workflow_commit": "c892784a485ce793efe3ee39b3bf479f2958163a",
+    "receipt": "data/JANUS-COSMOS-SETI-R35-GRAND-BENCHMARK-2026-11-18.json",
+    "receipt_commit": "b857495611b583525fc94cec57d82d0144742cc0",
+    "manifest": 14418220586,
     "production_adoption": false
   },
   "hannah_memory": {
@@ -393,5 +430,50 @@
       "dec": "-70d55m13.11s",
       "observation_epoch_jd": 2459559.261
     }
+  },
+  "r35": {
+    "R35A": {
+      "status": "PASS_NATIVE_BLISS_CPU_KERNEL",
+      "run": 44281308232,
+      "job": 134722403715,
+      "artifact": 14416548199
+    },
+    "R35B": {
+      "status": "RUNNING_UNMEASURED",
+      "run": 44281785113,
+      "job": 134724062458
+    },
+    "R35C": {
+      "status": "PASS_NATIVE_FASTDD_CPU_KERNEL",
+      "run": 44282525864,
+      "job": 134726661493,
+      "artifact": 14417721398
+    },
+    "R35D": {
+      "status": "PASS_NATIVE_TURBOSETI_FINDDOPPLER",
+      "run": 44282975798,
+      "job": 134728246427,
+      "artifact": 14417178863
+    },
+    "R35E": {
+      "status": "HOLD_NO_CUDA_GPU",
+      "run": 44282975798,
+      "job": 134728247026,
+      "artifact": 14417922076
+    },
+    "R35F": {
+      "status": "PASS_EXACT_REPLAY__HOLD_NO_MEANINGFUL_SPEED_GAIN",
+      "run": 44283278886,
+      "job": 134729311746,
+      "artifact": 14417199284
+    }
+  },
+  "r33b4": {
+    "status": "HOLD_ORIGINAL_HIT_MAPPING",
+    "run": 44280025167,
+    "artifact": 14415474120,
+    "receipt": "data/JANUS-COSMOS-SETI-R33B4-SOURCE-IDENTITY-2026-11-18.json",
+    "receipt_commit": "0a30c3b8131937485536303970b0f176f9d49ce3",
+    "exact_figure6_file": true
   }
 }
