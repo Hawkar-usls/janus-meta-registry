@@ -1,0 +1,51 @@
+{
+  "schema": "janus.cosmos.seti.r28b.receipt.v1",
+  "date": "2026-11-18",
+  "status": "LAUNCHED_RESULTS_OPEN",
+  "previous_receipt": "data/JANUS-COSMOS-SETI-R28-HYBRID-DETECTOR-2026-11-17.json",
+  "previous_result_commit": "0ded75e3958b4894a024f870a16fcaeac5c403e1",
+  "source": {
+    "repo": "Hawkar-usls/Janus-Cosmos",
+    "branch": "research/seti-radio-candidate-search-20261117",
+    "protocol_commit": "e4df8d7a06b5d1337e2ea93f915cd1de66df280b",
+    "router_commit": "a344e81a246ebb5ff1c4467bf04bdd0ab05ac73e",
+    "bliss_adapter_commit": "cc5ce6b959175fd93fbe3a42a45cce66416147b5",
+    "workflow_commit": "93a46aaab1b95f8f0065152510cffca8b2388074",
+    "run": 44254920023
+  },
+  "jobs": [
+    {
+      "id": 134634180388,
+      "name": "paired",
+      "status": "in_progress",
+      "conclusion": null
+    }
+  ],
+  "hypothesis": "calibration-frozen linear-first route can retain R28 gain and reduce false alerts; weakest signals may benefit from linear priority",
+  "historical_r28": {
+    "localized": 149,
+    "controls": 27,
+    "weak": 20,
+    "eval_positives": 512,
+    "eval_controls": 512
+  },
+  "test": {
+    "calibration_targets": 2,
+    "evaluation_targets": 4,
+    "examples": 1024,
+    "leak_challenges": 128,
+    "router_grid_count": 36,
+    "router_budget": 0.04,
+    "baseline_budget": 0.05,
+    "primary_gate": "localized >= contemporaneous R28-style hybrid; controls <= min(25, contemporaneous hybrid controls); weak localized > contemporaneous hybrid",
+    "historical_target": "149 localized historical comparison descriptive only; different dataset",
+    "timing": "actual selective DP execution independently compared against precomputed routing, identical path decisions required; report DP calls and elapsed preprocessing+kernel",
+    "bliss": "native original pinned CPU integration, 65 complete drift hypotheses, same registered float32 inputs, no desmearing, separate HDF5 bridge, no whole pipeline comparison"
+  },
+  "open": [
+    "archive result not yet observed",
+    "BLISS runtime/adapter selftest not yet observed",
+    "no independent source-labelled origin test"
+  ],
+  "production_adoption": false
+}
