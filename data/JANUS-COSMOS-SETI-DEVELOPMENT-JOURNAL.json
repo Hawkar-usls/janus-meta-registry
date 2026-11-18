@@ -1181,6 +1181,29 @@
       },
       "limitations": "Different realized control rates; CPU phase scopes differ and timing different runners; turbo native reported linearized path approximate. Historical synthetic exam, not independent; HyperSETI no GPU. R35B independent of exact archive labels, not externally blind. HANNAH false-alarm reduction remains HOLD.",
       "next_gate": "Check R35B, compare native external tools on new frozen inputs with cal and exam, equal observed controls and hardware; investigate exact subpath reuse and complementarities without using historical labels for promotion."
+    },
+    {
+      "event_id": "20261118-R35G-COMMON-NATIVE-LAUNCH",
+      "date": "2026-11-18",
+      "stage": "R35G",
+      "kind": "LAUNCH",
+      "status": "RUNNING_UNMEASURED",
+      "decision": "Reconstruct authenticated R35B frozen manifest with 2 fit/2 null/4 exam groups, export hash-bound common float32 inputs, all three native CPU methods calibrated on same null set and compare paired losses including weak/very weak, 128 shared-reference challenge. Do not claim independent gain or GPU.",
+      "evidence": {
+        "run": 44284089889,
+        "job": 134732113706,
+        "workflow_commit": "fff91c0c57b4af1c7d7727f76777689711432649",
+        "protocol_commit": "13f244bf73ee75b1fcf11834e72eece1faa98869",
+        "implementation_commits": [
+          "f331db7b01760d50f408d8db50f3655bc6371f70",
+          "ac9f3318111c133e9f8cd24aebddd02c7cbcd177"
+        ],
+        "manifest_artifact": 14418220586,
+        "manifest_digest": "bcbde36c711bce156b554b763fa8fb08af53d0843b13328ae54490b96f6e9888",
+        "receipt_commit": "6b544d1b7a613e4ff6f74e5da2cc883019139a23"
+      },
+      "limitations": "R35B protocol omitted actual R32 groups; audit overlap, disqualify prospective claim if overlap. Common artifact exact same across native methods; equality vs original B arrays still unverified. No cross-run end-to-end speed ranking. R35F 1.0054x warm only, 0.525x incl JIT cost: reject as meaningful acceleration. HyperSETI no GPU.",
+      "next_gate": "Check R35B and R35G actual results; seal exact identities, quantify sensitivity/false-alert and cost tradeoffs; only optimize on development then repeat on independent groups with protected compatible-grid real controls."
     }
   ],
   "current": {
@@ -1195,7 +1218,13 @@
     "run": 44281785113,
     "job": 134724062458,
     "receipt": "data/JANUS-COSMOS-SETI-R35-GRAND-BENCHMARK-2026-11-18.json",
-    "production_adoption": false
+    "production_adoption": false,
+    "parallel": {
+      "stage": "R35G",
+      "run": 44284089889,
+      "job": 134732113706,
+      "status": "RUNNING_UNMEASURED"
+    }
   },
   "hannah_memory_seed": {
     "status": "PASS_DURABLE_SNAPSHOT",
@@ -1256,6 +1285,12 @@
     },
     "hyperseti": "HOLD_NO_CUDA_GPU",
     "jit": "HOLD_NO_MEANINGFUL_SPEED_GAIN",
-    "fresh_run": 44281785113
+    "fresh_run": 44281785113,
+    "r35g": {
+      "status": "RUNNING_UNMEASURED",
+      "run": 44284089889,
+      "job": 134732113706,
+      "receipt_commit": "6b544d1b7a613e4ff6f74e5da2cc883019139a23"
+    }
   }
 }
