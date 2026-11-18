@@ -1,0 +1,137 @@
+{
+  "schema_id": "janus.rowan.independent_blind_stability_design.v2",
+  "date_utc": "2026-11-18",
+  "state": "PROPOSED_FOR_INDEPENDENT_REVIEW__NO_DATASET_NO_CUSTODIAN_NO_PREDICTIONS",
+  "supersession": "Append-only proposed expansion for a future prospective study; v1 and all historical 200-case public FireProt artifacts remain frozen, valid only in their original scope. Do not reinterpret them as a new blind study.",
+  "source_methodological_review": {
+    "date": "2026-10-26",
+    "organization": "FireProt team",
+    "kind": "EXTERNAL_METHODOLOGICAL_ADVICE_NOT_VALIDATION_OR_CUSTODY",
+    "summary": [
+      "200 observations across 10 proteins reasonable for an initial pilot",
+      "Recommend at least twofold to threefold scale for a more robust benchmark",
+      "Require exactly matched experimental conditions and diverse mutations",
+      "No independent custodian referral or commitment available"
+    ],
+    "public_source": false,
+    "consent_to_execute": false
+  },
+  "parent_protocols": [
+    {
+      "path": "data/rowan/protocols/ROWAN-S2-BBC1-PRIMARY-LABEL-AUDIT-AND-INDEPENDENT-BLIND-PREREG-2026-10-25-v1.json",
+      "git_blob_sha": "7471ef83ff921ed1004f9453f3847aec87f5cb35"
+    },
+    {
+      "path": "data/rowan/protocols/ROWAN-INDEPENDENT-UNPUBLISHED-LABEL-CUSTODY-CONTRACT-2026-10-26-v1.json",
+      "git_blob_sha": "52a1a10ba34774b1c598d57428f8658dbfecb50e"
+    }
+  ],
+  "design": {
+    "pilot_historical_only": {
+      "proteins": 10,
+      "unique_mutant_outcomes": 200
+    },
+    "recommended_range": [
+      400,
+      600
+    ],
+    "chosen_target": {
+      "independent_nonhomologous_proteins": 30,
+      "unique_mutants_per_protein": 20,
+      "unique_mutant_outcomes": 600,
+      "matched_wildtype_references": 30,
+      "required_comparable_prediction_records": 630
+    },
+    "counts_exclude_technical_and_biological_replicates": true,
+    "replicates_must_be_retained_and_reported": true,
+    "protein_clusters_must_be_independently_verified": true,
+    "selection_before_label_access": true,
+    "diversity_documentation": [
+      "predeclare label-independent sampling rule and diversity summary",
+      "report coverage of independent proteins, distinct positions and substitution classes",
+      "no selection using experimental outcomes or model score",
+      "no post-hoc replacement, no cherry-picking, retain failures and coverage"
+    ],
+    "comparability": {
+      "require_single_frozen_assay_protocol": true,
+      "require_exact_matching_experimental_conditions": true,
+      "metadata_required": [
+        "assay protocol revision",
+        "experimental method",
+        "temperature",
+        "pH",
+        "buffer composition",
+        "measurement units",
+        "reference state and sign convention",
+        "instrument calibration and uncertainty",
+        "replicate identifiers and counts",
+        "batch and laboratory provenance"
+      ],
+      "different_conditions": "HOLD_EXCLUDE_OR_PREREGISTER_SEPARATE_FUTURE_STUDY__NO_POOLING",
+      "replicate_aggregation": "Predeclare and independently verify method before prediction; do not count repeated measurements as independent variants",
+      "sign_unit_transform": "Verify assay-specific units, raw-to-target sign and transformation independently; no fit to holdout labels"
+    }
+  },
+  "model": {
+    "frozen_sha256": "52e0d6e75d603f0596ac7938715e45fccaf38835fac0ed110176128e33d86cf3",
+    "frozen_model_path": "data/rowan/feedback/FEEDBACK-RUN40236409772-38e04b8f73a81a21.json",
+    "provider_bridge": "HOLD_UNTIL_ROWAN_LOCAL_BOLTZ2_FEATURE_EQUIVALENCE_ON_SEPARATE_TECHNICAL_CONTROLS",
+    "no_retraining_or_recalibration": true,
+    "primary_comparator": "zero-change baseline",
+    "primary_metric": "equal-protein-weighted MAE in verified common units",
+    "bootstrap": {
+      "cluster": "independent protein",
+      "replicates": 10000,
+      "seed": 20261025,
+      "ci_percent": [
+        2.5,
+        97.5
+      ]
+    },
+    "pass_criteria": [
+      "all source, independence, comparability, prediction and custody gates PASS",
+      "macro MAE <= 0.90 * macro MAE zero baseline",
+      "upper 95% cluster bootstrap bound of paired MAE difference < 0"
+    ],
+    "power": "not yet established; independent review/power justification required before enrollment; no claim that n=600 guarantees adequate power"
+  },
+  "custody": {
+    "external_custodian": null,
+    "independent_identity_and_signed_commitment_verified": false,
+    "unpublished_outcomes_verified": false,
+    "conditions_and_selection_frozen": false,
+    "all_600_outcomes_available": false,
+    "all_630_comparable_prediction_records_frozen": false,
+    "prediction_manifest_sha256": null,
+    "external_holdout": "OPEN",
+    "unblinding_authorized": false,
+    "requirements": [
+      "independently verify institution and custodian identity/signing authority",
+      "custodian retains unpublished outcomes and confidential commitment salt; commit ordered data with detached signature before predictions",
+      "JANUS receives only approved metadata, never outcomes before frozen predictions",
+      "outside reviewer verifies independent custody, leakage screening, temporal order and full prediction completeness before any unblinding",
+      "publish all results including negative, abstention, missing and timeout cases; do not tune on holdout"
+    ]
+  },
+  "gates": {
+    "condition_metadata": "OPEN",
+    "diversity_and_independence": "OPEN",
+    "sample_size_and_power": "OPEN",
+    "provider_equivalence": "OPEN",
+    "independent_custodian": "OPEN",
+    "predictions": "NOT_GENERATED",
+    "external_lab_validation": "OPEN",
+    "scientific_promotion": false,
+    "paid_rowan_jobs_authorized": false,
+    "new_rowan_credit_budget": 0,
+    "autonomous_execution": false
+  },
+  "next_permitted": "Independent methodological review, metadata-only design/power and source equivalence audit without provider submissions or label access. New consent and explicit separate budget approval required for any paid jobs.",
+  "observed": {
+    "new_measurements": 0,
+    "new_predictions": 0,
+    "rowan_credits_used": 0,
+    "external_validation": false
+  },
+  "date_local": "2026-11-19"
+}
