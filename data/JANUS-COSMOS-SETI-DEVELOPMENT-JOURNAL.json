@@ -1204,27 +1204,93 @@
       },
       "limitations": "R35B protocol omitted actual R32 groups; audit overlap, disqualify prospective claim if overlap. Common artifact exact same across native methods; equality vs original B arrays still unverified. No cross-run end-to-end speed ranking. R35F 1.0054x warm only, 0.525x incl JIT cost: reject as meaningful acceleration. HyperSETI no GPU.",
       "next_gate": "Check R35B and R35G actual results; seal exact identities, quantify sensitivity/false-alert and cost tradeoffs; only optimize on development then repeat on independent groups with protected compatible-grid real controls."
+    },
+    {
+      "event_id": "20261118-R35B-RESULT-OVERLAP-AUDIT",
+      "date": "2026-11-18",
+      "stage": "R35B",
+      "kind": "RESULT",
+      "status": "HOLD_SENSITIVITY_AND_CROSS_R32_OVERLAP",
+      "decision": "Reject smooth fusion as replacement; preserve JUXTAPOSE binary decision early stop as engineering gain, audit true independence. Four of eight acquisition groups overlap R32 including two evaluation groups; no fresh independent claim.",
+      "evidence": {
+        "run": 44281785113,
+        "job": 134724062458,
+        "artifact": 14417393733,
+        "artifact_sha256": "c11410fc46aa3d7d26a9dcf8fa922ffb7940c455491e1af7c7652b721dcb34e7",
+        "lock_sha256": "9f90d0e4f2779d570d564a8789b88c944e587999969a81f729ec0ebef76c06b2",
+        "receipt_commit": "e6d45524f1b88f22da4bac42929b8cac00b0500e",
+        "baseline": {
+          "localized": 181,
+          "weak": 27,
+          "very_weak": 1,
+          "controls": 47,
+          "shared": 17
+        },
+        "smooth_fusion": {
+          "localized": 170,
+          "weak": 23,
+          "very_weak": 1,
+          "controls": 36,
+          "shared": 55,
+          "lost_weak": 5,
+          "lost_shared": 3
+        },
+        "raw_smooth": {
+          "localized": 155,
+          "weak": 26,
+          "controls": 39,
+          "shared": 62,
+          "lost_shared": 0
+        },
+        "juxtapose": {
+          "samples": 1024,
+          "full": 66560,
+          "early": 54232,
+          "full_seconds": 1.483476863000078,
+          "early_seconds": 1.2136353970001892,
+          "decision_equivalent": true
+        },
+        "overlap": [
+          [
+            "HIP16536",
+            57959,
+            "component_fit"
+          ],
+          [
+            "HIP33499",
+            57789,
+            "component_fit"
+          ],
+          [
+            "HIP522",
+            57803,
+            "evaluation"
+          ],
+          [
+            "HIP56244",
+            57961,
+            "evaluation"
+          ]
+        ]
+      },
+      "limitations": "Synthetic injected signals on archive backgrounds, non-independent R32 groups and no true origin labels. Exact binary existential decision only, not maximum localization path.",
+      "next_gate": "R35G identical common inputs for external comparisons (development); next strict group-disjoint fresh exam; separate raw preservation lane and sensitivity/false alert calibration."
     }
   ],
   "current": {
-    "stage": "R35",
-    "status": "THREE_NATIVE_COMPARISONS_COMPLETE__JIT_NO_MEANINGFUL_GAIN__FRESH_RUNNING",
+    "stage": "R35B",
+    "status": "HOLD_SENSITIVITY_AND_CROSS_R32_OVERLAP",
+    "run": 44281785113,
     "production_adoption": false,
     "confirmed_technosignatures": 0
   },
   "active_experiment": {
-    "stage": "R35B",
+    "stage": "R35G",
+    "run": 44284089889,
+    "job": 134732113706,
     "status": "RUNNING_UNMEASURED",
-    "run": 44281785113,
-    "job": 134724062458,
     "receipt": "data/JANUS-COSMOS-SETI-R35-GRAND-BENCHMARK-2026-11-18.json",
-    "production_adoption": false,
-    "parallel": {
-      "stage": "R35G",
-      "run": 44284089889,
-      "job": 134732113706,
-      "status": "RUNNING_UNMEASURED"
-    }
+    "production_adoption": false
   },
   "hannah_memory_seed": {
     "status": "PASS_DURABLE_SNAPSHOT",
@@ -1291,6 +1357,21 @@
       "run": 44284089889,
       "job": 134732113706,
       "receipt_commit": "6b544d1b7a613e4ff6f74e5da2cc883019139a23"
+    },
+    "r35b": {
+      "status": "HOLD_SENSITIVITY_AND_CROSS_R32_OVERLAP",
+      "run": 44281785113,
+      "receipt_commit": "e6d45524f1b88f22da4bac42929b8cac00b0500e",
+      "overlap_groups": 4,
+      "overlap_eval_groups": 2,
+      "juxtapose": {
+        "samples": 1024,
+        "full": 66560,
+        "early": 54232,
+        "full_seconds": 1.483476863000078,
+        "early_seconds": 1.2136353970001892,
+        "decision_equivalent": true
+      }
     }
   }
 }
