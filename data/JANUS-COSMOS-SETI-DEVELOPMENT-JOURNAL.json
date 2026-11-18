@@ -1468,27 +1468,81 @@
       },
       "limitations": "Separate native runners; common registered input comparison not full upstream raw pipeline or same-host speed proof. Alternative files untested, no workflow launched. R34 origin labels and protected physical same-grid source remain HOLD.",
       "next_gate": "Read canonical R36F2 manifest/result and native arms; compare realized controls and paired localization. If promising, separately benchmark same host using locked common artifact and validate HANNAH grid representation on independent labelled development data."
+    },
+    {
+      "event_id": "20261118-R35G-RESULT",
+      "date": "2026-11-18",
+      "stage": "R35G",
+      "kind": "RESULT",
+      "status": "PASS_NATIVE_COMMON_REPLAY__HOLD_INDEPENDENT_OVERLAP_AND_CONTROL_RATE",
+      "decision": "Three pinned native CPU jobs completed on same common artifact. R28 181 localized/27 weak/47 controls; BLISS 154/27/43, fastDD 134/21/36, turboSETI 89/11/45. R32 overlap four groups including two exam groups, no independent gain or matched realized control rates.",
+      "evidence": {
+        "run": 44284089889,
+        "common_artifact": 14420977581,
+        "common_digest": "1c7e48d3fdf788233fa24e6db3e97f9f505d3c5d759720158ca200584057e517",
+        "receipt_commit": "70c7e3c766fc91dd9df12e17b0dac7aa7e7d3825",
+        "native_jobs": [
+          134753572900,
+          134753572830,
+          134753572887
+        ]
+      },
+      "next_gate": "Fresh source-disjoint comparison, protected measured and source-labelled RFI controls, same-host full cost."
+    },
+    {
+      "event_id": "20261118-R36F2-SOURCE-HOLD",
+      "date": "2026-11-18",
+      "stage": "R36F2",
+      "kind": "RESULT",
+      "status": "HOLD_INSUFFICIENT_FRESH_SOURCE_GROUPS",
+      "decision": "Freeze failed at 1/8 eligible groups (HIP93069 day 58000); 95 logged attempts; native job skipped. No evaluation spectra or new detector results; no relaxation.",
+      "evidence": {
+        "run": 44289784087,
+        "job": 134751692007,
+        "receipt_commit": "95b07548c9b89bc3787e01bee0f72eeb8947f944",
+        "selected": 1,
+        "required": 8
+      },
+      "limitations": "Failure occurred before artifact upload; logs provide selected metadata, no full source lock artifact.",
+      "next_gate": "R37 archived source scout and physically appropriate GBT/Parkes qualification."
+    },
+    {
+      "event_id": "20261118-R37A-RESOLUTION-SOURCE-LAUNCH",
+      "date": "2026-11-18",
+      "stage": "R37A",
+      "kind": "LAUNCH",
+      "status": "RUNNING_UNMEASURED",
+      "decision": "Controlled physical area-weighted rebinning on 10 exact measured passports from R33A/B2, four derived coarsened versions each, fixed 8Hz/36s representation, given track and conservation checks; 36/40 at cosine .9 minimum. Separate metadata-only archive scout for non-HIP Parkes aliases and Price et al. Green Bank L-band targets; all known exclusions retained.",
+      "evidence": {
+        "run": 44292499460,
+        "grid_job": 134760977302,
+        "sources_job": 134760976816,
+        "protocol_commit": "03c0ba8defb6d456e5d239db3d8bc629b00c95f1",
+        "grid_commit": "e7f2720ec726da9a007b47fcabda2beba5c08703",
+        "scout_commit": "1796cbd91da734fd281a136cb4cfa7f5ad39a63b",
+        "workflow_commit": "fdb06ca41f63c2cf19efd1f7fc550561d603de47",
+        "receipt": "data/JANUS-COSMOS-SETI-R37A-HANNAH-RESOLUTION-2026-11-18.json",
+        "receipt_commit": "4fa3b56797bb24cf0e5db4ff0243bed0dde03a92"
+      },
+      "limitations": "Same parent raw data and same campaign; given measured paths, transformed observations not independent, no confirmed source label for drift tracks or actual cross-instrument classification. Metadata scout not a qualified exam.",
+      "next_gate": "Inspect actual R37A and source summaries; HOLD if shapes collapse across families or support fails. Qualify source IDs and protected real controls before fresh comparison."
     }
   ],
   "current": {
-    "stage": "R35B",
-    "status": "HOLD_SENSITIVITY_AND_CROSS_R32_OVERLAP",
-    "run": 44281785113,
+    "stage": "R36F2",
+    "status": "HOLD_INSUFFICIENT_FRESH_SOURCE_GROUPS",
+    "run": 44289784087,
     "production_adoption": false,
     "confirmed_technosignatures": 0
   },
   "active_experiment": {
-    "stage": "R35G",
+    "stage": "R37A",
     "status": "RUNNING_UNMEASURED",
-    "run": 44284089889,
-    "job": 134732113706,
-    "receipt": "data/JANUS-COSMOS-SETI-R35-GRAND-BENCHMARK-2026-11-18.json",
-    "parallel": {
-      "stage": "R36F2",
-      "status": "RUNNING_UNMEASURED",
-      "run": 44289784087,
-      "job": 134751692007
-    }
+    "run": 44292499460,
+    "grid_job": 134760977302,
+    "sources_job": 134760976816,
+    "receipt": "data/JANUS-COSMOS-SETI-R37A-HANNAH-RESOLUTION-2026-11-18.json",
+    "production_adoption": false
   },
   "hannah_memory_seed": {
     "status": "PASS_DURABLE_SNAPSHOT",
@@ -1551,10 +1605,9 @@
     "jit": "HOLD_NO_MEANINGFUL_SPEED_GAIN",
     "fresh_run": 44281785113,
     "r35g": {
-      "status": "RUNNING_UNMEASURED",
+      "status": "PASS_NATIVE_COMMON_REPLAY__HOLD_INDEPENDENT_OVERLAP_AND_CONTROL_RATE",
       "run": 44284089889,
-      "job": 134732113706,
-      "receipt_commit": "6b544d1b7a613e4ff6f74e5da2cc883019139a23"
+      "receipt_commit": "70c7e3c766fc91dd9df12e17b0dac7aa7e7d3825"
     },
     "r35b": {
       "status": "HOLD_SENSITIVITY_AND_CROSS_R32_OVERLAP",
@@ -1586,11 +1639,11 @@
   },
   "r36": {
     "stage": "R36A-E",
-    "status": "R36F1_EXACT_PASS__R36F2_RUNNING_UNMEASURED",
+    "status": "HOLD_INSUFFICIENT_FRESH_SOURCE_GROUPS",
     "run": 44287522512,
     "job": 134743918777,
     "receipt": "data/JANUS-COSMOS-SETI-R36-GALAXY-SWARM-2026-11-18.json",
-    "receipt_commit": "fb6350022e31b705b825e5cd54a6151d8995a6b9",
+    "receipt_commit": "95b07548c9b89bc3787e01bee0f72eeb8947f944",
     "artifact": 14419252346,
     "r36f1": {
       "status": "PASS_EXACT_ARCHIVED_HYBRID_REPLAY",
@@ -1599,7 +1652,7 @@
       "artifact": 14420491434
     },
     "r36f2": {
-      "status": "RUNNING_UNMEASURED",
+      "status": "HOLD_INSUFFICIENT_FRESH_SOURCE_GROUPS",
       "run": 44289784087,
       "job": 134751692007,
       "receipt_commit": "6a9d4e2aaa62912192357001f3c208477aca3902"
