@@ -1,7 +1,7 @@
 {
   "schema": "janus.cosmos.r36.receipt.v1",
   "date": "2026-11-18",
-  "status": "R36F1_EXACT_PASS__R36F2_RUNNING_UNMEASURED",
+  "status": "R36F1_EXACT_PASS__R36F2_HOLD_INSUFFICIENT_SOURCES",
   "source": {
     "repo": "Hawkar-usls/Janus-Cosmos",
     "branch": "research/seti-radio-candidate-search-20261117",
@@ -283,7 +283,7 @@
     "artifact_sha256": "5c1e72a7467d05305289e637ec43d913716063a0724affb06c489ce1fd6c1de4"
   },
   "r36f2": {
-    "status": "RUNNING_UNMEASURED",
+    "status": "HOLD_INSUFFICIENT_FRESH_SOURCE_GROUPS",
     "run": 44289784087,
     "job": 134751692007,
     "protocol_commit": "e826fb8c5c137052fd81c164ee076db4a06ccd23",
@@ -336,6 +336,27 @@
         "research/seti/r36f2_fresh_pipeline.py"
       ],
       "reason": "Separate same-host cost draft prepared before discovering already active R36F2. Do not run it alongside the canonical experiment; canonical R36F2 has broader pinned prior manifest exclusion. Native comparison file already exists; not overwritten. Draft not tested; reconcile only after canonical benchmark if needed for same-host timing."
-    }
+    },
+    "job_conclusion": "failure",
+    "native_conclusion": "skipped",
+    "selected_groups": 1,
+    "required_groups": 8,
+    "selected_metadata": [
+      {
+        "target": "HIP93069",
+        "day": 58000,
+        "files": [
+          "Parkes_58000_42239_HIP93069_S_fine.h5",
+          "Parkes_58000_42583_HIP93069_R_fine.h5",
+          "Parkes_58000_42930_HIP93069_S_fine.h5",
+          "Parkes_58000_43272_HIP93069_R_fine.h5"
+        ]
+      }
+    ],
+    "attempt_count": 95,
+    "freeze_error": "Insufficient fresh day-disjoint archive targets: leave HOLD, never relax split.",
+    "spectrum_processing_started": false,
+    "source_artifacts": [],
+    "limitation": "Failure before successful freeze; source lock upload not executed. Preserve actual logs; no comparison or new detector result."
   }
 }
