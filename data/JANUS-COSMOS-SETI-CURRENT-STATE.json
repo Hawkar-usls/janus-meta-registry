@@ -2,26 +2,33 @@
   "schema": "janus.context_bridge.current_state.v1",
   "project": "JANUS COSMOS / SETI",
   "updated_utc": "2026-11-18T09:39:47Z",
-  "as_of": "R37E0 complete authenticated inventory, independent sessions HOLD; R37E1 dated WLAN metadata qualification running",
+  "as_of": "R37E1 metadata qualification complete, identity HOLD; R37E2 aggregate power observability running",
   "authority": {
     "repository": "Hawkar-usls/Janus-Cosmos",
     "research_branch": "research/seti-radio-candidate-search-20261117",
     "registry": "Hawkar-usls/janus-meta-registry",
     "journal": "data/JANUS-COSMOS-SETI-DEVELOPMENT-JOURNAL.json",
-    "journal_commit": "561355f95f6a760df78e661e72574227d2c1b34d",
+    "journal_commit": "f57f7b10b1c74129f58188f63b198b1b00d59801",
     "continuity_protocol": "data/JANUS-PROJECT-CONTINUITY-LEDGER-HRAIN-INAIHR-PROTOCOL-2026-08-24-v1.0.json",
     "protocol_blob": "740065281c7c7b289c927db7661b9b000abb8c68"
   },
   "goal": "Increase weak narrowband radio signal recovery while separating background/RFI and preserving known physical signals, with independently reproducible scientific controls.",
   "current": {
-    "stage": "R37E0",
-    "status": "HOLD_CAPTURE_UNIT_QUALIFICATION",
-    "run": 44297207941,
-    "job": 134777242242,
-    "artifact": 14424547337,
-    "artifact_sha256": "4215a959bf7bdc329a359a749e3f88c4946de8fc3a67d0b86ca41ffb6f5c9087",
+    "stage": "R37E1",
+    "status": "HOLD_AUTHOR_LABEL_AND_TRANSMIT_CHANNEL_REVIEW",
+    "run": 44299491719,
+    "job": 134785191399,
+    "artifact": 14425796394,
+    "artifact_sha256": "c84ec23704d73b15605c153d2451f36e257781069ac449b5747a5f5d80f80aeb",
     "receipt": "data/JANUS-COSMOS-SETI-R37E-TRANSMITTER-IDENTITY-2026-11-18.json",
-    "receipt_commit": "bf8f9a9aee34b7637177d8c2e12a02baf63e3be1",
+    "receipt_commit": "3f501accff7f40efaa8c700e7aa7a0c449845690",
+    "results": {
+      "recordings": 431,
+      "sessions": 12,
+      "days": 4,
+      "receiver_center_hz": 2412000000,
+      "sample_rate_hz": 55000000
+    },
     "production_adoption": false
   },
   "preceding": {
@@ -376,7 +383,7 @@
     }
   },
   "open_gates": [
-    "R37E1: authenticated whole WLAN session/day/environment qualification; author device mapping and exact common transmit channel review before waveform evaluation; temporal dataset restricted.",
+    "R37E2 pooled power observability result, raw dedup and duration support. Physical identity, environment transfer of a classifier, calibrated identity abstention and R38 remain HOLD.",
     "R37B: extra source groups and historical alias/pointing qualification; 6 Parkes header groups, 0 GBT, PROXCEN known target so <=5 potential new groups; R36F2 remains HOLD.",
     "R35H HOLD: zero compatible HANNAH queries, no joint localization/control gain. Develop physically validated resolution-aware features in separate development line, no threshold relaxation; independently protected controls required.",
     "R35F exact but negligible warm speedup; need blocking costs and more efficient memory traffic; GPU HyperSETI HOLD without CUDA",
@@ -391,7 +398,7 @@
     "Retain raw paths when OFF contains signal",
     "R33B4 original hit mapping HOLD, Figure6 exact file available; R34 independently labelled inputs and protected compatible grid still HOLD."
   ],
-  "next_allowed": "CHECK read-only inspect R37E1 run 44299491719 R37E1_SUMMARY. On continuation seal verified metadata, qualify author label semantics and carrier, use separately frozen aggregate power observability test in controlled lab only. Preserve R28 and G4; no production or external release.",
+  "next_allowed": "CHECK read-only inspect R37E2 44302684812 and R37E2_POWER_SUMMARY. On continuation record aggregate information loss and actual observation duration limits; no emitter classification or automatic label promotion. Preserve G4 and Hybrid R28.",
   "claim_ceiling": "Synthetic injections on real measured backgrounds; not independent real source labels. CPU kernel comparisons only, no proof of whole pipeline superiority. No confirmed extraterrestrial technosignatures.",
   "startup": [
     "Read this current-state JSON from GitHub main each new COSMOS conversation.",
@@ -430,14 +437,14 @@
     "eta_policy": "Observed min/max historical comparable duration minus elapsed, descriptive not prediction interval; unknown when elapsed exceeds all examples or scope differs. No invented percent progress; explicit checkpoint artifacts only."
   },
   "active_experiment": {
-    "stage": "R37E1",
-    "status": "RUNNING_METADATA_ONLY",
-    "run": 44299491719,
-    "job": 134785191399,
-    "protocol_commit": "bc08a2ec33261ed22c9da5803a04c07cb40788c3",
-    "workflow_commit": "56453cf4a98333c0ae9c4e3ab40bb778d894e7b6",
+    "stage": "R37E2",
+    "status": "RUNNING_UNMEASURED_AGGREGATE_POWER_ONLY",
+    "run": 44302684812,
+    "job": 134796176609,
+    "protocol_commit": "75712069d85729bed4440047012df28bb45d5ca0",
+    "workflow_commit": "ef31dca1e9339dcb47f1894d7348497f0c51595c",
     "receipt": "data/JANUS-COSMOS-SETI-R37E-TRANSMITTER-IDENTITY-2026-11-18.json",
-    "receipt_commit": "bf8f9a9aee34b7637177d8c2e12a02baf63e3be1",
+    "receipt_commit": "3f501accff7f40efaa8c700e7aa7a0c449845690",
     "production_adoption": false
   },
   "hannah_memory": {
@@ -733,10 +740,10 @@
       }
     },
     "r37e": {
-      "status": "R37E1_RUNNING_METADATA_ONLY",
-      "run": 44299491719,
-      "job": 134785191399,
-      "r37e0": "HOLD_CAPTURE_UNIT_QUALIFICATION"
+      "status": "HOLD_AUTHOR_LABEL_AND_TRANSMIT_CHANNEL_REVIEW",
+      "r37e1_run": 44299491719,
+      "r37e2_run": 44302684812,
+      "scope": "Aggregate resolution and capture integrity only; no classification or astrophysical identity proof."
     }
   }
 }
