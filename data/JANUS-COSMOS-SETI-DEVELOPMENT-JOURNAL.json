@@ -2270,19 +2270,51 @@
       },
       "limitations": "Published checksums not necessarily independently generated, no raw file authentication or natural line proof until full-byte verification. No R37F3/R38 promotion.",
       "next_gate": "Inspect actual exact matches and full-file checksums; report budget-exceeding files separately."
+    },
+    {
+      "event_id": "20261118-R37F2D2-HTTPS-CHECKSUM-RESULT",
+      "date": "2026-11-18",
+      "stage": "R37F2D2",
+      "kind": "RESULT",
+      "status": "PUBLISHED_CHECKSUM_PARTIAL_PASS__FULL_FILE_HOLD",
+      "decision": "Official HTTPS release and 31 catalogue pages authenticated; 4/11 exact file references joined with published MD5 and size, including S235, S231, NGC7538 and W3OH. Smallest matched file 1610613126 bytes exceeds initial 1GiB transfer cap. No complete file hash and no spectral measurement. Remaining seven may lie outside page cap.",
+      "evidence": {
+        "run": 44324269494,
+        "job": 134871191058,
+        "artifact": 14436247190,
+        "artifact_sha256": "85cd9df9eed90667e63d85c5ef4e036f44f5cd7cdd9c256630e66211e3526edb",
+        "receipt_commit": "8e860363f61dae048bf88501fe46e6eb0f90cc28"
+      }
+    },
+    {
+      "event_id": "20261118-R37F2D2A-FULL-STREAM-LAUNCH",
+      "date": "2026-11-18",
+      "stage": "R37F2D2A",
+      "kind": "LAUNCH",
+      "status": "RUNNING_NARROW_CHECKSUM_AND_COMPLETE_STREAM",
+      "decision": "Narrow exact MJD query for seven unmatched files; select smallest exact official HTTPS checksum reference within 2GiB cap. Stream entire file without storage, compare published MD5 and byte count, record local SHA256. No partial checksum promotion or spectral measurement.",
+      "evidence": {
+        "run": 44324775316,
+        "job": 134873022739,
+        "protocol_commit": "859c5a58c1daa20838dce954201dcf69c48be2f6",
+        "implementation_commit": "b0931400b9170346816827bd818912a569f90b94",
+        "workflow_commit": "91565fb45a4a70c29788fd707782458acfe8ceb4",
+        "receipt_commit": "36f175e47be64f1090cac97eb930b663dabd2293"
+      },
+      "next_gate": "Inspect R37F2D2A_SUMMARY for complete stream hash and exact reference results. Natural line and spatial OFF qualification remain separate."
     }
   ],
   "current": {
-    "stage": "R37F2D1A",
-    "status": "CATALOGUE_NAME_COORDINATE_PASS__ARCHIVE_INTEGRITY_HOLD",
-    "run": 44322829452,
+    "stage": "R37F2D2",
+    "status": "PUBLISHED_CHECKSUM_PARTIAL_PASS__FULL_FILE_HOLD",
+    "run": 44324269494,
     "production_adoption": false
   },
   "active_experiment": {
-    "stage": "R37F2D2",
-    "status": "RUNNING_OFFICIAL_HTTPS_CHECKSUM_AUDIT",
-    "run": 44324269494,
-    "job": 134871191058,
+    "stage": "R37F2D2A",
+    "status": "RUNNING_NARROW_CHECKSUM_AND_COMPLETE_STREAM",
+    "run": 44324775316,
+    "job": 134873022739,
     "receipt": "data/JANUS-COSMOS-SETI-R37E-TRANSMITTER-IDENTITY-2026-11-18.json",
     "production_adoption": false
   },
