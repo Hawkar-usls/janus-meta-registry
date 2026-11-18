@@ -1,0 +1,102 @@
+{
+  "schema": "janus.cosmos.r32.hannah.receipt.v1",
+  "date": "2026-11-18",
+  "status": "RUNNING_UNMEASURED",
+  "source": {
+    "repo": "Hawkar-usls/Janus-Cosmos",
+    "branch": "research/seti-radio-candidate-search-20261117",
+    "protocol": {
+      "path": "research/seti/r32_hannah_adaptive_protocol.json",
+      "commit": "e474c093d533d451c0f566345ad6cafcbee39d5e",
+      "blob": "1a543af8371b2f00528e25742766988255b7f7fb"
+    },
+    "implementation": {
+      "path": "research/seti/r32_hannah_adaptive.py",
+      "commit": "9e4a6f1e690ad0545469ac1fc18b4c8cb6c54382",
+      "blob": "32f45dee3485d1675314ef248432832fb1b61e91"
+    },
+    "workflow": {
+      "path": ".github/workflows/seti-r32-hannah-adaptive.yml",
+      "commit": "628919ea7806b08cad92a15b1bc2fcf9ee9ca611",
+      "blob": "fc63e174316c44c91a8cd45d54271faac44f9226",
+      "run": 44268188685,
+      "job": 134677854370,
+      "observed_status": "in_progress",
+      "observed_step": "dependency installation"
+    }
+  },
+  "parent": {
+    "generation": 3,
+    "entries": 109,
+    "verified_rfi": 1,
+    "recurrent": 12,
+    "unknown": 96,
+    "sha256": "ec382441e707ebf131e3cb84b7037a9729f31ef3163412e99eca4462dcf0d807",
+    "path": "research/seti/memory/hannah_library_v0003.json",
+    "commit": "a74c4ddb46b201a7aaad6e920ff0e69c181831cc",
+    "blob": "f8c559cc7e194adf9876fd72c0fac711f2025f9a",
+    "pointer_commit": "98657ba6de6693e1d593b1f300c39e1f387e665a",
+    "recovery_run": 44267559021
+  },
+  "r31": {
+    "run": 44265324373,
+    "receipt_commit": "6826c3d7a8de616d7c40c029387d726f88a99f4f",
+    "science": "HOLD",
+    "baseline": [
+      127,
+      13,
+      22
+    ],
+    "all_memory": [
+      127,
+      13,
+      22
+    ],
+    "fields": [
+      "localized",
+      "weak_localized",
+      "control_alerts"
+    ],
+    "hook": "PASS_HOOK_DEVELOPMENT"
+  },
+  "design": {
+    "fit_targets": 2,
+    "policy_calibration_targets": 2,
+    "evaluation_targets": 4,
+    "distinct_days": 8,
+    "paired_exam": 1024,
+    "shared_reference_challenges": 128,
+    "measured_tiles_for_candidate_g4": 128,
+    "modes": [
+      "baseline_full",
+      "exact_g3",
+      "shape_all",
+      "shape_recurrent",
+      "shape_all_off",
+      "shape_recurrent_off",
+      "off_only"
+    ],
+    "family": "Amplitude-normalized spectral and temporal descriptors, mirror and frequency-shift tolerance, soft drift term, physical grid tolerance, no decision from labels or target identity",
+    "calibration": "Choose shape/OFF policies on two disjoint calibration targets only; require zero held positive alarms including shared-reference positives; disabled if no safe positive removal of controls. Separate two fit targets for baseline.",
+    "gate": "Recurrent-and-OFF fewer controls vs baseline and OFF-only, no positive alarm/weak/localized/shared-reference losses. Disabled/no-op is HOLD.",
+    "memory_hook": "Append measured-only passports after independent frozen testing; no automatic promotion or arbitrary origin labels."
+  },
+  "verified_label_scout": {
+    "status": "SOURCE_LOCATED_RAW_JOIN_NOT_DONE",
+    "sources": [
+      "https://www.nature.com/articles/s41550-021-01508-8",
+      "https://seti.berkeley.edu/blc1/",
+      "https://arxiv.org/abs/2111.06350",
+      "https://arxiv.org/abs/2002.06162"
+    ],
+    "next": "Obtain precise published BLC1 lookalike and mirrored-family identities from supplementary material; bind scan/time/frequency/drift and source bytes with a reviewed receipt, exclude protected astrophysical/spacecraft signals; evaluate independent family splits; no inferred origin or label expansion until raw join verified."
+  },
+  "limitations": [
+    "R32 still running; no scientific gain measured yet.",
+    "Only one confirmed anchor, outside Parkes G3 narrowband context. Morphological resemblance and OFF evidence do not establish origin.",
+    "Policy grid may abstain; compare OFF-only to isolate actual memory contribution.",
+    "Archive control samples and synthetic injected positives are not independent physical-source labels; no production veto.",
+    "Hook only on controlled new path; all legacy lines not integrated."
+  ],
+  "production_adoption": false
+}
