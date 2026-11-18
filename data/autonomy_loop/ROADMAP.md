@@ -2,7 +2,7 @@
 
 Automatically rebuilt from pinned public evidence.
 
-Status: **AUTONOMY_PARTIAL** · observed 2026-11-17T23:12:05Z
+Status: **AUTONOMY_PARTIAL** · observed 2026-11-18T03:58:24Z
 
 Current phase: **P0.3**
 
@@ -27,9 +27,9 @@ A successful collector is not proof of useful work or full autonomy.
 ```json
 {
   "native_model": {
-    "attempt_count": 2003,
+    "attempt_count": 2006,
     "promotion_count": 62,
-    "rejection_count": 1941,
+    "rejection_count": 1944,
     "checkpoint_sha256": "06d7e6228ca9aef2dc58eb55fe1c805aa3b66e4f8fb90b0e946ce6af47b1a662",
     "last_training_status": "REJECTED",
     "retained_history_count": 64,
@@ -55,15 +55,15 @@ A successful collector is not proof of useful work or full autonomy.
     "waiting": 38
   },
   "home": {
-    "sequence": 393,
+    "sequence": 395,
     "source_main_sha": "d178c8353c647e10fb2f9c5e2db95815326997e0"
   },
   "beetle_delivery": {
     "status": "WARN",
-    "observed_at": "2026-11-17T20:57:02.077476Z",
-    "health_age_minutes": 135,
+    "observed_at": "2026-11-17T23:59:18.637593Z",
+    "health_age_minutes": 239,
     "health_clock": "VERIFIED_TIMESTAMP",
-    "routing_gate_age_minutes": 135,
+    "routing_gate_age_minutes": 239,
     "routing_gate_clock": "VERIFIED_TIMESTAMP",
     "max_health_age_minutes": 120,
     "total_pending": 2,
@@ -78,38 +78,36 @@ A successful collector is not proof of useful work or full autonomy.
   "native_decision": "NO_ACTION",
   "forge": "SEARCHED_NO_NOVEL_FALLBACK_CANDIDATE",
   "p03_preflight": {
-    "authority_delta": 0,
+    "schema": "janus.autonomy.p03_preflight.v1",
+    "status": "P03_PREFLIGHT_BLOCKED",
     "blockers": [
       "PRIVATE_ACK_AUTH_UNKNOWN",
       "PRODUCER_ROUTING_HELD"
     ],
-    "full_issue_162_acceptance": false,
-    "home_model_call_attested": false,
-    "home_sequence": 393,
-    "p03_acceptance": false,
-    "pre_route_gate_allowed": false,
+    "public_receiver_count": 18,
+    "public_receiver_pending": 0,
+    "public_receiver_lagging": 0,
     "private_ack_visibility": "UNAVAILABLE",
     "private_receiver_pending": 2,
+    "home_sequence": 395,
+    "home_model_call_attested": false,
+    "pre_route_gate_allowed": false,
     "producer_after_route_pending": 2,
-    "public_receiver_count": 18,
-    "public_receiver_lagging": 0,
-    "public_receiver_pending": 0,
-    "runtime_consumption_attested": false,
-    "schema": "janus.autonomy.p03_preflight.v1",
-    "status": "P03_PREFLIGHT_BLOCKED"
+    "authority_delta": 0,
+    "full_issue_162_acceptance": false,
+    "p03_acceptance": false,
+    "runtime_consumption_attested": false
   }
 }
 ```
 
 ## Evidence-driven tasks
 
-- **P0.3** BEETLE_DELIVERY_HEALTH_STALE: {"age_minutes": 135, "max_minutes": 120}
-- **P0.3** BEETLE_ROUTING_GATE_STALE: {"age_minutes": 135, "max_minutes": 120}
+- **P0.3** BEETLE_DELIVERY_HEALTH_STALE: {"age_minutes": 239, "max_minutes": 120}
+- **P0.3** BEETLE_ROUTING_GATE_STALE: {"age_minutes": 239, "max_minutes": 120}
 - **P0.3** BEETLE_DELIVERY_PENDING: {"total_pending": 2, "receiver_states": {"UP_TO_DATE": 18, "ACK_UNAVAILABLE": 1}}
 - **P0.3** BEETLE_ROUTING_HELD: "HOLD_SINGLE_RECEIVER_BACKLOG"
-- **P0.3** EXTERNAL_WITNESS_BEETLE_LOCAL_RECEIVER: "SCHEDULE_SILENCE"
 - **P0.3** EXTERNAL_WITNESS_GENESIS_HIGHWATER: "ANCHOR_PENDING_WITHIN_GRACE"
-- **P0.3** EXTERNAL_WITNESS_GENESIS_HOME: "SCHEDULE_SILENCE"
 - **P0.3** EXTERNAL_WITNESS_SKINGPT_ACK: "UNKNOWN"
 - **P0.4** PATCHES_WAITING: 38
 - **P0.5** SCOUT_MODEL_SYNTHESIS_DEGRADED: {"snapshots": 17, "synthesis": 0, "expected": 17}
