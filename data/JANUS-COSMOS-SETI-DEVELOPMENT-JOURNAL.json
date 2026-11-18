@@ -265,10 +265,48 @@
       },
       "limitations": "Original is SHA256 nonce traversal, not radio detection; lane choice changes order only, not hash truth. Learner resets per job. No evidence of cryptographic prediction or COSMOS sensitivity gain. No repeat only within a fixed job and fixed traversal schedule; physical data overlap must be handled separately.",
       "next_gate": "After R28B results, test donor scheduler on fresh labelled calibration and fixed eval tasks, compare fixed routing, exhaustive search, budgeted coverage and equal control rate; shared preprocessing and independent held-out targets. Do not learn from evaluation truth."
+    },
+    {
+      "event_id": "20261118-R28B-result-seal",
+      "date": "2026-11-18",
+      "stage": "R28B",
+      "kind": "RESULT",
+      "status": "HOLD",
+      "evidence": {
+        "receipt_commit": "5db8c3dea651b268ee214b9cd2040ead52e8a893",
+        "run": 44254920023,
+        "full_hybrid": 164,
+        "adaptive": 142,
+        "controls_both": 12,
+        "weak_full": 20,
+        "weak_adaptive": 14,
+        "dp_calls": 845,
+        "bliss_failure": "AttributeError integrate_drifts"
+      },
+      "decision": "Retain fixed full hybrid as reference; repair BLISS separately; no promotion."
+    },
+    {
+      "event_id": "20261118-R29-launch",
+      "date": "2026-11-18",
+      "stage": "R29",
+      "kind": "LAUNCH",
+      "status": "RUNNING_UNMEASURED",
+      "hypothesis": "Contextual Star Forge lane scheduling improves finite-budget search.",
+      "decision": "Five distinct native search lanes, calibrated signed reward, fixed and contextual scheduler matched proxy budgets; no label adaptation on exam.",
+      "evidence": {
+        "receipt": "data/JANUS-COSMOS-SETI-R29-STAR-FORGE-2026-11-18.json",
+        "receipt_commit": "53b7b7ec46a8d56dbe354b54193190243ee526cf",
+        "run": 44257652209,
+        "protocol_commit": "199c44a7d6c76cc95ba45f838d4feb43aeef8e40",
+        "implementation_commit": "519af4f2fc1dbca47cc3b4f3450834e3a0a5b69a",
+        "workflow_commit": "3bd36c316a9d296c40a9f6e754d1382c17dc5731"
+      },
+      "limitations": "Synthetic injections; no fresh external origin labels; timing proxy not actual equal CPU; KYBER is classical template not FractalGPT.",
+      "next_gate": "Seal frozen lock, paired outcomes, unique coverage, actual cost and failure logs."
     }
   ],
   "current": {
-    "stage": "R28B",
+    "stage": "R29",
     "status": "RUNNING_UNMEASURED",
     "production_adoption": false,
     "confirmed_technosignatures": 0
