@@ -2,13 +2,13 @@
   "schema": "janus.context_bridge.current_state.v1",
   "project": "JANUS COSMOS / SETI",
   "updated_utc": "2026-11-18T09:39:47Z",
-  "as_of": "R40J development gate HOLD; R40K committed raw ON/OFF protected recovery; no promotion.",
+  "as_of": "R40K shared recovery PASS, control budget HOLD; R40L guarded Joint Min replay. No production changes.",
   "authority": {
     "repository": "Hawkar-usls/Janus-Cosmos",
     "research_branch": "research/seti-radio-candidate-search-20261117",
     "registry": "Hawkar-usls/janus-meta-registry",
     "journal": "data/JANUS-COSMOS-SETI-DEVELOPMENT-JOURNAL.json",
-    "journal_commit": "fea4ec64964bf9a23017b1b27d14ddb7bc12bac7",
+    "journal_commit": "baa4f1e26f998a60a608f03858bf3edd32e109e1",
     "continuity_protocol": "data/JANUS-PROJECT-CONTINUITY-LEDGER-HRAIN-INAIHR-PROTOCOL-2026-08-24-v1.0.json",
     "protocol_blob": "740065281c7c7b289c927db7661b9b000abb8c68"
   },
@@ -399,7 +399,7 @@
     "Retain raw paths when OFF contains signal",
     "R33B4 original hit mapping HOLD, Figure6 exact file available; R34 independently labelled inputs and protected compatible grid still HOLD."
   ],
-  "next_allowed": "Verify R40K run and results; recover BLISS matched calibration after egress service availability; do not promote or relaunch discovery.",
+  "next_allowed": "Evaluate R40L all arms; no threshold retuning on R40H; R38 and R43 HOLD.",
   "claim_ceiling": "Synthetic injections on real measured backgrounds; not independent real source labels. CPU kernel comparisons only, no proof of whole pipeline superiority. No confirmed extraterrestrial technosignatures.",
   "startup": [
     "Read this current-state JSON from GitHub main each new COSMOS conversation.",
@@ -438,11 +438,11 @@
     "eta_policy": "Observed min/max historical comparable duration minus elapsed, descriptive not prediction interval; unknown when elapsed exceeds all examples or scope differs. No invented percent progress; explicit checkpoint artifacts only."
   },
   "active_experiment": {
-    "stage": "R40K",
+    "stage": "R40L",
     "status": "RUNNING_UNMEASURED",
-    "run": 44412191208,
-    "receipt": "data/JANUS-COSMOS-SETI-R40K-ON-OFF-SEPARATION-2026-11-18.json",
-    "receipt_commit": "2225708ec3eae000e3159522226bea7ff5a5856b",
+    "run": 44419064003,
+    "receipt": "data/JANUS-COSMOS-SETI-R40L-JOINT-SHIELD-2026-11-19.json",
+    "receipt_commit": "5b0391badf113d6bd1ac0e041ff3402c92986d59",
     "production_adoption": false,
     "discovery_relaunch_allowed": false
   },
@@ -2033,12 +2033,71 @@
   },
   "r40k": {
     "stage": "R40K",
-    "status": "RUNNING_UNMEASURED",
+    "status": "PASS_SHARED_RECOVERY__HOLD_CONTROL_BUDGET",
     "run": 44412191208,
     "receipt": "data/JANUS-COSMOS-SETI-R40K-ON-OFF-SEPARATION-2026-11-18.json",
-    "receipt_commit": "2225708ec3eae000e3159522226bea7ff5a5856b",
+    "receipt_commit": "4f9e80b2e15c62704b3b604a499964bc11380fb5",
     "production_adoption": false,
     "discovery_relaunch_allowed": false,
-    "gate": "R40H total>=214, weak>=41, shared weak>=21, alerts<=35, zero loss vs R40G. No replay-based tuning."
+    "gate": "R40H total>=214, weak>=41, shared weak>=21, alerts<=35, zero loss vs R40G. No replay-based tuning.",
+    "metrics": {
+      "fields": [
+        "localized",
+        "weak",
+        "control_alerts",
+        "shared_localized",
+        "shared_weak"
+      ],
+      "r40g": [
+        213,
+        41,
+        31,
+        29,
+        18
+      ],
+      "on_only": [
+        220,
+        44,
+        58,
+        78,
+        21
+      ],
+      "joint_min": [
+        215,
+        43,
+        43,
+        111,
+        36
+      ],
+      "joint_mean": [
+        218,
+        43,
+        49,
+        114,
+        37
+      ],
+      "parent_lost": 0,
+      "all_gates": false,
+      "calibration_controls": 256,
+      "calibration_parent_alerts": 10,
+      "calibration_additional_alerts": 0,
+      "thresholds": {
+        "on_only": 1.350306115814548,
+        "joint_min": 0.7661068370840325,
+        "joint_mean": 0.8909228307746216
+      },
+      "registered_exact": true,
+      "seconds": 1140.770129832
+    }
+  },
+  "r40l": {
+    "stage": "R40L",
+    "status": "RUNNING_UNMEASURED",
+    "run": 44419064003,
+    "receipt": "data/JANUS-COSMOS-SETI-R40L-JOINT-SHIELD-2026-11-19.json",
+    "receipt_commit": "5b0391badf113d6bd1ac0e041ff3402c92986d59",
+    "production_adoption": false,
+    "discovery_relaunch_allowed": false,
+    "gate": "<=35 control alerts, >=214 total localized, >=41 weak, >=21 shared weak, zero R40G loss; stronger shared-preservation goal 111 total and 36 weak. No external scientific promotion or working-version adoption."
   }
 }
