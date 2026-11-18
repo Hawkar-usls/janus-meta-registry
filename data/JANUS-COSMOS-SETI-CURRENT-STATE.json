@@ -1,77 +1,48 @@
 {
   "schema": "janus.context_bridge.current_state.v1",
   "project": "JANUS COSMOS / SETI",
-  "updated_utc": "2026-11-18T07:52:30Z",
-  "as_of": "R29 confirmed; R30A diagnostic, R30B launched (unmeasured)",
+  "updated_utc": "2026-11-18T08:04:58Z",
+  "as_of": "R30B measured HOLD; R30C initial memory PASS; incremental ingestion running",
   "authority": {
     "repository": "Hawkar-usls/Janus-Cosmos",
     "research_branch": "research/seti-radio-candidate-search-20261117",
     "registry": "Hawkar-usls/janus-meta-registry",
     "journal": "data/JANUS-COSMOS-SETI-DEVELOPMENT-JOURNAL.json",
-    "journal_commit": "f112c23fc4d5ca713401fd7edc5f753ca95ce6a7",
+    "journal_commit": "9d3f1a2de8e9819ce8874cc1a1fc871f8189fc1c",
     "continuity_protocol": "data/JANUS-PROJECT-CONTINUITY-LEDGER-HRAIN-INAIHR-PROTOCOL-2026-08-24-v1.0.json",
     "protocol_blob": "740065281c7c7b289c927db7661b9b000abb8c68"
   },
   "goal": "Increase weak narrowband radio signal recovery while separating background/RFI and preserving known physical signals, with independently reproducible scientific controls.",
   "current": {
-    "stage": "R29",
-    "status": "HOLD_STAR_FORGE_NOT_BETTER_THAN_FIXED",
-    "run": 44257652209,
-    "job": 134643091165,
-    "receipt": "data/JANUS-COSMOS-SETI-R29-STAR-FORGE-2026-11-18.json",
-    "receipt_commit": "f5c6c86da923cf39eb714b3775bdbab7dbc199b9",
-    "artifact": 14407466601,
-    "artifact_sha256": "b611c03cc74d228d98f3995568ff0b632657fa1f6af342fa65bdd2e2ca67934e",
-    "lock_sha256": "42b8029838fe351f65aee9f6dc6ff106fe2167c9e9445f193f1ec5d86b1cc413",
-    "duration_seconds": 552,
-    "exam_seconds": 400,
-    "eval_targets": [
-      "HIP56452",
-      "HIP29295",
-      "HIP11964",
-      "HIP10138"
-    ],
+    "stage": "R30B",
+    "status": "HOLD_NO_SCIENTIFIC_GAIN",
+    "run": 44262281770,
+    "job": 134658251957,
+    "receipt": "data/JANUS-COSMOS-SETI-R30-FALSE-ALARM-SHIELD-2026-11-18.json",
+    "receipt_commit": "6c2e00806a607c0be841c8348e69f88853737bd6",
+    "artifact": 14408812860,
+    "artifact_sha256": "49ea750a401bf613c7896cff439685a7e338f4417970049f05430e261d4b916e",
+    "lock_sha256": "e157d73df1b7bffab8e9f9436e24288286e086c114ac0556b5aff5e20d21abda",
     "metrics": {
       "positives": 512,
       "controls": 512,
       "full_r28": {
-        "localized": 143,
-        "control_alerts": 22,
-        "weak": 15,
-        "measured_seconds": 0.656521254
+        "localized": 148,
+        "control_alerts": 25,
+        "weak": 22,
+        "shared_localized": 17
       },
-      "r28b_fixed": {
-        "localized": 126,
-        "control_alerts": 21,
-        "weak": 12,
-        "measured_seconds": 0.433067956
+      "kusto_topa": {
+        "localized": 40,
+        "control_alerts": 15,
+        "weak": 5,
+        "shared_localized": 1
       },
-      "orbit_budget": {
-        "localized": 131,
-        "control_alerts": 20,
-        "weak": 15,
-        "measured_seconds": 0.425453651
-      },
-      "fixed_five": {
-        "localized": 122,
-        "control_alerts": 22,
-        "weak": 15
-      },
-      "star_forge": {
-        "localized": 123,
-        "control_alerts": 27,
-        "weak": 15,
-        "measured_seconds": 0.434864381,
-        "optional_calls": {
-          "DAWN": 8,
-          "ORBIT": 0,
-          "KYBER": 0,
-          "MERCY": 0,
-          "GROGU": 280
-        },
-        "coverage": 0.05625,
-        "leak_recovery": 24,
-        "leak_total": 128
+      "protected_raw_union": {
+        "localized": 139,
+        "control_alerts": 24,
+        "weak": 19,
+        "shared_localized": 53
       }
     },
     "production_adoption": false
@@ -92,18 +63,82 @@
       "weak_adaptive": 14,
       "gate": "HOLD",
       "bliss": "native import PASS, adapter AttributeError: integrate_drifts; no comparison"
+    },
+    "R29": {
+      "stage": "R29",
+      "status": "HOLD_STAR_FORGE_NOT_BETTER_THAN_FIXED",
+      "run": 44257652209,
+      "job": 134643091165,
+      "receipt": "data/JANUS-COSMOS-SETI-R29-STAR-FORGE-2026-11-18.json",
+      "receipt_commit": "f5c6c86da923cf39eb714b3775bdbab7dbc199b9",
+      "artifact": 14407466601,
+      "artifact_sha256": "b611c03cc74d228d98f3995568ff0b632657fa1f6af342fa65bdd2e2ca67934e",
+      "lock_sha256": "42b8029838fe351f65aee9f6dc6ff106fe2167c9e9445f193f1ec5d86b1cc413",
+      "duration_seconds": 552,
+      "exam_seconds": 400,
+      "eval_targets": [
+        "HIP56452",
+        "HIP29295",
+        "HIP11964",
+        "HIP10138"
+      ],
+      "metrics": {
+        "positives": 512,
+        "controls": 512,
+        "full_r28": {
+          "localized": 143,
+          "control_alerts": 22,
+          "weak": 15,
+          "measured_seconds": 0.656521254
+        },
+        "r28b_fixed": {
+          "localized": 126,
+          "control_alerts": 21,
+          "weak": 12,
+          "measured_seconds": 0.433067956
+        },
+        "orbit_budget": {
+          "localized": 131,
+          "control_alerts": 20,
+          "weak": 15,
+          "measured_seconds": 0.425453651
+        },
+        "fixed_five": {
+          "localized": 122,
+          "control_alerts": 22,
+          "weak": 15
+        },
+        "star_forge": {
+          "localized": 123,
+          "control_alerts": 27,
+          "weak": 15,
+          "measured_seconds": 0.434864381,
+          "optional_calls": {
+            "DAWN": 8,
+            "ORBIT": 0,
+            "KYBER": 0,
+            "MERCY": 0,
+            "GROGU": 280
+          },
+          "coverage": 0.05625,
+          "leak_recovery": 24,
+          "leak_total": 128
+        }
+      },
+      "production_adoption": false
     }
   },
   "open_gates": [
-    "R30B observe selftests/manifest/lock and paired, fresh target/day-disjoint results; retain HOLD if fewer than half controls not achieved or recovery losses",
-    "R30C HANNAH provenance-labelled RFI memory and false look-alikes",
+    "R30C incremental ingestion: verify parent preservation, new entries, duplicate replay, corrected candidate counts, artifact and durable reviewed library snapshot",
+    "R30C integrate automatic new-observation hook after successful incremental test; independently labelled family/false-lookalike validation; no automatic filtering or origin verdict",
+    "R30B all scientific gates failed: keep Full R28; no hard KUSTO/TOPA filter; separately test protected raw union shared-signal recovery",
     "R30D frozen separate-observation confirmation; R30F BLC1/Voyager and independent origin evidence",
     "R29B diagnose reward and lane collapse against ORBIT-only and fixed-five at equal proxy budget; no reuse of viewed exams for prospective claims",
     "BLISS repair API and verify actual original kernel on saved equal inputs",
     "Independent source-labelled origin evaluation; EYE remains HOLD",
     "Retain raw paths when OFF contains signal"
   ],
-  "next_allowed": "Verify active R30B run and receipt before choosing the next bounded stage. At CHECK read-only; on explicit work request seal actual outcome and follow journal. Do not claim R30 improvement until measured.",
+  "next_allowed": "Check active R30C incremental run read-only for CHECK. On explicit work request, seal result and permanent verified snapshot, then general observation hook and separate fresh source-labelled retrieval exam. No production change.",
   "claim_ceiling": "Synthetic injections on real measured backgrounds; not independent real source labels. CPU kernel comparisons only, no proof of whole pipeline superiority. No confirmed extraterrestrial technosignatures.",
   "startup": [
     "Read this current-state JSON from GitHub main each new COSMOS conversation.",
@@ -142,17 +177,35 @@
     "eta_policy": "Observed min/max historical comparable duration minus elapsed, descriptive not prediction interval; unknown when elapsed exceeds all examples or scope differs. No invented percent progress; explicit checkpoint artifacts only."
   },
   "active_experiment": {
-    "stage": "R30B",
+    "stage": "R30C-incremental",
     "status": "RUNNING_UNMEASURED",
-    "run": 44262281770,
-    "job": 134658251957,
-    "workflow_commit": "3eda0f2bb4b1272b3357e0050c3f94ba814dfc22",
-    "receipt": "data/JANUS-COSMOS-SETI-R30-FALSE-ALARM-SHIELD-2026-11-18.json",
-    "receipt_commit": "7d1f0e0602dffb15f6eb9e8a1c97c5e27d824180",
-    "protocol_blob": "10de9d69a3a4dbb051cb0a5154d089f9481503c7",
-    "implementation_blob": "e1d9d15ea9b4b895e6314beaad26cd407ef946b0",
-    "baseline": "Full R28, same fresh held-out samples",
-    "design": "2 fit, 4 null-calibration, 4 evaluation targets; all unique observation days; seven arms; 1024 ordinary samples and 128 shared-reference challenges; no measured results yet",
+    "run": 44263940100,
+    "job": 134663731942,
+    "workflow_commit": "afd1c5a9f8c4ab5f276b88cd128a774159089433",
+    "receipt": "data/JANUS-COSMOS-SETI-R30C-HANNAH-RFI-MEMORY-2026-11-18.json",
+    "receipt_commit": "88579eb7c53e6d6282c0cc3b34e6d11efb452249",
+    "parent_artifact": 14408723659,
+    "new_manifest": 14409292043,
+    "target": "HIP33478",
+    "design": "4 new measured scans; 16 tiles; immutable parent and exact hashes; no label promotion",
     "production_adoption": false
+  },
+  "hannah_memory": {
+    "status": "PASS_MEMORY_DEVELOPMENT",
+    "run": 44263525473,
+    "job": 134662361891,
+    "artifact": 14408723659,
+    "artifact_sha256": "8c053a4d0581a8d378c86002786c25c3087f255c9ed695c67ffcacea3af18269",
+    "library_sha256": "390bb4c938918bc0e3d7cdd86b7e9c42ca3e9d18755411ab985278310ce75da3",
+    "entries": 59,
+    "verified_rfi": 1,
+    "first_run_candidate_count": 8,
+    "first_run_unknown_count": 50,
+    "observed_tiles": 97,
+    "selftests": "10/10",
+    "replay_added": 0,
+    "receipt": "data/JANUS-COSMOS-SETI-R30C-HANNAH-RFI-MEMORY-2026-11-18.json",
+    "receipt_commit": "88579eb7c53e6d6282c0cc3b34e6d11efb452249",
+    "limitations": "Derived recurrence count provisional until distinct-tile correction tested; permanent snapshot and automatic ingestion pending. Advisory only."
   }
 }
