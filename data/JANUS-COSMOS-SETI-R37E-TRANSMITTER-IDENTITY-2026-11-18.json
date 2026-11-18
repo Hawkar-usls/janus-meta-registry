@@ -1,7 +1,7 @@
 {
   "schema": "janus.cosmos.r37e.receipt.v1",
   "date": "2026-11-18",
-  "status": "RUNNING_TSYS_AUDIT",
+  "status": "HOLD_TSYS_AUDIT",
   "source": {
     "repo": "Hawkar-usls/Janus-Cosmos",
     "branch": "research/seti-radio-candidate-search-20261117",
@@ -39,7 +39,7 @@
     }
   },
   "design": "Offline public civilian laboratory data only. Verify records, checksum, archive member layout and independent capture units before any feature fit. Power-only mathematical non-injectivity control. No raw IQ samples consumed in qualification, no classifier or source label promotion.",
-  "next_gate": "Inspect R37F3D1BB2_SUMMARY, distinguish arithmetic qualification and physical reason for archival flags; no losslessness claim.",
+  "next_gate": "R37F3D1B-B2A: compare original metadata-predicted instrument mask to actual dysh input masks; preserve masks and repeat independent Tsys arithmetic. No production change.",
   "production_adoption": false,
   "r37e0": {
     "status": "HOLD_CAPTURE_UNIT_QUALIFICATION",
@@ -12818,12 +12818,119 @@
     "artifact_sha256": "53054f24ed3648c487e6ec200d5046a084b93eeae3b8bfaec41a229040290ff6"
   },
   "r37f3d1bb2": {
-    "status": "RUNNING_TSYS_AUDIT",
+    "status": "HOLD_TSYS_AUDIT",
     "run": 44362212549,
     "job": 135006362096,
     "protocol_commit": "300a3533a6ea667675402e3e7e521bd2294a8dd9",
     "implementation_commit": "cb50621140bca10b4eb819982bc9bb391b03b2bf",
     "workflow_commit": "b1a4c52afd0836b28bb4f93899aadbb0b8f5af0d",
-    "scope": "Isolated historical NGC2415 IF0 both polarizations. Trace raw FLAGS and dysh masks, independent TCAL/Tsys/exposure/weights/calibration and weighted scan/block arithmetic on valid channels, native WCS and original hash. No flags disabled, no gap fill, no full detector, no production adoption."
+    "scope": "Isolated historical NGC2415 IF0 both polarizations. Trace raw FLAGS and dysh masks, independent TCAL/Tsys/exposure/weights/calibration and weighted scan/block arithmetic on valid channels, native WCS and original hash. No flags disabled, no gap fill, no full detector, no production adoption.",
+    "result": {
+      "status": "HOLD_TSYS_AUDIT",
+      "source": "NGC2415",
+      "production_adoption": false,
+      "detector_tested": false,
+      "lossless_average_proven": false,
+      "absolute_astrophysical_accuracy_proven": false,
+      "full_five_window_calibration": false,
+      "rows": [
+        {
+          "pol": 0,
+          "status": "HOLD",
+          "fits_flags_column": false,
+          "input_group_flags": [
+            {
+              "group": "sigcalon",
+              "fits_flagged": 0,
+              "dysh_masked": 151,
+              "exact_match": false
+            },
+            {
+              "group": "sigcaloff",
+              "fits_flagged": 0,
+              "dysh_masked": 151,
+              "exact_match": false
+            },
+            {
+              "group": "refcalon",
+              "fits_flagged": 0,
+              "dysh_masked": 151,
+              "exact_match": false
+            },
+            {
+              "group": "refcaloff",
+              "fits_flagged": 0,
+              "dysh_masked": 151,
+              "exact_match": false
+            }
+          ],
+          "calibrated_invalid_count": 151,
+          "input_mask_union_count": 151,
+          "archive_flag_union_count": 0,
+          "zero_or_nonfinite_reference_count": 0,
+          "calibrated_mask_matches_inputs_and_denominator": true,
+          "fits_flags_match_all_inputs": false,
+          "mask_origin": "UNRESOLVED_OR_MIXED",
+          "physical_reason_for_archive_flag_known": false,
+          "error": "AssertionError: mask origin not uniquely established"
+        },
+        {
+          "pol": 1,
+          "status": "HOLD",
+          "fits_flags_column": false,
+          "input_group_flags": [
+            {
+              "group": "sigcalon",
+              "fits_flagged": 0,
+              "dysh_masked": 151,
+              "exact_match": false
+            },
+            {
+              "group": "sigcaloff",
+              "fits_flagged": 0,
+              "dysh_masked": 151,
+              "exact_match": false
+            },
+            {
+              "group": "refcalon",
+              "fits_flagged": 0,
+              "dysh_masked": 151,
+              "exact_match": false
+            },
+            {
+              "group": "refcaloff",
+              "fits_flagged": 0,
+              "dysh_masked": 151,
+              "exact_match": false
+            }
+          ],
+          "calibrated_invalid_count": 151,
+          "input_mask_union_count": 151,
+          "archive_flag_union_count": 0,
+          "zero_or_nonfinite_reference_count": 0,
+          "calibrated_mask_matches_inputs_and_denominator": true,
+          "fits_flags_match_all_inputs": false,
+          "mask_origin": "UNRESOLVED_OR_MIXED",
+          "physical_reason_for_archive_flag_known": false,
+          "error": "AssertionError: mask origin not uniquely established"
+        }
+      ],
+      "code_receipts": {
+        "calibrate": "559f7cb9664f5b639802a5259da3dd2efdd1eb980b3ec55e195fbb9b24620c1b",
+        "average": "2422daeae21409fb892fe230cca54c5a809ea47fd9be673da2ce6e1e14e741ac",
+        "tsys": "3589136f9bbf84a988418f9a2f2e35c97031f2d8cbd486b298c31e60394ae789",
+        "weights": "a18150f5bbb6001bf10dee266bd7bc12e206f537763add04fb3ae5cf16891145"
+      },
+      "integrity": {
+        "bytes": 795479040,
+        "sha256": "abeefab2f0f5b67a5032dd1c79f7ea344a41da1fd552fe2f892761ac196376b2",
+        "published_checksum_verified": false,
+        "https_archive": true
+      },
+      "spatial_off_verified": true,
+      "original_unchanged": true
+    },
+    "artifact": 14455726322,
+    "artifact_sha256": "4728018da281e3abe11e5bbf69ef876180ff46c81f225a1b88ecdea1ec14608d"
   }
 }
