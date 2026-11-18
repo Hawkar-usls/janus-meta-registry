@@ -1,7 +1,7 @@
 {
   "schema": "janus.cosmos.r40b.transfer.receipt.v1",
   "date": "2026-11-18",
-  "status": "R40B_RUNNING_UNMEASURED",
+  "status": "PASS_HISTORICAL_DUAL_GAIN__HOLD_INDEPENDENT_EXAM",
   "scope": "Cross-project interpretation, historical development only. No change to R28 or production. No new discovery campaign.",
   "inventory": {
     "accessible_repositories": 51,
@@ -27,7 +27,125 @@
     "source_artifact": 14420977581,
     "source_sha256": "1c7e48d3fdf788233fa24e6db3e97f9f505d3c5d759720158ca200584057e517",
     "method": "Eight candidate path generators, shared soft trajectory support, trace features and learned linear classifier; four held-out group folds, separate two null calibration groups; original R28 retained. No donor's physical claim imported.",
-    "criteria": "Increase weak recovery, reduce control alerts, no aggregate or shared-positive regression."
+    "criteria": "Increase weak recovery, reduce control alerts, no aggregate or shared-positive regression.",
+    "status": "PASS_HISTORICAL_DUAL_GAIN__HOLD_INDEPENDENT_EXAM",
+    "artifact": 14469298638,
+    "artifact_sha256": "e3cc7855481473cd98696377519c4448f60aed05c3748afa93cb5256aec77d24",
+    "results": {
+      "fields": [
+        "localized",
+        "weak",
+        "control_alerts",
+        "shared_localized",
+        "shared_weak"
+      ],
+      "baseline": [
+        181,
+        27,
+        47,
+        17,
+        6
+      ],
+      "learned_only": [
+        145,
+        30,
+        40,
+        30,
+        12
+      ],
+      "r28_plus_learned": [
+        192,
+        30,
+        41,
+        26,
+        9
+      ],
+      "paired": {
+        "added": 18,
+        "lost": 7,
+        "weak_added": 7,
+        "weak_lost": 4,
+        "controls_added": 9,
+        "controls_removed": 15,
+        "shared_added": 10,
+        "shared_lost": 1
+      },
+      "groups": [
+        {
+          "name": "HIP48331",
+          "base": [
+            46,
+            7,
+            10,
+            3
+          ],
+          "candidate": [
+            49,
+            8,
+            8,
+            6
+          ]
+        },
+        {
+          "name": "HIP522",
+          "base": [
+            43,
+            4,
+            16,
+            5
+          ],
+          "candidate": [
+            45,
+            4,
+            14,
+            7
+          ]
+        },
+        {
+          "name": "HIP56244",
+          "base": [
+            47,
+            7,
+            12,
+            3
+          ],
+          "candidate": [
+            49,
+            9,
+            11,
+            5
+          ]
+        },
+        {
+          "name": "HIP86057",
+          "base": [
+            45,
+            9,
+            9,
+            6
+          ],
+          "candidate": [
+            49,
+            9,
+            8,
+            8
+          ]
+        }
+      ],
+      "cal_controls_per_fold": 256,
+      "eval_positives": 512,
+      "eval_controls": 512,
+      "shared_positives": 128,
+      "aggregate_dual_gate": true
+    },
+    "limitations": [
+      "Previously viewed historical corpus, not new external evidence.",
+      "Four separate fitted fold models; no single production model yet.",
+      "Tile hash checks concern saved tile_sha identifiers; full independent provenance remains open.",
+      "7 old localized positives lost, 4 weak; one shared-positive loss. No blanket protection proof.",
+      "No full pipeline runtime comparison; no independent physical negatives or survey-level calibration."
+    ],
+    "next": "Freeze one model trained on all four development groups, with immutable historical calibration, then evaluate on genuinely new source-disjoint sessions under R38 gate. Preserve all failed cases and test protected physical signals."
   },
   "r37f3d2a": {
     "run": 44392636378,
