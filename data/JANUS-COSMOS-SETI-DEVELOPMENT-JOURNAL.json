@@ -1526,21 +1526,60 @@
       },
       "limitations": "Same parent raw data and same campaign; given measured paths, transformed observations not independent, no confirmed source label for drift tracks or actual cross-instrument classification. Metadata scout not a qualified exam.",
       "next_gate": "Inspect actual R37A and source summaries; HOLD if shapes collapse across families or support fails. Qualify source IDs and protected real controls before fresh comparison."
+    },
+    {
+      "event_id": "20261118-R37A-RESULT",
+      "date": "2026-11-18",
+      "stage": "R37A",
+      "kind": "RESULT",
+      "status": "PASS_CONTROLLED_RESOLUTION_TRANSFER__HOLD_FAMILY_DISCRIMINATION",
+      "decision": "10 distinct measured raw passports under 4 derived grid coarsenings each. 40/40 cosine>=.9; min .9645463, median .9923998; conservation PASS. 27/37 different-group raw pairs also >=.9; prohibit shape-only use. 80/80 archive queries succeeded, 647 potential Parkes files, 724 GBT, 21 GBT same-date possible ON/OFF targets. Metadata only.",
+      "evidence": {
+        "run": 44292499460,
+        "grid_job": 134760977302,
+        "source_job": 134760976816,
+        "grid_artifact": 14421149472,
+        "grid_digest": "bcbc7d4ed91eea37bcfcdeeb23d3efd2aff5a08e0a10d6526f8a788767b8b6e0",
+        "source_artifact": 14422377242,
+        "source_digest": "4c2f8097c453059abf9f44d4ecd1b46202c757288707fe4370d38febf3f0957b",
+        "receipt_commit": "a896439fb61774d19c0d5c243ec1c7a412abbba2"
+      },
+      "limitations": "Derived from given tracks in same campaign, not detector or family origin proof; no independent labels, no promotion."
+    },
+    {
+      "event_id": "20261118-R37B-COORDINATE-REPAIR",
+      "date": "2026-11-18",
+      "stage": "R37B",
+      "kind": "LAUNCH",
+      "status": "RUNNING_COORDINATE_UNITS_REPAIR",
+      "decision": "Predeclare metadata qualification of alternate Parkes/GBT with exact cross-check of prior day/name/URL and known pointing. Initial strict packed parser failed. Diagnostic showed decimal RA hours and DEC degrees, corroborated HIP92403 RA 18.830388888888887h=282.4558333333deg, HIP13389 2.8734722222222224h=43.10208deg. Repair requires unique archive RA agreement and available DEC, retain .1deg separation. No power access.",
+      "evidence": {
+        "initial_run": 44293624672,
+        "initial_job": 134764865278,
+        "diagnostic_run": 44293820491,
+        "diagnostic_job": 134765547027,
+        "retry_run": 44293984901,
+        "retry_job": 134766110442,
+        "protocol_commit": "d7e8321d101190f571ba17833414ee0f478edd57",
+        "original_implementation": "c6ecfd79b3f6ddc110aa5429127145924955cf17",
+        "repaired_implementation": "c56366bc093856b977a3c89c26534d1a05c38d4b",
+        "workflow_commit": "1160da6d799c989c219e72cba0d9df3b403612a9",
+        "receipt_commit": "611e8f9cb16944301c58df8925d00ce5c815c892"
+      },
+      "next_gate": "Inspect R37B_SUMMARY; if fewer than eight groups for either telescope, HOLD. Header eligibility only, not source origin or independent science. Validate labels and measured protected source separately."
     }
   ],
   "current": {
-    "stage": "R36F2",
-    "status": "HOLD_INSUFFICIENT_FRESH_SOURCE_GROUPS",
-    "run": 44289784087,
-    "production_adoption": false,
-    "confirmed_technosignatures": 0
+    "stage": "R37A",
+    "status": "PASS_CONTROLLED_RESOLUTION_TRANSFER__HOLD_FAMILY_DISCRIMINATION",
+    "run": 44292499460,
+    "production_adoption": false
   },
   "active_experiment": {
-    "stage": "R37A",
-    "status": "RUNNING_UNMEASURED",
-    "run": 44292499460,
-    "grid_job": 134760977302,
-    "sources_job": 134760976816,
+    "stage": "R37B",
+    "status": "RUNNING_COORDINATE_UNITS_REPAIR",
+    "run": 44293984901,
+    "job": 134766110442,
     "receipt": "data/JANUS-COSMOS-SETI-R37A-HANNAH-RESOLUTION-2026-11-18.json",
     "production_adoption": false
   },
