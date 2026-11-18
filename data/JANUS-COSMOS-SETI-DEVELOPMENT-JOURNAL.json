@@ -2069,19 +2069,53 @@
         "receipt_commit": "4bf7f1610293930f6d6af2f091059bfbd05a53c8"
       },
       "next_gate": "Read repaired catalogue result, retain distinction between actual OFF direction and frequency switch; next independent natural SDFITS line calibration. Specific BL frame lineage HOLD."
+    },
+    {
+      "event_id": "20261118-R37F2B1-REDIRECT-REPAIR-RESULT",
+      "date": "2026-11-18",
+      "stage": "R37F2B1",
+      "kind": "RESULT",
+      "status": "SDFITS_REPEAT_METADATA_PASS__BERKELEY_TRANSPORT_HOLD",
+      "decision": "Same SDFITS hash verified again, legacy GBTIDL 403, all 11 Berkeley queries fail due to non-HTTPS or unexpected redirect; not evidence of absent OFF. No change to source qualification.",
+      "evidence": {
+        "run": 44314465143,
+        "job": 134836808965,
+        "artifact": 14431143357,
+        "artifact_sha256": "8a24c63e57e5cfd764ceb4c2190a9ba255bdad97b3ea7be11328c085ef551bf2",
+        "receipt_commit": "3e758f0288111553dc6310f58a4fee38bf5c2533"
+      }
+    },
+    {
+      "event_id": "20261118-R37F2C-OFFICIAL-DYSH-LAUNCH",
+      "date": "2026-11-18",
+      "stage": "R37F2C",
+      "kind": "LAUNCH",
+      "status": "RUNNING_OFFICIAL_DYSH_CALIBRATION",
+      "decision": "Reauthenticate original 2005 GBT W3OH SDFITS. Official dysh1.0.1 folded getfs, tsys timeaverage, documented Chebyshev5 baseline windows and fixed radio LSRK OH1667 velocity interval; all scans90–94 and both polarizations. Save original calibrated and baseline-subtracted spectra, measured line/control metrics and package versions.",
+      "evidence": {
+        "run": 44319462485,
+        "job": 134854268870,
+        "protocol_commit": "73b5404d095ae749d3a757aacd9bc5312e58fa81",
+        "implementation_commit": "73236a1ca41d89c891b614008c46c21171997b75",
+        "workflow_commit": "6c144acada04143f715a9e9d528e99b8c8b921ae",
+        "receipt_commit": "3e758f0288111553dc6310f58a4fee38bf5c2533",
+        "docs": "https://dysh.readthedocs.io/en/release-1.0.0/users_guide/frequencyswitch.html"
+      },
+      "limitations": "One independent date, not ten independent dates. Frequency switching is not spatial OFF, 1.526kHz native channels are not HANNAH fine grid. No automatic signal suppression or production changes.",
+      "next_gate": "Inspect all actual scan results and R37F2C_SUMMARY; determine natural line support; retain R37F3/R38 gates."
     }
   ],
   "current": {
-    "stage": "R37F2B",
-    "status": "SDFITS_CONTROL_METADATA_PASS__SPATIAL_OFF_AND_BL_FRAME_HOLD",
-    "run": 44314156077,
+    "stage": "R37F2B1",
+    "status": "SDFITS_REPEAT_METADATA_PASS__BERKELEY_TRANSPORT_HOLD",
+    "run": 44314465143,
     "production_adoption": false
   },
   "active_experiment": {
-    "stage": "R37F2B1",
-    "status": "RUNNING_REDIRECT_REPAIR",
-    "run": 44314465143,
-    "job": 134836808965,
+    "stage": "R37F2C",
+    "status": "RUNNING_OFFICIAL_DYSH_CALIBRATION",
+    "run": 44319462485,
+    "job": 134854268870,
     "receipt": "data/JANUS-COSMOS-SETI-R37E-TRANSMITTER-IDENTITY-2026-11-18.json",
     "production_adoption": false
   },
