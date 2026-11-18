@@ -2,36 +2,33 @@
   "schema": "janus.context_bridge.current_state.v1",
   "project": "JANUS COSMOS / SETI",
   "updated_utc": "2026-11-18T09:39:47Z",
-  "as_of": "R37F3D1B NGC2415 dysh calibration running",
+  "as_of": "R37F3D1B fixed-grid precondition failed before dysh calibration",
   "authority": {
     "repository": "Hawkar-usls/Janus-Cosmos",
     "research_branch": "research/seti-radio-candidate-search-20261117",
     "registry": "Hawkar-usls/janus-meta-registry",
     "journal": "data/JANUS-COSMOS-SETI-DEVELOPMENT-JOURNAL.json",
-    "journal_commit": "296a6cb1dfacd4b8d1dad561a9bf7b8c31b14d0f",
+    "journal_commit": "88d5e8b1b299c76166f20628b31d9afa4e7cb876",
     "continuity_protocol": "data/JANUS-PROJECT-CONTINUITY-LEDGER-HRAIN-INAIHR-PROTOCOL-2026-08-24-v1.0.json",
     "protocol_blob": "740065281c7c7b289c927db7661b9b000abb8c68"
   },
   "goal": "Increase weak narrowband radio signal recovery while separating background/RFI and preserving known physical signals, with independently reproducible scientific controls.",
   "current": {
-    "stage": "R37F3D1A",
-    "status": "PASS_NATURAL_SPATIAL_OFF_METADATA",
-    "run": 44350996631,
-    "job": 134966247145,
-    "artifact": 14447513481,
-    "artifact_sha256": "79c5548d0b6763f8975f03be110e6bef45b7f22f09592224f5f397604906beb5",
+    "stage": "R37F3D1B",
+    "status": "HOLD_NATURAL_DYSH_CALIBRATION",
+    "run": 44353039016,
+    "job": 134973590998,
+    "artifact": 14450030617,
+    "artifact_sha256": "f0e157830db87621dd9582f2e9cf752bd42397b552d669bf438184077e5b3fc2",
     "receipt": "data/JANUS-COSMOS-SETI-R37E-TRANSMITTER-IDENTITY-2026-11-18.json",
-    "receipt_commit": "ff3c062cb86494059c55888fc35852aca243f5d8",
+    "receipt_commit": "04d8a012596b40aee2de7b40c0db4c8ee366e758",
     "results": {
-      "metadata_gates_pass": 14,
       "qualified_sessions": 1,
       "target_sessions": 6,
-      "rows": 6040,
-      "unique_integrations_per_scan": 151,
-      "spatial_off_separation_deg": 0.47792850683225874,
-      "native_spacing_hz": 715.2557373046875,
-      "calibrated_line_tested": false,
-      "published_checksum_verified": false,
+      "spatial_off_verified": true,
+      "metadata_gates_pass": 14,
+      "calibrated_spectra": 0,
+      "failed_gate": "ON reference grid not fixed",
       "detector_tested": false
     },
     "production_adoption": false
@@ -403,7 +400,7 @@
     "Retain raw paths when OFF contains signal",
     "R33B4 original hit mapping HOLD, Figure6 exact file available; R34 independently labelled inputs and protected compatible grid still HOLD."
   ],
-  "next_allowed": "Inspect R37F3D1B_SUMMARY run 44353039016; natural astronomical science calibration only. G4/R28 unchanged.",
+  "next_allowed": "R37F3D1B-A spectral WCS and time-average reference semantics diagnostics only. Do not silently regrid, change tolerance or production. G4/R28 unchanged.",
   "claim_ceiling": "Synthetic injections on real measured backgrounds; not independent real source labels. CPU kernel comparisons only, no proof of whole pipeline superiority. No confirmed extraterrestrial technosignatures.",
   "startup": [
     "Read this current-state JSON from GitHub main each new COSMOS conversation.",
@@ -441,17 +438,7 @@
     ],
     "eta_policy": "Observed min/max historical comparable duration minus elapsed, descriptive not prediction interval; unknown when elapsed exceeds all examples or scope differs. No invented percent progress; explicit checkpoint artifacts only."
   },
-  "active_experiment": {
-    "stage": "R37F3D1B",
-    "status": "RUNNING_NATURAL_DYSH_CALIBRATION",
-    "run": 44353039016,
-    "job": 134973590998,
-    "protocol_commit": "2e08b3b03c0a913bce613d7cbc8fe6e9679ce4fd",
-    "workflow_commit": "31ddfe1e8680751af44b3c00ddcacb5711c7bbc2",
-    "receipt": "data/JANUS-COSMOS-SETI-R37E-TRANSMITTER-IDENTITY-2026-11-18.json",
-    "receipt_commit": "11a101c4a5507d459e4fd4f64a996857b64dce36",
-    "production_adoption": false
-  },
+  "active_experiment": null,
   "hannah_memory": {
     "status": "PASS_DURABLE_SNAPSHOT",
     "run": 44268188685,
@@ -753,8 +740,8 @@
       "telescope_gate": "HOLD_INSUFFICIENT_OBSERVATION"
     },
     "r37f": {
-      "status": "RUNNING_NATURAL_DYSH_CALIBRATION",
-      "receipt_commit": "11a101c4a5507d459e4fd4f64a996857b64dce36",
+      "status": "HOLD_NATURAL_DYSH_CALIBRATION",
+      "receipt_commit": "04d8a012596b40aee2de7b40c0db4c8ee366e758",
       "sources": [
         "Voyager1 Titan occultation 1980",
         "Voyager2 Saturn occultation 1981",
