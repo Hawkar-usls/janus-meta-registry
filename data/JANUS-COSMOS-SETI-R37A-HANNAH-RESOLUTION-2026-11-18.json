@@ -262,7 +262,7 @@
   ],
   "next_gate": "Qualify new metadata by exact native headers, independent coordinates/days/scans, physical cadence and coverage before spectrum examination. Preserve independently measured label requirements and protected real controls. Improve discriminative physics features separately; 27/37 cross-group similarities >=0.9 prohibit shape-only acceptance. No production adoption.",
   "r37b": {
-    "status": "HOLD_PRIOR_COORDINATE_FORMAT_DIAGNOSTIC",
+    "status": "RUNNING_COORDINATE_UNITS_REPAIR",
     "run": 44293624672,
     "job": 134764865278,
     "protocol_commit": "d7e8321d101190f571ba17833414ee0f478edd57",
@@ -277,7 +277,29 @@
       "job": 134765547027,
       "implementation_commit": "4bbcace20a640714c4a6992a63e515a6c38a9ce6",
       "workflow_commit": "dcddde9c554e53599e10b49d317ffbe350b3e9f4",
-      "scope": "Exact original coordinate values and metadata fields logged; strict guard unchanged, no power access."
+      "scope": "Exact original coordinate values and metadata fields logged; strict guard unchanged, no power access.",
+      "status": "DIAGNOSIS_CONFIRMED_DECIMAL_HOURS_AND_DEGREES",
+      "examples": [
+        {
+          "target": "HIP92403",
+          "ra_header_hours": 18.830388888888887,
+          "ra_archive_deg": 282.4558333333,
+          "dec_header_deg": -22.163888888888888
+        },
+        {
+          "target": "HIP13389",
+          "ra_header_hours": 2.8734722222222224,
+          "ra_archive_deg": 43.10208,
+          "dec_header_deg": -62.323055555555555
+        }
+      ]
+    },
+    "retry": {
+      "run": 44293984901,
+      "job": 134766110442,
+      "implementation_commit": "c56366bc093856b977a3c89c26534d1a05c38d4b",
+      "workflow_commit": "1160da6d799c989c219e72cba0d9df3b403612a9",
+      "rule": "Decimal hours / degrees supported only with uniquely matching archive RA, DEC when available; 0.1 degree source guard unchanged. No raw spectra touched."
     }
   }
 }
