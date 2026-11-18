@@ -1,7 +1,7 @@
 {
   "schema": "janus.cosmos.r35.grand_benchmark.receipt.v1",
   "date": "2026-11-18",
-  "status": "THREE_NATIVE_COMPARISONS_COMPLETE__FRESH_AND_SPEED_RUNNING",
+  "status": "THREE_NATIVE_COMPARISONS_COMPLETE__JIT_NO_MEANINGFUL_GAIN__FRESH_RUNNING",
   "preceding_r33b4": {
     "receipt": "data/JANUS-COSMOS-SETI-R33B4-SOURCE-IDENTITY-2026-11-18.json",
     "receipt_commit": "0a30c3b8131937485536303970b0f176f9d49ce3",
@@ -488,12 +488,31 @@
       }
     },
     "R35F": {
-      "status": "RUNNING_UNMEASURED",
+      "status": "PASS_EXACT_REPLAY__HOLD_NO_MEANINGFUL_SPEED_GAIN",
       "run": 44283278886,
       "job": 134729311746,
       "implementation_commit": "98122ee0f58b05420bd4d7bdb57874fcfcf5a634",
       "workflow_commit": "c0ed819b99b0335f936bbbbb6a29d8cedd3d2fb1",
-      "scope": "Exact JIT vs NumPy smooth template scores and paths, three repeats, single thread, include compile cost; historical engineering benchmark only."
+      "scope": "Exact JIT vs NumPy smooth template scores and paths, three repeats, single thread, include compile cost; historical engineering benchmark only.",
+      "artifact": 14417199284,
+      "artifact_sha256": "76e08e57e8e4062b77a55db365b35b072eea6f219ab17ee220cee1c1ae015901",
+      "result": {
+        "status": "PASS_EXACT_OBJECTIVE_REPLAY",
+        "exam_examples": 1024,
+        "template_bank": 201,
+        "evaluations": 3072,
+        "score_mismatches": 0,
+        "path_mismatches": 0,
+        "numpy_seconds": 1.101743400000089,
+        "jit_seconds": 1.0958317690000854,
+        "warm_speedup": 1.0053946519595776,
+        "jit_compile_seconds": 1.002865221000036,
+        "including_compile_speedup": 0.5249654453452212,
+        "peak_rss_kib_process": 456696,
+        "scope": "Historical exact numerical engineering benchmark only, no independent scientific gain. Same CPU, one thread, 3 repeats; no production changes.",
+        "production_adoption": false
+      },
+      "decision": "Warm +0.54%, cold slower, no meaningful gain; keep old kernel. Consider shared subpath recurrence/SIMD as separate controlled objective-preserving ablation."
     }
   },
   "findings": {
