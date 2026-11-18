@@ -2,30 +2,34 @@
   "schema": "janus.context_bridge.current_state.v1",
   "project": "JANUS COSMOS / SETI",
   "updated_utc": "2026-11-18T09:39:47Z",
-  "as_of": "R35G completed native comparison HOLD; R36F2 stopped before spectral reads 1/8 source groups; R37A physical grid transfer and alternate metadata scout running",
+  "as_of": "R37A controlled resolution transfer complete; shape-only discrimination HOLD; 1371 potential source files; R37B repaired coordinate-unit metadata qualification running",
   "authority": {
     "repository": "Hawkar-usls/Janus-Cosmos",
     "research_branch": "research/seti-radio-candidate-search-20261117",
     "registry": "Hawkar-usls/janus-meta-registry",
     "journal": "data/JANUS-COSMOS-SETI-DEVELOPMENT-JOURNAL.json",
-    "journal_commit": "d9d00c1e5c7a24624104dd39fe1358a143ff325c",
+    "journal_commit": "d31049ee4acbc84bad5ddb64d7213ed3cf29c3c1",
     "continuity_protocol": "data/JANUS-PROJECT-CONTINUITY-LEDGER-HRAIN-INAIHR-PROTOCOL-2026-08-24-v1.0.json",
     "protocol_blob": "740065281c7c7b289c927db7661b9b000abb8c68"
   },
   "goal": "Increase weak narrowband radio signal recovery while separating background/RFI and preserving known physical signals, with independently reproducible scientific controls.",
   "current": {
-    "stage": "R36F2",
-    "status": "HOLD_INSUFFICIENT_FRESH_SOURCE_GROUPS",
-    "run": 44289784087,
-    "job": 134751692007,
-    "receipt": "data/JANUS-COSMOS-SETI-R36-GALAXY-SWARM-2026-11-18.json",
-    "receipt_commit": "95b07548c9b89bc3787e01bee0f72eeb8947f944",
+    "stage": "R37A",
+    "status": "PASS_CONTROLLED_RESOLUTION_TRANSFER__HOLD_FAMILY_DISCRIMINATION",
+    "run": 44292499460,
+    "receipt": "data/JANUS-COSMOS-SETI-R37A-HANNAH-RESOLUTION-2026-11-18.json",
+    "receipt_commit": "611e8f9cb16944301c58df8925d00ce5c815c892",
     "results": {
-      "selected_groups": 1,
-      "required": 8,
-      "attempts": 95,
-      "native_skipped": true,
-      "no_evaluation_spectra": true
+      "derived_pairs": 40,
+      "above_threshold": 40,
+      "min_cosine": 0.964546313436695,
+      "median_cosine": 0.9923998482611949,
+      "cross_group_above_threshold": 27,
+      "cross_group_pairs": 37,
+      "power_conservation": "PASS",
+      "parkes_files": 647,
+      "gbt_files": 724,
+      "gbt_possible_targets": 21
     },
     "production_adoption": false
   },
@@ -320,11 +324,27 @@
           45
         ]
       }
+    },
+    "R36F2": {
+      "stage": "R36F2",
+      "status": "HOLD_INSUFFICIENT_FRESH_SOURCE_GROUPS",
+      "run": 44289784087,
+      "job": 134751692007,
+      "receipt": "data/JANUS-COSMOS-SETI-R36-GALAXY-SWARM-2026-11-18.json",
+      "receipt_commit": "95b07548c9b89bc3787e01bee0f72eeb8947f944",
+      "results": {
+        "selected_groups": 1,
+        "required": 8,
+        "attempts": 95,
+        "native_skipped": true,
+        "no_evaluation_spectra": true
+      },
+      "production_adoption": false
     }
   },
   "open_gates": [
-    "R37A physical grid transfer on 10 prior measured traces and derived coarsening; check valid support, conservation and cross-group confusion, no new origin labels",
-    "R37 archive metadata scout, qualify new telescope cadence, grid and alias identities, no relaxation of prior disjointness; R36F2 remains HOLD",
+    "R37B: qualify alternate Parkes and GBT headers without spectra, require exact coordinates and disjoint history; R36F2 still HOLD until eight eligible groups.",
+    "R37A: improve discrimination with independently labelled native physical RFI families and protected measured controls; cross-group high similarity prevents shape-only policy.",
     "R35H HOLD: zero compatible HANNAH queries, no joint localization/control gain. Develop physically validated resolution-aware features in separate development line, no threshold relaxation; independently protected controls required.",
     "R35F exact but negligible warm speedup; need blocking costs and more efficient memory traffic; GPU HyperSETI HOLD without CUDA",
     "R35E HyperSETI blocked by absent CUDA; no paid GPU provision.",
@@ -338,7 +358,7 @@
     "Retain raw paths when OFF contains signal",
     "R33B4 original hit mapping HOLD, Figure6 exact file available; R34 independently labelled inputs and protected compatible grid still HOLD."
   ],
-  "next_allowed": "CHECK read-only inspect R37A run 44292499460, grid job 134760977302 R37A_SUMMARY, sources job 134760976816 R37_SOURCE_SUMMARY. On continuation seal outcomes and qualify distinct real labelled RFI and measured protected controls; do not tune on failed exam or promote derived data; retain R28 and release HOLD.",
+  "next_allowed": "CHECK read-only inspect R37B run 44293984901, R37B_SUMMARY or exact failure; R37A measured result sealed. Only after eight qualified disjoint groups launch separate frozen comparative protocol; no relaxation or production/release change.",
   "claim_ceiling": "Synthetic injections on real measured backgrounds; not independent real source labels. CPU kernel comparisons only, no proof of whole pipeline superiority. No confirmed extraterrestrial technosignatures.",
   "startup": [
     "Read this current-state JSON from GitHub main each new COSMOS conversation.",
@@ -377,15 +397,14 @@
     "eta_policy": "Observed min/max historical comparable duration minus elapsed, descriptive not prediction interval; unknown when elapsed exceeds all examples or scope differs. No invented percent progress; explicit checkpoint artifacts only."
   },
   "active_experiment": {
-    "stage": "R37A",
-    "status": "RUNNING_UNMEASURED",
-    "run": 44292499460,
-    "grid_job": 134760977302,
-    "sources_job": 134760976816,
-    "protocol_commit": "03c0ba8defb6d456e5d239db3d8bc629b00c95f1",
-    "workflow_commit": "fdb06ca41f63c2cf19efd1f7fc550561d603de47",
+    "stage": "R37B",
+    "status": "RUNNING_COORDINATE_UNITS_REPAIR",
+    "run": 44293984901,
+    "job": 134766110442,
+    "protocol_commit": "d7e8321d101190f571ba17833414ee0f478edd57",
+    "workflow_commit": "1160da6d799c989c219e72cba0d9df3b403612a9",
     "receipt": "data/JANUS-COSMOS-SETI-R37A-HANNAH-RESOLUTION-2026-11-18.json",
-    "receipt_commit": "4fa3b56797bb24cf0e5db4ff0243bed0dde03a92",
+    "receipt_commit": "611e8f9cb16944301c58df8925d00ce5c815c892",
     "production_adoption": false
   },
   "hannah_memory": {
