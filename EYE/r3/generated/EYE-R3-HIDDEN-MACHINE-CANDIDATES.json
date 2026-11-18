@@ -24,8 +24,8 @@
     "ubiquitous_operator_usage_penalized": true
   },
   "schema": "janus.eye.r3.hidden_machine_miner.v1",
-  "source_git_commit": "46afd9f3d1e998c80cb9ccdb84fdd9d743a1775d",
-  "source_index_corpus_digest_sha256": "c5476b09274bbcbe8392a97407199380ecba8865a514926e18a69607213510b8",
+  "source_git_commit": "fe5eb77343f55c7192bb867faec9f80328e8fd0f",
+  "source_index_corpus_digest_sha256": "41f596c88c1eef6fb746383df86e73b94cd815f7e3dd6d0ed7346776c3154c5d",
   "status": "CANDIDATE_MINING_COMPLETE__VERIFY_REQUIRED",
   "target_hunt": {
     "domains": [
@@ -13581,6 +13581,358 @@
         "identity type is explicit and not silently upgraded"
       ],
       "score": 77.119426,
+      "verify_next": "Freeze the candidate; manually map input, state transition, output and verifier for each supporting lineage; then compare against lexically similar reordered negative controls.",
+      "why": "The same ordered operator machine appears in both domains despite penalized surface vocabulary overlap and lineage reuse."
+    },
+    {
+      "already_explicit_relation_detected": false,
+      "authority": "CANDIDATE_ONLY__INDEPENDENT_VERIFY_REQUIRED",
+      "candidate_id": "EYE-R3-PAIR-b8b5b33d7a59aa2e",
+      "candidate_type": "CROSS_DOMAIN_HIDDEN_MACHINE",
+      "confidence_class": "STRONG_HIDDEN_MACHINE_CANDIDATE__VERIFY_REQUIRED",
+      "counterexample": "The sequence is caused by shared JSON/workflow template order or generic JANUS governance boilerplate rather than the same operational mechanism.",
+      "domains": [
+        "COSMOS",
+        "LINEAR_A"
+      ],
+      "falsifier": "On held-out/manual verification, the claimed operator order or input-state-output semantics fail to align in either domain, or matched controls recover the same score without the mechanism.",
+      "formula": "COSMOS --[PRESERVE_FAILURE -> EXACT_VS_SEMANTIC_IDENTITY -> SEALED_CONTEXT_RECOVERY]--> LINEAR_A",
+      "independent_lineage_support": {
+        "COSMOS": 4,
+        "LINEAR_A": 6
+      },
+      "lexical_distance": 0.97138,
+      "lexical_overlap": 0.02862,
+      "lineage_overlap": 0.0,
+      "machine": [
+        "PRESERVE_FAILURE",
+        "EXACT_VS_SEMANTIC_IDENTITY",
+        "SEALED_CONTEXT_RECOVERY"
+      ],
+      "machine_domain_rarity": 0.894737,
+      "machine_id": "EYE-R3-MACHINE-196023142bc43ae1",
+      "operator_specificity": 0.017544,
+      "provenance": {
+        "COSMOS": [
+          {
+            "artifact_id": "janus.cosmos.r33.hannah.receipt.v1",
+            "lineage": "janus-cosmos-r33-hannah-receipt",
+            "machine_normalized_positions": [
+              0.0366897,
+              0.03998026,
+              0.03998026
+            ],
+            "machine_signal_strength": 14,
+            "operator_hits": {
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "byte",
+                "bytes",
+                "exact",
+                "hash",
+                "sha256"
+              ],
+              "PRESERVE_FAILURE": [
+                "blocked",
+                "failed",
+                "open",
+                "preserve",
+                "unknown"
+              ],
+              "SEALED_CONTEXT_RECOVERY": [
+                "hash",
+                "recover",
+                "recovery",
+                "sha256"
+              ]
+            },
+            "path": "data/JANUS-COSMOS-SETI-R33-HANNAH-VERIFIED-FAMILIES-2026-11-18.json",
+            "sha256": "ed1133eeba89e94a2240a0820acc25f54c59cb59575fa4e0259ed5fb96554190"
+          },
+          {
+            "artifact_id": "janus.cosmos.r32.hannah.receipt.v1",
+            "lineage": "janus-cosmos-r32-hannah-receipt",
+            "machine_normalized_positions": [
+              0.08924774,
+              0.09074439,
+              0.09074439
+            ],
+            "machine_signal_strength": 13,
+            "operator_hits": {
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "byte",
+                "bytes",
+                "exact",
+                "hash",
+                "identity",
+                "sha256"
+              ],
+              "PRESERVE_FAILURE": [
+                "null",
+                "unknown"
+              ],
+              "SEALED_CONTEXT_RECOVERY": [
+                "context",
+                "hash",
+                "recover",
+                "recovery",
+                "sha256"
+              ]
+            },
+            "path": "data/JANUS-COSMOS-SETI-R32-HANNAH-ADAPTIVE-2026-11-18.json",
+            "sha256": "cb13af6dcd5e3b17b00c6f5146d769b74c2400acb1bc77de571324a8940b1925"
+          },
+          {
+            "artifact_id": "janus.cosmos.seti.r11.control_calibration.v1",
+            "lineage": "janus-cosmos-seti-r11-control-calibration",
+            "machine_normalized_positions": [
+              0.00861936,
+              0.01037186,
+              0.01037186
+            ],
+            "machine_signal_strength": 10,
+            "operator_hits": {
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "byte",
+                "bytes",
+                "sha256"
+              ],
+              "PRESERVE_FAILURE": [
+                "mismatch",
+                "null",
+                "open",
+                "unknown"
+              ],
+              "SEALED_CONTEXT_RECOVERY": [
+                "recover",
+                "recovery",
+                "sha256"
+              ]
+            },
+            "path": "data/JANUS-COSMOS-SETI-R11-CONTROL-CALIBRATION-2026-11-17.json",
+            "sha256": "771b8d16c1778e6c77acba8377db9ee358f8d31356c09a033f1d8b6c00c61d83"
+          },
+          {
+            "artifact_id": "janus.cosmos.r40cde.launch.v1",
+            "lineage": "janus-cosmos-r40cde-launch",
+            "machine_normalized_positions": [
+              0.17927116,
+              0.19847179,
+              0.19847179
+            ],
+            "machine_signal_strength": 6,
+            "operator_hits": {
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "hash",
+                "sha256"
+              ],
+              "PRESERVE_FAILURE": [
+                "null",
+                "open"
+              ],
+              "SEALED_CONTEXT_RECOVERY": [
+                "hash",
+                "sha256"
+              ]
+            },
+            "path": "data/JANUS-COSMOS-SETI-R40CDE-TRANSFER-2026-11-18.json",
+            "sha256": "07d89b59a32864dec5bdef157652c3ea206835f45060aef2a2c770be2db4347a"
+          }
+        ],
+        "LINEAR_A": [
+          {
+            "artifact_id": "JANUS-LINEAR-A-LONG-FORMULA-NEIGHBORHOOD-RESULT-2026-08-14-v0.8",
+            "lineage": "janus-linear-a-long-formula-neighborhood-result",
+            "machine_normalized_positions": [
+              0.11673073,
+              0.1172365,
+              0.1962371
+            ],
+            "machine_signal_strength": 15,
+            "operator_hits": {
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "byte",
+                "bytes",
+                "exact",
+                "hash",
+                "identity",
+                "semantic",
+                "sha256"
+              ],
+              "PRESERVE_FAILURE": [
+                "blocked",
+                "failed",
+                "failure",
+                "null",
+                "preserve",
+                "retained"
+              ],
+              "SEALED_CONTEXT_RECOVERY": [
+                "hash",
+                "sha256"
+              ]
+            },
+            "path": "data/JANUS-LINEAR-A-LONG-FORMULA-NEIGHBORHOOD-RESULT-2026-08-14-v0.8.json",
+            "sha256": "720f431a8c57908c8ea7a4f47ca002ecdbfb828a047bd2575515cd6fde31d88c"
+          },
+          {
+            "artifact_id": "JANUS-LINEAR-A-R3C-1A-MAP-BOUNDARY-PARSER-CORRECTION-VALIDATION-RESULT-2026-08-14-v0.3",
+            "lineage": "janus-linear-a-r3c-1a-map-boundary-parser-correction-validation-result",
+            "machine_normalized_positions": [
+              0.20547341,
+              0.32222467,
+              0.32222467
+            ],
+            "machine_signal_strength": 11,
+            "operator_hits": {
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "byte",
+                "bytes",
+                "exact",
+                "semantic",
+                "sha256"
+              ],
+              "PRESERVE_FAILURE": [
+                "failed",
+                "null",
+                "preserve"
+              ],
+              "SEALED_CONTEXT_RECOVERY": [
+                "recover",
+                "recovery",
+                "sha256"
+              ]
+            },
+            "path": "data/JANUS-LINEAR-A-R3C-1A-MAP-BOUNDARY-PARSER-CORRECTION-VALIDATION-RESULT-2026-08-14-v0.3.json",
+            "sha256": "ec4227ad9fd479e2f163712c3a38ecb58d3c9c1f1f34787dff1d38570071e39c"
+          },
+          {
+            "artifact_id": "JANUS-LINEAR-A-TRANSCRIPTION-SUBSTRATE-VALIDATION-RESULT-2026-08-14-v1.0",
+            "lineage": "janus-linear-a-transcription-substrate-validation-result",
+            "machine_normalized_positions": [
+              0.13905997,
+              0.31312804,
+              0.35915721
+            ],
+            "machine_signal_strength": 11,
+            "operator_hits": {
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "byte",
+                "bytes",
+                "exact",
+                "hash",
+                "identity",
+                "semantic",
+                "sha256"
+              ],
+              "PRESERVE_FAILURE": [
+                "blocked",
+                "preserve"
+              ],
+              "SEALED_CONTEXT_RECOVERY": [
+                "hash",
+                "sha256"
+              ]
+            },
+            "path": "data/JANUS-LINEAR-A-TRANSCRIPTION-SUBSTRATE-VALIDATION-RESULT-2026-08-14-v1.0.json",
+            "sha256": "642c74868bc22eb1a51fcaaa2d2c077f81704c4cb0a5b8c3f98f6aeba408766d"
+          },
+          {
+            "artifact_id": null,
+            "lineage": "janus-linear-a-r7-e2-candidate-profile-holdout-spec",
+            "machine_normalized_positions": [
+              0.06509946,
+              0.13743219,
+              0.13743219
+            ],
+            "machine_signal_strength": 10,
+            "operator_hits": {
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "exact",
+                "hash",
+                "semantic"
+              ],
+              "PRESERVE_FAILURE": [
+                "failed",
+                "failure",
+                "null",
+                "open",
+                "retained"
+              ],
+              "SEALED_CONTEXT_RECOVERY": [
+                "context",
+                "hash"
+              ]
+            },
+            "path": "data/JANUS-LINEAR-A-R7-E2-CANDIDATE-PROFILE-HOLDOUT-SPEC-2026-08-15-v0.1.json",
+            "sha256": "db610eb9a943fd76cde860d93d1866b2388866862ec56851a897b2b68ea14deb"
+          },
+          {
+            "artifact_id": null,
+            "lineage": "janus-linear-a-r3c3-current-windows-resource-routing",
+            "machine_normalized_positions": [
+              0.1984015,
+              0.29055007,
+              0.29055007
+            ],
+            "machine_signal_strength": 10,
+            "operator_hits": {
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "byte",
+                "bytes",
+                "exact",
+                "identity",
+                "plaintext",
+                "sha256"
+              ],
+              "PRESERVE_FAILURE": [
+                "open",
+                "unknown"
+              ],
+              "SEALED_CONTEXT_RECOVERY": [
+                "plaintext",
+                "sha256"
+              ]
+            },
+            "path": "research/linear_a/janus_linear_a_r3c3_current_windows_resource_routing_v0_1.py",
+            "sha256": "28c491431c915be601b387e0e2e91729307ea60cc6ab509b0cce64178ae8f363"
+          },
+          {
+            "artifact_id": null,
+            "lineage": "janus-linear-a-transcription-ir-hardening",
+            "machine_normalized_positions": [
+              0.0176416,
+              0.02468731,
+              0.10453875
+            ],
+            "machine_signal_strength": 9,
+            "operator_hits": {
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "hash",
+                "identity",
+                "semantic"
+              ],
+              "PRESERVE_FAILURE": [
+                "mismatch",
+                "open",
+                "preserve",
+                "unknown"
+              ],
+              "SEALED_CONTEXT_RECOVERY": [
+                "hash",
+                "sealed"
+              ]
+            },
+            "path": "research/linear_a/janus_linear_a_transcription_ir_hardening_v1_1.py",
+            "sha256": "04da9670121577108a68d73e55f36436c212b3e70064ad6196c15ef3091ff616"
+          }
+        ]
+      },
+      "representation_invariants": [
+        "epistemic state identity under unsuccessful execution",
+        "identity type is explicit and not silently upgraded",
+        "surviving contextual constraints around an irreversible identity token"
+      ],
+      "score": 77.11182,
       "verify_next": "Freeze the candidate; manually map input, state transition, output and verifier for each supporting lineage; then compare against lexically similar reordered negative controls.",
       "why": "The same ordered operator machine appears in both domains despite penalized surface vocabulary overlap and lineage reuse."
     },
@@ -38075,369 +38427,6 @@
       "score": 75.772741,
       "verify_next": "Freeze the candidate; manually map input, state transition, output and verifier for each supporting lineage; then compare against lexically similar reordered negative controls.",
       "why": "The same ordered operator machine appears in both domains despite penalized surface vocabulary overlap and lineage reuse."
-    },
-    {
-      "already_explicit_relation_detected": false,
-      "authority": "CANDIDATE_ONLY__INDEPENDENT_VERIFY_REQUIRED",
-      "candidate_id": "EYE-R3-PAIR-e44d6397bcc30a1b",
-      "candidate_type": "CROSS_DOMAIN_HIDDEN_MACHINE",
-      "confidence_class": "MEDIUM_HIDDEN_MACHINE_CANDIDATE__VERIFY_REQUIRED",
-      "counterexample": "The sequence is caused by shared JSON/workflow template order or generic JANUS governance boilerplate rather than the same operational mechanism.",
-      "domains": [
-        "LINEAR_A",
-        "OSIRIS_MYTH"
-      ],
-      "falsifier": "On held-out/manual verification, the claimed operator order or input-state-output semantics fail to align in either domain, or matched controls recover the same score without the mechanism.",
-      "formula": "LINEAR_A --[PARTIAL_RECONSTRUCTION -> SEALED_CONTEXT_RECOVERY -> EXACT_VS_SEMANTIC_IDENTITY]--> OSIRIS_MYTH",
-      "independent_lineage_support": {
-        "LINEAR_A": 6,
-        "OSIRIS_MYTH": 4
-      },
-      "lexical_distance": 0.981277,
-      "lexical_overlap": 0.018723,
-      "lineage_overlap": 0.0,
-      "machine": [
-        "PARTIAL_RECONSTRUCTION",
-        "SEALED_CONTEXT_RECOVERY",
-        "EXACT_VS_SEMANTIC_IDENTITY"
-      ],
-      "machine_domain_rarity": 0.789474,
-      "machine_id": "EYE-R3-MACHINE-e650ebc4ff76b3c7",
-      "operator_specificity": 0.017544,
-      "provenance": {
-        "LINEAR_A": [
-          {
-            "artifact_id": "JANUS-LINEAR-A-R3C-3-CURRENT-SOURCE-METHOD-DIFFERENTIAL-SPEC-2026-08-14-v0.1",
-            "lineage": "janus-linear-a-r3c-3-current-source-method-differential-spec",
-            "machine_normalized_positions": [
-              0.0829918,
-              0.0829918,
-              0.09246926
-            ],
-            "machine_signal_strength": 17,
-            "operator_hits": {
-              "EXACT_VS_SEMANTIC_IDENTITY": [
-                "byte",
-                "bytes",
-                "exact",
-                "hash",
-                "identity",
-                "plaintext",
-                "semantic",
-                "sha256"
-              ],
-              "PARTIAL_RECONSTRUCTION": [
-                "reconstruct",
-                "reconstruction",
-                "recover",
-                "recovery"
-              ],
-              "SEALED_CONTEXT_RECOVERY": [
-                "hash",
-                "plaintext",
-                "recover",
-                "recovery",
-                "sha256"
-              ]
-            },
-            "path": "data/JANUS-LINEAR-A-R3C-3-CURRENT-SOURCE-METHOD-DIFFERENTIAL-SPEC-2026-08-14-v0.1.json",
-            "sha256": "fbc523f747bd91737a5287c33bed48e1bbac4f3953675bbc326a2c1d8e20dbe7"
-          },
-          {
-            "artifact_id": null,
-            "lineage": "janus-linear-a-r3c-real-ir-projection",
-            "machine_normalized_positions": [
-              0.0059269,
-              0.0059269,
-              0.0368785
-            ],
-            "machine_signal_strength": 16,
-            "operator_hits": {
-              "EXACT_VS_SEMANTIC_IDENTITY": [
-                "byte",
-                "bytes",
-                "exact",
-                "hash",
-                "identity",
-                "semantic",
-                "sha256"
-              ],
-              "PARTIAL_RECONSTRUCTION": [
-                "missing",
-                "partial",
-                "recover",
-                "recovery"
-              ],
-              "SEALED_CONTEXT_RECOVERY": [
-                "hash",
-                "recover",
-                "recovery",
-                "sealed",
-                "sha256"
-              ]
-            },
-            "path": "research/linear_a/janus_linear_a_r3c_real_ir_projection_v0_1_1.py",
-            "sha256": "e9d08969b31808f4861cc3be06baf2110b4ec46c8b31d74db78a9ce8ef784008"
-          },
-          {
-            "artifact_id": "JANUS-LINEAR-A-R3C-3-CURRENT-WINDOWS-STATIC-RESOURCE-ROUTING-SPEC-2026-08-14-v0.1",
-            "lineage": "janus-linear-a-r3c-3-current-windows-static-resource-routing-spec",
-            "machine_normalized_positions": [
-              0.08395722,
-              0.08395722,
-              0.17834225
-            ],
-            "machine_signal_strength": 14,
-            "operator_hits": {
-              "EXACT_VS_SEMANTIC_IDENTITY": [
-                "byte",
-                "bytes",
-                "exact",
-                "identity",
-                "plaintext",
-                "semantic",
-                "sha256"
-              ],
-              "PARTIAL_RECONSTRUCTION": [
-                "fragment",
-                "recover",
-                "recovery"
-              ],
-              "SEALED_CONTEXT_RECOVERY": [
-                "plaintext",
-                "recover",
-                "recovery",
-                "sha256"
-              ]
-            },
-            "path": "data/JANUS-LINEAR-A-R3C-3-CURRENT-WINDOWS-STATIC-RESOURCE-ROUTING-SPEC-2026-08-14-v0.1.json",
-            "sha256": "1b6b2d2577f59b207edb29f02841b27c867613e0a4a7c336fd9fd2564ea36d4f"
-          },
-          {
-            "artifact_id": "JANUS-LINEAR-A-R3C-3-PUBLIC-SOFTWARE-RESOURCE-LINEAGE-RECOVERY-2026-08-14-v0.1",
-            "lineage": "janus-linear-a-r3c-3-public-software-resource-lineage-recovery",
-            "machine_normalized_positions": [
-              0.01199306,
-              0.01199306,
-              0.03976645
-            ],
-            "machine_signal_strength": 14,
-            "operator_hits": {
-              "EXACT_VS_SEMANTIC_IDENTITY": [
-                "byte",
-                "bytes",
-                "exact",
-                "hash",
-                "identity",
-                "plaintext"
-              ],
-              "PARTIAL_RECONSTRUCTION": [
-                "reconstruct",
-                "reconstruction",
-                "recover",
-                "recovery"
-              ],
-              "SEALED_CONTEXT_RECOVERY": [
-                "hash",
-                "plaintext",
-                "recover",
-                "recovery"
-              ]
-            },
-            "path": "data/JANUS-LINEAR-A-R3C-3-PUBLIC-SOFTWARE-RESOURCE-LINEAGE-RECOVERY-2026-08-14-v0.1.json",
-            "sha256": "1ba737e14e152215110ab89cf54a86e6b953e3133ab7eccb86b398cc79cffb5e"
-          },
-          {
-            "artifact_id": "JANUS-LINEAR-A-R3D-PETROLITO-ACQUISITION-RECEIPT-CONTRACT-2026-08-14-v0.1",
-            "lineage": "janus-linear-a-r3d-petrolito-acquisition-receipt-contract",
-            "machine_normalized_positions": [
-              0.12363508,
-              0.12363508,
-              0.19513913
-            ],
-            "machine_signal_strength": 14,
-            "operator_hits": {
-              "EXACT_VS_SEMANTIC_IDENTITY": [
-                "byte",
-                "bytes",
-                "hash",
-                "identity",
-                "sha256"
-              ],
-              "PARTIAL_RECONSTRUCTION": [
-                "missing",
-                "reconstruct",
-                "reconstruction",
-                "recover",
-                "recovery"
-              ],
-              "SEALED_CONTEXT_RECOVERY": [
-                "hash",
-                "recover",
-                "recovery",
-                "sha256"
-              ]
-            },
-            "path": "data/JANUS-LINEAR-A-R3D-PETROLITO-ACQUISITION-RECEIPT-CONTRACT-2026-08-14-v0.1.json",
-            "sha256": "b93f7e8d6de07d38790f062ca6450fe5d7b0fb57395f9f891adbf5b2ce0dfc9c"
-          },
-          {
-            "artifact_id": null,
-            "lineage": "janus-linear-a-r3c3-historical-four-language-stress",
-            "machine_normalized_positions": [
-              0.17044991,
-              0.17044991,
-              0.18458611
-            ],
-            "machine_signal_strength": 13,
-            "operator_hits": {
-              "EXACT_VS_SEMANTIC_IDENTITY": [
-                "exact",
-                "hash",
-                "semantic",
-                "sha256"
-              ],
-              "PARTIAL_RECONSTRUCTION": [
-                "partial",
-                "reconstruct",
-                "reconstruction",
-                "recover",
-                "recovery"
-              ],
-              "SEALED_CONTEXT_RECOVERY": [
-                "hash",
-                "recover",
-                "recovery",
-                "sha256"
-              ]
-            },
-            "path": ".github/workflows/janus-linear-a-r3c3-historical-four-language-stress-v0-1.yml",
-            "sha256": "137d8fbefefa42a664c6d1292573348f56ca3fadee877afb4911561dc0fd50d3"
-          }
-        ],
-        "OSIRIS_MYTH": [
-          {
-            "artifact_id": "JANUS-OSIRIS-RITUAL-REASSEMBLY-MACHINE-THONIS-DENDERA-2026-09-03-v1.0",
-            "lineage": "janus-osiris-ritual-reassembly-machine-thonis-dendera",
-            "machine_normalized_positions": [
-              0.04540368,
-              0.04540368,
-              0.04876099
-            ],
-            "machine_signal_strength": 11,
-            "operator_hits": {
-              "EXACT_VS_SEMANTIC_IDENTITY": [
-                "exact",
-                "identity",
-                "semantic"
-              ],
-              "PARTIAL_RECONSTRUCTION": [
-                "fragment",
-                "missing",
-                "partial",
-                "reconstruct",
-                "reconstruction",
-                "recover"
-              ],
-              "SEALED_CONTEXT_RECOVERY": [
-                "context",
-                "recover"
-              ]
-            },
-            "path": "data/JANUS-OSIRIS-RITUAL-REASSEMBLY-MACHINE-THONIS-DENDERA-2026-09-03-v1.0.json",
-            "sha256": "0aa90a7f9f4f7a644e544c0386cd8463a7c36a051a680d6f94a23d6940892f98"
-          },
-          {
-            "artifact_id": "JANUS-OSIRIS-MENDES-NOMES-16-17-18-DENDERA-RELIC-PASS-2026-08-18-V1.2",
-            "lineage": "janus-osiris-mendes-nomes-16-17-18-dendera-relic-pass",
-            "machine_normalized_positions": [
-              0.11900741,
-              0.11900741,
-              0.13134988
-            ],
-            "machine_signal_strength": 9,
-            "operator_hits": {
-              "EXACT_VS_SEMANTIC_IDENTITY": [
-                "continuity",
-                "exact",
-                "semantic"
-              ],
-              "PARTIAL_RECONSTRUCTION": [
-                "gap",
-                "missing",
-                "recover",
-                "recovery"
-              ],
-              "SEALED_CONTEXT_RECOVERY": [
-                "recover",
-                "recovery"
-              ]
-            },
-            "path": "data/JANUS-OSIRIS-MENDES-NOMES-16-17-18-DENDERA-RELIC-PASS-2026-08-18-v1.2.json",
-            "sha256": "d750dc72ca497436bc29cdfd533d98bab1d988b7032eb09a294b01e23b18d168"
-          },
-          {
-            "artifact_id": "JANUS-CROFT-LIMA-EGYPT-INSTITUTIONAL-CORRIDOR-OSIRIS-CONTROL-2026-09-03-v1.0",
-            "lineage": "janus-croft-lima-egypt-institutional-corridor-osiris-control",
-            "machine_normalized_positions": [
-              0.71180862,
-              0.71180862,
-              0.80171791
-            ],
-            "machine_signal_strength": 6,
-            "operator_hits": {
-              "EXACT_VS_SEMANTIC_IDENTITY": [
-                "exact",
-                "identity"
-              ],
-              "PARTIAL_RECONSTRUCTION": [
-                "recover",
-                "recovery"
-              ],
-              "SEALED_CONTEXT_RECOVERY": [
-                "recover",
-                "recovery"
-              ]
-            },
-            "path": "data/JANUS-CROFT-LIMA-EGYPT-INSTITUTIONAL-CORRIDOR-OSIRIS-CONTROL-2026-09-03-v1.0.json",
-            "sha256": "f7fde6813e8e1542d847e44571b5518801341d1ae008b548e4825c7e81600257"
-          },
-          {
-            "artifact_id": "JANUS-HORUS-RESTORATION-PROCEDURE-DEVICE-SIGNATURE-PILOT-2026-08-16-v0.1",
-            "lineage": "janus-horus-restoration-procedure-device-signature-pilot",
-            "machine_normalized_positions": [
-              0.12650329,
-              0.12650329,
-              0.20229181
-            ],
-            "machine_signal_strength": 6,
-            "operator_hits": {
-              "EXACT_VS_SEMANTIC_IDENTITY": [
-                "identity",
-                "semantic"
-              ],
-              "PARTIAL_RECONSTRUCTION": [
-                "recover",
-                "recovery"
-              ],
-              "SEALED_CONTEXT_RECOVERY": [
-                "recover",
-                "recovery"
-              ]
-            },
-            "path": "data/JANUS-HORUS-RESTORATION-PROCEDURE-DEVICE-SIGNATURE-PILOT-2026-08-16-v0.1.json",
-            "sha256": "ad8e9a35d4fa7d9e2880d7ef540258b966ab659d8cdf96361cbbf32cab3a758d"
-          }
-        ]
-      },
-      "representation_invariants": [
-        "constraints surviving loss or sparsity",
-        "surviving contextual constraints around an irreversible identity token",
-        "identity type is explicit and not silently upgraded"
-      ],
-      "score": 75.730795,
-      "verify_next": "Freeze the candidate; manually map input, state transition, output and verifier for each supporting lineage; then compare against lexically similar reordered negative controls.",
-      "why": "The same ordered operator machine appears in both domains despite penalized surface vocabulary overlap and lineage reuse."
     }
   ],
   "top_triple_candidates": [
@@ -50805,7 +50794,7 @@
       "falsifier": "Held-out/manual sequence verification fails in one domain, or shuffled/reordered controls score equivalently.",
       "formula": "COSMOS <--> LINEAR_A <--> TRUMP_SLIME via EXACT_VS_SEMANTIC_IDENTITY -> SEALED_CONTEXT_RECOVERY -> BOUNDED_CANDIDATE_SEARCH",
       "independent_lineage_support": {
-        "COSMOS": 4,
+        "COSMOS": 5,
         "LINEAR_A": 6,
         "TRUMP_SLIME": 4
       },
@@ -50937,6 +50926,33 @@
             },
             "path": "data/JANUS-COSMOS-SETI-R40B-TRANSFER-2026-11-18.json",
             "sha256": "f40be0a6f3a6eba70a7c696cc85dd5108d8c9cf969c2e08701dedd66a9055d19"
+          },
+          {
+            "artifact_id": "janus.cosmos.r40cde.launch.v1",
+            "lineage": "janus-cosmos-r40cde-launch",
+            "machine_normalized_positions": [
+              0.19847179,
+              0.19847179,
+              0.29702194
+            ],
+            "machine_signal_strength": 7,
+            "operator_hits": {
+              "BOUNDED_CANDIDATE_SEARCH": [
+                "candidate",
+                "gate",
+                "rank"
+              ],
+              "EXACT_VS_SEMANTIC_IDENTITY": [
+                "hash",
+                "sha256"
+              ],
+              "SEALED_CONTEXT_RECOVERY": [
+                "hash",
+                "sha256"
+              ]
+            },
+            "path": "data/JANUS-COSMOS-SETI-R40CDE-TRANSFER-2026-11-18.json",
+            "sha256": "07d89b59a32864dec5bdef157652c3ea206835f45060aef2a2c770be2db4347a"
           }
         ],
         "LINEAR_A": [
