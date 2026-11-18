@@ -1,7 +1,7 @@
 {
   "schema": "janus.cosmos.r37e.receipt.v1",
   "date": "2026-11-18",
-  "status": "R37E2_AGGREGATE_PASS__TELESCOPE_HOLD__R37F_PUBLIC_ARCHIVE_DISCOVERY",
+  "status": "R37F1_METADATA_QUALIFICATION_RUNNING",
   "source": {
     "repo": "Hawkar-usls/Janus-Cosmos",
     "branch": "research/seti-radio-candidate-search-20261117",
@@ -39,7 +39,7 @@
     }
   },
   "design": "Offline public civilian laboratory data only. Verify records, checksum, archive member layout and independent capture units before any feature fit. Power-only mathematical non-injectivity control. No raw IQ samples consumed in qualification, no classifier or source label promotion.",
-  "next_gate": "R37F1 qualify public historical scientific acquisition metadata and duration/continuity, compare native resolution and independent epochs; keep previously seen Voyager example out of blind exam. Need measured protected natural controls. R38 HOLD.",
+  "next_gate": "Inspect R37F1_SUMMARY, qualify original record counters and matched natural science spectrum separately. Preserve R28 and G4; no source promotion or suppression.",
   "production_adoption": false,
   "r37e0": {
     "status": "HOLD_CAPTURE_UNIT_QUALIFICATION",
@@ -1310,5 +1310,40 @@
     "raw_downloaded": false,
     "new_power_processed": false,
     "production_adoption": false
+  },
+  "r37f1": {
+    "status": "RUNNING_METADATA_QUALIFICATION",
+    "run": 44306559063,
+    "job": 134809525039,
+    "protocol_commit": "37ea0ce1366e68166bb4b1354574b5c47b58286f",
+    "implementation_commit": "66a04cb590900f84317bcd26ad20d7d6a1f02b88",
+    "workflow_commit": "28c2cb7b7131a93e8ecc3fd537e99395da3a2b91",
+    "natural_control": {
+      "name": "W3 OH maser",
+      "doi": "10.1088/1538-3873/aa5800",
+      "figure": 7,
+      "mjd": 57424.92,
+      "channel_hz": 2.8,
+      "integration_s": 20,
+      "center_mhz": 1667.5,
+      "authority": "PUBLISHED_LITERATURE_ONLY; exact raw HDF5 join not verified"
+    },
+    "historical_label_examples": [
+      {
+        "url": "https://pds-ppi.igpp.ucla.edu/data/VG1-SSA-RSS-1-ROCC-V1.0/DATA/VJ6281AA.LBL",
+        "date": "1980-11-12",
+        "record_bytes": 5056,
+        "records": 6000,
+        "nominal_span_s": 297
+      },
+      {
+        "url": "https://pds-ppi.igpp.ucla.edu/data/VG2-S-RSS-1-ROCC-V1.0/DATA/C0SR01AA.LBL",
+        "date": "1981-08-26",
+        "record_bytes": 5056,
+        "records": 6000,
+        "nominal_span_s": 297
+      }
+    ],
+    "scope": "Bounded metadata, label provenance, nominal durations, checksum listing and HEAD lengths; no raw voltage access. Record-counter continuity, repeated sessions and actual common carrier remain unverified. W3 catalogue query only; Cassini profile confirms four dates and archive-level gap screening, requires individual file verification."
   }
 }
