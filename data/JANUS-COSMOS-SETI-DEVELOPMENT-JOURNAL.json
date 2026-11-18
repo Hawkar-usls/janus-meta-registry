@@ -569,20 +569,112 @@
       },
       "limitations": "No R30 performance measured; day-disjoint archive synthetic injections are not external physical source evidence; selected-path support not independent; BLC1/Voyager and HANNAH deferred; exact errors and source hashes in receipt.",
       "next_gate": "Inspect manifest, lock, job and artifacts; seal positive/negative findings and paired deltas. Only then R30C HANNAH."
+    },
+    {
+      "event_id": "20261118-R30B-RESULT",
+      "date": "2026-11-18",
+      "stage": "R30B",
+      "kind": "RESULT",
+      "status": "HOLD",
+      "decision": "Do not adopt KUSTO/TOPA hard veto. All four science gates fail. Keep baseline; test protected raw separately; advisory evidence only.",
+      "evidence": {
+        "receipt": "data/JANUS-COSMOS-SETI-R30-FALSE-ALARM-SHIELD-2026-11-18.json",
+        "receipt_commit": "6c2e00806a607c0be841c8348e69f88853737bd6",
+        "run": 44262281770,
+        "job": 134658251957,
+        "artifact": 14408812860,
+        "artifact_sha256": "49ea750a401bf613c7896cff439685a7e338f4417970049f05430e261d4b916e",
+        "lock_sha256": "e157d73df1b7bffab8e9f9436e24288286e086c114ac0556b5aff5e20d21abda",
+        "baseline": {
+          "localized": 148,
+          "controls": 25,
+          "weak": 22,
+          "shared": 17
+        },
+        "kusto_topa": {
+          "localized": 40,
+          "controls": 15,
+          "weak": 5,
+          "shared": 1
+        },
+        "protected": {
+          "localized": 139,
+          "controls": 24,
+          "weak": 19,
+          "shared": 53
+        }
+      },
+      "limitations": "Four fresh archive days, synthetic injections, no physical origin accuracy; GitHub technical success not scientific pass.",
+      "next_gate": "HANNAH research-only memory, then independent source-labelled retrieval and no-veto classification study."
+    },
+    {
+      "event_id": "20261118-R30C-SEED-RESULT",
+      "date": "2026-11-18",
+      "stage": "R30C",
+      "kind": "RESULT",
+      "status": "PASS_MEMORY_DEVELOPMENT",
+      "decision": "Retain immutable 59 entries and 1 known RFI seed; no automatic label or filtering. Derived recurrence requires distinct tile hash as well as distinct scan in corrected implementation.",
+      "evidence": {
+        "receipt": "data/JANUS-COSMOS-SETI-R30C-HANNAH-RFI-MEMORY-2026-11-18.json",
+        "receipt_commit": "88579eb7c53e6d6282c0cc3b34e6d11efb452249",
+        "run": 44263525473,
+        "job": 134662361891,
+        "artifact": 14408723659,
+        "artifact_sha256": "8c053a4d0581a8d378c86002786c25c3087f255c9ed695c67ffcacea3af18269",
+        "library_sha256": "390bb4c938918bc0e3d7cdd86b7e9c42ca3e9d18755411ab985278310ce75da3",
+        "observations": 97,
+        "entries": 59,
+        "verified": 1,
+        "candidate_first_run": 8,
+        "unknown_first_run": 50,
+        "replay_new": 0,
+        "selftests": "10/10",
+        "correction_commit": "09360900cba067e64ebc84f4fce45d5a14101da9"
+      },
+      "limitations": "First recurrence count provisional; controlled memory functionality, not evidence of scientific RFI accuracy. Artifacts temporary.",
+      "next_gate": "Preserve parent through incremental fresh real scans; then permanent reviewed ledger snapshot."
+    },
+    {
+      "event_id": "20261118-R30C-INCREMENTAL-LAUNCH",
+      "date": "2026-11-18",
+      "stage": "R30C-incremental",
+      "kind": "LAUNCH",
+      "status": "RUNNING_UNMEASURED",
+      "decision": "Pinned parent exact hash plus R30B frozen component-fit manifest, HIP33478, 4 scans/16 real tiles; no labels, no exam use, immutable dedup and no write permissions in CI.",
+      "evidence": {
+        "receipt": "data/JANUS-COSMOS-SETI-R30C-HANNAH-RFI-MEMORY-2026-11-18.json",
+        "receipt_commit": "88579eb7c53e6d6282c0cc3b34e6d11efb452249",
+        "run": 44263940100,
+        "job": 134663731942,
+        "workflow_commit": "afd1c5a9f8c4ab5f276b88cd128a774159089433",
+        "parent_artifact": 14408723659,
+        "manifest": 14409292043,
+        "protocol_blob": "31ad160ee8c197e3bd004bd6a81d636978acc545",
+        "implementation_blob": "d92d267a5e740aa4cc1933a4cbdb65eae764f5cc"
+      },
+      "limitations": "No measured incremental results yet; automatic general observation hook and durable registry promotion pending.",
+      "next_gate": "Check ledger hash, parent preservation, no duplicate additions, corrected candidates, export permanent library. Then fresh independent family-labelled test."
     }
   ],
   "current": {
-    "stage": "R29",
-    "status": "HOLD_STAR_FORGE_NOT_BETTER_THAN_FIXED",
+    "stage": "R30B",
+    "status": "HOLD_NO_SCIENTIFIC_GAIN",
     "production_adoption": false,
     "confirmed_technosignatures": 0
   },
   "active_experiment": {
-    "stage": "R30B",
+    "stage": "R30C-incremental",
     "status": "RUNNING_UNMEASURED",
-    "run": 44262281770,
-    "job": 134658251957,
-    "receipt": "data/JANUS-COSMOS-SETI-R30-FALSE-ALARM-SHIELD-2026-11-18.json",
+    "run": 44263940100,
+    "job": 134663731942,
+    "receipt": "data/JANUS-COSMOS-SETI-R30C-HANNAH-RFI-MEMORY-2026-11-18.json",
     "production_adoption": false
+  },
+  "hannah_memory_seed": {
+    "status": "PASS_MEMORY_DEVELOPMENT",
+    "entries": 59,
+    "verified_rfi": 1,
+    "artifact": 14408723659,
+    "library_sha256": "390bb4c938918bc0e3d7cdd86b7e9c42ca3e9d18755411ab985278310ce75da3"
   }
 }
