@@ -1,7 +1,7 @@
 {
   "schema": "janus.cosmos.r37a.receipt.v1",
   "date": "2026-11-18",
-  "status": "PASS_CONTROLLED_RESOLUTION_TRANSFER__HOLD_FAMILY_DISCRIMINATION__SOURCE_METADATA_READY",
+  "status": "R37A_TRANSFER_PASS__R37C_GROUP_RETRIEVAL_HOLD__R37D_CONDITIONAL_DRIFT_PASS__R37B_SOURCE_HOLD",
   "source": {
     "repo": "Hawkar-usls/Janus-Cosmos",
     "branch": "research/seti-radio-candidate-search-20261117",
@@ -260,9 +260,9 @@
       "digest": "sha256:bcbc7d4ed91eea37bcfcdeeb23d3efd2aff5a08e0a10d6526f8a788767b8b6e0"
     }
   ],
-  "next_gate": "Qualify new metadata by exact native headers, independent coordinates/days/scans, physical cadence and coverage before spectrum examination. Preserve independently measured label requirements and protected real controls. Improve discriminative physics features separately; 27/37 cross-group similarities >=0.9 prohibit shape-only acceptance. No production adoption.",
+  "next_gate": "R37E independently labelled sources at same or neighboring frequency, separately qualify native instrument cadence and protected measured signals, physical frequency/drift relation without mandatory modulation/harmonic veto. Need raw multi-epoch measured examples; preserve G4 and R28. R36F2 remains HOLD, no external release.",
   "r37b": {
-    "status": "RUNNING_COORDINATE_UNITS_REPAIR",
+    "status": "HOLD_INSUFFICIENT_QUALIFIED_SOURCE_GROUPS",
     "run": 44293624672,
     "job": 134764865278,
     "protocol_commit": "d7e8321d101190f571ba17833414ee0f478edd57",
@@ -299,7 +299,234 @@
       "job": 134766110442,
       "implementation_commit": "c56366bc093856b977a3c89c26534d1a05c38d4b",
       "workflow_commit": "1160da6d799c989c219e72cba0d9df3b403612a9",
-      "rule": "Decimal hours / degrees supported only with uniquely matching archive RA, DEC when available; 0.1 degree source guard unchanged. No raw spectra touched."
-    }
+      "rule": "Decimal hours / degrees supported only with uniquely matching archive RA, DEC when available; 0.1 degree source guard unchanged. No raw spectra touched.",
+      "status": "FAIL_MALFORMED_HISTORICAL_DECLINATION",
+      "failure": "HIP27890 declination -6254000.0130555555, no unique physical value."
+    },
+    "conservative_retry": {
+      "run": 44295277201,
+      "job": 134770601604,
+      "implementation_commit": "151e1be61e18403f0f4a9b59b2232cfc5e3323ec",
+      "workflow_commit": "f3c6de116aada3a214dd0d8153ad89558e2baddf",
+      "artifact": 14422818714,
+      "digest": "b0ec1760f487db164a1b6efee0d28d96b5552ca0103b5320a4de0c1b6b64c624",
+      "result": {
+        "status": "METADATA_QUALIFICATION_COMPLETE",
+        "protocol_sha256": "d5dbc184c7e0dfdca9e4cd64fe2f834db8e4624c333f7f17287acb11e051c6c9",
+        "source": {
+          "run": 44292499460,
+          "id": 14422377242,
+          "digest": "4c2f8097c453059abf9f44d4ecd1b46202c757288707fe4370d38febf3f0957b"
+        },
+        "parkes_count": 6,
+        "gbt_count": 0,
+        "required_per_telescope": 8,
+        "parkes_gate": "HOLD",
+        "gbt_gate": "HOLD",
+        "history_unknown_declination": [
+          {
+            "target": "HIP27890",
+            "ra_deg": 88.52625,
+            "status": "UNKNOWN_DECLINATION_CONSERVATIVE_EXCLUSION",
+            "original_declination": "-6254000.0130555555"
+          },
+          {
+            "target": "HIP45908",
+            "ra_deg": 140.3991666667,
+            "status": "UNKNOWN_DECLINATION_CONSERVATIVE_EXCLUSION",
+            "original_declination": "-5943000.002222222"
+          },
+          {
+            "target": "HIP44382",
+            "ra_deg": 135.61125,
+            "status": "UNKNOWN_DECLINATION_CONSERVATIVE_EXCLUSION",
+            "original_declination": "-6536000.003611111"
+          },
+          {
+            "target": "HIP38939",
+            "ra_deg": 119.52,
+            "status": "UNKNOWN_DECLINATION_CONSERVATIVE_EXCLUSION",
+            "original_declination": "-2422000.0058333334"
+          }
+        ],
+        "new_obs_power_read": false,
+        "source_origin_labels": false,
+        "exam_started": false,
+        "production_adoption": false,
+        "groups": {
+          "Parkes": [
+            {
+              "target": "LHS138",
+              "day": 58025,
+              "split": "component_fit",
+              "pointing": [
+                18.1275,
+                -15.001111111111111
+              ]
+            },
+            {
+              "target": "PROXCEN",
+              "day": 57790,
+              "split": "component_fit",
+              "pointing": [
+                217.42916666666667,
+                -61.32055555555556
+              ]
+            },
+            {
+              "target": "LHS288",
+              "day": 57791,
+              "split": "null_calibration",
+              "pointing": [
+                161.0883333333333,
+                -60.790277777777774
+              ]
+            },
+            {
+              "target": "GJ682",
+              "day": 57855,
+              "split": "null_calibration",
+              "pointing": [
+                264.2654166666667,
+                -43.681111111111115
+              ]
+            },
+            {
+              "target": "GJ845A",
+              "day": 57925,
+              "split": "evaluation",
+              "pointing": [
+                330.8404166666667,
+                -55.214166666666664
+              ]
+            },
+            {
+              "target": "DEN1048",
+              "day": 57799,
+              "split": "evaluation",
+              "pointing": [
+                162.06125,
+                -38.065
+              ]
+            }
+          ],
+          "GBT": []
+        },
+        "attempts": 56,
+        "header_attempts": 13
+      }
+    },
+    "review": "Six header groups Parkes, zero GBT; PROXCEN known BLC1 target name requires exclusion despite differing coordinates, so at most five candidate Parkes groups remain, aliases and historical source identity still require checking. No exam or power reads."
+  },
+  "r37c": {
+    "status": "HOLD_DEVELOPMENT_GROUP_RETRIEVAL",
+    "run": 44295180264,
+    "job": 134770273814,
+    "protocol_commit": "7b9b384b2aed86a99ce512f9959dabbaf2262d34",
+    "implementation_commit": "91f6cc9b07b1327b45e3c3b3b247e6ef06d451c4",
+    "workflow_commit": "971edf55ced4418bd173fdae07f443370612d654",
+    "artifact": 14422698936,
+    "digest": "f96908fe6e691631522f74fb10324dbe247623d3b419491741f8bb999d6c66e9",
+    "result": {
+      "status": "HOLD_DEVELOPMENT_GROUP_RETRIEVAL",
+      "gates": {
+        "central_retention": false,
+        "central_cross_group_zero": true
+      },
+      "measured_tiles": 10,
+      "pair_count": 45,
+      "known_same": {
+        "pairs": 6,
+        "arms": {
+          "shape": 6,
+          "shape_frequency": 6,
+          "shape_frequency_drift": 6,
+          "shape_modulation": 4,
+          "joint": 4
+        },
+        "counterfactual_collision_pass": 4,
+        "harmonic_matches": 0
+      },
+      "known_different": {
+        "pairs": 9,
+        "arms": {
+          "shape": 7,
+          "shape_frequency": 0,
+          "shape_frequency_drift": 0,
+          "shape_modulation": 4,
+          "joint": 0
+        },
+        "counterfactual_collision_pass": 4,
+        "harmonic_matches": 9
+      },
+      "all_different": {
+        "pairs": 37,
+        "arms": {
+          "shape": 27,
+          "shape_frequency": 0,
+          "shape_frequency_drift": 0,
+          "shape_modulation": 20,
+          "joint": 0
+        },
+        "counterfactual_collision_pass": 20,
+        "harmonic_matches": 21
+      },
+      "review_only": {
+        "pairs": 30,
+        "arms": {
+          "shape": 22,
+          "shape_frequency": 2,
+          "shape_frequency_drift": 2,
+          "shape_modulation": 18,
+          "joint": 2
+        },
+        "counterfactual_collision_pass": 18,
+        "harmonic_matches": 12
+      },
+      "signed_drift_resolved": 0,
+      "harmonic_authority": "DIAGNOSTIC_ONLY",
+      "counterfactual_scope": "Force frequency/drift compatible; shape/modulation only on distinct measured tiles with artificial metadata collision; not a new measurement.",
+      "independent_origin_gate": "HOLD",
+      "verified_promoted": 0,
+      "production_adoption": false
+    },
+    "decision": "Frequency separates widely spaced groups only. Modulation mandatory loses 2/6 known pairs, signed drift unresolved 0/4. Harmonic matches include all 9 known cross-group pairs, not evidence of shared origin. No promotion."
+  },
+  "r37d": {
+    "status": "PASS_CONDITIONAL_DRIFT_DEVELOPMENT",
+    "run": 44295686904,
+    "job": 134771991327,
+    "protocol_commit": "29c3b959e11405afd9c20dfa03e73d149dd2f483",
+    "implementation_commit": "c9519eca6196f096fba9d4277e4d34937bf69302",
+    "workflow_commit": "bda2a46f5f61380a4337cdabc61a7a6dc049cf6f",
+    "artifacts": [
+      {
+        "id": 14423691022,
+        "name": "janus-r37d-conditional-drift",
+        "digest": "sha256:7a938099964a7362d3dd5e6d2df1b7383ea413c7ab252931a58d740f87480cd4"
+      }
+    ],
+    "result": {
+      "status": "PASS_CONDITIONAL_DRIFT_DEVELOPMENT",
+      "canaries": "PASS",
+      "known_stationary_compatible": 6,
+      "known_stationary_total": 6,
+      "review_signed_full": 4,
+      "review_signed_first16": 4,
+      "review_total": 4,
+      "joint_pairs": 8,
+      "joint_feasible": 6,
+      "joint_known_feasible": 6,
+      "joint_review_feasible": 0,
+      "one_bin_stress": {
+        "trials": 736,
+        "feasible": 591,
+        "expected_sign_retained": 591
+      },
+      "scope": "Exact conditional bin interval model applied to stored measured paths; no raw source labels, no detector uncertainty or subchannel accuracy claim. Independent origin HOLD.",
+      "verified_promoted": 0,
+      "production_adoption": false
+    },
+    "decision": "Conditional affine bin model determines sign on all 4 stored review-only tracks, 6 stationary compatible, 6 known pairs joint feasible, 0/2 candidate pairs joint feasible. 591/736 one-bin perturbations feasible/sign retained; other 145 infeasible. Not detector path error bounds or origin identification."
   }
 }
