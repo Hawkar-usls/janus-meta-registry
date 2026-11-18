@@ -2656,6 +2656,24 @@
         "receipt_commit": "04d8a012596b40aee2de7b40c0db4c8ee366e758"
       },
       "next_gate": "R37F3D1B-A diagnose actual per-integration WCS and declared frame; verify dysh timeaverage reference convention, no threshold change, no operational processing."
+    },
+    {
+      "event_id": "20261118-R37F3D1BA-WCS-DIAGNOSTIC-LAUNCH",
+      "date": "2026-11-18",
+      "stage": "R37F3D1B-A",
+      "kind": "LAUNCH",
+      "status": "RUNNING_WCS_DIAGNOSTIC",
+      "decision": "Repeat full archive hash and spatial metadata checks, inspect all 6040 rows of spectral WCS, summarize CRVAL1/CRPIX1/CDELT1 and VFRAME by fixed groups; compare conditional Doppler arithmetic signs without assuming convention. Inspect actual installed dysh 1.0.1 timeaverage signatures and source hashes. No calibrated samples or spectral averaging in this diagnostic, no silent resampling.",
+      "evidence": {
+        "run": 44354276840,
+        "job": 134978030539,
+        "protocol_commit": "d449580d23c35bbe6f006a02320171b81710d3e1",
+        "implementation_commit": "6416e0bdc09df5d397707726d535cd049ec759bf",
+        "workflow_commit": "1cd8425a564ecfa8a7824a75e406859c07a61cc4",
+        "receipt_commit": "fb2ca0b6979b59b95dcaeb3e579b953137fd0a1d"
+      },
+      "limitations": "Metadata and code inspection only; not proof of frame convention, calibrated science, lossless average or independent validation. G4/R28 unchanged.",
+      "next_gate": "Inspect R37F3D1BA_SUMMARY; continue only with physically documented frame semantics and explicit loss assessment."
     }
   ],
   "current": {
@@ -2664,7 +2682,14 @@
     "run": 44353039016,
     "production_adoption": false
   },
-  "active_experiment": null,
+  "active_experiment": {
+    "stage": "R37F3D1B-A",
+    "status": "RUNNING_WCS_DIAGNOSTIC",
+    "run": 44354276840,
+    "job": 134978030539,
+    "receipt": "data/JANUS-COSMOS-SETI-R37E-TRANSMITTER-IDENTITY-2026-11-18.json",
+    "production_adoption": false
+  },
   "hannah_memory_seed": {
     "status": "PASS_DURABLE_SNAPSHOT",
     "entries": 169,
