@@ -2,47 +2,30 @@
   "schema": "janus.context_bridge.current_state.v1",
   "project": "JANUS COSMOS / SETI",
   "updated_utc": "2026-11-18T09:39:47Z",
-  "as_of": "R36F2 freezing disjoint sources, R35G fastDD and turbo complete, BLISS pending; R35H HOLD with measured native-grid mismatch",
+  "as_of": "R35G completed native comparison HOLD; R36F2 stopped before spectral reads 1/8 source groups; R37A physical grid transfer and alternate metadata scout running",
   "authority": {
     "repository": "Hawkar-usls/Janus-Cosmos",
     "research_branch": "research/seti-radio-candidate-search-20261117",
     "registry": "Hawkar-usls/janus-meta-registry",
     "journal": "data/JANUS-COSMOS-SETI-DEVELOPMENT-JOURNAL.json",
-    "journal_commit": "1f38690738bf78803ef613f1744e153ef4773be8",
+    "journal_commit": "d9d00c1e5c7a24624104dd39fe1358a143ff325c",
     "continuity_protocol": "data/JANUS-PROJECT-CONTINUITY-LEDGER-HRAIN-INAIHR-PROTOCOL-2026-08-24-v1.0.json",
     "protocol_blob": "740065281c7c7b289c927db7661b9b000abb8c68"
   },
   "goal": "Increase weak narrowband radio signal recovery while separating background/RFI and preserving known physical signals, with independently reproducible scientific controls.",
   "current": {
-    "stage": "R35B",
-    "status": "HOLD_SENSITIVITY_AND_CROSS_R32_OVERLAP",
-    "run": 44281785113,
-    "job": 134724062458,
-    "receipt": "data/JANUS-COSMOS-SETI-R35-GRAND-BENCHMARK-2026-11-18.json",
-    "receipt_commit": "e6d45524f1b88f22da4bac42929b8cac00b0500e",
-    "artifact": 14417393733,
-    "artifact_sha256": "c11410fc46aa3d7d26a9dcf8fa922ffb7940c455491e1af7c7652b721dcb34e7",
+    "stage": "R36F2",
+    "status": "HOLD_INSUFFICIENT_FRESH_SOURCE_GROUPS",
+    "run": 44289784087,
+    "job": 134751692007,
+    "receipt": "data/JANUS-COSMOS-SETI-R36-GALAXY-SWARM-2026-11-18.json",
+    "receipt_commit": "95b07548c9b89bc3787e01bee0f72eeb8947f944",
     "results": {
-      "baseline": {
-        "localized": 181,
-        "weak": 27,
-        "controls": 47,
-        "shared": 17
-      },
-      "smooth": {
-        "localized": 170,
-        "weak": 23,
-        "controls": 36,
-        "shared": 55
-      },
-      "overlap_groups": 4,
-      "overlap_evaluation_groups": 2,
-      "juxtapose": {
-        "samples": 1024,
-        "exhaustive_checks": 66560,
-        "early_checks": 54232,
-        "decision_equivalent": true
-      }
+      "selected_groups": 1,
+      "required": 8,
+      "attempts": 95,
+      "native_skipped": true,
+      "no_evaluation_spectra": true
     },
     "production_adoption": false
   },
@@ -310,12 +293,39 @@
         }
       },
       "production_adoption": false
+    },
+    "R35G": {
+      "status": "PASS_NATIVE_COMMON_REPLAY__HOLD_INDEPENDENT_OVERLAP_AND_CONTROL_RATE",
+      "run": 44284089889,
+      "receipt_commit": "70c7e3c766fc91dd9df12e17b0dac7aa7e7d3825",
+      "metrics": {
+        "R28": [
+          181,
+          27,
+          47
+        ],
+        "BLISS": [
+          154,
+          27,
+          43
+        ],
+        "fastDD": [
+          134,
+          21,
+          36
+        ],
+        "turboSETI": [
+          89,
+          11,
+          45
+        ]
+      }
     }
   },
   "open_gates": [
+    "R37A physical grid transfer on 10 prior measured traces and derived coarsening; check valid support, conservation and cross-group confusion, no new origin labels",
+    "R37 archive metadata scout, qualify new telescope cadence, grid and alias identities, no relaxation of prior disjointness; R36F2 remains HOLD",
     "R35H HOLD: zero compatible HANNAH queries, no joint localization/control gain. Develop physically validated resolution-aware features in separate development line, no threshold relaxation; independently protected controls required.",
-    "R36F2: source audit, frozen policy, complete available pipeline cost and identical native CPU arrays; compare actual realized control counts and paired losses. Real compatible-grid protected/origin and external review still required.",
-    "R35G common native comparisons on R35B development inputs; check R32 overlap and identical shared arrays",
     "R35F exact but negligible warm speedup; need blocking costs and more efficient memory traffic; GPU HyperSETI HOLD without CUDA",
     "R35E HyperSETI blocked by absent CUDA; no paid GPU provision.",
     "R32 HOLD; retain Hybrid R28, no automatic production veto",
@@ -328,7 +338,7 @@
     "Retain raw paths when OFF contains signal",
     "R33B4 original hit mapping HOLD, Figure6 exact file available; R34 independently labelled inputs and protected compatible grid still HOLD."
   ],
-  "next_allowed": "CHECK read-only inspect R35G 44284089889 and canonical R36F2 44289784087, source lock and all native results. R35H completed HOLD; no post-exam tuning; separate grid-aware development and same-host full cost follow-up only when justified. Keep R28; no release.",
+  "next_allowed": "CHECK read-only inspect R37A run 44292499460, grid job 134760977302 R37A_SUMMARY, sources job 134760976816 R37_SOURCE_SUMMARY. On continuation seal outcomes and qualify distinct real labelled RFI and measured protected controls; do not tune on failed exam or promote derived data; retain R28 and release HOLD.",
   "claim_ceiling": "Synthetic injections on real measured backgrounds; not independent real source labels. CPU kernel comparisons only, no proof of whole pipeline superiority. No confirmed extraterrestrial technosignatures.",
   "startup": [
     "Read this current-state JSON from GitHub main each new COSMOS conversation.",
@@ -367,22 +377,16 @@
     "eta_policy": "Observed min/max historical comparable duration minus elapsed, descriptive not prediction interval; unknown when elapsed exceeds all examples or scope differs. No invented percent progress; explicit checkpoint artifacts only."
   },
   "active_experiment": {
-    "stage": "R35G",
+    "stage": "R37A",
     "status": "RUNNING_UNMEASURED",
-    "run": 44284089889,
-    "job": 134732113706,
-    "workflow_commit": "fff91c0c57b4af1c7d7727f76777689711432649",
-    "protocol_commit": "13f244bf73ee75b1fcf11834e72eece1faa98869",
-    "receipt": "data/JANUS-COSMOS-SETI-R35-GRAND-BENCHMARK-2026-11-18.json",
-    "receipt_commit": "8b668f54bbe3322b82ef68c1bf1245750abd8296",
-    "source_manifest": 14418220586,
-    "scope": "Same R35B common data for native CPU development comparisons; not independent of R32",
-    "parallel": {
-      "stage": "R36F2",
-      "run": 44289784087,
-      "job": 134751692007,
-      "status": "RUNNING_UNMEASURED"
-    }
+    "run": 44292499460,
+    "grid_job": 134760977302,
+    "sources_job": 134760976816,
+    "protocol_commit": "03c0ba8defb6d456e5d239db3d8bc629b00c95f1",
+    "workflow_commit": "fdb06ca41f63c2cf19efd1f7fc550561d603de47",
+    "receipt": "data/JANUS-COSMOS-SETI-R37A-HANNAH-RESOLUTION-2026-11-18.json",
+    "receipt_commit": "4fa3b56797bb24cf0e5db4ff0243bed0dde03a92",
+    "production_adoption": false
   },
   "hannah_memory": {
     "status": "PASS_DURABLE_SNAPSHOT",
@@ -509,10 +513,9 @@
       "artifact": 14417199284
     },
     "r35g": {
-      "status": "RUNNING_UNMEASURED",
+      "status": "PASS_NATIVE_COMMON_REPLAY__HOLD_INDEPENDENT_OVERLAP_AND_CONTROL_RATE",
       "run": 44284089889,
-      "job": 134732113706,
-      "scope": "Same common registered arrays for JANUS/native BLISS, fastDD, turboSETI; null calibration split; R32 overlap audit; no independent validation claim"
+      "receipt_commit": "70c7e3c766fc91dd9df12e17b0dac7aa7e7d3825"
     },
     "r35h": {
       "status": "HOLD_NO_JOINT_GAIN_OR_COMPATIBLE_REFERENCES",
@@ -546,11 +549,11 @@
   },
   "r36": {
     "stage": "R36A-E",
-    "status": "R36F1_EXACT_PASS__R36F2_RUNNING_UNMEASURED",
+    "status": "R36F1_EXACT_PASS__R36F2_HOLD_INSUFFICIENT_SOURCES",
     "run": 44287522512,
     "job": 134743918777,
     "receipt": "data/JANUS-COSMOS-SETI-R36-GALAXY-SWARM-2026-11-18.json",
-    "receipt_commit": "fb6350022e31b705b825e5cd54a6151d8995a6b9",
+    "receipt_commit": "95b07548c9b89bc3787e01bee0f72eeb8947f944",
     "protocol_commit": "1de059f631941dcac732ed79e75262ee51906f44",
     "workflow_commit": "b0ee9a5d97c04b2f96749bcdb117e76d9c5ba168",
     "scope": "Exact historical two-bank coordination, not full detector; R36F HOLD",
@@ -594,7 +597,7 @@
       "cold_gate": false
     },
     "r36f2": {
-      "status": "RUNNING_UNMEASURED",
+      "status": "HOLD_INSUFFICIENT_FRESH_SOURCE_GROUPS",
       "run": 44289784087,
       "job": 134751692007,
       "protocol_commit": "e826fb8c5c137052fd81c164ee076db4a06ccd23",
@@ -618,7 +621,14 @@
         "compatible_queries_r35h": 0,
         "gate": "Freeze R36F2 unchanged; qualify native-grid labels or independently validate physical feature representation in separate development."
       },
-      "alternative_status": "NOT_EXECUTED_NOT_EVIDENCE"
+      "alternative_status": "NOT_EXECUTED_NOT_EVIDENCE",
+      "results": {
+        "selected_groups": 1,
+        "required": 8,
+        "attempts": 95,
+        "native_skipped": true,
+        "no_evaluation_spectra": true
+      }
     }
   }
 }
