@@ -1001,20 +1001,68 @@
       },
       "limitations": "Metadata only, not RFI recovery or negative scientific result. Exact source identification and compatible-grid independent protected control open.",
       "next_gate": "Coordinate/epoch and alias crossmatch in official archive; no exam until qualified."
+    },
+    {
+      "event_id": "20261118-R33B2-DRIFT-RESULT",
+      "date": "2026-11-18",
+      "stage": "R33B2",
+      "kind": "RESULT",
+      "status": "PASS_DRIFT_CANDIDATE_REPLAY__REVIEW_REQUIRED",
+      "decision": "2/36 rounded publication-guided candidates passed unique ON and distinct OFF replay; 34 HOLD. Four measured passports, no new verified origin labels. Keep G4 and production baseline unchanged.",
+      "evidence": {
+        "run": 44276705393,
+        "job": 134706567061,
+        "artifact": 14414154131,
+        "artifact_sha256": "fe97f959ec85a56457002cdf17f07a19e78709ee363d1fa75b7ff92b44200074",
+        "candidate_sha256": "9593bce5c10af104dc9f3556aa3869909d849a06418bdc3c5f139a6826abc648",
+        "manifest_sha256": "c8f7e84042ddb756c5e9b2d385708b8792a016fb77b4a6d68ad956c9126bf786",
+        "direct": {
+          "id": "F7-9",
+          "frequency_hz": 960006443.0236816,
+          "drift_hz_s": 0.029338538766868653,
+          "score": 143.41710930828077,
+          "occupancy": 1
+        },
+        "mirrored": {
+          "id": "F9-16",
+          "frequency_hz": 1333347717.2851562,
+          "drift_hz_s": -0.03031649005909761,
+          "score": 66.99976146826062,
+          "occupancy": 0.9375
+        },
+        "receipt_commit": "975c81b6017f76e1e81fa27e6091e6f802915336"
+      },
+      "limitations": "Rounded published frequency, no exact individual original turboSETI ID; same observation campaign; no independent family generalization. Endpoint drift quantization, no production veto.",
+      "next_gate": "R33B3 exact byte/hash and signed search revalidation; then persistent review-only sidecar."
+    },
+    {
+      "event_id": "20261118-R33B3-LAUNCH",
+      "date": "2026-11-18",
+      "stage": "R33B3",
+      "kind": "LAUNCH",
+      "status": "RUNNING_UNMEASURED",
+      "decision": "Recompute all four passports from pinned raw tile ZIP, row hashes and complete original signed search. Distinct sources and exact bytes required; no automatic promotion.",
+      "evidence": {
+        "run": 44277919489,
+        "job": 134710696141,
+        "implementation_commit": "5a57b0d81e2571bc10563bdda95ac985f63f98d8",
+        "workflow_commit": "9b1746dd2b6bb100b757a5f1298ce83999432dbd"
+      },
+      "next_gate": "Verify successful replay; persist exact candidate bytes with original REVIEW_REQUIRED label."
     }
   ],
   "current": {
-    "stage": "R33B-D",
-    "status": "PASS_CATALOG_AND_CENTRAL_REPLAY__HOLD_INDEPENDENT_FAMILY_GENERALIZATION",
-    "run": 44274269530,
+    "stage": "R33B2",
+    "status": "PASS_DRIFT_CANDIDATE_REPLAY__REVIEW_REQUIRED",
+    "run": 44276705393,
     "production_adoption": false,
     "confirmed_technosignatures": 0
   },
   "active_experiment": {
-    "stage": "R33B2",
+    "stage": "R33B3",
     "status": "RUNNING_UNMEASURED",
-    "run": 44276705393,
-    "job": 134706567061,
+    "run": 44277919489,
+    "job": 134710696141,
     "receipt": "data/JANUS-COSMOS-SETI-R33B2-HANNAH-DRIFT-REPLAY-2026-11-18.json",
     "production_adoption": false
   },
