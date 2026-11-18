@@ -1,7 +1,7 @@
 {
   "schema": "janus.cosmos.r37e.receipt.v1",
   "date": "2026-11-18",
-  "status": "RUNNING_OFFICIAL_DYSH_CALIBRATION",
+  "status": "RUNNING_PINNED_DYSH_ENVIRONMENT",
   "source": {
     "repo": "Hawkar-usls/Janus-Cosmos",
     "branch": "research/seti-radio-candidate-search-20261117",
@@ -39,7 +39,7 @@
     }
   },
   "design": "Offline public civilian laboratory data only. Verify records, checksum, archive member layout and independent capture units before any feature fit. Power-only mathematical non-injectivity control. No raw IQ samples consumed in qualification, no classifier or source label promotion.",
-  "next_gate": "Inspect R37F2C_SUMMARY and all scan results; archive spectra and environment. R37F3/R38 require independent protected target validation beyond this coarse control. BL exact frame and spatial OFF remain HOLD.",
+  "next_gate": "Read R37F2C_SUMMARY from pinned environment, verify all ten calibrations and fixed criteria. No spatial OFF/fine-grid equivalence/BL frame promotion.",
   "production_adoption": false,
   "r37e0": {
     "status": "HOLD_CAPTURE_UNIT_QUALIFICATION",
@@ -3874,12 +3874,100 @@
     "artifact_sha256": "8a24c63e57e5cfd764ceb4c2190a9ba255bdad97b3ea7be11328c085ef551bf2"
   },
   "r37f2c": {
-    "status": "RUNNING_OFFICIAL_DYSH_CALIBRATION",
+    "status": "HOLD_CALIBRATION_OR_LINE_CRITERIA",
     "run": 44319462485,
     "job": 134854268870,
     "protocol_commit": "73b5404d095ae749d3a757aacd9bc5312e58fa81",
     "implementation_commit": "73236a1ca41d89c891b614008c46c21171997b75",
     "workflow_commit": "6c144acada04143f715a9e9d528e99b8c8b921ae",
-    "scope": "Official dysh1.0.1 getfs folded and timeaverage tsys, official Chebyshev5 baseline, 5 scans x2 polarizations, fixed published radio LSRK velocity interval for OH1667.359. A separate observing date but frequency switching not spatial OFF, coarse grid not fine-grid equivalence."
+    "scope": "Official dysh1.0.1 getfs folded and timeaverage tsys, official Chebyshev5 baseline, 5 scans x2 polarizations, fixed published radio LSRK velocity interval for OH1667.359. A separate observing date but frequency switching not spatial OFF, coarse grid not fine-grid equivalence.",
+    "result": {
+      "status": "HOLD_CALIBRATION_OR_LINE_CRITERIA",
+      "input_sha256": "d650fd91d41b4163d2100343e4816a3d09a31f3db8b5d69679667e9f09e1e2a0",
+      "dysh": "1.0.1",
+      "astropy": "8.0.3",
+      "date": "2005-06-28",
+      "rows": [
+        {
+          "scan": 90,
+          "pol": 0,
+          "status": "HOLD",
+          "error": "ValueError: Big-endian buffer not supported on little-endian compiler"
+        },
+        {
+          "scan": 90,
+          "pol": 1,
+          "status": "HOLD",
+          "error": "ValueError: Big-endian buffer not supported on little-endian compiler"
+        },
+        {
+          "scan": 91,
+          "pol": 0,
+          "status": "HOLD",
+          "error": "ValueError: Big-endian buffer not supported on little-endian compiler"
+        },
+        {
+          "scan": 91,
+          "pol": 1,
+          "status": "HOLD",
+          "error": "ValueError: Big-endian buffer not supported on little-endian compiler"
+        },
+        {
+          "scan": 92,
+          "pol": 0,
+          "status": "HOLD",
+          "error": "ValueError: Big-endian buffer not supported on little-endian compiler"
+        },
+        {
+          "scan": 92,
+          "pol": 1,
+          "status": "HOLD",
+          "error": "ValueError: Big-endian buffer not supported on little-endian compiler"
+        },
+        {
+          "scan": 93,
+          "pol": 0,
+          "status": "HOLD",
+          "error": "ValueError: Big-endian buffer not supported on little-endian compiler"
+        },
+        {
+          "scan": 93,
+          "pol": 1,
+          "status": "HOLD",
+          "error": "ValueError: Big-endian buffer not supported on little-endian compiler"
+        },
+        {
+          "scan": 94,
+          "pol": 0,
+          "status": "HOLD",
+          "error": "ValueError: Big-endian buffer not supported on little-endian compiler"
+        },
+        {
+          "scan": 94,
+          "pol": 1,
+          "status": "HOLD",
+          "error": "ValueError: Big-endian buffer not supported on little-endian compiler"
+        }
+      ],
+      "calibrated": 0,
+      "supported": 0,
+      "scans_both_polarizations_supported": [],
+      "distinct_observation_dates": 1,
+      "spatial_off_verified": false,
+      "fine_grid_equivalence": false,
+      "bl_frame_verified": false,
+      "production_adoption": false
+    },
+    "artifact": 14434660603,
+    "artifact_sha256": "11f323825e12262019a77391e62b0ebd9324ce8cc720ff61ed3771d60b89fb98"
+  },
+  "r37f2c1": {
+    "status": "RUNNING_PINNED_DYSH_ENVIRONMENT",
+    "run": 44319868519,
+    "job": 134855642401,
+    "protocol_commit": "73b5404d095ae749d3a757aacd9bc5312e58fa81",
+    "implementation_commit": "e920c3612010ac07a27598f266ddab8f7d4477c2",
+    "workflow_commit": "ecd49d93233607307f91327487a4e97488200b79",
+    "scope": "Unchanged scientific protocol, conservative dependency versions numpy2.2.6 pandas2.2.3 astropy7.1.0 specutils2.1.0 scipy1.15.3; retain traceback. No claims before actual calibration."
   }
 }
