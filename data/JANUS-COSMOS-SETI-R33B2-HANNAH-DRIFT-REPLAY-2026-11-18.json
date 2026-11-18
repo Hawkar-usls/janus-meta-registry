@@ -1,0 +1,90 @@
+{
+  "schema": "janus.cosmos.r33b2.receipt.v1",
+  "date": "2026-11-18",
+  "status": "RUNNING_UNMEASURED",
+  "previous": {
+    "stage": "R33B-D",
+    "run": 44274269530,
+    "receipt_commit": "44d8a2298551fc4a4f36f7765100c63d8d9e5a80",
+    "stationary_references": 6,
+    "table1_holds": 4,
+    "independent_generalization": "HOLD"
+  },
+  "parent": {
+    "generation": 4,
+    "entries": 169,
+    "sha256": "17acaca5bf50a5872b51647984b49dadb46b3c2a3aa4536dd150ae70673d7bb3",
+    "external_sidecar_sha256": "8c12b5aa8d26fd445c98cf652e0f4425f34425a391f5ab1cdcc34e29b47bd411"
+  },
+  "source": {
+    "repository": "Hawkar-usls/Janus-Cosmos",
+    "branch": "research/seti-radio-candidate-search-20261117",
+    "protocol": {
+      "path": "research/seti/r33b2_drift_replay_protocol.json",
+      "commit": "b517b10dc327757025deb1d5280b1c441e6279d1",
+      "blob": "97c1cc7a90a29fbecdb98aff3674b23234c2435f"
+    },
+    "implementation": {
+      "path": "research/seti/r33b2_drift_replay.py",
+      "commit": "d24e9e380467d5f8abe73e3137a78fe830ab6746",
+      "blob": "e7e2e587128caf4e87b3f5c0f193b9608afc09d9"
+    },
+    "workflow": {
+      "path": ".github/workflows/seti-r33b2-drift-replay.yml",
+      "commit": "09f1a49dd1f9ce6532e6948119e73f2304c4d108",
+      "blob": "d772648576eef8d1ce9ede1d2b8bb15b7aa8efba",
+      "run": 44276705393,
+      "job": 134706567061,
+      "observed_status": "in_progress",
+      "observed_step": "Restore measured tracks and independently corroborating OFF windows"
+    },
+    "manifest": {
+      "id": 14413744774,
+      "sha256": "484ef2ea948e16a7bdc4356ebc724e0541caed7a0ecd20865a8d6f562c933e16"
+    }
+  },
+  "design": {
+    "publication_doi": "10.1038/s41550-021-01508-8",
+    "direct": 18,
+    "mirror": 18,
+    "first_panel": "2019-04-29T13:02:35",
+    "normalized_reference_rate_hz_s": 0.0312,
+    "reference_frequency_mhz": 982.00241,
+    "relative_tolerance": 0.151,
+    "admission": "Unique measured signed track in predeclared rounded-frequency/rate range, followed by unique distinct OFF corroboration within fixed extrapolation window; all alternative tracks, hashes, raw arrays and ambiguity holds retained. No verified promotion without exact published event identity and review.",
+    "scope": "Same Parkes campaign, not independent families. Figure10 exact file/rate alone lacks exact frequency; no cross-figure identity inference."
+  },
+  "r34": {
+    "status": "HOLD_INPUT_QUALIFICATION",
+    "protocol": {
+      "path": "research/seti/r34_independent_exam_protocol.json",
+      "commit": "2cc92e0ff77c0fa2e0dc09ecbda894ca0f126cc6",
+      "blob": "dc665def6ecd30a3850310cc4381a929717b814c"
+    },
+    "metadata_scout": {
+      "workflow_commit": "2e0961b6ac65b65efd98dc59674c8b3bedfd3ab7",
+      "run": 44276978450,
+      "job": 134707491275,
+      "scope": "Metadata only; no spectra, no exam, no training"
+    },
+    "external_candidates": [
+      {
+        "doi": "10.1017/pasa.2025.10060",
+        "figure": 3,
+        "target": "TIC31268146",
+        "rounded_center_mhz": 3448.76
+      },
+      {
+        "doi": "10.5061/dryad.wm37pvn0b",
+        "scope": "Probable-source labels catalog; raw joins not established"
+      }
+    ],
+    "gate": "Exact measured reviewed labels, source-family/day/scan separation, compatible-grid protected measurement, frozen policy; improve vs both baseline and OFF only with zero paired losses. Independent external custody absent."
+  },
+  "limitations": [
+    "R33B2 has no measured final results yet; 36 inputs are published labels, not 36 recovered tracks. Any candidate remains REVIEW_REQUIRED.",
+    "R34 metadata scout is not an independent exam; no qualified inputs or new gain measured.",
+    "G4 and existing external sidecar unchanged; no production veto."
+  ],
+  "production_adoption": false
+}
