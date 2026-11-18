@@ -1567,22 +1567,66 @@
         "receipt_commit": "611e8f9cb16944301c58df8925d00ce5c815c892"
       },
       "next_gate": "Inspect R37B_SUMMARY; if fewer than eight groups for either telescope, HOLD. Header eligibility only, not source origin or independent science. Validate labels and measured protected source separately."
+    },
+    {
+      "event_id": "20261118-R37B-QUALIFICATION-RESULT",
+      "date": "2026-11-18",
+      "stage": "R37B",
+      "kind": "RESULT",
+      "status": "HOLD_INSUFFICIENT_QUALIFIED_SOURCE_GROUPS",
+      "decision": "Malformed historical declination retained as unknown; conservatively exclude candidates if minimum angular distance over any possible declination and independently corroborated RA could violate guard. 4 malformed historical coordinates; 6 Parkes header groups, 0 GBT; PROXCEN is known BLC1 target name and excluded from prospective eligibility, at most 5 potential remaining groups, aliases still unqualified. No read of powers or exam.",
+      "evidence": {
+        "run": 44295277201,
+        "job": 134770601604,
+        "artifact": 14422818714,
+        "digest": "b0ec1760f487db164a1b6efee0d28d96b5552ca0103b5320a4de0c1b6b64c624",
+        "receipt_commit": "96ae6cd958bd70598b7663dbea74699d8dfd8d31"
+      },
+      "next_gate": "Qualify additional source groups and all original aliases; R36F2 stays HOLD."
+    },
+    {
+      "event_id": "20261118-R37C-PHYSICAL-IDENTITY-RESULT",
+      "date": "2026-11-18",
+      "stage": "R37C",
+      "kind": "RESULT",
+      "status": "HOLD_DEVELOPMENT_GROUP_RETRIEVAL",
+      "decision": "10 measured passports, 45 pairs. Shape retains 6/6 known within-group, 7/9 known cross-group. Frequency and frequency+drift retain 6/6 and 0/9; all 37 different-group comparisons frequency-incompatible, but groups far apart in frequency. Mandatory modulation loses 2/6 within group; counterfactual collisions retain 20/37; harmonic matches 9/9 known different-group, diagnostic only. No emitter classification, no promotion.",
+      "evidence": {
+        "run": 44295180264,
+        "job": 134770273814,
+        "artifact": 14422698936,
+        "digest": "f96908fe6e691631522f74fb10324dbe247623d3b419491741f8bb999d6c66e9",
+        "receipt_commit": "96ae6cd958bd70598b7663dbea74699d8dfd8d31"
+      },
+      "limitations": "Same campaign and stored tracks; frequency shortcut, modulation unstable, harmonics non-specific. Independently labelled same-frequency sources not tested."
+    },
+    {
+      "event_id": "20261118-R37D-CONDITIONAL-DRIFT-RESULT",
+      "date": "2026-11-18",
+      "stage": "R37D",
+      "kind": "RESULT",
+      "status": "PASS_CONDITIONAL_DRIFT_DEVELOPMENT",
+      "decision": "Exact conditional affine feasible slope interval from closed quantized bin intervals. 4/4 review-only stored drift paths signed full and first16, 6/6 stationary compatible, 6/6 known same-group joint affine pairs feasible, 0/2 review-only pairs jointly feasible. One-bin stress 591/736 feasible and expected sign retained; 145 infeasible. Conditional on given measured paths and quantization model; no measured uncertainty guarantee nor source origin proof.",
+      "evidence": {
+        "run": 44295686904,
+        "job": 134771991327,
+        "artifact": 14423691022,
+        "digest": "7a938099964a7362d3dd5e6d2df1b7383ea413c7ab252931a58d740f87480cd4",
+        "protocol_commit": "29c3b959e11405afd9c20dfa03e73d149dd2f483",
+        "implementation_commit": "c9519eca6196f096fba9d4277e4d34937bf69302",
+        "workflow_commit": "bda2a46f5f61380a4337cdabc61a7a6dc049cf6f",
+        "receipt_commit": "96ae6cd958bd70598b7663dbea74699d8dfd8d31"
+      },
+      "next_gate": "R37E independent labelled same/neighbor-frequency distinct sources and multi-epoch measurement; distinguish conditional affine incompatibility from physical emitter identity. No harmonic/modulation mandatory veto, preserve G4 and R28."
     }
   ],
   "current": {
-    "stage": "R37A",
-    "status": "PASS_CONTROLLED_RESOLUTION_TRANSFER__HOLD_FAMILY_DISCRIMINATION",
-    "run": 44292499460,
+    "stage": "R37D",
+    "status": "PASS_CONDITIONAL_DRIFT_DEVELOPMENT",
+    "run": 44295686904,
     "production_adoption": false
   },
-  "active_experiment": {
-    "stage": "R37B",
-    "status": "RUNNING_COORDINATE_UNITS_REPAIR",
-    "run": 44293984901,
-    "job": 134766110442,
-    "receipt": "data/JANUS-COSMOS-SETI-R37A-HANNAH-RESOLUTION-2026-11-18.json",
-    "production_adoption": false
-  },
+  "active_experiment": null,
   "hannah_memory_seed": {
     "status": "PASS_DURABLE_SNAPSHOT",
     "entries": 169,
