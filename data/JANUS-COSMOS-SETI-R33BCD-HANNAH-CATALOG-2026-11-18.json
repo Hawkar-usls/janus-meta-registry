@@ -1,0 +1,65 @@
+{
+  "schema": "janus.cosmos.r33bcd.receipt.v1",
+  "date": "2026-11-18",
+  "status": "RUNNING_UNMEASURED",
+  "parent": {
+    "generation": 4,
+    "entries": 169,
+    "verified_in_main": 1,
+    "sha256": "17acaca5bf50a5872b51647984b49dadb46b3c2a3aa4536dd150ae70673d7bb3"
+  },
+  "r33a": {
+    "run": 44272297122,
+    "job": 134691654656,
+    "receipt_commit": "f45d94fdbfd317c886f7255b4d432d0acb0a6869",
+    "status": "PASS_SOURCE_JOIN_CANDIDATES",
+    "candidate_occurrences": 6,
+    "central_groups": 2,
+    "artifact": 14412981947,
+    "sha256": "fd63f7272380e78a4b3017ce86691c076b5fcf449d82a5664e060dd686fc6500",
+    "candidate_sha256": "299b515b0c21f6dee6e54d4f6d2629e862c5abe4ac8bcfbd3d4c60f784857c3e"
+  },
+  "source": {
+    "repo": "Hawkar-usls/Janus-Cosmos",
+    "branch": "research/seti-radio-candidate-search-20261117",
+    "protocol": {
+      "path": "research/seti/r33bcd_family_catalog_protocol.json",
+      "commit": "46e76422f97ff3a6ba47ca04cc7fed1d556701c4",
+      "blob": "769d3238647d00b5423c00df985b9327f35b1b91"
+    },
+    "implementation": {
+      "path": "research/seti/r33bcd_family_catalog.py",
+      "commit": "281629ac3f5793f39efee6736a219f5bafc669fa",
+      "blob": "639229604920ef46cac1c120c87bb5ffb1f06a52"
+    },
+    "workflow": {
+      "commit": "6f4b8146c4fe110291bcd162ab48943b8f99a90c",
+      "blob": "2275a870902cdfb0f6b2825321426ce84e3c8167",
+      "run": 44274269530,
+      "job": 134698272890,
+      "observed_step": "Compile and replay exact source sidecar, labelled table, held scans and spacecraft control"
+    }
+  },
+  "external": {
+    "doi": "10.1038/s41550-021-01508-8",
+    "supplement": "https://seti.berkeley.edu/blc1/BLC1_NatAstron_arXiv_sheikh-supps.pdf",
+    "official_supplement_sha256": "7b4aa525576dfa1795543c59709877455ed0d4b4a7df45d8fb300270fe24399f",
+    "table1": 5,
+    "figure7": 18,
+    "figure9": 18,
+    "table2_unique_frequencies": 6,
+    "figure11_group_counts": {
+      "TF": 5,
+      "SF": 7,
+      "XY99": 14
+    },
+    "limitations": "Rounded figure frequencies not exact raw joins; duplicate 1298.699 opposite directions. TF/SF stationary anchors not drifting members. No independence across same campaign."
+  },
+  "design": {
+    "R33B": "Revalidate exact six R33A passports from actual raw tile ZIP, source metadata, and evidence hashes. Build separate externally supported central anchor sidecar and published lookalike catalogue; attempt four additional Table1 BLC1 occurrence raw joins, preserve existing anchor separately; candidate review only.",
+    "R33C": "Fixed same-campaign held scan diagnostic: ON reference, two OFF scans per group, strict top1 and threshold 0.9 scores, full vs adaptive. Not unseen family variation proof.",
+    "R33D": "Pinned actual Voyager 1 h5 control; anchored drift recovery and native-grid match check. Grid incompatibility not learned separation.",
+    "R34": "HOLD pending family-disjoint measured RFI and protected controls, separate future evaluation."
+  },
+  "production_adoption": false
+}
