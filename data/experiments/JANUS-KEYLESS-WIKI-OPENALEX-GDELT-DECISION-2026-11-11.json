@@ -1,0 +1,121 @@
+{
+  "schema": "janus.meta_registry.public_evidence_keyless_three_source_decision.v1",
+  "record_id": "JANUS-KEYLESS-EVIDENCE-2026-11-11-WIKIPEDIA-OPENALEX-GDELT",
+  "date_utc": "2026-11-11",
+  "user_decision": "APPROVED_REMOVE_BRAVE_DEPENDENCY",
+  "implementation": {
+    "repository": "Hawkar-usls/Janus",
+    "pr_url": "https://github.com/Hawkar-usls/Janus/pull/51",
+    "head_commit": "c4e69ba8b3310f41721345d197315e31ad3a5216",
+    "branch": "janus/public-evidence-mcp-gateway-20261111",
+    "tool": "janus.search_public_evidence",
+    "module": "mcp_gateway/public_evidence.py",
+    "providers": {
+      "wikipedia": {
+        "role": "GENERAL_ENCYCLOPEDIA",
+        "key_required": false,
+        "auto_nonfresh": true
+      },
+      "openalex": {
+        "role": "SCHOLARLY_DOI_METADATA",
+        "key_required": false,
+        "optional_free_key": true,
+        "auto_nonfresh": true
+      },
+      "gdelt": {
+        "role": "RECENT_NEWS_DISCOVERY",
+        "key_required": false,
+        "auto_fresh": true,
+        "endpoint": "https://api.gdeltproject.org/api/v2/doc/doc",
+        "source_attribution": "https://www.gdeltproject.org/",
+        "index_seen_at_is_publication_time": false
+      },
+      "brave": {
+        "role": "OPTIONAL_BROAD_WEB_INDEX",
+        "key_required": true,
+        "required_for_auto_search": false,
+        "access_regional_block_possible": true
+      }
+    },
+    "security": {
+      "host_env_opt_in": "JANUS_PUBLIC_EVIDENCE_ENABLED=1",
+      "per_query_opt_in": "public_query_approved=true",
+      "private_data_filter": "HEURISTIC_NOT_PROVEN_COMPLETE",
+      "allowlisted_endpoints_only": true,
+      "max_results": 4,
+      "max_body_bytes": 100000,
+      "network_redirects": false,
+      "external_writes": false,
+      "model_training": false
+    },
+    "gdelt_error_improvement": {
+      "timeout_seconds": 15,
+      "non_json_body_not_quoted": true,
+      "http429_reported_as_provider_unavailable": true
+    }
+  },
+  "experimental_evidence": {
+    "gate_ci": {
+      "run_id": 43035932458,
+      "url": "https://github.com/Hawkar-usls/Janus/actions/runs/43035932458",
+      "conclusion": "SUCCESS",
+      "tests_passed": 48,
+      "tests_total": 48
+    },
+    "source_ci": {
+      "run_id": 43035932709,
+      "url": "https://github.com/Hawkar-usls/Janus/actions/runs/43035932709",
+      "conclusion": "SUCCESS",
+      "tests_passed": 16,
+      "tests_total": 16
+    },
+    "network_api_results": [
+      {
+        "provider": "wikipedia",
+        "status": "SOURCES_FOUND_REVIEW_REQUIRED",
+        "source_count": 4
+      },
+      {
+        "provider": "openalex",
+        "status": "SOURCES_FOUND_REVIEW_REQUIRED",
+        "source_count": 4
+      },
+      {
+        "provider": "gdelt",
+        "status": "PROVIDER_UNAVAILABLE",
+        "source_count": 0,
+        "provider_error": "HTTP_429"
+      }
+    ],
+    "interpretation": "GDELT adapter and offline validation are implemented, but successful live GDELT DOC retrieval from GitHub Actions was NOT demonstrated. GitHub cloud IP was rate-limited. Provider unavailability is not evidence that matching news does not exist.",
+    "independent_real_world_fact_check": false
+  },
+  "archive": {
+    "original_github_artifact_id": 13862793121,
+    "original_github_zip_sha256": "0233f0b3b83679ae2a74acda947bdee1167121a6f4f4031497e703df0708f8cc",
+    "drive_id": "13B1_ZT5LxuD_H070JTMkLJbUs2PEW3KV",
+    "drive_url": "https://drive.google.com/file/d/13B1_ZT5LxuD_H070JTMkLJbUs2PEW3KV/view?usp=drivesdk",
+    "bytes": 447,
+    "drive_metadata_readback_verified": true,
+    "drive_sha256_readback_verified": false
+  },
+  "risks_and_limits": {
+    "gdelt_doc_rate_limit_may_prevent_reliable_live_search": true,
+    "gdelt_is_not_full_web_search": true,
+    "independent_news_claim_verification_needed": true,
+    "openalex_is_bibliography_not_scientific_explanation": true,
+    "public_mcp_server_deployed": false,
+    "brave_region_access_issue_unresolved": true,
+    "main_branch_modified": false,
+    "janus_ocean_modified": false,
+    "nas_containers_modified": false,
+    "scientific_admission": "HOLD"
+  },
+  "next_steps": [
+    "Implement conservative GDELT API request pacing and/or operator-controlled indexed GDELT batch ingestion; do not evade provider rate limits",
+    "Protected gateway deployment only after authorization, rate limits, privacy review and explicit approval",
+    "Run authenticated end-to-end MCP query and keep evidence roots distinct"
+  ],
+  "status": "THREE_PROVIDER_CODE_CONNECTED_CI_PASS_GDELT_NETWORK_RATE_LIMITED_RESEARCH_ONLY",
+  "registry_operation": "APPEND_ONLY_DRAFT"
+}

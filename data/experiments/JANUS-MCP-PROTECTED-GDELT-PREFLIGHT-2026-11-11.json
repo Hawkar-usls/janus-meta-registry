@@ -1,0 +1,74 @@
+{
+  "schema": "janus.meta_registry.protected_mcp_deploy_candidate.v1",
+  "record_id": "JANUS-MCP-PROTECTED-PREFLIGHT-GDELT-2026-11-11",
+  "utc_date": "2026-11-11",
+  "request": "Harden the existing JANUS public-source gateway and test GDELT availability at a real user-controlled network endpoint; do not modify NAS containers without a separately approved exact deployment target.",
+  "implementation": {
+    "repository": "Hawkar-usls/Janus",
+    "draft_pr": "https://github.com/Hawkar-usls/Janus/pull/51",
+    "protected_config_files": [
+      "mcp_gateway/protected_deploy/nginx.conf",
+      "mcp_gateway/protected_deploy/compose.yml",
+      "mcp_gateway/protected_deploy/README.md"
+    ],
+    "security_controls": [
+      "TLS v1.2/1.3 encrypted ingress",
+      "mandatory Nginx BasicAuth hashed user file",
+      "per-IP request limit 12 per minute burst 3",
+      "two concurrent connections per IP",
+      "64 KiB maximum incoming request body",
+      "loopback-only 127.0.0.1:8443 host bind",
+      "upstream gateway port 8000 exposed only to internal Docker network",
+      "read-only root filesystem, cap_drop ALL, no new privileges",
+      "MCP write tools disabled JANUS_ALLOW_WRITES=0",
+      "public search off by default JANUS_PUBLIC_EVIDENCE_ENABLED=0"
+    ],
+    "gdelt_api_cooldown": {
+      "per_process_min_gap_seconds": 6,
+      "on_http429_backoff_seconds": 60,
+      "disclaimer": "This process-local pacing does not coordinate multiple replicas or override provider/network rate limits."
+    }
+  },
+  "observations": {
+    "protected_ci_url": "https://github.com/Hawkar-usls/Janus/actions/runs/43039332212",
+    "protected_ci": "SUCCESS",
+    "protected_contract_tests_passed": 6,
+    "docker_compose_syntax": "PASS",
+    "nginx_config_syntax": "PASS_IN_EPHEMERAL_SANDBOX",
+    "gateway_tests_ci_url": "https://github.com/Hawkar-usls/Janus/actions/runs/43039331477",
+    "gateway_tests_passed": 55,
+    "gateway_tests_ci": "SUCCESS",
+    "real_gdelt_doc_api_from_authorized_client": {
+      "http_status": 429,
+      "news_entries_obtained": 0,
+      "real_server_verified": false
+    },
+    "real_gdelt_latest_batch_manifest_from_authorized_client": {
+      "http_status": 200,
+      "manifest_lines": 3,
+      "live_publication_manifest_available": true,
+      "actual_raw_batch_content_downloaded": false
+    },
+    "github_actions_gdelt_doc_last_observed": "HTTP_429",
+    "local_docker_service_state": "DOCKER_DAEMON_NOT_AVAILABLE_ON_OBSERVED_CLIENT",
+    "cloud_deployment_connection_status": "VERCEL_TEAM_ACCESS_NOT_AUTHORIZED_FOR_THIS_APP",
+    "deployment_approval_and_target": "MISSING",
+    "actual_authenticated_endpoint_opened": false
+  },
+  "required_followup": [
+    "Identify user-approved trusted deployment host and ingress domain/certificate and obtain explicit permission before touching NAS",
+    "Configure protected user credentials and TLS secrets solely on host, never in GitHub PR",
+    "Test unauthorized request=401 and authorized MCP read-only call on the deployed host",
+    "Do not bypass DOC HTTP429; prefer sanctioned GDELT bulk manifests/raw data with bounded ingestion if needed",
+    "Verify quotas and alerts, produce signed deployment receipt and rollback plan"
+  ],
+  "scientific_gate": {
+    "external_blind_test_completed": false,
+    "scientifically_admitted": false,
+    "janus_ocean_changed": false,
+    "training_data_leakage": false,
+    "protection_test_is_not_live_deployment": true
+  },
+  "status": "PROTECTED_DEPLOYMENT_DRY_RUN_PASS_REAL_HOST_DEPLOYMENT_PENDING",
+  "registry_operation": "APPEND_ONLY_DRAFT"
+}

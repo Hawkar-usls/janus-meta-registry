@@ -1,0 +1,87 @@
+{
+  "schema": "janus.meta_registry.tachyon_r2g_grounding_correction.v1",
+  "record_id": "TACHYON-R2G-2026-11-11-SUBJECT-GROUNDING-AUDIT-RUN-43031080190",
+  "date_utc": "2026-11-11",
+  "type": "APPEND_ONLY_NEGATIVE_FINDING_AND_CORRECTED_EVIDENCE",
+  "supersedes_inferences_not_historical_artifacts": [
+    "Original live public run #43028977249 marked 2 encyclopedic excerpts available, but manual inspection found answers unsuitable for their questions. This count MUST NOT be used as answer-quality evidence.",
+    "Subsequent run #43030658888 incorrectly returned an article on the Moon crater Mercury for a question about craters on the planet Mercury. That result is INVALID for the requested subject."
+  ],
+  "root_cause": "Keyword overlap and Russian inflection heuristics were insufficient to distinguish main subject, predicate and namesake objects.",
+  "fix": {
+    "repository": "Hawkar-usls/Demi_Head",
+    "pr": "https://github.com/Hawkar-usls/Demi_Head/pull/78",
+    "head_sha": "dda43c008b9e9b9fc2fb1ff5e7ec88d498ebc778",
+    "code_changes": [
+      "Require named subject to occur in source title, not only its excerpt",
+      "Reject mismatched entity types including lunar crater vs Mercury planet and entertainment award vs Saturn planet",
+      "Require question predicate support in excerpt before providing an attributed extract",
+      "Prefer subject-and-predicate title match, not incidental mention",
+      "Use title-anchored Wikipedia search and limited Russian morphology normalization",
+      "Treat rate limits as provider-unavailable evidence, not absence of scientific facts"
+    ],
+    "tests_passed": 17,
+    "tests_total": 17,
+    "test_type": "PUBLIC_DEVELOPMENT_AND_INTEGRATION_NOT_INDEPENDENT_SCIENCE"
+  },
+  "verification": {
+    "run_id": 43031080190,
+    "run_url": "https://github.com/Hawkar-usls/Demi_Head/actions/runs/43031080190",
+    "ci": "SUCCESS",
+    "public_questions": 3,
+    "attributed_topic_relevant_extracts": 2,
+    "no_verifiable_source": 1,
+    "evidence_cases": [
+      {
+        "case_id": "saturn_rings",
+        "decision": "ATTRIBUTED_EXTRACT_AVAILABLE",
+        "title": "Кольца Сатурна",
+        "url": "https://ru.wikipedia.org/wiki/Кольца_Сатурна",
+        "manual_title_subject_consistency_verified": true,
+        "independent_scientific_fact_check": false
+      },
+      {
+        "case_id": "mercury_craters",
+        "decision": "ATTRIBUTED_EXTRACT_AVAILABLE",
+        "title": "Список кратеров Меркурия",
+        "url": "https://ru.wikipedia.org/wiki/Список_кратеров_Меркурия",
+        "manual_title_subject_consistency_verified": true,
+        "independent_scientific_fact_check": false
+      },
+      {
+        "case_id": "marine_bacteria",
+        "decision": "NO_VERIFIABLE_SOURCE",
+        "manual_title_subject_consistency_verified": false,
+        "answer_fabricated": false
+      }
+    ],
+    "provider_status": {
+      "wikipedia_ru": "OPERATIONAL_4_RESULTS_FOR_EACH_SMOKE",
+      "openalex": "UPSTREAM_HTTP_429_RATE_LIMIT_ON_LAST_SMOKE",
+      "brave": "OPTIONAL_PROVIDER_CLIENT_IMPLEMENTED_NO_KEY_CONFIGURED"
+    },
+    "source_archive": {
+      "google_drive_file_id": "1k23RyDm_TXSamZZvZ_S8JmU4HWUE8QxS",
+      "url": "https://drive.google.com/file/d/1k23RyDm_TXSamZZvZ_S8JmU4HWUE8QxS/view?usp=drivesdk",
+      "github_artifact_id": 13860798864,
+      "artifact_zip_sha256": "9d73b7afb48d8fd03350ed09c90b1125f894b409c59ccd02a110bdcf2d1c8642",
+      "local_zip_hash_verified": true,
+      "google_drive_download_hash_not_checked": true
+    }
+  },
+  "limits": {
+    "general_unrestricted_web_search_ready": false,
+    "brave_key_present": false,
+    "fully_automatic_scientific_correctness_check": false,
+    "independent_blind_evaluation": false,
+    "note": "Retrieval of a relevant source and attribution does not prove correctness of all claims or support answering arbitrary topics."
+  },
+  "production": {
+    "main_modified": false,
+    "janus_ocean_modified": false,
+    "model_weights_modified": false,
+    "deployed": false,
+    "scientific_admission": "HOLD"
+  },
+  "registry_action": "APPEND_ONLY_CORRECTION_KEEP_PREVIOUS_EVIDENCE"
+}

@@ -1,0 +1,102 @@
+{
+  "schema": "janus.meta_registry.mcp_public_evidence_integration.v1",
+  "record_id": "JANUS-MCP-PUBLIC-EVIDENCE-2026-11-11-PR51",
+  "created_utc_date": "2026-11-11",
+  "context": "TACHYON-R2F/R2G external source search integration into existing JANUS MCP Gateway; separate read-only public research capability",
+  "provenance": {
+    "gateway_repository": "Hawkar-usls/Janus",
+    "gateway_pr": "https://github.com/Hawkar-usls/Janus/pull/51",
+    "head_sha": "6554b8c666db08eeae031bfa598a265b8def6909",
+    "source_module": "mcp_gateway/public_evidence.py",
+    "existing_server_tool_registration": "mcp_gateway/server.py",
+    "related_r2g_research_pr": "https://github.com/Hawkar-usls/Demi_Head/pull/78",
+    "related_issue": "https://github.com/Hawkar-usls/Demi_Head/issues/77",
+    "original_scientific_external_assessment_issue": "https://github.com/Hawkar-usls/Demi_Head/issues/74"
+  },
+  "hypothesis": "A protected, evidence-only public search tool can be registered in the canonical JANUS MCP Gateway and deliver bounded citations for public questions without sending private context or promoting model output to scientific truth.",
+  "implemented": {
+    "mcp_tool": "janus.search_public_evidence",
+    "providers": [
+      "Wikimedia MediaWiki API (keyless)",
+      "OpenAlex (anonymous or optional free key)",
+      "Brave Search (optional server-side token)"
+    ],
+    "implementation_scope": "CONNECTED_TO_EXISTING_MCP_SERVER_SOURCE_CODE",
+    "deployment_scope": "NOT_DEPLOYED_NOT_MERGED",
+    "gateway_writes_enabled": false,
+    "question_egress_requires_server_enable_flag": true,
+    "question_egress_requires_each_call_public_query_approval": true,
+    "default_egress_enabled": false,
+    "bounded_request_timeout_seconds": 6,
+    "per_provider_max_response_bytes": 100000,
+    "max_returned_sources": 4,
+    "provider_url_traversal": false,
+    "model_training": false,
+    "independent_scientific_fact_check": false
+  },
+  "evidence": {
+    "canonical_gateway_ci": {
+      "url": "https://github.com/Hawkar-usls/Janus/actions/runs/43033671467",
+      "status": "SUCCESS",
+      "unit_tests_passed": 44,
+      "unit_tests_total": 44
+    },
+    "provider_smoke_ci": {
+      "url": "https://github.com/Hawkar-usls/Janus/actions/runs/43033671663",
+      "status": "SUCCESS",
+      "unit_tests_passed": 12,
+      "unit_tests_total": 12,
+      "real_public_api_results": [
+        {
+          "provider": "wikipedia",
+          "retrieved_source_count": 4,
+          "status": "SOURCES_FOUND_REVIEW_REQUIRED"
+        },
+        {
+          "provider": "openalex",
+          "retrieved_source_count": 4,
+          "status": "SOURCES_FOUND_REVIEW_REQUIRED"
+        }
+      ]
+    },
+    "archived_artifact": {
+      "original_github_actions_artifact_id": 13862805898,
+      "original_github_zip_sha256": "10c68b396d4e0a254163f50bfe545ccb3f21e842b237a5f5e9ec6348dab8a828",
+      "original_github_artifact_expires_utc": "2026-11-25T13:56:28Z",
+      "google_drive_url": "https://drive.google.com/file/d/1Fcx5gtoi0FMgPzXeTmtWDdTcpPefsrb1/view?usp=drivesdk",
+      "google_drive_file_id": "1Fcx5gtoi0FMgPzXeTmtWDdTcpPefsrb1",
+      "google_drive_metadata_size_bytes": 400,
+      "google_drive_upload_verified_by_metadata": true,
+      "google_drive_bytes_sha256_rechecked": false
+    }
+  },
+  "limitations": {
+    "broad_live_web_search_without_brave_key_available": false,
+    "general_purpose_ai_answer_synthesis_deployed": false,
+    "running_gateway_upgraded": false,
+    "authenticated_https_ingress_and_rate_limits_verified": false,
+    "independently_verified_live_sports_scores_available": false,
+    "blind_scientific_review_completed": false,
+    "privacy_regexes_guarantee_no_private_leakage": false,
+    "retrocausal_signalling_established": false
+  },
+  "next_gate": {
+    "status": "USER_HOST_APPROVAL_AND_SECRET_CONFIGURATION_REQUIRED",
+    "tasks": [
+      "Review PR #51 and audit MCP ingress authentication, traffic limits and logs",
+      "Deploy merged reviewed gateway code on a trusted host",
+      "Enable JANUS_PUBLIC_EVIDENCE_ENABLED only for approved public queries",
+      "Supply optional Brave Search key through protected secret store if broad/live coverage desired",
+      "Perform end-to-end authenticated host call and verify source dating/relevance before claims",
+      "Maintain separate external blind physics evaluation"
+    ]
+  },
+  "assertions": {
+    "main_branch_modified": false,
+    "janus_ocean_modified": false,
+    "nas_containers_modified": false,
+    "production_model_changed": false,
+    "scientific_status": "HOLD"
+  },
+  "registry_operation": "APPEND_ONLY_DRAFT"
+}
