@@ -2,13 +2,13 @@
   "schema": "janus.context_bridge.current_state.v1",
   "project": "JANUS COSMOS / SETI",
   "updated_utc": "2026-11-18T09:39:47Z",
-  "as_of": "R40CDE queued; R40B historical dual gain remains development-only, new discovery and R38 HOLD.",
+  "as_of": "R40C one frozen model PASS, five transfer jobs underway, R40E null calibration insufficient; production and R38 HOLD.",
   "authority": {
     "repository": "Hawkar-usls/Janus-Cosmos",
     "research_branch": "research/seti-radio-candidate-search-20261117",
     "registry": "Hawkar-usls/janus-meta-registry",
     "journal": "data/JANUS-COSMOS-SETI-DEVELOPMENT-JOURNAL.json",
-    "journal_commit": "fd8e05fa819b01d3b37a06adeb3a6d09a6330e7e",
+    "journal_commit": "549b8370b87e6bfd013357710e923030ac18700e",
     "continuity_protocol": "data/JANUS-PROJECT-CONTINUITY-LEDGER-HRAIN-INAIHR-PROTOCOL-2026-08-24-v1.0.json",
     "protocol_blob": "740065281c7c7b289c927db7661b9b000abb8c68"
   },
@@ -439,10 +439,11 @@
   },
   "active_experiment": {
     "stage": "R40CDE",
-    "status": "QUEUED_UNMEASURED",
+    "status": "PASS_SINGLE_MODEL_FREEZE__TRANSFER_RUNNING__CAMPAIGN_HOLD",
     "run": 44395896208,
     "receipt": "data/JANUS-COSMOS-SETI-R40CDE-TRANSFER-2026-11-18.json",
-    "receipt_commit": "c1c8e153694ef3b58014da735f916fdab039f86e",
+    "receipt_commit": "4aea89f6bb28e64a52b22b2464e14236e31c4cfd",
+    "model_sha256": "a5afcdd963f011424f3182a7a414599b1268557ce25d09da60ffa25bd7f8e32f",
     "production_adoption": false,
     "discovery_relaunch_allowed": false
   },
@@ -1006,14 +1007,15 @@
   },
   "r40cde": {
     "stage": "R40CDE",
-    "status": "QUEUED_UNMEASURED",
+    "status": "PASS_SINGLE_MODEL_FREEZE__TRANSFER_RUNNING__CAMPAIGN_HOLD",
     "run": 44395896208,
     "receipt": "data/JANUS-COSMOS-SETI-R40CDE-TRANSFER-2026-11-18.json",
-    "receipt_commit": "c1c8e153694ef3b58014da735f916fdab039f86e",
+    "receipt_commit": "4aea89f6bb28e64a52b22b2464e14236e31c4cfd",
+    "model_sha256": "a5afcdd963f011424f3182a7a414599b1268557ce25d09da60ffa25bd7f8e32f",
     "production_adoption": false,
     "discovery_relaunch_allowed": false,
     "r40c": {
-      "stage": "SINGLE_MODEL_PRECOMMIT",
+      "stage": "PASS_SINGLE_MODEL_FREEZE",
       "source_artifact": 14420977581,
       "train_groups": 4,
       "calibration_groups": 2,
@@ -1027,15 +1029,41 @@
       "planned_eval_positives": 640,
       "planned_eval_controls": 640,
       "planned_shared_positives": 160,
-      "model_digest": null,
-      "scope": "new frequency windows on previously surveyed Parkes sessions; not external blind, alias qualification open"
+      "model_digest": "a5afcdd963f011424f3182a7a414599b1268557ce25d09da60ffa25bd7f8e32f",
+      "scope": "new frequency windows on previously surveyed Parkes sessions; not external blind, alias qualification open",
+      "job": 135125539461,
+      "model_artifact": {
+        "id": 14471145431,
+        "digest": "sha256:20eccaaccaca110de5c9b7894f5f0ecfd57de5245590be6b22bbb601032a7864"
+      },
+      "training_path_rows": 9216,
+      "train_targets": [
+        "HIP48331",
+        "HIP522",
+        "HIP56244",
+        "HIP86057"
+      ],
+      "calibration_targets": [
+        "HIP27890",
+        "HIP64583"
+      ],
+      "thresholds": {
+        "r28_frozen": -0.22586934656371177,
+        "r40c_fused": 0.4930459957372844,
+        "r40d_static": 0.4930459957372844,
+        "r40d_adaptive": 0.4930459957372844
+      },
+      "calibration_alerts_each_candidate": 12,
+      "calibration_controls": 256,
+      "transfer_status": "2 in progress, 3 queued; no results yet"
     },
     "r40d": {
       "stage": "PHYSARUM_INSPIRED_GRAPH_ABLATION",
       "iterations": 4,
       "control": "static graph, same frozen logits, independently frozen thresholds",
       "tested": false,
-      "scope": "adapted flow law not original donor execution"
+      "scope": "adapted flow law not original donor execution",
+      "flow_conservation": "PASS"
     },
     "r40e": {
       "stage": "CAMPAIGN_NULL_GATE",
@@ -1045,8 +1073,14 @@
       "calibration_groups": 2,
       "min_empirical_rank": 0.3333333333333333,
       "minimum_exchangeable_groups_for_resolution": 99,
-      "status": "HOLD_NULL_EXCHANGEABILITY_AND_RESOLUTION",
-      "scope": "mathematical bound only under validated null p-values; 99 necessary for rank resolution not sufficient"
+      "status": "HOLD_INSUFFICIENT_EXCHANGEABLE_NULL_GROUPS",
+      "scope": "mathematical bound only under validated null p-values; 99 necessary for rank resolution not sufficient",
+      "dependency_canary": {
+        "disjoint_union": 0.05,
+        "identical_union": 0.01,
+        "union_bound": 0.05,
+        "status": "PASS"
+      }
     }
   }
 }
