@@ -1,7 +1,7 @@
 {
   "schema": "janus.cosmos.r36.receipt.v1",
   "date": "2026-11-18",
-  "status": "RUNNING_UNMEASURED",
+  "status": "PASS_EXACT_COORDINATION__HOLD_FULL_DETECTOR",
   "source": {
     "repo": "Hawkar-usls/Janus-Cosmos",
     "branch": "research/seti-radio-candidate-search-20261117",
@@ -15,7 +15,8 @@
     "donor_commit": "8149dda9859e9e7a9bbee9cc7b8c05a942f23478",
     "donor_blob": "cad95f1d8d14fb155069be49550642f1168ba798",
     "input_artifact": 14405617460,
-    "input_sha256": "fa60d60f8c961d521fe9bfb0f915447b327a05f03c5756d5b743a965ce46a9b0"
+    "input_sha256": "fa60d60f8c961d521fe9bfb0f915447b327a05f03c5756d5b743a965ce46a9b0",
+    "conclusion": "success"
   },
   "lanes": {
     "R36A": "Single exact union instead of independently computing duplicated shift templates; identical score and canonical path per branch.",
@@ -32,5 +33,186 @@
     "Original Kenshi blackboard pinned exact Git blob; no scientific independence from shared source."
   ],
   "release_gate": "HOLD",
-  "production_adoption": false
+  "production_adoption": false,
+  "result": {
+    "status": "PASS_EXACT_DEVELOPMENT_NOT_FULL_DETECTOR",
+    "A_dedup": {
+      "linear": 65,
+      "smooth": 201,
+      "unique": 201,
+      "duplicate_templates": 65
+    },
+    "B_twin": {
+      "workers": 2,
+      "exclusive_template_counts": [
+        100,
+        101
+      ],
+      "total_coverage": 201
+    },
+    "C_tail": {
+      "setup_seconds": 0.1604157589999886,
+      "fixed_calibration_only": true
+    },
+    "D_core": {
+      "priority_preprocessing_seconds": 0.00026054200000658057,
+      "priority": {
+        "wall_seconds": 0.07126819300000875,
+        "cpu_seconds": 0.14122839200000037,
+        "priority_top_quartile_completion_seconds": 0.013020362499986504,
+        "completed": 8,
+        "row_reads": 65942882,
+        "bound_reads": 1048576
+      },
+      "fifo": {
+        "wall_seconds": 0.07136110599998347,
+        "cpu_seconds": 0.14085524199999977,
+        "priority_top_quartile_completion_seconds": 0.044474459999989335,
+        "completed": 8,
+        "row_reads": 65942882,
+        "bound_reads": 1048576
+      },
+      "priority_order": [
+        6,
+        2,
+        7,
+        4,
+        0,
+        1,
+        5,
+        3
+      ],
+      "scope": "Label-free peak proxy, full coverage; not confidence or recall improvement."
+    },
+    "E_failure": {
+      "exact_recovered": true,
+      "denied_conflict_stale_duplicate": 3,
+      "unique_commits": 1,
+      "wasted_row_reads": 4179701,
+      "wasted_bound_reads": 65536,
+      "retry_row_reads": 4179701,
+      "events": 5,
+      "wall_seconds": 0.02751528800001779,
+      "cpu_seconds": 0.02751525300000024,
+      "injected_precommit_failure": true,
+      "source_bound_is_not_independent_replication": true
+    },
+    "F": "HOLD_FULL_NATIVE_COMPARISON_REQUIRES_QUALIFIED_INTEGRATED_INPUTS",
+    "metrics": {
+      "localized": 122,
+      "weak": 13,
+      "very_weak": 2,
+      "controls": 512,
+      "positives": 512,
+      "control_alerts": 7,
+      "added_vs_r28": 5,
+      "lost_vs_r28": 47,
+      "r28_localized": 164,
+      "r28_control_alerts": 12
+    },
+    "timing": {
+      "duplicate": {
+        "median_wall_seconds": 0.45981584099999395,
+        "median_cpu_seconds": 0.4597982269999985,
+        "row_reads": 496533504,
+        "candidate_paths": 31033344,
+        "pruned_paths": 0,
+        "bound_reads": 0
+      },
+      "kenshi_shared": {
+        "median_wall_seconds": 0.34826923599999304,
+        "median_cpu_seconds": 0.3482639299999999,
+        "row_reads": 377520128,
+        "candidate_paths": 23595008,
+        "pruned_paths": 0,
+        "bound_reads": 0
+      },
+      "twin_fixed": {
+        "median_wall_seconds": 0.17749267700003202,
+        "median_cpu_seconds": 0.3521226930000001,
+        "row_reads": 377520128,
+        "candidate_paths": 23595008,
+        "pruned_paths": 0,
+        "bound_reads": 0
+      },
+      "tail_order_prune": {
+        "median_wall_seconds": 0.5441862239999864,
+        "median_cpu_seconds": 0.5441683410000016,
+        "row_reads": 255920811,
+        "candidate_paths": 23595008,
+        "pruned_paths": 23511979,
+        "bound_reads": 2097152
+      },
+      "tail_twin": {
+        "median_wall_seconds": 0.28428565800001593,
+        "median_cpu_seconds": 0.5646255730000007,
+        "row_reads": 264015903,
+        "candidate_paths": 23595008,
+        "pruned_paths": 23452371,
+        "bound_reads": 4194304
+      }
+    },
+    "gates": {
+      "kenshi_shared": {
+        "exact": true,
+        "fewer_row_reads_including_bound": true,
+        "lower_wall": true,
+        "lower_cpu": true,
+        "lower_wall_with_all_compile_and_tail_setup": false
+      },
+      "twin_fixed": {
+        "exact": true,
+        "fewer_row_reads_including_bound": true,
+        "lower_wall": true,
+        "lower_cpu": true,
+        "lower_wall_with_all_compile_and_tail_setup": false
+      },
+      "tail_order_prune": {
+        "exact": true,
+        "fewer_row_reads_including_bound": true,
+        "lower_wall": false,
+        "lower_cpu": false,
+        "lower_wall_with_all_compile_and_tail_setup": false
+      },
+      "tail_twin": {
+        "exact": true,
+        "fewer_row_reads_including_bound": true,
+        "lower_wall": true,
+        "lower_cpu": false,
+        "lower_wall_with_all_compile_and_tail_setup": false
+      }
+    },
+    "compile": {
+      "wall_seconds": 1.0982707379999965,
+      "cpu_seconds": 1.0593667969999998
+    },
+    "peak_rss_kib": 227892,
+    "cpu_count": 4,
+    "lock_sha256": "3dc0917de18ce3b97dcf7fb05fea5455f3b30481a300535e085b5f2069dc2746",
+    "source": {
+      "run": 44254920023,
+      "artifact": 14405617460,
+      "sha256": "fa60d60f8c961d521fe9bfb0f915447b327a05f03c5756d5b743a965ce46a9b0",
+      "scope": "Historical R28B exact registered arrays, 2 calibration and 4 evaluation groups, 512 injected positives and 512 controls. Development only."
+    },
+    "production_adoption": false,
+    "scope": "Exact isolated two-bank max, no new ODONTO/HANNAH behavior, historical registered arrays and synthetic injections. No end-to-end or independent science claim."
+  },
+  "artifacts": [
+    {
+      "id": 14419252346,
+      "digest": "sha256:8d97df8492c9832bc1c78f4d8fa224e77a723f035da4af5954fee636b63315c3",
+      "name": "janus-r36-galaxy-swarm-result",
+      "size": 8059
+    }
+  ],
+  "decisions": {
+    "kenshi": "PASS warm exact shared reduction; full cold comparison open",
+    "twin": "PASS warm exact and lower combined CPU vs duplicate baseline, but CPU slightly above shared serial; no general multi-runner speed or end-to-end claim",
+    "tail": "HOLD: row reads fall but CPU and sequential wall cost increase; no adoption",
+    "core": "PASS priority latency development on one fixed group, no scientific priority claim",
+    "failure": "PASS in-process precommit fault and lease guard; actual cross-runner outage not tested",
+    "r36f": "HOLD: isolated bank loses 47 baseline localized positives, adds 5; not replacement. Need preserve R28 ODONTO and use exact shared primitive inside full pipeline; R35G/H remain separate."
+  },
+  "next_gate": "R36F1 verify full Hybrid R28 bit/tie-equivalent integration on existing inputs, measure end-to-end same-process calibration and inference, count scheduling and cold/reused compile. Then fresh source-disjoint comparison with all native external methods and measured protected controls. No release or production adoption."
 }
