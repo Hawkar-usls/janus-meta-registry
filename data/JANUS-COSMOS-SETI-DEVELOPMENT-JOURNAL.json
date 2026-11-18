@@ -1825,25 +1825,80 @@
       },
       "limitations": "Detached labels do not establish continuity; archive header does not establish natural line presence or independence. R37F2/F3/R38 HOLD.",
       "next_gate": "Inspect both R37F1B_SUMMARY and R37F1C_SUMMARY, seal each independently; qualify appropriate natural protected controls and archival temporal grid before further science."
+    },
+    {
+      "event_id": "20261118-R37F1BC-RESULT",
+      "date": "2026-11-18",
+      "stage": "R37F1BC",
+      "kind": "RESULT",
+      "status": "METADATA_PARTIAL__CONTINUITY_AND_NATURAL_GRID_HOLD",
+      "decision": "Cassini 898 distinct index rows, 28 original detached labels, four days, nominal duration 5891.605–56940s; no measured continuity. Berkeley 1053 query rows, 18 unique HDF5 URLs; exact catalogue target differs from simplified query aliases (DIAG_W3OH etc), zero accepted headers under previous filter.",
+      "evidence": {
+        "run": 44309621604,
+        "jobs": {
+          "cassini": 134820055926,
+          "natural": 134820056821
+        },
+        "artifacts": [
+          14428234977,
+          14428659278
+        ],
+        "receipt_commit": "b54817646e9864f4213f2a8ffc4fa0f3560a9b4a"
+      }
+    },
+    {
+      "event_id": "20261118-R37F1DE-LAUNCH",
+      "date": "2026-11-18",
+      "stage": "R37F1DE",
+      "kind": "LAUNCH",
+      "status": "RUNNING_CHRONOLOGY_AND_NATURAL_HEADER_AUDIT",
+      "decision": "Reauthenticate prior Cassini labels, audit explicit time definitions and interval schema. Validate SIGPROC parser with synthetic canaries, qualify exact catalogue/header names, keep ON and OFF separate. No raw receiver timestamp or spectral-power decoding.",
+      "evidence": {
+        "run": 44310886570,
+        "jobs": {
+          "chronology": 134824425115,
+          "natural": 134824424622
+        },
+        "protocol_commit": "c12c5c7ad3573810955fc96f2b5fde6a34c14829",
+        "implementation_commit": "1f54d78013fb3e7d4fd27d34e56a50c3440efbc5",
+        "workflow_commit": "c889ddd4e8a87cda652b1505ebf3ebdf83a0be51"
+      }
+    },
+    {
+      "event_id": "20261118-R37F1DE-RESULT",
+      "date": "2026-11-18",
+      "stage": "R37F1DE",
+      "kind": "RESULT",
+      "status": "NATURAL_GRID_PARTIAL_PASS__CHRONOLOGY_HOLD",
+      "decision": "Cassini 28/28 label SHA reauthenticated, heuristic RSR candidates 0, no actual continuity. Natural catalogue 312 unique candidate URLs; SIGPROC finite parser canaries PASS; two W3OH HDF5 ON/OFF headers verified, both 2.7939677238464355Hz, 18.253611008s, 3 rows, 54.760833024s nominal, OH coverage, single date MJD57800. Four legacy FIL header requests failed on forced HTTPS, no archive FIL parser proof. Original publication epoch unmatched and natural line presence not verified.",
+      "evidence": {
+        "run": 44310886570,
+        "jobs": {
+          "chronology": 134824425115,
+          "natural": 134824424622
+        },
+        "artifacts": [
+          {
+            "id": 14429243560,
+            "sha256": "bf2a89efebbfc1e73c724c833956388a78e2e2c5e91802dc1f811b7c74b1b449"
+          },
+          {
+            "id": 14429153798,
+            "sha256": "a13e81a2dc2ab9731ea61fac60d6ca35c876eec5d6eb5f0f26f3c0ba7f45a5c9"
+          }
+        ],
+        "receipt_commit": "6ecbbcac9623887c4a041b14cf350ae95de99096"
+      },
+      "next_gate": "R37F2 protected natural-sky line validation with independent pointing/provenance and additional epochs; legacy alternate official mirrors; Cassini product-level label schema and record time continuity unresolved. R37F3/R38, emitter identity HOLD. No G4 or R28 changes."
     }
   ],
   "current": {
-    "stage": "R37F1A",
-    "status": "METADATA_REPAIR_AUDIT_ONLY",
-    "run": 44308615507,
+    "stage": "R37F1DE",
+    "status": "NATURAL_GRID_PARTIAL_PASS__CHRONOLOGY_HOLD",
+    "run": 44310886570,
     "production_adoption": false
   },
-  "active_experiment": {
-    "stage": "R37F1BC",
-    "status": "RUNNING_PARALLEL_METADATA_AUDIT",
-    "run": 44309621604,
-    "jobs": {
-      "cassini": 134820055926,
-      "natural": 134820056821
-    },
-    "receipt": "data/JANUS-COSMOS-SETI-R37E-TRANSMITTER-IDENTITY-2026-11-18.json",
-    "production_adoption": false
-  },
+  "active_experiment": null,
   "hannah_memory_seed": {
     "status": "PASS_DURABLE_SNAPSHOT",
     "entries": 169,
