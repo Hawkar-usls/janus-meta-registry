@@ -1,7 +1,7 @@
 {
   "schema": "janus.cosmos.r37e.receipt.v1",
   "date": "2026-11-18",
-  "status": "R37F1_METADATA_QUALIFICATION_RUNNING",
+  "status": "R37F1A_RUNNING_METADATA_REPAIR",
   "source": {
     "repo": "Hawkar-usls/Janus-Cosmos",
     "branch": "research/seti-radio-candidate-search-20261117",
@@ -39,7 +39,7 @@
     }
   },
   "design": "Offline public civilian laboratory data only. Verify records, checksum, archive member layout and independent capture units before any feature fit. Power-only mathematical non-injectivity control. No raw IQ samples consumed in qualification, no classifier or source label promotion.",
-  "next_gate": "Inspect R37F1_SUMMARY, qualify original record counters and matched natural science spectrum separately. Preserve R28 and G4; no source promotion or suppression.",
+  "next_gate": "Inspect R37F1A_SUMMARY and record actual failures and independently verified headers. No continuity or line presence claims until qualified.",
   "production_adoption": false,
   "r37e0": {
     "status": "HOLD_CAPTURE_UNIT_QUALIFICATION",
@@ -1312,7 +1312,7 @@
     "production_adoption": false
   },
   "r37f1": {
-    "status": "RUNNING_METADATA_QUALIFICATION",
+    "status": "METADATA_AUDIT_COMPLETE__CONTINUITY_AND_MATCHED_GRID_HOLD",
     "run": 44306559063,
     "job": 134809525039,
     "protocol_commit": "37ea0ce1366e68166bb4b1354574b5c47b58286f",
@@ -1344,6 +1344,90 @@
         "nominal_span_s": 297
       }
     ],
-    "scope": "Bounded metadata, label provenance, nominal durations, checksum listing and HEAD lengths; no raw voltage access. Record-counter continuity, repeated sessions and actual common carrier remain unverified. W3 catalogue query only; Cassini profile confirms four dates and archive-level gap screening, requires individual file verification."
+    "scope": "Bounded metadata, label provenance, nominal durations, checksum listing and HEAD lengths; no raw voltage access. Record-counter continuity, repeated sessions and actual common carrier remain unverified. W3 catalogue query only; Cassini profile confirms four dates and archive-level gap screening, requires individual file verification.",
+    "result": {
+      "status": "METADATA_AUDIT_COMPLETE__CONTINUITY_AND_MATCHED_GRID_HOLD",
+      "archives": [
+        {
+          "archive": "VG1-SSA-RSS-1-ROCC-V1.0",
+          "status": "HOLD",
+          "error": "HTTPError: 404 Client Error: Not Found for url: https://pds-ppi.igpp.ucla.edu/data/VG1-SSA-RSS-1-ROCC-V1.0/DATA/"
+        },
+        {
+          "archive": "VG2-S-RSS-1-ROCC-V1.0",
+          "status": "HOLD",
+          "error": "HTTPError: 404 Client Error: Not Found for url: https://pds-ppi.igpp.ucla.edu/data/VG2-S-RSS-1-ROCC-V1.0/DATA/"
+        }
+      ],
+      "natural_queries": [
+        {
+          "alias": "W3",
+          "status": "METADATA_QUERY_OK",
+          "response_sha256": "f391c4026cb77813f43c1058237bb9f973054c02e3828a7a4af3e855528c2178",
+          "count": 517,
+          "publication_epoch_candidates": 0
+        },
+        {
+          "alias": "W3OH",
+          "status": "METADATA_QUERY_OK",
+          "response_sha256": "3b4c985ce6098e9b9437da221bd47b3f28dd44f161155ef9a800c155ec429553",
+          "count": 461,
+          "publication_epoch_candidates": 0
+        },
+        {
+          "alias": "W3_OH",
+          "status": "METADATA_QUERY_OK",
+          "response_sha256": "c3559a2246c015cf58bb5a1424d30e66cfc15f13d034ec5f0f017d6753baba6b",
+          "count": 0,
+          "publication_epoch_candidates": 0
+        },
+        {
+          "alias": "W3-OH",
+          "status": "METADATA_QUERY_OK",
+          "response_sha256": "c3559a2246c015cf58bb5a1424d30e66cfc15f13d034ec5f0f017d6753baba6b",
+          "count": 0,
+          "publication_epoch_candidates": 0
+        }
+      ],
+      "natural_epoch_candidate_count": 0,
+      "cassini": {
+        "profile": "https://pds.nasa.gov/ds-view/pds/viewProfile.jsp?dsid=CO-S-RSS-1-SROC1-V1.0",
+        "doi": "10.17189/5azd-js41",
+        "official_dates": [
+          "2005-05-03",
+          "2005-05-21",
+          "2005-06-08",
+          "2005-06-26"
+        ],
+        "caveat": "NASA reports historical open-loop files screened for gaps; individual file continuity and labels still unverified in our experiment."
+      },
+      "natural_control_publication": "https://doi.org/10.1088/1538-3873/aa5800",
+      "continuity_verified": false,
+      "matched_frequency_verified": false,
+      "independent_same_source_sessions_verified": false,
+      "natural_raw_signal_verified": false,
+      "raw_power_read": false,
+      "production_adoption": false
+    },
+    "artifact": 14428591531,
+    "artifact_sha256": "1ed1589c9fd3e1046d6d0026992fea432dab827597ef8ea2b157feb2beaa9fbe"
+  },
+  "r37f1a": {
+    "status": "RUNNING_METADATA_REPAIR",
+    "run": 44308615507,
+    "job": 134816589646,
+    "protocol_commit": "b4d500e838c5f1f4d544464222454b57382c01bd",
+    "implementation_commit": "04eae188451eb2ae525eea6bec47777a9bc1a6e0",
+    "workflow_commit": "b34583938a399a5635f887da64fbd7784da8436f",
+    "sources": {
+      "pds4": "https://atmos.nmsu.edu/PDS/data/PDS4/cassini-rss-raw-sroc/data-rsr16/",
+      "pds3": "https://atmos.nmsu.edu/pdsd/archive/data/co-s-rss-1-sroc1-v10/cors_0104/",
+      "natural_publication": "10.1088/1538-3873/aa5800",
+      "alternative_natural_calibrators": [
+        "DR21",
+        "NGC7538"
+      ]
+    },
+    "scope": "Direct verified historical metadata URLs bypass directory dependency, PDS4/legacy collection qualification, exact natural source alias and epoch, header-only native grid/coverage. No power or receiver voltages read. Same-frequency identity and protected controls still HOLD."
   }
 }
