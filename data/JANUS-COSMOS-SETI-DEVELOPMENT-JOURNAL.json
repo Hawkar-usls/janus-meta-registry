@@ -518,6 +518,57 @@
       "decision": "Prioritize R30A diagnostic and R30B fresh evaluation: calibrate max of full pipeline including all lanes and overlapping windows with matched real controls and block-preserving nulls; sparse regimes abstain/fallback. Add separate frozen confirmation and stability/overlap/provenance ablations; report discovered vs escalated recall and controls including HOLD, keep raw records. HANNAH use measured RFI labels and feature overlap; no automatic origin veto from similarity. Compare same examples and counts with paired group-aware uncertainty; preregister operating point on calibration only. Relative goal halve control escalation at no loss in localized and weakest positive escalation; if filtering only, cannot recover more than its input. Preserve BLC1 detection and RFI-origin distinction and Voyager shared-signal tests.",
       "limitations": "Source inspection, not radio adaptation or performance measurement. KUSTO original bathymetry, TOPA original geography, HA10 original acoustics/seismology. Prior R22 donors not newly invented; old HA10 positive control failed 1/8 vs minimum 3 and shape-vs-scale transfer failed (11/19 within 3 dB). Control alerts are not verified ground-truth RFI. R29 already viewed; only development diagnostic. No new experiments or detector changes.",
       "next_gate": "R30A design freeze; R30B fresh target/day/source-disjoint calibration and evaluation; compare baseline, KUSTO, TOPA, combined, held-out confirmation, and advisory passport/stability separately. Report paired deltas and group-aware uncertainty, total runtime, known-signal retention; no production promotion."
+    },
+    {
+      "event_id": "20261118-R30A-SAME-DAY-CLUSTER",
+      "date": "2026-11-18",
+      "stage": "R30A",
+      "kind": "RESULT",
+      "status": "DEVELOPMENT_DIAGNOSTIC_NOT_CAUSAL_EVIDENCE",
+      "hypothesis": "Shared acquisition-day or receiver noise regime contributes to control alerts",
+      "decision": "Exclude R29 selected targets and five observed days; enforce unique day across every new target and all fit/null/exam splits. Do not tune using viewed R29 positives.",
+      "evidence": {
+        "receipt": "data/JANUS-COSMOS-SETI-R30-FALSE-ALARM-SHIELD-2026-11-18.json",
+        "receipt_commit": "7d1f0e0602dffb15f6eb9e8a1c97c5e27d824180",
+        "run": 44257652209,
+        "job": 134643091165,
+        "day": 57958,
+        "targets": [
+          "HIP11964",
+          "HIP10138"
+        ],
+        "full_r28_controls": 17,
+        "total_full_r28_controls": 22,
+        "star_forge_controls": 22,
+        "total_star_forge_controls": 27
+      },
+      "limitations": "Two problem targets share date; no causal proof, no true RFI labels; correlation within day and tile.",
+      "next_gate": "Fresh acquisition-day-disjoint R30B."
+    },
+    {
+      "event_id": "20261118-R30B-SHIELD-LAUNCH",
+      "date": "2026-11-18",
+      "stage": "R30B",
+      "kind": "LAUNCH",
+      "status": "RUNNING_UNMEASURED",
+      "hypothesis": "Reference-only KUSTO regime calibration and TOPA empirical joint null based on four time-block support will halve control alerts without reducing localized or weak recovery",
+      "decision": "Separate research path; freeze 2 fit, 4 null, 4 evaluation targets on distinct days; seven arms incl pooled strict, protected union, tile max; no destructive deletion or production change.",
+      "evidence": {
+        "receipt": "data/JANUS-COSMOS-SETI-R30-FALSE-ALARM-SHIELD-2026-11-18.json",
+        "receipt_commit": "7d1f0e0602dffb15f6eb9e8a1c97c5e27d824180",
+        "repo": "Hawkar-usls/Janus-Cosmos",
+        "branch": "research/seti-radio-candidate-search-20261117",
+        "run": 44262281770,
+        "job": 134658251957,
+        "workflow_commit": "3eda0f2bb4b1272b3357e0050c3f94ba814dfc22",
+        "protocol_commit": "c5d72dace666819bed697220bdcf34b4f1594f95",
+        "protocol_blob": "10de9d69a3a4dbb051cb0a5154d089f9481503c7",
+        "implementation_commit": "28b2103427d5176ef003bf5360cb194500ac417f",
+        "implementation_blob": "e1d9d15ea9b4b895e6314beaad26cd407ef946b0",
+        "observed_status": "in_progress"
+      },
+      "limitations": "No R30 performance measured; day-disjoint archive synthetic injections are not external physical source evidence; selected-path support not independent; BLC1/Voyager and HANNAH deferred; exact errors and source hashes in receipt.",
+      "next_gate": "Inspect manifest, lock, job and artifacts; seal positive/negative findings and paired deltas. Only then R30C HANNAH."
     }
   ],
   "current": {
@@ -525,5 +576,13 @@
     "status": "HOLD_STAR_FORGE_NOT_BETTER_THAN_FIXED",
     "production_adoption": false,
     "confirmed_technosignatures": 0
+  },
+  "active_experiment": {
+    "stage": "R30B",
+    "status": "RUNNING_UNMEASURED",
+    "run": 44262281770,
+    "job": 134658251957,
+    "receipt": "data/JANUS-COSMOS-SETI-R30-FALSE-ALARM-SHIELD-2026-11-18.json",
+    "production_adoption": false
   }
 }
