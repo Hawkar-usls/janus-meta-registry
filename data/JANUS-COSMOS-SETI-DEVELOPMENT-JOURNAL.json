@@ -725,31 +725,109 @@
       },
       "limitations": "No result yet; source-labelled external validation absent; one verified anchor on incompatible grid; only R31 path wired, no all-legacy integration or unreviewed write token.",
       "next_gate": "Read actual results and candidate library. Preserve HOLD; if hook passes persist next generation with review."
+    },
+    {
+      "event_id": "20261118-R31-HANNAH-RESULT",
+      "date": "2026-11-18",
+      "stage": "R31",
+      "kind": "RESULT",
+      "status": "HOLD_NO_FALSE_ALARM_GAIN__PASS_HOOK_DEVELOPMENT",
+      "decision": "Preserve negative scientific result. All four arms equal 127 localized/13 weak/22 control alerts; zero matched HOLD; hook preserves 66 and adds 43 measured passports.",
+      "evidence": {
+        "receipt": "data/JANUS-COSMOS-SETI-R31-HANNAH-PROSPECTIVE-2026-11-18.json",
+        "receipt_commit": "6826c3d7a8de616d7c40c029387d726f88a99f4f",
+        "run": 44265324373,
+        "job": 134668297179,
+        "artifact": 14411051155,
+        "artifact_sha256": "0f1d3d785f566622773150eefc5d262a9613dd90b438b94ffcf378e61cc9c1db",
+        "lock_sha256": "9b4786caad4afa58d2d243abf8720231ed9ddc20540668d84f19e2975f78dfaf",
+        "entries": 109,
+        "added": 43,
+        "observations": 96,
+        "verified_rfi": 1,
+        "derived_candidates": 12,
+        "unknown": 96,
+        "replay_added": 0,
+        "library_sha256": "ec382441e707ebf131e3cb84b7037a9729f31ef3163412e99eca4462dcf0d807"
+      },
+      "limitations": "No sensitivity or false-alarm gain; no matched R31 HOLD. Real source labels absent except BLC1. Archive paired synthetic exam only.",
+      "next_gate": "Persist G3; adaptive family comparison."
+    },
+    {
+      "event_id": "20261118-HANNAH-PERSISTENT-G3",
+      "date": "2026-11-18",
+      "stage": "R31",
+      "kind": "PERSISTENCE",
+      "status": "PASS_DURABLE_SNAPSHOT",
+      "decision": "Restore exact G3 artifact, verify immutable parent prefix 66, verify independent SHA256 of 135 ordered export chunks; commit unchanged bytes and advance CURRENT pointer.",
+      "evidence": {
+        "repo": "Hawkar-usls/Janus-Cosmos",
+        "path": "research/seti/memory/hannah_library_v0003.json",
+        "commit": "a74c4ddb46b201a7aaad6e920ff0e69c181831cc",
+        "blob": "f8c559cc7e194adf9876fd72c0fac711f2025f9a",
+        "sha256": "ec382441e707ebf131e3cb84b7037a9729f31ef3163412e99eca4462dcf0d807",
+        "bytes": 303218,
+        "pointer_commit": "98657ba6de6693e1d593b1f300c39e1f387e665a",
+        "entries": 109,
+        "recovery_run": 44267559021,
+        "recovery_job": 134675760306
+      },
+      "limitations": "Permanent research memory only; one verified RFI; no autonomous future promotion.",
+      "next_gate": "Use frozen G3 for R32."
+    },
+    {
+      "event_id": "20261118-R32-HANNAH-ADAPTIVE-LAUNCH",
+      "date": "2026-11-18",
+      "stage": "R32",
+      "kind": "LAUNCH",
+      "status": "RUNNING_UNMEASURED",
+      "decision": "Frequency-invariant amplitude-normalized shape/mirrored spectrum, soft drift, compatible grids; compare exact, shape all/recurrent, shape+OFF and OFF only. Lock calibration policies requiring zero held positive alarms including shared reference; separate fresh exam; no-op HOLD. Collect measured passports only after test for G4.",
+      "evidence": {
+        "receipt": "data/JANUS-COSMOS-SETI-R32-HANNAH-ADAPTIVE-2026-11-18.json",
+        "receipt_commit": "2f68b8f362b87ddfe098d17ef31d4622defecf8e",
+        "run": 44268188685,
+        "job": 134677854370,
+        "workflow_commit": "628919ea7806b08cad92a15b1bc2fcf9ee9ca611",
+        "protocol_blob": "1a543af8371b2f00528e25742766988255b7f7fb",
+        "implementation_blob": "32f45dee3485d1675314ef248432832fb1b61e91",
+        "parent_entries": 109,
+        "planned_tiles": 128,
+        "paired_examples": 1024,
+        "shared_reference_challenges": 128,
+        "external_sources": [
+          "https://seti.berkeley.edu/blc1/",
+          "https://arxiv.org/abs/2111.06350",
+          "https://arxiv.org/abs/2002.06162"
+        ]
+      },
+      "limitations": "No measured results yet. Published additional RFI candidates located, exact raw join/admission not done. Single verified anchor; no classifier or production veto. Only bounded new path integrated.",
+      "next_gate": "Check run and exact results; seal both positive and negative findings; persist G4 only after validation; separately bind additional source-labelled raw observations."
     }
   ],
   "current": {
-    "stage": "R30B",
-    "status": "HOLD_NO_SCIENTIFIC_GAIN",
+    "stage": "R31",
+    "status": "HOLD_NO_FALSE_ALARM_GAIN",
+    "run": 44265324373,
     "production_adoption": false,
     "confirmed_technosignatures": 0
   },
   "active_experiment": {
-    "stage": "R31",
+    "stage": "R32",
     "status": "RUNNING_UNMEASURED",
-    "run": 44265324373,
-    "job": 134668297179,
-    "receipt": "data/JANUS-COSMOS-SETI-R31-HANNAH-PROSPECTIVE-2026-11-18.json",
+    "run": 44268188685,
+    "job": 134677854370,
+    "receipt": "data/JANUS-COSMOS-SETI-R32-HANNAH-ADAPTIVE-2026-11-18.json",
     "production_adoption": false
   },
   "hannah_memory_seed": {
-    "status": "PASS_INCREMENTAL_MEMORY_DEVELOPMENT",
-    "entries": 66,
+    "status": "PASS_DURABLE_SNAPSHOT",
+    "entries": 109,
     "verified_rfi": 1,
-    "artifact": 14409083094,
-    "library_sha256": "95f90afbb07e1bca4d73fb28d1da64e778f59d019782587ef1ec7a868ddebc1e",
-    "generation": 2,
-    "derived_candidates": 8,
-    "unknown": 57,
-    "durable_commit": "f929f9a1e7b5a7227c614cc26245dcc19392b9d3"
+    "artifact": 14411051155,
+    "library_sha256": "ec382441e707ebf131e3cb84b7037a9729f31ef3163412e99eca4462dcf0d807",
+    "generation": 3,
+    "derived_candidates": 12,
+    "unknown": 96,
+    "durable_commit": "a74c4ddb46b201a7aaad6e920ff0e69c181831cc"
   }
 }
