@@ -151,7 +151,7 @@
     },
     "evaluate_job": 135161053338,
     "evaluate_status": "completed_success",
-    "native_status": "retry_running",
+    "native_status": "PARTIAL_NATIVE_COMMON_COMPARISON",
     "common_artifact": {
       "id": 14476995403,
       "sha256": "cbb45f9fda24c56b8eddda710e1206c7a1adf1136f90e1d1979458e70a4e31ac",
@@ -208,10 +208,97 @@
     },
     "native_retry": {
       "run": 44408084083,
-      "status": "RUNNING_UNMEASURED",
+      "status": "PARTIAL_NATIVE_COMMON_COMPARISON",
       "reason": "163084360-byte artifact exceeded prior 128 MiB cap; raise only compressed cap to 192 MiB; exact digest and 512 MiB decompression cap unchanged",
       "implementation_commit": "8bfb9fa575531535fd13fe3c15aae6cd943cb58c",
-      "workflow_commit": "add71af74555ac95ff2189c6d61e4b0eb6577cfb"
+      "workflow_commit": "add71af74555ac95ff2189c6d61e4b0eb6577cfb",
+      "results": {
+        "fastdd": {
+          "status": "NATIVE_COMMON_ARRAYS_PROSPECTIVE_REVIEW_ONLY",
+          "mode": "fastdd",
+          "source": {
+            "id": 14476995403,
+            "sha256": "cbb45f9fda24c56b8eddda710e1206c7a1adf1136f90e1d1979458e70a4e31ac"
+          },
+          "lock_sha256": "d415dbc2e008f62e81af5ca14bf307bd030c918e1bc78d3b6295c248e4de083e",
+          "threshold": 4.893957138061524,
+          "eval": {
+            "localized": 154,
+            "weak": 33,
+            "control_alerts": 67,
+            "edge_alerts": 0,
+            "positives": 640,
+            "controls": 640,
+            "added_vs_r40g": 12,
+            "lost_vs_r40g": 71,
+            "added_vs_r28": 9,
+            "lost_vs_r28": 69,
+            "adapter_wall_seconds": 4.749929653000095
+          },
+          "shared": {
+            "localized": 26,
+            "weak": 18,
+            "control_alerts": 0,
+            "edge_alerts": 0,
+            "positives": 160,
+            "controls": 0,
+            "added_vs_r40g": 2,
+            "lost_vs_r40g": 5,
+            "added_vs_r28": 1,
+            "lost_vs_r28": 1,
+            "adapter_wall_seconds": 0.59415532700001
+          },
+          "setup_seconds": 0.8134191739999892,
+          "scope": "Pinned CPU adapters on shared JANUS preprocessing; no whole-native pipeline superiority claim; no external blind qualification",
+          "production_adoption": false,
+          "job": 135168568577,
+          "artifact": 14477280210,
+          "artifact_digest": "sha256:f710878424b6fe1b559017060d8ec6207f9c3d22436451481fd653617a92c54c"
+        },
+        "turbo": {
+          "status": "NATIVE_COMMON_ARRAYS_PROSPECTIVE_REVIEW_ONLY",
+          "mode": "turbo",
+          "source": {
+            "id": 14476995403,
+            "sha256": "cbb45f9fda24c56b8eddda710e1206c7a1adf1136f90e1d1979458e70a4e31ac"
+          },
+          "lock_sha256": "0150e691e6a038e39037b22a9a41914d14b5751bdb31add33ba37915572be2b2",
+          "threshold": 5.971268000000001,
+          "eval": {
+            "localized": 96,
+            "weak": 14,
+            "control_alerts": 81,
+            "edge_alerts": 0,
+            "positives": 640,
+            "controls": 640,
+            "added_vs_r40g": 14,
+            "lost_vs_r40g": 131,
+            "added_vs_r28": 13,
+            "lost_vs_r28": 131,
+            "adapter_wall_seconds": 12.575564224000004
+          },
+          "shared": {
+            "localized": 3,
+            "weak": 2,
+            "control_alerts": 0,
+            "edge_alerts": 0,
+            "positives": 160,
+            "controls": 0,
+            "added_vs_r40g": 0,
+            "lost_vs_r40g": 26,
+            "added_vs_r28": 0,
+            "lost_vs_r28": 23,
+            "adapter_wall_seconds": 1.6009108340000182
+          },
+          "setup_seconds": 3.0341414669999978,
+          "scope": "Pinned CPU adapters on shared JANUS preprocessing; no whole-native pipeline superiority claim; no external blind qualification",
+          "production_adoption": false,
+          "job": 135168568967,
+          "artifact": 14476751225,
+          "artifact_digest": "sha256:92e6477e282e941ae0827cd8bf72557d5f33cf7701997a6bbd869ccd22c48e1f"
+        }
+      },
+      "timing_scope": "Native adapter wall seconds exclude archive download and common JANUS preprocessing; JANUS acquisition+panel full group times not comparable."
     }
   },
   "r37f3d2f": {
@@ -245,7 +332,13 @@
     "implementation_commit": "3026eda8ce80b72a91f3e80bd5ee8216bb64eed4",
     "workflow_commit": "32cd593ce5850c4d454e88e98ccdb8cc8f3fdb13",
     "scope": "Documented GBT radio Doppler differential using stored metadata, independent observer-motion diagnostic; does not itself prove calibration or physical identity.",
-    "qualified": false
+    "qualified": false,
+    "retry": {
+      "run": 44408979661,
+      "status": "LAUNCHED_UNMEASURED",
+      "reason": "original workflow script name mismatch; only path corrected",
+      "commit": "08f4516c2f5c4fff7005cef161fc3b19794fa33c"
+    }
   },
   "roadmap": {
     "R40H": "HOLD_ZERO_LOSS; native retry running",
