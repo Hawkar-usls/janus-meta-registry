@@ -1,7 +1,7 @@
 {
   "schema": "janus.cosmos.r37e.receipt.v1",
   "date": "2026-11-18",
-  "status": "RUNNING_NATURAL_ARCHIVE_QUALIFICATION",
+  "status": "HOLD_ARCHIVE_QUALIFICATION",
   "source": {
     "repo": "Hawkar-usls/Janus-Cosmos",
     "branch": "research/seti-radio-candidate-search-20261117",
@@ -39,7 +39,7 @@
     }
   },
   "design": "Offline public civilian laboratory data only. Verify records, checksum, archive member layout and independent capture units before any feature fit. Power-only mathematical non-injectivity control. No raw IQ samples consumed in qualification, no classifier or source label promotion.",
-  "next_gate": "Read R37F3D1_SUMMARY and report actual metadata qualification, not scientific detection.",
+  "next_gate": "R37F3D1A diagnostic read-only metadata audit: inspect actual SIG/CAL/PROCSCAN/PROCSEQN encoding and compare documented semantics; do not weaken spatial OFF or unique time requirements.",
   "production_adoption": false,
   "r37e0": {
     "status": "HOLD_CAPTURE_UNIT_QUALIFICATION",
@@ -9102,12 +9102,22 @@
     "artifact_sha256": "5206587a357c1cfbeacf22dcb0ee8b6bcff1748bae51cb7fa2f867bc05fb8bbe"
   },
   "r37f3d1": {
-    "status": "RUNNING_NATURAL_ARCHIVE_QUALIFICATION",
+    "status": "HOLD_ARCHIVE_QUALIFICATION",
     "run": 44349551148,
     "job": 134961094975,
     "protocol_commit": "74d30f7127c56ff9f59185d156ecfc448421de37",
     "implementation_commit": "17ed43024d3dec282e469fcd0501df0abe697b17",
     "workflow_commit": "0ba5b197f31b7c01139bd1e2568234497abc32a8",
-    "scope": "One documented historical natural astronomy SDFITS metadata audit, real unique time integrations and spatial reference geometry; no detector, spectral analysis, candidate ingestion or production changes. Six additional sessions a goal, not current count."
+    "scope": "One documented historical natural astronomy SDFITS metadata audit, real unique time integrations and spatial reference geometry; no detector, spectral analysis, candidate ingestion or production changes. Six additional sessions a goal, not current count.",
+    "artifact": 14447846881,
+    "artifact_sha256": "4cc9b4fe76f93d9d13cb2454120aad7cd6a01a8f71e105c32b95051c0c59b161",
+    "result": {
+      "bytes": 795479040,
+      "sha256": "abeefab2f0f5b67a5032dd1c79f7ea344a41da1fd552fe2f892761ac196376b2",
+      "published_checksum_verified": false,
+      "failed_gate": "Expected SIG T/F per ON/OFF scan; assertion at line 39",
+      "metadata_qualified": false,
+      "qualified_sessions": 0
+    }
   }
 }
