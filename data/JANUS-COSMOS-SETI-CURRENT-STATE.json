@@ -1,45 +1,40 @@
 {
   "schema": "janus.context_bridge.current_state.v1",
   "project": "JANUS COSMOS / SETI",
-  "updated_utc": "2026-11-18T08:34:40Z",
-  "as_of": "R31 scientific HOLD and hook PASS; durable HANNAH G3; R32 adaptive recognition running",
+  "updated_utc": "2026-11-18T09:03:07Z",
+  "as_of": "R32 HOLD, exact persistent G4; R33A publication-linked RFI candidate source join running",
   "authority": {
     "repository": "Hawkar-usls/Janus-Cosmos",
     "research_branch": "research/seti-radio-candidate-search-20261117",
     "registry": "Hawkar-usls/janus-meta-registry",
     "journal": "data/JANUS-COSMOS-SETI-DEVELOPMENT-JOURNAL.json",
-    "journal_commit": "efb239dc79c073400c0f1252cf0fc0422d56cd6e",
+    "journal_commit": "c9740206d28d1c25b63366555384cddcb53943c1",
     "continuity_protocol": "data/JANUS-PROJECT-CONTINUITY-LEDGER-HRAIN-INAIHR-PROTOCOL-2026-08-24-v1.0.json",
     "protocol_blob": "740065281c7c7b289c927db7661b9b000abb8c68"
   },
   "goal": "Increase weak narrowband radio signal recovery while separating background/RFI and preserving known physical signals, with independently reproducible scientific controls.",
   "current": {
-    "stage": "R31",
-    "status": "HOLD_NO_FALSE_ALARM_GAIN",
-    "run": 44265324373,
-    "job": 134668297179,
-    "receipt": "data/JANUS-COSMOS-SETI-R31-HANNAH-PROSPECTIVE-2026-11-18.json",
-    "receipt_commit": "6826c3d7a8de616d7c40c029387d726f88a99f4f",
-    "artifact": 14411051155,
-    "artifact_sha256": "0f1d3d785f566622773150eefc5d262a9613dd90b438b94ffcf378e61cc9c1db",
-    "lock_sha256": "9b4786caad4afa58d2d243abf8720231ed9ddc20540668d84f19e2975f78dfaf",
+    "stage": "R32",
+    "status": "HOLD_NO_SAFE_FALSE_ALARM_GAIN",
+    "run": 44268188685,
+    "job": 134677854370,
+    "receipt": "data/JANUS-COSMOS-SETI-R32-HANNAH-ADAPTIVE-2026-11-18.json",
+    "receipt_commit": "04c3a55d53332b1be68d013a4c2d21946bc8b0fd",
+    "artifact": 14411063806,
+    "artifact_sha256": "3cc29b108a54ca2c41eabcb6fde54a3c39e9d9064e09f2f74ea1d662774db0eb",
+    "lock_sha256": "f58f70c4a5a06cf2356384e127957a5b3108e911db975d5e4c7c09229f77d0d2",
     "metrics": {
       "positives": 512,
       "controls": 512,
       "baseline": {
-        "localized": 127,
-        "weak": 13,
-        "control_alerts": 22,
-        "shared_localized": 9
+        "localized": 108,
+        "weak": 6,
+        "control_alerts": 15,
+        "shared_localized": 10
       },
-      "all_memory": {
-        "localized": 127,
-        "weak": 13,
-        "control_alerts": 22,
-        "shared_localized": 9,
-        "held_positives": 0,
-        "held_controls": 0
-      }
+      "all_arms_equal": true,
+      "policy_grid_trials": 103,
+      "usable_policies": 0
     },
     "production_adoption": false
   },
@@ -156,12 +151,42 @@
         }
       },
       "production_adoption": false
+    },
+    "R31": {
+      "stage": "R31",
+      "status": "HOLD_NO_FALSE_ALARM_GAIN",
+      "run": 44265324373,
+      "job": 134668297179,
+      "receipt": "data/JANUS-COSMOS-SETI-R31-HANNAH-PROSPECTIVE-2026-11-18.json",
+      "receipt_commit": "6826c3d7a8de616d7c40c029387d726f88a99f4f",
+      "artifact": 14411051155,
+      "artifact_sha256": "0f1d3d785f566622773150eefc5d262a9613dd90b438b94ffcf378e61cc9c1db",
+      "lock_sha256": "9b4786caad4afa58d2d243abf8720231ed9ddc20540668d84f19e2975f78dfaf",
+      "metrics": {
+        "positives": 512,
+        "controls": 512,
+        "baseline": {
+          "localized": 127,
+          "weak": 13,
+          "control_alerts": 22,
+          "shared_localized": 9
+        },
+        "all_memory": {
+          "localized": 127,
+          "weak": 13,
+          "control_alerts": 22,
+          "shared_localized": 9,
+          "held_positives": 0,
+          "held_controls": 0
+        }
+      },
+      "production_adoption": false
     }
   },
   "open_gates": [
-    "R32 fresh adaptive family recognition: fewer control alerts than baseline and OFF-only, no held positive/weak/localized/shared-reference loss; seal HOLD if no-op",
-    "R32 measured-only hook: verify exact parent prefix and candidate G4, durable reviewed promotion separately",
-    "Expand independently verified RFI: published BLC1 lookalike/ mirrored family raw observation join, precise scan/time/frequency/drift and hashes; no self-labeling; independent family-level test",
+    "R33A exact source joins and official supplement metadata; check raw receipts and review candidate wrappers, no automatic origin labels",
+    "R33B precise externally documented individual family labels from supplement/archives; protected real signals and family-disjoint tests; no same-source leakage",
+    "R32 scientific HOLD: all 103 trial policies unusable; no efficacy improvement. Keep Hybrid R28 baseline.",
     "Extend bounded observation hook to other trusted legacy acquisition paths only after controlled verification",
     "R30B all scientific gates failed: keep Full R28; no hard KUSTO/TOPA filter; separately test protected raw union shared-signal recovery",
     "R30D frozen separate-observation confirmation; R30F BLC1/Voyager and independent origin evidence",
@@ -170,7 +195,7 @@
     "Independent source-labelled origin evaluation; EYE remains HOLD",
     "Retain raw paths when OFF contains signal"
   ],
-  "next_allowed": "CHECK read-only verify R32 run and artifacts. Explicit work request seal R32 and persist candidate G4 if validated; pursue exact source-labelled evidence and keep unknowns. No production veto until independent evidence.",
+  "next_allowed": "CHECK read-only verify R33A job, R33_SUMMARY and R33_SUPPLEMENT, manifest and artifacts. On explicit work request review exact joins and persist only admissible externally-labelled evidence; retain blocked diagnostics and non-promoted unknowns; later independently test family retrieval. No production veto.",
   "claim_ceiling": "Synthetic injections on real measured backgrounds; not independent real source labels. CPU kernel comparisons only, no proof of whole pipeline superiority. No confirmed extraterrestrial technosignatures.",
   "startup": [
     "Read this current-state JSON from GitHub main each new COSMOS conversation.",
@@ -209,45 +234,45 @@
     "eta_policy": "Observed min/max historical comparable duration minus elapsed, descriptive not prediction interval; unknown when elapsed exceeds all examples or scope differs. No invented percent progress; explicit checkpoint artifacts only."
   },
   "active_experiment": {
-    "stage": "R32",
+    "stage": "R33A",
     "status": "RUNNING_UNMEASURED",
-    "run": 44268188685,
-    "job": 134677854370,
-    "workflow_commit": "628919ea7806b08cad92a15b1bc2fcf9ee9ca611",
-    "receipt": "data/JANUS-COSMOS-SETI-R32-HANNAH-ADAPTIVE-2026-11-18.json",
-    "receipt_commit": "2f68b8f362b87ddfe098d17ef31d4622defecf8e",
-    "frozen_memory_sha256": "ec382441e707ebf131e3cb84b7037a9729f31ef3163412e99eca4462dcf0d807",
-    "design": "2 component fit, 2 policy calibration, 4 evaluation targets on unique fresh days, 7 arms, 1024 eval +128 shared-reference challenges, 128 measured tiles staged for G4",
+    "run": 44272297122,
+    "job": 134691654656,
+    "workflow_commit": "bc8c378001c64add4cd73d208571352ef63660ed",
+    "receipt": "data/JANUS-COSMOS-SETI-R33-HANNAH-VERIFIED-FAMILIES-2026-11-18.json",
+    "receipt_commit": "53a9a5a84189941341b8cff9c9da382f172a6c21",
+    "frozen_memory_sha256": "17acaca5bf50a5872b51647984b49dadb46b3c2a3aa4536dd150ae70673d7bb3",
+    "design": "Published TF/SF central interferers at 1400/1200 MHz: fixed exact-frequency stationary peak on frozen ON and distinct OFF scans, unique peak and separate hashes. Three Fig.5 approximate companions diagnostic only. Review-required sidecar; zero new promoted labels at launch.",
     "production_adoption": false
   },
   "hannah_memory": {
     "status": "PASS_DURABLE_SNAPSHOT",
-    "run": 44265324373,
-    "job": 134668297179,
-    "artifact": 14411051155,
-    "artifact_sha256": "0f1d3d785f566622773150eefc5d262a9613dd90b438b94ffcf378e61cc9c1db",
-    "library_sha256": "ec382441e707ebf131e3cb84b7037a9729f31ef3163412e99eca4462dcf0d807",
-    "entries": 109,
+    "run": 44268188685,
+    "job": 134677854370,
+    "artifact": 14411063806,
+    "artifact_sha256": "3cc29b108a54ca2c41eabcb6fde54a3c39e9d9064e09f2f74ea1d662774db0eb",
+    "library_sha256": "17acaca5bf50a5872b51647984b49dadb46b3c2a3aa4536dd150ae70673d7bb3",
+    "entries": 169,
     "verified_rfi": 1,
     "first_run_candidate_count": 8,
     "first_run_unknown_count": 50,
-    "observed_tiles": 209,
-    "selftests": "18/18 R31 combined",
+    "observed_tiles": 337,
+    "selftests": "23/23 R32 combined",
     "replay_added": 0,
-    "receipt": "data/JANUS-COSMOS-SETI-R31-HANNAH-PROSPECTIVE-2026-11-18.json",
-    "receipt_commit": "6826c3d7a8de616d7c40c029387d726f88a99f4f",
-    "limitations": "One confirmed RFI; 12 recurrence candidates not verified. G3 exact snapshot persistent; no scientific improvement.",
-    "generation": 3,
-    "derived_candidates": 12,
-    "unknown_without_recurrence": 96,
+    "receipt": "data/JANUS-COSMOS-SETI-R32-HANNAH-ADAPTIVE-2026-11-18.json",
+    "receipt_commit": "04c3a55d53332b1be68d013a4c2d21946bc8b0fd",
+    "limitations": "Only one verified RFI; 14 recurrence candidates not verified. G4 exact persistent snapshot; R32 no scientific gain.",
+    "generation": 4,
+    "derived_candidates": 14,
+    "unknown_without_recurrence": 154,
     "durable_snapshot": {
-      "path": "research/seti/memory/hannah_library_v0003.json",
-      "commit": "a74c4ddb46b201a7aaad6e920ff0e69c181831cc",
-      "blob": "f8c559cc7e194adf9876fd72c0fac711f2025f9a",
+      "path": "research/seti/memory/hannah_library_v0004.json",
+      "commit": "17c8e5550741d8ae490523131442d879793b89b8",
+      "blob": "2a0befc492054512bca5593f926fcc797a2d71ec",
       "pointer": "research/seti/memory/CURRENT.json",
-      "pointer_commit": "98657ba6de6693e1d593b1f300c39e1f387e665a",
-      "recovery_run": 44267559021,
-      "recovery_job": 134675760306
+      "pointer_commit": "1ea47164d21c755d529b4702d82193c3bd29b85a",
+      "recovery_run": 44271425216,
+      "recovery_job": 134688714428
     }
   }
 }
