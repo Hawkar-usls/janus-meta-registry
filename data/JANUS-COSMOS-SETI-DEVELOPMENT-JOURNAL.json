@@ -1789,19 +1789,58 @@
       },
       "limitations": "Metadata-only; network error cause still unknown. Archive aliases not proof of line presence, separate dates not independent physical emitter qualification. Cassini individual products may remain unavailable. R38 and identity HOLD.",
       "next_gate": "Read actual R37F1A_SUMMARY; distinguish verified grid from natural line presence and continuity, preserve protected natural controls."
+    },
+    {
+      "event_id": "20261118-R37F1A-RESULT",
+      "date": "2026-11-18",
+      "stage": "R37F1A",
+      "kind": "RESULT",
+      "status": "METADATA_REPAIR_AUDIT_ONLY",
+      "decision": "Voyager1 checksum manifest verified, direct label unavailable. Voyager2 detached label verified, 297s nominal, 6000 fixed records, 30336000 expected bytes; checksum endpoint 500. Cassini PDS4 collection and 898 index lines authenticated, PDS3 four date directories available; individual labels unqualified. Berkeley 1053 query rows across four productive aliases, zero accepted by guessed grammar; no header or natural signal verified.",
+      "evidence": {
+        "run": 44308615507,
+        "job": 134816589646,
+        "artifact": 14429266606,
+        "artifact_sha256": "bfa752993623a55f9563d78b326e04e42c7f6c44bf10a84f3f7f91fa589e0899",
+        "receipt_commit": "88f4b5beb3d1317562a48d49981794ac852de4d3"
+      }
+    },
+    {
+      "event_id": "20261118-R37F1BC-PARALLEL-LAUNCH",
+      "date": "2026-11-18",
+      "stage": "R37F1BC",
+      "kind": "LAUNCH",
+      "status": "RUNNING_PARALLEL_METADATA_AUDIT",
+      "decision": "Independent runner jobs: B bounded historical Cassini date directory traversal and detached labels with nominal durations; C actual Berkeley schema diagnostics, dedup exact URLs, header checks without guessed filename grammar. No voltage/power data, classification, or production changes.",
+      "evidence": {
+        "run": 44309621604,
+        "jobs": {
+          "cassini": 134820055926,
+          "natural": 134820056821
+        },
+        "protocol_commit": "990d1249abd8af8f892bf8b6adab43a46a2ce214",
+        "implementation_commit": "2d034b62b658ae7c2c1e97eaab53c7607e8ef9a3",
+        "workflow_commit": "78389146859562b846cb5ad4327e5fac05d74d63",
+        "receipt_commit": "88f4b5beb3d1317562a48d49981794ac852de4d3"
+      },
+      "limitations": "Detached labels do not establish continuity; archive header does not establish natural line presence or independence. R37F2/F3/R38 HOLD.",
+      "next_gate": "Inspect both R37F1B_SUMMARY and R37F1C_SUMMARY, seal each independently; qualify appropriate natural protected controls and archival temporal grid before further science."
     }
   ],
   "current": {
-    "stage": "R37F1",
-    "status": "HOLD_ARCHIVE_ACCESS_AND_EXACT_NATURAL_JOIN",
-    "run": 44306559063,
+    "stage": "R37F1A",
+    "status": "METADATA_REPAIR_AUDIT_ONLY",
+    "run": 44308615507,
     "production_adoption": false
   },
   "active_experiment": {
-    "stage": "R37F1A",
-    "status": "RUNNING_METADATA_REPAIR",
-    "run": 44308615507,
-    "job": 134816589646,
+    "stage": "R37F1BC",
+    "status": "RUNNING_PARALLEL_METADATA_AUDIT",
+    "run": 44309621604,
+    "jobs": {
+      "cassini": 134820055926,
+      "natural": 134820056821
+    },
     "receipt": "data/JANUS-COSMOS-SETI-R37E-TRANSMITTER-IDENTITY-2026-11-18.json",
     "production_adoption": false
   },
