@@ -2,26 +2,26 @@
   "schema": "janus.context_bridge.current_state.v1",
   "project": "JANUS COSMOS / SETI",
   "updated_utc": "2026-11-18T09:39:47Z",
-  "as_of": "R37F1 complete with archive access HOLD; R37F1A direct metadata and natural control header repair running",
+  "as_of": "R37F1A metadata recovery complete; independent Cassini and Berkeley metadata qualification running",
   "authority": {
     "repository": "Hawkar-usls/Janus-Cosmos",
     "research_branch": "research/seti-radio-candidate-search-20261117",
     "registry": "Hawkar-usls/janus-meta-registry",
     "journal": "data/JANUS-COSMOS-SETI-DEVELOPMENT-JOURNAL.json",
-    "journal_commit": "8be2f3dd34bf5e999ca048211d3e525bcbd1a3c1",
+    "journal_commit": "f396d51fa6159fd98f8b1260d0b9b9d66f8de858",
     "continuity_protocol": "data/JANUS-PROJECT-CONTINUITY-LEDGER-HRAIN-INAIHR-PROTOCOL-2026-08-24-v1.0.json",
     "protocol_blob": "740065281c7c7b289c927db7661b9b000abb8c68"
   },
   "goal": "Increase weak narrowband radio signal recovery while separating background/RFI and preserving known physical signals, with independently reproducible scientific controls.",
   "current": {
-    "stage": "R37F1",
-    "status": "HOLD_ARCHIVE_ACCESS_AND_EXACT_NATURAL_JOIN",
-    "run": 44306559063,
-    "job": 134809525039,
-    "artifact": 14428591531,
-    "artifact_sha256": "1ed1589c9fd3e1046d6d0026992fea432dab827597ef8ea2b157feb2beaa9fbe",
+    "stage": "R37F1A",
+    "status": "METADATA_REPAIR_AUDIT_ONLY",
+    "run": 44308615507,
+    "job": 134816589646,
+    "artifact": 14429266606,
+    "artifact_sha256": "bfa752993623a55f9563d78b326e04e42c7f6c44bf10a84f3f7f91fa589e0899",
     "receipt": "data/JANUS-COSMOS-SETI-R37E-TRANSMITTER-IDENTITY-2026-11-18.json",
-    "receipt_commit": "f2b69a8e65eb55bdeacf581c2a5bf34c949a8bc2",
+    "receipt_commit": "88f4b5beb3d1317562a48d49981794ac852de4d3",
     "production_adoption": false
   },
   "preceding": {
@@ -376,7 +376,7 @@
     }
   },
   "open_gates": [
-    "R37F1A: access recovery, detached archive metadata and exact natural-source HDF5 grid; actual continuity and protected signal presence HOLD.",
+    "R37F1BC: historical detached metadata/nominal durations and actual natural-source archive schema/native header grid. Actual continuity and protected line presence not yet verified.",
     "R37B: extra source groups and historical alias/pointing qualification; 6 Parkes header groups, 0 GBT, PROXCEN known target so <=5 potential new groups; R36F2 remains HOLD.",
     "R35H HOLD: zero compatible HANNAH queries, no joint localization/control gain. Develop physically validated resolution-aware features in separate development line, no threshold relaxation; independently protected controls required.",
     "R35F exact but negligible warm speedup; need blocking costs and more efficient memory traffic; GPU HyperSETI HOLD without CUDA",
@@ -391,7 +391,7 @@
     "Retain raw paths when OFF contains signal",
     "R33B4 original hit mapping HOLD, Figure6 exact file available; R34 independently labelled inputs and protected compatible grid still HOLD."
   ],
-  "next_allowed": "CHECK read-only inspect R37F1A run 44308615507 and R37F1A_SUMMARY. Record actual header and archive outcomes; no source identity inference or raw signal training. Preserve G4 and R28; R38 and R36F2 HOLD.",
+  "next_allowed": "CHECK read-only inspect run 44309621604, R37F1B_SUMMARY and R37F1C_SUMMARY separately. R37F2/F3 and R38 remain gated; preserve G4 and Hybrid R28.",
   "claim_ceiling": "Synthetic injections on real measured backgrounds; not independent real source labels. CPU kernel comparisons only, no proof of whole pipeline superiority. No confirmed extraterrestrial technosignatures.",
   "startup": [
     "Read this current-state JSON from GitHub main each new COSMOS conversation.",
@@ -430,14 +430,17 @@
     "eta_policy": "Observed min/max historical comparable duration minus elapsed, descriptive not prediction interval; unknown when elapsed exceeds all examples or scope differs. No invented percent progress; explicit checkpoint artifacts only."
   },
   "active_experiment": {
-    "stage": "R37F1A",
-    "status": "RUNNING_METADATA_REPAIR",
-    "run": 44308615507,
-    "job": 134816589646,
-    "protocol_commit": "b4d500e838c5f1f4d544464222454b57382c01bd",
-    "workflow_commit": "b34583938a399a5635f887da64fbd7784da8436f",
+    "stage": "R37F1BC",
+    "status": "RUNNING_PARALLEL_METADATA_AUDIT",
+    "run": 44309621604,
+    "jobs": {
+      "cassini": 134820055926,
+      "natural": 134820056821
+    },
+    "protocol_commit": "990d1249abd8af8f892bf8b6adab43a46a2ce214",
+    "workflow_commit": "78389146859562b846cb5ad4327e5fac05d74d63",
     "receipt": "data/JANUS-COSMOS-SETI-R37E-TRANSMITTER-IDENTITY-2026-11-18.json",
-    "receipt_commit": "f2b69a8e65eb55bdeacf581c2a5bf34c949a8bc2",
+    "receipt_commit": "88f4b5beb3d1317562a48d49981794ac852de4d3",
     "production_adoption": false
   },
   "hannah_memory": {
@@ -741,8 +744,8 @@
       "telescope_gate": "HOLD_INSUFFICIENT_OBSERVATION"
     },
     "r37f": {
-      "status": "RUNNING_METADATA_REPAIR",
-      "receipt_commit": "f2b69a8e65eb55bdeacf581c2a5bf34c949a8bc2",
+      "status": "RUNNING_PARALLEL_METADATA_AUDIT",
+      "receipt_commit": "88f4b5beb3d1317562a48d49981794ac852de4d3",
       "sources": [
         "Voyager1 Titan occultation 1980",
         "Voyager2 Saturn occultation 1981",
@@ -751,7 +754,7 @@
         "UCLA Dryad probable RFI",
         "MaserDB natural source catalogue"
       ],
-      "run": 44308615507,
+      "run": 44309621604,
       "natural_control": {
         "name": "W3 OH",
         "doi": "10.1088/1538-3873/aa5800",
