@@ -1,7 +1,7 @@
 {
   "schema": "janus.cosmos.r37e.receipt.v1",
   "date": "2026-11-18",
-  "status": "RUNNING_NATURAL_EPOCH_AND_LSRK_AUDIT",
+  "status": "RUNNING_ARCHIVE_ACCESS_AND_CONDITIONAL_LSRK",
   "source": {
     "repo": "Hawkar-usls/Janus-Cosmos",
     "branch": "research/seti-radio-candidate-search-20261117",
@@ -39,7 +39,7 @@
     }
   },
   "design": "Offline public civilian laboratory data only. Verify records, checksum, archive member layout and independent capture units before any feature fit. Power-only mathematical non-injectivity control. No raw IQ samples consumed in qualification, no classifier or source label promotion.",
-  "next_gate": "Inspect R37F2A_SUMMARY. Independent dates require authenticated data, comparable grid and independent natural emission validation. R37F3/R38 HOLD.",
+  "next_gate": "Inspect R37F2A_ACCESS_SUMMARY and R37F2A_FRAME_SUMMARY independently. Confirm authenticated additional archive access, exact input frame from archival documentation, and independent natural line observations before R37F3/R38.",
   "production_adoption": false,
   "r37e0": {
     "status": "HOLD_CAPTURE_UNIT_QUALIFICATION",
@@ -2610,12 +2610,23 @@
     }
   },
   "r37f2a": {
-    "status": "RUNNING_NATURAL_EPOCH_AND_LSRK_AUDIT",
-    "run": 44312934742,
-    "job": 134831481757,
-    "protocol_commit": "57617b63ee3407c7de7b78365c596bf660443554",
-    "implementation_commit": "9b64ca73fed9bbe2ded31a3d8fb2eb59d4e1f5a2",
-    "workflow_commit": "23e332fd01aa2c75af3cc86f0f0d403f7e4d53c5",
-    "scope": "Public natural W3OH archive only. Reproduce existing peak block scores and conditional LSRK transform with bundled IERS-B provenance, direct/chained and approximate correction checks. Additional dates MJD57934/57941/58110 official archive metadata access only; original HTTP untrusted; no certificate bypass, raw downloads or source classifier. Do not assert exact original frequency frame absent evidence."
+    "status": "RUNNING_ARCHIVE_ACCESS_AND_CONDITIONAL_LSRK",
+    "run": 44313102644,
+    "jobs": [
+      {
+        "id": 134832058772,
+        "name": "access",
+        "status": "in_progress"
+      },
+      {
+        "id": 134832059530,
+        "name": "lsrk",
+        "status": "in_progress"
+      }
+    ],
+    "protocol_commit": "6640889fd6c0326ed73b8a3cc572af0376cecd98",
+    "implementation_commit": "2d9e2b29ae6491c59859831b7a3cc3639d38f7d3",
+    "workflow_commit": "d1358632a4b65c3c3124a52d321ab5e5a3d1ac3c",
+    "scope": "Historical natural OH astronomy only. Original published official archive URLs, bounded header probes, unauthenticated HTTP metadata provisional. Astropy 7.1.0 radio LSRK conditional on known input frame, IERS provenance and round-trip, actual previously frozen ON/OFF power comparison in predeclared literature velocity intervals. Extra epochs not yet measured; G4/R28 unchanged."
   }
 }
