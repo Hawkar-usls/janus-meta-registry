@@ -2,13 +2,13 @@
   "schema": "janus.context_bridge.current_state.v1",
   "project": "JANUS COSMOS / SETI",
   "updated_utc": "2026-11-18T09:39:47Z",
-  "as_of": "R40C one frozen model PASS, five transfer jobs underway, R40E null calibration insufficient; production and R38 HOLD.",
+  "as_of": "R40CDE partial 4/5 transfer jobs PASS, natural exposure pair audit running; independent R38 hold.",
   "authority": {
     "repository": "Hawkar-usls/Janus-Cosmos",
     "research_branch": "research/seti-radio-candidate-search-20261117",
     "registry": "Hawkar-usls/janus-meta-registry",
     "journal": "data/JANUS-COSMOS-SETI-DEVELOPMENT-JOURNAL.json",
-    "journal_commit": "549b8370b87e6bfd013357710e923030ac18700e",
+    "journal_commit": "a8da70c507688d8afba6d36a4ce6587cd8677b8a",
     "continuity_protocol": "data/JANUS-PROJECT-CONTINUITY-LEDGER-HRAIN-INAIHR-PROTOCOL-2026-08-24-v1.0.json",
     "protocol_blob": "740065281c7c7b289c927db7661b9b000abb8c68"
   },
@@ -399,7 +399,7 @@
     "Retain raw paths when OFF contains signal",
     "R33B4 original hit mapping HOLD, Figure6 exact file available; R34 independently labelled inputs and protected compatible grid still HOLD."
   ],
-  "next_allowed": "Inspect freeze and transfer, aggregate paired metrics including lost positives; complete natural controls and HANNAH; no new survey before R38.",
+  "next_allowed": "Finish DEN1048, aggregate metrics and graph decision audit; inspect W3_1 exposure mask and native WCS diagnostics; no new survey.",
   "claim_ceiling": "Synthetic injections on real measured backgrounds; not independent real source labels. CPU kernel comparisons only, no proof of whole pipeline superiority. No confirmed extraterrestrial technosignatures.",
   "startup": [
     "Read this current-state JSON from GitHub main each new COSMOS conversation.",
@@ -438,11 +438,12 @@
     "eta_policy": "Observed min/max historical comparable duration minus elapsed, descriptive not prediction interval; unknown when elapsed exceeds all examples or scope differs. No invented percent progress; explicit checkpoint artifacts only."
   },
   "active_experiment": {
-    "stage": "R40CDE",
-    "status": "PASS_SINGLE_MODEL_FREEZE__TRANSFER_RUNNING__CAMPAIGN_HOLD",
+    "stage": "R40CDE / R37F3D2B",
+    "status": "TRANSFER_4_OF_5__R37_EXPOSURE_AUDIT_RUNNING",
     "run": 44395896208,
+    "natural_run": 44396841649,
     "receipt": "data/JANUS-COSMOS-SETI-R40CDE-TRANSFER-2026-11-18.json",
-    "receipt_commit": "4aea89f6bb28e64a52b22b2464e14236e31c4cfd",
+    "receipt_commit": "dc56f8cebb0166627716292683c262f2634361c2",
     "model_sha256": "a5afcdd963f011424f3182a7a414599b1268557ce25d09da60ffa25bd7f8e32f",
     "production_adoption": false,
     "discovery_relaunch_allowed": false
@@ -1006,11 +1007,12 @@
     ]
   },
   "r40cde": {
-    "stage": "R40CDE",
-    "status": "PASS_SINGLE_MODEL_FREEZE__TRANSFER_RUNNING__CAMPAIGN_HOLD",
+    "stage": "R40CDE / R37F3D2B",
+    "status": "TRANSFER_4_OF_5__R37_EXPOSURE_AUDIT_RUNNING",
     "run": 44395896208,
+    "natural_run": 44396841649,
     "receipt": "data/JANUS-COSMOS-SETI-R40CDE-TRANSFER-2026-11-18.json",
-    "receipt_commit": "4aea89f6bb28e64a52b22b2464e14236e31c4cfd",
+    "receipt_commit": "dc56f8cebb0166627716292683c262f2634361c2",
     "model_sha256": "a5afcdd963f011424f3182a7a414599b1268557ce25d09da60ffa25bd7f8e32f",
     "production_adoption": false,
     "discovery_relaunch_allowed": false,
@@ -1055,7 +1057,103 @@
       },
       "calibration_alerts_each_candidate": 12,
       "calibration_controls": 256,
-      "transfer_status": "2 in progress, 3 queued; no results yet"
+      "transfer_status": "4/5 successful; DEN1048 running",
+      "partial": {
+        "groups": [
+          "LHS138",
+          "LHS288",
+          "GJ845A",
+          "GJ682"
+        ],
+        "positives": 512,
+        "controls": 512,
+        "shared_positives": 128,
+        "fields": [
+          "localized",
+          "weak",
+          "control_alerts",
+          "shared_localized"
+        ],
+        "baseline": [
+          149,
+          14,
+          55,
+          21
+        ],
+        "fused": [
+          154,
+          20,
+          54,
+          30
+        ],
+        "paired": {
+          "added": 17,
+          "lost": 12,
+          "weak_added": 10,
+          "weak_lost": 4,
+          "shared_added": 10,
+          "shared_lost": 1
+        },
+        "per_group": {
+          "LHS138": {
+            "base": [
+              37,
+              2,
+              16,
+              4
+            ],
+            "fused": [
+              42,
+              5,
+              15,
+              8
+            ]
+          },
+          "LHS288": {
+            "base": [
+              39,
+              3,
+              11,
+              6
+            ],
+            "fused": [
+              40,
+              4,
+              12,
+              7
+            ]
+          },
+          "GJ845A": {
+            "base": [
+              37,
+              5,
+              13,
+              4
+            ],
+            "fused": [
+              37,
+              7,
+              14,
+              9
+            ]
+          },
+          "GJ682": {
+            "base": [
+              36,
+              4,
+              15,
+              7
+            ],
+            "fused": [
+              35,
+              4,
+              13,
+              6
+            ]
+          }
+        },
+        "limitations": "Partial, aggregate improvement modest; control alerts increased in two groups, GJ682 localized and shared decreased; synthetic injections on newly accessed bands of known sessions."
+      }
     },
     "r40d": {
       "stage": "PHYSARUM_INSPIRED_GRAPH_ABLATION",
@@ -1063,7 +1161,8 @@
       "control": "static graph, same frozen logits, independently frozen thresholds",
       "tested": false,
       "scope": "adapted flow law not original donor execution",
-      "flow_conservation": "PASS"
+      "flow_conservation": "PASS",
+      "partial": "Static/adaptive aggregate metrics match R40C in all four completed groups; only counts compared, not bitwise decision equivalence; no measured gain."
     },
     "r40e": {
       "stage": "CAMPAIGN_NULL_GATE",
@@ -1082,5 +1181,13 @@
         "status": "PASS"
       }
     }
+  },
+  "r37f3d2b": {
+    "run": 44396841649,
+    "status": "RUNNING_UNMEASURED",
+    "protocol_commit": "1e89c0de207d02a977de287ab83513a64e32dc76",
+    "implementation_commit": "56b269c586c1d6ef8893e432b3fd2d56f9fd2d02",
+    "workflow_commit": "f4d129ae918ba4249cfa37e65009da64b6ae6933",
+    "scope": "W3_1 original source hash; positive exposure paired mask with native-grid residual; dysh 1.0.1 observational diagnostics only, no imputation; qualification HOLD."
   }
 }
