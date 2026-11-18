@@ -1,7 +1,7 @@
 {
   "schema": "janus.cosmos.r40cde.launch.v1",
   "date": "2026-11-18",
-  "status": "TRANSFER_4_OF_5__R37_EXPOSURE_AUDIT_RUNNING",
+  "status": "PASS_TRANSFER_AGGREGATE_DUAL_GAIN__HOLD_ROBUSTNESS",
   "run": 44395896208,
   "protocol_commit": "f88f34e7af65f6183200a717b3e6b9f6293b135c",
   "implementation_commit": "44797bf3d7c92ee3646a617fb97be45fa9c652c2",
@@ -47,7 +47,7 @@
     },
     "calibration_alerts_each_candidate": 12,
     "calibration_controls": 256,
-    "transfer_status": "4/5 successful; DEN1048 running",
+    "transfer_status": "5/5 engineering PASS",
     "partial": {
       "groups": [
         "LHS138",
@@ -143,16 +143,123 @@
         }
       },
       "limitations": "Partial, aggregate improvement modest; control alerts increased in two groups, GJ682 localized and shared decreased; synthetic injections on newly accessed bands of known sessions."
+    },
+    "final": {
+      "groups": 5,
+      "positives": 640,
+      "controls": 640,
+      "shared_positives": 160,
+      "fields": [
+        "localized",
+        "weak",
+        "control_alerts",
+        "shared_localized"
+      ],
+      "baseline": [
+        197,
+        21,
+        61,
+        26
+      ],
+      "fused": [
+        198,
+        27,
+        60,
+        37
+      ],
+      "paired": {
+        "added": 19,
+        "lost": 18,
+        "weak_added": 11,
+        "weak_lost": 5,
+        "shared_added": 12,
+        "shared_lost": 1
+      },
+      "per_group": {
+        "LHS138": {
+          "base": [
+            37,
+            2,
+            16,
+            4
+          ],
+          "fused": [
+            42,
+            5,
+            15,
+            8
+          ]
+        },
+        "LHS288": {
+          "base": [
+            39,
+            3,
+            11,
+            6
+          ],
+          "fused": [
+            40,
+            4,
+            12,
+            7
+          ]
+        },
+        "GJ845A": {
+          "base": [
+            37,
+            5,
+            13,
+            4
+          ],
+          "fused": [
+            37,
+            7,
+            14,
+            9
+          ]
+        },
+        "GJ682": {
+          "base": [
+            36,
+            4,
+            15,
+            7
+          ],
+          "fused": [
+            35,
+            4,
+            13,
+            6
+          ]
+        },
+        "DEN1048": {
+          "base": [
+            48,
+            7,
+            6,
+            5
+          ],
+          "fused": [
+            44,
+            7,
+            6,
+            7
+          ]
+        }
+      },
+      "aggregate_dual_gate": true,
+      "limitations": "Only +1 total localized and -1 control alert; 18 old localizations lost. New bands in previously surveyed sessions; no independent blind validation."
     }
   },
   "r40d": {
     "stage": "PHYSARUM_INSPIRED_GRAPH_ABLATION",
     "iterations": 4,
     "control": "static graph, same frozen logits, independently frozen thresholds",
-    "tested": false,
+    "tested": true,
     "scope": "adapted flow law not original donor execution",
     "flow_conservation": "PASS",
-    "partial": "Static/adaptive aggregate metrics match R40C in all four completed groups; only counts compared, not bitwise decision equivalence; no measured gain."
+    "partial": "Static/adaptive aggregate metrics match R40C in all four completed groups; only counts compared, not bitwise decision equivalence; no measured gain.",
+    "final": "All five groups identical aggregate metrics for static, adaptive, and R40C; no added measured benefit; exact decision audit in R40F."
   },
   "r40e": {
     "stage": "CAMPAIGN_NULL_GATE",
@@ -180,10 +287,35 @@
   "discovery_relaunch_allowed": false,
   "r37f3d2b": {
     "run": 44396841649,
-    "status": "RUNNING_UNMEASURED",
+    "status": "PASS_EXPOSURE_PAIR_MASK__HOLD_CALIBRATION",
     "protocol_commit": "1e89c0de207d02a977de287ab83513a64e32dc76",
     "implementation_commit": "56b269c586c1d6ef8893e432b3fd2d56f9fd2d02",
     "workflow_commit": "f4d129ae918ba4249cfa37e65009da64b6ae6933",
-    "scope": "W3_1 original source hash; positive exposure paired mask with native-grid residual; dysh 1.0.1 observational diagnostics only, no imputation; qualification HOLD."
+    "scope": "W3_1 original source hash; positive exposure paired mask with native-grid residual; dysh 1.0.1 observational diagnostics only, no imputation; qualification HOLD.",
+    "job": 135128941318,
+    "artifact": 14470691910,
+    "artifact_sha256": "8f4059f35057229cbb81d9558fd7cb2115ae7d507246812fd1ab2776e7a2b705",
+    "result": {
+      "paired_valid": 30,
+      "paired_total": 31,
+      "invalid_exposure_rows": [
+        61,
+        123
+      ],
+      "excluded_ordinal": 30,
+      "dysh_nint": 30,
+      "dysh_nchan": 32768,
+      "positive_exposure": 30,
+      "positive_tsys": 30,
+      "integer_common_grid": false,
+      "on_off_offset_channels": [
+        20.661141504,
+        20.663937706666665
+      ],
+      "max_fractional_channel_residual": 0.338858496,
+      "original_unchanged": true,
+      "qualified": false
+    },
+    "next": "Independent W3_1 calibration math and physical fractional-grid verification; no resampling or automatic qualification."
   }
 }
