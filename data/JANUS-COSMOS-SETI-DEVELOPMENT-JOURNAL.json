@@ -1672,19 +1672,52 @@
         "temporal_source": "https://zenodo.org/records/18952487"
       },
       "next_gate": "R37E1_SUMMARY; verify author labels and common channel. No actual classification until qualification; separate fixed, aggregate power observability study, not astronomical source identity."
+    },
+    {
+      "event_id": "20261118-R37E1-RESULT",
+      "date": "2026-11-18",
+      "stage": "R37E1",
+      "kind": "RESULT",
+      "status": "HOLD_AUTHOR_LABEL_AND_TRANSMIT_CHANNEL_REVIEW",
+      "decision": "Both archive checksums valid. 431 recordings/12 sessions/four dates, 67 fit/97 calibration/42 exam/225 separate environmental cohort; all five tokens per day. Receiver tuned 2412MHz and 55MS/s. No CRC-size duplicate candidates. Distinct BSSID metadata and unverified carrier/physical label mapping mean no physical identification. No sample reads or model fit.",
+      "evidence": {
+        "run": 44299491719,
+        "job": 134785191399,
+        "artifact": 14425796394,
+        "artifact_sha256": "c84ec23704d73b15605c153d2451f36e257781069ac449b5747a5f5d80f80aeb",
+        "receipt_commit": "3f501accff7f40efaa8c700e7aa7a0c449845690"
+      }
+    },
+    {
+      "event_id": "20261118-R37E2-AGGREGATE-POWER-LAUNCH",
+      "date": "2026-11-18",
+      "stage": "R37E2",
+      "kind": "LAUNCH",
+      "status": "RUNNING_UNMEASURED_AGGREGATE_POWER_ONLY",
+      "decision": "Authenticate parent artifact, pair metadata hash, archive hashes and actual sample-byte duplicate checks. Fixed unpadded FFT bins 1024/4096/16384, sum coarse bins with conservation and scalar information loss per date. No hardware group or identity features, classifier, demodulation or identity exam. No artificial reconstruction of missing telescope resolution or duration.",
+      "evidence": {
+        "run": 44302684812,
+        "job": 134796176609,
+        "protocol_commit": "75712069d85729bed4440047012df28bb45d5ca0",
+        "implementation_commit": "50aab711732d65f3be717423ef568bf9ef44ed95",
+        "workflow_commit": "ef31dca1e9339dcb47f1894d7348497f0c51595c",
+        "receipt_commit": "3f501accff7f40efaa8c700e7aa7a0c449845690"
+      },
+      "limitations": "Aggregate spectral observability only, environment and date confounded; not physical emitter distinction, transfer or calibrated abstention. R38 independent real telescope observations still HOLD.",
+      "next_gate": "Inspect R37E2_POWER_SUMMARY and check actual cohort integrity and observed limits. Do not infer identity from spectral information loss."
     }
   ],
   "current": {
-    "stage": "R37E0",
-    "status": "HOLD_CAPTURE_UNIT_QUALIFICATION",
-    "run": 44297207941,
+    "stage": "R37E1",
+    "status": "HOLD_AUTHOR_LABEL_AND_TRANSMIT_CHANNEL_REVIEW",
+    "run": 44299491719,
     "production_adoption": false
   },
   "active_experiment": {
-    "stage": "R37E1",
-    "status": "RUNNING_METADATA_ONLY",
-    "run": 44299491719,
-    "job": 134785191399,
+    "stage": "R37E2",
+    "status": "RUNNING_UNMEASURED_AGGREGATE_POWER_ONLY",
+    "run": 44302684812,
+    "job": 134796176609,
     "receipt": "data/JANUS-COSMOS-SETI-R37E-TRANSMITTER-IDENTITY-2026-11-18.json",
     "production_adoption": false
   },
