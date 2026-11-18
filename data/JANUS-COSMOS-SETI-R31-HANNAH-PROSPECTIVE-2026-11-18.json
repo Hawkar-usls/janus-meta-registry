@@ -1,0 +1,75 @@
+{
+  "schema": "janus.cosmos.r31.hannah.receipt.v1",
+  "date": "2026-11-18",
+  "status": "RUNNING_UNMEASURED",
+  "source": {
+    "repo": "Hawkar-usls/Janus-Cosmos",
+    "branch": "research/seti-radio-candidate-search-20261117",
+    "protocol": {
+      "path": "research/seti/r31_hannah_paired_protocol.json",
+      "commit": "acd94215229fbe1c018573b525971e86f27b5ee4",
+      "blob": "356754145a435fadf28a1fe13e5f2b80a7db1b80"
+    },
+    "hook": {
+      "path": "research/seti/hannah_observation_hook.py",
+      "commit": "e6aeb62c801b6d0be321755a8c7c3e0f5720c5cd",
+      "blob": "e032f90718c0c341f0b51ce8e9932da6ff3427e7"
+    },
+    "implementation": {
+      "path": "research/seti/r31_hannah_paired.py",
+      "commit": "e7113fa7513ec55b37cd3f0a70e0883cd8a7ad2c",
+      "blob": "5f54133232b5a8872a41bbe4b631cb266b0721cf",
+      "base_gather_blob": "2bdbfa9b9ccc392a6e3e8cde53ddf6fe6965b1bb"
+    },
+    "workflow": {
+      "path": ".github/workflows/seti-r31-hannah-paired.yml",
+      "commit": "b7bf7d83372adf0e22bf067a91f1eeb7584fde2b",
+      "blob": "58fdd588a13965fa5d29da603857432c87ff07fb",
+      "run": 44265324373,
+      "job": 134668297179,
+      "observed_status": "in_progress",
+      "observed_step": "dependency installation"
+    }
+  },
+  "parent": {
+    "entries": 66,
+    "verified_rfi": 1,
+    "recurrent_candidates": 8,
+    "unknown": 57,
+    "sha256": "95f90afbb07e1bca4d73fb28d1da64e778f59d019782587ef1ec7a868ddebc1e",
+    "path": "research/seti/memory/hannah_library_v0002.json",
+    "commit": "f929f9a1e7b5a7227c614cc26245dcc19392b9d3"
+  },
+  "design": {
+    "fit_targets": 2,
+    "evaluation_targets": 4,
+    "distinct_days": 6,
+    "positives": 512,
+    "controls": 512,
+    "shared_reference_challenges": 128,
+    "planned_measured_tiles": 96,
+    "arms": [
+      "baseline_full",
+      "verified_only_hold",
+      "recurrent_only_hold",
+      "all_memory_hold"
+    ],
+    "match": {
+      "frequency_hz": 8.4,
+      "drift_hz_s": 0.011,
+      "shape_similarity": 0.9,
+      "grid_relative_tolerance": 0.02
+    },
+    "gate": "Fewer control alerts and zero lost localized positives, weak positives, and shared-reference localized positives vs same frozen baseline. HOLD valid.",
+    "ingestion": "Stage exact source-only measured raw tile passports during acquisition, publish only after sealed exam. Verify original entries, no duplicate replay, no verified label promotion. Runtime output artifact; permanent promotion after review."
+  },
+  "limitations": [
+    "No measured R31 results yet.",
+    "Existing single verified BLC1 anchor is outside Parkes frequency/grid; verified-only arm may be inactive.",
+    "Recurrent and unknown archive records are not verified RFI. Simulated HOLD is an advisory policy; no production veto.",
+    "Source-disjoint archive with injected signals, not independent source-labelled origin test.",
+    "Hook integrated in new R31 acquisition path only; all legacy workflows and automatically promoted persistent next generation are not yet integrated."
+  ],
+  "production_adoption": false,
+  "next_gate": "Verify live exam and hook result separately; record negative results, validate and persist next generation; extend hook to other trusted acquisition workflows only after successful controlled validation."
+}
