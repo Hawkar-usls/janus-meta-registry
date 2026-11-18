@@ -1,0 +1,134 @@
+{
+  "schema": "janus.research.011g.alcubierre_einstein_warp_metric_negative_energy.v1",
+  "record_id": "JANUS-PHYSICAL-011G-ALCUBIERRE-EINSTEIN-ADM-ENERGY-2026-11-11",
+  "record_date_local": "2026-11-11",
+  "append_only": true,
+  "scientific_status": "CLASSICAL_EINSTEIN_HAMILTONIAN_CALCULATION_COMPLETED__NO_PHYSICAL_WARP_OR_RETROCAUSAL_CHANNEL",
+  "user_reference_video": "https://youtu.be/PwOk0GKDv9c?si=g181Zd8ErUiICrO5",
+  "user_video_content_independently_verified": false,
+  "scientific_sources": [
+    {
+      "author": "Miguel Alcubierre",
+      "title": "The warp drive: hyper-fast travel within general relativity",
+      "journal": "Classical and Quantum Gravity",
+      "year": 1994,
+      "DOI": "10.1088/0264-9381/11/5/001",
+      "arxiv": "gr-qc/0009013"
+    },
+    {
+      "authors": "Miguel Alcubierre and Francisco S. N. Lobo",
+      "title": "Warp drive basics",
+      "year": 2021,
+      "arxiv": "2103.05610"
+    },
+    {
+      "title": "Shift vector sign reversal in the Alcubierre warp drive spacetime geometry and nonlinear Burgers-type dynamics",
+      "year": 2026,
+      "DOI": "10.1140/epjp/s13360-026-08079-5"
+    }
+  ],
+  "preanalysis": {
+    "method_frozen_first_git_commit": "9323019e914e1fce78db8b01a85e2fb161526ce3",
+    "frozen_before_first_calculation": true,
+    "code_repo": "Hawkar-usls/Janus-Demiurge",
+    "code_draft_pull_request": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/522",
+    "branch": "janus/011g-alcubierre-einstein-negative-energy-20261111",
+    "protocol_path": "experiments/ocean_transformer/late_choice_010/PROTOCOL_011G_ALCUBIERRE_FROZEN.md",
+    "script_path": "experiments/ocean_transformer/late_choice_010/alcubierre_einstein_011g.py",
+    "tests_path": "experiments/ocean_transformer/late_choice_010/test_alcubierre_einstein_011g.py",
+    "workflow_path": ".github/workflows/janus-011g-alcubierre-einstein.yml"
+  },
+  "physics": {
+    "Einstein_equations": "G_mu_nu=(8*pi*G/c^4) T_mu_nu",
+    "Alcubierre_metric": "ds^2=-c^2 dt^2 + (dx - v_s f(r) dt)^2 + dy^2 + dz^2; r=sqrt((x-x_s)^2+y^2+z^2)",
+    "lapse_geometric": 1,
+    "shift_geometric": "beta_x=-v_s f, beta_y=beta_z=0 with c=1",
+    "spatial_three_curvature": 0,
+    "ADM_Hamiltonian_constraint": "R^(3)+K^2-KijKij =16*pi*rho_geom",
+    "extrinsic_curvature_contraction": "K^2-KijKij=-(v_s^2/2)*((partial_y f)^2+(partial_z f)^2) in G=c=1",
+    "SI_Eulerian_local_energy_density": "rho_E=-(c^4/(32*pi*G))*(v_s/c)^2*(df/dr)^2*sin^2(theta), J/m^3",
+    "azimuth_and_polar_angular_integral": "integral sin^2(theta)dOmega=8*pi/3",
+    "coordinate_slice_integrated_density": "E_slice=-(c^4/(12*G))*(v_s/c)^2*integral_0^infinity r^2*(df/dr)^2 dr, J",
+    "wall_profile": "f(r)=[tanh((r+R)/Delta)-tanh((r-R)/Delta)]/[2*tanh(R/Delta)]",
+    "wall_delta_parameter_is_exact_10_90_thickness": false,
+    "negative_eulerian_density_in_nonzero_transverse_wall": true,
+    "weak_energy_condition_violated_for_this_metric": true,
+    "field_equations_not_fully_solved_for_realizable_source_stress_tensor": true,
+    "slice_energy_is_invariant_ADM_or_physical_fuel": false
+  },
+  "numerical": {
+    "G_SI": 6.6743e-11,
+    "speed_of_light_m_per_s": 299792458,
+    "integration": "Simpson quadrature 16000 even subintervals, validated against 8000; upper limit R+20 Delta",
+    "radius_R_m": 100,
+    "wall_Delta_m": 10,
+    "baseline_speed_energy": [
+      {
+        "beta": 0,
+        "total_local_slice_E_J": 0
+      },
+      {
+        "beta": 0.1,
+        "total_local_slice_E_J": -3.372661804343433e+43
+      },
+      {
+        "beta": 1,
+        "total_local_slice_E_J": -3.372661804343432e+45
+      },
+      {
+        "beta": 2,
+        "total_local_slice_E_J": -1.349064721737373e+46
+      }
+    ],
+    "beta_1_magnitude_mass_equivalent_kg": 3.7525923456526e+28,
+    "beta_1_magnitude_mass_equivalent_earth_masses": 6283.433819451154,
+    "beta_1_wall_equatorial_energy_density_J_per_m3": -3.009658704014991e+39,
+    "beta_1_wall_motion_axis_energy_density_J_per_m3": 0,
+    "speed_squared_scaling_verified": true,
+    "wall_thickness_sweep_beta1_R100": [
+      {
+        "delta_m": 1,
+        "total_E_J": -3.3619294196954353e+46
+      },
+      {
+        "delta_m": 10,
+        "total_E_J": -3.372661804343432e+45
+      },
+      {
+        "delta_m": 20,
+        "total_E_J": -1.702901143970956e+45
+      }
+    ],
+    "radius_sweep_included_in_artifact": true,
+    "beta_2_front_axis_coordinate_null_stagnation_radius_m": 100.00000004122307,
+    "superluminal_coordinate_stagnation_is_global_event_horizon_proven": false,
+    "closed_timelike_curve_derived_or_observed": false
+  },
+  "execution": {
+    "successful_GitHub_Actions_run": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/42927327680",
+    "job_id": 130216993389,
+    "all_tests_passed": 11,
+    "CI_conclusion": "success",
+    "artifact_id": 13815350027,
+    "artifact_sha256": "755421ca811c763a097362482212e1b34ccedc04bf7d166ab153184e284cc93e",
+    "artifact_expiration_utc": "2027-01-09T23:55:59Z",
+    "source_hashes_and_full_grid_stored_in_derived_artifact": true,
+    "source_video_transcript_fetch_success": false,
+    "no_hardware_or_quantum_fabrication_claimed": true,
+    "NAS_untouched": true,
+    "Docker_untouched": true,
+    "no_QPU_resources_used": true,
+    "JANUS_010_and_011A_F_frozen_records_unmodified": true
+  },
+  "scientific_admission": {
+    "classic_GR_assumed_metric_requirement_computed": true,
+    "exotic_energy_supply_demonstrated": false,
+    "genuine_warp_bubble_created": false,
+    "physical_superluminal_vehicle_observed": false,
+    "earlier_immutable_record_witnessed_before_late_free_choice": false,
+    "actual_retrocausal_information_proven": false,
+    "experimental_trials": 0,
+    "relation_to_retrocausality": "Superluminal coordinate motion in an engineered metric may raise causality and hypothetical CTC concerns only with extra global geometry, allowed matter and controllable field; a single metric and coordinate ray-stagnation do not prove backward signalling.",
+    "next_scientific_gate": "Independently check physical stress-energy realizability/quantum inequalities and complete horizon/causal structure under a source-supported metric. Do not claim negative energy has been generated or that a CTC exists."
+  }
+}
