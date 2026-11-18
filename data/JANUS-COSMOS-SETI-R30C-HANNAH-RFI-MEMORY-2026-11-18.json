@@ -1,7 +1,7 @@
 {
   "schema": "janus.cosmos.r30c.hannah.receipt.v1",
   "date": "2026-11-18",
-  "status": "PASS_MEMORY_DEVELOPMENT_INCREMENTAL_RUNNING",
+  "status": "PASS_INCREMENTAL_MEMORY_DEVELOPMENT",
   "original_donor": {
     "repo": "Hawkar-usls/Janus-Cosmos",
     "ref": "35bd5ca2cf032e3fb952a5e994897809b0defbd5",
@@ -42,7 +42,7 @@
     "reason": "Distinct scan name alone could count identical bytes from alias scans; require distinct tile content SHA as well. Original first-run candidate count is provisional until corrected rerun; no effect on immutable seed count."
   },
   "incremental": {
-    "status": "RUNNING_UNMEASURED",
+    "status": "PASS_INCREMENTAL_MEMORY_DEVELOPMENT",
     "run": 44263940100,
     "job": 134663731942,
     "protocol_commit": "06c2e09663a727a219b55c759ee23b3f2628d7f2",
@@ -56,14 +56,46 @@
     "target": "HIP33478",
     "day": 57778,
     "planned_new_tiles": 16,
-    "planned_new_scans": 4
+    "planned_new_scans": 4,
+    "conclusion": "success",
+    "result": {
+      "observations": 16,
+      "scans": 4,
+      "parent_entries": 59,
+      "added": 7,
+      "total": 66,
+      "replay_added": 0,
+      "replay_duplicates": 7,
+      "verified_rfi": 1,
+      "derived_candidates": 8,
+      "unknown_without_recurrence": 57,
+      "recurrence_pairs": 7,
+      "selftests": "10/10",
+      "seconds": 198.23828772399997,
+      "library_sha256": "95f90afbb07e1bca4d73fb28d1da64e778f59d019782587ef1ec7a868ddebc1e",
+      "artifact": 14409083094,
+      "artifact_sha256": "042ff34b45fbfeb02d604b37cc13fc7a7d95c7382d90c4953768cc4f933edb42"
+    }
   },
   "limitations": [
     "Archive source candidates are non-confirmed; no automatic origin decisions or filter veto.",
     "First memory seed artifact expires 2027-02-16; incremental workflow emits public ledger artifact and export chunks for permanent reviewed snapshot. Automatic ingestion for all future scans and promotion persist not yet wired.",
     "No RFI-classification accuracy or scientific sensitivity gain measured; parent artifact explicit digest; new source archive target component-fit only, no exam labels.",
-    "R30B completed technically but all scientific gates failed; keep baseline unchanged."
+    "R30B completed technically but all scientific gates failed; keep baseline unchanged.",
+    "Corrected recurrence count 8 confirmed. Durable generation 2 snapshot is independent of temporary artifact retention. New observation hooks are bounded to R31 research path; no automatic global repository promotion."
   ],
-  "next_gate": "Verify incremental run, archive exact library hash and durable repository snapshot; use HANNAH only as advisory retrieval. Future independent family-labelled test with fresh look-alikes and known signals. Connect new observation ingestion only after tests.",
-  "production_adoption": false
+  "next_gate": "R31 fresh prospective comparison and post-exam ingestion; inspect actual run 44265324373 and retain HOLD if no paired gain.",
+  "production_adoption": false,
+  "durable_snapshot": {
+    "repo": "Hawkar-usls/Janus-Cosmos",
+    "branch": "research/seti-radio-candidate-search-20261117",
+    "path": "research/seti/memory/hannah_library_v0002.json",
+    "commit": "f929f9a1e7b5a7227c614cc26245dcc19392b9d3",
+    "blob": "4c3bf095a74938468eabb300757e3d85e6136807",
+    "bytes": 178162,
+    "sha256": "95f90afbb07e1bca4d73fb28d1da64e778f59d019782587ef1ec7a868ddebc1e",
+    "verified": "80 ordered base64 export chunks decoded; independently recomputed exact SHA256; fetched committed file with 66 unique entries",
+    "pointer": "research/seti/memory/CURRENT.json",
+    "pointer_commit": "b47b15601984a0efba91bcfeef0d22e65209523c"
+  }
 }
