@@ -1,7 +1,7 @@
 {
   "schema": "janus.cosmos.r37e.receipt.v1",
   "date": "2026-11-18",
-  "status": "RUNNING_NATURAL_CONTROL_VALIDATION",
+  "status": "NATURAL_CONTROL_DEVELOPMENT_CANDIDATE",
   "source": {
     "repo": "Hawkar-usls/Janus-Cosmos",
     "branch": "research/seti-radio-candidate-search-20261117",
@@ -39,7 +39,7 @@
     }
   },
   "design": "Offline public civilian laboratory data only. Verify records, checksum, archive member layout and independent capture units before any feature fit. Power-only mathematical non-injectivity control. No raw IQ samples consumed in qualification, no classifier or source label promotion.",
-  "next_gate": "Inspect R37F2_METADATA and R37F2_SUMMARY; confirm actual ON/OFF grid and candidate support, count independent dates, preserve scientific uncertainty. No R37F3/R38 promotion without actual independent protected line validation. G4/R28 unchanged.",
+  "next_gate": "R37F2A qualify independent W3OH date archive access (MJD57934,57941,58110 FIL, 58110 RAW), independently establish frequency/velocity reference frame and natural-source line provenance. One candidate epoch not blind confirmation. No automatic labels or suppression; preserve G4 and R28.",
   "production_adoption": false,
   "r37e0": {
     "status": "HOLD_CAPTURE_UNIT_QUALIFICATION",
@@ -2512,12 +2512,101 @@
     ]
   },
   "r37f2": {
-    "status": "RUNNING_NATURAL_CONTROL_VALIDATION",
+    "status": "NATURAL_CONTROL_DEVELOPMENT_CANDIDATE",
     "run": 44311844159,
     "job": 134827689017,
     "protocol_commit": "37d2d54ea7a70a00bdde9b40e4bd70929fde448e",
     "implementation_commit": "3569c4d3ad3de477757a87db9a49a86ae15118ff",
     "workflow_commit": "512de628deed86a9bc1c225561624f4b9f66f51b",
-    "scope": "Astronomical OH observation ON/OFF comparison only. Authenticate previous HDF5 header artifact, check actual catalogue and pointing; freeze available independent date pairs before bounded line-window reads. Fixed broad Doppler velocity windows, no exact LSR correction or calibrated discovery p-value. Additional dates metadata only until qualification. No classifier or automatic source suppression."
+    "scope": "Astronomical OH observation ON/OFF comparison only. Authenticate previous HDF5 header artifact, check actual catalogue and pointing; freeze available independent date pairs before bounded line-window reads. Fixed broad Doppler velocity windows, no exact LSR correction or calibrated discovery p-value. Additional dates metadata only until qualification. No classifier or automatic source suppression.",
+    "artifacts": [
+      {
+        "id": 14430901518,
+        "name": "janus-r37f2-natural-control",
+        "digest": "sha256:1044e36b0c5e02728e37b0a8f5d30571c19f2e23f5c8805a584adf01121345e2"
+      }
+    ],
+    "result": {
+      "status": "NATURAL_CONTROL_DEVELOPMENT_CANDIDATE",
+      "catalogue": {
+        "sha256": "3b4c985ce6098e9b9437da221bd47b3f28dd44f161155ef9a800c155ec429553",
+        "rows": 461,
+        "unique": 461,
+        "dates_by_format": {
+          ".h5": [
+            57800
+          ],
+          ".fil": [
+            57934,
+            57941,
+            58110
+          ],
+          ".raw": [
+            58110
+          ]
+        },
+        "counts_by_format": {
+          ".fil": 219,
+          ".raw": 224,
+          ".h5": 18
+        }
+      },
+      "qualified_pairs": 1,
+      "independent_qualified_dates": 1,
+      "candidate_dates": 1,
+      "results": [
+        {
+          "day": 57800,
+          "status": "NATURAL_LINE_CANDIDATE",
+          "lines": [
+            {
+              "rest_transition_mhz": 1665.402,
+              "descriptive_peak_z": 462.4856972388095,
+              "relative_on_minus_off": 8.9753633048798,
+              "on_rows_positive": 3,
+              "on_rows": 3,
+              "adjacent_support": true,
+              "blocks": 4038,
+              "criterion_met": true
+            },
+            {
+              "rest_transition_mhz": 1667.359,
+              "descriptive_peak_z": 309.5282987161549,
+              "relative_on_minus_off": 3.326291875865282,
+              "on_rows_positive": 3,
+              "on_rows": 3,
+              "adjacent_support": true,
+              "blocks": 4043,
+              "criterion_met": true
+            }
+          ],
+          "io": [
+            {
+              "bytes_read": 19129130,
+              "file_bytes": 2926848554,
+              "chunk_plan": {
+                "unique_chunks": 6,
+                "compressed_bytes": 19081314
+              },
+              "rows": 3
+            },
+            {
+              "bytes_read": 18619366,
+              "file_bytes": 2903366177,
+              "chunk_plan": {
+                "unique_chunks": 6,
+                "compressed_bytes": 18571550
+              },
+              "rows": 3
+            }
+          ],
+          "scope": "Descriptive ON/OFF OH window excess; exact velocity frame not established."
+        }
+      ],
+      "actual_natural_origin_confirmed": false,
+      "independent_scientific_confirmation": false,
+      "exact_lsr_correction_verified": false,
+      "production_adoption": false
+    }
   }
 }
