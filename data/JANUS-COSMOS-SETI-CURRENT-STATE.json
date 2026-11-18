@@ -1,32 +1,42 @@
 {
   "schema": "janus.context_bridge.current_state.v1",
   "project": "JANUS COSMOS / SETI",
-  "updated_utc": "2026-11-18T09:15:46Z",
-  "as_of": "R33A source joins PASS; R33B-D published catalog and control diagnostics running",
+  "updated_utc": "2026-11-18T09:16:24Z",
+  "as_of": "R33B-D completed, catalog and externally reproduced stationary anchors persisted; independent family validation HOLD",
   "authority": {
     "repository": "Hawkar-usls/Janus-Cosmos",
     "research_branch": "research/seti-radio-candidate-search-20261117",
     "registry": "Hawkar-usls/janus-meta-registry",
     "journal": "data/JANUS-COSMOS-SETI-DEVELOPMENT-JOURNAL.json",
-    "journal_commit": "54375abc11dd7ca7649e84c1a299f3f135cf340d",
+    "journal_commit": "9868ea0b8601fb3120a5abd2520978d769fd2703",
     "continuity_protocol": "data/JANUS-PROJECT-CONTINUITY-LEDGER-HRAIN-INAIHR-PROTOCOL-2026-08-24-v1.0.json",
     "protocol_blob": "740065281c7c7b289c927db7661b9b000abb8c68"
   },
   "goal": "Increase weak narrowband radio signal recovery while separating background/RFI and preserving known physical signals, with independently reproducible scientific controls.",
   "current": {
-    "stage": "R33A",
-    "status": "PASS_SOURCE_JOIN_CANDIDATES",
-    "run": 44272297122,
-    "job": 134691654656,
-    "receipt": "data/JANUS-COSMOS-SETI-R33-HANNAH-VERIFIED-FAMILIES-2026-11-18.json",
-    "receipt_commit": "f45d94fdbfd317c886f7255b4d432d0acb0a6869",
-    "artifact": 14412981947,
-    "artifact_sha256": "fd63f7272380e78a4b3017ce86691c076b5fcf449d82a5664e060dd686fc6500",
-    "candidate_occurrences": 6,
-    "central_groups": 2,
-    "raw_tiles": 15,
-    "diagnostics": 9,
-    "verified_promoted": 0,
+    "stage": "R33B-D",
+    "status": "PASS_CATALOG_AND_CENTRAL_REPLAY__HOLD_INDEPENDENT_FAMILY_GENERALIZATION",
+    "run": 44274269530,
+    "job": 134698272890,
+    "receipt": "data/JANUS-COSMOS-SETI-R33BCD-HANNAH-CATALOG-2026-11-18.json",
+    "receipt_commit": "44d8a2298551fc4a4f36f7765100c63d8d9e5a80",
+    "artifact": 14414036594,
+    "artifact_sha256": "659bde7f03cc86adf7e3002496e37d146278b7dec78606409a6af4eb6f5f86d3",
+    "results": {
+      "central_verified_sidecar": 6,
+      "groups": 2,
+      "direct_catalog": 18,
+      "mirrored_catalog": 18,
+      "held_scans": 4,
+      "adaptive_top1": 4,
+      "full_top1": 4,
+      "wrong_group_matches": 0,
+      "table1_new": 0,
+      "table1_existing_anchor": 1,
+      "table1_holds": 4,
+      "voyager_recovered": true,
+      "voyager_native_grid_compatible": 0
+    },
     "production_adoption": false
   },
   "preceding": {
@@ -197,12 +207,28 @@
         "usable_policies": 0
       },
       "production_adoption": false
+    },
+    "R33A": {
+      "stage": "R33A",
+      "status": "PASS_SOURCE_JOIN_CANDIDATES",
+      "run": 44272297122,
+      "job": 134691654656,
+      "receipt": "data/JANUS-COSMOS-SETI-R33-HANNAH-VERIFIED-FAMILIES-2026-11-18.json",
+      "receipt_commit": "f45d94fdbfd317c886f7255b4d432d0acb0a6869",
+      "artifact": 14412981947,
+      "artifact_sha256": "fd63f7272380e78a4b3017ce86691c076b5fcf449d82a5664e060dd686fc6500",
+      "candidate_occurrences": 6,
+      "central_groups": 2,
+      "raw_tiles": 15,
+      "diagnostics": 9,
+      "verified_promoted": 0,
+      "production_adoption": false
     }
   },
   "open_gates": [
-    "R33B-D inspect run, persist exact validated external reference sidecar and catalog; actual raw lookalike joins remain open",
-    "R33C independent family-separated recognition and R33D broader protected controls including compatible-grid evidence; R34 blocked pending these",
-    "R32 scientific HOLD: all 103 policy trials unusable; preserve Hybrid R28 baseline.",
+    "R33B2 exact raw joins for direct/mirror lookalikes; preserve failed Table1 replays and review any new references",
+    "R33C independent group-disjoint recognition on actual drifting families; R33D compatible-grid protected controls, not merely abstention; R34 blocked",
+    "R32 HOLD; retain Hybrid R28, no automatic production veto",
     "Extend bounded observation hook to other trusted legacy acquisition paths only after controlled verification",
     "R30B all scientific gates failed: keep Full R28; no hard KUSTO/TOPA filter; separately test protected raw union shared-signal recovery",
     "R30D frozen separate-observation confirmation; R30F BLC1/Voyager and independent origin evidence",
@@ -211,7 +237,7 @@
     "Independent source-labelled origin evaluation; EYE remains HOLD",
     "Retain raw paths when OFF contains signal"
   ],
-  "next_allowed": "CHECK read-only verify R33B-D job, R33B_SUMMARY, R33C_SUMMARY, R33D_SUMMARY and artifacts. On explicit work request seal actual results and persist verified exact source-labelled sidecar/catalog. Do not promote unjoined figure entries; R34 requires fresh family-disjoint evidence and compatible-grid protected controls.",
+  "next_allowed": "CHECK read-only inspect recorded R33B-D receipts and repo pointers. On explicit continuation R33B2 join independently documented raw time/frequency/drift records, extend reference sidecar only on exact evidence; run family-disjoint recognition and compatible-grid protected controls before R34. No production suppression.",
   "claim_ceiling": "Synthetic injections on real measured backgrounds; not independent real source labels. CPU kernel comparisons only, no proof of whole pipeline superiority. No confirmed extraterrestrial technosignatures.",
   "startup": [
     "Read this current-state JSON from GitHub main each new COSMOS conversation.",
@@ -249,18 +275,7 @@
     ],
     "eta_policy": "Observed min/max historical comparable duration minus elapsed, descriptive not prediction interval; unknown when elapsed exceeds all examples or scope differs. No invented percent progress; explicit checkpoint artifacts only."
   },
-  "active_experiment": {
-    "stage": "R33B-D",
-    "status": "RUNNING_UNMEASURED",
-    "run": 44274269530,
-    "job": 134698272890,
-    "workflow_commit": "6f4b8146c4fe110291bcd162ab48943b8f99a90c",
-    "receipt": "data/JANUS-COSMOS-SETI-R33BCD-HANNAH-CATALOG-2026-11-18.json",
-    "receipt_commit": "a9996952aa332f50e6be6b67c1489ddd49354761",
-    "frozen_memory_sha256": "17acaca5bf50a5872b51647984b49dadb46b3c2a3aa4536dd150ae70673d7bb3",
-    "design": "Exact R33A artifact revalidation; published 18 direct+18 mirror catalogue; Table1 time/frequency/drift replay; same-campaign held scans; pinned Voyager carrier challenge",
-    "production_adoption": false
-  },
+  "active_experiment": null,
   "hannah_memory": {
     "status": "PASS_DURABLE_SNAPSHOT",
     "run": 44268188685,
@@ -289,6 +304,25 @@
       "pointer_commit": "1ea47164d21c755d529b4702d82193c3bd29b85a",
       "recovery_run": 44271425216,
       "recovery_job": 134688714428
+    },
+    "external_references": {
+      "status": "VERIFIED_EXTERNAL_SOURCE_REPLAY_REFERENCE_ONLY",
+      "sidecar": {
+        "path": "research/seti/memory/r33_verified_central_sidecar.json",
+        "commit": "fe5fd689b4c174c62764a543d316d0a218bce96d",
+        "sha256": "8c12b5aa8d26fd445c98cf652e0f4425f34425a391f5ab1cdcc34e29b47bd411",
+        "occurrences": 6,
+        "groups": 2
+      },
+      "catalog": {
+        "path": "research/seti/memory/r33_published_catalog.json",
+        "commit": "05ca0bec0688e6bd4148a2f1dda08d0d30752a3a",
+        "sha256": "83b1ff9259cbc11fe16c4b9b55a9c66978e46ea08d2d37fdd0e2e7704776a9ba",
+        "direct": 18,
+        "mirrored": 18
+      },
+      "pointer_commit": "0432560a291901eee3dc1b04fc3ec365640d836d",
+      "scope": "Main G4 unchanged, six externally reproduced central reference occurrences separately stored; published figure labels not raw verified passports."
     }
   }
 }
