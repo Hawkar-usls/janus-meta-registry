@@ -2037,19 +2037,51 @@
       },
       "limitations": "No independent natural emission validation from header alone; SDFITS frequency frame not transferable to BL; R37F3/R38 HOLD. G4 and R28 unchanged.",
       "next_gate": "Inspect R37F2B_SUMMARY and record authenticated source metadata and remaining spatial OFF / exact BL frame gaps."
+    },
+    {
+      "event_id": "20261118-R37F2B-NATURAL-ARCHIVE-RESULT",
+      "date": "2026-11-18",
+      "stage": "R37F2B",
+      "kind": "RESULT",
+      "status": "SDFITS_CONTROL_METADATA_PASS__SPATIAL_OFF_AND_BL_FRAME_HOLD",
+      "decision": "Official Green Bank HTTPS SDFITS 31625280 bytes SHA256 d650fd91d41b4163d2100343e4816a3d09a31f3db8b5d69679667e9f09e1e2a0. W3OH 2005-06-28, 240 rows x32768 channels, scans90..94, both SIG/REF and CAL phases each; CDELT1 -1525.87890625Hz, RESTFREQ1667359000Hz, CTYPE1 FREQ-OBS explicitly topocentric per dysh documentation, VELDEF OPTI-LSR optical LSRK velocity convention. No spatial OFF or line evaluation; coarse resolution not equivalent to BL fine-grid. Legacy GBTIDL file returns403. All 11 Berkeley queries HOLD because strict HTTP redirect assumption, need rerun, not evidence of absent OFF.",
+      "evidence": {
+        "run": 44314156077,
+        "job": 134835749756,
+        "artifact": 14430459835,
+        "artifact_sha256": "7e65ed1def9502f7fcfb917af128c9121bb655c339fa342c752edbbea519ec95",
+        "receipt_commit": "4bf7f1610293930f6d6af2f091059bfbd05a53c8",
+        "frame_doc": "https://dysh.readthedocs.io/en/latest/users_guide/velocity_frames.html"
+      }
+    },
+    {
+      "event_id": "20261118-R37F2B1-REDIRECT-REPAIR-LAUNCH",
+      "date": "2026-11-18",
+      "stage": "R37F2B1",
+      "kind": "LAUNCH",
+      "status": "RUNNING_REDIRECT_REPAIR",
+      "decision": "Follow at most five explicit same-authority HTTPS redirects, preserve caps and TLS validation. Improve error reporting, unchanged scientific qualification criteria.",
+      "evidence": {
+        "run": 44314465143,
+        "job": 134836808965,
+        "implementation_commit": "1f660bf0a558892f1979ae4071f7bb1f2c3f6991",
+        "workflow_commit": "a6dd0cf3883eeb467c64709e130d774bc7440c73",
+        "receipt_commit": "4bf7f1610293930f6d6af2f091059bfbd05a53c8"
+      },
+      "next_gate": "Read repaired catalogue result, retain distinction between actual OFF direction and frequency switch; next independent natural SDFITS line calibration. Specific BL frame lineage HOLD."
     }
   ],
   "current": {
-    "stage": "R37F2A",
-    "status": "LSRK_CONDITIONAL_PASS__INDEPENDENT_EPOCH_HOLD",
-    "run": 44312934742,
+    "stage": "R37F2B",
+    "status": "SDFITS_CONTROL_METADATA_PASS__SPATIAL_OFF_AND_BL_FRAME_HOLD",
+    "run": 44314156077,
     "production_adoption": false
   },
   "active_experiment": {
-    "stage": "R37F2B",
-    "status": "RUNNING_NATURAL_CONTROL_METADATA_AUDIT",
-    "run": 44314156077,
-    "job": 134835749756,
+    "stage": "R37F2B1",
+    "status": "RUNNING_REDIRECT_REPAIR",
+    "run": 44314465143,
+    "job": 134836808965,
     "receipt": "data/JANUS-COSMOS-SETI-R37E-TRANSMITTER-IDENTITY-2026-11-18.json",
     "production_adoption": false
   },
