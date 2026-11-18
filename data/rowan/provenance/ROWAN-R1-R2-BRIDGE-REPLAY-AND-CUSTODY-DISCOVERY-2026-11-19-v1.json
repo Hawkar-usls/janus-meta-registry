@@ -1,0 +1,168 @@
+{
+  "schema_id": "janus.rowan.r1_r2.progress_receipt.v1",
+  "date_local": "2026-11-19",
+  "status": "R1_HOLD_PROVIDER_EQUIVALENCE_NOT_DEMONSTRATED__R2_CANDIDATES_ONLY",
+  "protocol": "data/rowan/protocols/ROWAN-INDEPENDENT-BLIND-600-FIREPROT-REVIEW-2026-11-19-v2.json",
+  "protocol_merge": "40a1c6b6fe4168f26a4002a3a37007c04413b195",
+  "source_git_commit": "a5d0b83e8fb89c197b8e407b07eaca3a9542647b",
+  "sources": [
+    {
+      "path": "data/rowan/provenance/ROWAN-BBC1-ALL-EIGHT-MUTANTS-PUBLIC-MSA-TRANSFER-AUDIT-2026-10-26-v1.json",
+      "git_blob_sha": "0c08a2ad0927156e4105dfa78867ed98d8fce310"
+    },
+    {
+      "path": "data/rowan/provenance/ROWAN-1EY0-T8A-REAL-ROWAN-VS-LOCAL-MUTATION-DELTA-2026-10-26-v1.json",
+      "git_blob_sha": "a17ab735185c5a4c6a93e454768a4744a813ec84"
+    },
+    {
+      "path": "data/rowan/provenance/ROWAN-1EY0-T8A-TOPA-REAL-ROUNDING-ONLY-BOUND-2026-10-26-v1.json",
+      "git_blob_sha": "74ecbde8092b2a5daea70afb76d5c9c8234ef841"
+    }
+  ],
+  "method": "Arithmetic replay of archived paired confidence deltas, local minus Rowan; compare nonzero opposite signs only when absolute Rowan delta exceeds 0.001 rounding envelope; this is not a stochastic uncertainty interval. Two proteins, nine mutations, descriptive only.",
+  "historical_rows": [
+    {
+      "id": "BBC1:G53A",
+      "local_ptm": -0.010780930519104004,
+      "rowan_ptm": -0.009000000000000008,
+      "local_lddt": -0.0025634169578552246,
+      "rowan_lddt": 0.0050000000000000044
+    },
+    {
+      "id": "BBC1:G48D",
+      "local_ptm": -0.0014352798461914062,
+      "rowan_ptm": -0.0010000000000000009,
+      "local_lddt": -0.000008821487426757812,
+      "rowan_lddt": 0.008000000000000007
+    },
+    {
+      "id": "BBC1:E27F",
+      "local_ptm": -0.0028017759323120117,
+      "rowan_ptm": 0.0020000000000000018,
+      "local_lddt": -0.0001544356346130371,
+      "rowan_lddt": 0.006000000000000005
+    },
+    {
+      "id": "BBC1:W38L",
+      "local_ptm": 0.000039458274841308594,
+      "rowan_ptm": 0.0020000000000000018,
+      "local_lddt": -0.003265678882598877,
+      "rowan_lddt": 0.0040000000000000036
+    },
+    {
+      "id": "BBC1:K13N",
+      "local_ptm": -0.0012728571891784668,
+      "rowan_ptm": 0.0010000000000000009,
+      "local_lddt": 0.00003451108932495117,
+      "rowan_lddt": 0.0040000000000000036
+    },
+    {
+      "id": "BBC1:G64Q",
+      "local_ptm": 0.0014690160751342773,
+      "rowan_ptm": 0.0020000000000000018,
+      "local_lddt": 0.0014435052871704102,
+      "rowan_lddt": 0.0050000000000000044
+    },
+    {
+      "id": "BBC1:Q44V",
+      "local_ptm": -0.0016849637031555176,
+      "rowan_ptm": 0,
+      "local_lddt": 0.00258791446685791,
+      "rowan_lddt": 0.007000000000000006
+    },
+    {
+      "id": "BBC1:E42H",
+      "local_ptm": -0.0022543668746948242,
+      "rowan_ptm": 0.0030000000000000027,
+      "local_lddt": 0.0031317472457885742,
+      "rowan_lddt": 0.009000000000000008
+    },
+    {
+      "id": "1EY0:T8A",
+      "local_ptm": 0.0020025968551635742,
+      "rowan_ptm": -0.0030000000000000027,
+      "local_lddt": 0.002591431140899658,
+      "rowan_lddt": 0.0010000000000000009
+    }
+  ],
+  "results": {
+    "paired_mutations": 9,
+    "distinct_proteins": 2,
+    "ptm": {
+      "mean_signed_difference": -0.0015243447621663408,
+      "mae": 0.0026360329522026912,
+      "max_abs": 0.005254366874694827,
+      "opposite_sign_outside_rowan_rounding": [
+        "BBC1:E27F",
+        "BBC1:E42H",
+        "1EY0:T8A"
+      ]
+    },
+    "lddt": {
+      "mean_signed_difference": -0.00502258263693916,
+      "mae": 0.005376234001583528,
+      "max_abs": 0.008008821487426765,
+      "opposite_sign_outside_rowan_rounding": [
+        "BBC1:G53A",
+        "BBC1:G48D",
+        "BBC1:E27F",
+        "BBC1:W38L"
+      ]
+    }
+  },
+  "r1": {
+    "state": "HOLD",
+    "software_fix": {
+      "pr": "https://github.com/Hawkar-usls/Janus/pull/59",
+      "merge_sha": "ee441aa5023bfb7d74863f9697ae1096af390529",
+      "ci": "https://github.com/Hawkar-usls/Janus/actions/runs/44416967521"
+    },
+    "unresolved": [
+      "provider model checkpoint and seed/ensemble",
+      "MSA identity",
+      "confidence aggregation / feature equivalence",
+      "stochastic variance"
+    ],
+    "next": "Obtain provider attested metadata for existing outputs; predefine independent technical control and equivalence tolerance before new measurements."
+  },
+  "r2": {
+    "state": "DISCOVERY_ONLY_NO_CUSTODIAN",
+    "candidates": [
+      {
+        "name": "Rocklin Lab, Northwestern University",
+        "url": "https://www.rocklinlab.org/",
+        "role": "methodological review or referral",
+        "caveat": "Coauthor of original BBC1 source; not automatically independent external assay custodian."
+      },
+      {
+        "name": "Tsuboyama Lab, University of Tokyo",
+        "url": "https://www.chembio.t.u-tokyo.ac.jp/e/department/lab/tsuboyama.html",
+        "role": "methodological review or referral",
+        "caveat": "Original source author; cannot assume independent data or custody."
+      },
+      {
+        "name": "Caltech / Mayo group publication",
+        "url": "https://doi.org/10.1073/pnas.1903888116",
+        "role": "historical evidence of direct thermodynamic measurement capability; potential referral",
+        "caveat": "Current availability, willingness, independent unpublished data and exact assay comparability unverified."
+      }
+    ]
+  },
+  "r3": {
+    "target": 600,
+    "verified_unpublished_observations": 0
+  },
+  "r4": {
+    "target": 630,
+    "new_frozen_comparable_records": 0
+  },
+  "r5": {
+    "state": "BLOCKED",
+    "external_validation": false
+  },
+  "new_provider_calls": 0,
+  "new_credits": 0,
+  "new_emails_sent": 0,
+  "weights_modified": false,
+  "unblinding_authorized": false
+}
