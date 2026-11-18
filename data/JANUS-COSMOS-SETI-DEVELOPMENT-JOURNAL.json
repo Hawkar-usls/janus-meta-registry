@@ -3333,6 +3333,113 @@
         }
       },
       "next_gate": "Check Tsys, effective exposure, calibrated TA, native WCS; retain physical fractional-grid HOLD."
+    },
+    {
+      "event_id": "20261118-R40H-PARITY-SELECTION-PASS",
+      "date": "2026-11-18",
+      "stage": "R40H",
+      "kind": "PARTIAL_RESULT",
+      "status": "PASS_FROZEN_PARITY_AND_METADATA__TRANSFER_RUNNING",
+      "decision": "1,440 serialized decisions exact; five metadata-selected groups on distinct known days; no evaluation metrics yet, physical alias completeness unproven.",
+      "evidence": {
+        "freeze_job": 135158026140,
+        "status": "PASS_NUMERIC_SERIALIZATION_AND_METADATA_SELECTION",
+        "artifact": 14473224552,
+        "artifact_sha256": "0f45519a57965262d6b3bcd90c1cc34b88daab2766022ac1b8213259ac490717",
+        "parity": {
+          "rows": 1440,
+          "max_probability_delta": 2.220446049250313e-16,
+          "exact_decisions": true
+        },
+        "selection": {
+          "targets": [
+            [
+              "HIP92403",
+              58011
+            ],
+            [
+              "HIP13389",
+              57992
+            ],
+            [
+              "HIP52596",
+              57991
+            ],
+            [
+              "HIP105858",
+              57840
+            ],
+            [
+              "HIP5496",
+              57837
+            ]
+          ],
+          "manifest_sha256": "198fe94ba41a011b207dd05a80cdd5c2da226c60525db3fd305ec55764ddb8fe",
+          "files": 20,
+          "attempts": 35,
+          "physical_alias_disjointness_proven": false
+        },
+        "evaluate_job": 135161053338,
+        "evaluate_status": "in_progress",
+        "native_status": "waiting"
+      },
+      "next_gate": "Complete frozen evaluation and native comparisons."
+    },
+    {
+      "event_id": "20261118-R37F3D2E-PASS-F-LAUNCH",
+      "date": "2026-11-18",
+      "stage": "R37F3D2E / F",
+      "kind": "RESULT_AND_LAUNCH",
+      "status": "PASS_ISOLATED_ARITHMETIC__HOLD_PHYSICAL_GRID",
+      "decision": "982,950 valid samples agree with independent arithmetic within 7.34 microK; native frequency WCS exact; fractional physical grid still HOLD. Launch metadata-only provenance audit.",
+      "evidence": {
+        "result": {
+          "run": 44405893310,
+          "status": "PASS_ISOLATED_ARITHMETIC__HOLD_PHYSICAL_GRID",
+          "implementation_commit": "7db8d0dc9b54d7811ecfaa0483afed9b68e2dca3",
+          "workflow_commit": "1f65c364e1cb8dc4936543e09e63c77f171d0241",
+          "scope": "Repeat R37F3D2C arithmetic with documented nonfinite exclusion unioned with original masks; original thresholds, raw file, no imputation or interpolation. Physical fractional-grid hold remains.",
+          "qualified": false,
+          "job": 135160875470,
+          "artifact": 14473469493,
+          "artifact_sha256": "acc9dec6cd46e6916e9af817b9dbf53d909a72219caadf6bcd6b31e2c59aceba",
+          "metrics": {
+            "row_ids_match": true,
+            "raw_unmasked_match": true,
+            "input_masks": [
+              90,
+              90,
+              90,
+              90
+            ],
+            "tsys_error_K": 0,
+            "exposure_error_s": 0,
+            "width_error_hz": 0,
+            "weight_error": 2.7755575615628914e-17,
+            "mask_exact": true,
+            "calibrated_error_K": 0.000007340320712145854,
+            "valid_calibrated_samples": 982950,
+            "native_wcs_error_hz": 0,
+            "fractional_grid": {
+              "offset_channels_min": 20.661141504,
+              "offset_channels_max": 20.663937706666665,
+              "max_residual_channels": 0.338858496,
+              "integer_common_grid": false
+            },
+            "imputed_samples": 0,
+            "interpolated_samples": 0,
+            "original_unchanged": true
+          }
+        },
+        "next": {
+          "run": 44407007946,
+          "status": "RUNNING_UNMEASURED",
+          "implementation_commit": "94a8a0ac14d9dbd4dde4f42b09feaf1b9cb0dc4a",
+          "workflow_commit": "048f88b394cd088796d8507307e236c41be4af24",
+          "scope": "Physical frequency metadata inventory; origin of ON/OFF fractional shift not established. No spectral power read, no registration, no qualification."
+        }
+      },
+      "next_gate": "Identify documented frame and physical frequency offset; no interpolation or automatic qualification."
     }
   ],
   "current": {
@@ -3342,12 +3449,12 @@
     "production_adoption": false
   },
   "active_experiment": {
-    "stage": "R40H / R37F3D2E",
-    "status": "R40H_FREEZE_RUNNING__W3_NONFINITE_DIAGNOSIS_PASS",
+    "stage": "R40H / R37F3D2F",
+    "status": "PASS_FROZEN_PARITY_AND_METADATA__TRANSFER_RUNNING",
     "run": 44405077857,
-    "natural_run": 44405893310,
+    "natural_run": 44407007946,
     "receipt": "data/JANUS-COSMOS-SETI-R40H-FROZEN-TRANSFER-2026-11-18.json",
-    "receipt_commit": "9ced9cde256f1fd2e481d158358f1e067e6f87f8",
+    "receipt_commit": "975211409c1328f27d4623e2c65c2c682c79b761",
     "production_adoption": false,
     "discovery_relaunch_allowed": false
   },
