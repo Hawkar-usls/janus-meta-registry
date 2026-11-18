@@ -1,7 +1,7 @@
 {
   "schema": "janus.cosmos.r37e.receipt.v1",
   "date": "2026-11-18",
-  "status": "R37F1A_RUNNING_METADATA_REPAIR",
+  "status": "RUNNING_PARALLEL_METADATA_AUDIT",
   "source": {
     "repo": "Hawkar-usls/Janus-Cosmos",
     "branch": "research/seti-radio-candidate-search-20261117",
@@ -39,7 +39,7 @@
     }
   },
   "design": "Offline public civilian laboratory data only. Verify records, checksum, archive member layout and independent capture units before any feature fit. Power-only mathematical non-injectivity control. No raw IQ samples consumed in qualification, no classifier or source label promotion.",
-  "next_gate": "Inspect R37F1A_SUMMARY and record actual failures and independently verified headers. No continuity or line presence claims until qualified.",
+  "next_gate": "Inspect R37F1B_SUMMARY and R37F1C_SUMMARY. Separate nominal span from continuity; header grid from natural line presence. R37F2/3 and R38 remain HOLD.",
   "production_adoption": false,
   "r37e0": {
     "status": "HOLD_CAPTURE_UNIT_QUALIFICATION",
@@ -1413,7 +1413,7 @@
     "artifact_sha256": "1ed1589c9fd3e1046d6d0026992fea432dab827597ef8ea2b157feb2beaa9fbe"
   },
   "r37f1a": {
-    "status": "RUNNING_METADATA_REPAIR",
+    "status": "METADATA_REPAIR_AUDIT_ONLY",
     "run": 44308615507,
     "job": 134816589646,
     "protocol_commit": "b4d500e838c5f1f4d544464222454b57382c01bd",
@@ -1428,6 +1428,245 @@
         "NGC7538"
       ]
     },
-    "scope": "Direct verified historical metadata URLs bypass directory dependency, PDS4/legacy collection qualification, exact natural source alias and epoch, header-only native grid/coverage. No power or receiver voltages read. Same-frequency identity and protected controls still HOLD."
+    "scope": "Direct verified historical metadata URLs bypass directory dependency, PDS4/legacy collection qualification, exact natural source alias and epoch, header-only native grid/coverage. No power or receiver voltages read. Same-frequency identity and protected controls still HOLD.",
+    "result": {
+      "status": "METADATA_REPAIR_AUDIT_ONLY",
+      "voyager": [
+        {
+          "dataset": "VG1-SSA-RSS-1-ROCC-V1.0",
+          "listing": {
+            "status": "HOLD",
+            "url": "https://pds-ppi.igpp.ucla.edu/data/VG1-SSA-RSS-1-ROCC-V1.0/DATA/",
+            "error": "HTTPError: 404 Client Error: Not Found for url: https://pds-ppi.igpp.ucla.edu/data/VG1-SSA-RSS-1-ROCC-V1.0/DATA/"
+          },
+          "direct_label": {
+            "status": "HOLD",
+            "url": "https://pds-ppi.igpp.ucla.edu/data/VG1-SSA-RSS-1-ROCC-V1.0/DATA/VJ6281AA.LBL",
+            "error": "HTTPError: 404 Client Error: Not Found for url: https://pds-ppi.igpp.ucla.edu/data/VG1-SSA-RSS-1-ROCC-V1.0/DATA/VJ6281AA.LBL"
+          },
+          "checksum_manifest": {
+            "status": "PASS",
+            "url": "https://pds-ppi.igpp.ucla.edu/data/VG1-SSA-RSS-1-ROCC-V1.0/CHECKSUMS.TXT",
+            "sha256": "3bb869e3b98d74b791a292d893de71592fac2f699fb06eecd3d1127a853673e1",
+            "bytes": 28822
+          }
+        },
+        {
+          "dataset": "VG2-S-RSS-1-ROCC-V1.0",
+          "listing": {
+            "status": "HOLD",
+            "url": "https://pds-ppi.igpp.ucla.edu/data/VG2-S-RSS-1-ROCC-V1.0/DATA/",
+            "error": "HTTPError: 404 Client Error: Not Found for url: https://pds-ppi.igpp.ucla.edu/data/VG2-S-RSS-1-ROCC-V1.0/DATA/"
+          },
+          "direct_label": {
+            "status": "PASS",
+            "url": "https://pds-ppi.igpp.ucla.edu/data/VG2-S-RSS-1-ROCC-V1.0/DATA/C0SR01AA.LBL",
+            "sha256": "0d86763192eb57e11752fd12e6dc3d25401313419d33444068b2e6458d9637b6",
+            "bytes": 1840,
+            "dataset": "VG2-S-RSS-1-ROCC-V1.0",
+            "nominal_span_s": 297,
+            "record_count": 6000,
+            "expected_bytes": 30336000,
+            "continuity_verified": false
+          },
+          "checksum_manifest": {
+            "status": "HOLD",
+            "url": "https://pds-ppi.igpp.ucla.edu/data/VG2-S-RSS-1-ROCC-V1.0/CHECKSUMS.TXT",
+            "error": "HTTPError: 500 Server Error: Internal Server Error for url: https://pds-ppi.igpp.ucla.edu/data/VG2-S-RSS-1-ROCC-V1.0/CHECKSUMS.TXT"
+          }
+        }
+      ],
+      "cassini": {
+        "pds4_collection": {
+          "status": "PASS",
+          "url": "https://atmos.nmsu.edu/PDS/data/PDS4/cassini-rss-raw-sroc/data-rsr16/collection_sroc_rsr16.xml",
+          "sha256": "e52dfc0cc59475924fb2a4ac6534e6c5b578950ebf82d793269053ac09b97d08",
+          "bytes": 12858,
+          "root": "Product_Collection",
+          "logical_identifier": [
+            "urn:nasa:pds:cassini.rss.raw.sroc:data.rsr16"
+          ],
+          "start": [
+            "2005-05-03T02:30:00Z"
+          ],
+          "stop": [
+            "2017-09-15T12:30:00Z"
+          ],
+          "files_declared": 1
+        },
+        "pds4_index": {
+          "status": "PASS",
+          "url": "https://atmos.nmsu.edu/PDS/data/PDS4/cassini-rss-raw-sroc/data-rsr16/collection_sroc_rsr16.csv",
+          "sha256": "d5b84215078e9e784362ba64c2f1787985116d635d05c4276543ec5514db356a",
+          "bytes": 73636,
+          "nonempty_lines": 898
+        },
+        "pds3_listing": {
+          "status": "PASS",
+          "url": "https://atmos.nmsu.edu/pdsd/archive/data/co-s-rss-1-sroc1-v10/cors_0104/",
+          "sha256": "34ec34d8e3198be4f8c0f2f426583f4883e24331c6c657c1fe240d5832e65332",
+          "bytes": 3794,
+          "day_directories": [
+            "sroc1_123/",
+            "sroc1_141/",
+            "sroc1_159/",
+            "sroc1_177/"
+          ]
+        },
+        "products": [
+          {
+            "day_of_year": 123,
+            "attempts": [],
+            "legacy_day_directory": {
+              "status": "PASS",
+              "url": "https://atmos.nmsu.edu/pdsd/archive/data/co-s-rss-1-sroc1-v10/cors_0104/sroc1_123/",
+              "sha256": "effb661fcdac21ec8b21e79e27d9a77ecf115f91574ad2a8d2e4e632f46c15c3",
+              "bytes": 2562,
+              "child_directory_count": 6
+            }
+          },
+          {
+            "day_of_year": 141,
+            "attempts": [],
+            "legacy_day_directory": {
+              "status": "PASS",
+              "url": "https://atmos.nmsu.edu/pdsd/archive/data/co-s-rss-1-sroc1-v10/cors_0104/sroc1_141/",
+              "sha256": "851227a8b086bde3428c6eee48782cb90bbbc4910b107a7641961841fc64de1f",
+              "bytes": 2374,
+              "child_directory_count": 5
+            }
+          },
+          {
+            "day_of_year": 159,
+            "attempts": [],
+            "legacy_day_directory": {
+              "status": "PASS",
+              "url": "https://atmos.nmsu.edu/pdsd/archive/data/co-s-rss-1-sroc1-v10/cors_0104/sroc1_159/",
+              "sha256": "9e35bd042255d6769c1d3e164537fd682b8bf2a4c78f22857812b6b79c647d54",
+              "bytes": 2562,
+              "child_directory_count": 6
+            }
+          },
+          {
+            "day_of_year": 177,
+            "attempts": [],
+            "legacy_day_directory": {
+              "status": "PASS",
+              "url": "https://atmos.nmsu.edu/pdsd/archive/data/co-s-rss-1-sroc1-v10/cors_0104/sroc1_177/",
+              "sha256": "599c39b33deb8021293683058a066039fa089674217817224f4708a38c66f511",
+              "bytes": 2374,
+              "child_directory_count": 5
+            }
+          }
+        ]
+      },
+      "natural": {
+        "queries": [
+          {
+            "alias": "W3",
+            "status": "PASS",
+            "rows": 517,
+            "fine_exact_alias": 0,
+            "epoch_candidates": 0,
+            "sha256": "f391c4026cb77813f43c1058237bb9f973054c02e3828a7a4af3e855528c2178"
+          },
+          {
+            "alias": "W3OH",
+            "status": "PASS",
+            "rows": 461,
+            "fine_exact_alias": 0,
+            "epoch_candidates": 0,
+            "sha256": "3b4c985ce6098e9b9437da221bd47b3f28dd44f161155ef9a800c155ec429553"
+          },
+          {
+            "alias": "W3_OH",
+            "status": "PASS",
+            "rows": 0,
+            "fine_exact_alias": 0,
+            "epoch_candidates": 0,
+            "sha256": "c3559a2246c015cf58bb5a1424d30e66cfc15f13d034ec5f0f017d6753baba6b"
+          },
+          {
+            "alias": "W3-OH",
+            "status": "PASS",
+            "rows": 0,
+            "fine_exact_alias": 0,
+            "epoch_candidates": 0,
+            "sha256": "c3559a2246c015cf58bb5a1424d30e66cfc15f13d034ec5f0f017d6753baba6b"
+          },
+          {
+            "alias": "W3(OH)",
+            "status": "PASS",
+            "rows": 0,
+            "fine_exact_alias": 0,
+            "epoch_candidates": 0,
+            "sha256": "c3559a2246c015cf58bb5a1424d30e66cfc15f13d034ec5f0f017d6753baba6b"
+          },
+          {
+            "alias": "DR21",
+            "status": "PASS",
+            "rows": 0,
+            "fine_exact_alias": 0,
+            "epoch_candidates": 0,
+            "sha256": "c3559a2246c015cf58bb5a1424d30e66cfc15f13d034ec5f0f017d6753baba6b"
+          },
+          {
+            "alias": "DR_21",
+            "status": "PASS",
+            "rows": 72,
+            "fine_exact_alias": 0,
+            "epoch_candidates": 0,
+            "sha256": "e59f8a538bfafa0afd86b909b9de352903cbcc1af5975668087fef803b289d9a"
+          },
+          {
+            "alias": "NGC7538",
+            "status": "PASS",
+            "rows": 0,
+            "fine_exact_alias": 0,
+            "epoch_candidates": 0,
+            "sha256": "c3559a2246c015cf58bb5a1424d30e66cfc15f13d034ec5f0f017d6753baba6b"
+          },
+          {
+            "alias": "NGC_7538",
+            "status": "PASS",
+            "rows": 3,
+            "fine_exact_alias": 0,
+            "epoch_candidates": 0,
+            "sha256": "2661ef30fd86e8bf1da36ea652e64b1c6e10d3ad079e9dbef2875a44b2ab14ec"
+          }
+        ],
+        "unique_exact_alias_fine_files": 0,
+        "exact_epoch_candidates": 0,
+        "headers": [],
+        "qualified_grid_headers": 0,
+        "oh_coverage_headers": 0
+      },
+      "raw_power_read": false,
+      "continuity_verified": false,
+      "source_identity_verified": false,
+      "production_adoption": false
+    },
+    "artifact": 14429266606,
+    "artifact_sha256": "bfa752993623a55f9563d78b326e04e42c7f6c44bf10a84f3f7f91fa589e0899"
+  },
+  "r37f1bc": {
+    "status": "RUNNING_PARALLEL_METADATA_AUDIT",
+    "run": 44309621604,
+    "jobs": [
+      {
+        "id": 134820055926,
+        "name": "cassini",
+        "status": "in_progress"
+      },
+      {
+        "id": 134820056821,
+        "name": "natural",
+        "status": "in_progress"
+      }
+    ],
+    "protocol_commit": "990d1249abd8af8f892bf8b6adab43a46a2ce214",
+    "implementation_commit": "2d034b62b658ae7c2c1e97eaab53c7607e8ef9a3",
+    "workflow_commit": "78389146859562b846cb5ad4327e5fac05d74d63",
+    "scope": "Historical Cassini detached labels bounded crawl and Berkeley actual response schema with HDF5 header-only qualification; no power read, classifier or source label promotion."
   }
 }
