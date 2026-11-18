@@ -1,7 +1,7 @@
 {
   "schema": "janus.cosmos.r37e.receipt.v1",
   "date": "2026-11-18",
-  "status": "RUNNING_AVERAGE_DIAGNOSTIC",
+  "status": "HOLD_AVERAGE_DIAGNOSTIC",
   "source": {
     "repo": "Hawkar-usls/Janus-Cosmos",
     "branch": "research/seti-radio-candidate-search-20261117",
@@ -39,7 +39,7 @@
     }
   },
   "design": "Offline public civilian laboratory data only. Verify records, checksum, archive member layout and independent capture units before any feature fit. Power-only mathematical non-injectivity control. No raw IQ samples consumed in qualification, no classifier or source label promotion.",
-  "next_gate": "Read R37F3D1BB_SUMMARY; independent projection check and actual averaging behavior, no irreversible losslessness claim.",
+  "next_gate": "R37F3D1B-B1 explicit mask/nonfinite support audit and isolated averaging comparison only on valid common support. No filling, interpolation across gaps, silent relaxation or detector changes. Full native Tsys calibration HOLD.",
   "production_adoption": false,
   "r37e0": {
     "status": "HOLD_CAPTURE_UNIT_QUALIFICATION",
@@ -12437,12 +12437,82 @@
     "artifact_sha256": "92512942545a21f70d7e22f6605a509f92892345c990f425bb72e90abe40bac9"
   },
   "r37f3d1bb": {
-    "status": "RUNNING_AVERAGE_DIAGNOSTIC",
+    "status": "HOLD_AVERAGE_DIAGNOSTIC",
     "run": 44355620714,
     "job": 134982816015,
     "protocol_commit": "e25ce3a2cbc7e73842bd2994f160cd3e118787e1",
     "implementation_commit": "22409d71971f13164c700b5d24841efcc643b1bc",
     "workflow_commit": "2b705e9191c5f4b9914da216f6a3f956ef055ce4",
-    "scope": "Historical natural galaxy only; actual dysh call sites, independent Astropy heliocentric projection, uniform-weight diagnostic on IF0 two polarizations. Aggregate RMS and temporal variance, no raw data export or candidate detector. Official Tsys calibration and lossless averaging remain HOLD."
+    "scope": "Historical natural galaxy only; actual dysh call sites, independent Astropy heliocentric projection, uniform-weight diagnostic on IF0 two polarizations. Aggregate RMS and temporal variance, no raw data export or candidate detector. Official Tsys calibration and lossless averaging remain HOLD.",
+    "result": {
+      "status": "HOLD_AVERAGE_DIAGNOSTIC",
+      "source": "NGC2415",
+      "production_adoption": false,
+      "detector_tested": false,
+      "lossless_average_proven": false,
+      "official_tsys_calibration_qualified": false,
+      "rows": [
+        {
+          "pol": 0,
+          "status": "HOLD",
+          "error": "AssertionError: masked or nonfinite channels"
+        },
+        {
+          "pol": 1,
+          "status": "HOLD",
+          "error": "AssertionError: masked or nonfinite channels"
+        }
+      ],
+      "source_audit": [
+        {
+          "method": "ScanBase.timeaverage",
+          "sha256": "2422daeae21409fb892fe230cca54c5a809ea47fd9be673da2ce6e1e14e741ac",
+          "relevant_lines": [
+            "def timeaverage(self, weights=\"tsys\", use_wcs=True):  ## SCANBASE",
+            "if self._calibrated is None or len(self._calibrated) == 0:",
+            "self._timeaveraged = deepcopy(self.getspec(0, use_wcs=use_wcs))",
+            "data = self._calibrated",
+            "data_avg, sum_of_weights = np.ma.average(data, axis=0, weights=w, returned=True)",
+            "w_collapsed = np.average(w, axis=1)"
+          ]
+        },
+        {
+          "method": "ScanBlock.timeaverage",
+          "sha256": "ac44a44130f9067ae862dc4bb4d554eb449b75a4f2548f6e9da3be2a184e4bd7",
+          "relevant_lines": [
+            "def timeaverage(self, weights=\"tsys\", use_wcs: bool = True):  ## SCANBLOCK",
+            "self._timeaveraged.append(scan.timeaverage(w, use_wcs=use_wcs))",
+            "s = average_spectra(self._timeaveraged, weights=\"spectral\")",
+            "self._timeaveraged.append(scan.timeaverage(weights, use_wcs=use_wcs))",
+            "s = average_spectra(self._timeaveraged, weights=weights)"
+          ]
+        }
+      ],
+      "integrity": {
+        "bytes": 795479040,
+        "sha256": "abeefab2f0f5b67a5032dd1c79f7ea344a41da1fd552fe2f892761ac196376b2",
+        "published_checksum_verified": false,
+        "https_archive": true
+      },
+      "spatial_off_verified": true,
+      "frame": {
+        "152": {
+          "rows": 151,
+          "negation_max_abs_residual_m_s": 0.4619251652038656,
+          "same_sign_max_abs_residual_m_s": 30537.960427522525,
+          "pass": true
+        },
+        "153": {
+          "rows": 151,
+          "negation_max_abs_residual_m_s": 1.0817662490208022,
+          "same_sign_max_abs_residual_m_s": 30181.446379368594,
+          "pass": true
+        }
+      },
+      "frame_sign_consistent_with_independent_heliocentric_projection": true,
+      "original_unchanged": true
+    },
+    "artifact": 14453265586,
+    "artifact_sha256": "a076487d0834712bd672ce193468fc1e963e946426c934ddff31da4b28b41d76"
   }
 }
