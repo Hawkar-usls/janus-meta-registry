@@ -2,13 +2,13 @@
   "schema": "janus.context_bridge.current_state.v1",
   "project": "JANUS COSMOS / SETI",
   "updated_utc": "2026-11-18T09:39:47Z",
-  "as_of": "R40C weak gain reproduced on new bands; false-alert reduction marginal, 18 localized losses; R40F protected screen running; natural and R38 HOLD.",
+  "as_of": "R40F reduces control alerts 60→23 but loses 11 localized incl one weak; strict gate HOLD; no production or discovery.",
   "authority": {
     "repository": "Hawkar-usls/Janus-Cosmos",
     "research_branch": "research/seti-radio-candidate-search-20261117",
     "registry": "Hawkar-usls/janus-meta-registry",
     "journal": "data/JANUS-COSMOS-SETI-DEVELOPMENT-JOURNAL.json",
-    "journal_commit": "1ee241bc1730a676509da489cc1005904fe33809",
+    "journal_commit": "4b91eb6e00fd0d89c2920d8a54b55ea53c3cf736",
     "continuity_protocol": "data/JANUS-PROJECT-CONTINUITY-LEDGER-HRAIN-INAIHR-PROTOCOL-2026-08-24-v1.0.json",
     "protocol_blob": "740065281c7c7b289c927db7661b9b000abb8c68"
   },
@@ -399,7 +399,7 @@
     "Retain raw paths when OFF contains signal",
     "R33B4 original hit mapping HOLD, Figure6 exact file available; R34 independently labelled inputs and protected compatible grid still HOLD."
   ],
-  "next_allowed": "Check R40F zero-loss gate and graph equality; continue natural calibration and HANNAH full pipeline. No discovery relaunch.",
+  "next_allowed": "R40G investigate localized losses without test-conditioned threshold tuning; predeclare separate rescue lane using physical trajectory evidence and robust regime variation on historical fit/calibration, verify fresh source-disjoint data; retain all low-priority candidates. R38 HOLD.",
   "claim_ceiling": "Synthetic injections on real measured backgrounds; not independent real source labels. CPU kernel comparisons only, no proof of whole pipeline superiority. No confirmed extraterrestrial technosignatures.",
   "startup": [
     "Read this current-state JSON from GitHub main each new COSMOS conversation.",
@@ -439,10 +439,11 @@
   },
   "active_experiment": {
     "stage": "R40F",
-    "status": "RUNNING_UNMEASURED",
+    "status": "HOLD_ZERO_LOSS_GATE__PROMISING_FALSE_ALERT_RANKING",
     "run": 44399825954,
     "receipt": "data/JANUS-COSMOS-SETI-R40F-PROTECTED-SCREEN-2026-11-18.json",
-    "receipt_commit": "863b320d216ac95600fcf1c23aa450dd66190e77",
+    "receipt_commit": "5d362fe7eb079e4435f635e0dcd3c9ee578bef20",
+    "artifact": 14470274311,
     "production_adoption": false,
     "discovery_relaunch_allowed": false
   },
@@ -1322,11 +1323,63 @@
   },
   "r40f": {
     "stage": "R40F",
-    "status": "RUNNING_UNMEASURED",
+    "status": "HOLD_ZERO_LOSS_GATE__PROMISING_FALSE_ALERT_RANKING",
     "run": 44399825954,
     "receipt": "data/JANUS-COSMOS-SETI-R40F-PROTECTED-SCREEN-2026-11-18.json",
-    "receipt_commit": "863b320d216ac95600fcf1c23aa450dd66190e77",
+    "receipt_commit": "5d362fe7eb079e4435f635e0dcd3c9ee578bef20",
+    "artifact": 14470274311,
     "production_adoption": false,
-    "discovery_relaunch_allowed": false
+    "discovery_relaunch_allowed": false,
+    "result": {
+      "fields": [
+        "localized",
+        "weak",
+        "control_alerts",
+        "shared_localized",
+        "shared_weak"
+      ],
+      "r28": [
+        197,
+        21,
+        61,
+        26,
+        8
+      ],
+      "r40c": [
+        198,
+        27,
+        60,
+        37,
+        15
+      ],
+      "screen": [
+        187,
+        26,
+        23,
+        37,
+        15
+      ],
+      "protected": [
+        196,
+        26,
+        59,
+        37,
+        15
+      ],
+      "screen_lost": 11,
+      "screen_weak_lost": 1,
+      "screen_shared_lost": 0,
+      "protected_lost": 2,
+      "protected_weak_lost": 1,
+      "protected_shared_lost": 0,
+      "positives": 640,
+      "controls": 640,
+      "shared_positives": 160,
+      "train_alerts": 302,
+      "cal_localized": 90,
+      "graph_alerts_equal": true,
+      "graph_paths_equal": true,
+      "graph_scores_equal": false
+    }
   }
 }
