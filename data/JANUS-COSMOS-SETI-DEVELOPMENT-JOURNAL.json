@@ -802,32 +802,103 @@
       },
       "limitations": "No measured results yet. Published additional RFI candidates located, exact raw join/admission not done. Single verified anchor; no classifier or production veto. Only bounded new path integrated.",
       "next_gate": "Check run and exact results; seal both positive and negative findings; persist G4 only after validation; separately bind additional source-labelled raw observations."
+    },
+    {
+      "event_id": "20261118-R32-HANNAH-RESULT",
+      "date": "2026-11-18",
+      "stage": "R32",
+      "kind": "RESULT",
+      "status": "HOLD_NO_SAFE_FALSE_ALARM_GAIN__PASS_HOOK_DEVELOPMENT",
+      "decision": "All seven arms equal baseline 108 localized/6 weak/15 controls. All 103 calibration policies had zero usable selections; no applied HOLD. Hook preserved 109 and added 60 measured passports.",
+      "evidence": {
+        "receipt": "data/JANUS-COSMOS-SETI-R32-HANNAH-ADAPTIVE-2026-11-18.json",
+        "receipt_commit": "04c3a55d53332b1be68d013a4c2d21946bc8b0fd",
+        "run": 44268188685,
+        "job": 134677854370,
+        "artifact": 14411063806,
+        "artifact_sha256": "3cc29b108a54ca2c41eabcb6fde54a3c39e9d9064e09f2f74ea1d662774db0eb",
+        "lock_sha256": "f58f70c4a5a06cf2356384e127957a5b3108e911db975d5e4c7c09229f77d0d2",
+        "entries": 169,
+        "added": 60,
+        "observations": 128,
+        "verified_rfi": 1,
+        "derived_candidates": 14,
+        "unknown": 154,
+        "replay_added": 0,
+        "library_sha256": "17acaca5bf50a5872b51647984b49dadb46b3c2a3aa4536dd150ae70673d7bb3"
+      },
+      "limitations": "No scientific gain; no loss because no policy fired. Source-labelled validation absent. Keep baseline.",
+      "next_gate": "Persist G4 and source-specific RFI evidence."
+    },
+    {
+      "event_id": "20261118-HANNAH-PERSISTENT-G4",
+      "date": "2026-11-18",
+      "stage": "R32",
+      "kind": "PERSISTENCE",
+      "status": "PASS_DURABLE_SNAPSHOT",
+      "decision": "Restore exact sealed G4 artifact; verify 109 prefix, 60 unknowns, zero append replay; recompute SHA256 from 213 ordered chunks before storing exact bytes.",
+      "evidence": {
+        "repo": "Hawkar-usls/Janus-Cosmos",
+        "path": "research/seti/memory/hannah_library_v0004.json",
+        "commit": "17c8e5550741d8ae490523131442d879793b89b8",
+        "blob": "2a0befc492054512bca5593f926fcc797a2d71ec",
+        "sha256": "17acaca5bf50a5872b51647984b49dadb46b3c2a3aa4536dd150ae70673d7bb3",
+        "bytes": 477499,
+        "pointer_commit": "1ea47164d21c755d529b4702d82193c3bd29b85a",
+        "recovery_run": 44271425216,
+        "recovery_job": 134688714428,
+        "entries": 169
+      },
+      "limitations": "Still one verified RFI; no autonomous origin label promotion.",
+      "next_gate": "External labelled occurrences sidecar."
+    },
+    {
+      "event_id": "20261118-R33-HANNAH-VERIFIED-FAMILIES-LAUNCH",
+      "date": "2026-11-18",
+      "stage": "R33A",
+      "kind": "LAUNCH",
+      "status": "RUNNING_UNMEASURED",
+      "decision": "Preregister paper-specific 1400/1200 MHz zero-drift central interferer joins on frozen exact 2019 ON and nearest distinct OFF files; require unique strong stationary peak within 4 Hz and distinct hashes. Approximate three BLC1 companions diagnostic only. Official supplement retrieval and exact identities separate. External paper reports 36 direct and 27 mirrored RFI lookalikes, not yet 63 passports.",
+      "evidence": {
+        "receipt": "data/JANUS-COSMOS-SETI-R33-HANNAH-VERIFIED-FAMILIES-2026-11-18.json",
+        "receipt_commit": "53a9a5a84189941341b8cff9c9da382f172a6c21",
+        "run": 44272297122,
+        "job": 134691654656,
+        "workflow_commit": "bc8c378001c64add4cd73d208571352ef63660ed",
+        "protocol_blob": "a173bc8407612cf06f4c5634010d5b30bf2d55d7",
+        "implementation_blob": "90153a2b0b880bf92b546ae60809a8c3e5cdf311",
+        "supplement_blob": "de27c214330445e288bf75127b49f8cc48695b15",
+        "parent_entries": 169,
+        "doi": "10.1038/s41550-021-01508-8"
+      },
+      "limitations": "Verified label candidates review only, no label promotion. Source supplement web extraction blocked by size, CI retrieval receipt not yet examined. No independent family validation or production veto.",
+      "next_gate": "Check exact raw source join, review candidate evidence, promote only individually linked references; group-disjoint retrieval and protected signal test."
     }
   ],
   "current": {
-    "stage": "R31",
-    "status": "HOLD_NO_FALSE_ALARM_GAIN",
-    "run": 44265324373,
+    "stage": "R32",
+    "status": "HOLD_NO_SAFE_FALSE_ALARM_GAIN",
+    "run": 44268188685,
     "production_adoption": false,
     "confirmed_technosignatures": 0
   },
   "active_experiment": {
-    "stage": "R32",
+    "stage": "R33A",
     "status": "RUNNING_UNMEASURED",
-    "run": 44268188685,
-    "job": 134677854370,
-    "receipt": "data/JANUS-COSMOS-SETI-R32-HANNAH-ADAPTIVE-2026-11-18.json",
+    "run": 44272297122,
+    "job": 134691654656,
+    "receipt": "data/JANUS-COSMOS-SETI-R33-HANNAH-VERIFIED-FAMILIES-2026-11-18.json",
     "production_adoption": false
   },
   "hannah_memory_seed": {
     "status": "PASS_DURABLE_SNAPSHOT",
-    "entries": 109,
+    "entries": 169,
     "verified_rfi": 1,
-    "artifact": 14411051155,
-    "library_sha256": "ec382441e707ebf131e3cb84b7037a9729f31ef3163412e99eca4462dcf0d807",
-    "generation": 3,
-    "derived_candidates": 12,
-    "unknown": 96,
-    "durable_commit": "a74c4ddb46b201a7aaad6e920ff0e69c181831cc"
+    "artifact": 14411063806,
+    "library_sha256": "17acaca5bf50a5872b51647984b49dadb46b3c2a3aa4536dd150ae70673d7bb3",
+    "generation": 4,
+    "derived_candidates": 14,
+    "unknown": 154,
+    "durable_commit": "17c8e5550741d8ae490523131442d879793b89b8"
   }
 }
