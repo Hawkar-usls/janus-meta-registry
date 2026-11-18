@@ -2792,15 +2792,56 @@
         "receipt_commit": "4cb31d399c225ce9b820b722da2099d0626cfd0a"
       },
       "next_gate": "B2A: independently verify the metadata-derived VEGAS instrumental mask against actual dysh input masks, then repeat Tsys arithmetic. No removal of flags or detector changes."
+    },
+    {
+      "event_id": "20261118-R37F3D1BB2A-VEGAS-RESULT",
+      "date": "2026-11-18",
+      "stage": "R37F3D1B-B2A",
+      "kind": "RESULT",
+      "status": "HOLD_TSYS_AUDIT",
+      "decision": "Both IF0 polarizations failed raw binary table BACKEND lookup; original SHA256 and spatial metadata pass. Independent mask provenance and Tsys arithmetic not reached.",
+      "evidence": {
+        "run": 44362962457,
+        "job": 135009012722,
+        "artifact": 14455811967,
+        "artifact_sha256": "c8764c3e90882157e4a9714d32d382973cfa6b882ec9d0ba6790ebea2e273bdd",
+        "receipt_commit": "85b5e18456c7ec4cee31216d6dec5ad36cb49cf2"
+      },
+      "next_gate": "Resolve FITS header versus column metadata and cross-check dysh index."
+    },
+    {
+      "event_id": "20261118-R37F3D1BB2B-HEADER-TSYS-LAUNCH",
+      "date": "2026-11-18",
+      "stage": "R37F3D1B-B2B",
+      "kind": "LAUNCH",
+      "status": "RUNNING_TSYS_HEADER_AUDIT",
+      "decision": "Preserve B2A; repair metadata lookup only. Read primary and table headers, and binary columns; reject missing or contradictory values, require equality to dysh index for actual selected rows. Original Tsys arithmetic and mask preservation gates unchanged. No detector or production changes.",
+      "evidence": {
+        "run": 44364270996,
+        "job": 135013662960,
+        "protocol_commit": "e0c6bef813c312e0500869fa559ea26096ca4f33",
+        "implementation_commit": "8e084cb8f1b7e6b07cdb94214ff1ec5c683dfbe2",
+        "workflow_commit": "bd0d9b0251ac4c11fb60fc7d2e1cc60bcd181531",
+        "receipt_commit": "85b5e18456c7ec4cee31216d6dec5ad36cb49cf2"
+      },
+      "limitations": "Calibration diagnostic only for historical NGC2415 IF0. Not a detector quality test, absolute astrophysical accuracy, or independent replication. Original project goal unchanged.",
+      "next_gate": "Inspect R37F3D1BB2B_SUMMARY; preserve any new failed gates."
     }
   ],
   "current": {
-    "stage": "R37F3D1B-B2",
+    "stage": "R37F3D1B-B2A",
     "status": "HOLD_TSYS_AUDIT",
-    "run": 44362212549,
+    "run": 44362962457,
     "production_adoption": false
   },
-  "active_experiment": null,
+  "active_experiment": {
+    "stage": "R37F3D1B-B2B",
+    "status": "RUNNING_TSYS_HEADER_AUDIT",
+    "run": 44364270996,
+    "job": 135013662960,
+    "receipt": "data/JANUS-COSMOS-SETI-R37E-TRANSMITTER-IDENTITY-2026-11-18.json",
+    "production_adoption": false
+  },
   "hannah_memory_seed": {
     "status": "PASS_DURABLE_SNAPSHOT",
     "entries": 169,
