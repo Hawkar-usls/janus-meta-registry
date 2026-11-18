@@ -1,7 +1,7 @@
 {
   "schema": "janus.cosmos.r37e.receipt.v1",
   "date": "2026-11-18",
-  "status": "RUNNING_CHRONOLOGY_AND_NATURAL_HEADER_AUDIT",
+  "status": "NATURAL_GRID_PARTIAL_PASS__CHRONOLOGY_HOLD",
   "source": {
     "repo": "Hawkar-usls/Janus-Cosmos",
     "branch": "research/seti-radio-candidate-search-20261117",
@@ -39,7 +39,7 @@
     }
   },
   "design": "Offline public civilian laboratory data only. Verify records, checksum, archive member layout and independent capture units before any feature fit. Power-only mathematical non-injectivity control. No raw IQ samples consumed in qualification, no classifier or source label promotion.",
-  "next_gate": "Inspect R37F1D_SUMMARY and R37F1E_SUMMARY. Actual continuity requires independently decoded record timestamps; natural line presence requires separate science validation. No automatic labels, preserve G4 and R28.",
+  "next_gate": "Separate protected natural-sky line validation: validate exact W3OH ON/OFF pair pointing and observation provenance, predeclare natural-line checks (not source identity), require additional independent epochs and actual line presence. Legacy FIL HTTPS endpoints failed; investigate official alternate mirrors. Cassini PDS4 product-specific label format and RSR continuity remain HOLD. No automatic suppression or source label promotion.",
   "production_adoption": false,
   "r37e0": {
     "status": "HOLD_CAPTURE_UNIT_QUALIFICATION",
@@ -2342,7 +2342,7 @@
     ]
   },
   "r37f1de": {
-    "status": "RUNNING_CHRONOLOGY_AND_NATURAL_HEADER_AUDIT",
+    "status": "NATURAL_GRID_PARTIAL_PASS__CHRONOLOGY_HOLD",
     "run": 44310886570,
     "jobs": [
       {
@@ -2359,6 +2359,156 @@
     "protocol_commit": "c12c5c7ad3573810955fc96f2b5fde6a34c14829",
     "implementation_commit": "1f54d78013fb3e7d4fd27d34e56a50c3440efbc5",
     "workflow_commit": "c889ddd4e8a87cda652b1505ebf3ebdf83a0be51",
-    "scope": "Reauthenticate historical Cassini labels and record chronology documentation; SIGPROC and HDF5 natural-source header checks using exact catalogue target and separately preserved ON/OFF roles. No sample timestamp read from historical receiver payload, no power decoded or emitter classifier."
+    "scope": "Reauthenticate historical Cassini labels and record chronology documentation; SIGPROC and HDF5 natural-source header checks using exact catalogue target and separately preserved ON/OFF roles. No sample timestamp read from historical receiver payload, no power decoded or emitter classifier.",
+    "chronology_result": {
+      "status": "LABEL_CHRONOLOGY_AUDIT_ONLY",
+      "parent_count": 28,
+      "reauthenticated": 28,
+      "rsr_candidates": 0,
+      "rsr_nominal_duration_min_s": null,
+      "rsr_nominal_duration_max_s": null,
+      "rsr_with_record_count": 0,
+      "rsr_with_documented_time_field": 0,
+      "explicit_interval_comparisons": 0,
+      "actual_continuity_verified": false,
+      "raw_receiver_data_read": false
+    },
+    "natural_result": {
+      "status": "NATURAL_HEADER_ONLY",
+      "parser_canaries": "PASS",
+      "queries": [
+        {
+          "alias": "W3",
+          "rows": 517,
+          "qualified_catalogue_rows": 237,
+          "sha256": "f391c4026cb77813f43c1058237bb9f973054c02e3828a7a4af3e855528c2178"
+        },
+        {
+          "alias": "W3OH",
+          "rows": 461,
+          "qualified_catalogue_rows": 237,
+          "sha256": "3b4c985ce6098e9b9437da221bd47b3f28dd44f161155ef9a800c155ec429553"
+        },
+        {
+          "alias": "DR_21",
+          "rows": 72,
+          "qualified_catalogue_rows": 72,
+          "sha256": "e59f8a538bfafa0afd86b909b9de352903cbcc1af5975668087fef803b289d9a"
+        },
+        {
+          "alias": "NGC_7538",
+          "rows": 3,
+          "qualified_catalogue_rows": 3,
+          "sha256": "2661ef30fd86e8bf1da36ea652e64b1c6e10d3ad079e9dbef2875a44b2ab14ec"
+        }
+      ],
+      "unique_candidate_urls": 312,
+      "selected": 6,
+      "verified_headers": 2,
+      "on_oh_grid_headers": 1,
+      "on_oh_grid_dates": [
+        57800
+      ],
+      "publication_epoch_matches": 0,
+      "headers": [
+        {
+          "url": "https://bldata.berkeley.edu/pipeline/AGBT17A_999_06/holding/spliced_blc0001020304050607_guppi_57800_08267_DIAG_W3OH_0009.gpuspec.0000.h5",
+          "catalogue_target": "DIAG_W3OH",
+          "field": "W3OH",
+          "role": "ON",
+          "mjd": 57800.09568287037,
+          "format": "h5",
+          "status": "HEADER_VERIFIED",
+          "channel_hz": 2.7939677238464355,
+          "integration_s": 18.253611008,
+          "rows": 3,
+          "nominal_duration_s": 54.760833024,
+          "comparable_grid": true,
+          "oh_coverage": [
+            1665.4018,
+            1667.359,
+            1667.5
+          ],
+          "exact_publication_epoch": false,
+          "line_presence_verified": false
+        },
+        {
+          "url": "https://bldata.berkeley.edu/pipeline/AGBT17A_999_06/holding/spliced_blc0001020304050607_guppi_57800_08348_DIAG_W3OH_OFF_0010.gpuspec.0000.h5",
+          "catalogue_target": "DIAG_W3OH_OFF",
+          "field": "W3OH",
+          "role": "OFF",
+          "mjd": 57800.09662037037,
+          "format": "h5",
+          "status": "HEADER_VERIFIED",
+          "channel_hz": 2.7939677238464355,
+          "integration_s": 18.253611008,
+          "rows": 3,
+          "nominal_duration_s": 54.760833024,
+          "comparable_grid": true,
+          "oh_coverage": [
+            1665.4018,
+            1667.359,
+            1667.5
+          ],
+          "exact_publication_epoch": false,
+          "line_presence_verified": false
+        },
+        {
+          "url": "http://blpd13.ssl.berkeley.edu/ETZ/AGBT17A_999_89/GUPPI/BLP00/blc00_guppi_57934_77014_DIAG_W3OH_0051.gpuspec.0000.fil",
+          "catalogue_target": "DIAG_W3OH",
+          "field": "W3OH",
+          "role": "ON",
+          "mjd": 57934.89136574074,
+          "format": "fil",
+          "status": "HOLD_HEADER",
+          "error": "SSLError: HTTPSConnectionPool(host='blpd13.ssl.berkeley.edu', port=443): Max retries exceeded with url: /ETZ/AGBT17A_999_89/GUPPI/BLP00/blc00_guppi_57934_77014_DIAG_W3OH_0051.gpuspec.0000.fil (Caused by SSLErro"
+        },
+        {
+          "url": "http://blpd0.ssl.berkeley.edu/sample_data/spliced_filterbank/spliced_blc0001020304050607_guppi_58110_07044_DIAG_W3OH_0059.gpuspec.0000.fil",
+          "catalogue_target": "DIAG_W3OH",
+          "field": "W3OH",
+          "role": "ON",
+          "mjd": 58110.08152777778,
+          "format": "fil",
+          "status": "HOLD_HEADER",
+          "error": "ConnectionError: HTTPSConnectionPool(host='blpd0.ssl.berkeley.edu', port=443): Max retries exceeded with url: /sample_data/spliced_filterbank/spliced_blc0001020304050607_guppi_58110_07044_DIAG_W3OH_0059.gpuspec.0000.f"
+        },
+        {
+          "url": "http://blpd13.ssl.berkeley.edu/ETZ/AGBT17A_999_92/GUPPI/BLP00/blc00_guppi_57941_10663_CAL5_DR_21_0054.gpuspec.0000.fil",
+          "catalogue_target": "CAL5_DR_21",
+          "field": "DR_21",
+          "role": "ON",
+          "mjd": 57941.12341435185,
+          "format": "fil",
+          "status": "HOLD_HEADER",
+          "error": "SSLError: HTTPSConnectionPool(host='blpd13.ssl.berkeley.edu', port=443): Max retries exceeded with url: /ETZ/AGBT17A_999_92/GUPPI/BLP00/blc00_guppi_57941_10663_CAL5_DR_21_0054.gpuspec.0000.fil (Caused by SSLErr"
+        },
+        {
+          "url": "http://blpd13.ssl.berkeley.edu/ETZ/AGBT17A_999_90/spliced_blc00010203040506o710111213141516o72021222324252627_guppi_57935_44041_CAL6_NGC_7538_0007.gpuspec.0000.fil",
+          "catalogue_target": "CAL6_NGC_7538",
+          "field": "NGC_7538",
+          "role": "ON",
+          "mjd": 57935.509733796294,
+          "format": "fil",
+          "status": "HOLD_HEADER",
+          "error": "SSLError: HTTPSConnectionPool(host='blpd13.ssl.berkeley.edu', port=443): Max retries exceeded with url: /ETZ/AGBT17A_999_90/spliced_blc00010203040506o710111213141516o72021222324252627_guppi_57935_44041_CAL6_NGC"
+        }
+      ],
+      "power_decoded": false,
+      "natural_line_verified": false,
+      "production_adoption": false
+    },
+    "artifacts": [
+      {
+        "id": 14429243560,
+        "name": "janus-r37f1d-chronology",
+        "digest": "sha256:bf2a89efebbfc1e73c724c833956388a78e2e2c5e91802dc1f811b7c74b1b449"
+      },
+      {
+        "id": 14429153798,
+        "name": "janus-r37f1e-natural-sigproc",
+        "digest": "sha256:a13e81a2dc2ab9731ea61fac60d6ca35c876eec5d6eb5f0f26f3c0ba7f45a5c9"
+      }
+    ]
   }
 }
