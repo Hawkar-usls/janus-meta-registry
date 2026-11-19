@@ -2,13 +2,13 @@
   "schema": "janus.context_bridge.current_state.v1",
   "project": "JANUS COSMOS / SETI",
   "updated_utc": "2026-11-18T09:39:47Z",
-  "as_of": "R40N2 complete: 1024 new Parkes controls; stratum counts PASS; GBT and actual detector performance HOLD; production unchanged.",
+  "as_of": "R40N3 launched: 8-day Parkes bank, conditional KUSTO and protected replay. No production adoption.",
   "authority": {
     "repository": "Hawkar-usls/Janus-Cosmos",
     "research_branch": "research/seti-radio-candidate-search-20261117",
     "registry": "Hawkar-usls/janus-meta-registry",
     "journal": "data/JANUS-COSMOS-SETI-DEVELOPMENT-JOURNAL.json",
-    "journal_commit": "4be8b577c4a50223b4b3007847ce0869d58684f1",
+    "journal_commit": "a875d5f2f8e80213e556c4c9a5c5cabb39b620de",
     "continuity_protocol": "data/JANUS-PROJECT-CONTINUITY-LEDGER-HRAIN-INAIHR-PROTOCOL-2026-08-24-v1.0.json",
     "protocol_blob": "740065281c7c7b289c927db7661b9b000abb8c68"
   },
@@ -399,7 +399,7 @@
     "Retain raw paths when OFF contains signal",
     "R33B4 original hit mapping HOLD, Figure6 exact file available; R34 independently labelled inputs and protected compatible grid still HOLD."
   ],
-  "next_allowed": "R40N3: reconstruct the four additional Parkes raw reference banks from authenticated R40N2 manifest, verify exact tile hashes, combine with four R40N1 bank days; use leave-one-day-out crossday features for calibration and earlier historical groups for fit. Freeze thresholds using 1024 new controls before replay of viewed R40H. Compare protected raw/crossday arms against Joint Min, report all losses and wrong paths; <=35 control alerts, >=215/43 and >=111/36 shared, zero paired loss; no production adoption or independent FAP claim. GBT remains separate HOLD.",
+  "next_allowed": "Verify exact bank/threshold parity and all replay arms; report paired losses and wrong paths, no promotion or FAP claim.",
   "claim_ceiling": "Synthetic injections on real measured backgrounds; not independent real source labels. CPU kernel comparisons only, no proof of whole pipeline superiority. No confirmed extraterrestrial technosignatures.",
   "startup": [
     "Read this current-state JSON from GitHub main each new COSMOS conversation.",
@@ -438,11 +438,11 @@
     "eta_policy": "Observed min/max historical comparable duration minus elapsed, descriptive not prediction interval; unknown when elapsed exceeds all examples or scope differs. No invented percent progress; explicit checkpoint artifacts only."
   },
   "active_experiment": {
-    "stage": "R40N2",
-    "status": "PASS_ACQUISITION_COUNTS_KUSTO_STRATA__HOLD_DETECTOR_REPLAY",
-    "run": 44500234520,
-    "receipt": "data/JANUS-COSMOS-SETI-R40N2-INSTRUMENT-CONTROLS-2026-11-19.json",
-    "receipt_commit": "bacaa59d8284319b43d2620fbff11037d3b24be6",
+    "stage": "R40N3",
+    "status": "RUNNING_UNMEASURED",
+    "run": 44507140792,
+    "receipt": "data/JANUS-COSMOS-SETI-R40N3-CROSSDAY-KUSTO-2026-11-19.json",
+    "receipt_commit": "22e05b62106a197de08359e27b3556b839bc4ed2",
     "production_adoption": false,
     "discovery_relaunch_allowed": false
   },
@@ -3104,5 +3104,15 @@
       "candidate_cap": 220,
       "status": "HOLD_NO_QUALIFIED_GROUPS"
     }
+  },
+  "r40n3": {
+    "stage": "R40N3",
+    "status": "RUNNING_UNMEASURED",
+    "run": 44507140792,
+    "receipt": "data/JANUS-COSMOS-SETI-R40N3-CROSSDAY-KUSTO-2026-11-19.json",
+    "receipt_commit": "22e05b62106a197de08359e27b3556b839bc4ed2",
+    "production_adoption": false,
+    "discovery_relaunch_allowed": false,
+    "gate": "<=35 control alerts, >=215/43 ordinary, >=111/36 shared, zero Joint Min paired loss. No production adoption; independent prospective exam and GBT remain HOLD."
   }
 }
