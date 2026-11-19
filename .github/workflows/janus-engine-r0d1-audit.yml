@@ -27,6 +27,8 @@ jobs:
         run: python3 projects/janus-engine/digital-twin/r0d1/reproduce.py --archive verified-experiments.tgz --output r0d1b-results.json
       - name: Audit O2 inventory, gas circulation and loaded raw windows
         run: python3 projects/janus-engine/digital-twin/r0d1/audit_inventory.py --archive verified-experiments.tgz --output r0d1c-results.json
+      - name: Independently calibrate EXP09 and reproduce EXP03 volume
+        run: python3 projects/janus-engine/digital-twin/r0d1/calibrate_fc_volume.py --archive verified-experiments.tgz --output r0d1c1-results.json
       - name: Preserve evidence even on failure
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -39,4 +41,5 @@ jobs:
             verified-experiments.tgz
             r0d1b-results.json
             r0d1c-results.json
+            r0d1c1-results.json
           if-no-files-found: warn
