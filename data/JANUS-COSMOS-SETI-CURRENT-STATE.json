@@ -2,13 +2,13 @@
   "schema": "janus.context_bridge.current_state.v1",
   "project": "JANUS COSMOS / SETI",
   "updated_utc": "2026-11-18T09:39:47Z",
-  "as_of": "R40N5A launched: preflight actual candidate frequencies before new raw reads, retain prior banks; external exam and production HOLD.",
+  "as_of": "R40N5A complete: coordinate preflight, 384 source tiles and nonconstant recurrence PASS, no strict performance gain; production unchanged.",
   "authority": {
     "repository": "Hawkar-usls/Janus-Cosmos",
     "research_branch": "research/seti-radio-candidate-search-20261117",
     "registry": "Hawkar-usls/janus-meta-registry",
     "journal": "data/JANUS-COSMOS-SETI-DEVELOPMENT-JOURNAL.json",
-    "journal_commit": "565cb9f3e0c6af8128578711ffe18346d8880cd1",
+    "journal_commit": "2b650da2739f149acdc23b30f0d3145b00fafeec",
     "continuity_protocol": "data/JANUS-PROJECT-CONTINUITY-LEDGER-HRAIN-INAIHR-PROTOCOL-2026-08-24-v1.0.json",
     "protocol_blob": "740065281c7c7b289c927db7661b9b000abb8c68"
   },
@@ -399,7 +399,7 @@
     "Retain raw paths when OFF contains signal",
     "R33B4 original hit mapping HOLD, Figure6 exact file available; R34 independently labelled inputs and protected compatible grid still HOLD."
   ],
-  "next_allowed": "Verify preflight and actual bank coverage before fit; compare frozen variants; no production promotion.",
+  "next_allowed": "R40N6: diagnose frequency-domain transfer with historical frequency-matched and held-out target/day validation; evaluate genuine recurrence vs equal-dimensional placebo and raw baseline, do not infer effectiveness from nonzero variance. Acquire labeled development injections on calibration-band frequencies on NEW disjoint days and targets, not R40H or external exam groups; predeclare split and lock before testing. Target zero paired Joint Min losses and <=35 control alerts; preserve independent exam custody and production HOLD.",
   "claim_ceiling": "Synthetic injections on real measured backgrounds; not independent real source labels. CPU kernel comparisons only, no proof of whole pipeline superiority. No confirmed extraterrestrial technosignatures.",
   "startup": [
     "Read this current-state JSON from GitHub main each new COSMOS conversation.",
@@ -439,10 +439,10 @@
   },
   "active_experiment": {
     "stage": "R40N5A",
-    "status": "RUNNING_UNMEASURED",
+    "status": "PASS_MATCHED_FREQUENCY_AND_NONDEGENERATE_FEATURES__HOLD_ZERO_LOSS_CONTROL_BUDGET",
     "run": 44518130876,
     "receipt": "data/JANUS-COSMOS-SETI-R40N5A-VERIFIED-FREQUENCY-2026-11-19.json",
-    "receipt_commit": "c1d8b235a4e3fbeb0668c8cba97e01be13236887",
+    "receipt_commit": "04311d67a3e30bba0121356de15711279f3d8962",
     "production_adoption": false,
     "discovery_relaunch_allowed": false
   },
@@ -4504,12 +4504,894 @@
   },
   "r40n5a": {
     "stage": "R40N5A",
-    "status": "RUNNING_UNMEASURED",
+    "status": "PASS_MATCHED_FREQUENCY_AND_NONDEGENERATE_FEATURES__HOLD_ZERO_LOSS_CONTROL_BUDGET",
     "run": 44518130876,
     "receipt": "data/JANUS-COSMOS-SETI-R40N5A-VERIFIED-FREQUENCY-2026-11-19.json",
-    "receipt_commit": "c1d8b235a4e3fbeb0668c8cba97e01be13236887",
+    "receipt_commit": "04311d67a3e30bba0121356de15711279f3d8962",
     "production_adoption": false,
     "discovery_relaunch_allowed": false,
-    "gate": "PASS preflight then full native support and nondegenerate recurrence; <=35 alerts and zero paired Joint Min losses, 215/43 ordinary, 111/36 shared. No independent exam or production adoption."
+    "gate": "PASS preflight then full native support and nondegenerate recurrence; <=35 alerts and zero paired Joint Min losses, 215/43 ordinary, 111/36 shared. No independent exam or production adoption.",
+    "preflight": {
+      "totals": {
+        "historical": 1664,
+        "evaluation": 1440,
+        "calibration": 1024
+      },
+      "sha256": "403630cef8101fb177c949b82df8f1ee9354e82d77111a2fb4ab6121e66ae4b3",
+      "status": "PASS_COORDINATES_AND_HEADER_BOUNDS"
+    },
+    "bank": {
+      "days": 8,
+      "historical_raw_tiles": 128,
+      "retained_raw_tiles": 128,
+      "unused_preserved_tiles": 128,
+      "total_acquired_tiles": 384,
+      "windows_mhz": [
+        2860,
+        3010,
+        3150,
+        3400,
+        2850,
+        3050,
+        3250,
+        3330
+      ],
+      "unused_preserved_mhz": [
+        2800,
+        3000,
+        3200,
+        3370
+      ]
+    },
+    "variation": {
+      "central": 6,
+      "neighborhood": 21,
+      "placebo": 19
+    },
+    "replay": {
+      "eval": {
+        "joint_min": {
+          "localized": 215,
+          "weak": 43,
+          "control_alerts": 43,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 40
+        },
+        "r40g": {
+          "localized": 213,
+          "weak": 41,
+          "control_alerts": 31,
+          "lost_parent": 0,
+          "lost_joint": 2,
+          "lost_joint_weak": 2,
+          "false_paths_on_positive": 30
+        },
+        "learned05": {
+          "localized": 215,
+          "weak": 43,
+          "control_alerts": 40,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 37
+        },
+        "n3_tree_kusto": {
+          "localized": 215,
+          "weak": 43,
+          "control_alerts": 40,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 37
+        },
+        "raw_logistic_preserve": {
+          "localized": 215,
+          "weak": 43,
+          "control_alerts": 39,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 36
+        },
+        "raw_logistic_pooled025": {
+          "localized": 215,
+          "weak": 43,
+          "control_alerts": 39,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 36
+        },
+        "raw_logistic_kusto025": {
+          "localized": 215,
+          "weak": 43,
+          "control_alerts": 39,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 36
+        },
+        "raw_logistic_pooled005": {
+          "localized": 215,
+          "weak": 43,
+          "control_alerts": 38,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 35
+        },
+        "raw_logistic_kusto005": {
+          "localized": 214,
+          "weak": 42,
+          "control_alerts": 37,
+          "lost_parent": 0,
+          "lost_joint": 1,
+          "lost_joint_weak": 1,
+          "false_paths_on_positive": 35
+        },
+        "raw_tree_preserve": {
+          "localized": 215,
+          "weak": 43,
+          "control_alerts": 40,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 37
+        },
+        "raw_tree_pooled025": {
+          "localized": 215,
+          "weak": 43,
+          "control_alerts": 41,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 38
+        },
+        "raw_tree_kusto025": {
+          "localized": 215,
+          "weak": 43,
+          "control_alerts": 40,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 37
+        },
+        "raw_tree_pooled005": {
+          "localized": 215,
+          "weak": 43,
+          "control_alerts": 40,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 37
+        },
+        "raw_tree_kusto005": {
+          "localized": 215,
+          "weak": 43,
+          "control_alerts": 40,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 37
+        },
+        "central_logistic_preserve": {
+          "localized": 215,
+          "weak": 43,
+          "control_alerts": 40,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 37
+        },
+        "central_logistic_pooled025": {
+          "localized": 215,
+          "weak": 43,
+          "control_alerts": 40,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 37
+        },
+        "central_logistic_kusto025": {
+          "localized": 215,
+          "weak": 43,
+          "control_alerts": 40,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 37
+        },
+        "central_logistic_pooled005": {
+          "localized": 215,
+          "weak": 43,
+          "control_alerts": 38,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 35
+        },
+        "central_logistic_kusto005": {
+          "localized": 214,
+          "weak": 42,
+          "control_alerts": 37,
+          "lost_parent": 0,
+          "lost_joint": 1,
+          "lost_joint_weak": 1,
+          "false_paths_on_positive": 35
+        },
+        "central_tree_preserve": {
+          "localized": 215,
+          "weak": 43,
+          "control_alerts": 40,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 37
+        },
+        "central_tree_pooled025": {
+          "localized": 215,
+          "weak": 43,
+          "control_alerts": 40,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 37
+        },
+        "central_tree_kusto025": {
+          "localized": 215,
+          "weak": 43,
+          "control_alerts": 40,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 37
+        },
+        "central_tree_pooled005": {
+          "localized": 215,
+          "weak": 43,
+          "control_alerts": 40,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 37
+        },
+        "central_tree_kusto005": {
+          "localized": 215,
+          "weak": 43,
+          "control_alerts": 40,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 37
+        },
+        "neighborhood_logistic_preserve": {
+          "localized": 215,
+          "weak": 43,
+          "control_alerts": 40,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 37
+        },
+        "neighborhood_logistic_pooled025": {
+          "localized": 215,
+          "weak": 43,
+          "control_alerts": 40,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 37
+        },
+        "neighborhood_logistic_kusto025": {
+          "localized": 215,
+          "weak": 43,
+          "control_alerts": 40,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 37
+        },
+        "neighborhood_logistic_pooled005": {
+          "localized": 215,
+          "weak": 43,
+          "control_alerts": 39,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 36
+        },
+        "neighborhood_logistic_kusto005": {
+          "localized": 215,
+          "weak": 43,
+          "control_alerts": 38,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 35
+        },
+        "neighborhood_tree_preserve": {
+          "localized": 215,
+          "weak": 43,
+          "control_alerts": 40,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 37
+        },
+        "neighborhood_tree_pooled025": {
+          "localized": 215,
+          "weak": 43,
+          "control_alerts": 41,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 38
+        },
+        "neighborhood_tree_kusto025": {
+          "localized": 215,
+          "weak": 43,
+          "control_alerts": 40,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 37
+        },
+        "neighborhood_tree_pooled005": {
+          "localized": 215,
+          "weak": 43,
+          "control_alerts": 40,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 37
+        },
+        "neighborhood_tree_kusto005": {
+          "localized": 215,
+          "weak": 43,
+          "control_alerts": 40,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 37
+        },
+        "placebo_logistic_preserve": {
+          "localized": 215,
+          "weak": 43,
+          "control_alerts": 39,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 36
+        },
+        "placebo_logistic_pooled025": {
+          "localized": 215,
+          "weak": 43,
+          "control_alerts": 40,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 37
+        },
+        "placebo_logistic_kusto025": {
+          "localized": 215,
+          "weak": 43,
+          "control_alerts": 39,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 36
+        },
+        "placebo_logistic_pooled005": {
+          "localized": 215,
+          "weak": 43,
+          "control_alerts": 39,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 36
+        },
+        "placebo_logistic_kusto005": {
+          "localized": 214,
+          "weak": 42,
+          "control_alerts": 37,
+          "lost_parent": 0,
+          "lost_joint": 1,
+          "lost_joint_weak": 1,
+          "false_paths_on_positive": 35
+        },
+        "placebo_tree_preserve": {
+          "localized": 215,
+          "weak": 43,
+          "control_alerts": 40,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 37
+        },
+        "placebo_tree_pooled025": {
+          "localized": 215,
+          "weak": 43,
+          "control_alerts": 41,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 38
+        },
+        "placebo_tree_kusto025": {
+          "localized": 215,
+          "weak": 43,
+          "control_alerts": 40,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 37
+        },
+        "placebo_tree_pooled005": {
+          "localized": 215,
+          "weak": 43,
+          "control_alerts": 40,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 37
+        },
+        "placebo_tree_kusto005": {
+          "localized": 215,
+          "weak": 43,
+          "control_alerts": 40,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 37
+        }
+      },
+      "shared": {
+        "joint_min": {
+          "localized": 111,
+          "weak": 36,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 7
+        },
+        "r40g": {
+          "localized": 29,
+          "weak": 18,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 82,
+          "lost_joint_weak": 18,
+          "false_paths_on_positive": 7
+        },
+        "learned05": {
+          "localized": 111,
+          "weak": 36,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 7
+        },
+        "n3_tree_kusto": {
+          "localized": 111,
+          "weak": 36,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 7
+        },
+        "raw_logistic_preserve": {
+          "localized": 108,
+          "weak": 35,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 3,
+          "lost_joint_weak": 1,
+          "false_paths_on_positive": 7
+        },
+        "raw_logistic_pooled025": {
+          "localized": 109,
+          "weak": 35,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 2,
+          "lost_joint_weak": 1,
+          "false_paths_on_positive": 7
+        },
+        "raw_logistic_kusto025": {
+          "localized": 108,
+          "weak": 34,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 3,
+          "lost_joint_weak": 2,
+          "false_paths_on_positive": 7
+        },
+        "raw_logistic_pooled005": {
+          "localized": 45,
+          "weak": 19,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 66,
+          "lost_joint_weak": 17,
+          "false_paths_on_positive": 7
+        },
+        "raw_logistic_kusto005": {
+          "localized": 58,
+          "weak": 22,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 53,
+          "lost_joint_weak": 14,
+          "false_paths_on_positive": 7
+        },
+        "raw_tree_preserve": {
+          "localized": 108,
+          "weak": 34,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 3,
+          "lost_joint_weak": 2,
+          "false_paths_on_positive": 7
+        },
+        "raw_tree_pooled025": {
+          "localized": 111,
+          "weak": 36,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 7
+        },
+        "raw_tree_kusto025": {
+          "localized": 111,
+          "weak": 36,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 7
+        },
+        "raw_tree_pooled005": {
+          "localized": 109,
+          "weak": 35,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 2,
+          "lost_joint_weak": 1,
+          "false_paths_on_positive": 7
+        },
+        "raw_tree_kusto005": {
+          "localized": 110,
+          "weak": 35,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 1,
+          "lost_joint_weak": 1,
+          "false_paths_on_positive": 7
+        },
+        "central_logistic_preserve": {
+          "localized": 109,
+          "weak": 35,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 2,
+          "lost_joint_weak": 1,
+          "false_paths_on_positive": 7
+        },
+        "central_logistic_pooled025": {
+          "localized": 109,
+          "weak": 35,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 2,
+          "lost_joint_weak": 1,
+          "false_paths_on_positive": 7
+        },
+        "central_logistic_kusto025": {
+          "localized": 110,
+          "weak": 35,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 1,
+          "lost_joint_weak": 1,
+          "false_paths_on_positive": 7
+        },
+        "central_logistic_pooled005": {
+          "localized": 47,
+          "weak": 19,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 64,
+          "lost_joint_weak": 17,
+          "false_paths_on_positive": 7
+        },
+        "central_logistic_kusto005": {
+          "localized": 53,
+          "weak": 23,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 58,
+          "lost_joint_weak": 13,
+          "false_paths_on_positive": 7
+        },
+        "central_tree_preserve": {
+          "localized": 107,
+          "weak": 34,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 4,
+          "lost_joint_weak": 2,
+          "false_paths_on_positive": 7
+        },
+        "central_tree_pooled025": {
+          "localized": 111,
+          "weak": 36,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 7
+        },
+        "central_tree_kusto025": {
+          "localized": 111,
+          "weak": 36,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 7
+        },
+        "central_tree_pooled005": {
+          "localized": 111,
+          "weak": 36,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 7
+        },
+        "central_tree_kusto005": {
+          "localized": 111,
+          "weak": 36,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 7
+        },
+        "neighborhood_logistic_preserve": {
+          "localized": 107,
+          "weak": 35,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 4,
+          "lost_joint_weak": 1,
+          "false_paths_on_positive": 7
+        },
+        "neighborhood_logistic_pooled025": {
+          "localized": 107,
+          "weak": 35,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 4,
+          "lost_joint_weak": 1,
+          "false_paths_on_positive": 7
+        },
+        "neighborhood_logistic_kusto025": {
+          "localized": 108,
+          "weak": 35,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 3,
+          "lost_joint_weak": 1,
+          "false_paths_on_positive": 7
+        },
+        "neighborhood_logistic_pooled005": {
+          "localized": 68,
+          "weak": 21,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 43,
+          "lost_joint_weak": 15,
+          "false_paths_on_positive": 7
+        },
+        "neighborhood_logistic_kusto005": {
+          "localized": 58,
+          "weak": 23,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 53,
+          "lost_joint_weak": 13,
+          "false_paths_on_positive": 7
+        },
+        "neighborhood_tree_preserve": {
+          "localized": 109,
+          "weak": 35,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 2,
+          "lost_joint_weak": 1,
+          "false_paths_on_positive": 7
+        },
+        "neighborhood_tree_pooled025": {
+          "localized": 111,
+          "weak": 36,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 7
+        },
+        "neighborhood_tree_kusto025": {
+          "localized": 111,
+          "weak": 36,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 7
+        },
+        "neighborhood_tree_pooled005": {
+          "localized": 110,
+          "weak": 36,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 1,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 7
+        },
+        "neighborhood_tree_kusto005": {
+          "localized": 110,
+          "weak": 35,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 1,
+          "lost_joint_weak": 1,
+          "false_paths_on_positive": 7
+        },
+        "placebo_logistic_preserve": {
+          "localized": 105,
+          "weak": 33,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 6,
+          "lost_joint_weak": 3,
+          "false_paths_on_positive": 7
+        },
+        "placebo_logistic_pooled025": {
+          "localized": 106,
+          "weak": 33,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 5,
+          "lost_joint_weak": 3,
+          "false_paths_on_positive": 7
+        },
+        "placebo_logistic_kusto025": {
+          "localized": 107,
+          "weak": 34,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 4,
+          "lost_joint_weak": 2,
+          "false_paths_on_positive": 7
+        },
+        "placebo_logistic_pooled005": {
+          "localized": 48,
+          "weak": 19,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 63,
+          "lost_joint_weak": 17,
+          "false_paths_on_positive": 7
+        },
+        "placebo_logistic_kusto005": {
+          "localized": 60,
+          "weak": 21,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 51,
+          "lost_joint_weak": 15,
+          "false_paths_on_positive": 7
+        },
+        "placebo_tree_preserve": {
+          "localized": 108,
+          "weak": 34,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 3,
+          "lost_joint_weak": 2,
+          "false_paths_on_positive": 7
+        },
+        "placebo_tree_pooled025": {
+          "localized": 111,
+          "weak": 36,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 7
+        },
+        "placebo_tree_kusto025": {
+          "localized": 111,
+          "weak": 36,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 0,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 7
+        },
+        "placebo_tree_pooled005": {
+          "localized": 110,
+          "weak": 36,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 1,
+          "lost_joint_weak": 0,
+          "false_paths_on_positive": 7
+        },
+        "placebo_tree_kusto005": {
+          "localized": 110,
+          "weak": 35,
+          "control_alerts": 0,
+          "lost_parent": 0,
+          "lost_joint": 1,
+          "lost_joint_weak": 1,
+          "false_paths_on_positive": 7
+        }
+      },
+      "gates": {
+        "joint_min": false,
+        "r40g": false,
+        "learned05": false,
+        "n3_tree_kusto": false,
+        "raw_logistic_preserve": false,
+        "raw_logistic_pooled025": false,
+        "raw_logistic_kusto025": false,
+        "raw_logistic_pooled005": false,
+        "raw_logistic_kusto005": false,
+        "raw_tree_preserve": false,
+        "raw_tree_pooled025": false,
+        "raw_tree_kusto025": false,
+        "raw_tree_pooled005": false,
+        "raw_tree_kusto005": false,
+        "central_logistic_preserve": false,
+        "central_logistic_pooled025": false,
+        "central_logistic_kusto025": false,
+        "central_logistic_pooled005": false,
+        "central_logistic_kusto005": false,
+        "central_tree_preserve": false,
+        "central_tree_pooled025": false,
+        "central_tree_kusto025": false,
+        "central_tree_pooled005": false,
+        "central_tree_kusto005": false,
+        "neighborhood_logistic_preserve": false,
+        "neighborhood_logistic_pooled025": false,
+        "neighborhood_logistic_kusto025": false,
+        "neighborhood_logistic_pooled005": false,
+        "neighborhood_logistic_kusto005": false,
+        "neighborhood_tree_preserve": false,
+        "neighborhood_tree_pooled025": false,
+        "neighborhood_tree_kusto025": false,
+        "neighborhood_tree_pooled005": false,
+        "neighborhood_tree_kusto005": false,
+        "placebo_logistic_preserve": false,
+        "placebo_logistic_pooled025": false,
+        "placebo_logistic_kusto025": false,
+        "placebo_logistic_pooled005": false,
+        "placebo_logistic_kusto005": false,
+        "placebo_tree_preserve": false,
+        "placebo_tree_pooled025": false,
+        "placebo_tree_kusto025": false,
+        "placebo_tree_pooled005": false,
+        "placebo_tree_kusto005": false
+      },
+      "lock_sha256": "81e338539ce1854faf562674f8d7b2cce9d374a6dc85554cbc984040802017df"
+    }
   }
 }
