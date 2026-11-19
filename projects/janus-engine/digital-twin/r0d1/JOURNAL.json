@@ -2,7 +2,7 @@
   "schema": "janus.engine.digital_twin.journal.v1",
   "stage": "R0D1A",
   "date": "2026-11-19",
-  "status": "R0D1B_PARTIAL_AGGREGATE_REPRODUCTION_DYNAMIC_HOLD",
+  "status": "R0D1C_PARTIAL_RAW_INVENTORY_AUDIT_CAUSAL_ATTRIBUTION_HOLD",
   "scope": "Computer-only research: open measurements, calculations, simulation. No user physical experiments required.",
   "sources": [
     {
@@ -40,7 +40,7 @@
   "run008": "FROZEN_UNCHANGED",
   "pr620": "UNCHANGED",
   "evidence_policy": "External physical evidence is not JANUS hardware evidence; external CFD and synthetic runs never count as physical runs.",
-  "next_action": "R0D1C: audit raw column meanings, equilibrium windows, leak/purge and gas volume; reproduce original loaded flux independently and test dynamic recovery without post-hoc exclusion. Keep R0D2 production calibration HOLD until uncertainty and holdout are supported.",
+  "next_action": "R0D1C1: obtain exact original logger schema; independently fit fuel-cell coefficients (EXP09), reconstruct volume/leak control (EXP03), quantify purge losses without removing anomalous runs. Separately inventory public CFD archive and reproduce postprocessed flux curves without retuning permeance.",
   "r0d1a_receipt": {
     "run_id": 44565755112,
     "artifact_id": 14549884703,
@@ -118,5 +118,71 @@
       "Poor transfer to no-fuel-cell recovery at 1540 and 2100 rpm; do not promote."
     ],
     "ci_head": "b303eea2417597699788b9e43a6a27de8cbdd600"
+  },
+  "r0d1c": {
+    "date": "2026-11-19",
+    "source_artifact": 14554123249,
+    "source_run": 44572212030,
+    "ci_head": "5d57c746b00681952dd351ed03ba666f32c6f9c7",
+    "source_sha256": "fdcf8d27c8d04e7f47db14039c366b79e12ccc7e00d789a198189be3c931db9a",
+    "local_calculation": {
+      "recovery_samples": 36122,
+      "author_excluded_2100_from_linear_fit": true,
+      "volume_l": 7.061,
+      "volume_uncertainty_l": 0.02,
+      "anomalies": [
+        {
+          "rpm": 1540,
+          "samples": 8103,
+          "k_ratio": 0.6167110569122423,
+          "channel10_zero_fraction": 1,
+          "temperature_effect_percent": 0.07457552748053597,
+          "volume_required_l": 11.449446091258872,
+          "equivalent_missing_flux_umol_s": 0.5340250234122005,
+          "inert_inventory_slope_umol_s": -0.0820332464746829
+        },
+        {
+          "rpm": 2100,
+          "samples": 8100,
+          "k_ratio": 0.4618943901272627,
+          "channel10_median": 0.38,
+          "temperature_effect_percent": 0.01604029521753425,
+          "volume_required_l": 15.287044291779619,
+          "equivalent_missing_flux_umol_s": 0.7860544505952152,
+          "inert_inventory_slope_umol_s": -0.19240936407743361
+        }
+      ],
+      "loaded_fluxes_umol_s": [
+        1.698290760050715,
+        1.534351945792841,
+        2.0275558936940374,
+        1.5772348587213678,
+        1.600651315120979,
+        1.6692544953835293,
+        1.5524910559169258,
+        2.485008743243253,
+        2.396966969800032
+      ],
+      "loaded_reference_umol_s": [
+        1.99,
+        1.623,
+        1.999,
+        1.64,
+        1.63,
+        1.59,
+        1.6,
+        2.46,
+        2.52
+      ],
+      "loaded_rmse_umol_s": 0.11684269771325723,
+      "loaded_samples": 23085
+    },
+    "limitations": [
+      "Temperature and stated volume uncertainty cannot explain conductance deficit; actual variable volume not independently identified.",
+      "Channel 10 mapping inferred; zero cannot distinguish real flow loss versus sensor failure.",
+      "Equivalent missing flux is not measured leakage; purge event losses, leak and inert gas partition remain unresolved.",
+      "Loaded windows retrospective; published empirical FC coefficients used; no independent FC calibration yet.",
+      "CFD reproduction and physical JANUS validation remain HOLD."
+    ]
   }
 }
