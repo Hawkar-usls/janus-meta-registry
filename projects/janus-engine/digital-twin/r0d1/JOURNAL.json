@@ -2,7 +2,7 @@
   "schema": "janus.engine.digital_twin.journal.v1",
   "stage": "R0D1A",
   "date": "2026-11-19",
-  "status": "R0D1C_PARTIAL_RAW_INVENTORY_AUDIT_CAUSAL_ATTRIBUTION_HOLD",
+  "status": "R0D1C1_PARTIAL_VOLUME_REPRODUCED_FC_TRANSFER_HOLD_CFD_RUNNING",
   "scope": "Computer-only research: open measurements, calculations, simulation. No user physical experiments required.",
   "sources": [
     {
@@ -40,7 +40,7 @@
   "run008": "FROZEN_UNCHANGED",
   "pr620": "UNCHANGED",
   "evidence_policy": "External physical evidence is not JANUS hardware evidence; external CFD and synthetic runs never count as physical runs.",
-  "next_action": "R0D1C1: obtain original logger schema, independently fit FC coefficients (EXP09), replicate exact published leak-volume fit vs alternate pressure bins, quantify purge and operational gas losses; do not remove anomalous runs. Separately reproduce CFD postprocessing without retuning.",
+  "next_action": "R0D1C2: verify CI receipts and CFD flux tables, locate logger schema, fit validated effective depletion model across matched no-load/loaded configurations, quantify uncertainty and operational leakage/purge separately; keep all anomalies and RUN008 frozen.",
   "r0d1a_receipt": {
     "run_id": 44565755112,
     "artifact_id": 14549884703,
@@ -192,7 +192,7 @@
     },
     "volume_supplement": {
       "head": "3467e1aa9aeb8b1cb0798c0b2f0ec9952bed5020",
-      "status": "LOCAL_CALCULATION_CI_PENDING",
+      "status": "CI_CONFIRMED",
       "container_l": [
         2.214956982890186,
         2.205937368612004
@@ -204,7 +204,101 @@
         7.987439104007546,
         8.410608978084657
       ],
-      "interpretation": "Container reconstruction agrees with published 2.21 L; total-volume alternative estimator does not reproduce paper 7.061 L. Small sample counts and intentional leak plug; not operational leakage. Does not explain 11.45 or 15.29 L required by anomalous recovery."
+      "interpretation": "Container reconstruction agrees with published 2.21 L; total-volume alternative estimator does not reproduce paper 7.061 L. Small sample counts and intentional leak plug; not operational leakage. Does not explain 11.45 or 15.29 L required by anomalous recovery.",
+      "ci_run": 44576083822
     }
+  },
+  "r0d1c1": {
+    "source_run": 44576083822,
+    "source_artifact": 14555683676,
+    "temperature_index_defect": {
+      "file": "exp09_fuelcell_calibration/fc_performance.py",
+      "description": "segment tuple index 3 is dp/dt, but used as Celsius; actual T not stored in segments",
+      "archival_reconstruction_coefficients": [
+        32.55068699,
+        0.22437536,
+        1.19504448
+      ],
+      "corrected_pressure_slope": [
+        29.56136872,
+        0.21231464,
+        1.11218301
+      ],
+      "corrected_inventory_slope": [
+        29.70255551,
+        0.24033864,
+        1.13096035
+      ],
+      "units": "umol/s, I in A",
+      "train_segments": 8,
+      "train_rmse": [
+        0.04271778326,
+        0.03705413327,
+        0.03959159044
+      ],
+      "cross_run_rmse_corrected": [
+        0.490854848,
+        0.515367823,
+        0.269409364
+      ],
+      "cross_run_rmse_archival": [
+        0.360419987,
+        0.337667382,
+        0.200917348
+      ],
+      "cross_run_ids": [
+        "09.01",
+        "09.02",
+        "09.03"
+      ],
+      "loaded_rmse_previous": 0.11684269771325548,
+      "loaded_rmse_corrected": 0.2271437005678625,
+      "decision": "HOLD corrected model transfer; do not deploy"
+    },
+    "full_volume": {
+      "method": "reimplementation of author smoothing/interpolation/variance objective",
+      "ratio": 3.169368286811009,
+      "computed_l": 7.0588701445034046,
+      "published_l": 7.061,
+      "uncertainty_l": 0.02
+    },
+    "purge_screen": {
+      "method": "signed inventory discontinuity with pre/post linear trends",
+      "run_09_05": {
+        "events": 11,
+        "median_umol": -0.9155835,
+        "sum_umol": -12.0600153
+      },
+      "run_10_14": {
+        "events": 53,
+        "median_umol": -1.01548446,
+        "sum_umol": -229.9595974
+      },
+      "run_10_12": {
+        "events": 99,
+        "median_umol": 0.02579237,
+        "sum_umol": -147.1446248
+      },
+      "run_08_02": {
+        "events": 26,
+        "median_umol": 8.78174007,
+        "sum_umol": 207.35506614
+      },
+      "status": "NOT_IDENTIFIABLE_AS_PHYSICAL_PURGE_LOSS"
+    },
+    "schema": {
+      "status": "PARTIAL_CORROBORATION_NOT_AUTHORITATIVE",
+      "missing": "bugs.bugs_data logger/parser module",
+      "column10": "unresolved; withdraw prior gas flow interpretation"
+    },
+    "cfd": {
+      "run_id": 44576823355,
+      "head": "29968f243abdda4eb684f1ed8b1fab5c91f73fb4",
+      "status": "IN_PROGRESS",
+      "source": "10.5281/zenodo.13149491",
+      "target_cases": 26,
+      "scope": "postprocessing only; no CFD solver rerun"
+    },
+    "ci_head": "7b4b60f6f55c8b919997728928aceb749c46e495"
   }
 }
