@@ -1,0 +1,467 @@
+{
+  "schema": "janus.engine.digital_twin.journal.v1",
+  "stage": "R0D1A",
+  "date": "2026-11-19",
+  "status": "R0D1C4_PARTIAL_HYPOTHESES_TESTED_CFD_STORAGE_AUDIT_RUNNING",
+  "scope": "Computer-only research: open measurements, calculations, simulation. No user physical experiments required.",
+  "sources": [
+    {
+      "doi": "10.5281/zenodo.12784504",
+      "kind": "external physical experiments",
+      "filename": "experiments.tgz",
+      "published_md5": "113b7be70d4c4364f464ccc9e9c3a5cf"
+    },
+    {
+      "doi": "10.5281/zenodo.13149491",
+      "kind": "external CFD simulations",
+      "filename": "OpenFoamData.tgz",
+      "published_md5": "922663cb89aa3f47c611de8b2c7af5f4",
+      "status": "deferred"
+    },
+    {
+      "doi": "10.1002/advs.202410358",
+      "kind": "publication"
+    }
+  ],
+  "local_download": {
+    "status": "BLOCKED_DNS",
+    "error": "curl (6): Could not resolve host: zenodo.org"
+  },
+  "gates": {
+    "R0D1A": "archive checksum and safe inventory",
+    "R0D1B": "inspect data and units; independently reproduce Figure 3 without executing unaudited source code",
+    "R0D2": "calibrate on separated experiments, hold out entire runs",
+    "R0D3": "synthetic active/blank pairs, validate conservation and uncertainty",
+    "R0D4": "screen candidate geometries with explicit hydraulic and electrical costs",
+    "RUN009": "calculated energy balance only; external hydrogen accounted; no unmeasured auxiliaries set to zero"
+  },
+  "physical_janus_runs": 0,
+  "figure3_reproduced": false,
+  "run008": "FROZEN_UNCHANGED",
+  "pr620": "UNCHANGED",
+  "evidence_policy": "External physical evidence is not JANUS hardware evidence; external CFD and synthetic runs never count as physical runs.",
+  "next_action": "Check CI and CFD field inventory; independently integrate scalar concentration times cell volume if valid fields and geometry exist. If absent, document impossibility from archive and plan independently reproduced extended CFD. Resolve valve compartment topology, evaluate ambient proxy and separate gas reaction; do not promote degenerate model.",
+  "r0d1a_receipt": {
+    "run_id": 44565755112,
+    "artifact_id": 14549884703,
+    "archive_bytes": 10987779,
+    "archive_sha256": "fdcf8d27c8d04e7f47db14039c366b79e12ccc7e00d789a198189be3c931db9a",
+    "members": 146,
+    "expanded_bytes": 61314772,
+    "checks": 3,
+    "status": "PASS_ARCHIVE_PROVENANCE_ONLY"
+  },
+  "r0d1b": {
+    "schema_run_id": 44571467477,
+    "verified_archive_artifact_id": 14554047745,
+    "source_sha256": "fdcf8d27c8d04e7f47db14039c366b79e12ccc7e00d789a198189be3c931db9a",
+    "local_calculation": {
+      "points": 9,
+      "flow_groups": 3,
+      "split": "leave one entire flow setting out; 8.7a/b always same fold",
+      "common_pressure_pa": 17660,
+      "common_pressure": {
+        "constant_rmse_umol_s": 0.17146455437708932,
+        "laminar_rmse_umol_s": 0.06854666070801944,
+        "laminar_mare": 0.029716355302078976,
+        "k_fit_all_data_mol_m2_s_pa": 5.884527667675732e-11
+      },
+      "individual_pressure": {
+        "constant_rmse_umol_s": 0.2910921112840975,
+        "laminar_rmse_umol_s": 0.27449460969399336,
+        "laminar_mare": 0.11958992218412565
+      },
+      "raw_recovery": [
+        {
+          "run": "10.8",
+          "rpm": 1200,
+          "samples": 8093,
+          "k_ratio": 0.852,
+          "rmse_pa": 319.54
+        },
+        {
+          "run": "10.14",
+          "rpm": 1540,
+          "samples": 8103,
+          "k_ratio": 0.6136,
+          "rmse_pa": 1263.86
+        },
+        {
+          "run": "10.10",
+          "rpm": 1800,
+          "samples": 3725,
+          "k_ratio": 1.1579,
+          "rmse_pa": 78.97
+        },
+        {
+          "run": "10.12",
+          "rpm": 2100,
+          "samples": 8100,
+          "k_ratio": 0.4623,
+          "rmse_pa": 1766.16
+        },
+        {
+          "run": "10.6",
+          "rpm": 2400,
+          "samples": 8101,
+          "k_ratio": 0.8674,
+          "rmse_pa": 276.23
+        }
+      ],
+      "raw_samples": 36122
+    },
+    "limitations": [
+      "Published aggregate flux not independently reconstructed from the original loaded FC windows.",
+      "External dataset is public; no blind external validation.",
+      "Raw channel mapping inferred; purge semantics and leak correction open; water pressure linearly interpolated.",
+      "Full Figure 3 CFD not reproduced.",
+      "Poor transfer to no-fuel-cell recovery at 1540 and 2100 rpm; do not promote."
+    ],
+    "ci_head": "b303eea2417597699788b9e43a6a27de8cbdd600"
+  },
+  "r0d1c": {
+    "date": "2026-11-19",
+    "source_artifact": 14554123249,
+    "source_run": 44572212030,
+    "ci_head": "5d57c746b00681952dd351ed03ba666f32c6f9c7",
+    "source_sha256": "fdcf8d27c8d04e7f47db14039c366b79e12ccc7e00d789a198189be3c931db9a",
+    "local_calculation": {
+      "recovery_samples": 36122,
+      "author_excluded_2100_from_linear_fit": true,
+      "volume_l": 7.061,
+      "volume_uncertainty_l": 0.02,
+      "anomalies": [
+        {
+          "rpm": 1540,
+          "samples": 8103,
+          "k_ratio": 0.6167110569122423,
+          "channel10_zero_fraction": 1,
+          "temperature_effect_percent": 0.07457552748053597,
+          "volume_required_l": 11.449446091258872,
+          "equivalent_missing_flux_umol_s": 0.5340250234122005,
+          "inert_inventory_slope_umol_s": -0.0820332464746829
+        },
+        {
+          "rpm": 2100,
+          "samples": 8100,
+          "k_ratio": 0.4618943901272627,
+          "channel10_median": 0.38,
+          "temperature_effect_percent": 0.01604029521753425,
+          "volume_required_l": 15.287044291779619,
+          "equivalent_missing_flux_umol_s": 0.7860544505952152,
+          "inert_inventory_slope_umol_s": -0.19240936407743361
+        }
+      ],
+      "loaded_fluxes_umol_s": [
+        1.698290760050715,
+        1.534351945792841,
+        2.0275558936940374,
+        1.5772348587213678,
+        1.600651315120979,
+        1.6692544953835293,
+        1.5524910559169258,
+        2.485008743243253,
+        2.396966969800032
+      ],
+      "loaded_reference_umol_s": [
+        1.99,
+        1.623,
+        1.999,
+        1.64,
+        1.63,
+        1.59,
+        1.6,
+        2.46,
+        2.52
+      ],
+      "loaded_rmse_umol_s": 0.11684269771325723,
+      "loaded_samples": 23085
+    },
+    "limitations": [
+      "Temperature and stated volume uncertainty cannot explain conductance deficit; actual variable volume not independently identified.",
+      "Channel 10 mapping inferred; zero cannot distinguish real flow loss versus sensor failure.",
+      "Equivalent missing flux is not measured leakage; purge event losses, leak and inert gas partition remain unresolved.",
+      "Loaded windows retrospective; published empirical FC coefficients used; no independent FC calibration yet.",
+      "CFD reproduction and physical JANUS validation remain HOLD."
+    ],
+    "ci_receipt": {
+      "run_id": 44575723725,
+      "artifact_id": 14556136662,
+      "status": "SUCCESS_RAW_INVENTORY_AUDIT",
+      "head": "5d57c746b00681952dd351ed03ba666f32c6f9c7"
+    },
+    "volume_supplement": {
+      "head": "3467e1aa9aeb8b1cb0798c0b2f0ec9952bed5020",
+      "status": "CI_CONFIRMED",
+      "container_l": [
+        2.214956982890186,
+        2.205937368612004
+      ],
+      "bypass_l": 0.0245,
+      "matched_pressure_bins_total_l": [
+        7.771152403072204,
+        7.954783924414911,
+        7.987439104007546,
+        8.410608978084657
+      ],
+      "interpretation": "Container reconstruction agrees with published 2.21 L; total-volume alternative estimator does not reproduce paper 7.061 L. Small sample counts and intentional leak plug; not operational leakage. Does not explain 11.45 or 15.29 L required by anomalous recovery.",
+      "ci_run": 44576083822
+    }
+  },
+  "r0d1c1": {
+    "source_run": 44576083822,
+    "source_artifact": 14555683676,
+    "temperature_index_defect": {
+      "file": "exp09_fuelcell_calibration/fc_performance.py",
+      "description": "segment tuple index 3 is dp/dt, but used as Celsius; actual T not stored in segments",
+      "archival_reconstruction_coefficients": [
+        32.55068699,
+        0.22437536,
+        1.19504448
+      ],
+      "corrected_pressure_slope": [
+        29.56136872,
+        0.21231464,
+        1.11218301
+      ],
+      "corrected_inventory_slope": [
+        29.70255551,
+        0.24033864,
+        1.13096035
+      ],
+      "units": "umol/s, I in A",
+      "train_segments": 8,
+      "train_rmse": [
+        0.04271778326,
+        0.03705413327,
+        0.03959159044
+      ],
+      "cross_run_rmse_corrected": [
+        0.490854848,
+        0.515367823,
+        0.269409364
+      ],
+      "cross_run_rmse_archival": [
+        0.360419987,
+        0.337667382,
+        0.200917348
+      ],
+      "cross_run_ids": [
+        "09.01",
+        "09.02",
+        "09.03"
+      ],
+      "loaded_rmse_previous": 0.11684269771325548,
+      "loaded_rmse_corrected": 0.2271437005678625,
+      "decision": "HOLD corrected model transfer; do not deploy"
+    },
+    "full_volume": {
+      "method": "reimplementation of author smoothing/interpolation/variance objective",
+      "ratio": 3.169368286811009,
+      "computed_l": 7.0588701445034046,
+      "published_l": 7.061,
+      "uncertainty_l": 0.02
+    },
+    "purge_screen": {
+      "method": "signed inventory discontinuity with pre/post linear trends",
+      "run_09_05": {
+        "events": 11,
+        "median_umol": -0.9155835,
+        "sum_umol": -12.0600153
+      },
+      "run_10_14": {
+        "events": 53,
+        "median_umol": -1.01548446,
+        "sum_umol": -229.9595974
+      },
+      "run_10_12": {
+        "events": 99,
+        "median_umol": 0.02579237,
+        "sum_umol": -147.1446248
+      },
+      "run_08_02": {
+        "events": 26,
+        "median_umol": 8.78174007,
+        "sum_umol": 207.35506614
+      },
+      "status": "NOT_IDENTIFIABLE_AS_PHYSICAL_PURGE_LOSS"
+    },
+    "schema": {
+      "status": "PARTIAL_CORROBORATION_NOT_AUTHORITATIVE",
+      "missing": "bugs.bugs_data logger/parser module",
+      "column10": "unresolved; withdraw prior gas flow interpretation"
+    },
+    "cfd": {
+      "run_id": 44577479713,
+      "artifact_id": 14558436461,
+      "status": "BLOCKED_PARSER_FORMAT_ARCHIVE_VERIFIED",
+      "archive_bytes": 1128126000,
+      "md5": "922663cb89aa3f47c611de8b2c7af5f4",
+      "sha256": "3f5d6e8fe5d07cbd022ac63c08b7873571b3333176fec7ef5303be2fe984ed4d",
+      "error": "unexpected flux record OpenFoamData/bugsScalarTransport3D1200Sc1LRp7000/postProcessing/flux/0/flux.dat:3"
+    },
+    "ci_head": "7b4b60f6f55c8b919997728928aceb749c46e495",
+    "ci_receipt": {
+      "run_id": 44577479177,
+      "artifact_id": 14557157344,
+      "status": "SUCCESS"
+    }
+  },
+  "r0d1c2": {
+    "source_artifact": 14557157344,
+    "source_run": 44577479177,
+    "ideal_stack_cells": 13,
+    "faraday_umol_per_A_s": 33.68387638400762,
+    "assumption_source": "exp09_fuelcell_calibration/fc_performance.py uses i/4/F*13",
+    "local_calculation": {
+      "train_run": "09.05",
+      "segments_by_run": {
+        "09.01": 10,
+        "09.02": 10,
+        "09.03": 1,
+        "09.05": 8
+      },
+      "constant_residual_umol_s": 0.85579312,
+      "log_coefficients": [
+        1.04894609,
+        0.42846572
+      ],
+      "cross_run_rmse_log": [
+        0.4149711637932534,
+        0.38499871486725273,
+        0.3967127948669653
+      ],
+      "loaded_rmse_mean_pressure": 0.30635664561300013,
+      "negative_residuals": 2,
+      "no_load_residual_range_umol_s": [
+        1.00371533,
+        1.5196317
+      ]
+    },
+    "limitations": [
+      "Net residual not a unique causal loss measurement; negative values retained.",
+      "Ideal Faradaic term assumes 13 active series cells and four-electron reduction.",
+      "R0D1C2 loaded comparison worsens; no promotion.",
+      "CFD parser must match archived foamfiles.py: membrane reads first 3 fields and accepts trailing columns, inlet/outlet exact 3; use author sign and factor, distinguish volumetric water flow from O2 scalar flux."
+    ],
+    "ci_head": "861be68257a6ba7005dae89efecacac4238ed4e3",
+    "ci_receipt": {
+      "run_id": 44590686803,
+      "artifact_id": 14562074020,
+      "status": "SUCCESS"
+    },
+    "cfd_retry": {
+      "run_id": 44590687016,
+      "artifact_id": 14563932717,
+      "status": "PASS_CFD_POSTPROCESSING_ONLY",
+      "coverage": 26,
+      "archive_sha256": "3f5d6e8fe5d07cbd022ac63c08b7873571b3333176fec7ef5303be2fe984ed4d"
+    }
+  },
+  "r0d1c3": {
+    "cfd": {
+      "receipt": 44590687016,
+      "artifact": 14563932717,
+      "cases": 26,
+      "rmse_umol_s": 0.0112182712774284,
+      "mare": 0.011357577143180994,
+      "figure3_points": 15,
+      "mare_figure3": 0.005664296853281648,
+      "maximum_abs_scalar_closure_umol_s": 0.9696985119999837,
+      "max_relative_water_imbalance": 0.005554757323390269,
+      "scope": "Frozen K, actual computed CFD inlet Q, no retuning; single paper, solver time 1 s, scalar storage and convergence open."
+    },
+    "exp00": {
+      "raw_rows": 22509,
+      "windows": 17,
+      "window_samples": 5625,
+      "oxygen_inventory_slope_range_umol_s": [
+        -2.928959147594807,
+        5.450293842891105
+      ],
+      "strict_zero_flag_windows": 0,
+      "conditions": "Earlier apparatus, assumed 7.059 L for inventory scale; current near zero not disconnected; sensor configuration and purge semantics unresolved."
+    },
+    "exp09_no_load": {
+      "n": 13,
+      "residual_umol_s_range": [
+        1.003715326170514,
+        1.5196317021870225
+      ],
+      "boundary": "Bypass without membrane, fuel supply remains attached; zero electrical load not zero chemical consumption."
+    },
+    "exp10": {
+      "n": 5,
+      "equivalent_residual_umol_s": [
+        -0.0617497012420805,
+        0.7860544505952155
+      ],
+      "notes": "Author description documents removal of hydrosticks for recovery protocol; exact configuration per run not independently verified."
+    },
+    "identification": "Only conditional net residual identified, not a unique physical loss range. Ingress and loss can cancel; unknown membrane conductance also confounds recovery. No positive loss clipping.",
+    "ci_head": "99ea3c2041a7c2f6128d2dfead6f6df2d46d627e",
+    "ci_run": 44596098875,
+    "ci_receipt": {
+      "run_id": 44596098875,
+      "artifact_id": 14565576738,
+      "status": "SUCCESS"
+    }
+  },
+  "r0d1c4": {
+    "source_run": 44596217520,
+    "source_artifact": 14566636537,
+    "experimental_local_calculation": {
+      "exp10_05": {
+        "rows": 7466,
+        "duration_s": 13812,
+        "command_times_s": {
+          "valves": 40,
+          "pump1200": 690,
+          "pump2400_approx": 5580
+        },
+        "signed_inventory_slope_umol_s": {
+          "valve_transient": -357.25044087577663,
+          "pump_off": 8.380727759026913,
+          "pump1200_stable": 0.9451182671480528,
+          "pump2400_early": 1.081019814801645,
+          "pump2400_late": 0.885580259427343
+        },
+        "boundary": "Valve transient is not a leak measurement; water pressure absent, assumed scenarios."
+      },
+      "recovery": {
+        "blocks": 111,
+        "run_groups": 5,
+        "macro_rmse_umol_s": {
+          "frozen": 0.3380787121789602,
+          "frozen_plus_ingress": 0.3380787121789602,
+          "scaled_membrane": 0.24135464756200675,
+          "scaled_plus_ingress": 0.16692781122973666
+        },
+        "joint_all_data_fit": [
+          0,
+          0.09573321402266805
+        ],
+        "decision": "HOLD model degeneracy; membrane coefficient vanishes; no causal ingress attribution"
+      },
+      "fc": {
+        "runs": 4,
+        "segments": 29,
+        "macro_rmse_umol_s": {
+          "faraday_only": 1.1554875534203584,
+          "constant_residual": 0.39020456799024006,
+          "pressure_reaction": 0.4278159736639231,
+          "log_residual": 0.2590471024114941
+        },
+        "decision": "Descriptive grouped cross-validation only; log residual is not a physical mechanism."
+      }
+    },
+    "cfd": {
+      "code_head": "2426dffbbdb40bc2d7b4832209fcf32337249e7b",
+      "status": "AWAITING_CI",
+      "scope": "All 26 cases matched boundary histories, required storage rate, integrated implied inventory change, tail membrane variation and archived field headers. Direct volume integral and actual steady state not yet established."
+    },
+    "experimental_code_head": "2a97235871d92301ebfe2c89ea198eb7bd29aa68",
+    "physical_janus_runs": 0,
+    "run008_modified": false
+  }
+}
