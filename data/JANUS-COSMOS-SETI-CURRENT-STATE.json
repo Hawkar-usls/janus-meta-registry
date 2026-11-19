@@ -2,13 +2,13 @@
   "schema": "janus.context_bridge.current_state.v1",
   "project": "JANUS COSMOS / SETI",
   "updated_utc": "2026-11-18T09:39:47Z",
-  "as_of": "R40N5 launched: extend bank across historical frequency windows, hard coverage and variation gate; external exam and production HOLD.",
+  "as_of": "R40N5 acquisition complete; coverage FAIL before fit; verified actual historical windows from R40N reads; production unchanged.",
   "authority": {
     "repository": "Hawkar-usls/Janus-Cosmos",
     "research_branch": "research/seti-radio-candidate-search-20261117",
     "registry": "Hawkar-usls/janus-meta-registry",
     "journal": "data/JANUS-COSMOS-SETI-DEVELOPMENT-JOURNAL.json",
-    "journal_commit": "f73691cadcc36a44e3759b8e1b416a88eb76a14f",
+    "journal_commit": "e3f18e715338b3ee10ff795f103a1b238b2e9059",
     "continuity_protocol": "data/JANUS-PROJECT-CONTINUITY-LEDGER-HRAIN-INAIHR-PROTOCOL-2026-08-24-v1.0.json",
     "protocol_blob": "740065281c7c7b289c927db7661b9b000abb8c68"
   },
@@ -399,7 +399,7 @@
     "Retain raw paths when OFF contains signal",
     "R33B4 original hit mapping HOLD, Figure6 exact file available; R34 independently labelled inputs and protected compatible grid still HOLD."
   ],
-  "next_allowed": "Verify native bank hashes, actual frequency coverage and nonconstant train features; freeze all variants before replay; no production promotion.",
+  "next_allowed": "R40N5A: authenticate original R40N read receipts and candidate frequency vectors; preflight all historical and evaluation candidate ranges (frequency only, no evaluation labels) and eight day manifests BEFORE additional power reads. Read correct historical windows 2860/3010/3150/3400 MHz (52 kHz half-width) on frozen bank days; preserve both previously acquired banks separately. Audit 100% coverage, nonconstant features, real vs placebo then fit and replay unchanged preregistered arms. Do not weaken coverage gate. No production or independent exam.",
   "claim_ceiling": "Synthetic injections on real measured backgrounds; not independent real source labels. CPU kernel comparisons only, no proof of whole pipeline superiority. No confirmed extraterrestrial technosignatures.",
   "startup": [
     "Read this current-state JSON from GitHub main each new COSMOS conversation.",
@@ -439,10 +439,10 @@
   },
   "active_experiment": {
     "stage": "R40N5",
-    "status": "RUNNING_UNMEASURED",
+    "status": "PASS_BANK_ACQUISITION__HOLD_WRONG_HISTORICAL_WINDOWS",
     "run": 44515235265,
     "receipt": "data/JANUS-COSMOS-SETI-R40N5-MATCHED-FREQUENCY-2026-11-19.json",
-    "receipt_commit": "7392c9b340f98352bab1e078009e4318db77f861",
+    "receipt_commit": "6bffeb8188573e440f7d4130860354c44d9c2fad",
     "production_adoption": false,
     "discovery_relaunch_allowed": false
   },
@@ -4472,12 +4472,34 @@
   },
   "r40n5": {
     "stage": "R40N5",
-    "status": "RUNNING_UNMEASURED",
+    "status": "PASS_BANK_ACQUISITION__HOLD_WRONG_HISTORICAL_WINDOWS",
     "run": 44515235265,
     "receipt": "data/JANUS-COSMOS-SETI-R40N5-MATCHED-FREQUENCY-2026-11-19.json",
-    "receipt_commit": "7392c9b340f98352bab1e078009e4318db77f861",
+    "receipt_commit": "6bffeb8188573e440f7d4130860354c44d9c2fad",
     "production_adoption": false,
     "discovery_relaunch_allowed": false,
-    "gate": "Full measured coverage and nondegenerate historical recurrence; <=35 alerts and zero paired Joint Min losses, 215/43 ordinary, 111/36 shared. Historical-to-evaluation frequency transfer remains a limitation, independent exam and GBT HOLD."
+    "gate": "Full measured coverage and nondegenerate historical recurrence; <=35 alerts and zero paired Joint Min losses, 215/43 ordinary, 111/36 shared. Historical-to-evaluation frequency transfer remains a limitation, independent exam and GBT HOLD.",
+    "bank": {
+      "days": 8,
+      "historical_raw_tiles": 128,
+      "retained_raw_tiles": 128,
+      "windows_mhz": [
+        2800,
+        3000,
+        3200,
+        3370,
+        2850,
+        3050,
+        3250,
+        3330
+      ]
+    },
+    "failure": "AssertionError: Candidate frequency outside specified windows; first historical coverage gate before model fit. No detector replay.",
+    "actual_historical_windows_mhz": [
+      2860,
+      3010,
+      3150,
+      3400
+    ]
   }
 }
