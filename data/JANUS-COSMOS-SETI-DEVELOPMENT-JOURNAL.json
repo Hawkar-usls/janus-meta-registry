@@ -7114,6 +7114,41 @@
         "discovery_relaunch_allowed": false
       },
       "next_gate": "Full measured coverage and nondegenerate historical recurrence; <=35 alerts and zero paired Joint Min losses, 215/43 ordinary, 111/36 shared. Historical-to-evaluation frequency transfer remains a limitation, independent exam and GBT HOLD."
+    },
+    {
+      "event_id": "20261119-R40N5-RESULT",
+      "date": "2026-11-19",
+      "stage": "R40N5",
+      "kind": "RESULT",
+      "status": "PASS_BANK_ACQUISITION__HOLD_WRONG_HISTORICAL_WINDOWS",
+      "decision": "128 additional raw tiles acquired on 8 days, wrong historical windows. Coverage gate fails before training. Original R40N read receipts confirm 2860/3010/3150/3400 MHz, not default R9 windows. Preflight frequency vectors before next read.",
+      "evidence": {
+        "artifact": 14525438133,
+        "sha256": "681a867613b1c162794db6148540bf40b8d5accbde86f9fd6bc654c98cd6c9fd",
+        "bank": {
+          "days": 8,
+          "historical_raw_tiles": 128,
+          "retained_raw_tiles": 128,
+          "windows_mhz": [
+            2800,
+            3000,
+            3200,
+            3370,
+            2850,
+            3050,
+            3250,
+            3330
+          ]
+        },
+        "actual_historical_windows_mhz": [
+          2860,
+          3010,
+          3150,
+          3400
+        ],
+        "source_job": 135428447854
+      },
+      "next_gate": "R40N5A: authenticate original R40N read receipts and candidate frequency vectors; preflight all historical and evaluation candidate ranges (frequency only, no evaluation labels) and eight day manifests BEFORE additional power reads. Read correct historical windows 2860/3010/3150/3400 MHz (52 kHz half-width) on frozen bank days; preserve both previously acquired banks separately. Audit 100% coverage, nonconstant features, real vs placebo then fit and replay unchanged preregistered arms. Do not weaken coverage gate. No production or independent exam."
     }
   ],
   "current": {
@@ -7124,10 +7159,10 @@
   },
   "active_experiment": {
     "stage": "R40N5",
-    "status": "RUNNING_UNMEASURED",
+    "status": "PASS_BANK_ACQUISITION__HOLD_WRONG_HISTORICAL_WINDOWS",
     "run": 44515235265,
     "receipt": "data/JANUS-COSMOS-SETI-R40N5-MATCHED-FREQUENCY-2026-11-19.json",
-    "receipt_commit": "7392c9b340f98352bab1e078009e4318db77f861",
+    "receipt_commit": "6bffeb8188573e440f7d4130860354c44d9c2fad",
     "production_adoption": false,
     "discovery_relaunch_allowed": false
   },
