@@ -2,7 +2,7 @@
   "schema": "janus.engine.digital_twin.journal.v1",
   "stage": "R0D1A",
   "date": "2026-11-19",
-  "status": "R0D1A_PASS_R0D1B_SCHEMA_REVIEW_IN_PROGRESS",
+  "status": "R0D1B_PARTIAL_AGGREGATE_REPRODUCTION_DYNAMIC_HOLD",
   "scope": "Computer-only research: open measurements, calculations, simulation. No user physical experiments required.",
   "sources": [
     {
@@ -40,7 +40,7 @@
   "run008": "FROZEN_UNCHANGED",
   "pr620": "UNCHANGED",
   "evidence_policy": "External physical evidence is not JANUS hardware evidence; external CFD and synthetic runs never count as physical runs.",
-  "next_action": "Review schema-review.json; reconstruct published curves from raw measurements and independently compare published aggregate, then freeze run-level holdout before fitting.",
+  "next_action": "R0D1C: audit raw column meanings, equilibrium windows, leak/purge and gas volume; reproduce original loaded flux independently and test dynamic recovery without post-hoc exclusion. Keep R0D2 production calibration HOLD until uncertainty and holdout are supported.",
   "r0d1a_receipt": {
     "run_id": 44565755112,
     "artifact_id": 14549884703,
@@ -50,5 +50,73 @@
     "expanded_bytes": 61314772,
     "checks": 3,
     "status": "PASS_ARCHIVE_PROVENANCE_ONLY"
+  },
+  "r0d1b": {
+    "schema_run_id": 44571467477,
+    "verified_archive_artifact_id": 14554047745,
+    "source_sha256": "fdcf8d27c8d04e7f47db14039c366b79e12ccc7e00d789a198189be3c931db9a",
+    "local_calculation": {
+      "points": 9,
+      "flow_groups": 3,
+      "split": "leave one entire flow setting out; 8.7a/b always same fold",
+      "common_pressure_pa": 17660,
+      "common_pressure": {
+        "constant_rmse_umol_s": 0.17146455437708932,
+        "laminar_rmse_umol_s": 0.06854666070801944,
+        "laminar_mare": 0.029716355302078976,
+        "k_fit_all_data_mol_m2_s_pa": 5.884527667675732e-11
+      },
+      "individual_pressure": {
+        "constant_rmse_umol_s": 0.2910921112840975,
+        "laminar_rmse_umol_s": 0.27449460969399336,
+        "laminar_mare": 0.11958992218412565
+      },
+      "raw_recovery": [
+        {
+          "run": "10.8",
+          "rpm": 1200,
+          "samples": 8093,
+          "k_ratio": 0.852,
+          "rmse_pa": 319.54
+        },
+        {
+          "run": "10.14",
+          "rpm": 1540,
+          "samples": 8103,
+          "k_ratio": 0.6136,
+          "rmse_pa": 1263.86
+        },
+        {
+          "run": "10.10",
+          "rpm": 1800,
+          "samples": 3725,
+          "k_ratio": 1.1579,
+          "rmse_pa": 78.97
+        },
+        {
+          "run": "10.12",
+          "rpm": 2100,
+          "samples": 8100,
+          "k_ratio": 0.4623,
+          "rmse_pa": 1766.16
+        },
+        {
+          "run": "10.6",
+          "rpm": 2400,
+          "samples": 8101,
+          "k_ratio": 0.8674,
+          "rmse_pa": 276.23
+        }
+      ],
+      "raw_samples": 36122
+    },
+    "limitations": [
+      "Published aggregate flux not independently reconstructed from the original loaded FC windows.",
+      "External dataset is public; no blind external validation.",
+      "Raw channel mapping inferred; purge semantics and leak correction open; water pressure linearly interpolated.",
+      "Full Figure 3 CFD not reproduced.",
+      "Poor transfer to no-fuel-cell recovery at 1540 and 2100 rpm; do not promote."
+    ],
+    "ci_head": "b303eea2417597699788b9e43a6a27de8cbdd600"
   }
 }
