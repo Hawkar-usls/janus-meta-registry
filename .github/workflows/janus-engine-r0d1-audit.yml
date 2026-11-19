@@ -21,6 +21,8 @@ jobs:
         run: python3 projects/janus-engine/digital-twin/r0d1/archive_audit.py --self-test-only --output self-test.json
       - name: Acquire and inventory published experiment archive
         run: python3 projects/janus-engine/digital-twin/r0d1/archive_audit.py --output provenance.json
+      - name: Review experiment schema and source documentation
+        run: python3 projects/janus-engine/digital-twin/r0d1/schema_review.py
       - name: Preserve evidence even on failure
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -29,4 +31,5 @@ jobs:
           path: |
             self-test.json
             provenance.json
+            schema-review.json
           if-no-files-found: warn
