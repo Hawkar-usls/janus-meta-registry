@@ -1,0 +1,44 @@
+{
+  "schema": "janus.engine.digital_twin.journal.v1",
+  "stage": "R0D1A",
+  "date": "2026-11-19",
+  "status": "IMPLEMENTED_AWAITING_CI_AND_ARCHIVE",
+  "scope": "Computer-only research: open measurements, calculations, simulation. No user physical experiments required.",
+  "sources": [
+    {
+      "doi": "10.5281/zenodo.12784504",
+      "kind": "external physical experiments",
+      "filename": "experiments.tgz",
+      "published_md5": "113b7be70d4c4364f464ccc9e9c3a5cf"
+    },
+    {
+      "doi": "10.5281/zenodo.13149491",
+      "kind": "external CFD simulations",
+      "filename": "OpenFoamData.tgz",
+      "published_md5": "922663cb89aa3f47c611de8b2c7af5f4",
+      "status": "deferred"
+    },
+    {
+      "doi": "10.1002/advs.202410358",
+      "kind": "publication"
+    }
+  ],
+  "local_download": {
+    "status": "BLOCKED_DNS",
+    "error": "curl (6): Could not resolve host: zenodo.org"
+  },
+  "gates": {
+    "R0D1A": "archive checksum and safe inventory",
+    "R0D1B": "inspect data and units; independently reproduce Figure 3 without executing unaudited source code",
+    "R0D2": "calibrate on separated experiments, hold out entire runs",
+    "R0D3": "synthetic active/blank pairs, validate conservation and uncertainty",
+    "R0D4": "screen candidate geometries with explicit hydraulic and electrical costs",
+    "RUN009": "calculated energy balance only; external hydrogen accounted; no unmeasured auxiliaries set to zero"
+  },
+  "physical_janus_runs": 0,
+  "figure3_reproduced": false,
+  "run008": "FROZEN_UNCHANGED",
+  "pr620": "UNCHANGED",
+  "evidence_policy": "External physical evidence is not JANUS hardware evidence; external CFD and synthetic runs never count as physical runs.",
+  "next_action": "Review CI archive inventory then implement parser based on actual data formats."
+}
