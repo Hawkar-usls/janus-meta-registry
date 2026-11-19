@@ -2,7 +2,7 @@
   "schema": "janus.engine.digital_twin.journal.v1",
   "stage": "R0D1A",
   "date": "2026-11-19",
-  "status": "R0D1C2_NET_RESIDUAL_IDENTIFIED_CFD_RETRY_TRANSFER_HOLD",
+  "status": "R0D1C3_PARTIAL_CFD_AGREEMENT_NET_RESIDUAL_CONSTRAINED_COMPONENTS_NOT_IDENTIFIED",
   "scope": "Computer-only research: open measurements, calculations, simulation. No user physical experiments required.",
   "sources": [
     {
@@ -40,7 +40,7 @@
   "run008": "FROZEN_UNCHANGED",
   "pr620": "UNCHANGED",
   "evidence_policy": "External physical evidence is not JANUS hardware evidence; external CFD and synthetic runs never count as physical runs.",
-  "next_action": "Verify new gas-balance CI, retry CFD extraction with archived source-defined schema; inspect all case coverage and matched timestamps, report signed imbalance without asserting independent validation. Preserve RUN008.",
+  "next_action": "R0D1C4: establish CFD scalar storage term and time convergence using archived fields, analyze EXP10-05 valve/pump step separately, compare pressure-dependent ambient ingress/cathode reaction and purge hypotheses on held-out runs. Do not treat alternative estimator as unique physical loss, do not promote corrected model or RUN008.",
   "r0d1a_receipt": {
     "run_id": 44565755112,
     "artifact_id": 14549884703,
@@ -344,6 +344,62 @@
       "R0D1C2 loaded comparison worsens; no promotion.",
       "CFD parser must match archived foamfiles.py: membrane reads first 3 fields and accepts trailing columns, inlet/outlet exact 3; use author sign and factor, distinguish volumetric water flow from O2 scalar flux."
     ],
-    "ci_head": "861be68257a6ba7005dae89efecacac4238ed4e3"
+    "ci_head": "861be68257a6ba7005dae89efecacac4238ed4e3",
+    "ci_receipt": {
+      "run_id": 44590686803,
+      "artifact_id": 14562074020,
+      "status": "SUCCESS"
+    },
+    "cfd_retry": {
+      "run_id": 44590687016,
+      "artifact_id": 14563932717,
+      "status": "PASS_CFD_POSTPROCESSING_ONLY",
+      "coverage": 26,
+      "archive_sha256": "3f5d6e8fe5d07cbd022ac63c08b7873571b3333176fec7ef5303be2fe984ed4d"
+    }
+  },
+  "r0d1c3": {
+    "cfd": {
+      "receipt": 44590687016,
+      "artifact": 14563932717,
+      "cases": 26,
+      "rmse_umol_s": 0.0112182712774284,
+      "mare": 0.011357577143180994,
+      "figure3_points": 15,
+      "mare_figure3": 0.005664296853281648,
+      "maximum_abs_scalar_closure_umol_s": 0.9696985119999837,
+      "max_relative_water_imbalance": 0.005554757323390269,
+      "scope": "Frozen K, actual computed CFD inlet Q, no retuning; single paper, solver time 1 s, scalar storage and convergence open."
+    },
+    "exp00": {
+      "raw_rows": 22509,
+      "windows": 17,
+      "window_samples": 5625,
+      "oxygen_inventory_slope_range_umol_s": [
+        -2.928959147594807,
+        5.450293842891105
+      ],
+      "strict_zero_flag_windows": 0,
+      "conditions": "Earlier apparatus, assumed 7.059 L for inventory scale; current near zero not disconnected; sensor configuration and purge semantics unresolved."
+    },
+    "exp09_no_load": {
+      "n": 13,
+      "residual_umol_s_range": [
+        1.003715326170514,
+        1.5196317021870225
+      ],
+      "boundary": "Bypass without membrane, fuel supply remains attached; zero electrical load not zero chemical consumption."
+    },
+    "exp10": {
+      "n": 5,
+      "equivalent_residual_umol_s": [
+        -0.0617497012420805,
+        0.7860544505952155
+      ],
+      "notes": "Author description documents removal of hydrosticks for recovery protocol; exact configuration per run not independently verified."
+    },
+    "identification": "Only conditional net residual identified, not a unique physical loss range. Ingress and loss can cancel; unknown membrane conductance also confounds recovery. No positive loss clipping.",
+    "ci_head": "99ea3c2041a7c2f6128d2dfead6f6df2d46d627e",
+    "ci_run": 44596098875
   }
 }
