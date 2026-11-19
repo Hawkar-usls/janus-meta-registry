@@ -2,7 +2,7 @@
   "schema": "janus.engine.digital_twin.journal.v1",
   "stage": "R0D1A",
   "date": "2026-11-19",
-  "status": "R0D1C3_PARTIAL_CFD_AGREEMENT_NET_RESIDUAL_CONSTRAINED_COMPONENTS_NOT_IDENTIFIED",
+  "status": "R0D1C4_PARTIAL_HYPOTHESES_TESTED_CFD_STORAGE_AUDIT_RUNNING",
   "scope": "Computer-only research: open measurements, calculations, simulation. No user physical experiments required.",
   "sources": [
     {
@@ -40,7 +40,7 @@
   "run008": "FROZEN_UNCHANGED",
   "pr620": "UNCHANGED",
   "evidence_policy": "External physical evidence is not JANUS hardware evidence; external CFD and synthetic runs never count as physical runs.",
-  "next_action": "R0D1C4: establish CFD scalar storage term and time convergence using archived fields, analyze EXP10-05 valve/pump step separately, compare pressure-dependent ambient ingress/cathode reaction and purge hypotheses on held-out runs. Do not treat alternative estimator as unique physical loss, do not promote corrected model or RUN008.",
+  "next_action": "Check CI and CFD field inventory; independently integrate scalar concentration times cell volume if valid fields and geometry exist. If absent, document impossibility from archive and plan independently reproduced extended CFD. Resolve valve compartment topology, evaluate ambient proxy and separate gas reaction; do not promote degenerate model.",
   "r0d1a_receipt": {
     "run_id": 44565755112,
     "artifact_id": 14549884703,
@@ -400,6 +400,68 @@
     },
     "identification": "Only conditional net residual identified, not a unique physical loss range. Ingress and loss can cancel; unknown membrane conductance also confounds recovery. No positive loss clipping.",
     "ci_head": "99ea3c2041a7c2f6128d2dfead6f6df2d46d627e",
-    "ci_run": 44596098875
+    "ci_run": 44596098875,
+    "ci_receipt": {
+      "run_id": 44596098875,
+      "artifact_id": 14565576738,
+      "status": "SUCCESS"
+    }
+  },
+  "r0d1c4": {
+    "source_run": 44596217520,
+    "source_artifact": 14566636537,
+    "experimental_local_calculation": {
+      "exp10_05": {
+        "rows": 7466,
+        "duration_s": 13812,
+        "command_times_s": {
+          "valves": 40,
+          "pump1200": 690,
+          "pump2400_approx": 5580
+        },
+        "signed_inventory_slope_umol_s": {
+          "valve_transient": -357.25044087577663,
+          "pump_off": 8.380727759026913,
+          "pump1200_stable": 0.9451182671480528,
+          "pump2400_early": 1.081019814801645,
+          "pump2400_late": 0.885580259427343
+        },
+        "boundary": "Valve transient is not a leak measurement; water pressure absent, assumed scenarios."
+      },
+      "recovery": {
+        "blocks": 111,
+        "run_groups": 5,
+        "macro_rmse_umol_s": {
+          "frozen": 0.3380787121789602,
+          "frozen_plus_ingress": 0.3380787121789602,
+          "scaled_membrane": 0.24135464756200675,
+          "scaled_plus_ingress": 0.16692781122973666
+        },
+        "joint_all_data_fit": [
+          0,
+          0.09573321402266805
+        ],
+        "decision": "HOLD model degeneracy; membrane coefficient vanishes; no causal ingress attribution"
+      },
+      "fc": {
+        "runs": 4,
+        "segments": 29,
+        "macro_rmse_umol_s": {
+          "faraday_only": 1.1554875534203584,
+          "constant_residual": 0.39020456799024006,
+          "pressure_reaction": 0.4278159736639231,
+          "log_residual": 0.2590471024114941
+        },
+        "decision": "Descriptive grouped cross-validation only; log residual is not a physical mechanism."
+      }
+    },
+    "cfd": {
+      "code_head": "2426dffbbdb40bc2d7b4832209fcf32337249e7b",
+      "status": "AWAITING_CI",
+      "scope": "All 26 cases matched boundary histories, required storage rate, integrated implied inventory change, tail membrane variation and archived field headers. Direct volume integral and actual steady state not yet established."
+    },
+    "experimental_code_head": "2a97235871d92301ebfe2c89ea198eb7bd29aa68",
+    "physical_janus_runs": 0,
+    "run008_modified": false
   }
 }
