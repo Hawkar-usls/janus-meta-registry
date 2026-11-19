@@ -1,0 +1,28 @@
+name: JANUS Engine R0D1C1 CFD
+on:
+  pull_request:
+    branches: [research/janus-engine]
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'projects/janus-engine/digital-twin/r0d1/cfd_reproduce.py'
+      - '.github/workflows/janus-engine-r0d1c1-cfd.yml'
+permissions:
+  contents: read
+concurrency:
+  group: janus-engine-r0d1c1-cfd
+  cancel-in-progress: true
+jobs:
+  cfd:
+    if: github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'research/janus-engine-r0d1-open-data-20261119'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - run: python3 projects/janus-engine/digital-twin/r0d1/cfd_reproduce.py
+      - if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: janus-engine-r0d1c1-cfd
+          path: r0d1c1-cfd.json
