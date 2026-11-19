@@ -25,6 +25,8 @@ jobs:
         run: python3 projects/janus-engine/digital-twin/r0d1/schema_review.py
       - name: Reconstruct experimental points and screen raw recovery curves
         run: python3 projects/janus-engine/digital-twin/r0d1/reproduce.py --archive verified-experiments.tgz --output r0d1b-results.json
+      - name: Audit O2 inventory, gas circulation and loaded raw windows
+        run: python3 projects/janus-engine/digital-twin/r0d1/audit_inventory.py --archive verified-experiments.tgz --output r0d1c-results.json
       - name: Preserve evidence even on failure
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -36,4 +38,5 @@ jobs:
             schema-review.json
             verified-experiments.tgz
             r0d1b-results.json
+            r0d1c-results.json
           if-no-files-found: warn
