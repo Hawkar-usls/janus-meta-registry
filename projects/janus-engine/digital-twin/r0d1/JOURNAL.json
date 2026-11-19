@@ -40,7 +40,7 @@
   "run008": "FROZEN_UNCHANGED",
   "pr620": "UNCHANGED",
   "evidence_policy": "External physical evidence is not JANUS hardware evidence; external CFD and synthetic runs never count as physical runs.",
-  "next_action": "R0D1C1: obtain exact original logger schema; independently fit fuel-cell coefficients (EXP09), reconstruct volume/leak control (EXP03), quantify purge losses without removing anomalous runs. Separately inventory public CFD archive and reproduce postprocessed flux curves without retuning permeance.",
+  "next_action": "R0D1C1: obtain original logger schema, independently fit FC coefficients (EXP09), replicate exact published leak-volume fit vs alternate pressure bins, quantify purge and operational gas losses; do not remove anomalous runs. Separately reproduce CFD postprocessing without retuning.",
   "r0d1a_receipt": {
     "run_id": 44565755112,
     "artifact_id": 14549884703,
@@ -183,6 +183,28 @@
       "Equivalent missing flux is not measured leakage; purge event losses, leak and inert gas partition remain unresolved.",
       "Loaded windows retrospective; published empirical FC coefficients used; no independent FC calibration yet.",
       "CFD reproduction and physical JANUS validation remain HOLD."
-    ]
+    ],
+    "ci_receipt": {
+      "run_id": 44575723725,
+      "artifact_id": 14556136662,
+      "status": "SUCCESS_RAW_INVENTORY_AUDIT",
+      "head": "5d57c746b00681952dd351ed03ba666f32c6f9c7"
+    },
+    "volume_supplement": {
+      "head": "3467e1aa9aeb8b1cb0798c0b2f0ec9952bed5020",
+      "status": "LOCAL_CALCULATION_CI_PENDING",
+      "container_l": [
+        2.214956982890186,
+        2.205937368612004
+      ],
+      "bypass_l": 0.0245,
+      "matched_pressure_bins_total_l": [
+        7.771152403072204,
+        7.954783924414911,
+        7.987439104007546,
+        8.410608978084657
+      ],
+      "interpretation": "Container reconstruction agrees with published 2.21 L; total-volume alternative estimator does not reproduce paper 7.061 L. Small sample counts and intentional leak plug; not operational leakage. Does not explain 11.45 or 15.29 L required by anomalous recovery."
+    }
   }
 }
