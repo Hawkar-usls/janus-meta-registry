@@ -31,6 +31,8 @@ jobs:
         run: python3 projects/janus-engine/digital-twin/r0d1/calibrate_fc_volume.py --archive verified-experiments.tgz --output r0d1c1-results.json
       - name: Separate Faradaic consumption and signed residual
         run: python3 projects/janus-engine/digital-twin/r0d1/gas_balance.py
+      - name: Identify residual ranges and compare frozen twin with all CFD cases
+        run: python3 projects/janus-engine/digital-twin/r0d1/residual_identification.py
       - name: Preserve evidence even on failure
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -45,4 +47,5 @@ jobs:
             r0d1c-results.json
             r0d1c1-results.json
             r0d1c2-results.json
+            r0d1c3-results.json
           if-no-files-found: warn
