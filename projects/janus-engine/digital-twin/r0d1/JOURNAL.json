@@ -2,7 +2,7 @@
   "schema": "janus.engine.digital_twin.journal.v1",
   "stage": "R0D1A",
   "date": "2026-11-19",
-  "status": "R0D1C1_PARTIAL_VOLUME_REPRODUCED_FC_TRANSFER_HOLD_CFD_RUNNING",
+  "status": "R0D1C2_NET_RESIDUAL_IDENTIFIED_CFD_RETRY_TRANSFER_HOLD",
   "scope": "Computer-only research: open measurements, calculations, simulation. No user physical experiments required.",
   "sources": [
     {
@@ -40,7 +40,7 @@
   "run008": "FROZEN_UNCHANGED",
   "pr620": "UNCHANGED",
   "evidence_policy": "External physical evidence is not JANUS hardware evidence; external CFD and synthetic runs never count as physical runs.",
-  "next_action": "R0D1C2: verify CI receipts and CFD flux tables, locate logger schema, fit validated effective depletion model across matched no-load/loaded configurations, quantify uncertainty and operational leakage/purge separately; keep all anomalies and RUN008 frozen.",
+  "next_action": "Verify new gas-balance CI, retry CFD extraction with archived source-defined schema; inspect all case coverage and matched timestamps, report signed imbalance without asserting independent validation. Preserve RUN008.",
   "r0d1a_receipt": {
     "run_id": 44565755112,
     "artifact_id": 14549884703,
@@ -292,13 +292,58 @@
       "column10": "unresolved; withdraw prior gas flow interpretation"
     },
     "cfd": {
-      "run_id": 44576823355,
-      "head": "29968f243abdda4eb684f1ed8b1fab5c91f73fb4",
-      "status": "IN_PROGRESS",
-      "source": "10.5281/zenodo.13149491",
-      "target_cases": 26,
-      "scope": "postprocessing only; no CFD solver rerun"
+      "run_id": 44577479713,
+      "artifact_id": 14558436461,
+      "status": "BLOCKED_PARSER_FORMAT_ARCHIVE_VERIFIED",
+      "archive_bytes": 1128126000,
+      "md5": "922663cb89aa3f47c611de8b2c7af5f4",
+      "sha256": "3f5d6e8fe5d07cbd022ac63c08b7873571b3333176fec7ef5303be2fe984ed4d",
+      "error": "unexpected flux record OpenFoamData/bugsScalarTransport3D1200Sc1LRp7000/postProcessing/flux/0/flux.dat:3"
     },
-    "ci_head": "7b4b60f6f55c8b919997728928aceb749c46e495"
+    "ci_head": "7b4b60f6f55c8b919997728928aceb749c46e495",
+    "ci_receipt": {
+      "run_id": 44577479177,
+      "artifact_id": 14557157344,
+      "status": "SUCCESS"
+    }
+  },
+  "r0d1c2": {
+    "source_artifact": 14557157344,
+    "source_run": 44577479177,
+    "ideal_stack_cells": 13,
+    "faraday_umol_per_A_s": 33.68387638400762,
+    "assumption_source": "exp09_fuelcell_calibration/fc_performance.py uses i/4/F*13",
+    "local_calculation": {
+      "train_run": "09.05",
+      "segments_by_run": {
+        "09.01": 10,
+        "09.02": 10,
+        "09.03": 1,
+        "09.05": 8
+      },
+      "constant_residual_umol_s": 0.85579312,
+      "log_coefficients": [
+        1.04894609,
+        0.42846572
+      ],
+      "cross_run_rmse_log": [
+        0.4149711637932534,
+        0.38499871486725273,
+        0.3967127948669653
+      ],
+      "loaded_rmse_mean_pressure": 0.30635664561300013,
+      "negative_residuals": 2,
+      "no_load_residual_range_umol_s": [
+        1.00371533,
+        1.5196317
+      ]
+    },
+    "limitations": [
+      "Net residual not a unique causal loss measurement; negative values retained.",
+      "Ideal Faradaic term assumes 13 active series cells and four-electron reduction.",
+      "R0D1C2 loaded comparison worsens; no promotion.",
+      "CFD parser must match archived foamfiles.py: membrane reads first 3 fields and accepts trailing columns, inlet/outlet exact 3; use author sign and factor, distinguish volumetric water flow from O2 scalar flux."
+    ],
+    "ci_head": "861be68257a6ba7005dae89efecacac4238ed4e3"
   }
 }
