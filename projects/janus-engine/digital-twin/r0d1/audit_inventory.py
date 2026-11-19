@@ -54,14 +54,43 @@ def loaded(t,spec):
     inventory=1e6*slope(ts,[V*pp/(R*T) for pp,T in zip(p,temp)])
     flux=fc+inventory
     return {"run":name,"window_s":[lo,hi],"samples":len(a),"mean_p_pa":statistics.mean(p),"mean_current_ma":statistics.mean(I)*1e3,"inventory_umol_s":inventory,"fc_umol_s":fc,"flux_umol_s":flux,"reference_umol_s":ref,"delta_umol_s":flux-ref,"purge_nonzero_rows":sum(x[18]!=0 for x in a)}
+def volume_controls(t):
+    # Linear pressure extrapolation on the author's EXP03 valve windows.
+    results=[]
+    for n,to,p1,t1 in [(4,399.1,102067,24.97),(5,675,102058,25.34)]:
+        x=load(t,f"exp03_volume_test/data_exp03_{n:02}.txt")
+        idx=min(range(len(x)),key=lambda i:abs(x[i][0]-to))
+        a=x[idx-52:idx-2];b=x[idx+15:idx+65]
+        def intercept(rows):
+            tt=[v[0]-to for v in rows];pp=[v[5] for v in rows]
+            return statistics.mean(pp)-slope(tt,pp)*statistics.mean(tt)
+        p2,p3=intercept(a),intercept(b)
+        T2=273.15+statistics.mean(v[2] for v in a);T3=273.15+statistics.mean(v[2] for v in b)
+        factor=(p1*T3/(t1+273.15)-p3)/(p3-p2*T3/T2)
+        results.append({"run":n,"factor":factor,"container_l":factor*.0245})
+    # Matched total-pressure bins, temperature-corrected pressure slopes.
+    # This deliberately differs from the author's variance/interpolation estimator.
+    bins=[]
+    for lo in (80000,85000,90000,95000):
+        slopes=[];counts=[]
+        for n,l,h in [(9,93,395),(10,105,230)]:
+            rows=[v for v in load(t,f"exp03_volume_test/data_exp03_{n:02}.txt") if l<=v[0]<=h and lo<=v[5]<lo+5000]
+            counts.append(len(rows))
+            if len(rows)<3:raise ValueError("too few leak control samples")
+            slopes.append(slope([v[0] for v in rows],[v[5]/(v[2]+273.15) for v in rows]))
+        ratio=slopes[1]/slopes[0]
+        bins.append({"pressure_pa":[lo,lo+5000],"samples_full_bypass":counts,"ratio":ratio,"total_l_screen":ratio*(statistics.mean(v["container_l"] for v in results)+.0245)})
+    return {"container_controls":results,"matched_pressure_leak_control":bins,"boundary":"Artificial calibrated leak plug differs from operating seals. Small sample counts and estimator sensitivity; screening only, not validated total volume or runtime leak."}
+
 def main():
     p=argparse.ArgumentParser();p.add_argument("--archive",type=Path,required=True);p.add_argument("--output",type=Path,required=True);a=p.parse_args()
     if hashlib.sha256(a.archive.read_bytes()).hexdigest()!=SHA:raise ValueError("archive mismatch")
     with tarfile.open(a.archive,"r:gz") as t:
         rec=[recovery(t,r) for r in REC];loaded_rows=[loaded(t,w) for w in WINDOWS]
+        volumes=volume_controls(t)
         script=t.extractfile("experiments/exp10/p_curves.py").read().decode()
         excluded_2100="Tscales[3] = np.nan" in script and "idx = np.array([0,1,2,4])" in script
-    out={"stage":"R0D1C","status":"PARTIAL_RAW_INVENTORY_AUDIT_CAUSAL_ATTRIBUTION_HOLD","source_sha256":SHA,"recovery":rec,"loaded":loaded_rows,"loaded_rmse":math.sqrt(statistics.mean(r["delta_umol_s"]**2 for r in loaded_rows)),"author_excluded_2100_from_linear_fit":excluded_2100,"physical_janus_runs":0,"full_cfd_reproduced":False,"run008_modified":False,"limitations":["Channel 10 is inferred to be gas flow; sensor schema not established independently; zero may be sensor fault.","Unmodelled sink is an equivalent residual, not a leak measurement. Purge flags are counted as nonzero samples, not distinct events; losses unquantified.","Fixed loaded windows selected retrospectively from notes and current traces; not exact published windows or blind validation.","Inventory slope plus published FC coefficients is an independent calculation, not independent FC calibration; neglects unknown leak and purge flux.","Volume sensitivity uses published volume and uncertainty; not independent volume replication.","All five recovery runs retained, including 2100 rpm."]}
+    out={"stage":"R0D1C","status":"PARTIAL_RAW_INVENTORY_AUDIT_CAUSAL_ATTRIBUTION_HOLD","source_sha256":SHA,"recovery":rec,"volume_controls":volumes,"loaded":loaded_rows,"loaded_rmse":math.sqrt(statistics.mean(r["delta_umol_s"]**2 for r in loaded_rows)),"author_excluded_2100_from_linear_fit":excluded_2100,"physical_janus_runs":0,"full_cfd_reproduced":False,"run008_modified":False,"limitations":["Channel 10 is inferred to be gas flow; sensor schema not established independently; zero may be sensor fault.","Unmodelled sink is an equivalent residual, not a leak measurement. Purge flags are counted as nonzero samples, not distinct events; losses unquantified.","Fixed loaded windows selected retrospectively from notes and current traces; not exact published windows or blind validation.","Inventory slope plus published FC coefficients is an independent calculation, not independent FC calibration; neglects unknown leak and purge flux.","Volume valve controls independently reconstructed. Matched-pressure leak test is a screening estimator, not exact paper algorithm or runtime leak measurement.","All five recovery runs retained, including 2100 rpm."]}
     a.output.write_text(json.dumps(out,indent=2)+"\n",encoding="utf-8")
     print(json.dumps(out,indent=2))
 if __name__=="__main__":main()
