@@ -2,13 +2,13 @@
   "schema": "janus.context_bridge.current_state.v1",
   "project": "JANUS COSMOS / SETI",
   "updated_utc": "2026-11-18T09:39:47Z",
-  "as_of": "R40N10B launch: original Parkes receiver recovery plus separate UWL transfer using unchanged R40N10 model lock; qualification unmeasured; production HOLD.",
+  "as_of": "R40N10B finished; frozen weights intact, zero qualified groups in both lanes, scientific evaluation HOLD.",
   "authority": {
     "repository": "Hawkar-usls/Janus-Cosmos",
     "research_branch": "research/seti-radio-candidate-search-20261117",
     "registry": "Hawkar-usls/janus-meta-registry",
     "journal": "data/JANUS-COSMOS-SETI-DEVELOPMENT-JOURNAL.json",
-    "journal_commit": "9d95f2780f69e62c7bd77666c6beac6e885ec8ee",
+    "journal_commit": "001f4e920652fe6cc626008316750ccce14839bb",
     "continuity_protocol": "data/JANUS-PROJECT-CONTINUITY-LEDGER-HRAIN-INAIHR-PROTOCOL-2026-08-24-v1.0.json",
     "protocol_blob": "740065281c7c7b289c927db7661b9b000abb8c68"
   },
@@ -399,7 +399,7 @@
     "Retain raw paths when OFF contains signal",
     "R33B4 original hit mapping HOLD, Figure6 exact file available; R34 independently labelled inputs and protected compatible grid still HOLD."
   ],
-  "next_allowed": "Check metadata qualification and exact rejection ledger, then unchanged-model separate paired tests on new spectra. No relaxation or training; HOLD where fewer than two acquired groups.",
+  "next_allowed": "R40N10C ARCHIVE ADAPTER AUDIT: inspect real published UWL metadata rows, documented columns/band/file naming/ON-OFF cadence and public archive direct listing before expanding queries; diagnose 80 unlabeled Parkes assertions with instrumented header and pointing gate, preserving criteria. Seek separately qualified alternate receiver archive if UWL lacks requisite cadence. Freeze unchanged N10 model, no training, no relaxed independence, no replacement after power. Require >=2 independent qualified groups per lane. External physical claims HOLD. No production change.",
   "claim_ceiling": "Synthetic injections on real measured backgrounds; not independent real source labels. CPU kernel comparisons only, no proof of whole pipeline superiority. No confirmed extraterrestrial technosignatures.",
   "startup": [
     "Read this current-state JSON from GitHub main each new COSMOS conversation.",
@@ -439,10 +439,10 @@
   },
   "active_experiment": {
     "stage": "R40N10B",
-    "status": "RUNNING_UNMEASURED",
+    "status": "PASS_FROZEN_MODEL_AND_METADATA_AUDIT__HOLD_NO_QUALIFIED_FRESH_GROUPS",
     "run": 44580662741,
     "receipt": "data/JANUS-COSMOS-SETI-R40N10B-EXPANSION-2026-11-19.json",
-    "receipt_commit": "d1e788f5ae444512dd79bd93f9c46e84b89f0955",
+    "receipt_commit": "593b814aec32de671e6b5f8ffd568bc8d552ebaf",
     "production_adoption": false,
     "discovery_relaunch_allowed": false
   },
@@ -8191,13 +8191,65 @@
   },
   "r40n10b": {
     "stage": "R40N10B",
-    "status": "RUNNING_UNMEASURED",
+    "status": "PASS_FROZEN_MODEL_AND_METADATA_AUDIT__HOLD_NO_QUALIFIED_FRESH_GROUPS",
     "run": 44580662741,
     "receipt": "data/JANUS-COSMOS-SETI-R40N10B-EXPANSION-2026-11-19.json",
-    "receipt_commit": "d1e788f5ae444512dd79bd93f9c46e84b89f0955",
+    "receipt_commit": "593b814aec32de671e6b5f8ffd568bc8d552ebaf",
     "production_adoption": false,
     "discovery_relaunch_allowed": false,
     "frozen_model_sha256": "ecb99e581270f3617171578a9983e0f2ad5069267318d7cc9210756769794646",
-    "gate": "Exact frozen weights hash before and after; zero paired losses and repeat stress losses, <=35/640 and <=7/8 Learned05 controls, >=2 fresh qualified measured groups in each applicable lane. Insufficient or failed acquisitions HOLD. UWL transfer not same-domain replication or external validation."
+    "gate": "Exact frozen weights hash before and after; zero paired losses and repeat stress losses, <=35/640 and <=7/8 Learned05 controls, >=2 fresh qualified measured groups in each applicable lane. Insufficient or failed acquisitions HOLD. UWL transfer not same-domain replication or external validation.",
+    "artifact": 14560938049,
+    "artifact_sha256": "c4b02e5cbba28220c631cf0ed8044e945aefdcc5321fa550ae38db124c007aa0",
+    "lock_sha256": "ecb99e581270f3617171578a9983e0f2ad5069267318d7cc9210756769794646",
+    "manifest_sha256": "9543f5ea09317aba124a08f5fa00e82a3b85f0f7d032265e2517da71c322572a",
+    "selection": [
+      {
+        "stage": "SELECTION",
+        "lane": "same_receiver",
+        "qualified": 0,
+        "eligible": false,
+        "attempts": 237,
+        "cadences": 123,
+        "rejections": {
+          "AssertionError: ": 80,
+          "ValueError: not 16 native integrations": 4,
+          "OSError: archive refused exact range": 28,
+          "ValueError: missing original four frequency windows": 9,
+          "ValueError: Prior or duplicate sky pointing": 2
+        },
+        "manifest_sha256": "51615a59ae7b381537d2f3d4a9ab50e7cee0846c24fe6d7f69bc7f0eade9e124",
+        "seconds": 1396.1569620569999
+      },
+      {
+        "stage": "SELECTION",
+        "lane": "uwl",
+        "qualified": 0,
+        "eligible": false,
+        "attempts": 69,
+        "cadences": 0,
+        "rejections": {},
+        "manifest_sha256": "322b970dd748c0fdc9324ac071abda77608c5971b6e774480be1965c0121890b",
+        "seconds": 429.4545873679999
+      }
+    ],
+    "lanes": {
+      "same_receiver": {
+        "status": "HOLD_INSUFFICIENT_QUALIFIED_GROUPS",
+        "qualified": 0,
+        "planned": 0,
+        "measured": 0,
+        "failures": [],
+        "controls": 0
+      },
+      "uwl": {
+        "status": "HOLD_INSUFFICIENT_QUALIFIED_GROUPS",
+        "qualified": 0,
+        "planned": 0,
+        "measured": 0,
+        "failures": [],
+        "controls": 0
+      }
+    }
   }
 }
