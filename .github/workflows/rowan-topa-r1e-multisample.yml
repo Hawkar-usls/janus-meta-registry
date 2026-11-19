@@ -1,0 +1,28 @@
+name: JANUS TOPA R1E five-sample cost and confidence audit
+on:
+  pull_request:
+    paths:
+      - 'data/rowan/provenance/ROWAN-R1E-REAL-FIVE-SAMPLE-WT-COST-2026-11-19-v1.json'
+      - 'modules/rowan_observer/topa_r1e_multisample.py'
+      - '.github/workflows/rowan-topa-r1e-multisample.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Independent decimal replay and three negative controls
+        run: python modules/rowan_observer/topa_r1e_multisample.py --out "${RUNNER_TEMP}/topa-r1e.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: topa-r1e-${{ github.run_id }}
+          path: ${{ runner.temp }}/topa-r1e.json
+          retention-days: 14
