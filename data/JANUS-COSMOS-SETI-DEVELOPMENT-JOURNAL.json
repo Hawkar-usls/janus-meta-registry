@@ -10927,6 +10927,69 @@
         "discovery_relaunch_allowed": false
       },
       "next_gate": "Exact frozen weights hash before and after; zero paired losses and repeat stress losses, <=35/640 and <=7/8 Learned05 controls, >=2 fresh qualified measured groups in each applicable lane. Insufficient or failed acquisitions HOLD. UWL transfer not same-domain replication or external validation."
+    },
+    {
+      "event_id": "20261119-R40N10B-RESULT",
+      "date": "2026-11-19",
+      "stage": "R40N10B",
+      "kind": "RESULT",
+      "status": "PASS_FROZEN_MODEL_AND_METADATA_AUDIT__HOLD_NO_QUALIFIED_FRESH_GROUPS",
+      "decision": "Same receiver 237 targets/123 cadences, zero eligible; UWL 69 targets, zero assembled candidate cadences. Frozen lock unchanged. 80 generic assertions still unlabelled; UWL metadata adapter not established as correct. No power measurement or scientific transfer result.",
+      "evidence": {
+        "artifact": 14560938049,
+        "sha256": "c4b02e5cbba28220c631cf0ed8044e945aefdcc5321fa550ae38db124c007aa0",
+        "lock_sha256": "ecb99e581270f3617171578a9983e0f2ad5069267318d7cc9210756769794646",
+        "manifest_sha256": "9543f5ea09317aba124a08f5fa00e82a3b85f0f7d032265e2517da71c322572a",
+        "selection": [
+          {
+            "stage": "SELECTION",
+            "lane": "same_receiver",
+            "qualified": 0,
+            "eligible": false,
+            "attempts": 237,
+            "cadences": 123,
+            "rejections": {
+              "AssertionError: ": 80,
+              "ValueError: not 16 native integrations": 4,
+              "OSError: archive refused exact range": 28,
+              "ValueError: missing original four frequency windows": 9,
+              "ValueError: Prior or duplicate sky pointing": 2
+            },
+            "manifest_sha256": "51615a59ae7b381537d2f3d4a9ab50e7cee0846c24fe6d7f69bc7f0eade9e124",
+            "seconds": 1396.1569620569999
+          },
+          {
+            "stage": "SELECTION",
+            "lane": "uwl",
+            "qualified": 0,
+            "eligible": false,
+            "attempts": 69,
+            "cadences": 0,
+            "rejections": {},
+            "manifest_sha256": "322b970dd748c0fdc9324ac071abda77608c5971b6e774480be1965c0121890b",
+            "seconds": 429.4545873679999
+          }
+        ],
+        "lanes": {
+          "same_receiver": {
+            "status": "HOLD_INSUFFICIENT_QUALIFIED_GROUPS",
+            "qualified": 0,
+            "planned": 0,
+            "measured": 0,
+            "failures": [],
+            "controls": 0
+          },
+          "uwl": {
+            "status": "HOLD_INSUFFICIENT_QUALIFIED_GROUPS",
+            "qualified": 0,
+            "planned": 0,
+            "measured": 0,
+            "failures": [],
+            "controls": 0
+          }
+        }
+      },
+      "next_gate": "R40N10C ARCHIVE ADAPTER AUDIT: inspect real published UWL metadata rows, documented columns/band/file naming/ON-OFF cadence and public archive direct listing before expanding queries; diagnose 80 unlabeled Parkes assertions with instrumented header and pointing gate, preserving criteria. Seek separately qualified alternate receiver archive if UWL lacks requisite cadence. Freeze unchanged N10 model, no training, no relaxed independence, no replacement after power. Require >=2 independent qualified groups per lane. External physical claims HOLD. No production change."
     }
   ],
   "current": {
@@ -10937,10 +11000,10 @@
   },
   "active_experiment": {
     "stage": "R40N10B",
-    "status": "RUNNING_UNMEASURED",
+    "status": "PASS_FROZEN_MODEL_AND_METADATA_AUDIT__HOLD_NO_QUALIFIED_FRESH_GROUPS",
     "run": 44580662741,
     "receipt": "data/JANUS-COSMOS-SETI-R40N10B-EXPANSION-2026-11-19.json",
-    "receipt_commit": "d1e788f5ae444512dd79bd93f9c46e84b89f0955",
+    "receipt_commit": "593b814aec32de671e6b5f8ffd568bc8d552ebaf",
     "production_adoption": false,
     "discovery_relaunch_allowed": false
   },
