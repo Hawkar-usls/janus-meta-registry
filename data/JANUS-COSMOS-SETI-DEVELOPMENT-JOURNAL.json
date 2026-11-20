@@ -12415,6 +12415,130 @@
         "receipt_commit": "896aedbbca18e2aac13b91ff6323bbb31fa9a81b"
       },
       "next_gate": "Verify original archive metadata, exact original source and role, and actual per-scan pointing; then unchanged independent cadence/hash/sky gate. No automatic promotion from alternate header alone."
+    },
+    {
+      "event_id": "20261120-R41S1H2_LOCK-COMPLETE",
+      "date": "2026-11-20",
+      "stage": "R41S1H2_LOCK",
+      "kind": "RESULT",
+      "status": "LOCKED_SYNTHETIC_OPERATING_POINT__HOLD_NATIVE_VALIDATION",
+      "evidence": {
+        "schema": "janus.cosmos.r41s1h2.receipt.v1",
+        "date": "2026-11-20",
+        "stage": "R41S1H2_LOCK",
+        "status": "LOCKED_SYNTHETIC_OPERATING_POINT__HOLD_NATIVE_VALIDATION",
+        "branch": "research/seti-r41s1h2-frozen-operating-point-20261120",
+        "protocol_commit": "05a42654b41207e49d746298e1c2c89f565ac5c0",
+        "implementation_commit": "e436bb9d7b80bc66d58aee94238d46e29120857c",
+        "workflow_commit": "022a63076686992914946c00b82c6173b524d6de",
+        "run": 44786812937,
+        "job": 136463725912,
+        "result": {
+          "artifact": 14653828217,
+          "artifact_digest": "608643dd148242a53b6134cf11645b99c3476a5d2fbb8be5a37c553e60b30842",
+          "lock_sha256": "52d6e811ea95484c14f130a4bc70cda588d988d3446ba64ed1c32424f7ce56e2",
+          "source_h1_archive_verified": true,
+          "thresholds": {
+            "physical": -0.1438110998221716,
+            "fixed": -0.035691888748720604
+          },
+          "development": {
+            "positive": 288,
+            "negative": 480,
+            "physical": {
+              "tp": 288,
+              "fn": 0,
+              "fp": 371
+            },
+            "fixed": {
+              "tp": 288,
+              "fn": 0,
+              "fp": 409
+            }
+          },
+          "heldout": {
+            "positive": 432,
+            "negative": 720,
+            "physical": {
+              "tp": 431,
+              "fn": 1,
+              "fp": 527,
+              "tn": 193,
+              "weak": 144,
+              "weak_total": 144,
+              "broad_rfi_kept": 4,
+              "broad_rfi_total": 144,
+              "noise_kept": 144,
+              "shared_narrow_kept": 122,
+              "stationary_off_kept": 131,
+              "shifted_rival_kept": 126
+            },
+            "fixed": {
+              "tp": 429,
+              "fn": 3,
+              "fp": 557,
+              "tn": 163,
+              "weak": 143,
+              "weak_total": 144,
+              "broad_rfi_kept": 105,
+              "broad_rfi_total": 144,
+              "noise_kept": 144,
+              "shared_narrow_kept": 94,
+              "stationary_off_kept": 71,
+              "shifted_rival_kept": 143
+            }
+          },
+          "independent_real_groups": 0,
+          "native_test_run": false,
+          "zero_loss_gate": false
+        },
+        "limitations": "H1 analytical model and H2 single predetermined threshold calibrated only on synthetic development rows; H1 aggregate heldout AUC already known when H2 policy registered, not a new external blind test. One heldout target_narrow lost; no synthetic zero-loss operating gate, no veto/adoption. Improvement mainly broad-RFI rejection; noise remains fully retained. Actual production metrics are not measured by hypothetical historical NOISE; 51 is historical comparator count.",
+        "next": "H2 locked diagnostic only. Do not modify existing lock or search thresholds on historical 38. Independently acquire actual pointing and native group manifest; qualify native adapter and compare same locked point prospectively, report loss and FPR as-is. If a future safety modification is designed, preregister separately with new disjoint data. R42B/R38 remain HOLD.",
+        "production_adoption": false,
+        "external_validation": false,
+        "receipt": "data/JANUS-COSMOS-SETI-R41S1H2-FROZEN-OPERATING-POINT-2026-11-20.json",
+        "receipt_commit": "876e42935701384256e36bb950468fabe177eb08"
+      },
+      "next_gate": "H2 locked diagnostic only. Do not modify existing lock or search thresholds on historical 38. Independently acquire actual pointing and native group manifest; qualify native adapter and compare same locked point prospectively, report loss and FPR as-is. If a future safety modification is designed, preregister separately with new disjoint data. R42B/R38 remain HOLD."
+    },
+    {
+      "event_id": "20261120-R41S1G1-COMPLETE",
+      "date": "2026-11-20",
+      "stage": "R41S1G1",
+      "kind": "RESULT",
+      "status": "HOLD_INDEPENDENT_POINTING_CORROBORATION",
+      "evidence": {
+        "schema": "janus.cosmos.r41s1g1.receipt.v1",
+        "date": "2026-11-20",
+        "stage": "R41S1G1",
+        "status": "HOLD_INDEPENDENT_POINTING_CORROBORATION",
+        "branch": "research/seti-r41s1g1-parkes-metadata-20261120",
+        "protocol_commit": "6ad80f024222d083b85d245dfd6224bb7b6dae12",
+        "implementation_commit": "b0340937f80b03aebaefb6bfb7491c9678240eae",
+        "workflow_commit": "111c1c4cf6d333061283d3485ef157256f575a2d",
+        "run": 44785747389,
+        "job": 136460017765,
+        "source_run": 44593785066,
+        "source_artifact": 14566527135,
+        "scope": "Metadata-only exact rejoin of 80 historical zero-coordinate rejections; up to 16 cadences, 64 files, original HDF5 attrs and exact .fil index match when present, no power, no target coordinates substituted; independent pointing corroboration still required.",
+        "next": "Obtain authentic original telescope observation/log metadata or an independent observing archive with nonzero per-scan pointing; no target coordinates substitution and no relaxed gates. Alternative native receiver lanes may be separately qualified.",
+        "external_validation": false,
+        "production_adoption": false,
+        "result": {
+          "artifact": 14653359591,
+          "artifact_digest": "06fdff4e7ce8291a5455feb270e8e6fe63ddcbe20f6ffad2e9fd9ca93705fc4a",
+          "cadences": 16,
+          "files": 64,
+          "hdf5_attrs_recovered": 64,
+          "exact_fil_match": 0,
+          "candidate_nonzero_fil_pointings": 0,
+          "qualified_fresh_groups": 0,
+          "no_power_read": true
+        },
+        "receipt": "data/JANUS-COSMOS-SETI-R41S1G1-PARKES-METADATA-2026-11-20.json",
+        "receipt_commit": "c059d31320e8bc2b2a60daf693cc16ba87520b18"
+      },
+      "next_gate": "Obtain authentic original telescope observation/log metadata or an independent observing archive with nonzero per-scan pointing; no target coordinates substitution and no relaxed gates. Alternative native receiver lanes may be separately qualified."
     }
   ],
   "current": {
@@ -13246,7 +13370,7 @@
       "schema": "janus.cosmos.r41s1g1.receipt.v1",
       "date": "2026-11-20",
       "stage": "R41S1G1",
-      "status": "RUNNING_METADATA_ONLY__HOLD_FRESH_QUALIFICATION",
+      "status": "HOLD_INDEPENDENT_POINTING_CORROBORATION",
       "branch": "research/seti-r41s1g1-parkes-metadata-20261120",
       "protocol_commit": "6ad80f024222d083b85d245dfd6224bb7b6dae12",
       "implementation_commit": "b0340937f80b03aebaefb6bfb7491c9678240eae",
@@ -13256,11 +13380,99 @@
       "source_run": 44593785066,
       "source_artifact": 14566527135,
       "scope": "Metadata-only exact rejoin of 80 historical zero-coordinate rejections; up to 16 cadences, 64 files, original HDF5 attrs and exact .fil index match when present, no power, no target coordinates substituted; independent pointing corroboration still required.",
-      "next": "Verify original archive metadata, exact original source and role, and actual per-scan pointing; then unchanged independent cadence/hash/sky gate. No automatic promotion from alternate header alone.",
+      "next": "Obtain authentic original telescope observation/log metadata or an independent observing archive with nonzero per-scan pointing; no target coordinates substitution and no relaxed gates. Alternative native receiver lanes may be separately qualified.",
       "external_validation": false,
       "production_adoption": false,
+      "result": {
+        "artifact": 14653359591,
+        "artifact_digest": "06fdff4e7ce8291a5455feb270e8e6fe63ddcbe20f6ffad2e9fd9ca93705fc4a",
+        "cadences": 16,
+        "files": 64,
+        "hdf5_attrs_recovered": 64,
+        "exact_fil_match": 0,
+        "candidate_nonzero_fil_pointings": 0,
+        "qualified_fresh_groups": 0,
+        "no_power_read": true
+      },
       "receipt": "data/JANUS-COSMOS-SETI-R41S1G1-PARKES-METADATA-2026-11-20.json",
-      "receipt_commit": "896aedbbca18e2aac13b91ff6323bbb31fa9a81b"
+      "receipt_commit": "c059d31320e8bc2b2a60daf693cc16ba87520b18"
+    },
+    "r41s1h2": {
+      "schema": "janus.cosmos.r41s1h2.receipt.v1",
+      "date": "2026-11-20",
+      "stage": "R41S1H2_LOCK",
+      "status": "LOCKED_SYNTHETIC_OPERATING_POINT__HOLD_NATIVE_VALIDATION",
+      "branch": "research/seti-r41s1h2-frozen-operating-point-20261120",
+      "protocol_commit": "05a42654b41207e49d746298e1c2c89f565ac5c0",
+      "implementation_commit": "e436bb9d7b80bc66d58aee94238d46e29120857c",
+      "workflow_commit": "022a63076686992914946c00b82c6173b524d6de",
+      "run": 44786812937,
+      "job": 136463725912,
+      "result": {
+        "artifact": 14653828217,
+        "artifact_digest": "608643dd148242a53b6134cf11645b99c3476a5d2fbb8be5a37c553e60b30842",
+        "lock_sha256": "52d6e811ea95484c14f130a4bc70cda588d988d3446ba64ed1c32424f7ce56e2",
+        "source_h1_archive_verified": true,
+        "thresholds": {
+          "physical": -0.1438110998221716,
+          "fixed": -0.035691888748720604
+        },
+        "development": {
+          "positive": 288,
+          "negative": 480,
+          "physical": {
+            "tp": 288,
+            "fn": 0,
+            "fp": 371
+          },
+          "fixed": {
+            "tp": 288,
+            "fn": 0,
+            "fp": 409
+          }
+        },
+        "heldout": {
+          "positive": 432,
+          "negative": 720,
+          "physical": {
+            "tp": 431,
+            "fn": 1,
+            "fp": 527,
+            "tn": 193,
+            "weak": 144,
+            "weak_total": 144,
+            "broad_rfi_kept": 4,
+            "broad_rfi_total": 144,
+            "noise_kept": 144,
+            "shared_narrow_kept": 122,
+            "stationary_off_kept": 131,
+            "shifted_rival_kept": 126
+          },
+          "fixed": {
+            "tp": 429,
+            "fn": 3,
+            "fp": 557,
+            "tn": 163,
+            "weak": 143,
+            "weak_total": 144,
+            "broad_rfi_kept": 105,
+            "broad_rfi_total": 144,
+            "noise_kept": 144,
+            "shared_narrow_kept": 94,
+            "stationary_off_kept": 71,
+            "shifted_rival_kept": 143
+          }
+        },
+        "independent_real_groups": 0,
+        "native_test_run": false,
+        "zero_loss_gate": false
+      },
+      "limitations": "H1 analytical model and H2 single predetermined threshold calibrated only on synthetic development rows; H1 aggregate heldout AUC already known when H2 policy registered, not a new external blind test. One heldout target_narrow lost; no synthetic zero-loss operating gate, no veto/adoption. Improvement mainly broad-RFI rejection; noise remains fully retained. Actual production metrics are not measured by hypothetical historical NOISE; 51 is historical comparator count.",
+      "next": "H2 locked diagnostic only. Do not modify existing lock or search thresholds on historical 38. Independently acquire actual pointing and native group manifest; qualify native adapter and compare same locked point prospectively, report loss and FPR as-is. If a future safety modification is designed, preregister separately with new disjoint data. R42B/R38 remain HOLD.",
+      "production_adoption": false,
+      "external_validation": false,
+      "receipt": "data/JANUS-COSMOS-SETI-R41S1H2-FROZEN-OPERATING-POINT-2026-11-20.json",
+      "receipt_commit": "876e42935701384256e36bb950468fabe177eb08"
     }
   }
 }
