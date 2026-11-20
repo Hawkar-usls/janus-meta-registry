@@ -11749,6 +11749,49 @@
         "previous_run": 44759469112
       },
       "next_gate": "Verify actual SIA rows, WCS, source FITS and band results, maintain per-target deadlines and no origin claim."
+    },
+    {
+      "event_id": "20261120-R41U1-R2-NATIVE-CUTOUT",
+      "date": "2026-11-20",
+      "stage": "R41U1",
+      "kind": "REPAIR",
+      "status": "RUNNING_UNMEASURED_NATIVE_CUTOUT_REPAIR",
+      "decision": "R1 seven successful SIA queries, zero pixels due to column ID/name mismatch. Fix names and bounded native cutout transport; frozen prior failures preserved.",
+      "evidence": {
+        "stage": "R41U1",
+        "status": "RUNNING_UNMEASURED_NATIVE_CUTOUT_REPAIR",
+        "run": 44765412986,
+        "branch": "research/seti-r41u1-wise-bounded-20261120",
+        "receipt": "data/JANUS-COSMOS-SETI-R41U1-WISE-BOUNDED-2026-11-20.json",
+        "receipt_commit": "76b1542711fce739d206b292d84a75b26e66eb75",
+        "next": "Verify archived replay, fourteen FITS responses and hashes, WCS and rival fits; no association/origin inference or adoption.",
+        "production_adoption": false,
+        "discovery_relaunch_allowed": false,
+        "previous_run": 44760371360,
+        "r1_result": {
+          "run": 44760371360,
+          "status": "HOLD_VOTABLE_COLUMN_ID_MISMATCH",
+          "artifact": 14640278194,
+          "archive_sha256_verified": "0dac4520dce2eefd79593809e44207f0f28230fe3f89d6c25ddfb767fb7e3b64",
+          "sia_success": 7,
+          "sia_rows": 28,
+          "common_w1_w3": 7,
+          "images": 0,
+          "gaia_preserved": 7,
+          "orbit_preserved": 11,
+          "error": "'sia_bp_id' Astropy default uses field IDs col_13, not names"
+        },
+        "r2": {
+          "run": 44765412986,
+          "status": "RUNNING_UNMEASURED_NATIVE_CUTOUT_REPAIR",
+          "protocol_commit": "f680c67f953532582a619dc670d5c2888c4d91d3",
+          "implementation_commit": "57511b260223c8c32ffb3db8cca78a34c210db99",
+          "workflow_commit": "341a56b74070758ef8dc431a309c10be974816ac",
+          "method": "Replay seven authentic archived SIA responses with use_names_over_ids=True; official native IBE cutout 200arcsec with strict 160arcsec local native WCS extraction and SIA pixel scale check. Preserve 150s target deadline, no science gate change, no full atlas retrieval claim.",
+          "next": "Verify archived replay, fourteen FITS responses and hashes, WCS and rival fits; no association/origin inference or adoption."
+        }
+      },
+      "next_gate": "Verify archived replay, fourteen FITS responses and hashes, WCS and rival fits; no association/origin inference or adoption."
     }
   ],
   "current": {
@@ -12237,15 +12280,37 @@
     },
     "r41u1": {
       "stage": "R41U1",
-      "status": "RUNNING_UNMEASURED_FORMAT_REPAIR",
-      "run": 44760371360,
+      "status": "RUNNING_UNMEASURED_NATIVE_CUTOUT_REPAIR",
+      "run": 44765412986,
       "branch": "research/seti-r41u1-wise-bounded-20261120",
       "receipt": "data/JANUS-COSMOS-SETI-R41U1-WISE-BOUNDED-2026-11-20.json",
-      "receipt_commit": "f913621ab416ba021da6468730c32f282f9a0b6e",
-      "next": "Verify actual SIA rows, WCS, source FITS and band results, maintain per-target deadlines and no origin claim.",
+      "receipt_commit": "76b1542711fce739d206b292d84a75b26e66eb75",
+      "next": "Verify archived replay, fourteen FITS responses and hashes, WCS and rival fits; no association/origin inference or adoption.",
       "production_adoption": false,
       "discovery_relaunch_allowed": false,
-      "previous_run": 44759469112
+      "previous_run": 44760371360,
+      "r1_result": {
+        "run": 44760371360,
+        "status": "HOLD_VOTABLE_COLUMN_ID_MISMATCH",
+        "artifact": 14640278194,
+        "archive_sha256_verified": "0dac4520dce2eefd79593809e44207f0f28230fe3f89d6c25ddfb767fb7e3b64",
+        "sia_success": 7,
+        "sia_rows": 28,
+        "common_w1_w3": 7,
+        "images": 0,
+        "gaia_preserved": 7,
+        "orbit_preserved": 11,
+        "error": "'sia_bp_id' Astropy default uses field IDs col_13, not names"
+      },
+      "r2": {
+        "run": 44765412986,
+        "status": "RUNNING_UNMEASURED_NATIVE_CUTOUT_REPAIR",
+        "protocol_commit": "f680c67f953532582a619dc670d5c2888c4d91d3",
+        "implementation_commit": "57511b260223c8c32ffb3db8cca78a34c210db99",
+        "workflow_commit": "341a56b74070758ef8dc431a309c10be974816ac",
+        "method": "Replay seven authentic archived SIA responses with use_names_over_ids=True; official native IBE cutout 200arcsec with strict 160arcsec local native WCS extraction and SIA pixel scale check. Preserve 150s target deadline, no science gate change, no full atlas retrieval claim.",
+        "next": "Verify archived replay, fourteen FITS responses and hashes, WCS and rival fits; no association/origin inference or adoption."
+      }
     },
     "r41s1f": {
       "stage": "R41S1F",
