@@ -19,7 +19,10 @@
     },
     "B": {
       "name": "paired_view",
-      "information": "Same ON1/OFF1/ON2/OFF2 native scans and actual timing, grids and role metadata for every method. Compare native supported cadence pipeline or documented independent adapter, with a common prespecified matching/veto baseline applied identically to candidates. Separate canonical pipeline from common wrapper. Keep transient/intermittent and shared injections as separate strata, not blanket veto."
+      "information": "Same ON1/OFF1/ON2/OFF2 native scans and actual timing, grids and role metadata for every method. Compare native supported cadence pipeline or documented independent adapter, with a common prespecified matching/veto baseline applied identically to candidates. Separate canonical pipeline from common wrapper. Keep transient/intermittent and shared injections as separate strata, not blanket veto.",
+      "wrapper_draft": {
+        "scope": "Common independently specified cadence adapter for all methods including JANUS, separate from canonical pipelines. Native engines run independently on all four scans with same WCS/scan metadata and candidate evidence; no method-specific privilege. Record full candidate lists or predeclared score field and not just best ON path. Match by native physical frequency/time and prespecified drift range/tolerances, compare ON and OFF along matched path; preserve missingness, avoid blanket recurrence requirement, report transient/shared strata. Candidate score fused by same fixed rule with calibration-only per-engine score scale; verify canary on injected linear/drift/intermittent/shared cases; no fitting on audit. Full native pipeline lane only if equivalent information proven; otherwise HOLD or label adapter-only experiment. Final matching tolerance and fusion formula not frozen until native adapter feasibility and tuning design independently inspected."
+      }
     }
   },
   "preconditions": [
@@ -53,6 +56,11 @@
         "single-view ablation",
         "paired variant with same tuning budget"
       ]
+    },
+    "budget_draft": {
+      "trial_definition": "one unique full hyperparameter configuration evaluated on the same development groups; failed/timeouts count. A seed repetition does not count as a new config but consumes aggregate CPU budget. Include preprocessing, drift-search, desmear, candidate selection, cadence matching, learned fitting and other method-specific parameters; no changing ranges or decision rule after validation.",
+      "proposal": "Per method per information lane up to 24 configurations including default; same runner class and 120 CPU-min aggregate per method/lane, 10 CPU-min per trial, first limit reached stops. No parallel CPU oversubscription. Equal budget not proof of optimality; record completed trials, failures and timing, maintainer review before final lock. CPU/GPU separate. Calibration only after tuning, fit rule and score normalization on dev only; final parameter grids and counts fixed before any development run.",
+      "selection": "Rank on development-only groupwise localized recall at prespecified 5.46875% null calibration budget, tie-break fewer false alerts then CPU time then stable config ID; separate internal dev folds. No held-out test data used."
     }
   },
   "metrics": {
@@ -70,5 +78,13 @@
     "production_adoption": false,
     "external_validation": false
   },
-  "next": "Obtain authentic Parkes TCS/backend logs or qualify alternative archive. Finalize custodian-backed manifest, tuning budgets and sample-size before real evaluation. R38 remains HOLD."
+  "next": "Obtain authentic Parkes TCS/backend logs or qualify alternative archive. Finalize custodian-backed manifest, tuning budgets and sample-size before real evaluation. R38 remains HOLD.",
+  "revision": "v1.1_engineering_draft_not_final_lock",
+  "shared_definition": {
+    "historical": "For stationary injected ON example, identical artificial stationary path/active rows also injected into associated OFF reference at amplitude scaled by each scan's row MAD. Duplicate ON source row; leakage robustness stress, not an independent astronomical positive or proof of origin. 32/group, 160 audit rows. Report ordinary and shared separately, do not treat duplicates as independent."
+  },
+  "score_contract": {
+    "required": "For every row and every method/lane persist finite full-pipeline primary score before threshold, path and candidate details, unsupported and missingness flags, deterministic tie rules, input hash, role/metadata and code/config hash. No score inferred from truth or correctness. Threshold comparison alone must reproduce frozen alerts exactly; compare stored trace/hit independently only after truth reveal. Full continuous score must exist for every eligible row, not just accepted candidates. If no native candidate, use predeclared explicit no-candidate sentinel rank and report coverage; no fabricated probabilities. All finite scalar rankings and path output frozen before calibration. Separate retrospective conditional R42A2 audit is not full pipeline ROC.",
+    "gate": "Reject lane if exact parity, no-label dependency and full score export cannot be demonstrated. Freeze normalization, score assembly, search range and path-selection logic before thresholds."
+  }
 }
