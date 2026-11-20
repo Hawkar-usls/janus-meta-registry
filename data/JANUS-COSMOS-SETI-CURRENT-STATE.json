@@ -8,7 +8,7 @@
     "research_branch": "research/seti-radio-candidate-search-20261117",
     "registry": "Hawkar-usls/janus-meta-registry",
     "journal": "data/JANUS-COSMOS-SETI-DEVELOPMENT-JOURNAL.json",
-    "journal_commit": "acd6732606de66f92773364036b054f8494ac5ea",
+    "journal_commit": "aa012e8febbf20cef720fe5ab0e8856fe0545c29",
     "continuity_protocol": "data/JANUS-PROJECT-CONTINUITY-LEDGER-HRAIN-INAIHR-PROTOCOL-2026-08-24-v1.0.json",
     "protocol_blob": "740065281c7c7b289c927db7661b9b000abb8c68"
   },
@@ -1910,7 +1910,8 @@
     "R41S2": "HOLD_HISTORICAL_SCREEN",
     "R41S3": "HOLD_MEANINGFUL_C",
     "R41S4": "HOLD_FRESH_EXTERNAL",
-    "R41S1B": "RUNNING_UNMEASURED_ADVISORY"
+    "R41S1B": "PASS_TRANSITION_DECOUPLED_ADVISORY__HOLD_SCIENTIFIC_SCREEN",
+    "R41S1C": "PROPOSED_PREREG_DIAGNOSTIC"
   },
   "r40ia": {
     "run": 44409755678,
@@ -8393,13 +8394,67 @@
   },
   "r41s1b": {
     "stage": "R41S1B",
-    "status": "RUNNING_UNMEASURED_ADVISORY",
+    "status": "PASS_TRANSITION_DECOUPLED_ADVISORY__HOLD_SCIENTIFIC_SCREEN",
     "run": 44711647088,
     "receipt": "data/JANUS-COSMOS-SETI-R41S1B-TRANSITION-AUDIT-2026-11-20.json",
-    "receipt_commit": "c1f006ba4f1fad722e3504314326286e873f1199",
+    "receipt_commit": "913979002de44212abf048d8b992eeb97e156eb9",
     "branch": "research/seti-r41s-5d-spiral-20261120",
     "production_adoption": false,
     "discovery_relaunch_allowed": false,
-    "next": "Verify original parity, qualified advisory transitions, per-lane blockers and cofail; no automatic authority; seal result before any new decision rule."
+    "next": "R41S1C: preregister a label-blind diagnostic comparison of repeat morphology/frequency trajectories, competing explanations and instrumental controls; evaluate distributions across all candidates and independent held-out controls before designing any new veto. Verify archive bytes and trace hashes before reuse. Keep R41S1B advisory, B/D and production HOLD.",
+    "result": {
+      "run": 44711647088,
+      "job": 136204555159,
+      "conclusion": "success",
+      "artifact": 14618353623,
+      "archive_sha256_reported_by_github": "0c70ac769ab01d45753ab27d503881cecc7a707234474454e48e61fd1a4061c0",
+      "summary_artifact": 14618453439,
+      "summary_archive_sha256_reported_by_github": "0ef4fd8ddde0283ba99a4c2df2e75bfb3a5f007eb38df8e82edfbe5a4d3f4d48",
+      "evidence_scope": "Completed job log summary and GitHub artifact metadata; ZIP bytes not independently rehashed in this check.",
+      "groups": 11,
+      "rows": 3168,
+      "fit": {
+        "triggered": 492,
+        "pass1": 484,
+        "qualified": 482,
+        "advanced": 482,
+        "additional_calls": 2410
+      },
+      "audit": {
+        "triggered": 417,
+        "pass1": 414,
+        "qualified": 409,
+        "advanced": 409,
+        "additional_calls": 2045,
+        "repeat_on_ceiling": 286,
+        "repeat_off_floor": 0,
+        "repeat_off_margin": 0,
+        "both_rivals_repeat_margin": 0,
+        "stationary": 203
+      },
+      "total_advanced": 891,
+      "total_calls": 4455,
+      "decision_changes": 0,
+      "original_metrics": {
+        "localized": 318,
+        "weak": 69,
+        "controls": 53,
+        "original_stress_cases": 119
+      },
+      "cost": {
+        "acquisition_wall": 1356.4844963629998,
+        "baseline_wall": 25.568648701000427,
+        "original_trace_wall": 4.747285487996351,
+        "advisory_wall": 1.8553159190013844,
+        "full_wall": 1422.4202817679998,
+        "cpu": 132.601751185,
+        "peak_rss_kib": 715232,
+        "payload_bytes": 8863168714,
+        "requests": 6680,
+        "files": 44
+      },
+      "no_new_stress": true,
+      "scientific_screen": false
+    }
   }
 }
