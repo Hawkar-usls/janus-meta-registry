@@ -8,7 +8,7 @@
     "research_branch": "research/seti-radio-candidate-search-20261117",
     "registry": "Hawkar-usls/janus-meta-registry",
     "journal": "data/JANUS-COSMOS-SETI-DEVELOPMENT-JOURNAL.json",
-    "journal_commit": "661079b28fefff2fc402c5c18512dd0b4d87cc62",
+    "journal_commit": "d02181b5a04c55a4d4206569005cbefdedf7b46d",
     "continuity_protocol": "data/JANUS-PROJECT-CONTINUITY-LEDGER-HRAIN-INAIHR-PROTOCOL-2026-08-24-v1.0.json",
     "protocol_blob": "740065281c7c7b289c927db7661b9b000abb8c68"
   },
@@ -1911,7 +1911,7 @@
     "R41S3": "HOLD_MEANINGFUL_C",
     "R41S4": "HOLD_FRESH_EXTERNAL",
     "R41S1B": "PASS_TRANSITION_DECOUPLED_ADVISORY__HOLD_SCIENTIFIC_SCREEN",
-    "R41S1C": "RUNNING_UNMEASURED_R1_DIAGNOSTIC",
+    "R41S1C": "PASS_EVIDENCE_DIFFERENTIATION_DIAGNOSTIC__HOLD_SCIENTIFIC_SCREEN",
     "R41T": "PASS_BOUNDED_RAW_REPLAY__REVIEW_ONLY",
     "R41U": "RUNNING_UNMEASURED_ADAPTER_PILOTS"
   },
@@ -8461,15 +8461,56 @@
   },
   "r41s1c": {
     "stage": "R41S1C",
-    "status": "RUNNING_UNMEASURED_R1_DIAGNOSTIC",
+    "status": "PASS_EVIDENCE_DIFFERENTIATION_DIAGNOSTIC__HOLD_SCIENTIFIC_SCREEN",
     "run": 44730508064,
     "receipt": "data/JANUS-COSMOS-SETI-R41S1C-EVIDENCE-DIFFERENTIATION-2026-11-20.json",
-    "receipt_commit": "b01326b7d9b6481bca5ed024a30b388bce7e00e1",
+    "receipt_commit": "1d58b96a4410f04e8d5075a9d251eebbc9dccaf6",
     "branch": "research/seti-r41s-5d-spiral-20261120",
-    "next": "Verify R1 new-seed synthetic gate then 11 groups, original full-bank diagnostics separately from translation. No veto or Penrose; independent fresh controls required.",
+    "next": "R41S1D preregister grouped incremental diagnostic evaluation, including signed offset and broad occupancy, fixed matched-FAP baseline, held-out entirely fresh groups; do not tune or claim benefit on viewed audit. Keep advisory only and all other lanes independent.",
     "production_adoption": false,
     "discovery_relaunch_allowed": false,
-    "previous_run": 44730088286
+    "previous_run": 44730088286,
+    "result": {
+      "run": 44730508064,
+      "job": 136268738114,
+      "groups": 11,
+      "qualified": 891,
+      "audit_qualified": 409,
+      "features": 45,
+      "decision_changes": 0,
+      "baseline": {
+        "localized": 318,
+        "weak": 69,
+        "controls": 53
+      },
+      "artifact": 14629936008,
+      "archive_sha256_verified": "3d5ad4e54f590a72bb5108f065df752d53ff8e874761cc86474205f11bb90b2d",
+      "summary_artifact": 14629008043,
+      "summary_sha256_verified": "0f97036e007b1762684d7e07105cd7b64a9ad68d335836f0c462927275657c80",
+      "result_sha256_verified": "4c6d4f8e2fa129c51daac1197e4dcecc0beecc6167553eda1ca97b5b8333e3b5",
+      "trace_hashes_verified": 22,
+      "synthetic_checks_pass": true,
+      "full_bank_new_seed_direction_pass": true,
+      "previous_seed_failure_retained": true,
+      "audit_descriptive_auc": {
+        "repeat_on_broad_row_mean": 0.6266694933220267,
+        "repeat_on_occupancy": 0.6238605045579818,
+        "off_template_heldout_score": 0.6230655077379691,
+        "on_template_shape_cosine": 0.6151147959183674,
+        "on_heldout_gain": 0.5961946152215392,
+        "off_template_abs_offset_hz": 0.3083527665889337
+      },
+      "cost": {
+        "diagnostic_wall": 8.700627059004432,
+        "acquisition_wall": 3116.9538790520005,
+        "baseline_wall": 19.782305841999005,
+        "parent_replay_wall": 4.64201084899662,
+        "full_wall": 3172.3321512579996,
+        "payload_bytes": 8863168714
+      },
+      "scientific_screen": false,
+      "external_validation": false
+    }
   },
   "r41t": {
     "stage": "R41T",
