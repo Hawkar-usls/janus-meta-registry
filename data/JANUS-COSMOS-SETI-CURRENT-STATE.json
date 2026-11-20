@@ -8,7 +8,7 @@
     "research_branch": "research/seti-radio-candidate-search-20261117",
     "registry": "Hawkar-usls/janus-meta-registry",
     "journal": "data/JANUS-COSMOS-SETI-DEVELOPMENT-JOURNAL.json",
-    "journal_commit": "30bdcdf559dedfcbbb3940204d032d41b1954666",
+    "journal_commit": "661079b28fefff2fc402c5c18512dd0b4d87cc62",
     "continuity_protocol": "data/JANUS-PROJECT-CONTINUITY-LEDGER-HRAIN-INAIHR-PROTOCOL-2026-08-24-v1.0.json",
     "protocol_blob": "740065281c7c7b289c927db7661b9b000abb8c68"
   },
@@ -1912,7 +1912,7 @@
     "R41S4": "HOLD_FRESH_EXTERNAL",
     "R41S1B": "PASS_TRANSITION_DECOUPLED_ADVISORY__HOLD_SCIENTIFIC_SCREEN",
     "R41S1C": "RUNNING_UNMEASURED_R1_DIAGNOSTIC",
-    "R41T": "RUNNING_UNMEASURED_BOUNDED_RAW_REPLAY",
+    "R41T": "PASS_BOUNDED_RAW_REPLAY__REVIEW_ONLY",
     "R41U": "RUNNING_UNMEASURED_ADAPTER_PILOTS"
   },
   "r40ia": {
@@ -8473,14 +8473,40 @@
   },
   "r41t": {
     "stage": "R41T",
-    "status": "RUNNING_UNMEASURED_BOUNDED_RAW_REPLAY",
+    "status": "PASS_BOUNDED_RAW_REPLAY__REVIEW_ONLY",
     "run": 44733648612,
     "receipt": "data/JANUS-COSMOS-SETI-R41T-RAW-TECHNOSIGNATURE-2026-11-20.json",
-    "receipt_commit": "c08e395a6c139e12988aa74bec811fd2e9dd471d",
+    "receipt_commit": "28d139cd0dd3ecc303be2c4d5b923796075950f6",
     "branch": "research/seti-r41t-raw-technosignature-20261120",
-    "next": "Verify authenticated plan, five exact tile groups, candidate ledgers and ON/OFF matching with no origin claim; separate independent fresh-data gate.",
+    "next": "Review raw track ledger for five repeated ON with matched OFF, qualify independently new scans and calibrated FAP before any discovery claim; no production adoption.",
     "production_adoption": false,
-    "discovery_relaunch_allowed": false
+    "discovery_relaunch_allowed": false,
+    "result": {
+      "run": 44733648612,
+      "job": 136279455181,
+      "groups": 5,
+      "raw_tiles": 80,
+      "patches": 44720,
+      "counts": {
+        "r40g": 1737,
+        "joint_min": 1919,
+        "minimal": 1875
+      },
+      "on1_anchors": 346,
+      "on2_matched": 5,
+      "off_matched": 31,
+      "repeat_without_matched_off": 0,
+      "confirmed_technosignatures": 0,
+      "payload_bytes": 4022998330,
+      "no_injection": true,
+      "artifact": 14627684804,
+      "artifact_sha256_reported": "02412875d78b615fea2a5b0f5fa1ff741bdffaf9d0a32d6636c3a07cb68f6a7c",
+      "summary_artifact": 14628233127,
+      "summary_archive_sha256_verified": "c2c387c60d1b6bd308b4378a6d088364faa2479e94c8c9ca9c2d60fb5d1e27e9",
+      "result_sha256_verified": "2e5167c68a033ecc38aab78843ef97e657df954451aac01dd3f3bf1734d6f6d6",
+      "external_validation": false,
+      "global_false_alarm_calibrated": false
+    }
   },
   "r41u": {
     "stage": "R41U",
