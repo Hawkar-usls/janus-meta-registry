@@ -13442,6 +13442,23 @@
         "external_validation": false
       },
       "next_gate": "Check actual replay and binary parity first. If pilot PASS, preregister and freeze an aggregate model score for all groups before retrospective audit, then external independent R42B when sourced."
+    },
+    {
+      "event_id": "20261120-R42A4A-AUTHENTICATED-REPLAY",
+      "date": "2026-11-20",
+      "stage": "R42A4A",
+      "kind": "PROGRESS",
+      "status": "R42A4A_ARCHIVES_AUTHENTICATED__GROUP_01_IN_PROGRESS",
+      "evidence": {
+        "run": 44822205236,
+        "job": 136585650358,
+        "archive_authenticated": true,
+        "repair_commits": [
+          "5958c24fc8a4cdde5832aae2f078114fff0d2b2c",
+          "6a9169d00af315fb3cbe0c7013a3e3d1d012d4c4"
+        ]
+      },
+      "next_gate": "Check score/feature parity and rejected-score coverage; do not claim R42B release or total score before success."
     }
   ],
   "current": {
@@ -14981,21 +14998,40 @@
       "schema": "janus.cosmos.r42a4a.receipt.v1",
       "stage": "R42A4A",
       "date": "2026-11-20",
-      "status": "RUNNING_ALL_CANDIDATE_NOISE_FEATURE_FEASIBILITY",
+      "status": "R42A4A_ARCHIVES_AUTHENTICATED__GROUP_01_IN_PROGRESS",
       "branch": "research/seti-r42a4a-noise-all-candidates-20261120",
       "protocol_commit": "8a49355e133522ea499fef1cf29856e39c6a8723",
       "implementation_commit": "c888e19e13023d8156364cee69e90332b6d26267",
       "workflow_commit": "59d9de47601858f3c15427ff14d9147f979f7111",
-      "run": 44821687629,
-      "job": 136583856592,
-      "last_observed_status": "in_progress_setup",
+      "run": 44822205236,
+      "job": 136585650358,
+      "last_observed_status": "in_progress_replay_group_01",
       "design": "Replay two 288-row groups (fit #1, audit #7) and attempt R41S1F raw NOISE feature extraction for all candidate paths, not just already-accepted. Compare already-accepted supported original archived feature vectors exactly and audit prediction margin to frozen logistic, count rejected candidate support. No model fitting or operational threshold selection. Pass/fail based on exact archived parity.",
       "limits": "Preselected path / lane still frozen; all-candidate model extrapolation and unqualified feature absence cannot be construed as validated full rerouted ROC. R42B blocked actual independent pointing and external custodian. Production unchanged.",
-      "next": "Check actual replay and binary parity first. If pilot PASS, preregister and freeze an aggregate model score for all groups before retrospective audit, then external independent R42B when sourced.",
+      "next": "Check score/feature parity and rejected-score coverage; do not claim R42B release or total score before success.",
       "production_adoption": false,
       "external_validation": false,
+      "failed_run": 44821687629,
+      "failed_run_root_cause": "INITIAL_ADAPTER_INPUT_SCHEMA_MISMATCH: used R41S1F protocol source map rather than exact authenticated noise archive artifact; failure before replay or scientific measurement",
+      "repair_commit": "5958c24fc8a4cdde5832aae2f078114fff0d2b2c",
+      "retry_workflow_commit": "278f9d2fc625c2e90cbf6f94fbd8b3d2e50ef31c",
+      "failed_runs": [
+        {
+          "run": 44821687629,
+          "reason": "schema artifact key"
+        },
+        {
+          "run": 44821905868,
+          "reason": "missing signed result_sha256 field"
+        }
+      ],
+      "repair_commits": [
+        "5958c24fc8a4cdde5832aae2f078114fff0d2b2c",
+        "6a9169d00af315fb3cbe0c7013a3e3d1d012d4c4"
+      ],
+      "archive_authenticated": true,
       "receipt": "data/JANUS-COSMOS-SETI-R42A4A-FULL-NOISE-SCORE-2026-11-20.json",
-      "receipt_commit": "e8e1f5d49a0e0c27afe512fb45eeaa98d1e00fa5"
+      "receipt_commit": "318c3fc53693dfae18955801d89b3ab7c5f9511e"
     }
   }
 }
