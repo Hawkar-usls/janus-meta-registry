@@ -78,25 +78,25 @@ A successful collector is not proof of useful work or full autonomy.
   "native_decision": "NO_ACTION",
   "forge": "SEARCHED_NO_NOVEL_FALLBACK_CANDIDATE",
   "p03_preflight": {
-    "schema": "janus.autonomy.p03_preflight.v1",
-    "status": "P03_PREFLIGHT_BLOCKED",
+    "authority_delta": 0,
     "blockers": [
       "PRIVATE_ACK_AUTH_UNKNOWN",
       "PRODUCER_ROUTING_HELD"
     ],
-    "public_receiver_count": 18,
-    "public_receiver_pending": 0,
-    "public_receiver_lagging": 0,
+    "full_issue_162_acceptance": false,
+    "home_model_call_attested": false,
+    "home_sequence": 415,
+    "p03_acceptance": false,
+    "pre_route_gate_allowed": false,
     "private_ack_visibility": "UNAVAILABLE",
     "private_receiver_pending": 2,
-    "home_sequence": 415,
-    "home_model_call_attested": false,
-    "pre_route_gate_allowed": false,
     "producer_after_route_pending": 2,
-    "authority_delta": 0,
-    "full_issue_162_acceptance": false,
-    "p03_acceptance": false,
-    "runtime_consumption_attested": false
+    "public_receiver_count": 18,
+    "public_receiver_lagging": 0,
+    "public_receiver_pending": 0,
+    "runtime_consumption_attested": false,
+    "schema": "janus.autonomy.p03_preflight.v1",
+    "status": "P03_PREFLIGHT_BLOCKED"
   }
 }
 ```
@@ -121,9 +121,9 @@ A successful collector is not proof of useful work or full autonomy.
 - **P0.5** SCOUT_MODEL_SYNTHESIS_DEGRADED: {"snapshots": 17, "synthesis": 0, "expected": 17}
 - **P2** SELF_WRITER_REVIEWED_TASKS_REMAINING: {"accepted": 9, "admitted": 10}
 - **P3** RECENT_TRAINING_ALL_REJECTED: 64
-- **P0.2** WORKFLOW_NOT_SUCCESS_COSMOS_WITNESS: {"repository": "Hawkar-usls/Janus-Cosmos", "workflow": "cosmos-rowan-ecosystem-witness.yml", "status": "OBSERVED", "run_id": 44809584202, "run_attempt": 1, "event": "workflow_run", "conclusion": "skipped", "head_sha": "f50b48a3153fdc78e33cd10d0d92e7976facc783", "created_at": "2026-11-20T20:14:47Z", "url": "https://github.com/Hawkar-usls/Janus-Cosmos/actions/runs/44809584202"}
-- **P0.2** WORKFLOW_NOT_SUCCESS_CROSS_ORGAN_WITNESS: {"repository": "Hawkar-usls/janus-meta-registry", "workflow": "janus-cross-organ-source-witness.yml", "status": "OBSERVED", "run_id": 44813900312, "run_attempt": 1, "event": "schedule", "conclusion": "failure", "head_sha": "bb991d96269fc8201b5d50a7d0b9fa76c53fdb0d", "created_at": "2026-11-20T20:43:18Z", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/44813900312"}
-- **P0.2** WORKFLOW_NOT_SUCCESS_ROWAN_WITNESS: {"repository": "Hawkar-usls/janus-meta-registry", "workflow": "janus-rowan-ecosystem-sync-witness.yml", "status": "OBSERVED", "run_id": 44810333500, "run_attempt": 1, "event": "workflow_run", "conclusion": "failure", "head_sha": "1bfc7202f9f811c970bd6858b441e5bcbb96f56e", "created_at": "2026-11-20T20:19:38Z", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/44810333500"}
+- **P0.2** WORKFLOW_NOT_SUCCESS_COSMOS_WITNESS: {"conclusion": "skipped", "created_at": "2026-11-20T20:14:47Z", "event": "workflow_run", "head_sha": "f50b48a3153fdc78e33cd10d0d92e7976facc783", "repository": "Hawkar-usls/Janus-Cosmos", "run_attempt": 1, "run_id": 44809584202, "status": "OBSERVED", "url": "https://github.com/Hawkar-usls/Janus-Cosmos/actions/runs/44809584202", "workflow": "cosmos-rowan-ecosystem-witness.yml"}
+- **P0.2** WORKFLOW_NOT_SUCCESS_CROSS_ORGAN_WITNESS: {"conclusion": "failure", "created_at": "2026-11-20T20:43:18Z", "event": "schedule", "head_sha": "bb991d96269fc8201b5d50a7d0b9fa76c53fdb0d", "repository": "Hawkar-usls/janus-meta-registry", "run_attempt": 1, "run_id": 44813900312, "status": "OBSERVED", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/44813900312", "workflow": "janus-cross-organ-source-witness.yml"}
+- **P0.2** WORKFLOW_NOT_SUCCESS_ROWAN_WITNESS: {"conclusion": "failure", "created_at": "2026-11-20T20:19:38Z", "event": "workflow_run", "head_sha": "1bfc7202f9f811c970bd6858b441e5bcbb96f56e", "repository": "Hawkar-usls/janus-meta-registry", "run_attempt": 1, "run_id": 44810333500, "status": "OBSERVED", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/44810333500", "workflow": "janus-rowan-ecosystem-sync-witness.yml"}
 - **P0.3** P03_SOURCE_PREFLIGHT_BLOCKED: ["PRIVATE_ACK_AUTH_UNKNOWN", "PRODUCER_ROUTING_HELD"]
 
 ## Owner-directed self-assembly (registered, not executable)
