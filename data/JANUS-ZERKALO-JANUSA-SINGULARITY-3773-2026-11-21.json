@@ -2,7 +2,7 @@
   "schema": "janus.zerkalo.janusa.singularity.3773.v1",
   "name_ru": "Зеркало Януса — Сингулярность №3773",
   "date": "2026-11-21",
-  "status": "COORDINATE_DERIVED__ASTRONOMICAL_VALIDATION_PENDING",
+  "status": "COORDINATE_DERIVED__SIMBAD_CHECK_COMPLETED__GAIA_WISE_RETRY_PENDING",
   "source": {
     "repository": "Hawkar-usls/janus-meta-registry",
     "path": "data/JANUS-ZERKALO-JANUSA-R0M2-CELESTIAL-COORDINATES-2026-11-21.json",
@@ -36,8 +36,45 @@
     "this_is_an_unknown_sky_object": false,
     "this_is_a_proven_probe": false,
     "this_is_a_technosignature": false,
-    "astro_query_status": "PENDING",
+    "astro_query_status": "SIMBAD_COMPLETED_MULTIBAND_RETRY_PENDING",
     "required_evidence": "Independent repeatable observations, cross-instrument source counterpart, matched sky controls, time and provenance"
   },
-  "next": "Check SIMBAD at declared cones and 256 random controls via JANUS COSMOS; cross-check Gaia+WISE if available. No new detection claim until evidence."
+  "next": "Verify exact Gaia DR3 and AllWISE crossmatch from repaired JANUS-COSMOS workflow; do not infer novel astrophysical discovery without real independent repeated observations.",
+  "catalog_validation": {
+    "run": 44836632590,
+    "job": 136634543822,
+    "status": "PASS_SIMBAD_SOURCE_CENSUS_AND_256_RANDOM_CONTROLS",
+    "artifact": 14679400570,
+    "artifact_sha256": "0806e5559b068ff4eca699bd42872c9986d6b780f9aed400cbad00d86d74f34b",
+    "target_sources_within_2arcsec": 0,
+    "target_sources_within_10arcsec": 0,
+    "target_sources_within_30arcsec": 0,
+    "target_sources_within_60arcsec": 2,
+    "found_known_sources": [
+      {
+        "name": "[WOW2012] A370 134",
+        "type": "known radio catalog source",
+        "separation_arcsec": 41.774214409311305,
+        "ra_deg": 39.753791666666665,
+        "dec_deg": -1.352038888888889
+      },
+      {
+        "name": "NVSS J023900-012042",
+        "type": "known radio catalog source",
+        "separation_arcsec": 46.33677766618621,
+        "ra_deg": 39.75333333333333,
+        "dec_deg": -1.343986111111111
+      }
+    ],
+    "random_controls": {
+      "count": 256,
+      "available": 256,
+      "have_source_within_2arcsec": 0,
+      "have_source_within_10arcsec": 4,
+      "have_source_within_30arcsec": 23,
+      "have_source_within_60arcsec": 75
+    },
+    "independent_gaia_allwise": "FAILED_ENVIRONMENT_ONLY: NumPy version missing numpy.in1d; explicit rerun under compatible pinned NumPy pending",
+    "scientific_interpretation": "Two previously catalogued radio emitters near the direction, neither within 30 arcseconds. Sky background has common 60-arcsecond catalog neighbors. No unique, novel, anomalous or artificial source established."
+  }
 }
