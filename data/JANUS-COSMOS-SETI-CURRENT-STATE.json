@@ -8,7 +8,7 @@
     "research_branch": "research/seti-radio-candidate-search-20261117",
     "registry": "Hawkar-usls/janus-meta-registry",
     "journal": "data/JANUS-COSMOS-SETI-DEVELOPMENT-JOURNAL.json",
-    "journal_commit": "b49c105efd573b9d8af515b0e139092384fa0d69",
+    "journal_commit": "dc6a70ff714e257bc847f3250e0faccb04b5a659",
     "continuity_protocol": "data/JANUS-PROJECT-CONTINUITY-LEDGER-HRAIN-INAIHR-PROTOCOL-2026-08-24-v1.0.json",
     "protocol_blob": "740065281c7c7b289c927db7661b9b000abb8c68"
   },
@@ -1905,11 +1905,12 @@
     "prior_r41_hannah_gate": "HOLD_HANNAH_SOURCE_COMPATIBILITY; feature provenance and no automatic suppression",
     "prior_r42_identity_gate": "HOLD_PHYSICAL_IDENTITY_CONTROLS",
     "R41P": "RUNNING_UNMEASURED",
-    "R41S": "RUNNING_UNMEASURED_A_C",
-    "R41S1": "SELFTEST_PENDING",
-    "R41S2": "A_C_RUN_UNMEASURED",
-    "R41S3": "HOLD_C_SEALED",
-    "R41S4": "HOLD_FRESH_EXTERNAL"
+    "R41S": "PASS_OPERATOR_PARITY__HOLD_HISTORICAL_SCREEN",
+    "R41S1": "PASS_OPERATOR_PARITY",
+    "R41S2": "HOLD_HISTORICAL_SCREEN",
+    "R41S3": "HOLD_MEANINGFUL_C",
+    "R41S4": "HOLD_FRESH_EXTERNAL",
+    "R41S1B": "COMMITTED_RUN_NOT_VERIFIED"
   },
   "r40ia": {
     "run": 44409755678,
@@ -8354,16 +8355,51 @@
   },
   "r41s": {
     "stage": "R41S",
-    "status": "RUNNING_UNMEASURED_A_C",
+    "status": "PASS_OPERATOR_PARITY__HOLD_HISTORICAL_SCREEN",
     "run": 44689555233,
     "branch": "research/seti-r41s-5d-spiral-20261120",
     "receipt": "data/JANUS-COSMOS-SETI-R41S-5D-SPIRAL-2026-11-20.json",
-    "receipt_commit": "b8d1a57b59dea5f78d90242a7f47ab8947d12ea3",
+    "receipt_commit": "f17d4f92bf2ce4610f8f5574e90d7c47a24acb7b",
     "protocol_commit": "360d6a5858994447dd943ddc695ffb8547f98fa3",
     "production_adoption": false,
     "discovery_relaunch_allowed": false,
-    "next": "Verify selftests, 11 A/C group pairs, C0 parity, preserve all C evidence and compare historical gate; B/D HOLD until C seal; external deployment HOLD.",
+    "next": "R41S1B decouple inquiry and veto; unchanged original C sealed. B/D hold.",
     "numeric_lock_commit": "823325830cd98ec0cbeaefd1ad4635acd97d9b79",
-    "implementation_commit": "d4819cae1cde6f69211e51de5116d76f164667f6"
+    "implementation_commit": "d4819cae1cde6f69211e51de5116d76f164667f6",
+    "result": {
+      "run": 44689555233,
+      "artifact": 14611225480,
+      "archive_sha256": "2fcec83e66245277a01a0c744a3a6e501432c4b958417b438e400cee44770b51",
+      "result_sha256": "4f9f18d8054d6a32d3d5e9664d2fc11f8fefd9fb06558b30399929d10edd7c3b",
+      "C_sealed_lock_sha256": "5e38d41aa50767b0d0b08af5c3518529fae9e8d453a19cab0bc4570f4d1f2339",
+      "groups": 11,
+      "paired_processes": 22,
+      "audit": {
+        "localized": 318,
+        "weak": 69,
+        "controls": 53,
+        "stress_cases": 119,
+        "stress_lost": 0,
+        "triggered": 417,
+        "first_turn": 414,
+        "qualified": 409,
+        "second_turn": 0,
+        "removed": 0
+      },
+      "full_11_compute_wall_A": 24.707871696000723,
+      "full_11_compute_wall_C": 29.38849913300021,
+      "scientific_screen": false
+    }
+  },
+  "r41s1b": {
+    "stage": "R41S1B",
+    "status": "COMMITTED_RUN_NOT_VERIFIED",
+    "run": null,
+    "receipt": "data/JANUS-COSMOS-SETI-R41S1B-TRANSITION-AUDIT-2026-11-20.json",
+    "receipt_commit": "29ed339d6e8b33325ebf260e086c236b3837ce52",
+    "branch": "research/seti-r41s-5d-spiral-20261120",
+    "production_adoption": false,
+    "discovery_relaunch_allowed": false,
+    "next": "Verify original parity, qualified advisory transitions, per-lane blockers and cofail; no automatic authority; seal result before any new decision rule."
   }
 }
