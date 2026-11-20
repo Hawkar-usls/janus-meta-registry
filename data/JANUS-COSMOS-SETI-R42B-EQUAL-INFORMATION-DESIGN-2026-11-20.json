@@ -1,0 +1,74 @@
+{
+  "schema": "janus.cosmos.r42b.design.v1",
+  "date": "2026-11-20",
+  "stage": "R42B_DESIGN",
+  "status": "PREREGISTRATION_DRAFT__HOLD_CUSTODIAN_AND_FRESH_GROUPS",
+  "source_r42a": {
+    "run": 44785055340,
+    "common_artifact": 14657744482,
+    "receipt_commit": "bac73ef7f1aef534440c00321552a2e97cb4c5f2"
+  },
+  "hypotheses": {
+    "primary": "Within identical input-information lane and target calibration budget, compare paired localization and actual FPR. Claim improvement only if externally held-out paired inference supports gain, without violating control budget and preservation gates.",
+    "secondary": "Measure contribution of ON/OFF by within-method paired contrast from lane A to B; do not attribute extra evidence to intrinsic detector superiority."
+  },
+  "lanes": {
+    "A": {
+      "name": "single_view",
+      "information": "Same one ON scan, native time/frequency units, mask, tile/coverage, no OFF, repeated scan, truth, weights derived from repeat, or reference registration using OFF. Every algorithm including JANUS must run true single-view path or hold lane. Equal search range and resource class."
+    },
+    "B": {
+      "name": "paired_view",
+      "information": "Same ON1/OFF1/ON2/OFF2 native scans and actual timing, grids and role metadata for every method. Compare native supported cadence pipeline or documented independent adapter, with a common prespecified matching/veto baseline applied identically to candidates. Separate canonical pipeline from common wrapper. Keep transient/intermittent and shared injections as separate strata, not blanket veto."
+    }
+  },
+  "preconditions": [
+    "Independent custodian signs exact source target/day/sky/raw hash exclusions across all JANUS historical groups; verify actual per-scan pointing independent of target catalogue, UTC/MJD and role; independent qualification and blind heldout manifest. R41S1G1 yielded 0 qualified groups.",
+    "Development/tuning, calibration, blind test disjoint by group/observation, no hidden injection labels revealed before immutable predictions submitted. Include authentic null backgrounds, stationary/drift/nonlinear/intermittent/weak/shared injections and calibrated natural controls when available; no claims of confirmed extraterrestrial origin.",
+    "Predeclare sample-size/power at observation-group level with custodian before final lock; target budget 35/640 = 0.0546875, not 35/512, report actual FPR and confidence intervals. On historical R41 panel 318/69/<=35; on fresh panel report denominators and paired preservation rather than demand identical counts.",
+    "Pin exact native source, environment, config, preprocessing and evaluation; record file hashes and artifacts. No changes after blind start. Freeze before evaluation, independent checkout and replication."
+  ],
+  "tuning_parity": {
+    "rule": "Separate equal-information development set and equal declared runtime/trial budgets per method; search parameter grids recommended by respective maintainers, no audit or blind tuning. Log every trial, stop conditions and selected configuration with checksum; method-specific defaults plus tuned versions reported separately. Freeze CPU/GPU lanes separately; measure entire data-access + compute pipeline.",
+    "parameters": {
+      "bliss": [
+        "drift range",
+        "desmear",
+        "resolution",
+        "candidate thresholds"
+      ],
+      "fastdd": [
+        "N0",
+        "drift range",
+        "candidate selection"
+      ],
+      "turbo": [
+        "drift bounds",
+        "SNR",
+        "flagging",
+        "cadence/event matching"
+      ],
+      "janus": [
+        "frozen production comparator",
+        "single-view ablation",
+        "paired variant with same tuning budget"
+      ]
+    }
+  },
+  "metrics": {
+    "primary": "Localized positive recall under <=5.46875% null calibration budget, localization ±2 native channels on >=75% active rows (when defined); preserve paired hits including weak/shared; separate natural positive control detection from injection trajectory localization. Report realized test FPR; target <=5.46875% not guaranteed by calibration.",
+    "curves": "Score ROC and localization-aware DET (FNR vs FPR), resolution near 1%, all method curves and locked operating markers, thresholds calibrated only on separate calibration; no retrospective retune. Nonlocalizing positives count as missed. Define one scalar score per complete pipeline before test, handle fail-open/unknown explicitly; no curve fabricated from binary alerts.",
+    "statistics": "Group-wise paired bootstrap or permutation intervals predeclared by custodian, no independent-row assumption, multiplicity and uncertainty. Report added/lost/weak/shared and ordinary, per group, resource costs and input-access equality."
+  },
+  "gates": {
+    "equal_information_verified": false,
+    "fresh_groups": 0,
+    "custodian": false,
+    "versions_locked": false,
+    "working_point_locked": false,
+    "blind_exam_started": false,
+    "production_adoption": false,
+    "external_validation": false
+  },
+  "next": "Obtain authentic Parkes TCS/backend logs or qualify alternative archive. Finalize custodian-backed manifest, tuning budgets and sample-size before real evaluation. R38 remains HOLD."
+}
