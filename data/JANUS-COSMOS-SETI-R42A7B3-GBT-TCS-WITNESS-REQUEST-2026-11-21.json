@@ -64,7 +64,7 @@
     "nrao_archive_tap_artifact": 14707976780,
     "nrao_archive_tap_artifact_digest": "6bb02ffbc49bc4d18d4a72e2f817e39c4451005b59cd3bf7684c904c75a05c6a"
   },
-  "next": "Await GBT archive response. Independently hash and validate original Antenna FITS encoder time series and ScanLog.fits; then establish disjoint source set and secure external blind custodian. Official TAP metadata is insufficient for physical pointing certification.",
+  "next": "GBT support original TCS request still pending. Review official NRAO six-scan ON/OFF cadence and acquire corresponding original Antenna FITS/ScanLog; do not confuse three repeats with independent target groups. External custodian and sealed prospective audit still HOLD.",
   "archive_crosscheck": {
     "server": "https://data-query.nrao.edu/tap",
     "schema": "tap_schema.obscore",
@@ -93,6 +93,41 @@
     ],
     "pointing_inference": "NONE: Official ObsCore target RA/Dec and scan schedule are not actual ACU encoder pointing",
     "corroborates": "Project identity, target names, distinct scheduled ON/OFF, observation timestamps with equal 6-sec native-data delay",
-    "independent_TCS_received": false
+    "independent_TCS_received": false,
+    "nrao_archive_project_view": "https://data.nrao.edu/portal/#/productViewer/AGBT16A_999_42",
+    "project_temporal_cadence": {
+      "status": "CONFIRMED_OFFICIAL_NRAO_OBSCORE_SEQUENCE__NOT_TCS",
+      "target": "HIP53020",
+      "unit": "one observing target/session (not six independent validation groups)",
+      "original_project": "AGBT16A_999_42",
+      "source": "NRAO tap_schema.obscore; t_min and target_name as archive metadata",
+      "alternating_scans": [
+        {
+          "role": "ON",
+          "t_min_mjd": 57431.34766203724
+        },
+        {
+          "role": "OFF",
+          "t_min_mjd": 57431.35144675942
+        },
+        {
+          "role": "ON",
+          "t_min_mjd": 57431.355231481604
+        },
+        {
+          "role": "OFF",
+          "t_min_mjd": 57431.35901620379
+        },
+        {
+          "role": "ON",
+          "t_min_mjd": 57431.36280092597
+        },
+        {
+          "role": "OFF",
+          "t_min_mjd": 57431.36658564815
+        }
+      ],
+      "source_limitation": "These are scheduled/catalogued ON/OFF source names and timestamps; they are not measured antenna boresight logs. One source/cadence cluster, not six independent examples."
+    }
   }
 }
