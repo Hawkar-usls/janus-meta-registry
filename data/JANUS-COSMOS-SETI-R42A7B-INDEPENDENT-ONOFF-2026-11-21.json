@@ -2,7 +2,7 @@
   "schema": "janus.cosmos.seti.r42a7b.qualification.v1",
   "stage": "R42A7B",
   "date": "2026-11-21",
-  "status": "PASS_ORIGINAL_GBT_ONOFF_FULL_BYTE_MD5_AND_NATIVE_HEADER__HOLD_INDEPENDENT_TCS_AND_BLIND_CUSTODIAN",
+  "status": "PASS_ORIGINAL_GBT_HDF5_NRAO_OBSCORE_PROVENANCE__HOLD_INDEPENDENT_ENCODERS_AND_CUSTODIAN",
   "origin": {
     "repo": "Hawkar-usls/Janus-Cosmos",
     "branch": "research/seti-r42a7b-independent-onoff-20261121",
@@ -86,6 +86,22 @@
           "sha256": "61cc6221938dd5a41a0c3ab3dfda91762ed9b8a89727d1cf67cfef26e0eef6fd"
         }
       ]
+    },
+    {
+      "stage": "R42A7B3",
+      "run": 44905561762,
+      "artifact": 14707976780,
+      "artifact_digest": "6bb02ffbc49bc4d18d4a72e2f817e39c4451005b59cd3bf7684c904c75a05c6a",
+      "status": "PASS_OFFICIAL_NRAO_OBSCORE_METADATA_ONLY__NO_TCS",
+      "verified_archive": "AGBT16A_999_42",
+      "nrao_tap_table": "tap_schema.obscore",
+      "scan_hdf5_start_offset_seconds": {
+        "ON": 6,
+        "OFF": 6
+      },
+      "independent_pointing_measured": false,
+      "external_source_request_status": "SENT_GBT_HELPDESK_2026-11-21",
+      "external_review_issue": "https://github.com/Hawkar-usls/Janus-Cosmos/issues/63"
     }
   ],
   "qualification": {
@@ -95,7 +111,10 @@
     "TCS_independently_corrob": false,
     "external_blind_custodian": false,
     "qualified_test_groups": 0,
-    "real_onoff_radio_detector_exam_started": false
+    "real_onoff_radio_detector_exam_started": false,
+    "official_NRAO_tap_scan_metadata_match": true,
+    "independent_TCS_requested": true,
+    "GBT_staff_response_received": false
   },
   "boundaries": {
     "old_audit_train_tune": false,
@@ -105,5 +124,5 @@
     "technosignature_claim": false
   },
   "gate": "Two GBT original HDF5 spectra accepted for archival byte integrity and native header provenance, but not cleared for independently corroborated telescope pointing or blind test: TCS/backend log and unseen independent custodian missing. Archive HDF5 src_raj/src_dej may be target coordinates, not antenna encoder measurements.",
-  "next": "R42A7B3: Obtain independent original GBT telescope TCS/encoder or authenticated scan logs for HIP53020 on 2016-02-13 08:42:31 UTC and HIP53020_OFF 08:47:58 UTC, and cross-check disjoint source date/hash exclusion. Then seal a blind equal-information ON/OFF manifest before running any JANUS detector gain test."
+  "next": "Await GBT Antenna FITS and ScanLog original observations from support email, validate actual encoder sky positions independent of target catalog; then external blind-custodian seal and fair paired detector exam. Automatic veto remains off."
 }
