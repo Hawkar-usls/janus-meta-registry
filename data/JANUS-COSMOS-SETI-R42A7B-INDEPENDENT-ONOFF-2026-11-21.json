@@ -1,0 +1,74 @@
+{
+  "schema": "janus.cosmos.seti.r42a7b.qualification.v1",
+  "stage": "R42A7B",
+  "date": "2026-11-21",
+  "status": "ARCHIVE_INDEX_PASS__RAW_PAIR_CHECK_RUNNING__BLIND_EXAM_HOLD",
+  "origin": {
+    "repo": "Hawkar-usls/Janus-Cosmos",
+    "branch": "research/seti-r42a7b-independent-onoff-20261121",
+    "parent": "data/JANUS-COSMOS-SETI-R42A7-NONDESTRUCTIVE-RFI-2026-11-21.json",
+    "old_reference": {
+      "false_alerts": 51,
+      "localized": 318,
+      "weak": 69
+    },
+    "old_shadow_auc": 0.478257823592042
+  },
+  "procedures": [
+    {
+      "stage": "R42A7B1",
+      "run": 44903174619,
+      "artifact": 14706677638,
+      "source": "Breakthrough Listen official GBT HDF5 latest 6 pages",
+      "pages": 6,
+      "archive_records": 600,
+      "explicit_onoff_pairs": 0,
+      "status": "HOLD_NO_OFF_ROLE_PAIRS"
+    },
+    {
+      "stage": "R42A7B1b",
+      "run": 44903279134,
+      "artifact": 14706034563,
+      "source": "Breakthrough Listen official GBT 2016 early HDF5/baseband metadata",
+      "pages": 8,
+      "archive_records": 800,
+      "role_OFF_records": 253,
+      "provisional_pairs": 253,
+      "download_urls": 657,
+      "archived_MD5s": 800,
+      "status": "PASS_CATALOG_DISCOVERY_ONLY__NOT_QUALIFIED_POINTING"
+    },
+    {
+      "stage": "R42A7B2",
+      "run": 44903550331,
+      "status": "RUNNING_FROZEN_SOURCE_RAW_MD5_HEADER_TEST",
+      "frozen_manifest": "research/seti/r42a7b2_frozen_raw_pair.json",
+      "source": "2016-02-13 HIP53020/HIP53020_OFF, GBT 1501.46484375 MHz",
+      "input_files": 2,
+      "total_bytes": 285320836,
+      "archive_MD5s": [
+        "9a772f2529b6634fa4b6f4d10e427d68",
+        "4440a2b2aba3a2cefe147e5208bc55d8"
+      ],
+      "live_status": "UNKNOWN_UNTIL_JOB_COMPLETES"
+    }
+  ],
+  "qualification": {
+    "metadata_index_verified": true,
+    "raw_spectra_full_checksum_verified": false,
+    "actual_native_header_coordinates_verified": false,
+    "TCS_independently_corrob": false,
+    "external_blind_custodian": false,
+    "qualified_test_groups": 0,
+    "real_onoff_radio_detector_exam_started": false
+  },
+  "boundaries": {
+    "old_audit_train_tune": false,
+    "synthetic_ONOFF_as_real": false,
+    "archive_source_label_as_TCS_proof": false,
+    "production_change": false,
+    "technosignature_claim": false
+  },
+  "gate": "Only original ON+OFF bytes with exact hashes, per-file native time/sky headers AND independent TCS pointing + session exclusions can become qualified. External blind exam still HOLD.",
+  "next": "Review R42A7B2 native header file and byte result; if raw verified, obtain original TCS/backend pointing and independent custodian before new paired spectrum evaluation."
+}
