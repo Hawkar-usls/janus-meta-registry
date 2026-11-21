@@ -2,7 +2,7 @@
   "schema": "janus.cosmos.seti.r42a7b.qualification.v1",
   "stage": "R42A7B",
   "date": "2026-11-21",
-  "status": "ARCHIVE_INDEX_PASS__RAW_PAIR_CHECK_RUNNING__BLIND_EXAM_HOLD",
+  "status": "PASS_ORIGINAL_GBT_ONOFF_FULL_BYTE_MD5_AND_NATIVE_HEADER__HOLD_INDEPENDENT_TCS_AND_BLIND_CUSTODIAN",
   "origin": {
     "repo": "Hawkar-usls/Janus-Cosmos",
     "branch": "research/seti-r42a7b-independent-onoff-20261121",
@@ -41,7 +41,7 @@
     {
       "stage": "R42A7B2",
       "run": 44903550331,
-      "status": "RUNNING_FROZEN_SOURCE_RAW_MD5_HEADER_TEST",
+      "status": "success",
       "frozen_manifest": "research/seti/r42a7b2_frozen_raw_pair.json",
       "source": "2016-02-13 HIP53020/HIP53020_OFF, GBT 1501.46484375 MHz",
       "input_files": 2,
@@ -50,13 +50,48 @@
         "9a772f2529b6634fa4b6f4d10e427d68",
         "4440a2b2aba3a2cefe147e5208bc55d8"
       ],
-      "live_status": "UNKNOWN_UNTIL_JOB_COMPLETES"
+      "live_status": "UNKNOWN_UNTIL_JOB_COMPLETES",
+      "job": 136844277208,
+      "artifact": 14706613864,
+      "artifact_digest": "f138a34cf3c8c251128e7e4f3edf43e6c6b1700cdd1e82134d0dfa4f6bcc25d0",
+      "readable_native_HDF5": 2,
+      "native_shape_per_file": [
+        106624,
+        1,
+        2048
+      ],
+      "native_mjd": {
+        "ON": 57431.36287037037,
+        "OFF": 57431.36665509259
+      },
+      "native_src_raj_hours": {
+        "ON": 10.847554166666669,
+        "OFF": 10.847555833333333
+      },
+      "native_src_dec_degrees": {
+        "ON": 6.804433611111112,
+        "OFF": 8.804431666666666
+      },
+      "verified_raw_files": [
+        {
+          "role": "ON",
+          "bytes": 124015085,
+          "md5": "9a772f2529b6634fa4b6f4d10e427d68",
+          "sha256": "a4d282eddb536f43d8d296ac80207447cc49940ecda3c9187372d9a520790036"
+        },
+        {
+          "role": "OFF",
+          "bytes": 161305751,
+          "md5": "4440a2b2aba3a2cefe147e5208bc55d8",
+          "sha256": "61cc6221938dd5a41a0c3ab3dfda91762ed9b8a89727d1cf67cfef26e0eef6fd"
+        }
+      ]
     }
   ],
   "qualification": {
     "metadata_index_verified": true,
-    "raw_spectra_full_checksum_verified": false,
-    "actual_native_header_coordinates_verified": false,
+    "raw_spectra_full_checksum_verified": true,
+    "actual_native_header_coordinates_verified": true,
     "TCS_independently_corrob": false,
     "external_blind_custodian": false,
     "qualified_test_groups": 0,
@@ -69,6 +104,6 @@
     "production_change": false,
     "technosignature_claim": false
   },
-  "gate": "Only original ON+OFF bytes with exact hashes, per-file native time/sky headers AND independent TCS pointing + session exclusions can become qualified. External blind exam still HOLD.",
-  "next": "Review R42A7B2 native header file and byte result; if raw verified, obtain original TCS/backend pointing and independent custodian before new paired spectrum evaluation."
+  "gate": "Two GBT original HDF5 spectra accepted for archival byte integrity and native header provenance, but not cleared for independently corroborated telescope pointing or blind test: TCS/backend log and unseen independent custodian missing. Archive HDF5 src_raj/src_dej may be target coordinates, not antenna encoder measurements.",
+  "next": "R42A7B3: Obtain independent original GBT telescope TCS/encoder or authenticated scan logs for HIP53020 on 2016-02-13 08:42:31 UTC and HIP53020_OFF 08:47:58 UTC, and cross-check disjoint source date/hash exclusion. Then seal a blind equal-information ON/OFF manifest before running any JANUS detector gain test."
 }
