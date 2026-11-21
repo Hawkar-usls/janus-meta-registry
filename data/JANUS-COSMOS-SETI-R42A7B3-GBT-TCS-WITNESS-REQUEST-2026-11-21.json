@@ -2,7 +2,7 @@
   "schema": "janus.cosmos.r42a7b3.gbt.tcs.witness.request.v1",
   "stage": "R42A7B3",
   "date": "2026-11-21",
-  "status": "EXTERNAL_POINTING_REQUEST_SENT__AWAITING_GBT_SUPPORT_RESPONSE",
+  "status": "EXTERNAL_GBT_REQUEST_SENT__PUBLIC_NRAO_SCANS_CROSSMATCH_PASS__TCS_AND_CUSTODIAN_HOLD",
   "project": "AGBT16A_999_42",
   "telescope": "GBT",
   "utc_date": "2016-02-13",
@@ -59,8 +59,40 @@
     "independent_review_issue": "https://github.com/Hawkar-usls/Janus-Cosmos/issues/63",
     "issue_status": "OPEN_REQUEST_FOR_EXTERNAL_TCS_POINTING_WITNESS_AND_CUSTODIAN",
     "nrao_archive_tap_crosscheck_run": 44905561762,
-    "nrao_archive_tap_crosscheck_status": "IN_PROGRESS_PUBLIC_METADATA_ONLY",
-    "reliability_note": "TAP catalog coordinates are not independent antenna position; no original TCS received"
+    "nrao_archive_tap_crosscheck_status": "COMPLETE_PASS_OFFICIAL_OBSCORE_SOURCE_AND_TIME_MATCH__NOT_ACTUAL_ENCODER",
+    "reliability_note": "TAP catalog coordinates are not independent antenna position; no original TCS received",
+    "nrao_archive_tap_artifact": 14707976780,
+    "nrao_archive_tap_artifact_digest": "6bb02ffbc49bc4d18d4a72e2f817e39c4451005b59cd3bf7684c904c75a05c6a"
   },
-  "next": "Wait for GBT support reply; if a source URL/access route arrives, verify original per-scan Antenna FITS actual pointing and ScanLog.fits with original project UTC and SHA256; maintain HOLD for blind exam."
+  "next": "Await GBT archive response. Independently hash and validate original Antenna FITS encoder time series and ScanLog.fits; then establish disjoint source set and secure external blind custodian. Official TAP metadata is insufficient for physical pointing certification.",
+  "archive_crosscheck": {
+    "server": "https://data-query.nrao.edu/tap",
+    "schema": "tap_schema.obscore",
+    "result": "PASS_ARCHIVE_ENTRY_AND_NATIVE_TIME",
+    "matched_project": "AGBT16A_999_42",
+    "matched_on": {
+      "name": "HIP53020",
+      "archive_t_min_mjd": 57431.36280092597,
+      "hdf5_tstart_mjd": 57431.36287037037,
+      "offset_sec": 5.9999963734298944,
+      "archive_ra_deg": 162.713333333,
+      "archive_dec_deg": 6.80444444444
+    },
+    "matched_off": {
+      "name": "HIP53020_OFF",
+      "archive_t_min_mjd": 57431.36658564815,
+      "hdf5_tstart_mjd": 57431.36665509259,
+      "offset_sec": 5.999999516643584,
+      "archive_ra_deg": 162.713333333,
+      "archive_dec_deg": 8.80444444444
+    },
+    "other_archival_HIP53020_epochs": [
+      "2017",
+      "2018",
+      "2019"
+    ],
+    "pointing_inference": "NONE: Official ObsCore target RA/Dec and scan schedule are not actual ACU encoder pointing",
+    "corroborates": "Project identity, target names, distinct scheduled ON/OFF, observation timestamps with equal 6-sec native-data delay",
+    "independent_TCS_received": false
+  }
 }
