@@ -1,0 +1,102 @@
+{
+  "schema": "janus.meta_registry.cosmos_tachyon_r5f_mirror_provenance.v1",
+  "artifact_id": "JANUS-COSMOS-TACHYON-R5F-MIRROR-PROVENANCE-2026-11-22",
+  "created_utc_date": "2026-11-22",
+  "status": "ENGINEERING_SYNTHETIC_INTEGRATION_PASS__NO_GAIN_OVER_STRONG_DIRECT_AUDIT__SCIENTIFIC_HOLD",
+  "science_scope": "R42A8A native synthetic spectrogram and authenticated frozen R42A7A shadow scorer; NOT full original radio detector and NOT real GBT/Parkes observations.",
+  "source_repo": "Hawkar-usls/Janus-Cosmos",
+  "research_branch": "research/cosmos-tachyon-r5f-mirror-provenance-20261122",
+  "source_pr": "https://github.com/Hawkar-usls/Janus-Cosmos/pull/65",
+  "source_head_commit": "f7d96f598f97e58d15c751893d9c3af895bffee1",
+  "source_result": "https://github.com/Hawkar-usls/Janus-Cosmos/blob/research/cosmos-tachyon-r5f-mirror-provenance-20261122/research/seti/cosmos_tachyon_r5f_bridge_result.json",
+  "source_protocol": "https://github.com/Hawkar-usls/Janus-Cosmos/blob/research/cosmos-tachyon-r5f-mirror-provenance-20261122/research/seti/cosmos_tachyon_r5f_bridge_protocol.json",
+  "source_implementation": "https://github.com/Hawkar-usls/Janus-Cosmos/blob/research/cosmos-tachyon-r5f-mirror-provenance-20261122/research/seti/cosmos_tachyon_r5f_bridge.py",
+  "TACHYON_source": "Hawkar-usls/Demi_Head@91ef855a6f7119a733990c8f3adeb478e79beb05",
+  "COSMOS_R42A8_source_blob": "4f11b407e5271a058c38b3186c9f5c8192130655",
+  "freeze_model_lock_sha256": "bb00bb9bff24cd3997a581291cd440794efdc1f8794ef62963badb31eff9056e",
+  "successful_CI_runs": [
+    "https://github.com/Hawkar-usls/Janus-Cosmos/actions/runs/45045928726",
+    "https://github.com/Hawkar-usls/Janus-Cosmos/actions/runs/45046063956",
+    "https://github.com/Hawkar-usls/Janus-Cosmos/actions/runs/45046068811"
+  ],
+  "artifact": {
+    "name": "cosmos-tachyon-r5f-mirror-frozen-provenance",
+    "id": 14763811009,
+    "sha256": "eeda29086227fd63eb5e7bda2a7222c73db4bf28e251a2a4fffe3b8324e26dc6"
+  },
+  "experiment": {
+    "N": 1024,
+    "synthetic_positives": 512,
+    "synthetic_controls": 512,
+    "data_source": "Original R42A8A generated native 16x128 synthetic time-frequency spectra, seeded 420826",
+    "candidate_path": "Native COSMOS R42A8A blind_line_candidate function",
+    "score": "Frozen authentic R42A7A shadow score and no retraining",
+    "TACHYON": "Pinned R5F mirror_case, mirrored_exact and mirrored_replay; reverse computational provenance C frozen score -> B blind path -> A simulated spectrum followed by forward checksum replay",
+    "eight_overlay_scenarios_balanced_at": 128,
+    "metadata_damaged_or_incomplete": 896,
+    "intact": 128,
+    "original_frozen_scores_unchanged": true,
+    "original_candidate_paths_unchanged": true,
+    "no_observation_clocks_fabricated": true,
+    "no_independent_sensor_roots_inferred": true
+  },
+  "results": {
+    "COSMOS_only": {
+      "intact_retained": 128,
+      "corrupted_metadata_accepted": 896
+    },
+    "TACHYON_mirror_only": {
+      "intact_retained": 128,
+      "corrupted_metadata_accepted": 896
+    },
+    "TACHYON_mirror_plus_replay": {
+      "intact_retained": 128,
+      "corrupted_metadata_accepted": 0,
+      "corrupted_metadata_rejected": 896,
+      "mean_graph_ops": 3.875,
+      "total_postprocessing_seconds_single_runner": 0.0271
+    },
+    "strong_direct_provenance": {
+      "intact_retained": 128,
+      "corrupted_metadata_accepted": 0,
+      "corrupted_metadata_rejected": 896,
+      "mean_graph_ops": 0.25,
+      "total_postprocessing_seconds_single_runner": 0.0111
+    },
+    "null_always_abstain": {
+      "intact_retained": 0,
+      "corrupted_metadata_accepted": 0
+    },
+    "native_frozen_shadow_auc": [
+      0.7122802734375,
+      0.71795654296875
+    ],
+    "native_ridge_auc": [
+      0.5998687744140625,
+      0.601470947265625
+    ],
+    "new_unit_tests_passed": 22,
+    "incremental_gain_over_no_provenance_audit": true,
+    "incremental_gain_over_equally_informed_strong_audit": false,
+    "runtime_relative_to_direct": "TACHYON sidecar took approximately 2.44x the direct audit postprocessing time in this uncalibrated interleaved single-runner measurement. Not a full pipeline performance evaluation.",
+    "actual_radio_alert_vetoes": 0,
+    "actual_localized_signal_losses": 0,
+    "actual_false_alert_reductions": 0
+  },
+  "scientific_limits": {
+    "real_telescope_data": false,
+    "native_end_to_end_JANUS_detector_run": false,
+    "historical_318_detections_or_69_weak_replayed": false,
+    "original_318_69_source_historical_only": true,
+    "independent_ONOFF": false,
+    "external_custodian": false,
+    "trained_model_changed": false,
+    "production_adoption": false,
+    "physical_reverse_time": false,
+    "retrocausal_information_transfer": false,
+    "scientific_gate": "HOLD_REQUIRE_INDEPENDENT_REAL_PROVENANCE_AND_STRONG_DIRECT_BASELINE"
+  },
+  "epistemic_interpretation_ru": "Инженерный тест подтверждает работоспособность зеркальной трассировки и прямой проверки цепочки вычислительного происхождения радиокандидата, но сильный обычный аудит достигает тех же результатов быстрее. Корректность определяется нашим генератором и преднамеренно внесёнными повреждениями метаданных, а не астрономическими истинными источниками. Тест не улучшил фактические локализации/ложные тревоги действующего JANUS COSMOS, потому что детектор не изменялся и не тестировался на реальных наблюдениях.",
+  "workflow_policy": "Research PR ready for review; do not merge into historical frozen COSMOS branch or production main automatically; no source algorithms rewritten",
+  "next": "Independent custodian provides calibrated raw ON/OFF telescope metadata and same-information source-audit comparators; evaluate prospectively with full costs and zero loss of protected physical signals."
+}
