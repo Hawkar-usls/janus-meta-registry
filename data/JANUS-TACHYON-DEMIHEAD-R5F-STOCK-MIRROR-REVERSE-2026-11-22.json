@@ -1,0 +1,86 @@
+{
+  "schema": "janus.meta_registry.tachyon.demihead.r5f.stock_mirrored_reverse.v1",
+  "id": "JANUS-TACHYON-DEMIHEAD-R5F-STOCK-MIRROR-REVERSE-2026-11-22",
+  "created_date_utc": "2026-11-22",
+  "status": "SYNTHETIC_STOCK_MIRROR_CI_PASS__NO_STRONG_BASELINE_GAIN__SCIENTIFIC_HOLD",
+  "source": {
+    "repo": "Hawkar-usls/Demi_Head",
+    "main_commit": "91ef855a6f7119a733990c8f3adeb478e79beb05",
+    "merged_pr": "https://github.com/Hawkar-usls/Demi_Head/pull/117",
+    "canonical_result": "https://github.com/Hawkar-usls/Demi_Head/blob/main/research/tachyon/r5f_stock_mirror_result_20261122.json",
+    "protocol": "https://github.com/Hawkar-usls/Demi_Head/blob/main/research/tachyon/r5f_stock_mirror_protocol_20261122.json",
+    "source_script": "https://github.com/Hawkar-usls/Demi_Head/blob/main/tools/tachyon_r5f_stock_mirror_audit.py",
+    "verified_branch_ci": "https://github.com/Hawkar-usls/Demi_Head/actions/runs/45045142915",
+    "pr_ci": "https://github.com/Hawkar-usls/Demi_Head/actions/runs/45045148372",
+    "original_method": "data/JANUS-DOUGAN-FREESTYLER-REVERSE-ROAD-CAUSAL-TRACE-2026-08-18-v1.4.json"
+  },
+  "experiment": {
+    "stock_graph_edge_count": 9,
+    "stock_budget_operation_count": 500,
+    "heldout_synthetic_cases": 600,
+    "scenario_types": 15,
+    "new_tests_pass": 33,
+    "original_R5F_tests_pass": 29,
+    "original_DemiHead_reference_tests_pass": 7,
+    "original_R5F_script_git_blob": "ea3ebbbd14594291adcde4f403a7e040d65f76a3",
+    "negative_999_not_applied": true,
+    "x100_expansion_not_applied": true,
+    "production_weights_unchanged": true,
+    "physical_capture_utc_unchanged_cases": 600,
+    "mirrored_graph": "Original A→B→C graph inverted algebraically to C→B→A, fixed original C source, all edge directions reversed; output path re-normalized to A|B|C.",
+    "original_forward_to_mirror_exact_equal": 600,
+    "original_reverse_replay_to_mirror_replay_equal": 600,
+    "all_arms_zero_unsupported_claims": true
+  },
+  "paired_result": {
+    "original_stock_forward": {
+      "answered": 200,
+      "mean_counted_operations_per_case": 8.6667
+    },
+    "A_mirrored_exact": {
+      "answered": 200,
+      "coverage": 0.333333,
+      "selective_accuracy": 1,
+      "mean_counted_operations_per_case": 6.0667
+    },
+    "B_mirrored_proposals_only": {
+      "answered": 120,
+      "coverage": 0.2,
+      "selective_accuracy": 1,
+      "mean_counted_operations_per_case": 5.6667
+    },
+    "C_mirrored_proposals_and_replay": {
+      "answered": 160,
+      "coverage": 0.266667,
+      "selective_accuracy": 1,
+      "mean_counted_operations_per_case": 10.3333
+    },
+    "D_mirrored_strong_exact": {
+      "answered": 200,
+      "coverage": 0.333333,
+      "selective_accuracy": 1,
+      "mean_counted_operations_per_case": 6.0667
+    },
+    "E_always_abstain": {
+      "answered": 0,
+      "coverage": 0,
+      "selective_accuracy": null,
+      "mean_counted_operations_per_case": 0
+    },
+    "mirrored_forward_reduction_vs_original_counted_operations_percent": 30,
+    "mirrored_replay_vs_strong_answer_gap": -40,
+    "neural_advantage_demonstrated": false,
+    "true_wallclock_speedup_proven": false
+  },
+  "scientific_interpretation_ru": "В стоковом конфиге R5F (500 операций, 9 рёбер) корректное зеркальное представление причинного графа даёт 600/600 инвариантных выводов и 30% сокращение числа условно учтённых обходов для прямого точного поиска, поскольку он стартует от известного C. Этого же выигрыша достигает сильный зеркальный baseline, поэтому дополнительное интеллектуальное или физическое преимущество TACHYON не доказано. Все измерения на прежнем синтетическом генераторе.",
+  "scientific_boundaries": {
+    "outside_authored_blind_exam": false,
+    "independent_clock_provenance": false,
+    "human_consciousness_or_memory_measured": false,
+    "physical_causality_reversal": false,
+    "future_to_past_information": false,
+    "neural_or_production_weight_change": false,
+    "science_gate": "HOLD_SYNTHETIC_GRAPH_TRANSPOSITION_ONLY"
+  },
+  "next": "R5G optimize exact indexed target conditioned baseline on independently authored causal DAG and authentic timestamped evidence, compare full costs and reliability at frozen constraints."
+}
