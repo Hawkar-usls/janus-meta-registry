@@ -1,0 +1,73 @@
+name: JANUS Simptomat R2B - Pinned Offline Methods Review
+
+on:
+  pull_request:
+    paths:
+      - 'data/JANUS-TACHYON-SIMPTOMAT-R2B-INDEPENDENT-METHODS-REVIEW-2026-11-22.json'
+      - 'data/JANUS-RULE-001-FIRST-PERSON-TEMPORAL-CONSTRUCTION-2026-11-22-v1.0.json'
+      - 'tools/validate_tachyon_r2b.py'
+      - 'tests/test_tachyon_r2b_registry.py'
+      - '.github/workflows/tachyon-simptomat-r2b.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'data/JANUS-TACHYON-SIMPTOMAT-R2B-INDEPENDENT-METHODS-REVIEW-2026-11-22.json'
+      - 'data/JANUS-RULE-001-FIRST-PERSON-TEMPORAL-CONSTRUCTION-2026-11-22-v1.0.json'
+      - 'tools/validate_tachyon_r2b.py'
+      - 'tests/test_tachyon_r2b_registry.py'
+      - '.github/workflows/tachyon-simptomat-r2b.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pinned-offline-methods-and-boundaries:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validate fixed research evidence and canonical Rule 001 hash
+        run: |
+          python -m unittest discover -s tests -p 'test_tachyon_r2b_registry.py' -v
+          python -m unittest discover -s tests -p '*rule001*.py' -v
+          python tools/validate_tachyon_r2b.py
+      - name: Resolve validated immutable source pin
+        id: source
+        run: |
+          python - <<'PY'
+          import json, os, re
+          from pathlib import Path
+          evidence = json.loads(Path('data/JANUS-TACHYON-SIMPTOMAT-R2B-INDEPENDENT-METHODS-REVIEW-2026-11-22.json').read_text())
+          commit = evidence['source']['commit']
+          assert re.fullmatch('[a-f0-9]{40}', commit)
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as stream:
+              stream.write('commit=' + commit + '\n')
+          PY
+      - uses: actions/checkout@v4
+        with:
+          repository: Hawkar-usls/Simptomat
+          ref: ${{ steps.source.outputs.commit }}
+          path: source-simptomat
+          persist-credentials: false
+      - name: Reproduce synthetic source methods at exact commit
+        run: |
+          mkdir -p out/tachyon-r2b
+          cd source-simptomat
+          python -m unittest discover -s tests -p 'test_temporal_awareness*.py' -v
+          python -m tools.temporal_awareness_r2b_reproduce
+          python -m tools.temporal_awareness_r2b --audit > ../out/tachyon-r2b/source_results.json
+      - name: Compare regenerated result with frozen digest
+        run: python tools/validate_tachyon_r2b.py --source-results > out/tachyon-r2b/registry_validation.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: janus-tachyon-simptomat-r2b-pinned-offline-review
+          path: out/tachyon-r2b/*.json
+          if-no-files-found: warn
+          retention-days: 30
