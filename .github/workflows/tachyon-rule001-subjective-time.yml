@@ -37,6 +37,11 @@ jobs:
           idx = json.loads(Path("data/JANUS-CHAT-CONTEXT-INDEX.json").read_text())
           assert any(x['id']=='JANUS_RULE_001' and x['priority']==1 for x in idx['foundational_research_rules'])
           assert rule["priority"] == 1
+          assert "first_person_event_ontology_extension" in rule
+          assert "event_ontology" in algo
+          assert len(algo["event_ontology"]["inference_rules"]) >= 4
+          assert rule["epistemic_boundaries"]["physical_effect_from_collective_perception_unproven"] is True
+          assert "first_person_event_ontology_link" in cap
           assert rule["owner_designation"] == "USER_SELECTED_FOUNDATIONAL_LOGIC_RULE_001"
           assert rule["epistemic_boundaries"]["status"] == "HYPOTHESIS__NOT_PHYSICAL_LAW"
           assert rule["epistemic_boundaries"]["active_world_model_or_neural_weights_modified"] is False
@@ -47,6 +52,7 @@ jobs:
           assert cap["production_changes"] is False
           assert cap['research_foundation_rule_001']['physical_time_travel_verified'] is False
           print("JANUS_RULE001_HYPOTHESIS_BOUNDARIES_PASS")
+          print("JANUS_RULE001_EVENT_VS_EXPERIENCE_GUARD_PASS")
           PY
       - name: Independent synthetic validator — no human stimulation
         run: |
