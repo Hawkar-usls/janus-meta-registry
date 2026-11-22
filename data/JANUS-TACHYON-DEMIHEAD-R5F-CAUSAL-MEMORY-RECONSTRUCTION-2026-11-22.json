@@ -1,0 +1,93 @@
+{
+  "schema": "janus.meta_registry.tachyon.demihead.r5f.causal_memory_reconstruction.v1",
+  "artifact_id": "JANUS-TACHYON-DEMIHEAD-R5F-CAUSAL-MEMORY-RECONSTRUCTION-2026-11-22",
+  "date": "2026-11-22",
+  "status": "SYNTHETIC_ENGINEERING_PASS__NO_ADVANTAGE_OVER_STRONG_EXACT_BASELINE__SCIENTIFIC_HOLD",
+  "origin": {
+    "source_method": "data/JANUS-DOUGAN-FREESTYLER-REVERSE-ROAD-CAUSAL-TRACE-2026-08-18-v1.4.json",
+    "source_method_git_blob_sha1": "4b21b5abc6e2741bcbea562d80f3079b8ab2ce22",
+    "source_repository": "Hawkar-usls/Demi_Head",
+    "merged_PR": "https://github.com/Hawkar-usls/Demi_Head/pull/114",
+    "merged_main_commit": "86651e4dd8b190156b0337d42d1e1547d90c7ef7",
+    "canonical_result": "https://github.com/Hawkar-usls/Demi_Head/blob/main/research/tachyon/r5f_causal_memory_result_20261122.json",
+    "protocol": "https://github.com/Hawkar-usls/Demi_Head/blob/main/research/tachyon/r5f_causal_memory_protocol_20261122.json",
+    "implementation": "https://github.com/Hawkar-usls/Demi_Head/blob/main/tools/tachyon_r5f_causal_memory_audit.py",
+    "first_successful_ci": "https://github.com/Hawkar-usls/Demi_Head/actions/runs/45043113884",
+    "final_successful_premerge_ci": "https://github.com/Hawkar-usls/Demi_Head/actions/runs/45043209995"
+  },
+  "protocol_frozen_before_run": true,
+  "experimental_scope": {
+    "method": "C→B→A predecessor reconstruction followed by frozen forward A→B→C replay and decoy/unknown controls",
+    "development_cases": 300,
+    "validation_cases": 150,
+    "developer_heldout_cases": 600,
+    "adversarial_scenarios": 15,
+    "paired_arms": 5,
+    "same_visible_input": true,
+    "hard_graph_operation_budget_per_case": 500,
+    "repeated_generator_across_splits": true,
+    "independent_external_challenge": false,
+    "same_source_graph_semantics_for_gold_and_strong_control": true,
+    "simulated_witness_root_strings_not_authenticated": true,
+    "gold": "Unique history supported by graph and corroborated visible synthetic records, not empirically witnessed physical ground truth",
+    "data_source": "ARTIFICIAL_CAUSAL_DAGS_ONLY"
+  },
+  "paired_results": {
+    "A_forward_exhaustive": {
+      "answered": 200,
+      "coverage": 0.333333,
+      "selective_accuracy": 1,
+      "unsupported_assertions": 0,
+      "mean_operations": 8.6667
+    },
+    "B_reverse_only": {
+      "answered": 120,
+      "coverage": 0.2,
+      "selective_accuracy": 1,
+      "unsupported_assertions": 0,
+      "mean_operations": 5.6667
+    },
+    "C_reverse_forward_replay": {
+      "answered": 160,
+      "coverage": 0.266667,
+      "selective_accuracy": 1,
+      "unsupported_assertions": 0,
+      "mean_operations": 10.3333
+    },
+    "D_strong_exact_provenance": {
+      "answered": 200,
+      "coverage": 0.333333,
+      "selective_accuracy": 1,
+      "unsupported_assertions": 0,
+      "mean_operations": 8.6667
+    },
+    "E_abstain": {
+      "answered": 0,
+      "coverage": 0,
+      "selective_accuracy": null,
+      "unsupported_assertions": 0,
+      "mean_operations": 0
+    },
+    "ambiguous_and_correctly_abstained_by_exact_rule": 400,
+    "gain_replay_vs_reverse_only_safe_answers": 40,
+    "replay_minus_strong_safe_answers": -40,
+    "replay_minus_strong_coverage_percentage_points": -6.6666,
+    "neural_gain": false,
+    "algorithmic_superiority_over_strong_baseline": false,
+    "original_DemiHead_reference_tests_pass": 7,
+    "prior_R5B_tests_pass": 26,
+    "new_R5F_tests_pass": 29
+  },
+  "scientific_interpretation_ru": "Обратная реконструкция с форвард-проверкой лучше слабого обратного поиска на 40 ответов, но уступает полному прямому базовому алгоритму на 40 определённых ответов и расходует больше условно подсчитанных операций. Предсказания 100% среди выданных связаны с искусственным графом и строгим отказом на неоднозначных историях, а не с реконструкцией независимого физического прошлого. Метка нейросетевого прироста или ретрокаузальности не допускается.",
+  "scientific_gates": {
+    "independent_custodian": false,
+    "real_authentic_witness_data": false,
+    "human_memory_measured": false,
+    "physical_time_reversal_measured": false,
+    "retrocausal_information_verified": false,
+    "neural_production_model_modified": false,
+    "clinical_data_used": false,
+    "scientific_gate": "HOLD_EXTERNAL_INDEPENDENT_CAUSAL_INFERENCE_CHALLENGE"
+  },
+  "next": "R5G genuinely externally authored causal graph and sensor provenance challenge with frozen output predictions, strong exact and probabilistic inference baselines, authenticated source roots, scored coverage/risk/uncertainty and full computational costs."
+}
