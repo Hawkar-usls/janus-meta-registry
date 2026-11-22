@@ -129,3 +129,85 @@ def score_session(session: Mapping) -> dict:
         "scientific_verdict": "NOT_TESTED",
         "evidence_of_timeless_consciousness": False,
     }
+
+
+# JANUS RULE #1 is a classification framework for research evidence,
+# not an ontological claim that physical processes need minds.
+EVENT_KINDS = frozenset({
+    "PHYSICAL_EVENT",
+    "SUBJECTIVE_EXPERIENCE",
+    "SOCIAL_INTERPRETATION",
+    "PHYSICAL_SPACETIME_CHANGE",
+})
+EVENT_TYPES = frozenset({
+    "ACOUSTIC_FALL",
+    "SUBJECTIVE_SOUND",
+    "SUBJECTIVE_TIMELESSNESS",
+    "TIME_JUMP",
+    "COLLECTIVE_SYNCHRONIZATION",
+    "OTHER",
+})
+
+
+def classify_temporal_claim(claim: Mapping) -> dict:
+    """Apply RULE #1 to a proposed event or subjective-time assertion.
+
+    No sound sensation without a hearer does NOT imply no air-pressure wave;
+    no felt time without temporal sequencing does NOT imply stopped clocks.
+    The classification is a protective evidence ontology, not a QFT proof.
+    """
+    if not isinstance(claim, Mapping):
+        return {"verdict": "INVALID_INPUT", "reason": "CLAIM_NOT_MAPPING"}
+    kind, event = claim.get("kind"), claim.get("event_type")
+    if kind not in EVENT_KINDS or event not in EVENT_TYPES:
+        return {"verdict": "INVALID_INPUT", "reason": "UNKNOWN_EVENT_TYPE_OR_KIND"}
+    observer = claim.get("observer_present")
+    if observer is not None and type(observer) is not bool:
+        return {"verdict": "INVALID_INPUT", "reason": "INVALID_OBSERVER_FLAG"}
+    # Never interpret source text or participant reports as independent physics.
+    if kind == "PHYSICAL_SPACETIME_CHANGE" or event == "TIME_JUMP":
+        return {
+            "verdict": "HOLD_INDEPENDENT_PHYSICAL_EVIDENCE",
+            "physical_event_may_exist_without_observer": True,
+            "physical_time_travel_verified": False,
+        }
+    if event == "ACOUSTIC_FALL":
+        if kind != "PHYSICAL_EVENT":
+            return {"verdict": "REJECT_CATEGORY_ERROR", "reason": "FALL_IS_PHYSICAL_EVENT"}
+        return {
+            "verdict": "PHYSICAL_EVENT_CONCEPTUALLY_POSSIBLE",
+            "physical_event_may_exist_without_observer": True,
+            "subjective_hearing": "NOT_PRESENT_FOR_ABSENT_OBSERVER"
+            if observer is False else "NOT_ESTABLISHED_BY_EVENT_ALONE",
+            "acoustic_wave_measured": False,
+            "physical_time_travel_verified": False,
+        }
+    if event == "SUBJECTIVE_SOUND":
+        if kind != "SUBJECTIVE_EXPERIENCE":
+            return {"verdict": "REJECT_CATEGORY_ERROR", "reason": "SOUND_QUALIA_NEEDS_EXPERIENCER"}
+        if observer is False:
+            return {"verdict": "REJECT_CATEGORY_ERROR",
+                    "reason": "NO_HEARING_BY_ABSENT_OBSERVER"}
+        return {"verdict": "SUBJECTIVE_REPORT_REQUIRES_CONFIRMATION",
+                "physical_time_travel_verified": False}
+    if event == "SUBJECTIVE_TIMELESSNESS":
+        if kind != "SUBJECTIVE_EXPERIENCE":
+            return {"verdict": "REJECT_CATEGORY_ERROR",
+                    "reason": "TIMELESSNESS_REPORT_IS_PHENOMENOLOGY"}
+        return {
+            "verdict": "FIRST_PERSON_REPORT_ONLY__CHECK_AWARENESS_MEMORY_AND_CLOCK",
+            "memory_loss_ruled_out": False,
+            "external_time_unchanged_by_claim": True,
+            "physical_time_travel_verified": False,
+        }
+    if event == "COLLECTIVE_SYNCHRONIZATION":
+        if kind != "SOCIAL_INTERPRETATION":
+            return {"verdict": "REJECT_CATEGORY_ERROR",
+                    "reason": "GROUP_REPORT_REQUIRES_SOCIAL_CLASS"}
+        return {
+            "verdict": "SOCIAL_OR_PHENOMENOLOGICAL_EFFECT__PHYSICAL_CHANGE_UNVERIFIED",
+            "independent_external_measurement_required": True,
+            "physical_time_travel_verified": False,
+        }
+    return {"verdict": "CLASSIFIED_FOR_RESEARCH_ONLY",
+            "physical_time_travel_verified": False}
