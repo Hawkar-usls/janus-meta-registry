@@ -2,7 +2,7 @@
 import copy
 import unittest
 
-from tools.tachyon.rule001_temporal_perception import score_session
+from tools.tachyon.rule001_temporal_perception import score_session, classify_temporal_claim
 
 
 def fixture():
@@ -116,6 +116,91 @@ class SubjectiveTimeRule1Tests(unittest.TestCase):
         self.assertEqual(score_session(x)["guard_verdict"], "INVALID_INPUT")
         x["external_clock_start_ns"] = True
         self.assertEqual(score_session(x)["guard_verdict"], "INVALID_INPUT")
+
+
+class FirstPersonEventOntologyTests(unittest.TestCase):
+    """Synthetic category-error controls for foundational research RULE #1."""
+
+    def test_falling_rock_without_hearer_does_not_erase_physical_wave(self):
+        r = classify_temporal_claim({
+            "kind": "PHYSICAL_EVENT",
+            "event_type": "ACOUSTIC_FALL",
+            "observer_present": False,
+        })
+        self.assertTrue(r["physical_event_may_exist_without_observer"])
+        self.assertEqual(r["subjective_hearing"], "NOT_PRESENT_FOR_ABSENT_OBSERVER")
+        self.assertFalse(r["acoustic_wave_measured"])
+
+    def test_no_listener_cannot_report_sound_experience(self):
+        r = classify_temporal_claim({
+            "kind": "SUBJECTIVE_EXPERIENCE",
+            "event_type": "SUBJECTIVE_SOUND",
+            "observer_present": False,
+        })
+        self.assertEqual(r["verdict"], "REJECT_CATEGORY_ERROR")
+
+    def test_heard_sound_is_not_the_falling_event_itself(self):
+        r = classify_temporal_claim({
+            "kind": "PHYSICAL_EVENT",
+            "event_type": "SUBJECTIVE_SOUND",
+            "observer_present": True,
+        })
+        self.assertEqual(r["verdict"], "REJECT_CATEGORY_ERROR")
+
+    def test_timelessness_report_does_not_stop_external_clocks(self):
+        r = classify_temporal_claim({
+            "kind": "SUBJECTIVE_EXPERIENCE",
+            "event_type": "SUBJECTIVE_TIMELESSNESS",
+            "observer_present": True,
+            "subjective_report": "I felt no passage of time",
+        })
+        self.assertEqual(r["verdict"], "FIRST_PERSON_REPORT_ONLY__CHECK_AWARENESS_MEMORY_AND_CLOCK")
+        self.assertFalse(r["memory_loss_ruled_out"])
+        self.assertTrue(r["external_time_unchanged_by_claim"])
+        self.assertFalse(r["physical_time_travel_verified"])
+
+    def test_felt_timelessness_as_physical_time_is_category_error(self):
+        r = classify_temporal_claim({
+            "kind": "PHYSICAL_EVENT",
+            "event_type": "SUBJECTIVE_TIMELESSNESS",
+        })
+        self.assertEqual(r["verdict"], "REJECT_CATEGORY_ERROR")
+
+    def test_single_person_physical_time_jump_is_hold(self):
+        r = classify_temporal_claim({
+            "kind": "PHYSICAL_SPACETIME_CHANGE",
+            "event_type": "TIME_JUMP",
+            "subjective_report": "transported",
+        })
+        self.assertEqual(r["verdict"], "HOLD_INDEPENDENT_PHYSICAL_EVIDENCE")
+        self.assertFalse(r["physical_time_travel_verified"])
+
+    def test_collective_synchronization_not_physical_spacetime(self):
+        r = classify_temporal_claim({
+            "kind": "SOCIAL_INTERPRETATION",
+            "event_type": "COLLECTIVE_SYNCHRONIZATION",
+        })
+        self.assertTrue(r["independent_external_measurement_required"])
+        self.assertFalse(r["physical_time_travel_verified"])
+
+    def test_collective_as_physical_is_hold(self):
+        r = classify_temporal_claim({
+            "kind": "PHYSICAL_SPACETIME_CHANGE",
+            "event_type": "COLLECTIVE_SYNCHRONIZATION",
+        })
+        self.assertEqual(r["verdict"], "HOLD_INDEPENDENT_PHYSICAL_EVIDENCE")
+
+    def test_invalid_event_and_observer_types(self):
+        self.assertEqual(classify_temporal_claim({"kind":"POSSIBLE", "event_type":"OTHER"})["verdict"],
+                         "INVALID_INPUT")
+        self.assertEqual(classify_temporal_claim({"kind":"PHYSICAL_EVENT",
+                             "event_type":"ACOUSTIC_FALL", "observer_present":"none"})["verdict"],
+                         "INVALID_INPUT")
+
+    def test_research_only_default_no_physical_certification(self):
+        r = classify_temporal_claim({"kind":"PHYSICAL_EVENT", "event_type":"OTHER"})
+        self.assertEqual(r["verdict"], "CLASSIFIED_FOR_RESEARCH_ONLY")
+        self.assertFalse(r["physical_time_travel_verified"])
 
 
 if __name__ == "__main__":
