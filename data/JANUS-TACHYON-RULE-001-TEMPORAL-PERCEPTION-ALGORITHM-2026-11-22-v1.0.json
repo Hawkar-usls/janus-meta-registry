@@ -10,7 +10,8 @@
     "Проверять возможную связь повторяемости/новизны стимулов с границами запомненных событий.",
     "Проверять сохранность осознанной активности отдельно от субъективной непрерывности времени и памяти.",
     "Не допускать вывода о физическом путешествии во времени из самоотчётов.",
-    "Хранить отрицательные и неопределённые исходы."
+    "Хранить отрицательные и неопределённые исходы.",
+    "Переносить аналогию камня в лесу на временные утверждения без логического скачка от отсутствия переживания к отсутствию физического события."
   ],
   "io_contract": {
     "input": {
@@ -107,6 +108,11 @@
   },
   "states": [
     {
+      "id": "S_ONT_EVENT_TYPE",
+      "action": "До любого моделирования определить класс события: внешнее физическое, субъективное, коллективно-интерпретируемое или претензия на изменение физического времени.",
+      "advance_if": "Никакое отсутствие наблюдателя не используется для отрицания физического события; любой physical-time claim помечен HOLD."
+    },
+    {
       "id": "S0_SPEC",
       "action": "Version and freeze hypothesis, arms, stimulus assets, duration, randomization, measures, thresholds, stop rule, sample size/power plan, and exclusion reasons; hash schedule.",
       "advance_if": "All preregistration and review requirements met."
@@ -187,9 +193,20 @@
       "gate": "G08_POPULATION",
       "when": "group agreement used to claim all minds are one or shared altered physical spacetime",
       "verdict": "REJECT_UNSUPPORTED_INFERENCE"
+    },
+    {
+      "gate": "G09_ONTOLOGICAL_CATEGORY_ERROR",
+      "when": "No hearer interpreted as no acoustic pressure wave, or no sense of time interpreted as no external clock passage",
+      "verdict": "REJECT_CATEGORY_ERROR"
+    },
+    {
+      "gate": "G10_COLLECTIVE_INFERENCE",
+      "when": "Synchronized inner reports alone are treated as direct causal influence on physical spacetime",
+      "verdict": "HOLD_INDEPENDENT_PHYSICAL_EVIDENCE"
     }
   ],
   "pseudocode_ru": [
+    "ПЕРВОЕ ПРАВИЛО: различить PHYSICAL_EVENT, SUBJECTIVE_EXPERIENCE, SOCIAL_INTERPRETATION и PHYSICAL_SPACETIME_CHANGE; отсутствие переживающего не означает отсутствие физического процесса.",
     "ФУНКЦИЯ PLAN: зарегистрировать RULE_001, гипотезы, объективные часы, случайный порядок A/B/C, этические ограничения; сохранить hash ДО наблюдений.",
     "ФУНКЦИЯ RUN: если нет безопасного добровольного допуска → STOP; иначе для каждой сессии воспроизводить заранее зафиксированные безопасные стимулы и логировать внешнее время.",
     "ФУНКЦИЯ COLLECT: отдельно получить немедленную оценку прохождения времени, оценку длительности, отсроченную память и независимые события.",
@@ -204,7 +221,8 @@
     "code_location": "tools/tachyon/rule001_temporal_perception.py",
     "tests_location": "tests/test_tachyon_rule001_temporal_perception.py",
     "use": "Pure offline synthetic or already authorized anonymized summary data. No human stimulation or brain-device control.",
-    "cannot_claim": "A successful unit test demonstrates software invariants, not a change in consciousness."
+    "cannot_claim": "A successful unit test demonstrates software invariants, not a change in consciousness.",
+    "ontology_function": "classify_temporal_claim in tools/tachyon/rule001_temporal_perception.py"
   },
   "references": [
     {
@@ -229,5 +247,47 @@
     "change_physical_time": "NOT_SUPPORTED",
     "self_modification": "NO",
     "auto_deployment": "NO"
+  },
+  "event_ontology": {
+    "typed_event_classes": {
+      "PHYSICAL_EVENT": "Объективно регистрируемое событие, даже когда нет наблюдающего субъекта.",
+      "SUBJECTIVE_EXPERIENCE": "Переживание ощущения, звука, потока времени или субъективного настоящего, требующее субъекта; измерение — самоотчёт и психофизические корреляты.",
+      "SOCIAL_INTERPRETATION": "Коллективная интерпретация/согласование; возможны поведенческие эффекты без изменения фундаментальной физики.",
+      "PHYSICAL_SPACETIME_CHANGE": "Сильное утверждение об изменении физических часов/причинности; требует независимых подтверждений и внешней валидации."
+    },
+    "optional_claim_contract": {
+      "kind": "PHYSICAL_EVENT | SUBJECTIVE_EXPERIENCE | SOCIAL_INTERPRETATION | PHYSICAL_SPACETIME_CHANGE",
+      "event_type": "ACOUSTIC_FALL | SUBJECTIVE_SOUND | SUBJECTIVE_TIMELESSNESS | TIME_JUMP | COLLECTIVE_SYNCHRONIZATION | OTHER",
+      "physical_evidence": "Optional hash-linked external measurement, NOT inferred from subjective narrative.",
+      "observer_present": "Optional boolean; observer absent disallows subjective hearing by that observer but not a pressure wave.",
+      "subjective_report": "Optional participant statement with explicit consent; may not be physical proof."
+    },
+    "inference_rules": [
+      {
+        "id": "IO1",
+        "input": "ACOUSTIC_FALL + observer_present=false",
+        "result": "PHYSICAL_PRESSURE_WAVE_POSSIBLE__NO_OBSERVED_SUBJECTIVE_HEARING",
+        "note": "No measured wave without a sensor; conservation of physical causality is independent of report."
+      },
+      {
+        "id": "IO2",
+        "input": "SUBJECTIVE_TIMELESSNESS report",
+        "result": "FIRST_PERSON_REPORT_ONLY__CHECK_AWARENESS_MEMORY_AND_CLOCK",
+        "note": "No physical time-jump inference."
+      },
+      {
+        "id": "IO3",
+        "input": "TIME_JUMP with only subjective report",
+        "result": "HOLD_EXTERNAL_CLOCK_AND_CAUSAL_EVIDENCE",
+        "note": "Cannot establish physical displacement."
+      },
+      {
+        "id": "IO4",
+        "input": "COLLECTIVE_SYNCHRONIZATION",
+        "result": "SOCIAL_OR_PHENOMENOLOGICAL_EFFECT__PHYSICAL_CHANGE_NOT_ESTABLISHED",
+        "note": "Protect causal independence and source contamination."
+      }
+    ],
+    "global_safety_policy": "Never autonomously stimulate, hypnotize, confine, manipulate memories, alter public media at scale, or recruit participants. Software here classifies research claims only."
   }
 }
