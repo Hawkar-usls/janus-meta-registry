@@ -1,0 +1,111 @@
+{
+  "schema": "janus.cosmos.retina_5d_mosaic.registry_receipt.v1",
+  "created_utc_date": "2026-11-23",
+  "project": "JANUS COSMOS / RETINA / 5D SPIRAL / MOSAIC KALEIDOSCOPE",
+  "status": "SYNTHETIC_ENGINEERING_CI_PASS__REAL_RADIO_SCIENCE_HOLD__PRODUCTION_UNCHANGED",
+  "source_of_concept": {
+    "canonical_5d": {
+      "repo": "Hawkar-usls/janus-meta-registry",
+      "path": "data/JANUS-DEEP-ANALYSIS-5D-SPIRAL-ORIGIN-PRIME-ORACLE-PROTOCOL-2026-08-21-v2.1.json",
+      "blob": "b4922c58fde2254fa625f80d5e0de07d9aec3293"
+    },
+    "cosmos_r41s": {
+      "repo": "Hawkar-usls/Janus-Cosmos",
+      "branch": "research/seti-r41s-5d-spiral-20261120",
+      "path": "research/seti/r41s_5d_spiral_protocol.json",
+      "blob": "5716ff06cb8ae9505b9e0ce40b3af8ac08cb2ce6"
+    },
+    "shared_retina_video": {
+      "repo": "Hawkar-usls/TOPA",
+      "path": "tools/topa_retina_video.py",
+      "blob": "206056bce5b9b980311df680dffdc53393d3bd3e"
+    },
+    "mosaic": "New experimental reversible tile and mirror comparison, NOT inherited as established detector evidence"
+  },
+  "implementation": {
+    "repo": "Hawkar-usls/Janus-Cosmos",
+    "branch": "research/retina-5d-mosaic-kaleidoscope-20261123",
+    "pr": "https://github.com/Hawkar-usls/Janus-Cosmos/pull/77",
+    "pr_state": "draft",
+    "last_verified_commit": "e916c87b299558573e24c631ec2bd34b9aed2a80",
+    "radio_code": "research/seti/retina_5d_mosaic.py",
+    "tests": [
+      "research/seti/test_retina_5d_mosaic.py",
+      "research/seti/test_retina_5d_mosaic_cli.py"
+    ],
+    "cli": "research/seti/retina_5d_mosaic_cli.py",
+    "protocol": "research/seti/retina_5d_mosaic_protocol.json",
+    "benchmark": "research/seti/benchmark_retina_5d_mosaic.py",
+    "result": "research/seti/retina_5d_mosaic_synthetic_result.json"
+  },
+  "evaluation": {
+    "local_environment": {
+      "python": "3.13.5",
+      "numpy": "2.3.5",
+      "pillow": "12.3.0",
+      "local_tests": "9/9 PASS"
+    },
+    "github_actions": {
+      "url": "https://github.com/Hawkar-usls/Janus-Cosmos/actions/runs/45082122739",
+      "run_id": 45082122739,
+      "job_id": 137392392483,
+      "status": "completed",
+      "conclusion": "success",
+      "scope": "synthetic+hash/PTS test only"
+    },
+    "generator": "Synthetic 32x64 Gaussian power arrays, 80 null calibration, 200 separate synthetic evaluation, 40 per class",
+    "methods": "Same three drift-path bank, direct matched mean vs 0.5 mean +0.5 minimum of four time-mosaic means",
+    "numerical_results": {
+      "gaussian_noise_exceed": {
+        "direct": 1,
+        "mosaic": 3,
+        "denominator": 40
+      },
+      "impulse_noise_exceed": {
+        "direct": 27,
+        "mosaic": 3,
+        "denominator": 40
+      },
+      "weak_source_only_detect": {
+        "direct": 35,
+        "mosaic": 31,
+        "denominator": 40
+      },
+      "strong_source_only_detect": {
+        "direct": 40,
+        "mosaic": 40,
+        "denominator": 40
+      },
+      "shared_source_reference_exceed": {
+        "direct": 40,
+        "mosaic": 40,
+        "denominator": 40
+      },
+      "shared_source_reference_advisory": {
+        "mosaic": 39,
+        "denominator": 40
+      }
+    },
+    "negative_result": "Four fewer weak synthetic detections under separate synthetic-null p95 thresholds. No evidence of broad sensitivity gain.",
+    "reliability_limit": "One simple synthetic generator and correlated tile/mirror representations; not independent real sky FPR or physical source identification.",
+    "synthetic_threshold_not_adopted": true,
+    "baseline_alerts_modified": false,
+    "original_radio_raw_modified": false,
+    "topa_original_video_mutated": false
+  },
+  "scientific_gate": {
+    "status": "HOLD",
+    "required": [
+      "authenticated untouched native ON/OFF parent scans and physical grids",
+      "external scan/IF metadata",
+      "paired full matched-filter and R41S comparison",
+      "no protected weak signal losses and equal measured controls",
+      "independent prospective groups and audit custodian"
+    ],
+    "existing_sit2e_thresholds_unchanged": true,
+    "october_2025_holdout_opened": false,
+    "no_origin_or_technosignature_claim": true,
+    "production_model_unchanged": true
+  },
+  "decision": "Persist this negative/positive engineering evidence in a separate registry receipt; do not overwrite prior COSMOS R41S or SIT2E decisions; user review and further independent validation required."
+}
