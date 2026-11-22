@@ -1,0 +1,59 @@
+name: JANUS Rule 001 - TACHYON Subjective Time Offline Gate
+
+on:
+  pull_request:
+    paths:
+      - 'data/JANUS-CHAT-CONTEXT-INDEX.json'
+      - 'data/JANUS-RULE-001-FIRST-PERSON-TEMPORAL-CONSTRUCTION-2026-11-22-v1.0.json'
+      - 'data/JANUS-TACHYON-RULE-001-TEMPORAL-PERCEPTION-ALGORITHM-2026-11-22-v1.0.json'
+      - 'data/JANUS-TACHYON-SUBJECTIVE-TIME-CAPSULE-2026-11-22-v1.0.json'
+      - 'tools/tachyon/rule001_temporal_perception.py'
+      - 'tests/test_tachyon_rule001_temporal_perception.py'
+      - '.github/workflows/tachyon-rule001-subjective-time.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline-synthetic-only:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Enforce schema, symbolic boundaries and frozen Rule 001 link
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          rule = json.loads(Path("data/JANUS-RULE-001-FIRST-PERSON-TEMPORAL-CONSTRUCTION-2026-11-22-v1.0.json").read_text())
+          algo = json.loads(Path("data/JANUS-TACHYON-RULE-001-TEMPORAL-PERCEPTION-ALGORITHM-2026-11-22-v1.0.json").read_text())
+          cap = json.loads(Path("data/JANUS-TACHYON-SUBJECTIVE-TIME-CAPSULE-2026-11-22-v1.0.json").read_text())
+          idx = json.loads(Path("data/JANUS-CHAT-CONTEXT-INDEX.json").read_text())
+          assert any(x['id']=='JANUS_RULE_001' and x['priority']==1 for x in idx['foundational_research_rules'])
+          assert rule["priority"] == 1
+          assert "first_person_event_ontology_extension" in rule
+          assert "event_ontology" in algo
+          assert len(algo["event_ontology"]["inference_rules"]) >= 4
+          assert rule["epistemic_boundaries"]["physical_effect_from_collective_perception_unproven"] is True
+          assert "first_person_event_ontology_link" in cap
+          assert rule["owner_designation"] == "USER_SELECTED_FOUNDATIONAL_LOGIC_RULE_001"
+          assert rule["epistemic_boundaries"]["status"] == "HYPOTHESIS__NOT_PHYSICAL_LAW"
+          assert rule["epistemic_boundaries"]["active_world_model_or_neural_weights_modified"] is False
+          assert algo["parent_rule"] == "data/JANUS-RULE-001-FIRST-PERSON-TEMPORAL-CONSTRUCTION-2026-11-22-v1.0.json"
+          assert algo["scientific_ladder"]["change_physical_time"] == "NOT_SUPPORTED"
+          assert algo["scientific_ladder"]["auto_deployment"] == "NO"
+          assert algo["scientific_ladder"]["human_research"] == "REQUIRES_ETHICAL_APPROVAL_AND_CONSENT"
+          assert cap["production_changes"] is False
+          assert cap['research_foundation_rule_001']['physical_time_travel_verified'] is False
+          print("JANUS_RULE001_HYPOTHESIS_BOUNDARIES_PASS")
+          print("JANUS_RULE001_EVENT_VS_EXPERIENCE_GUARD_PASS")
+          PY
+      - name: Independent synthetic validator — no human stimulation
+        run: |
+          python -m unittest discover -s tests -p 'test_tachyon_rule001_temporal_perception.py' -v
