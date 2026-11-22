@@ -1,0 +1,119 @@
+{
+  "schema": "janus.meta_registry.cosmos.sit2c.gbt_x_to_l_rfi_aware_v1",
+  "id": "JANUS-SIT2C-CROSSBAND-GBT-X-TO-L-2026-11-22",
+  "date_utc": "2026-11-22",
+  "status": "REAL_GBT_DIFFERENT_RECEIVER_CADENCE_512_CASES_ENGINEERING_PASS__WEAK_DETECTION_GAIN_ZERO__SCIENTIFIC_HOLD",
+  "dedication": "Continuation of JANUS SIT research program dedicated to Stephen Hawking; computational C→B→A is not physical reversed time.",
+  "source": {
+    "repo": "Hawkar-usls/Janus-Cosmos",
+    "pr": "https://github.com/Hawkar-usls/Janus-Cosmos/pull/70",
+    "research_branch": "research/janus-sit2c-crossband-rfi-20261122",
+    "full_result": "https://github.com/Hawkar-usls/Janus-Cosmos/blob/research/janus-sit2c-crossband-rfi-20261122/research/seti/janus_sit2c_result.json",
+    "pre_registered_protocol": "https://github.com/Hawkar-usls/Janus-Cosmos/blob/research/janus-sit2c-crossband-rfi-20261122/research/seti/janus_sit2c_protocol.json",
+    "research_code": "https://github.com/Hawkar-usls/Janus-Cosmos/blob/research/janus-sit2c-crossband-rfi-20261122/research/seti/janus_sit2c_crossband_rfi.py",
+    "initial_successful_CI": "https://github.com/Hawkar-usls/Janus-Cosmos/actions/runs/45054138752",
+    "initial_CI_artifact": {
+      "id": 14767050348,
+      "name": "janus-sit2c-prospective-gbt-x-to-l-rfi-receipt",
+      "zip_sha256": "dc727e563f67b0ec609ccd2e4676bd3f0678744506161b84abf84305e85742e3"
+    },
+    "second_CI_confirmation": "PENDING_VERIFY",
+    "unit_tests_pass": 18
+  },
+  "data": {
+    "official_archive": "https://bldata.berkeley.edu/ATLAS/GB_ATLAS/",
+    "real_source": "Green Bank Telescope observations of 3I/ATLAS on 2025-12-18",
+    "development": "Previously used X-band blc20 scans 0061 ON and 0062 OFF; 128 artificial injection/control cases solely to determine fixed score thresholds",
+    "prospective_eval": "New 6-scan L-band blc21 cadence 0013 ON, 0014 OFF, 0015 ON, 0016 OFF, 0017 ON, 0018 OFF; 24 actual 16×128 power arrays before artificial injections",
+    "different_receiver_and_time_cadence": true,
+    "different_telescope_or_observing_date": false,
+    "independently_confirmed_antenna_pointing": false,
+    "HDF5_rawspec_product": "low frequency resolution 2.861 kHz channels, not high-resolution baseband",
+    "first_seen_sha_not_independent_provider_reference": true,
+    "source_SHA256_L": [
+      {
+        "scan": "0013",
+        "sha256": "04d52bdca1b6870f25af01531bd0ec96cbef65196bf6711da3a42bbcc637eec5"
+      },
+      {
+        "scan": "0014",
+        "sha256": "cf5969af38d6842c5f20ffbd6e73b41b5acd34c4a80e46ce58933249b3aef7bf"
+      },
+      {
+        "scan": "0015",
+        "sha256": "e6d0daa795f1889263363521fdcda9848393424981b304e14bcff9268b568a6f"
+      },
+      {
+        "scan": "0016",
+        "sha256": "946447065fe97665f783cc7794a4caf2cc8d462413e03b052272b1f05da49931"
+      },
+      {
+        "scan": "0017",
+        "sha256": "6e2a72c8d0b00032324939fb36ca6643567dfb5f8c977e92baf73c96b581a73d"
+      },
+      {
+        "scan": "0018",
+        "sha256": "16102729b13bb4059f450aa7478413aa5a89e9068af5fcc9f82f03f5e16d44de"
+      }
+    ]
+  },
+  "experiment": {
+    "cases_total": 512,
+    "development_X_cases": 128,
+    "heldout_L_cases": 384,
+    "heldout_weak_artificial_injections": 96,
+    "heldout_strong_artificial_injections": 96,
+    "heldout_negative_no_added_line_or_engineered_RFI": 192,
+    "source_injection_ground_truth": "Synthetic labels introduced after extraction onto real rawspec data; not independently observed sky or instrument-labeled RFI",
+    "native_COSMOS": "Frozen R42A8A candidate path and original ridge statistic",
+    "strong_baselines": "Exact 672-path direct sideband matched filter and same-information nominal OFF-aware matched filter",
+    "rfi_aware": "Fixed direct 672-path temporal median/sideband/OFF occupancy and time-outlier penalty",
+    "tachyon": "Pinned DemiHead R5F reverse path traversal and computational provenance forward replay; same numerical RFI-aware objective as strong direct RFI-aware",
+    "cutoff": "95th percentile of X-only dev synthetic controls, never adapted to L heldout",
+    "strong_qualification": "At least 87/96 strong signals and <=9/192 heldout controls above threshold; actual PASS for all arms",
+    "science_full_independent_validation": false
+  },
+  "outcome": {
+    "native_COSMOS": {
+      "weak_path_localized": 82,
+      "weak_detected": 0,
+      "strong_detected": 96,
+      "controls_above_threshold": 0
+    },
+    "strong_direct_sideband": {
+      "weak_path_localized": 96,
+      "weak_detected": 0,
+      "strong_detected": 96,
+      "controls_above_threshold": 0
+    },
+    "strong_direct_OFF_aware": {
+      "weak_path_localized": 96,
+      "weak_detected": 0,
+      "strong_detected": 96,
+      "controls_above_threshold": 0
+    },
+    "rfi_aware_direct": {
+      "weak_path_localized": 96,
+      "weak_detected": 0,
+      "strong_detected": 96,
+      "controls_above_threshold": 0
+    },
+    "rfi_aware_TACHYON_reverse": {
+      "weak_path_localized": 96,
+      "weak_detected": 0,
+      "strong_detected": 96,
+      "controls_above_threshold": 0
+    },
+    "extra_weak_recovered_over_strong_direct": 0,
+    "extra_weak_recovered_by_TACHYON_specific_reverse": 0,
+    "strong_positive_and_synthetic_control_gate_pass": true,
+    "qualified_weak_sensitivity_gain": false,
+    "real_astro_FPR": null,
+    "technosignature_discovered": false,
+    "real_physical_reverse_time_proved": false,
+    "production_models_or_thresholds_changed": false,
+    "scientific_status": "HOLD"
+  },
+  "interpretation_ru": "SIT2C проверил новый RFI-aware алгоритм при порогах, замороженных по уже известным X-данным, на другой шестискановой L-диапазонной последовательности настоящих GBT HDF5. Все алгоритмы обнаружили 96/96 сильных искусственных инъекций и не превысили порог на 192 искусственных контрольных случаях, но 0/96 слабых инъекций признаны обнаружением. Новый RFI-aware и сильный прямой matched-filter локализовали 96/96 слабых траекторий против 82/96 оригинального COSMOS. Прирост локализации неспецифичен для зеркального TACHYON, а реальное улучшение обнаружения или классификации радиоисточников не доказано. Набор отличается диапазоном и временем наблюдения, но не телескопом, датой или целевой областью.",
+  "next": "SIT2D: high-resolution source sessions on other dates/telescopes, independent pointing verification, realistic injected RFI morphologies and a precommitted score distinguishing weak-signal amplitudes from interference at acceptable actual FPR. Do not tune SIT2C retrospective heldout."
+}
