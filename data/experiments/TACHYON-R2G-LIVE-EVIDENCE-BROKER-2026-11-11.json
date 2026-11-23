@@ -1,0 +1,94 @@
+{
+  "schema": "janus.meta_registry.tachyon_r2g_live_evidence_v1",
+  "record_id": "TACHYON-R2G-2026-11-11-RUN-43028977249",
+  "created_utc_date": "2026-11-11",
+  "status": "LIVE_SOURCE_SEARCH_CI_PASS_RESEARCH_ONLY",
+  "experiment": {
+    "repo": "Hawkar-usls/Demi_Head",
+    "pr_url": "https://github.com/Hawkar-usls/Demi_Head/pull/78",
+    "branch": "janus/tachyon-r2g-live-evidence-broker-20261111",
+    "head_sha": "f892316ad2bf8c5e4f0121f1035cfacffef3c10b",
+    "run_id": 43028977249,
+    "run_url": "https://github.com/Hawkar-usls/Demi_Head/actions/runs/43028977249"
+  },
+  "hypothesis": "Real constrained source retrieval can address unsupported public queries beyond the original 3 static general cards while preserving physics HOLD and private data boundaries.",
+  "mechanism": {
+    "service": "LIVE_PUBLIC_EVIDENCE_BROKER",
+    "providers_successfully_called": [
+      "MediaWiki_ru_Wikipedia",
+      "OpenAlex_works"
+    ],
+    "provider_optional_not_configured": "Brave_Web_Search_API",
+    "network_requirements": {
+      "explicit_public_query_opt_in": true,
+      "known_https_api_hosts_only": true,
+      "per_response_max_bytes": 160000,
+      "timeout_seconds": 7,
+      "per_provider_max_results": 4,
+      "per_question_max_providers": 3,
+      "redirection_allowed": false,
+      "arbitrary_result_url_following": false
+    },
+    "source_verification": [
+      "host and HTTPS validation",
+      "lexical overlap with simple Russian case-ending normalization",
+      "source title, retrieved timestamp and publication date when available",
+      "freshness gate for current-event questions",
+      "private token/email/path/IP heuristic blocker"
+    ],
+    "epistemic_limit": "Citation+timestamp+lexical support do not prove scientific correctness or independently fact-check web content."
+  },
+  "ci": {
+    "conclusion": "SUCCESS",
+    "unit_tests_passed": 12,
+    "unit_tests_total": 12,
+    "keyless_live_smoke": [
+      {
+        "provider": "wikipedia",
+        "query": "Нептун",
+        "source_count": 4
+      },
+      {
+        "provider": "wikipedia",
+        "query": "Сатурн",
+        "source_count": 4
+      },
+      {
+        "provider": "openalex",
+        "query": "quantum entanglement",
+        "source_count": 4
+      }
+    ],
+    "public_broker_diagnostic": {
+      "questions": 3,
+      "attributed_encyclopedic_extract_available": 2,
+      "no_verifiable_source": 1,
+      "independent_blind_test": false
+    },
+    "live_sports_with_no_key": "WEB_PROVIDER_KEY_REQUIRED",
+    "general_dynamic_web_search_configured": false
+  },
+  "artifact": {
+    "github_artifact_id": 13859456976,
+    "github_zip_sha256": "a2c9a4520932d70331656f97934acd8573c37739c36e1ec4e25ed6baf2039fb3",
+    "github_artifact_expires_utc": "2026-11-25T13:25:46Z",
+    "google_drive_url": "https://drive.google.com/file/d/1wxGnuIhDWHui3imdy7csGAgDIJO8AFb4/view?usp=drivesdk",
+    "google_drive_file_id": "1wxGnuIhDWHui3imdy7csGAgDIJO8AFb4",
+    "google_drive_confirmed_size_bytes": 3320,
+    "archive_status": "UPLOADED_METADATA_VERIFIED_REMOTE_ZIP_NOT_REHASHED"
+  },
+  "external_blind_scientific_review": false,
+  "scientifically_admitted": false,
+  "proof_of_retrocausal_channel": false,
+  "neural_training_performed": false,
+  "models_modified": false,
+  "janus_ocean_modified": false,
+  "main_modified": false,
+  "production_deployed": false,
+  "next_gate": {
+    "need": "Add a configured broad general web-search provider in a protected trusted runtime, not an untrusted PR workflow; verify dated event claims; external blinded science evaluator remains separate.",
+    "tracking_issue": "https://github.com/Hawkar-usls/Demi_Head/issues/77",
+    "external_science_gate": "https://github.com/Hawkar-usls/Demi_Head/issues/74"
+  },
+  "registry_action": "APPEND_ONLY_DRAFT_NO_MERGE"
+}

@@ -1,0 +1,113 @@
+{
+  "schema": "janus.meta_registry.tachyon_r2h_parallel_training.v1",
+  "record_id": "TACHYON-R2H-2026-11-11-4CPU-SEEDS-43038783896",
+  "research_date": "2026-11-11",
+  "hypothesis": "Bounded CPU parallel retraining and a learned source/formula routing policy may improve the ability to choose a supported answer pathway, while preserving the separate true scientific correctness gate.",
+  "action": {
+    "repo": "Hawkar-usls/Demi_Head",
+    "pr": "https://github.com/Hawkar-usls/Demi_Head/pull/79",
+    "branch": "janus/tachyon-r2h-bounded-parallel-cpu-20261111",
+    "checked_head": "2b9cc8c0e28f1922f51c2f0d645d58072499e9af",
+    "training_run": "https://github.com/Hawkar-usls/Demi_Head/actions/runs/43038783896",
+    "training_run_id": 43038783896,
+    "ci": "SUCCESS",
+    "global_contract_ci": "SUCCESS",
+    "execution": {
+      "standard_github_hosted_cpu_jobs": 4,
+      "max_parallel": 4,
+      "timeout_per_training_job_minutes": 16,
+      "side_effects": "read_only_actions_and_artifacts_only",
+      "scientific_laboratory_holdout_used": false,
+      "production_model_changed": false,
+      "automatic_deployment": false
+    },
+    "global_contract_ci_url": "https://github.com/Hawkar-usls/Demi_Head/actions/runs/43038783967"
+  },
+  "observed": {
+    "tachyon_generator": {
+      "train_pairs": 36,
+      "evaluation_type": "POSTHOC_PUBLIC_DEVELOPMENT_NOT_EXTERNAL_BLIND",
+      "numeric_cases": 8,
+      "seeds": [
+        {
+          "seed": 117,
+          "hits": 0,
+          "checkpoint_sha256": "e8c50c0eb17bd7f5ad2caa3bc7a2a256301eb0a42f728fd03bbd84dee78375a2"
+        },
+        {
+          "seed": 223,
+          "hits": 0,
+          "checkpoint_sha256": "c254ea41099ef4937b61d565cd300dd756b1550d00f23ee766e87ee47e4c538c"
+        }
+      ],
+      "interpretation": "Additional independent tiny Transformer retraining failed to solve the eight previously public numeric examples."
+    },
+    "evidence_routing_model": {
+      "type": "tiny_hashed_char_supervised_router_not_general_language_model",
+      "train_prompt_count": 83,
+      "dev_cases": 18,
+      "seeds": [
+        {
+          "seed": 337,
+          "route_correct": 18,
+          "live_false_positive": 0,
+          "checkpoint_sha256": "a99752193057029ea82d86997970bd74550ed353acafcce1c649c712e6fe5763"
+        },
+        {
+          "seed": 449,
+          "route_correct": 18,
+          "live_false_positive": 0,
+          "checkpoint_sha256": "e76f977aecf5949930013d5919355209a05e88c2f3cb91f8b28712455cd4f21d"
+        }
+      ],
+      "interpretation": "Successful route categorization on an author-known fixed public development set; not proof of factual answer quality, unseen generalization or independent scientific validation."
+    },
+    "no_open_world_data_autotrained": true,
+    "no_secret_clock_labels_read": true,
+    "no_hardware_time_travel_claim": true
+  },
+  "artifacts": {
+    "retention_policy": "14 days in GitHub Actions then expires unless separately archived",
+    "original_run": 43038783896,
+    "sha256_locally_verified_for_github_downloads": true,
+    "google_drive_uploaded": true,
+    "google_drive_byte_readback_verified": false,
+    "items": [
+      {
+        "name": "comparison",
+        "artifact_id": 13865005689,
+        "zip_sha256": "43b0192d8621971f52e9636b41bfd1ae297642c6ef390cdc55cd1c2ccdb4c330",
+        "drive_url": "https://drive.google.com/file/d/1mH6k5V9GBtc0idm7ZUU56_-K79b1SKpT/view?usp=drivesdk"
+      },
+      {
+        "name": "tachyon_seed_117",
+        "artifact_id": 13864825839,
+        "zip_sha256": "55b46fbb4df2ca534eeeafca1c9ba84048f6639e13cba01cf8e0b8c63b4415be",
+        "drive_url": "https://drive.google.com/file/d/1MFPsQcwift9PKUoc9yX4CoY4qgdSiDP0/view?usp=drivesdk"
+      },
+      {
+        "name": "tachyon_seed_223",
+        "artifact_id": 13863882857,
+        "zip_sha256": "0e139d2ea4375bd75f5922dc29101bfb6afac869c3154aa7d9ff57a1182b0a39",
+        "drive_url": "https://drive.google.com/file/d/1pKXEf4Wp7KOdbtgj4GE_TmG09DeFgURI/view?usp=drivesdk"
+      },
+      {
+        "name": "router_seed_337",
+        "artifact_id": 13864576761,
+        "zip_sha256": "eaaa4f49d86e19f03baadb644a2a4ea6bff83db934823e15195ceaf6b11f0cc7",
+        "drive_url": "https://drive.google.com/file/d/1H_pxQCzupMetvQtyiaNtNun5M8QhIyys/view?usp=drivesdk"
+      },
+      {
+        "name": "router_seed_449",
+        "artifact_id": 13863767709,
+        "zip_sha256": "2243b97d24e9a102c2a47de083c4b1cc42f0ebedcf536d34206cc01f33fe6080",
+        "drive_url": "https://drive.google.com/file/d/1-KtEOD2fLTVA4dC8Lw4X8QM5MSSLRT_5/view?usp=drivesdk"
+      }
+    ],
+    "google_drive_all_five_metadata_sizes_readback_verified": true,
+    "google_drive_independent_sha256_readback_verified": false
+  },
+  "epistemic_status": "DEVELOPMENT_ONLY_SCIENTIFIC_HOLD",
+  "next_direction": "Do not scale blind random seeds before fixing numeric model curriculum and independently evaluating novelty. Retain deterministic formula execution and source correctness checks separately. Future external science custodian required.",
+  "registry_action": "APPEND_ONLY_DRAFT"
+}
