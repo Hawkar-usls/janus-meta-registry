@@ -1,0 +1,117 @@
+{
+  "schema_id": "janus.sat_reproducibility.historical_source_audit.v1",
+  "audit_id": "SAT_REPRODUCIBILITY_001_HISTORICAL_SOURCE_AUDIT_20261101",
+  "on_date_utc": "2026-11-01",
+  "status": "SCOPE_LIMITED_NEGATIVE_EVIDENCE_NOT_PROOF_OF_NONEXISTENCE",
+  "evidence_lane": "SAT_REPRODUCIBILITY_001",
+  "source": "OWNER_AUTHORIZED_REMOTE_READ_ONLY_YAKSA_E_DRIVE",
+  "evidence_items": [
+    {
+      "local_path": "E:\\Janus_Love\\sat_duels.jsonl",
+      "sha256": "0228c5fee2031101bf44f9f028dbe507b9973d8bbf1383303c7f9cd9a8cf6e0a",
+      "file_type": "JSONL",
+      "read_record_count": 100,
+      "first_round": 1,
+      "last_round": 100,
+      "minimum_variables": 9,
+      "maximum_variables": 108,
+      "minimum_clauses": 34,
+      "maximum_clauses": 410,
+      "record_result_classes": {
+        "speed": 35,
+        "draw": 28,
+        "solved": 22,
+        "max_sat": 15
+      },
+      "checked_payload_keys": [
+        "cnf",
+        "dimacs",
+        "clauses",
+        "assignment",
+        "seed"
+      ],
+      "checked_payload_keys_present": false,
+      "interpretation": "Evolutionary agent duels recorded summary performance; lacks reconstructible source formula and checked SAT answer in inspected records; not 220–240 evidence"
+    },
+    {
+      "local_path": "E:\\Janus_Love\\sat_state.json",
+      "sha256": "b0d43e50e4525b35f372e7051aa50d0346d4510ccbc440e21688326bcdedd0bd",
+      "file_type": "JSON",
+      "state_round": 100,
+      "state_n_vars": 108,
+      "state_n_clauses": 410,
+      "interpretation": "Last preserved agent state for the same early 100-round experiment"
+    },
+    {
+      "local_path": "E:\\Janus_Love\\All Star\\experimental_sat_profile.py",
+      "sha256": "0c1baa31fca64add6aa2d299b444951887767a3bd269acd68a4ef0e9ebbfacc9",
+      "file_type": "PYTHON_SOURCE",
+      "executed": false,
+      "interpretation": "Static inspection identifies an assignment-occupancy profiling heuristic, not a verified 220–240 SAT benchmark"
+    },
+    {
+      "local_path": "E:\\Janus_Love\\team_duels.jsonl",
+      "sha256": "594cf699e9b9cc832e6c26eb5859013b90ee5ba1447a81e5b14290afbcaed1af",
+      "file_type": "JSONL",
+      "read_record_count": 975,
+      "distinct_rounds": 195,
+      "minimum_variables": 5,
+      "maximum_variables": 13,
+      "record_has_original_cnf_seed_assignment": false,
+      "interpretation": "Five agent-duel lines per round (975 rows over 195 rounds) for tiny 5–13 variable problems; not evidence of 220–240-variable SAT performance"
+    }
+  ],
+  "additional_files_inspected_without_content_ingest": [
+    {
+      "local_path": "E:\\Janus_Love\\All Star\\JANUS_FAHRENHEIT_225.py",
+      "interpretation": "Thermal client/telemetry loop; numeric 225 is a device/model label, not an established 225-variable SAT record"
+    },
+    {
+      "local_path": "E:\\Janus_Love\\All Star\\janus_solver_integrated.py",
+      "interpretation": "Header describes subset-sum dynamic programming; not the alleged 3-SAT instance/proof bundle"
+    },
+    {
+      "local_path": "E:\\Janus_Love\\final_benchmark_tmp.csv",
+      "interpretation": "Rows contain training loss, perplexity and model statistics; not SAT runtime/CNF/verifier pairs"
+    }
+  ],
+  "source_scope": {
+    "remote_e_drive_root_scanned": "E:\\Janus_Love",
+    "filename_inventory_method": "PowerShell Get-ChildItem recursive name filter, most recent 70 matches viewed",
+    "files_without_matching_filename_may_be_missed": true,
+    "nas_entire_archive_search_complete": false,
+    "independent_sat_answer_reverification_performed": false,
+    "original_220_to_240_cnf_located": false,
+    "original_220_to_240_solver_trace_verified": false,
+    "note": "Negative evidence is limited to named files and inspected listing. It does not prove other historical experiments never happened."
+  },
+  "disclosure_policy": {
+    "raw_user_files_uploaded": false,
+    "personal_secrets_transferred": false,
+    "untrusted_pickle_executed": false,
+    "paid_compute_submitted": false,
+    "local_files_modified": false
+  },
+  "scientific_verdict": "HISTORICAL_CLAIM_STILL_UNVERIFIED",
+  "promotion_rights": "NONE",
+  "negative_evidence_same_visibility_as_positive": true,
+  "prereg_path": "data/sat_reproducibility/SAT_REPRODUCIBILITY_001.json",
+  "nas_legacy_metrics_inspection": {
+    "path": "NAS:/Janus/janus_nas/raw_logs/np_scaling_metrics.json",
+    "original_file_sha256": "e0e7dad1fde68bb98906e12e3c568173ade96fb5d2ba07e11e6db679d37472a3",
+    "record_count": 1,
+    "observed_record": {
+      "n_vars": 197,
+      "reported_solved": true,
+      "reported_time_ms": 268011.09313964844,
+      "reported_attempt": 1,
+      "source_timestamp": "2026-04-03T20:50:19.060670"
+    },
+    "independent_answer_checked": false,
+    "original_dimacs_available_in_this_file": false,
+    "output_evidence_status": "UNVERIFIED_SELF_REPORTED_SCALING_METADATA_ONLY",
+    "scope": "One NAS raw_logs JSON file; does not establish any 220–240 result; no NAS-wide census",
+    "raw_telemetry_or_private_data_uploaded": false,
+    "path_disclosure": "LOCAL_HOST_AND_ADDRESS_REDACTED_IN_PUBLIC_AUDIT"
+  }
+}
