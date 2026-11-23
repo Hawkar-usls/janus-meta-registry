@@ -122,6 +122,20 @@ class ProtectedReviewTests(unittest.TestCase):
         with self.assertRaisesRegex(review.AdmissionHold,"DIGEST"):
             review.assess(self.manifest,self.latest,self.checkpoint,"unknown")
 
+    def test_r2_public_result_matches_original_pinned_evidence(self):
+        report=json.loads((ROOT/"data/autonomy_map/P03_RECOVERY_R2_REAL_CPU_RESULT_20261123.json").read_text())
+        self.assertFalse(report["immutable_governance"]["p03_phase_accepted"])
+        self.assertFalse(report["immutable_governance"]["checkpoint_patched_to_pass"])
+        self.assertFalse(report["immutable_governance"]["independent_external_review_obtained"])
+        self.assertFalse(report["immutable_governance"]["independent_cross_platform_recovery_proven"])
+        model=next(x for x in report["work"] if x.get("repo")=="Hawkar-usls/Janus_Genesis")
+        pinned=self.manifest["genesis_experimental_model_consumer"]
+        self.assertEqual(model["model_execution_receipt_sha256"],pinned["receipt_sha256"])
+        self.assertEqual(model["second_model_artifact_zip_sha256"],pinned["second_artifact_zip_sha256"])
+        self.assertTrue(model["two_independent_github_workflow_executions_same_full_receipt"])
+        self.assertTrue(pinned["same_github_platform_not_external_replication"])
+        self.assertFalse(model["production_home_model_integration"])
+
     def test_checkpoint_files_not_modified(self):
         paths=(ROOT/recovery.POINTER,ROOT/recovery.CHECKPOINT)
         before=[hashlib.sha256(path.read_bytes()).hexdigest() for path in paths]
