@@ -1,0 +1,118 @@
+{
+  "artifact_id": "JANUS-RETRO-ADDRESSED-HANDSHAKE-20LANE-BATCH-R3-2026-11-07-v1.0",
+  "schema_version": "1.0",
+  "date_utc": "2026-11-07",
+  "language": "ru",
+  "registry": {
+    "repository": "Hawkar-usls/janus-meta-registry",
+    "path": "registry/uap/JANUS-RETRO-ADDRESSED-HANDSHAKE-20LANE-BATCH-R3-2026-11-07-v1.0.json",
+    "mode": "APPEND_ONLY",
+    "status": "DRAFT_REVIEW"
+  },
+  "parent_artifacts": [
+    "registry/uap/JANUS-RETRO-TAHYON-ADDRESSING-DEPENDENCE-TEST-v1.0.json",
+    "registry/uap/JANUS-RETRO-BYTE-CAMPAIGN-2026-11-06-v1.0.json",
+    "registry/uap/JANUS-RETRO-EARLY-JOINT-WITNESS-AND-PROSPECTIVE-R1-2026-11-07-v1.0.json"
+  ],
+  "experiment": {
+    "name": "JANUS R3 20-lane independent staged early/late 2x2 addressed handshake",
+    "question": "Does a later classical addressed/sham routing assignment change the advantage of a precommitted addressed predictor versus a topic-only predictor on matched versus control requests?",
+    "source_model": "JANUS R2 addressed handshake, no quantum hardware or physical past-information interface",
+    "separate_phases": [
+      "20 parallel early precommit jobs",
+      "single 120-second barrier after ALL 20 early artifacts",
+      "20 blind future OS RNG jobs",
+      "20 unconditional per-lane scoring jobs",
+      "single all-lane 1280-trial audit"
+    ],
+    "early_lanes": 20,
+    "attempts_per_lane": 64,
+    "total_trials": 1280,
+    "four_cells": {
+      "matched_request_addressed": 320,
+      "matched_request_sham": 320,
+      "control_request_addressed": 320,
+      "control_request_sham": 320
+    },
+    "early_request_and_prediction_artifact_contains_no_future_bits": true,
+    "future_rng_stages_do_not_download_early_artifacts": true,
+    "future_source": "Python secrets.randbits(1) on isolated GitHub-hosted OS runner",
+    "late_route_source": "Python secrets.SystemRandom shuffle, 16 addressed and 16 sham per request type per lane",
+    "early_stage_precedes_late_stage_by_workflow_dependency_and_wallclock_barrier": true,
+    "required_wallclock_delay_seconds": 120,
+    "all_attempts_included": true,
+    "late_outcome_postselection": false,
+    "external_cryptographically_attested_clock": false,
+    "independently_certified_entropy_source": false
+  },
+  "implementation": {
+    "repo": "Hawkar-usls/Janus-Demiurge",
+    "branch": "research/janus-addressed-handshake-cpu-r2-20261107",
+    "research_pr": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/454",
+    "workflow_file": ".github/workflows/janus-addressed-handshake-batch-r3.yml",
+    "aggregation_code": "experiments/ocean_transformer/janus_addressed_batch_audit_r3.py",
+    "regression_tests": "experiments/ocean_transformer/test_janus_addressed_batch_audit_r3.py",
+    "generator_and_per_lane_scorer": "experiments/ocean_transformer/janus_addressed_handshake_cpu_r2.py",
+    "code_commit_at_run": "54f7765973fadcae7744157b8ccbcf49c7d160cc",
+    "no_production_or_NAS_workflow_modified": true,
+    "existing_retro_byte_A_B_campaign_untouched": true
+  },
+  "verified_ci": {
+    "workflow_run_id": 42365673881,
+    "workflow_url": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/42365673881",
+    "workflow_result": "success",
+    "workflow_jobs_success": 64,
+    "workflow_jobs_total": 64,
+    "all_workflow_jobs_conclusion_success": true,
+    "counted_early_commit_jobs": 20,
+    "counted_future_rng_jobs": 20,
+    "counted_per_lane_score_jobs": 20,
+    "precommit_delay_job_conclusion": "success",
+    "test_workers": [
+      {
+        "python": "3.11",
+        "result": "success"
+      },
+      {
+        "python": "3.12",
+        "result": "success"
+      }
+    ],
+    "aggregate_job_id": 128383715429,
+    "aggregate_job_conclusion": "success",
+    "aggregate_artifact_name": "janus-addressed-r3-aggregate-42365673881",
+    "aggregate_artifact_id": 13571369180,
+    "aggregate_artifact_zip_sha256": "72ff05764bd879ea1feb8b739de069b51b46699cb8240efd93ec07cfdbc6feb7",
+    "raw_artifact_families": [
+      "janus-addressed-r3-early-42365673881-{0..19}",
+      "janus-addressed-r3-future-42365673881-{0..19}",
+      "janus-addressed-r3-comparison-42365673881-{0..19}"
+    ],
+    "artifact_count": 61,
+    "artifact_retention_days": 90
+  },
+  "observed_statistics": {
+    "all_20_lanes_included": true,
+    "unconditional_attempts": 1280,
+    "addressing_interaction_difference_in_differences": 0.034375,
+    "paired_exact_one_sided_p": 0.26552272473039634,
+    "within_lane_route_permutation_p": 0.342,
+    "correction": "Bonferroni minimum over two tests",
+    "corrected_two_test_min_p": 0.5310454494607927,
+    "permutation_seed": 20261107,
+    "permutation_iterations": 1999,
+    "statistical_evidence_for_addressed_retrocausal_effect": false
+  },
+  "negative_and_limiting_evidence": {
+    "classical_late_route_is_a_label_not_a_physical_time_reversed_intervention": true,
+    "independent_later_OS_RNG_cannot_be_certified_as_physical_future_entropy_from_CI_alone": true,
+    "git_actions_job_precedence_does_not_certify_all_physical_clock_properties": true,
+    "statistical_positive_result_if_any_requires_replication_and_leakage_audit": true,
+    "measured_p_value_consistent_with_null": true,
+    "signal_transmitted_to_a_past_observer": false,
+    "physical_retrocausality_proven": false,
+    "recommended_next_test": "An externally sourced sealed late-choice experiment with actual physical early receiver and independent future randomness, plus a blind independent replication. Any new larger batch must be preregistered as a separate cohort; never aggregate adaptively just to force significance."
+  },
+  "scientific_verdict": "FULL_20_LANE_BATCH_EXECUTION_PASS__ADDRESSING_HYPOTHESIS_NOT_SUPPORTED__NO_PHYSICAL_RETROCAUSAL_SIGNAL",
+  "production_promotion_allowed": false
+}
