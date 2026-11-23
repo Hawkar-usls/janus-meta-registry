@@ -2,7 +2,7 @@
   "schema": "janus.meta_registry.trinity_parental_r11_r12_status/1.0",
   "id": "JANUS-TRINITY-PARENTAL-CPU-2026-11-23-R11-R12",
   "date_utc": "2026-11-23",
-  "status": "TRINITY_R11_NEGATIVE_REAL_CPU__R12_HF_SHIFT_CORRECTED_CPU_EVAL_PENDING__GRADUATION_HOLD",
+  "status": "TRINITY_R11_NEGATIVE_REAL_CPU__R12_CORRECT_HF_SHIFT_BUT_ALL_VETO_FAILURE__GRADUATION_HOLD",
   "work": {
     "repo": "Hawkar-usls/Janus-Demiurge",
     "original_R0_pr": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/704",
@@ -32,7 +32,24 @@
     "r12_source_root_cause": "Hugging Face causal LM already shifts labels internally; R11 pre-shifted both inputs and labels, causing wrong-token training loss.",
     "r12_corrected_train_ci": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/45197279127",
     "r12_new_firstlook_ci": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/45197279127",
-    "r12_new_firstlook_metrics": "PENDING_REAL_ARTIFACT",
+    "r12_new_firstlook_metrics": {
+      "firstlook_run": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/45197279127",
+      "baseline_ambiguity": "12/12 ABSTAIN on correct; 11/12 ABSTAIN and 1/12 wrong APPROVE on wrong",
+      "trained_correct_APPROVE": "0/12",
+      "trained_correct_VETO": "12/12",
+      "trained_incorrect_VETO": "12/12",
+      "trained_ambiguous_VETO": "12/12",
+      "base_model_revision": "12fd25f77366fa6b3b4b768ec3050bf629380bac",
+      "corrected_training_loss_first": 3.8169898986816406,
+      "corrected_training_loss_last": 0.005780230276286602,
+      "firstlook_original_sha256": "6822912798bbe49ac56b896cf6b3a61585c49924b1a53396d661c5538798669c",
+      "original_interim_label": "INTERNAL_CRITIC_IMPROVEMENT_OBSERVED__EXTERNAL_HOLD",
+      "corrected_adjudication": "HOLD_CRITIC_GENERALIZATION_NOT_PROVEN",
+      "original_gate_flaw": "All-veto shortcut initially passed relative-only positive-approval condition when baseline positive approval=0",
+      "corrected_absolute_floor": "At least 8/12 correct APPROVE and >=8/12 incorrect VETO, simultaneously",
+      "result_source": "https://github.com/Hawkar-usls/Janus-Demiurge/blob/research/trinity-r12-critic-label-alignment-20261123/research/essence/trinity_parental_school/RESULT_R12_POSTHOC_ADJUDICATION_20261123.json",
+      "no_new_blind_after_reanalysis": true
+    },
     "r12_original_R11_firstlook_reused": false,
     "previous_genesis64_reused_as_new_blind": false
   },
@@ -50,5 +67,5 @@
     "automated_model_promotion": false,
     "all_PRs_are_review_only": true
   },
-  "next": "Read R12 firstlook result, preserve positive or negative metrics without retuning on already disclosed tests; require external fresh critic certification and at least 3 independent student cohorts before any autonomy."
+  "next": "Corrected model got 12/12 wrong VETO but also vetoed all correct cases; this is NOT a reliable critic. Preserve existing R12 eval as disclosed and hold all graduation. The next model must balance YES/NO on separate TRAIN_ONLY data, freeze a FOURTH new eval before use, and obtain true external independent critic / student exams before promotion."
 }
