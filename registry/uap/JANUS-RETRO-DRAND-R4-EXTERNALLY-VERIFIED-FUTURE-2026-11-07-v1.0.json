@@ -1,0 +1,119 @@
+{
+  "artifact_id": "JANUS-RETRO-DRAND-R4-EXTERNALLY-VERIFIED-FUTURE-2026-11-07-v1.0",
+  "schema_version": "1.0",
+  "recorded_date": "2026-11-07",
+  "language": "ru",
+  "registry": {
+    "repo": "Hawkar-usls/janus-meta-registry",
+    "path": "registry/uap/JANUS-RETRO-DRAND-R4-EXTERNALLY-VERIFIED-FUTURE-2026-11-07-v1.0.json",
+    "mode": "APPEND_ONLY",
+    "status": "DRAFT_PR_453_REVIEW_PENDING"
+  },
+  "parents": [
+    "registry/uap/JANUS-RETROCAUSAL-ALTERNATIVE-CORRIDORS-EXTERNAL-BEACON-2026-11-07-v1.0.json",
+    "registry/uap/JANUS-RETRO-BYTE-CAMPAIGN-2026-11-06-v1.0.json"
+  ],
+  "scientific_status": "EXTERNAL_FUTURE_CHALLENGE_CI_PASS__NO_IMPROVED_PREDICTION__PHYSICAL_RETROCAUSALITY_NOT_DEMONSTRATED",
+  "interpretation": "This R4 software pilot is a rigorous provenance improvement over a GitHub-local future RNG: early 256-bit hash-control prediction and future Quicknet round frozen in early job; a separate future job obtains BLS-threshold-signed public beacon and another runner independently re-fetches and BLS-verifies it. Forecast is NOT trained JANUS model and does not operationally access future information.",
+  "source_repo": "Hawkar-usls/Janus-Demiurge",
+  "source_branch": "research/retro-drand-external-blind-r4-20261107",
+  "source_pr": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/455",
+  "checked_code_sha": "e41dcc4c39e27685c456bdb926facb8e938c75da",
+  "workflow": ".github/workflows/janus-retro-drand-external-r4.yml",
+  "entrypoints": [
+    "experiments/ocean_transformer/janus_retro_drand_external_r4.py",
+    "experiments/ocean_transformer/janus_retro_drand_external_r4.mjs",
+    "experiments/ocean_transformer/test_janus_retro_drand_external_r4.py"
+  ],
+  "exact_run": {
+    "run_id": 42367674317,
+    "url": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/42367674317",
+    "conclusion": "success",
+    "completed_jobs": 5,
+    "successful_jobs": 5,
+    "regression_tests_per_python": 11,
+    "tested_versions": [
+      "3.11",
+      "3.12"
+    ],
+    "future_round": 33749064,
+    "separation_rule_seconds": 180,
+    "challenge_source": "drand Quicknet external network, not GitHub OS RNG",
+    "forecast_source": "SHA256_PRECOMMITTED_BASELINE_CONTROL__NOT_JANUS_TRAINED_MODEL",
+    "correct_bits": 127,
+    "total_bits": 256,
+    "success_fraction": 0.49609375,
+    "one_sided_exact_fair_bit_tail_p": 0.5743424702535425,
+    "statistical_excess_over_random": false,
+    "future_round_hash_signature_verified_in_late_job": true,
+    "future_round_independently_refetched_and_BLS_verified_in_second_job": true,
+    "all_bits_scored": true,
+    "postselection": false,
+    "no_physical_retro_signal": true
+  },
+  "drand_chain": {
+    "name": "quicknet",
+    "chain_hash": "52db9ba70e0cc0f6eaf7803dd07447a1f5477735fd3f661792ba94600c84e971",
+    "period_seconds": 3,
+    "genesis_epoch": 1692803367,
+    "public_key_pinned": true,
+    "signature_scheme": "bls-unchained-g1-rfc9380",
+    "client": "drand-client@1.4.2",
+    "API_version": "v1",
+    "actual_verified_round": 33749064,
+    "signature_and_randomness_in_raw_artifacts": true,
+    "independent_crypto_verification_replayed": true,
+    "output_256_bits_origin": "SHA256 over the same one signature. Not 256 physically independently sampled photon events.",
+    "cryptographic_assumptions": "Unpredictability depends on drand threshold/cryptographic security, no collusion, correct pinning and unbroken algorithms.",
+    "docs": [
+      "https://docs.drand.love/developer/",
+      "https://github.com/drand/drand-client"
+    ]
+  },
+  "artifacts": {
+    "early": {
+      "name": "janus-r4-early-42367674317",
+      "id": 13572097153
+    },
+    "early_plan": {
+      "name": "janus-r4-plan-42367674317",
+      "id": 13572231938
+    },
+    "late_signed_future": {
+      "name": "janus-r4-future-42367674317",
+      "id": 13572113880
+    },
+    "independently_verified_score": {
+      "name": "janus-r4-verified-score-42367674317",
+      "id": 13572052450,
+      "zip_sha256": "47bf3ce0331297d70495c6650e0b85b161f611dd1ea15226193f276b57c4dc7e"
+    },
+    "github_artifact_retention_days": 90
+  },
+  "error_history_preserved": [
+    {
+      "run_id": 42367258454,
+      "conclusion": "failure",
+      "reason": "Npm package.json not exported; diagnostic command only, no beacon fetch."
+    },
+    {
+      "run_id": 42367335508,
+      "conclusion": "failure",
+      "reason": "Pinned drand verification failed due client 1.4.2 lacking v2 chain normalization; signature verification not disabled; switched to official v1 API."
+    }
+  ],
+  "physical_verification_gates": {
+    "physical_A_before_B_external_time_attestation": false,
+    "signed_future_external_beacon": true,
+    "BLS_signature_crypto_verified_twice": true,
+    "all_attempts_without_postselection": true,
+    "pretrained_JANUS_predictor_used": false,
+    "independent_hardware_entropy_free_choice_certified": false,
+    "independent_physical_replication": false,
+    "actual_past_directed_message_detected": false,
+    "physical_retrocausality_proven": false
+  },
+  "next_action": "Separately preregister a truly JANUS-trained predictor before new independent future drand rounds, fixed N/multiple-testing budget, external early-log timestamp witness and a physical experiment for causal intervention if any statistical anomaly survives. Do NOT retroactively reclassify SHA256 hash control or adapt model from this future target.",
+  "no_production_mutations": true,
+  "original_R3_null_preserved": true
+}
