@@ -1,0 +1,103 @@
+{
+  "artifact_id": "JANUS-RETRO-EARLY-DECODER-CHALLENGERS-2026-11-07-v1.0",
+  "schema_version": "1.0",
+  "created_date": "2026-11-07",
+  "language": "ru",
+  "registry": {
+    "repo": "Hawkar-usls/janus-meta-registry",
+    "path": "registry/uap/JANUS-RETRO-EARLY-DECODER-CHALLENGERS-2026-11-07-v1.0.json",
+    "mode": "APPEND_ONLY",
+    "status": "DRAFT_NOT_MERGED"
+  },
+  "parent_artifact": "registry/uap/JANUS-RETRO-EARLY-JOINT-WITNESS-AND-PROSPECTIVE-R1-2026-11-07-v1.0.json",
+  "title": "Prospectively frozen four-decoder JANUS early-only challenge to improve future-bit forecasting if any reproducible predictive structure exists",
+  "status": "FOUR_FIXED_EARLY_DECODERS_IMPLEMENTED__TWO_CPU_RUNNERS_PASS__PROSPECTIVE_24_TRIALS_PENDING",
+  "source_code": {
+    "repo": "Hawkar-usls/Janus-Demiurge",
+    "pull_request": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/453",
+    "branch": "research/retro-audit-raw-recount-r1-20261107",
+    "decoder_module": "experiments/ocean_transformer/janus_retro_decoder_challengers_r1.py",
+    "decoder_precommit": "experiments/ocean_transformer/janus_retro_decoder_challengers_r1.json",
+    "prospective_evaluator": "experiments/ocean_transformer/janus_retro_prospective_joint_r1.py",
+    "tests": "experiments/ocean_transformer/test_janus_retro_decoder_challengers_r1.py",
+    "workflow": ".github/workflows/janus-retro-raw-recount-r1.yml",
+    "latest_verified_code_head_sha": "29e17b878026c0376516250780831b883f0463fb"
+  },
+  "verification": {
+    "github_actions_run": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/42362681005",
+    "status": "success",
+    "parallel_jobs": 6,
+    "all_six_jobs_success": true,
+    "host": "GitHub hosted standard CPU, Ubuntu 24.04",
+    "python_versions": [
+      "3.11",
+      "3.12"
+    ],
+    "decoder_unit_tests_per_worker": 7,
+    "synthetic_deliberate_leak_control": "inverted 256-bit synthetic source is decoded perfectly; code still sets physical_retrocausality_proven=false",
+    "raw_historical_recount_untouched": true,
+    "current_A_B_campaign_untouched": true,
+    "NAS_touched": false,
+    "production_touched": false
+  },
+  "precommit_manifest": {
+    "protocol_id": "JANUS-JOINT-EARLY-DECODER-CHALLENGERS-2026-11-07-R1",
+    "applies_to_existing_frozen_parent_trial_selection": "2026-11-08T00:00:00Z onward, first 24 A/B attempts selected solely by early commit timestamp and trial ID, no late outcome selection",
+    "candidates": [
+      {
+        "id": "RAW",
+        "mapping": "A",
+        "early_only": true
+      },
+      {
+        "id": "INVERTED",
+        "mapping": "1 XOR A",
+        "early_only": true
+      },
+      {
+        "id": "CONFIDENCE_HIGH_FLIP",
+        "mapping": "A XOR C",
+        "early_only": true
+      },
+      {
+        "id": "CONFIDENCE_LOW_FLIP",
+        "mapping": "A XOR (1 XOR C)",
+        "early_only": true
+      }
+    ],
+    "A": "early.json predicted_bits[i]",
+    "C": "1 if abs(early.json p1_model_probs[i] - 0.5) >= 0.25 else 0",
+    "future": "future.json future_bits[i], generated after nominal early commit",
+    "bit_count_per_trial": 256,
+    "selected_trials": 24,
+    "predicted_bits_total": 6144,
+    "candidate_count": 4,
+    "one_sided_exact_binomial_tail_for_each_candidate": true,
+    "familywise_bonferroni_alpha": 0.0001,
+    "training_or_fitting_on_future_24_labels": false,
+    "no_adaptive_candidate_selection_after_future_target": true,
+    "halted_on_uncompleted_selected_attempt": true,
+    "no_postselection": true,
+    "user_space_timestamps_not_an_external_seal": true,
+    "independent_future_entropy_not_externally_certified": true
+  },
+  "historical_context_not_confirmatory": {
+    "raw_model_correct_bits": 857,
+    "raw_model_total_bits": 1792,
+    "raw_model_accuracy": 0.47823660714285715,
+    "inverted_model_correct_bits": 935,
+    "inverted_model_accuracy": 0.5217633928571429,
+    "full_byte_hits": 2,
+    "full_byte_tries": 224,
+    "why_not_success": "Inverting after inspecting historical outcomes selects one of several predictors based on the data; its nominal >50% rate is not a blind prospective improvement or evidence of future information."
+  },
+  "outcomes": {
+    "actual_future_24_trial_scores_available": false,
+    "actual_reproducible_future_prediction_improvement_proven": false,
+    "physical_future_to_past_channel_implemented": false,
+    "physical_retrocausality_proven": false,
+    "scientific_status": "DEVELOPMENT_ONLY_PROSPECTIVE_EVALUATION_PENDING",
+    "production_promotion_allowed": false
+  },
+  "next_action": "Wait for future early precommit attempts from Nov 8 onward; run fixed-N 24-trial evaluation without choosing successful trials. Add independent external entropy source and separate sealed timestamp before interpreting anomalies. Larger independently registered experiment needed to resolve ~1pp effects at stringent alpha."
+}
