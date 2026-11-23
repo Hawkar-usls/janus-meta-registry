@@ -1,0 +1,112 @@
+{
+  "artifact_id": "JANUS-FORMAL-MATHEMATICAL-CAUSALITY-CERTIFICATE-R9-2026-11-07-v1.0",
+  "schema_version": "1.0",
+  "created_at": "2026-11-07",
+  "language": "ru",
+  "registry": {
+    "repo": "Hawkar-usls/janus-meta-registry",
+    "path": "registry/uap/JANUS-FORMAL-MATHEMATICAL-CAUSALITY-CERTIFICATE-R9-2026-11-07-v1.0.json",
+    "mode": "APPEND_ONLY",
+    "status": "DRAFT_REVIEW_NOT_MERGED"
+  },
+  "motivation": "User requires a strictly mathematical CPU-only JANUS research theorem rather than hardware photons or statistical coincidences.",
+  "proven_claims": [
+    {
+      "theorem_id": "R9-T1-FORWARD-ONLY-INDEPENDENT-FUTURE-NO-GO",
+      "statement": "If B is an independent uniform future bit and R is all information accessible to the algorithm before B, then for any early Boolean A=f(R), P(A=B)=1/2 and I(A;B)=0. For any early pair X,Z=g(R), P(X,Z|B)=P(X,Z).",
+      "formal_proof": "For each x,z,b, P(X=x,Z=z,B=b)=sum_{r:g(r)=(x,z)} P(R=r,B=b) = sum_r P(R=r)P(B=b) = P(X=x,Z=z)/2.",
+      "assumptions": [
+        "B independent of complete earlier information R",
+        "B unbiased",
+        "A,X,Z computed solely from R without leakage or a physical future-directed input"
+      ],
+      "implication": "Computational complexity, neural networks and quantum emulation do not generate knowledge of B while these assumptions hold.",
+      "exact_exhaustive_sanity_checks": {
+        "R_states": 4,
+        "nonuniform_weights": [
+          "1/10",
+          "2/10",
+          "3/10",
+          "4/10"
+        ],
+        "early_pair_function_combinations": 256,
+        "all_pass": true
+      }
+    },
+    {
+      "theorem_id": "R9-T2-OCB-ABSTRACT-NONCAUSAL-PROCESS-EXISTENCE",
+      "formalism": "Oreshkov-Costa-Brukner generalized process matrices; local CP maps and generalized Born rule",
+      "canonical_source_doi": "10.1038/ncomms2076",
+      "pauli_process": "P=IZZI, Q=ZIXZ, W(v) = [I + (v/sqrt(2))*(P+Q)]/4, tensor order A_in A_out B_in B_out",
+      "exact_properties": [
+        "P^2=Q^2=I16",
+        "PQ=-QP",
+        "Tr P=Tr Q=0",
+        "W(v) has eigenvalues (1±v)/4 each multiplicity 8 for 0≤v≤1",
+        "Tr W=4",
+        "For any local CPTP Choi maps, Tr W(M_A tensor M_B)=1, due partial trace identities"
+      ],
+      "exact_Born_probability": "P(x,y|a,b,task)=1/4 + ((-1)^(x XOR b) if task=0, else (-1)^(y XOR a)) * v*sqrt(2)/8",
+      "causal_bound": "3/4",
+      "causal_bound_argument": "With a definite A before B or B before A, one of two equally likely games must guess an independent unavailable bit (success <=1/2), while the favorable direction can succeed <=1. Convex mixtures retain <=3/4.",
+      "game_success": "(2+v*sqrt(2))/4",
+      "strict_violation_at_v1": "(sqrt(2)-1)/4 > 0",
+      "proof_of_sign": "sqrt(2)>1 because 2>1 and both terms positive",
+      "critical_visibility_condition": "2*v^2 > 1 for v≥0",
+      "exact_field": "Q(sqrt(2)), coefficient pairs of Fraction objects, no float or stochastic sampling",
+      "result": "There exists a mathematically valid noncausally-ordered process W in the generalized process-matrix theory, incompatible with any convex mixture of definite causal orders.",
+      "physical_scope_limit": "Existence in generalized mathematical model is not proof of implementation by standard time-ordered physical circuits or of messages to a clock-attested earlier receiver."
+    },
+    {
+      "theorem_id": "R9-T3-POSTSELECTION-EQUIVALENCE-COUNTEREXAMPLE",
+      "premises": "X,Z,B all independent fair bits, 8 joint outcomes P=1/8 each",
+      "filter": "Retain event only when B=X XOR Z",
+      "retention_probability": "1/2",
+      "conditional_joint": "After renormalization of retained events, P(X,Z,B)=1/4 on parity-equal outcomes and zero otherwise — identical to ideal parity-jamming toy's selected joint distribution.",
+      "conclusion": "A mathematically perfect later-conditioned correlation is not proof that later intervention changed already committed earlier data."
+    }
+  ],
+  "new_implementation": {
+    "repo": "Hawkar-usls/Janus-Demiurge",
+    "branch": "research/janus-math-causality-certificate-r9-20261107",
+    "pr": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/459",
+    "exact_proof": "experiments/ocean_transformer/janus_math_causality_exact_r9.py",
+    "regression": "experiments/ocean_transformer/test_janus_math_causality_exact_r9.py",
+    "workflow": ".github/workflows/janus-math-causality-exact-r9.yml",
+    "run_code_commit": "084d525b70cc2c114e4d179b42347ffacf3ce357",
+    "canonical_cpu_technique": "Exact rational Pauli 16x16 contractions and algebraic field Q(sqrt2)"
+  },
+  "live_verification": {
+    "run_id": 42374639688,
+    "url": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/42374639688",
+    "conclusion": "success",
+    "two_jobs_success": 2,
+    "python_versions": [
+      "3.11",
+      "3.12"
+    ],
+    "unit_tests_per_worker": 9,
+    "exact_certificate_artifacts": [
+      {
+        "name": "janus-r9-exact-mathematical-certificate-py3.11",
+        "artifact_id": 13575196697
+      },
+      {
+        "name": "janus-r9-exact-mathematical-certificate-py3.12",
+        "artifact_id": 13574916829
+      }
+    ],
+    "original_OCB_numeric_prototype": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/448",
+    "all_exact_checks_pass": true
+  },
+  "non_claims": {
+    "physical_retrocausal_signal_observed": false,
+    "independent_late_b_known_without_leak": false,
+    "no_photonic_hardware_required_for_math": true,
+    "no_quantum_computer_required_for_math": true,
+    "general_math_process_not_equivalent_to_a_physical_time_machine": true,
+    "existing_CLASSICAL_R3_R4_R5_null_results_unmodified": true,
+    "production_promotion_allowed": false
+  },
+  "final_verdict": "MATHEMATICAL_NONCAUSALITY_IN_GENERALIZED_OCB_FORMALISM_PROVEN__CLASSICAL_INDEPENDENT_FUTURE_PREDICTION_IMPOSSIBLE_UNDER_NO_LEAK_ASSUMPTIONS__PHYSICAL_REALIZATION_NOT_PROVEN"
+}
