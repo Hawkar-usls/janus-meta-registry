@@ -1,0 +1,64 @@
+name: JANUS P0.3 Protected Cross-Organ Admission Review (HOLD)
+
+on:
+  push:
+    branches:
+      - research/p03-protected-admission-review-20261123
+    paths:
+      - 'modules/autonomy_loop/p03_protected_review.py'
+      - 'tests/test_autonomy_p03_protected_review.py'
+      - 'data/autonomy_map/P03_CROSS_ORGAN_EVIDENCE_20261123.json'
+      - '.github/workflows/janus-p03-protected-review.yml'
+  pull_request:
+    paths:
+      - 'modules/autonomy_loop/p03_protected_review.py'
+      - 'tests/test_autonomy_p03_protected_review.py'
+      - 'data/autonomy_map/P03_CROSS_ORGAN_EVIDENCE_20261123.json'
+      - '.github/workflows/janus-p03-protected-review.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  cross-organ-evidence:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Recompute P0.3 from bound local source, reject untrusted self approval
+        run: |
+          set -euo pipefail
+          python -m py_compile modules/autonomy_loop/p03_protected_review.py tests/test_autonomy_p03_protected_review.py
+          python -m unittest discover -v -s tests -p test_autonomy_p03_protected_review.py
+          python -m unittest discover -v -s tests -p test_autonomy_p03_recovery_matrix.py
+          python -m unittest discover -v -s tests -p test_autonomy_dispatch_guard.py
+      - name: Generate separate cross-organ HOLD, no protected approval asserted
+        run: |
+          set -euo pipefail
+          mkdir -p runtime/p03
+          python -m modules.autonomy_loop.p03_protected_review \
+            --root . --out runtime/p03/PROTECTED_REVIEW_HOLD.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('runtime/p03/PROTECTED_REVIEW_HOLD.json').read_text())
+          assert r['status']=='HOLD_P03_NO_INDEPENDENT_CONSUMPTION_AND_PHASE_ADMISSION'
+          assert r['actual_software_items_processed']==24
+          assert r['gates']['genesis_neural_model_consumption']=='HOLD_NOT_ATTESTED'
+          assert r['gates']['externally_authenticated_review']=='HOLD_NO_PROTECTED_CUSTODIAN'
+          for key in ('can_update_checkpoint','can_wake_janus','may_fork_or_spawn_organ','can_promote_model','p03_accepted','independent_external_acceptance_performed'):
+              assert r[key] is False
+          print('JANUS_P03_CROSS_ORGAN_REVIEW_COMPLETED__SCIENTIFIC_AND_OPERATIONAL_HOLD')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-p03-protected-review-hold
+          path: runtime/p03/PROTECTED_REVIEW_HOLD.json
+          if-no-files-found: error
+          retention-days: 60
