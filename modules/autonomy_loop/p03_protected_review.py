@@ -49,9 +49,12 @@ def validate(manifest, latest, checkpoint):
         g.get("original_successful_ci")!="https://github.com/Hawkar-usls/Janus_Genesis/actions/runs/45227943588" or
         g.get("source_commit")!="df796fe68b57771294a02ea941aa8ea64824956c" or
         g.get("source_state_commit")!="b7d7a469f0a57a782e9253597b62fa92fd5cb5a1" or
-        not all(HEX64.fullmatch(str(g.get(k,""))) for k in (
-            "input_context_sha256","artifact_zip_sha256",
-            "event_id_sha256","query_result_sha256")) or
+        g.get("input_context_sha256")!="f5c35a30874627239f177cc1b8b5d17873960e68cd3fc35e3ba82508cbef5090" or
+        g.get("artifact_zip_sha256")!="0b15c7de7e638f68a0bc275371229e775eb4d7a31e48556376bb922f30ab241f" or
+        g.get("event_id_sha256")!="ce95cc5370cfdebfa606246d92bbed2fc5352c81c122403efd6bfce9d1fe67ea" or
+        g.get("query_result_sha256")!="4516ac546b78839dee4c6c2ae66e06bb567b85acd61b89afd482d73726f2c636" or
+        g.get("lens_identity_sha256")!="829930d591fe6fc09d8a1df5364f05ef8e94adaaa2417b0daf4aba5c714eba7e" or
+        g.get("receipt_sha256")!="92cba90559b685ef6b88a0a0bf4d6c10a73e68383f5bd0f1c1271e8aa67418db" or
         g.get("source_home_sequence")!=433 or g.get("input_context_sequence")!=105 or
         g.get("items_processed")!=24 or
         g.get("control_lens_items")!=24 or
