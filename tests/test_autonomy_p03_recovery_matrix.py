@@ -25,6 +25,10 @@ class P03RecoveryMatrixTests(unittest.TestCase):
                          "HOLD_PRIVATE_AUTH_UNVERIFIED")
         self.assertEqual(result["gates"]["cloud_home_context_consumed"],
                          "HOLD_NO_RUNTIME_CONSUMPTION_WITNESS")
+        self.assertEqual(result["gates"]["source_router_admitted"],
+                         "HOLD_PRODUCER_ROUTING")
+        self.assertTrue(result["snapshot_based_only"])
+        self.assertFalse(result["live_github_recheck_performed"])
         self.assertTrue(result["source_receipt_sha256"]==latest["receipt_sha256"])
         for key in ("admission_granted","dispatch_performed","fork_performed","source_mutated",
                     "weights_changed","independent_external_witness_completed"):
@@ -36,8 +40,10 @@ class P03RecoveryMatrixTests(unittest.TestCase):
         fake["last_verified_snapshot"]=latest["state_sha256"]
         fake.setdefault("accepted_phases",{})["P0.3"]={"status":"PASS"}
         report=m.evaluate(latest,fake,receipt,sha)
-        self.assertEqual(report["gates"]["checkpoint_matches_current"],"PASS")
-        self.assertEqual(report["gates"]["p03_phase_admitted"],"PASS")
+        self.assertEqual(report["gates"]["checkpoint_matches_current"],
+                         "MATCHES_LOCAL_BYTES_NOT_EXTERNAL_VERIFIED")
+        self.assertEqual(report["gates"]["p03_phase_admitted"],
+                         "HOLD_LOCAL_CLAIM_NOT_INDEPENDENTLY_ATTESTED")
         self.assertEqual(report["gates"]["cloud_home_context_consumed"],
                          "HOLD_NO_RUNTIME_CONSUMPTION_WITNESS")
         self.assertFalse(report["admission_granted"])
