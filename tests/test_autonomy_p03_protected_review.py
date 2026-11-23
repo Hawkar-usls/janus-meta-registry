@@ -27,6 +27,8 @@ class ProtectedReviewTests(unittest.TestCase):
         self.assertEqual(report["actual_software_items_processed"],24)
         self.assertFalse(report["genesis_model_call_attested"])
         self.assertTrue(report["experimental_cpu_model_generate_observed"])
+        self.assertTrue(report["two_clean_github_model_runs_same_receipt"])
+        self.assertFalse(report["cross_platform_recovery_proven"])
         self.assertFalse(report["experimental_model_truth_or_quality_proven"])
         self.assertEqual(report["gates"]["genesis_neural_model_consumption"],
                          "EXPERIMENTAL_LOCAL_CPU_GENERATE_VERIFIED__PRODUCTION_HOLD")
@@ -59,6 +61,8 @@ class ProtectedReviewTests(unittest.TestCase):
     def test_experimental_model_proof_cannot_be_rebound_or_promoted(self):
         cases=[
            ("receipt_sha256","a"*64),
+           ("second_artifact_zip_sha256","f"*64),
+           ("two_clean_github_workflow_runs_match_entire_receipt",False),
            ("source_commit","b"*40),
            ("input_tokens",0),
            ("production_cloud_home_model_integrated",True),
