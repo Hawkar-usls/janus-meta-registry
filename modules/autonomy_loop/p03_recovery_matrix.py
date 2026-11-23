@@ -68,13 +68,15 @@ def read_evidence(root: Path):
     required(path, type(path) is str and RECEIPT_PATH.fullmatch(path) is not None,
              "UNTRUSTED_RECEIPT_PATH")
     file = root / path
-    required(file, file.is_file() and not file.is_symlink(), "MISSING_RECEIPT")
+    required(file, file.is_file() and not file.is_symlink()
+             and file.resolve(strict=True).is_relative_to(root),
+             "MISSING_OR_UNTRUSTED_RECEIPT")
     raw = file.read_bytes()
     required(raw, len(raw) <= 2_000_000, "RECEIPT_TOO_LARGE")
     h = hashlib.sha256(raw).hexdigest()
     required(h, h == latest.get("receipt_sha256"), "RECEIPT_DIGEST_MISMATCH")
     receipt = decode_strict(raw)
-    required(receipt, type(receipt) is dict and receipt.get("schema") == "janus.autonomy.receipt.v1",
+    required(receipt, type(receipt) is dict and receipt.get("schema") == "janus.autonomy.snapshot.v1",
              "RECEIPT_SCHEMA_UNVERIFIED")
     s = latest.get("state_sha256")
     required(s, type(s) is str and HEX64.fullmatch(s) is not None
@@ -136,7 +138,7 @@ def evaluate(latest, checkpoint, receipt, receipt_digest):
     if private_visibility not in ("UNAVAILABLE",
              "CLAIMED_IN_PRODUCER_TELEMETRY_NOT_INDEPENDENTLY_REPLAYED"):
         raise Hold("PRIVATE_ACK_PRODUCER_OVERCLAIM")
-    if preflight.get("private_receiver_pending", 0) and type(preflight.get("private_receiver_pending")) is not int:
+    if type(preflight.get("private_receiver_pending")) is not int:
         raise Hold("PRIVATE_PENDING_TYPE")
     if type(preflight.get("public_receiver_pending")) is not int:
         raise Hold("PUBLIC_PENDING_TYPE")
