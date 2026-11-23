@@ -1,0 +1,129 @@
+{
+  "schema": "janus.physical010m.independent_causal_falsification_eth2023.v1",
+  "record_id": "JANUS-PHYSICAL-010M-THREE-MODEL-ETH-REAL-BELL-FALSIFICATION-2026-11-10",
+  "date_utc": "2026-11-10",
+  "append_only": true,
+  "experimental_state": "COMPLETED_REAL_HISTORICAL_PHYSICAL_ARCHIVAL_REPLAY_NOT_PROSPECTIVE",
+  "actual_physical_data": {
+    "paper": "Storz et al., Loophole-free Bell inequality violation with superconducting circuits, Nature 617 265 (2023)",
+    "paper_doi": "10.1038/s41586-023-05885-0",
+    "open_source_dataset_doi": "10.3929/ethz-b-000624026",
+    "original_source_url": "https://www.research-collection.ethz.ch/server/api/core/bitstreams/88466bab-6aba-46e8-bd18-9a62c2c45ea5/content",
+    "raw_source_zip_sha256": "2d39d1b6898480d3de0134e2d55ac3faee87af32c8db5bc6fdf6fa6997296909",
+    "raw_source_zip_md5": "aa308b354b78d4ba4d8ef5a5457dae1a",
+    "original_raw_trials": 1048576,
+    "original_columns": [
+      "Alice local setting a",
+      "Alice outcome A",
+      "Bob remote setting b",
+      "Bob outcome B"
+    ],
+    "per_shot_timestamp_available": false,
+    "physically_late_independent_B_choice_after_A_certified": false,
+    "all_rows_processed": true,
+    "original_raw_bytes_redistributed_in_repo": false,
+    "historical_prior_exposure": "JANUS 010C had already analyzed ALL original physical trial outcomes, so 010M split is NOT truly untouched/blinded to researcher"
+  },
+  "frozen_010M_analysis": {
+    "source_integrity_before_measurement": true,
+    "training_rows_recorded_order_first": 524288,
+    "internal_validation_rows_last": 524288,
+    "validation_block_size": 4096,
+    "models": {
+      "M0": "Bernoulli local probability conditional on own setting only; Jeffreys Beta(.5,.5) smoothing",
+      "Mpost": "Negative collider/postselection control; selection by OTHER wing positive outcome, excludes these cases from primary predictive and hypothesis statistics",
+      "Mjanus": "Bernoulli local probability conditional on own and other wing setting, same Jeffreys smoothing; only statistical proxy for claimed physical late causation"
+    },
+    "hypothesis_family": "Four two-sided local by remote conditional differences (Alice a0/1, Bob b0/1)",
+    "inference": "Large-N pooled binomial z approximation with Holm multiple comparisons",
+    "familywise_alpha": 0.001,
+    "declared_example_effect_abs_probability_difference": 0.01,
+    "postselection_used_in_primary": false,
+    "no_best_subgroup_selected": true,
+    "chronology_last_half_not_true_external_independence": true
+  },
+  "results": {
+    "validation_local_no_signalling_checks": [
+      {
+        "wing": "Alice",
+        "own_setting": 0,
+        "unconditional_delta": -0.0013181335969046915,
+        "holm_adjusted_p": 1,
+        "remote_positive_postselection_delta": -0.5331442678818914
+      },
+      {
+        "wing": "Alice",
+        "own_setting": 1,
+        "unconditional_delta": 0.002688891038933161,
+        "holm_adjusted_p": 0.672981709276487,
+        "remote_positive_postselection_delta": 0.023745474960679358
+      },
+      {
+        "wing": "Bob",
+        "own_setting": 0,
+        "unconditional_delta": 0.00018667868879762572,
+        "holm_adjusted_p": 1,
+        "remote_positive_postselection_delta": -0.00004735946267486746
+      },
+      {
+        "wing": "Bob",
+        "own_setting": 1,
+        "unconditional_delta": 0.00128502502719402,
+        "holm_adjusted_p": 1,
+        "remote_positive_postselection_delta": 0.5336435762206327
+      }
+    ],
+    "all_four_no_signalling_tests_not_significant_at_fixed_alpha": true,
+    "Mjanus_minus_M0_validation_bits_per_event": {
+      "Alice": 0.000001618801,
+      "Bob": -0.000007009605
+    },
+    "meaning_of_model_comparison": "Alice proxy improves descriptive logscore by only 1.6e-6 bits/event while Bob worsens by 7e-6; no robust cross-wing general predictive advantage established, and none of this is retrocausal evidence",
+    "postselection_artifact_demonstrated_on_real_physical_data": true,
+    "synthetic_proof_control": "Independent uniform A,C with B=A XOR C has P(A=1|C)=1/2 unconditionally but perfect dependence when conditioning B=0",
+    "mathematics_no_signalling_proof": "Local CPTP map on B has no influence on reduced rho_A, by partial trace and trace preservation",
+    "conclusion": "NO_EVIDENCE_OF_UNCONDITIONAL_REMOTE_SETTING_INFLUENCE_IN_THIS_TEST; CONDITIONAL_SELECTION_CREATES_LARGE_APPARENT_ASSOCIATION",
+    "no_signalling_proven_universally_by_sample": false,
+    "retrocausal_physical_channel_observed": false
+  },
+  "limitations": [
+    "Not independent newly collected data; 010C had previously inspected this ETH archive.",
+    "The ETH four-column Bell results are spatially separated choices/outcomes, not A physically committed before later free choice C.",
+    "No per-shot timestamp, externally signed early A record or independently calibrated timelike event ordering.",
+    "Trial independence and stationarity of asymptotic z tests are not independently guaranteed; fixed block heuristics do not cure all memory effects.",
+    "Big conditional associations are entanglement and collider/selection phenomena, not future-to-past signals.",
+    "No formal equivalence/effect-absence bound established by this experiment; failure to reject is not proof of universal no-signalling.",
+    "True JANUS prospective independent late choice protocol stays sealed and scientifically unsatisfied."
+  ],
+  "reproducibility": {
+    "code_repo": "Hawkar-usls/Janus-Demiurge",
+    "code_branch": "janus/010m-independent-causal-falsification-20261110",
+    "draft_PR": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/508",
+    "executed_workflow": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/42815070063",
+    "job_id": 129825968040,
+    "tests_passed": 9,
+    "all_physical_records_processed": 1048576,
+    "initial_unit_test_typo_failure_preserved": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/42814988273",
+    "successful_head_commit": "bbee95ac72af66e1f8b39d3bb2658d3aee8797bc",
+    "original_archive_hash_checked": true,
+    "aggregate_artifact_id": 13763324204,
+    "artifact_sha256": "4ed5ef87fe0f38e512486c668b673491ea46808cfb8b18d702640cff3fe3b811",
+    "artifact_expires_at_utc": "2027-01-09T12:21:53Z",
+    "code_paths": [
+      "experiments/ocean_transformer/late_choice_010/causal_falsification_010m.py",
+      "experiments/ocean_transformer/late_choice_010/test_causal_falsification_010m.py",
+      "experiments/ocean_transformer/late_choice_010/PROTOCOL_010M.md",
+      ".github/workflows/janus-010m-causal-falsification.yml"
+    ]
+  },
+  "admission": {
+    "physical_retrocausality_proven": false,
+    "retrocausal_future_past_information_channel_usable": false,
+    "independent_physical_future_choice_experiment_started": false,
+    "no_physical_QPU_used": true,
+    "prior_010_protocol_sealed_unmodified": true,
+    "NAS_unmodified": true,
+    "independent_external_replication_required": true
+  },
+  "next_gate": "Acquire truly unseen prospective data with independent physically late free setting C, externally timestamped early A and uncertainty accounting; independent blinded replication. Existing ETH archive only supports retrospective no-signalling diagnostic and collider error study."
+}
