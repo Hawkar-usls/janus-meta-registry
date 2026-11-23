@@ -1,0 +1,161 @@
+{
+  "schema": "janus.research.physical_010c_eth_million_bell_replay.v1",
+  "record_id": "JANUS-PHYSICAL-010C-ETH-MILLION-TRIAL-REAL-BELL-REPLAY-2026-11-10",
+  "created_utc_date": "2026-11-10",
+  "record_type": "APPEND_ONLY_INDEPENDENT_REAL_HISTORICAL_QUANTUM_DATA_REANALYSIS",
+  "stage": "REAL_PHYSICAL_DATA_REPLAY_CI_PASS_NOT_RETROCAUSALITY_TEST",
+  "scientific_scope": "Verify CHSH Bell correlators and no-signalling marginals on every published superconducting-circuit trial; NOT a physically later-than-early-A intervention.",
+  "source": {
+    "paper": "Storz et al., Loophole-free Bell inequality violation with superconducting circuits, Nature 617, 265 (2023)",
+    "paper_doi": "10.1038/s41586-023-05885-0",
+    "archive_doi": "10.3929/ethz-b-000624026",
+    "original_zip": "https://www.research-collection.ethz.ch/server/api/core/bitstreams/88466bab-6aba-46e8-bd18-9a62c2c45ea5/content",
+    "original_zip_md5_verified": "aa308b354b78d4ba4d8ef5a5457dae1a",
+    "original_zip_sha256": "2d39d1b6898480d3de0134e2d55ac3faee87af32c8db5bc6fdf6fa6997296909",
+    "raw_event_rows": 1048576,
+    "observed_columns": [
+      "setting_A",
+      "result_A",
+      "setting_B",
+      "result_B"
+    ],
+    "outcomes_domain": [
+      -1,
+      1
+    ],
+    "settings_domain": [
+      0,
+      1
+    ],
+    "license": "ETH Research Collection: CC BY 4.0",
+    "actual_physical_measurements": true,
+    "source_data_redistributed_in_artifact": false
+  },
+  "analytic_protocol": {
+    "all_rows_included": true,
+    "raw_pair_postselection": false,
+    "no_hand_tuned_weighting": true,
+    "CHSH_formula": "Maximum abs of four conventional CHSH sign orientations over four setting-pair means E[A*B]",
+    "CHSH_standard_error": "sqrt(sum((1-E[a,b]^2)/n[a,b])) independent-cell plug-in estimate",
+    "marginal_null": "Local positive-result frequency independent of remote setting conditional on own setting",
+    "marginal_test": "Four two-sided pooled two-proportion normal z tests, adjusted by Holm familywise correction",
+    "marginal_caveat": "Asymptotic per-trial iid assumption may be degraded by instrument drift or correlations; unadjusted local p-values cannot be cherry picked as retrocausality.",
+    "no_dated_shot_timestamps": true,
+    "no_QRNG_generation_timetags_in_source": true,
+    "no_physical_late_choice_after_early_A_verified": true
+  },
+  "results": {
+    "CHSH_S": 2.0747244690753677,
+    "CHSH_standard_error_approx": 0.0033393279010699188,
+    "CHSH_local_hidden_variable_bound": 2,
+    "published_CHSH_S_approximately": 2.0747,
+    "published_standard_error_approximately": 0.0033,
+    "raw_trials_included": 1048576,
+    "marginal_tests": [
+      {
+        "wing": "Alice",
+        "local_setting": 0,
+        "remote_setting0": {
+          "n": 262200,
+          "positives": 132309
+        },
+        "remote_setting1": {
+          "n": 261703,
+          "positives": 131980
+        },
+        "delta_probability": -0.00029884388394896266,
+        "p_two_sided": 0.8287421107848509,
+        "p_holm": 0.8764972926433335
+      },
+      {
+        "wing": "Alice",
+        "local_setting": 1,
+        "remote_setting0": {
+          "n": 262304,
+          "positives": 124679
+        },
+        "remote_setting1": {
+          "n": 262369,
+          "positives": 125477
+        },
+        "delta_probability": 0.002923760184226354,
+        "p_two_sided": 0.033998274788243354,
+        "p_holm": 0.10199482436473006
+      },
+      {
+        "wing": "Bob",
+        "local_setting": 0,
+        "remote_setting0": {
+          "n": 262200,
+          "positives": 130455
+        },
+        "remote_setting1": {
+          "n": 262304,
+          "positives": 130226
+        },
+        "delta_probability": -0.0010703007379213592,
+        "p_two_sided": 0.43824864632166677,
+        "p_holm": 0.8764972926433335
+      },
+      {
+        "wing": "Bob",
+        "local_setting": 1,
+        "remote_setting0": {
+          "n": 261703,
+          "positives": 127230
+        },
+        "remote_setting1": {
+          "n": 262369,
+          "positives": 128395
+        },
+        "delta_probability": 0.0032062333779251384,
+        "p_two_sided": 0.0202450110691856,
+        "p_holm": 0.0809800442767424
+      }
+    ],
+    "number_holm_significant_at_alpha_0_05": 0,
+    "smallest_adjusted_p": 0.0809800442767424,
+    "retrocausal_signal_observed": false,
+    "retrocausality_proven": false
+  },
+  "provenance": {
+    "code_draft_PR": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/501",
+    "branch": "janus/010c-eth-million-physical-replay-20261110",
+    "exact_code_commit_at_pass": "990b9ea1d6ea00d8d08bcb589f2f4287c18eba70",
+    "script": "experiments/ocean_transformer/late_choice_010/eth_bell_010c.py",
+    "unit_tests_passed": 6,
+    "github_actions_run_url": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/42797594137",
+    "github_actions_run_id": 42797594137,
+    "github_actions_job_id": 129766616726,
+    "workflow_conclusion": "success",
+    "archived_aggregate_artifact_id": 13754971589,
+    "aggregate_artifact_sha256": "41f49c9df0269fbba8e041e8cb27e180b5f66b6d35f8649c2a1d672afc8bf6b0",
+    "archive_expires_utc": "2027-01-09T10:15:40Z"
+  },
+  "physical_trial_planning": {
+    "existing_preregistered_010_N": 16384,
+    "existing_preregistered_010_two_sided_alpha": 0.001,
+    "approximate_power_assumptions": "Independent balanced Bernoulli groups with P(A=1) near 0.5; large-N normal difference-of-proportions, 90% desired power, no additional corrections",
+    "z_alpha_over_two": 3.2905267314919255,
+    "z_power_90_percent": 1.2815515655446004,
+    "formula_for_N_approx": "N_total = ceil(((z_(1-alpha/2)+z_power)/delta)^2)",
+    "N_total_approx_for_absolute_probability_difference": {
+      "0.005": 836156,
+      "0.01": 209039,
+      "0.02": 52260,
+      "0.03": 23227,
+      "0.04": 13065
+    },
+    "caution": "These are only planning approximations, not measured effects or a change to the sealed 010 sample size. Laboratory-specific noise, losses, sequential dependence, multiple comparisons and acceptance rates require independent power feasibility assessment before any new prereg."
+  },
+  "boundaries": {
+    "retiming_or_changing_original_sealed_010_trial": false,
+    "QPU_or_photonic_hardware_used": false,
+    "independent_physical_late_choice_validated": false,
+    "physical_data_reanalysis_only": true,
+    "original_OPEN009_and_QPU005_untouched": true,
+    "prof_Ma_response_needed_for_this_010C_result": false,
+    "new_physical_retrocausal_measurement_not_performed": true
+  },
+  "next_gate": "Increase data diversity with independent NIST/Delft calibration and conduct prospective independent physical late-choice with externally certified timestamp and full no-postselection trial inclusion."
+}
