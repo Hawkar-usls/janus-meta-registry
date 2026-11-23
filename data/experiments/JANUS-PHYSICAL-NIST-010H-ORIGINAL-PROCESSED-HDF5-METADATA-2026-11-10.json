@@ -1,0 +1,101 @@
+{
+  "schema": "janus.research.nist010h.processed_hdf5_metadata.v1",
+  "record_id": "JANUS-PHYSICAL-NIST-010H-ORIGINAL-PROCESSED-CLOCK-METADATA-2026-11-10",
+  "date_utc": "2026-11-10",
+  "record_type": "APPEND_ONLY_REAL_HISTORICAL_LABORATORY_PROCESSED_SOURCE_METADATA",
+  "parent_records": [
+    "JANUS-PHYSICAL-NIST-010F-2015-FULL-RUN3-GPS-CLOCK-2026-11-10",
+    "JANUS-PHYSICAL-NIST-010G-UNCONFIRMED-PPS-CLOCK-SECOND-ALIGNMENT-2026-11-10"
+  ],
+  "evidence_state": "NIST_ORIGINAL_PROCESSED_HDF5_SCHEMA_VERIFIED__NOT_INDEPENDENT_CLOCK_CALIBRATION",
+  "original_NIST_documentation": [
+    "https://s3.amazonaws.com/nist-belltestdata/belldata/File_Folder_Descriptions.pdf",
+    "https://s3.amazonaws.com/nist-belltestdata/belldata/code/analysis/DataProcessingDescription.pdf",
+    "https://www.nist.gov/pml/applied-physics-division/bell-test-research-software-and-data/repository-bell-test-research-2"
+  ],
+  "documentation_finding": {
+    "processing_uses_common_GPS_PPS_first_sync": true,
+    "HDF5_claimed_fields": "NIST authors state processed HDF5 has information about initial skips to establish Alice/Bob misalignment, anomalous syncs, sync block indices, raw detector offsets relative to sync, and settings/laser pulses",
+    "author_clock_alignment_is_not_independent_replication": true,
+    "processed_HDF5_is_derived_from_original_compressed_not_identical_to_raw": true,
+    "original_raw_epoch_offset_still_unverified_by_JANUS": true
+  },
+  "data": {
+    "training": {
+      "full_source_file": "03_31_CH_pockel_100kHz.run4.afterTimingfix2_training.dat.compressed.build.hdf5",
+      "original_source_url": "https://s3.amazonaws.com/nist-belltestdata/belldata/processed_compressed/hdf5/2015_09_18/03_31_CH_pockel_100kHz.run4.afterTimingfix2_training.dat.compressed.build.hdf5",
+      "original_source_sha256": "c471ae6ebac7178d4a74d228872aee9ab2f54db85a1079fb94f2ec84c06f8e57",
+      "original_bytes": 87774101,
+      "source_warning": "NIST authors explicitly identify loss of laser mode locking during entire training run",
+      "alice_settings_len": 28526907,
+      "bob_settings_len": 28526894,
+      "alice_clicks_len": 363,
+      "bob_clicks_len": 363,
+      "alice_badSyncInfo_shape": [
+        4,
+        479804
+      ],
+      "bob_badSyncInfo_shape": [
+        4,
+        479791
+      ]
+    },
+    "corrected": {
+      "full_source_file": "03_43_CH_pockel_100kHz.run4.afterTimingfix2_afterfixingModeLocking.dat.compressed.build.hdf5",
+      "original_source_url": "https://s3.amazonaws.com/nist-belltestdata/belldata/processed_compressed/hdf5/2015_09_18/03_43_CH_pockel_100kHz.run4.afterTimingfix2_afterfixingModeLocking.dat.compressed.build.hdf5",
+      "original_source_sha256": "94af31f6f8cadda9ed21fdf1adb7d6154a05a33bba551c11619e5df70b800f06",
+      "original_bytes": 736902908,
+      "source_warning": "NIST authors note fridge temperature problem near run end; retrospective quality correction requires original source code and provenance",
+      "alice_settings_len": 107109596,
+      "bob_settings_len": 107109596,
+      "alice_clicks_len": 107109596,
+      "bob_clicks_len": 107109596,
+      "alice_badSyncInfo_shape": [
+        4,
+        10
+      ],
+      "bob_badSyncInfo_shape": [
+        4,
+        8
+      ],
+      "alice_laserPulseNumber_len": 5084060,
+      "bob_laserPulseNumber_len": 4339158,
+      "config_alice_bitoffset": 28,
+      "config_bob_bitoffset": 37,
+      "config_alice_pk": 90,
+      "config_bob_pk": 125,
+      "config_alice_radius": 4,
+      "config_bob_radius": 5,
+      "bitoffset_physical_meaning_verified": false,
+      "difference_between_bitoffset_values_is_NOT_a_clock_offset": true,
+      "processing_alignment_proven_from_independent_hardware": false
+    }
+  },
+  "software_evidence": {
+    "code_repo": "Hawkar-usls/Janus-Demiurge",
+    "code_path": "experiments/ocean_transformer/late_choice_010/nist_hdf5_clock_010h.py",
+    "code_PR": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/503",
+    "github_action": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/42807018475",
+    "job_id": 129798630257,
+    "tests_passed": 4,
+    "HDF5_groups_and_datasets_inspected_per_source": 22,
+    "metadata_truncated": false,
+    "artifact_id": 13760225143,
+    "artifact_sha256": "f7cd6420a4ee225438f51dedad152869222304de2dd74b273cc4ae45e53b9320",
+    "artifact_expires_date_utc": "2027-01-09",
+    "author_processed_HDF5_bytes_redisseminated": false
+  },
+  "gating": {
+    "true_independent_A_B_absolute_offset": false,
+    "common_UTC_second_identifier_verified": false,
+    "source_code_processing_semantics_verified": false,
+    "full_no_signalling_hypothesis_test_executed": false,
+    "prospective_early_A_before_late_C_verified": false,
+    "retrocausal_channel_found": false,
+    "retrocausality_proven": false,
+    "unchanged_sealed_009_010": true,
+    "NAS_untouched": true,
+    "no_QPU_cost": true
+  },
+  "next_gate": "Inspect NIST original bell_analysis_code source to establish meaning of config/bitoffset and badSyncInfo, GPS PPS first shared anchor selection, and exclusions. Only after independently validating that metadata against original raw timing and hardware latency can cross-station causal tests be considered."
+}

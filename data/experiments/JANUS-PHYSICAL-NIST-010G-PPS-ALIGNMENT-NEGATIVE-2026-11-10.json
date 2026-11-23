@@ -1,0 +1,75 @@
+{
+  "schema": "janus.research.nist010g.gps_waveform_lag_holdout.v1",
+  "record_id": "JANUS-PHYSICAL-NIST-010G-UNCONFIRMED-PPS-CLOCK-SECOND-ALIGNMENT-2026-11-10",
+  "append_only": true,
+  "recorded_date_utc": "2026-11-10",
+  "parent_record": "JANUS-PHYSICAL-NIST-010F-2015-FULL-RUN3-GPS-CLOCK-2026-11-10",
+  "status": "NO_REPRODUCIBLE_GPS_SECOND_MATCH__ABSOLUTE_CLOCK_OFFSET_UNIDENTIFIED",
+  "scientific_class": "REAL_NIST_PHYSICAL_CLOCK_DATA_RETROSPECTIVE_NEGATIVE_CALIBRATION",
+  "source": {
+    "physical_original": "Full 00_44/run3 Alice and 00_43/run3 Bob 2015-09-18 official NIST raw files; NIST documented incorrect timing correction",
+    "alice_zip_sha256": "d581080c9fa6853a1bfb8ce511782563f433512f3ce7efb612202a5179c5ee6c",
+    "bob_zip_sha256": "f42204b41289c26ef779d39957062604c8d4008a4892724b7f2078afd7ddd5d4",
+    "alice_interval_array_sha256": "ae111553c22d9288a0f3ffa7ddaeefe9ada4d02117ba19db1f1fe58546a00b00",
+    "bob_interval_array_sha256": "5f6ffa1e8e095643b343e0f4f5ebdf31e6dbac937c559c5a22a6d8b94aa992a2",
+    "gps_pps_each_station": 417,
+    "gps_periods_each_station": 416
+  },
+  "method": {
+    "independent_of_detector_times": true,
+    "only_GPS_PPS_channel_5": true,
+    "lag_range_index_units": [
+      -120,
+      120
+    ],
+    "A_training_indices_inclusive": [
+      0,
+      207
+    ],
+    "A_validation_indices_inclusive": [
+      208,
+      415
+    ],
+    "selection": "Max absolute Pearson correlation of GPS period deviations on training set; deterministic tie-break",
+    "validation": "Independent heldout Pearson; two-sided circular-shift null enumeration on validation vector",
+    "alpha_exploratory": 0.01,
+    "calibration_not_retrocausal_statistics": true,
+    "circular_shift_null_requires_stationarity": true,
+    "data_analysis_historic_not_prospective": true
+  },
+  "observed": {
+    "training_selected_B_index_minus_A_index": -97,
+    "candidate_not_actual_absolute_clock_offset": true,
+    "training_overlap": 111,
+    "training_r": -0.25466910717017904,
+    "heldout_overlap": 208,
+    "heldout_r": 0.12610842110937545,
+    "sign_consistency": false,
+    "heldout_two_sided_p": 0.17307692307692307,
+    "passes_exploratory_alpha": false,
+    "independent_GPS_second_correspondence_confirmed": false,
+    "independent_absolute_clock_offset_established": false,
+    "retrocausal_signal_observed": false
+  },
+  "evidence": {
+    "code_repo": "Hawkar-usls/Janus-Demiurge",
+    "draft_PR": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/503",
+    "github_actions_run": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/42805330670",
+    "workflow_run_id": 42805330670,
+    "job_id": 129792872330,
+    "unit_tests_passed": 5,
+    "artifact_id": 13758197095,
+    "artifact_sha256": "25df373d73cfe881d2f69712ce7c92d9244b2e3fa3c49b3cd165ecf5b9b7fe4f",
+    "original_full_010F_record_unchanged": true
+  },
+  "remaining": {
+    "externally_labeled_common_UTC_seconds": false,
+    "hardware_path_and_latching_delays_certified": false,
+    "fully_calibrated_A_B_absolute_offset": false,
+    "future_free_choice_after_early_committed_result_established": false,
+    "independent_laboratory_replication": false,
+    "sealed_009_010_changed": false,
+    "NAS_touched": false
+  },
+  "next_step": "Use independent NIST-provided shared UTC PPS index/absolute clock anchor or trusted source synchronization metadata, not target photon coincidence optimization. Independently verify on a properly time-corrected full Bell source and preserve no-postselection trial rules."
+}
