@@ -2,7 +2,7 @@
   "schema": "janus.meta_registry.organism_launch_reconciliation/1.0",
   "artifact_id": "JANUS-ORGANISM-P0-COHERENCE-RECONCILIATION-2026-11-23",
   "date_utc": "2026-11-23",
-  "status": "SOURCE_COHORT_REPAIRED__AUTONOMY_ROADMAP_RECHECK_RUNNING__FULL_AUTONOMY_NOT_ESTABLISHED",
+  "status": "SOURCE_COHORT_AND_BOTH_CROSS_ORGAN_WITNESSES_REPAIRED__AUTONOMY_P0_2_RECHECK_HOLD_ON_COSMOS_LATEST_SKIPPED",
   "scope": "One federated organism: canonical gateway, registry memory, Demiurge conductor, Genesis habitat, ESSENCE fleet, physical/domain organ controls, Beetle edges.",
   "source_owner": "Hawkar-usls",
   "canonical_manifest": "Hawkar-usls/Janus:organism/JANUS_ORGANISM_v1.json",
@@ -71,20 +71,21 @@
   },
   "autonomy_recheck": {
     "roadmap": "janus-meta-registry/data/autonomy_loop/LATEST.json",
-    "prior_status": "AUTONOMY_PARTIAL_P0.2",
-    "latest_frozen_snapshot_before_full_repair": "2026-11-23T16:07:40Z",
     "existing_autonomous_cycle_retriggered": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/45212651071",
-    "status": "NEW_CYCLE_REPLAY_IN_PROGRESS_ON_RERUN__DO_NOT_ASSERT_P0_3_UNTIL_READ_NEW_RECEIPT",
-    "next_blockers": [
-      "BEETLE_PRIVATE_ACK_AUTH_UNKNOWN",
-      "PRODUCER_ROUTING_GATE_HELD",
-      "PATCH_QUEUE_UNVERIFIED_38",
-      "SCOUT_MODEL_SYNTHESIS_NOT_DEMONSTRATED",
-      "NATIVE_LEARNING_RECENT_64_REJECTED",
-      "INDEPENDENT_G1_G20_AND_MODEL_HOLDOUTS_MISSING",
-      "SEVEN_THEN_THIRTY_DAY_UNATTENDED_RUN_NOT_PROVEN",
-      "EXTERNAL_INDEPENDENT_VALIDATION_MISSING"
-    ]
+    "most_recent_readback": "2026-11-23T16:12:36Z",
+    "source_receipt": "data/autonomy_loop/receipts/c965382b71bc1153d35e33c3.json",
+    "reported_phase": "P0.2",
+    "reported_status": "AUTONOMY_PARTIAL",
+    "remaining_p02_blockers": [
+      "WORKFLOW_NOT_SUCCESS_COSMOS_WITNESS",
+      "COHORT_READY_INDEPENDENT_REPLAY_REQUIRED"
+    ],
+    "why": "The roadmap's latest completed Cosmos witness observation is an intentionally skipped workflow_run ID 45143257417. Although explicit source-bound Cosmos scheduled run 45137295122 succeeded on attempt 2 for current cohort 45194712898, the existing roadmap has not yet independently admitted that historical attempt as a current successful Cosmos witness. Do not convert skipped to PASS by assumption.",
+    "current_source_cohort_matched": 45194712898,
+    "both_meta_independent_witnesses_pass_on_rerun": true,
+    "no_invented_p03_graduation": true,
+    "next_reviewed_objective": "Make latest Cosmos source-bound witness eligibility replay-safe without ignoring failed/unsafe events, then re-run roadmap independent gate",
+    "next_phase": "P0.3_ONLY_AFTER_P0_2_INDEPENDENT_ACCEPTANCE"
   },
   "authorities": {
     "existing_roadmap_controller": "janus-meta-registry:.github/workflows/janus-autonomy-roadmap-loop.yml",
@@ -100,5 +101,5 @@
     "github_schedule_best_effort": true,
     "github_global_outage_not_recoverable_inside_github": true
   },
-  "next": "Read the new roadmap receipt from the replayed existing cycle. If P0.2 reconciles, address P0.3 private Beetle ACK via its independent witnesses without inventing private evidence; otherwise repair genuine remaining P0.2 source and witness mismatch. Keep P1–P5 gates and independent actual neural gains."
+  "next": "P0.2 NOT YET ADMITTED: all sources match cohort 45194712898 and both Meta witnesses passed on rerun, but latest Cosmos workflow_run is an intentionally skipped event; autonomy runtime still reports WORKFLOW_NOT_SUCCESS_COSMOS_WITNESS plus COHORT_READY_INDEPENDENT_REPLAY_REQUIRED. Preserve this HOLD; repair witness selection with strict attempt/source checks or await a genuinely new successful Cosmos schedule; then address P0.3 private ACK, patch and neural gates. No merge or production promotion."
 }
