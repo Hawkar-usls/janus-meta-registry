@@ -50,7 +50,10 @@ jobs:
           r=json.loads(Path('runtime/p03/PROTECTED_REVIEW_HOLD.json').read_text())
           assert r['status']=='HOLD_P03_NO_INDEPENDENT_CONSUMPTION_AND_PHASE_ADMISSION'
           assert r['actual_software_items_processed']==24
-          assert r['gates']['genesis_neural_model_consumption']=='HOLD_NOT_ATTESTED'
+          assert r['gates']['genesis_neural_model_consumption']=='EXPERIMENTAL_LOCAL_CPU_GENERATE_VERIFIED__PRODUCTION_HOLD'
+          assert r['gates']['active_cloud_home_model_integration']=='HOLD_NOT_IMPLEMENTED_OR_VERIFIED'
+          assert r['experimental_cpu_model_generate_observed'] is True
+          assert r['experimental_model_truth_or_quality_proven'] is False
           assert r['gates']['externally_authenticated_review']=='HOLD_NO_PROTECTED_CUSTODIAN'
           for key in ('can_update_checkpoint','can_wake_janus','may_fork_or_spawn_organ','can_promote_model','p03_accepted','independent_external_acceptance_performed'):
               assert r[key] is False
