@@ -29,10 +29,11 @@ def validate(manifest, latest, checkpoint):
         raise AdmissionHold("UNVERIFIED_CROSSORGAN_MANIFEST")
     a=manifest.get("private_receiver_ack")
     g=manifest.get("genesis_context_consumer")
+    model=manifest.get("genesis_experimental_model_consumer")
     p=manifest.get("protected_review")
     f=manifest.get("failure_recovery")
     b=manifest.get("boundaries")
-    if any(type(x) is not dict for x in (a,g,p,f,b)):
+    if any(type(x) is not dict for x in (a,g,model,p,f,b)):
         raise AdmissionHold("INCOMPLETE_CROSSORGAN_EVIDENCE")
     if (a.get("source_repository")!="Hawkar-usls/SkinGPT" or
         a.get("sender_repository")!="Hawkar-usls/janus-lapis" or
@@ -64,6 +65,35 @@ def validate(manifest, latest, checkpoint):
         g.get("p03_admission") is not False or
         g.get("cloud_home_state_mutated") is not False):
         raise AdmissionHold("GENESIS_CONSUMER_PROOF_SCOPE_OR_TRUTH_DRIFT")
+    # Separate experimental HF CPU execution from earlier deterministic
+    # context-query receipt. It still does NOT attest production HOME,
+    # semantic understanding, external custody or P0.3 acceptance.
+    if (model.get("repository")!="Hawkar-usls/Janus_Genesis" or
+        model.get("run_id")!=45230608295 or
+        model.get("original_successful_ci")!="https://github.com/Hawkar-usls/Janus_Genesis/actions/runs/45230608295" or
+        model.get("source_commit")!="a0793e4eb75324e26d167d8089bd4e711856d475" or
+        model.get("state_commit")!="b7d7a469f0a57a782e9253597b62fa92fd5cb5a1" or
+        model.get("context_sequence")!=105 or
+        model.get("context_sha256")!=g["input_context_sha256"] or
+        model.get("artifact_id")!=14846073259 or
+        model.get("artifact_zip_sha256")!="10ac071150a48803348494f8a7767bdb41a3eb0e8e761a0aa7c1d575f2006692" or
+        model.get("receipt_sha256")!="452a1f73d8b5c563d8e3e044379219a2b74663fbc1cee2f4d8bbd9da13580b09" or
+        model.get("event_id_sha256")!="ed4456fca0798539d85e4abf771f8a5972db62ba6a06a9cd598e467702e43b3b" or
+        model.get("input_prompt_sha256")!="fbd973f3a8101f5785c2272668ae094e8cdd2ca6b66d0dfd27c8fdf97e468e4e" or
+        model.get("output_text_sha256")!="cad126ab2e9fdef988210adf59902e082015d16a2f5486c78f1c49a27f2b9d92" or
+        model.get("model_id")!="HuggingFaceTB/SmolLM2-135M-Instruct" or
+        model.get("model_revision")!="12fd25f77366fa6b3b4b768ec3050bf629380bac" or
+        type(model.get("input_tokens")) is not int or model["input_tokens"]!=220 or
+        type(model.get("output_tokens")) is not int or model["output_tokens"]!=32 or
+        model.get("selected_mirror_lens")!="CONTROL" or
+        model.get("model_call_attested") is not True or
+        model.get("stage")!="EXPERIMENTAL_READONLY_SAME_OWNER_GITHUB_CPU_NOT_PRODUCTION" or
+        any(model.get(k) is not False for k in (
+            "model_result_authoritative","model_understood_context_proven",
+            "production_cloud_home_model_integrated",
+            "external_independent_validation","model_weights_modified",
+            "phase_p03_accepted"))):
+        raise AdmissionHold("EXPERIMENTAL_MODEL_PROOF_OR_AUTHORITY_DRIFT")
     if (any(p.get(k) is not False for k in (
            "protected_independent_checker_active_on_main",
            "outside_custodian_signed_p03_acceptance",
@@ -96,11 +126,13 @@ def assess(manifest, latest, checkpoint, source_digest):
         raise AdmissionHold("UNBOUND_EVIDENCE_DIGEST")
     g=manifest["genesis_context_consumer"]
     a=manifest["private_receiver_ack"]
+    model=manifest["genesis_experimental_model_consumer"]
     checks={
       "receiver_inbox_durable_ack":"SAME_OWNER_ORIGINAL_READ_2_OF_2_NOT_FRESH_EXTERNAL_REPLAY",
       "sender_active_worker_token":"HOLD_CREDENTIAL_NOT_PROVEN",
       "genesis_context_software_query":"ORIGINAL_GITHUB_CPU_RUN_24_HASH_BOUND_ITEMS",
-      "genesis_neural_model_consumption":"HOLD_NOT_ATTESTED",
+      "genesis_neural_model_consumption":"EXPERIMENTAL_LOCAL_CPU_GENERATE_VERIFIED__PRODUCTION_HOLD",
+      "active_cloud_home_model_integration":"HOLD_NOT_IMPLEMENTED_OR_VERIFIED",
       "four_lens_fitness":"HOLD_1_OF_4_LENSES_PRESENT",
       "externally_authenticated_review":"HOLD_NO_PROTECTED_CUSTODIAN",
       "checkpoint_anchor":"HOLD_DRIFT" if latest.get("state_sha256")!=checkpoint.get("last_verified_snapshot") else "MATCH_ONLY_NOT_ACCEPTANCE",
@@ -116,6 +148,9 @@ def assess(manifest, latest, checkpoint, source_digest):
       "actual_software_items_processed":g["items_processed"],
       "original_genesis_run_id":g["run_id"],
       "genesis_model_call_attested":False,
+      "experimental_cpu_model_generate_observed":True,
+      "experimental_model_artifact_id":model["artifact_id"],
+      "experimental_model_truth_or_quality_proven":False,
       "evidence_manifest_sha256":source_digest,
       "latest_snapshot_sha256":latest["state_sha256"],
       "last_verified_checkpoint_snapshot_sha256":checkpoint["last_verified_snapshot"],
