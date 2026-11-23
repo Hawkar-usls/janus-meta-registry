@@ -47,8 +47,8 @@ def validate(manifest, latest, checkpoint):
     if (g.get("repository")!="Hawkar-usls/Janus_Genesis" or
         g.get("run_id")!=45227943588 or
         g.get("original_successful_ci")!="https://github.com/Hawkar-usls/Janus_Genesis/actions/runs/45227943588" or
-        not HEX40.fullmatch(str(g.get("source_commit",""))) or
-        not HEX40.fullmatch(str(g.get("source_state_commit",""))) or
+        g.get("source_commit")!="df796fe68b57771294a02ea941aa8ea64824956c" or
+        g.get("source_state_commit")!="b7d7a469f0a57a782e9253597b62fa92fd5cb5a1" or
         not all(HEX64.fullmatch(str(g.get(k,""))) for k in (
             "input_context_sha256","artifact_zip_sha256",
             "event_id_sha256","query_result_sha256")) or
@@ -94,9 +94,9 @@ def assess(manifest, latest, checkpoint, source_digest):
     g=manifest["genesis_context_consumer"]
     a=manifest["private_receiver_ack"]
     checks={
-      "receiver_inbox_durable_ack":"SAME_OWNER_SHA_MATCHED_2_OF_2",
+      "receiver_inbox_durable_ack":"SAME_OWNER_ORIGINAL_READ_2_OF_2_NOT_FRESH_EXTERNAL_REPLAY",
       "sender_active_worker_token":"HOLD_CREDENTIAL_NOT_PROVEN",
-      "genesis_context_software_query":"PASS_24_HASH_BOUND_ITEMS",
+      "genesis_context_software_query":"ORIGINAL_GITHUB_CPU_RUN_24_HASH_BOUND_ITEMS",
       "genesis_neural_model_consumption":"HOLD_NOT_ATTESTED",
       "four_lens_fitness":"HOLD_1_OF_4_LENSES_PRESENT",
       "externally_authenticated_review":"HOLD_NO_PROTECTED_CUSTODIAN",
