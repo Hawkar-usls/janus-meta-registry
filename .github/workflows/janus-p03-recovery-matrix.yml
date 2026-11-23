@@ -1,0 +1,62 @@
+name: JANUS P0.3 Read-only Recovery Matrix (No Wake)
+
+on:
+  push:
+    branches:
+      - research/p03-recovery-matrix-readonly-20261123
+    paths:
+      - 'modules/autonomy_loop/p03_recovery_matrix.py'
+      - 'tests/test_autonomy_p03_recovery_matrix.py'
+      - '.github/workflows/janus-p03-recovery-matrix.yml'
+  pull_request:
+    paths:
+      - 'modules/autonomy_loop/p03_recovery_matrix.py'
+      - 'tests/test_autonomy_p03_recovery_matrix.py'
+      - '.github/workflows/janus-p03-recovery-matrix.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  p03-recovery-audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Read-only tests against checked-out receipt and adversarial forged evidence
+        run: |
+          set -euo pipefail
+          python -m py_compile modules/autonomy_loop/p03_recovery_matrix.py tests/test_autonomy_p03_recovery_matrix.py
+          python -m unittest discover -s tests -p test_autonomy_p03_recovery_matrix.py -v
+          python -m unittest discover -s tests -p test_autonomy_p03_preflight.py -v
+          python -m unittest discover -s tests -p test_autonomy_dispatch_guard.py -v
+      - name: Derive fail-closed P0.3 recovery matrix from repository checkout only
+        run: |
+          set -euo pipefail
+          python -m modules.autonomy_loop.p03_recovery_matrix --root . --out runtime/p03/RECOVERY_MATRIX.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          x=json.loads(Path('runtime/p03/RECOVERY_MATRIX.json').read_text())
+          assert x['status']=='P03_RECOVERY_REVIEW_REQUIRED'
+          assert x['phase']=='P0.3'
+          assert x['gates']['private_ack_replayed_independently']=='HOLD_PRIVATE_AUTH_UNVERIFIED'
+          assert x['gates']['cloud_home_context_consumed']=='HOLD_NO_RUNTIME_CONSUMPTION_WITNESS'
+          assert x['gates']['fork_and_organ_effects']=='DISABLED_AWAITING_EXTERNAL_REVIEW'
+          assert all(x[k] is False for k in ('admission_granted','dispatch_performed',
+                 'weights_changed','fork_performed','source_mutated',
+                 'independent_external_witness_completed'))
+          print('JANUS_P03_INDEPENDENT_DIAGNOSTIC_ONLY__NO_WAKE__NO_ADMISSION')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-p03-recovery-matrix
+          path: runtime/p03/RECOVERY_MATRIX.json
+          if-no-files-found: error
+          retention-days: 30
