@@ -129,7 +129,8 @@ def evaluate(latest, checkpoint, receipt, receipt_digest):
                                    "CLAIMED_ZERO_PENDING_NOT_CONSUMED",
         "private_ack_replayed_independently": "HOLD_PRIVATE_AUTH_UNVERIFIED",
         "cloud_home_context_consumed": "HOLD_NO_RUNTIME_CONSUMPTION_WITNESS",
-        "source_router_admitted": "HOLD_PRODUCER_ROUTING" if "PRODUCER_ROUTING_HELD" in reasons else
+        "source_router_admitted": "HOLD_PRODUCER_ROUTING" if
+                                  {"PRODUCER_ROUTING_HELD", "BEETLE_ROUTING_HELD"} & reasons else
                                   "UNKNOWN_NEEDS_LIVE_RECHECK",
         "fork_and_organ_effects": "DISABLED_AWAITING_EXTERNAL_REVIEW"
     }
@@ -151,6 +152,8 @@ def evaluate(latest, checkpoint, receipt, receipt_digest):
         "checkpoint_verified_snapshot": checkpoint.get("last_verified_snapshot"),
         "source_receipt_sha256": receipt_digest,
         "observed_at_utc": receipt.get("observed_at_utc"),
+        "snapshot_based_only": True,
+        "live_github_recheck_performed": False,
         "phase": EXPECTED_PHASE,
         "p03_preflight_status": preflight["status"],
         "private_ack_producer_visibility": private_visibility,
