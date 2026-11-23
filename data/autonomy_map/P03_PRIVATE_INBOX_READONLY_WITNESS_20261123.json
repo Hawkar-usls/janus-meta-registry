@@ -1,0 +1,52 @@
+{
+  "schema": "janus.autonomy.p03_private_inbox_readonly_witness.v1",
+  "date_utc": "2026-11-23",
+  "status": "READ_ONLY_CROSS_REPOSITORY_INBOX_ACK_MATCH__NO_RUNTIME_CONSUMPTION_OR_PHASE_ADMISSION",
+  "source_scope": "Authenticated user's connected GitHub read of private receiver, compared with current sender queue; NOT an external third-party custodian",
+  "checked_repository_count": 2,
+  "source_repository": "Hawkar-usls/janus-lapis",
+  "source_visibility": "public delivery-state branch",
+  "receiver_repository": "Hawkar-usls/SkinGPT",
+  "receiver_visibility": "private",
+  "credential_material_stored": false,
+  "raw_ack_or_batch_identifiers_publicly_stored": false,
+  "method": [
+    "Read exact private receiver ACK through authorized GitHub read-only connector",
+    "Read sender's immutable receiver-specific queue manifest in janus-lapis",
+    "Compare ACK schema, recipient, status, integer last_sequence, latest acknowledged batch identifier and SHA256 against sender queue entry",
+    "Count remaining unacknowledged sender queue entries without disclosing private payloads"
+  ],
+  "results": {
+    "queue_schema_valid": true,
+    "ack_schema_valid": true,
+    "signed_external_custodian_proof": false,
+    "produced_batch_count": 2,
+    "matched_ack_sequence": 2,
+    "last_ack_batch_identity_match": true,
+    "last_ack_payload_sha256_match": true,
+    "queue_remaining_after_verified_prefix": 0,
+    "proof_scope": "DURABLE_PRIVATE_INBOX_RECEIPT_ONLY",
+    "runtime_consumption_proven": false,
+    "source_checkpoint_phase_p03_admitted": false,
+    "current_public_sender_reports_ack_unavailable": true,
+    "sender_visibility_recovery_required": true
+  },
+  "privacy": {
+    "no_raw_private_contents_persisted_in_public_registry": true,
+    "no_sensitive_values_or_tokens_logged": true,
+    "no_authorized_private_ack_secret_set_in_github_actions": true,
+    "no_public_source_status_rewritten": true
+  },
+  "authority": {
+    "github_actions_worker_secret_not_inferred_from_connector_access": true,
+    "cloud_home_usage_proven": false,
+    "external_independent_custodian_proven": false,
+    "heartbeat_or_snapshot_is_not_consumption": true,
+    "p03_accepted": false,
+    "checkpoint_rewritten": false,
+    "workflow_dispatched": false,
+    "new_forks_created": 0,
+    "source_mutated": false
+  },
+  "follow_up": "Review least-privilege private ACK read credential for janus-lapis Actions; run fresh producer audit (read-only), then require a separate Genesis consumption receipt and independently authenticated phase review before P0.3 acceptance. This snapshot cannot be reused as live proof in future."
+}
