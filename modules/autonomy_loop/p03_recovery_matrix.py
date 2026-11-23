@@ -120,8 +120,10 @@ def evaluate(latest, checkpoint, receipt, receipt_digest):
     # These lane names are fixed by reviewed source, never generated from an
     # untrusted model message. All external unobserved evidence fails closed.
     gates = {
-        "checkpoint_matches_current": "PASS" if anchored else "HOLD_SNAPSHOT_DRIFT",
-        "p03_phase_admitted": "PASS" if p03_admitted else "HOLD_NOT_ADMITTED",
+        "checkpoint_matches_current": "MATCHES_LOCAL_BYTES_NOT_EXTERNAL_VERIFIED"
+                                      if anchored else "HOLD_SNAPSHOT_DRIFT",
+        "p03_phase_admitted": "HOLD_LOCAL_CLAIM_NOT_INDEPENDENTLY_ATTESTED"
+                              if p03_admitted else "HOLD_NOT_ADMITTED",
         "beetle_telemetry_fresh": "HOLD_STALE" if {
              "BEETLE_DELIVERY_HEALTH_STALE", "BEETLE_ROUTING_GATE_STALE"
              } & reasons else "UNKNOWN_NEEDS_LIVE_RECHECK",
