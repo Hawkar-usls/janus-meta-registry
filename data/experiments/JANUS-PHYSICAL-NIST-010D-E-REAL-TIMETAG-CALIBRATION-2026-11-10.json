@@ -1,0 +1,141 @@
+{
+  "schema": "janus.research.nist_real_timetag_010d_e.v1",
+  "record_id": "JANUS-PHYSICAL-NIST-010D-E-REAL-TIMETAG-CLOCK-AND-EVENT-ORDER-2026-11-10",
+  "date_utc": "2026-11-10",
+  "record_type": "APPEND_ONLY_VERIFIED_HISTORICAL_PHYSICAL_CALIBRATION_REPLAY",
+  "scientific_status": "REAL_NIST_HARDWARE_TIMETAGS_CONFIRMED__RETROSPECTIVE_CALIBRATION_ONLY__NO_RETROCAUSAL_SIGNAL",
+  "data_origin": {
+    "organization": "NIST Physical Measurement Laboratory",
+    "study": "Shalm et al., A strong loophole-free test of local realism (2015)",
+    "source_index": "https://www.nist.gov/pml/applied-physics-division/bell-test-research-software-and-data/repository-bell-test-research-3",
+    "original_format_description": "https://s3.amazonaws.com/nist-belltestdata/belldata/File_Folder_Descriptions.pdf",
+    "paper_doi": "10.1103/PhysRevLett.115.250402",
+    "data_date": "2015-09-18",
+    "source_type": "find_sync T1/T2 raw calibration, NOT actual heralded Bell trials",
+    "raw_record_schema": "3 x unsigned little-endian 64-bit: channel, 12.8GHz timetag, computer transfer index",
+    "tick_ps": 78.125,
+    "mapped_channels": {
+      "0": "Detector click",
+      "2": "QRNG setting output 0",
+      "4": "QRNG setting output 1",
+      "5": "GPS PPS",
+      "6": "Electronics/Pockels sync"
+    },
+    "unclassified_channel_code_64": "Observed in original NIST raw files; physical semantics unknown; EXCLUDED from mapped channels",
+    "independent_station_epoch": "Unaligned absolute tag epochs; stations share a 10MHz reference frequency but not absolute start time",
+    "source_data_copied_into_repo": false,
+    "bounded_acquisition": true
+  },
+  "calibration_010d": {
+    "four_archives_verified": 4,
+    "total_original_raw_records": 978523,
+    "original_zip_SHA256": [
+      {
+        "run": "18_32",
+        "wing": "alice",
+        "sha256": "2639ee5cd6661129b4e57ef4ddf5148cee5c45d7b42c19745677cdc8d9a96952",
+        "raw_count": 2760,
+        "unknown64_count": 2,
+        "GPS_PPS_count": 2,
+        "one_PPS_period_ns": 1000002030.390625
+      },
+      {
+        "run": "18_32",
+        "wing": "bob",
+        "sha256": "0338893ea0e77f63a7d1e6a2fd99cfb4423442e42ae0b6ce8ec1f80eb6e522f2",
+        "raw_count": 1031,
+        "unknown64_count": 3,
+        "GPS_PPS_count": 2,
+        "one_PPS_period_ns": 1000002029.765625
+      },
+      {
+        "run": "00_03",
+        "wing": "alice",
+        "sha256": "e54d30d866a642dd23d1a40e3ae3418cf6420fa6beb616bac2d21601a6b0d485",
+        "raw_sha256": "09d1ea355122481f08a914692bd7e3f69d1184301372097ed1301a2a5776713f",
+        "raw_count": 485503,
+        "unknown64_count": 2,
+        "GPS_PPS_count": 2,
+        "one_PPS_period_ns": 1000002019.296875
+      },
+      {
+        "run": "00_03",
+        "wing": "bob",
+        "sha256": "33c294c778babfebc6e4eddf30519a30c25728c704ea78e24ee4f40a49ad1cec",
+        "raw_sha256": "fa00ca6e657d47cd5b55bd067fbd160440f4aff5ffb5003f3f62d1c9214be569",
+        "raw_count": 489229,
+        "unknown64_count": 2,
+        "GPS_PPS_count": 2,
+        "one_PPS_period_ns": 1000002019.140625
+      }
+    ],
+    "observation": "One pair of GPS PPS pulses per short source means only a single interval; no credible clock-drift or synchronization precision estimate can follow",
+    "tests_passed": 8,
+    "github_run": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/42799730639",
+    "github_run_id": 42799730639,
+    "artifact_id": 13755785361,
+    "artifact_digest_sha256": "6dc8599dd991a3c464714d7fc2d41c6e997fdc474f41d97390c9ff4223337d1f"
+  },
+  "cycle_timing_010e": {
+    "run": "00_03 find_sync official Alice/Bob original training",
+    "fixed_cycle_window": "Every closed half-open interval from hardware sync channel 6 at t_i to next channel 6 at t_i+1; no tunable acceptance cutoff",
+    "unit": "ns",
+    "Alice": {
+      "total_raw_records": 485503,
+      "completed_cycles": 194914,
+      "cycles_with_detector": 75241,
+      "cycles_with_no_detector": 119673,
+      "cycles_with_at_least_one_rng": 194914,
+      "rng_tag_precedes_first_detector": 75237,
+      "first_detector_precedes_rng_tag": 4,
+      "median_rng_output_after_sync_ns": 3.984375,
+      "median_first_detector_after_sync_ns": 4406.953125,
+      "median_rng_minus_detector_ns": -4402.109375,
+      "dangling_incomplete_final_cycle_not_scored": 1
+    },
+    "Bob": {
+      "total_raw_records": 489229,
+      "completed_cycles": 197214,
+      "cycles_with_detector": 75219,
+      "cycles_with_no_detector": 121995,
+      "cycles_with_at_least_one_rng": 197214,
+      "rng_tag_precedes_first_detector": 74974,
+      "first_detector_precedes_rng_tag": 245,
+      "median_rng_output_after_sync_ns": 28.359375,
+      "median_first_detector_after_sync_ns": 4435.234375,
+      "median_rng_minus_detector_ns": -4407.8125,
+      "dangling_incomplete_final_cycle_not_scored": 1
+    },
+    "test_count": 14,
+    "github_run": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/42799730519",
+    "github_run_id": 42799730519,
+    "artifact_id": 13754149236,
+    "artifact_digest_sha256": "ac9db811f1b30e700f5fe572d4065f417abca02d6501dfc946cdf4f5a9b162d0",
+    "retrophysical_interpretation": "The registered electrical RNG-output pulse generally precedes a detector click within the same short calibration cycle. Rare opposite edge order is an electrical timing observation, not verified free choice generation after irreversible A or a future-to-past communication channel.",
+    "timebase_and_causality_limit": "No independently calibrated shared time zero, signed early A, original generation time of free RNG decision or physical later B analyzer intervention are verified."
+  },
+  "provenance": {
+    "draft_code_pull_request": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/502",
+    "code_branch": "janus/010d-nist-raw-timetag-calibration-20261110",
+    "original_preregistered_010": "https://github.com/Hawkar-usls/janus-meta-registry/pull/488",
+    "independent_lab_gate": "https://github.com/Hawkar-usls/Janus-Demiurge/issues/499",
+    "initial_failed_runs_preserved": true,
+    "corrected_run_head_commit": "ec2cdb8692799fd6b329d91c3822ac2956fbadb7",
+    "code_paths": [
+      "experiments/ocean_transformer/late_choice_010/nist_sync_010d.py",
+      "experiments/ocean_transformer/late_choice_010/nist_cycle_order_010e.py",
+      ".github/workflows/janus-010d-nist-raw-clock.yml",
+      ".github/workflows/janus-010e-nist-event-order.yml"
+    ]
+  },
+  "hard_boundaries": {
+    "no_actual_retrocausal_physical_choice_test_performed": true,
+    "no_Physical_QPU_cost": true,
+    "no_NAS_edits": true,
+    "no_sealed_OPEN009_or_010_amendment": true,
+    "not_a_reproduction_of_NIST_full_Bell_inequality_result": true,
+    "no_physical_retrocausal_signal_observed": true,
+    "no_p_value_claimed_from_retrospective_calibration": true
+  },
+  "next_gate": "Independent NIST channel 64 instrument marker identification and alignment on longer full original Bell runs; record both stations' clock offsets/uncertainties and independent QRNG generation timing before prospective claim. Extend acquisition with bounded streaming and independently audited inclusion protocol."
+}
