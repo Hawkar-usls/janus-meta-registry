@@ -77,6 +77,12 @@ def validate(manifest, latest, checkpoint):
         model.get("context_sha256")!=g["input_context_sha256"] or
         model.get("artifact_id")!=14846073259 or
         model.get("artifact_zip_sha256")!="10ac071150a48803348494f8a7767bdb41a3eb0e8e761a0aa7c1d575f2006692" or
+        model.get("second_independent_workflow_run_id")!=45230599343 or
+        model.get("second_workflow_run_url")!="https://github.com/Hawkar-usls/Janus_Genesis/actions/runs/45230599343" or
+        model.get("second_artifact_id")!=14845349921 or
+        model.get("second_artifact_zip_sha256")!="65d852691d36517a8326b325fc471e1f9c4cee13e915e703df9a44235381b83d" or
+        model.get("two_clean_github_workflow_runs_match_entire_receipt") is not True or
+        model.get("same_github_platform_not_external_replication") is not True or
         model.get("receipt_sha256")!="452a1f73d8b5c563d8e3e044379219a2b74663fbc1cee2f4d8bbd9da13580b09" or
         model.get("event_id_sha256")!="ed4456fca0798539d85e4abf771f8a5972db62ba6a06a9cd598e467702e43b3b" or
         model.get("input_prompt_sha256")!="fbd973f3a8101f5785c2272668ae094e8cdd2ca6b66d0dfd27c8fdf97e468e4e" or
@@ -151,6 +157,8 @@ def assess(manifest, latest, checkpoint, source_digest):
       "experimental_cpu_model_generate_observed":True,
       "experimental_model_artifact_id":model["artifact_id"],
       "experimental_model_truth_or_quality_proven":False,
+      "two_clean_github_model_runs_same_receipt":True,
+      "cross_platform_recovery_proven":False,
       "evidence_manifest_sha256":source_digest,
       "latest_snapshot_sha256":latest["state_sha256"],
       "last_verified_checkpoint_snapshot_sha256":checkpoint["last_verified_snapshot"],
