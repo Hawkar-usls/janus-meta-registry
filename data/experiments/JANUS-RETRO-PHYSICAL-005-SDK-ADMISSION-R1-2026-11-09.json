@@ -1,0 +1,80 @@
+{
+  "schema": "janus.research.post_prereg_sdk_admission.v1",
+  "record_id": "JANUS-RETRO-PHYSICAL-005-SDK-ADMISSION-R1-2026-11-09",
+  "experiment_id": "JANUS-RETRO-PHYSICAL-005",
+  "date": "2026-11-09",
+  "record_type": "POST_PREREG_APPEND_ONLY_ENGINEERING_ADMISSION",
+  "status": "OFFLINE_SDK_AUDIT_PASS__HARDWARE_UNRUN__SECURITY_AMENDMENT_DRAFT",
+  "immutable_science_baseline": {
+    "source_pr": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/485",
+    "source_main_merge_commit": "8fa54f25c5bf3f5593db6b7ddc2a3a8da5f78f19",
+    "registration_pr": "https://github.com/Hawkar-usls/janus-meta-registry/pull/475",
+    "registration_file": "data/experiments/JANUS-RETRO-PHYSICAL-005-PREREG-2026-11-09-v1.json",
+    "original_files_unchanged": true,
+    "original_git_blobs": {
+      "experiments/ocean_transformer/physical_qpu_005_protocol.py": "09448c98ef0321660e739a558d0e43ab55ae5289",
+      "experiments/ocean_transformer/physical_qpu_005_ibm.py": "43d963f6fae7982d8ff284f5cb59c2507eed9b0f",
+      "experiments/ocean_transformer/test_physical_qpu_005.py": "a64b84cdce04587d6279581e8f017d331a811037"
+    }
+  },
+  "proposed_security_amendment": {
+    "repo": "Hawkar-usls/Janus-Demiurge",
+    "pull_request": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/486",
+    "state": "DRAFT_NOT_MERGED",
+    "audit_script": "experiments/ocean_transformer/physical_qpu_005_sdk_audit_r1.py",
+    "amendment_doc": "experiments/ocean_transformer/JANUS_QPU_005_SDK_AMENDMENT_R1.md",
+    "offline_workflow": ".github/workflows/janus-physical-qpu-005-sdk-audit.yml",
+    "manual_workflow_modification_proposed_only": true,
+    "defense_in_depth": [
+      "workflow_dispatch on main, owner actor only",
+      "github.run_attempt==1 protects against rerun of same dispatch",
+      "two original human authorization checkboxes",
+      "exact original preregistered plan SHA supplied as input",
+      "default-deny JANUS_QPU005_RELEASE_GATE flag",
+      "named environment janus-qpu005-approval; reviewer protection must be configured separately",
+      "existing concurrency serializes jobs, not globally deduplicates them"
+    ]
+  },
+  "verified_offline_evidence": {
+    "result": "PASS",
+    "official_ibm_sdk_versions": {
+      "qiskit": "2.6.2",
+      "qiskit-ibm-runtime": "0.50.0"
+    },
+    "frozen_existing_test_count": 11,
+    "frozen_existing_tests_passed": 11,
+    "new_import_and_structure_audit": "PASS",
+    "no_credentials_submission_refusal": "PASS",
+    "legacy_sampler_v2_status": "AVAILABLE_BUT_DEPRECATED_IN_RUNTIME_0_50",
+    "new_client_side_sampler": "IMPORT_VERIFIED_NOT_USED_IN_FROZEN_ADAPTER",
+    "ci_run": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/42673706217",
+    "ci_event": "push",
+    "ci_head_sha": "a6ad335e7a43a55251d273518160f7488e2e6f18",
+    "ci_job_id": 129350953189,
+    "ci_artifact_id": 13698473323,
+    "ci_artifact_digest": "sha256:048a588977e4bebb600af8e11a29d29c4adf1f55e0777ccd6bf88229558344d7",
+    "qpu_time_used_minutes": 0,
+    "provider_api_requested": false,
+    "actual_hardware_job_id": null,
+    "real_shots_collected": 0,
+    "production_models_modified": false,
+    "NAS_containers_modified": false
+  },
+  "limitations_and_open_gates": [
+    "Offline checks do not verify a real backend's compiled ISA or dynamic instruction timing",
+    "Account Open Plan tier has not been verified with provider credentials",
+    "SamplerV2 is deprecated but migration is not part of original preregistration",
+    "Human-review GitHub environment must be separately configured before merge or activation",
+    "Fresh separate workflow_dispatch runs are not globally deduplicated, so a provider one-job ledger or manual release-gate shutdown is still required",
+    "PR event workflows associated with draft PR initially failed without any jobs; independently triggered branch push offline SDK audit succeeded; no cause inferred",
+    "No independently spaced photonic stations or external data custodian involved"
+  ],
+  "claims": {
+    "sdk_offline_compatibility_confirmed_for_pinned_versions": true,
+    "actual_hardware_compatibility_confirmed": false,
+    "QPU_physical_experiment_run": false,
+    "retrocausal_signal_observed": false,
+    "retrocausality_proven": false
+  },
+  "next_gate": "Review draft PR #486 and protected environment settings; do not authorize or dispatch IBM QPU until operator explicitly approves and the duplicate-submission risk is addressed."
+}
