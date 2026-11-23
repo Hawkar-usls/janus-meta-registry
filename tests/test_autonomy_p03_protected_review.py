@@ -26,6 +26,12 @@ class ProtectedReviewTests(unittest.TestCase):
         self.assertEqual(report["status"],"HOLD_P03_NO_INDEPENDENT_CONSUMPTION_AND_PHASE_ADMISSION")
         self.assertEqual(report["actual_software_items_processed"],24)
         self.assertFalse(report["genesis_model_call_attested"])
+        self.assertTrue(report["experimental_cpu_model_generate_observed"])
+        self.assertFalse(report["experimental_model_truth_or_quality_proven"])
+        self.assertEqual(report["gates"]["genesis_neural_model_consumption"],
+                         "EXPERIMENTAL_LOCAL_CPU_GENERATE_VERIFIED__PRODUCTION_HOLD")
+        self.assertEqual(report["gates"]["active_cloud_home_model_integration"],
+                         "HOLD_NOT_IMPLEMENTED_OR_VERIFIED")
         self.assertEqual(report["gates"]["four_lens_fitness"],"HOLD_1_OF_4_LENSES_PRESENT")
         for k in ("can_update_checkpoint","can_wake_janus","may_fork_or_spawn_organ",
                   "can_promote_model","p03_accepted","independent_external_acceptance_performed"):
@@ -49,6 +55,23 @@ class ProtectedReviewTests(unittest.TestCase):
             bad[section][key]=True
             with self.subTest(section=section,key=key),self.assertRaises(review.AdmissionHold):
                 review.assess(bad,self.latest,self.checkpoint,self.sha)
+
+    def test_experimental_model_proof_cannot_be_rebound_or_promoted(self):
+        cases=[
+           ("receipt_sha256","a"*64),
+           ("source_commit","b"*40),
+           ("input_tokens",0),
+           ("production_cloud_home_model_integrated",True),
+           ("model_result_authoritative",True),
+           ("phase_p03_accepted",True),
+           ("external_independent_validation",True),
+        ]
+        for key,value in cases:
+            with self.subTest(key=key):
+                forged=copy.deepcopy(self.manifest)
+                forged["genesis_experimental_model_consumer"][key]=value
+                with self.assertRaisesRegex(review.AdmissionHold,"EXPERIMENTAL_MODEL"):
+                    review.assess(forged,self.latest,self.checkpoint,self.sha)
 
     def test_forged_zero_backlog_with_wrong_count_fails(self):
         a=copy.deepcopy(self.manifest)
