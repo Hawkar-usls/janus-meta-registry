@@ -1,0 +1,164 @@
+{
+  "schema": "janus.research.011d.abl_two_boundary_vs_deutsch_ctc_unitary_swap.v1",
+  "id": "JANUS-RETRO-011D-TWO-BOUNDARY-ABL-VS-DEUTSCH-SWAP-2026-11-10",
+  "date_utc": "2026-11-10",
+  "append_only": true,
+  "evidence_class": "EXACT_THEORETICAL_COMPARISON_NOT_EXTERNAL_PHYSICAL_EVIDENCE",
+  "project_goal": "Test whether Principle of Janus two-phase future/past calibration emerges from standard two-boundary QM versus a Deutsch CTC model, without falsely inferring operational backwards signalling.",
+  "published_authorities": [
+    {
+      "paper": "Aharonov Bergmann Lebowitz, Time Symmetry in the Quantum Process of Measurement",
+      "DOI": "10.1103/PhysRev.134.B1410",
+      "year": 1964,
+      "scope": "time symmetric probabilities from pre- and postselected quantum ensembles"
+    },
+    {
+      "paper": "David Deutsch, Quantum mechanics near closed timelike lines",
+      "DOI": "10.1103/PhysRevD.44.3197",
+      "year": 1991,
+      "scope": "hypothetical quantum CTC consistency"
+    },
+    {
+      "paper": "Ji Lloyd Wilde, Retrocausal Capacity of a Quantum Channel: Communicating through Noisy Closed Timelike Curves",
+      "DOI": "10.1103/znyd-npk5",
+      "year": 2026,
+      "scope": "capacities of hypothetical postselected noisy CTC channels, NOT the capacity calculation in this record"
+    }
+  ],
+  "executed_calculations": {
+    "ABL_pre_post_selection": {
+      "physical_interpretation": "Single qubit prepared |+>, early Z projective A, later selectable C=Z or X for B measurement",
+      "complete_joint_outcomes_by_late_basis_Z": {
+        "A0B0": 0.5,
+        "A0B1": 0,
+        "A1B0": 0,
+        "A1B1": 0.5
+      },
+      "complete_joint_outcomes_by_late_basis_X": {
+        "A0B0": 0.25,
+        "A0B1": 0.25,
+        "A1B0": 0.25,
+        "A1B1": 0.25
+      },
+      "all_four_outcomes_included": true,
+      "unconditional_early_P_A0_given_late_Z": 0.5,
+      "unconditional_early_P_A0_given_late_X": 0.5,
+      "early_delta_unconditional": 0,
+      "postselected_late_B0_success_probability_for_Z": 0.5,
+      "postselected_late_B0_success_probability_for_X": 0.5,
+      "conditioned_early_P_A0_given_B0_late_Z": 1,
+      "conditioned_early_P_A0_given_B0_late_X": 0.5,
+      "conditioned_early_delta_late_X_minus_Z": -0.5,
+      "backward_operational_message_readable_before_B": false,
+      "scientific_class": "ABL_RETROSPECTIVE_CONDITIONING_NOT_PHYSICAL_BACKWARDS_CAUSATION"
+    },
+    "Deutsch_quantum_CTC_SWAP": {
+      "mathematical_unitary": "4×4 SWAP on two qubits: U_SWAP(rho_CR⊗sigma_CTC)U†=sigma_CTC⊗rho_CR",
+      "genuine_quantum_coherence_checked_in_tests": true,
+      "consistency_postulate": "sigma_CTC=Tr_CR[U_SWAP(rho_CR⊗sigma_CTC)U†]",
+      "future_later_CR_input_for_C0": "|0><0|",
+      "future_later_CR_input_for_C1": "|1><1|",
+      "noise_on_return_channel": "D_eta(rho)=(1-eta)rho+eta I/2, trace-preserving depolarizing model",
+      "unique_fixed_point": "sigma_C=(1-eta)|C><C|+eta I/2",
+      "all_outcomes_included": true,
+      "postselection_used": false,
+      "mathematical_noise_sensitivity": [
+        {
+          "eta_depolarization": 0,
+          "model_internal_early_L1_when_C0": 0,
+          "model_internal_early_L1_when_C1": 1,
+          "model_internal_early_prob_delta": 1,
+          "toy_binary_Shannon_bits_per_use": 1,
+          "physical_retrocausal_capacity_measured": false
+        },
+        {
+          "eta_depolarization": 0.1,
+          "model_internal_early_L1_when_C0": 0.05,
+          "model_internal_early_L1_when_C1": 0.95,
+          "model_internal_early_prob_delta": 0.9,
+          "toy_binary_Shannon_bits_per_use": 0.7136030428840437,
+          "physical_retrocausal_capacity_measured": false
+        },
+        {
+          "eta_depolarization": 0.25,
+          "model_internal_early_L1_when_C0": 0.125,
+          "model_internal_early_L1_when_C1": 0.875,
+          "model_internal_early_prob_delta": 0.75,
+          "toy_binary_Shannon_bits_per_use": 0.4564355568004036,
+          "physical_retrocausal_capacity_measured": false
+        },
+        {
+          "eta_depolarization": 0.5,
+          "model_internal_early_L1_when_C0": 0.25,
+          "model_internal_early_L1_when_C1": 0.75,
+          "model_internal_early_prob_delta": 0.5,
+          "toy_binary_Shannon_bits_per_use": 0.18872187554086717,
+          "physical_retrocausal_capacity_measured": false
+        },
+        {
+          "eta_depolarization": 1,
+          "model_internal_early_L1_when_C0": 0.5,
+          "model_internal_early_L1_when_C1": 0.5,
+          "model_internal_early_prob_delta": 0,
+          "toy_binary_Shannon_bits_per_use": 0,
+          "physical_retrocausal_capacity_measured": false
+        }
+      ],
+      "theoretical_internal_early_L_delta_at_zero_noise": 1,
+      "model_internal_capacity_bits_at_zero_noise": 1,
+      "independent_physical_CTC_geometry_or_return_path_proven": false,
+      "independently_accessible_early_L_record_verified": false,
+      "measurement_witness_interaction_with_CTC_dynamically_modeled": false,
+      "operational_channel_built_or_used": false,
+      "scientific_class": "QUANTUM_DEUTSCH_FIXED_POINT_TOY_WITH_GLOBAL_CTC_POSTULATE"
+    },
+    "ordinary_forward_SWAP_CONTROL": {
+      "same_prior_incoming_loop_like_qubit_for_C0_and_C1": "I/2",
+      "same_precommitted_early_P_L1": 0.5,
+      "same_precommitted_early_delta": 0,
+      "later_CR_outcome_P1_for_both_C": 0.5,
+      "later_other_output_contains_C_information": true,
+      "ordinary_FORWARD_physically_compatible_math": true,
+      "cannot_rewrite_precommitted_A": true,
+      "meaning": "The exact same quantum SWAP unitary cannot deliver the C bit to any earlier record without imposing Deutsch CTC consistency."
+    },
+    "principle_of_Janus_mapping": {
+      "formal_two_phase_analogy": "ABL/Bayesian smoothing uses later evidence to reorganize interpretation of earlier outcomes; Deutsch solves a future-conditioned self-consistent state.",
+      "original_meta_registry_principle_record_located_and_derived_formally": false,
+      "original_scientific_principle_derived_from_standard_QM": false,
+      "proof_of_independent_nonstandard_return_dynamics": false,
+      "avoid_confusing_forecast_improvements_with_actual_temporal_messages": true
+    }
+  },
+  "code_and_provenance": {
+    "repo": "Hawkar-usls/Janus-Demiurge",
+    "branch": "janus/011d-abl-deutsch-swap-causal-test-20261110",
+    "draft_code_PR": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/515",
+    "protocol": "experiments/ocean_transformer/late_choice_010/PROTOCOL_011D_ABL_DEUTSCH_COMPARISON.md",
+    "script": "experiments/ocean_transformer/late_choice_010/abl_deutsch_011d.py",
+    "tests": "experiments/ocean_transformer/late_choice_010/test_abl_deutsch_011d.py",
+    "workflow": ".github/workflows/janus-011d-abl-deutsch-quantum.yml",
+    "workflow_run": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/42885587174",
+    "successful_GitHub_Actions_tests": 11,
+    "workflow_job_id": 130072939596,
+    "artifact_id": 13795119044,
+    "artifact_SHA256": "4f90dfe36a1ba553a37e50a449bd2487f9974aa421c6d10de0f8fddd91e7c98d",
+    "artifact_expires_utc": "2027-01-09T19:28:29Z",
+    "no_proprietary_code_or_private_data": true,
+    "no_original_2015_NIST_data_mutated": true,
+    "no_sealed_JANUS010_changes": true,
+    "no_NAS_edits": true,
+    "no_QPU_use": true
+  },
+  "boundary_of_scientific_claim": {
+    "hypothetical_CTC_self_consistency_is_not_independently_derived": true,
+    "physically_late_free_choice_after_precommitted_early_A_realized": false,
+    "physical_time_loop_existence_observed": false,
+    "experimental_retrocausality_proven": false,
+    "physical_early_to_late_information_channels_measured": 0,
+    "actual_physical_trials": 0,
+    "theoretical_comparison_completed": true,
+    "status": "THEORETICAL_ABL_VS_DEUTSCH_SWAP_CONTROL_ONLY"
+  },
+  "next_gate": "Investigate falsifiable nonstandard temporal boundary laws with explicit physical mechanisms that differ from ordinary trace-preserving dynamics beyond outcome postselection. Acquire independent real physical late choice, immutable early witness, calibrated event chronology and external replication before any empirical retrocausal claim."
+}
