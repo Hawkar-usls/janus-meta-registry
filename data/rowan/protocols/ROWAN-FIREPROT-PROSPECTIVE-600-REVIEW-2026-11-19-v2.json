@@ -1,0 +1,83 @@
+{
+  "schema_id": "janus.rowan.prospective_blind_validation.review.v2",
+  "date_utc": "2026-11-18",
+  "state": "PROPOSED_FOR_EXTERNAL_REVIEW_NO_DATA_OR_EXECUTION_AUTHORIZED",
+  "parent": {
+    "path": "data/rowan/protocols/ROWAN-S2-BBC1-PRIMARY-LABEL-AUDIT-AND-INDEPENDENT-BLIND-PREREG-2026-10-25-v1.json",
+    "blob": "7471ef83ff921ed1004f9453f3847aec87f5cb35",
+    "custody_contract": "data/rowan/protocols/ROWAN-INDEPENDENT-UNPUBLISHED-LABEL-CUSTODY-CONTRACT-2026-10-26-v1.json",
+    "technical_prs": [
+      292,
+      294
+    ]
+  },
+  "external_review": {
+    "team": "FireProtDB / Loschmidt Laboratories",
+    "date": "2026-10-26",
+    "scope": "Written methodological feedback, not experimental validation or partnership agreement",
+    "recommendations": [
+      "Increase 200 observations by factor 2–3",
+      "Use identical experimental conditions",
+      "Ensure diversity of mutations"
+    ],
+    "custodian_referred": false
+  },
+  "objective": "Test whether frozen structural-confidence predictor generalizes to independent unpublished quantitative folding-stability data; no biological efficacy claim.",
+  "design": {
+    "target_unique_protein_variant_pairs": 600,
+    "proposed_independent_protein_domains": 30,
+    "proposed_observations_per_domain": 20,
+    "minimum_confirmatory_target": 600,
+    "replicates_and_WT_controls_excluded_from_600": true,
+    "allocation_status": "proposal, subject to custodian feasibility and blinded power review",
+    "independence": "Independent benign model proteins; unrelated to training domains; independent laboratory or custodian documents provenance and screens overlap before freeze.",
+    "assay": "One comparable quantitative stability assay and consistent conditions across cohort; laboratory attests protocol, units, sign, quality controls and any deviations before freeze; do not pool incompatible conditions.",
+    "diversity": "Independent laboratory documents diversity and nonredundancy of naturally available benign research observations without using outcome values to select cases; no specific sequences or mutation designs proposed.",
+    "power": "No guaranteed power at n=600. Pre-freeze independent review of domain-level clustering and plausible effects, report assumptions; if target infeasible, revise and register before predictions, never after labels."
+  },
+  "frozen_model": {
+    "source": "parent frozen S2 predictor; no refitting or recalibration",
+    "features": [
+      "mutant-minus-WT pTM",
+      "mutant-minus-WT avg_lDDT"
+    ],
+    "provider_gate": "Hold: T8A local delta pTM +0.0020025968551635742 versus Rowan -0.003; resolve comparability, model revision and source-specific MSA or separate preregistration with untouched independent holdout before scoring."
+  },
+  "evaluation": {
+    "primary_metric": "Equal-domain-weighted MAE in kcal/mol with independently verified sign convention",
+    "primary_comparator": "zero-effect baseline",
+    "pass": "All integrity gates pass; macro-MAE <= 0.90 times zero baseline; upper 95% confidence bound of paired macro-MAE difference < 0.",
+    "uncertainty": "Paired domain-cluster bootstrap, 10000 replicates, deterministic seed 20261025; report domain coverage and missingness.",
+    "secondary": "Pooled MAE, per-domain rank and directional accuracy; descriptive, not substitutes for primary endpoint.",
+    "missingness": "Report all enrolled observations and failures; incomplete confirmatory cohort HOLD; no selective removal or post hoc rescue.",
+    "negative_results": "Publish fail/indeterminate; no tuning on this holdout."
+  },
+  "custody": {
+    "organization": null,
+    "unpublished_outcome_count_verified": 0,
+    "attestation": null,
+    "selection_frozen": false,
+    "commitment": "Independent custodian signs salted SHA-256 commitment to canonical ordered private outcomes plus provenance; high-entropy salt kept private until authorized unblinding.",
+    "release_order": [
+      "Independent reviewer approves design, assay and sample-size analysis",
+      "Independent custodian confirms new unpublished outcomes and freezes input manifest and signed commitment",
+      "Resolve provider comparability gate; freeze model/code/configuration and all real predictions",
+      "Independent reviewer verifies time order, completeness, signature and integrity",
+      "Only then release and evaluate once"
+    ],
+    "public_data": "Public FireProt/ThermoMPNN is retrospective only, never true prospective validation."
+  },
+  "gates": {
+    "external_custodian": "HOLD",
+    "provider_equivalence": "HOLD",
+    "cohort": "HOLD",
+    "assay_uniformity": "HOLD",
+    "diversity_attestation": "HOLD",
+    "predictions": "NOT_STARTED",
+    "unblinding": false,
+    "paid_jobs": false,
+    "production_promotion": false,
+    "legacy_fireprot_210": "BLOCKED"
+  },
+  "next_action": "Seek independent academic laboratory/custodian with suitable existing unpublished benign protein stability cohort and ask for design review; no outcome disclosure or execution until gates pass."
+}
