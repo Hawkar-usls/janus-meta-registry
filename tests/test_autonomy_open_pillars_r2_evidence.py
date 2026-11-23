@@ -60,6 +60,21 @@ class PillarEvidenceTests(unittest.TestCase):
         self.assertEqual(v["actual_new_repositories_created"],0)
         self.assertFalse(v["separate_codepath_is_outside_independent_custodian"])
 
+    def test_later_fitness_selector_does_not_claim_neural_gain(self):
+        x=self.j["latest_verified_extension"]
+        self.assertEqual(x["latest_source_commit"],
+                         "376fdc5fe16b36071136290cec715724b21ffe86")
+        self.assertEqual(x["jobs_passed"],4)
+        self.assertEqual(x["paired_synthetic_selector_tests"],6)
+        self.assertTrue(x["strict_no_regression"])
+        self.assertFalse(x["actual_neural_parent_child_gain_tested"])
+        self.assertFalse(x["external_scientific_admission"])
+        self.assertEqual((x["fresh_pillars_source_watch_matches"],
+                          x["fresh_pillars_source_watch_held"]),(12,1))
+        self.assertEqual(x["latest_pr_ci"],
+                         "https://github.com/Hawkar-usls/Janus/actions/runs/45290789554")
+        self.assertRegex(x["final_verifier_sha256"],r"^[0-9a-f]{64}$")
+
     def test_no_out_of_scope_evolution_or_secret_writes(self):
         gates=self.j["gates"]
         for key in ("new_daily_schedule_active_on_default_branch","auto_fork",
