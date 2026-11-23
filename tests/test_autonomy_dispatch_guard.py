@@ -5,7 +5,11 @@ from datetime import datetime, timedelta, timezone
 import importlib.util
 import json
 from pathlib import Path
+import sys
+import tempfile
 import unittest
+from unittest import mock
+import urllib.error
 
 ROOT = Path(__file__).resolve().parents[1]
 SPEC = importlib.util.spec_from_file_location(
@@ -133,6 +137,39 @@ class BoundedWakeTests(unittest.TestCase):
         l["full_issue_162_acceptance"] = True
         with self.assertRaises(guard.Hold):
             guard.validate_policy(self.policy, l, c)
+
+    def test_public_hold_reason_requires_exact_local_allowlist_not_uppercase_pattern(self):
+        for reason in guard.PUBLIC_HOLD_REASONS:
+            self.assertRegex(reason, r"^[A-Z][A-Z_]+$")
+            self.assertEqual(guard.public_hold_reason(guard.Hold(reason)), reason)
+        for error in (guard.Hold("AKIAEXAMPLESECRETUPPERCASE"),
+                      guard.Hold("https://example.invalid/?token=SECRET"),
+                      guard.Hold("UNVERIFIED_AUTONOMY_CHECKPOINT\nSECRET"),
+                      guard.Hold("UNVERIFIED_AUTONOMY_CHECKPOINT "),
+                      guard.Hold({"token": "SECRET"}),
+                      ValueError("UNVERIFIED_AUTONOMY_CHECKPOINT"),
+                      urllib.error.HTTPError("https://example.invalid/?token=SECRET", 403,
+                                             "Bearer SECRET", {}, None)):
+            self.assertEqual(guard.public_hold_reason(error), "HOLD_REASON_REDACTED")
+            if isinstance(error, urllib.error.HTTPError):
+                error.close()
+
+    def test_main_records_checkpoint_hold_without_constructing_api_or_dispatch(self):
+        latest, checkpoint = fixture_checkpoint()
+        checkpoint["last_verified_snapshot"] = "b" * 64
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "receipt.json"
+            with mock.patch.object(sys, "argv", ["dispatch_guard.py", "--root", str(ROOT),
+                                                "--out", str(output), "--dry-run"]), \
+                 mock.patch.object(guard, "load", side_effect=[self.policy, latest, checkpoint]), \
+                 mock.patch.object(guard, "GitHub") as api:
+                self.assertEqual(guard.main(), 2)
+                api.assert_not_called()
+            receipt = json.loads(output.read_text(encoding="utf-8"))
+            self.assertEqual(receipt["status"], "HOLD_FAIL_CLOSED")
+            self.assertEqual(receipt["hold_reason"], "UNVERIFIED_AUTONOMY_CHECKPOINT")
+            self.assertFalse(receipt["dispatch_is_success"])
+            self.assertEqual(receipt["authority_delta"], 0)
 
     def test_recent_success_or_failure_prevents_duplicate_wake(self):
         lane = self.lanes[0]

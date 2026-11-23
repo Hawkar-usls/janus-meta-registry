@@ -1,0 +1,44 @@
+name: JANUS autonomy map R1 exact-source witness
+
+on:
+  pull_request:
+    paths:
+      - 'data/autonomy_map/**'
+      - 'data/JANUS-CHAT-CONTEXT-INDEX.json'
+      - 'tools/verify_autonomy_map_r1.py'
+      - '.github/workflows/janus-autonomy-map-r1-witness.yml'
+  push:
+    branches:
+      - 'research/bounded-autonomy-map-r1-*'
+    paths:
+      - 'data/autonomy_map/**'
+      - 'data/JANUS-CHAT-CONTEXT-INDEX.json'
+      - 'tools/verify_autonomy_map_r1.py'
+      - '.github/workflows/janus-autonomy-map-r1-witness.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: autonomy-map-r1-witness-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  exact-source-witness:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.11'
+      - name: Independent structural and adversarial controls
+        run: python tools/verify_autonomy_map_r1.py --self-test
+      - name: Witness exact open draft and successful source CI
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python tools/verify_autonomy_map_r1.py --live --authenticated
