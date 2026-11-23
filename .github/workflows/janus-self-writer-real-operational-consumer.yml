@@ -21,7 +21,7 @@ permissions:
 
 concurrency:
   group: janus-self-writer-real-consumer-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   independent-operational-consumption:
@@ -34,23 +34,44 @@ jobs:
         with:
           path: _code
           persist-credentials: false
+          sparse-checkout: |
+            /modules/autonomy_coder/
+            /tests/test_real_operational_self_writer_consumer.py
+            /tests/test_actions_cost_r15_checkout.py
+            /data/autonomy_loop/LATEST.json
+            /.github/workflows/janus-self-writer-real-operational-consumer.yml
+          sparse-checkout-cone-mode: false
       - uses: actions/checkout@v4
         with:
           ref: ccb2f82edb0f1c61c460aa0a4521a9991e8d5eb2
           path: _state
           persist-credentials: false
+          sparse-checkout: |
+            /STATE.json
+            /MODULE_INDEX.json
+            /attempts/
+            /generated/
+            /receipts/
+            /self_modules/
+          sparse-checkout-cone-mode: false
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
       - name: Negative controls for genuine model-authored source and observation
         run: |
           python -m unittest discover -s _code/tests -p test_real_operational_self_writer_consumer.py -v
+          python -m unittest discover -s _code/tests -p test_actions_cost_r15_checkout.py -v
       - name: Fetch unchanged pinned networkless evaluation container
         run: docker pull python@sha256:1148dbb014615300fa7e713b2f94f550c0d1c69780c0805f84f093ceee34dd0b
       - name: Exact SHA provenance, clean isolated model-code execution and real LATEST
         run: |
           set -euo pipefail
+          test "$(git -C _code rev-parse HEAD)" = "$GITHUB_SHA"
           test "$(git -C _state rev-parse HEAD)" = ccb2f82edb0f1c61c460aa0a4521a9991e8d5eb2
+          for p in _code/modules/autonomy_coder/real_operational_consumer.py _code/tests/test_real_operational_self_writer_consumer.py _code/data/autonomy_loop/LATEST.json _state/STATE.json _state/MODULE_INDEX.json; do
+            test -f "$p"
+          done
+          for d in _state/attempts _state/generated _state/receipts _state/self_modules; do test -d "$d"; done
           PYTHONPATH=_code/modules/autonomy_coder \
             python _code/modules/autonomy_coder/real_operational_consumer.py \
               --state _state \
