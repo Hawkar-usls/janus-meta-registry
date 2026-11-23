@@ -30,10 +30,34 @@ LANES = {
 ACTIVE = {"queued", "in_progress", "waiting", "pending", "requested"}
 VALID_EVENTS = {"schedule", "workflow_dispatch", "workflow_run", "push"}
 UTC_Z = re.compile(r"^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d+)?Z$")
+# Only locally defined constant reasons may enter a public receipt. An uppercase
+# pattern alone is insufficient: credentials can also contain uppercase tokens.
+PUBLIC_HOLD_REASONS = frozenset({
+    "ADMITTED_WORKFLOW_CONTRACT_CHANGED", "ADMITTED_WORKFLOW_MISSING",
+    "GITHUB_DISPATCH_NOT_ACCEPTED", "GITHUB_HISTORY_PAGE_INVALID",
+    "GITHUB_HISTORY_PAGE_UNAVAILABLE", "GITHUB_HISTORY_PAGINATION_INCOMPLETE",
+    "GITHUB_HISTORY_STATUS_UNVERIFIED", "GITHUB_RESPONSE_TOO_LARGE",
+    "GITHUB_RUN_CLOCK_FUTURE", "GITHUB_RUN_CONCLUSION_UNKNOWN", "GITHUB_RUN_INVALID",
+    "GITHUB_RUN_METADATA_INVALID", "GITHUB_RUN_TIMESTAMP_INCONSISTENT",
+    "GITHUB_WORKFLOW_IDENTITY_MISMATCH", "INVALID_JSON_OBJECT", "INVALID_UTC_TIMESTAMP",
+    "NO_PRIOR_TRUSTED_SUCCESS", "NO_TRUSTED_MAIN_RUN_HISTORY", "PHASE_ADMISSION_UNVERIFIED",
+    "UNADMITTED_WORKFLOW_OR_DUPLICATE", "UNAUTHORIZED_REPOSITORY_OR_TOKEN",
+    "UNTRUSTED_WAKE_LANE", "UNTRUSTED_WAKE_LANES", "UNTRUSTED_WAKE_POLICY",
+    "UNVERIFIED_AUTONOMY_CHECKPOINT", "UNVERIFIED_OBSERVATION", "WAKE_LANE_PRIORITY_INVALID",
+    "WAKE_SCOPE_OR_RATE_LIMIT_CHANGED", "WORKFLOW_NOT_ALLOWLISTED",
+})
 
 
 class Hold(ValueError):
     """An unverified prerequisite cannot grant dispatch authority."""
+
+
+def public_hold_reason(exc: BaseException) -> str:
+    """Retain an approved reason, never remote/error text or credentials."""
+    if (type(exc) is Hold and len(exc.args) == 1 and type(exc.args[0]) is str
+            and exc.args[0] in PUBLIC_HOLD_REASONS):
+        return exc.args[0]
+    return "HOLD_REASON_REDACTED"
 
 
 def iso_utc(value: str) -> datetime:
@@ -288,6 +312,7 @@ def main() -> int:
             "timestamp_utc": now.isoformat().replace("+00:00", "Z"),
             "status": "HOLD_FAIL_CLOSED",
             "error_class": type(exc).__name__,
+            "hold_reason": public_hold_reason(exc),
             "authority_delta": 0,
             "dispatch_is_success": False,
         }
@@ -299,6 +324,8 @@ def main() -> int:
     print("JANUS_AUTONOMY_DISPATCH_TARGET=" +
           str(result.get("selected_workflow") or "NONE"))
     print("JANUS_AUTONOMY_AUTHORITY_DELTA=0")
+    if result["status"] == "HOLD_FAIL_CLOSED":
+        print("JANUS_AUTONOMY_HOLD_REASON=" + result["hold_reason"])
     return rc
 
 
