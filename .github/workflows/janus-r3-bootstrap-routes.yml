@@ -1,0 +1,52 @@
+name: JANUS Meta Registry R3 Typed Bootstrap Routes (Read Only)
+
+on:
+  push:
+    branches: [research/r3-navigator-boot-contract-20261124]
+    paths:
+      - 'data/autonomy_map/JANUS_R3_TYPED_BOOTSTRAP_ROUTES_2026-11-24.json'
+      - 'tests/test_autonomy_r3_typed_bootstrap_routes.py'
+      - '.github/workflows/janus-r3-bootstrap-routes.yml'
+  pull_request:
+    paths:
+      - 'data/autonomy_map/JANUS_R3_TYPED_BOOTSTRAP_ROUTES_2026-11-24.json'
+      - 'tests/test_autonomy_r3_typed_bootstrap_routes.py'
+      - '.github/workflows/janus-r3-bootstrap-routes.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+
+jobs:
+  provenance-and-readonly-policy:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          repository: Hawkar-usls/janus-meta-registry
+          ref: 07f5e4115d88b7df4081135d27eda2878874aa9c
+          path: pinned-meta-main
+          sparse-checkout: |
+            data/JANUS-CHAT-CONTEXT-INDEX.json
+          persist-credentials: false
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          repository: Hawkar-usls/janus-meta-registry
+          ref: 9306037335bb4532049633b7f5f082e75891ff51
+          path: pinned-meta-map
+          sparse-checkout: |
+            data/autonomy_map/CURRENT_STATE.json
+            data/autonomy_map/OPERATING_CONTRACT.json
+            data/autonomy_map/receipts/45219142499-health.json
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.12'
+      - name: Independently hash Git object bytes and validate boot data vs original schemas
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s tests -p test_autonomy_r3_typed_bootstrap_routes.py -v
+          echo 'JANUS_R3_META_BOOT_ROUTES_SOURCE_HASHES_MATCH__NO_PRODUCTION_ADMISSION'
