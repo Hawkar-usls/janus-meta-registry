@@ -1,0 +1,174 @@
+{
+  "schema": "janus.registry.semantic_atlas.r62.protocol.v1",
+  "status": "PREREGISTERED_INTERNAL_STUDY",
+  "goal": "Boot-time typed source navigation, semantic field proposals, knowledge gaps and next verification step; unknown roles stay untrusted.",
+  "training": {
+    "contract_commit": "bed6698f038e7edb81abc0acf93cbacdfbf35ec5",
+    "contract_blob": "9478d72993e4fd9992eb81fee654331bac061a90",
+    "documents": 8,
+    "labels": "R61 curated role mappings, not independent semantic truth",
+    "partition": "TRAIN_ONLY"
+  },
+  "exam": {
+    "partition": "DEVELOPER_AUTHORED_DOCUMENT_DISJOINT_NOT_BLIND",
+    "documents": [
+      {
+        "id": "roadmap",
+        "root": "exam-roadmap",
+        "commit": "ab914cf6f2b4e862272dfc126b65040afbdca9c4",
+        "path": "data/autonomy_map/JANUS-R7-FEDERATED-SCHOOL-ROADMAP-2026-11-24.json",
+        "blob": "84cde919172c877199a1aca06f101d4a09d4feee",
+        "schema": "janus.federated_school.roadmap.v1",
+        "fields": [
+          [
+            "goal",
+            "GOAL"
+          ],
+          [
+            "status",
+            "STATUS"
+          ],
+          [
+            "next_allowed",
+            "NEXT"
+          ],
+          [
+            "boundaries",
+            "BOUNDARY"
+          ],
+          [
+            "milestones",
+            "UNKNOWN"
+          ],
+          [
+            "external_sources",
+            "EVIDENCE"
+          ],
+          [
+            "architecture",
+            "UNKNOWN"
+          ]
+        ]
+      },
+      {
+        "id": "evidence",
+        "root": "exam-evidence",
+        "commit": "48fb78caa34c3fc5d9aa0486fcf608ddfa53fc32",
+        "path": "data/autonomy_map/JANUS-R5-R51-REGISTRY-INTELLIGENCE-EVIDENCE-2026-11-24.json",
+        "blob": "302f1b07d1b810451a05b79fa8c546eb1aeaaff9",
+        "schema": "janus.registry.intelligence.research_evidence.v1",
+        "fields": [
+          [
+            "purpose",
+            "GOAL"
+          ],
+          [
+            "status",
+            "STATUS"
+          ],
+          [
+            "r5",
+            "EVIDENCE"
+          ],
+          [
+            "r51",
+            "EVIDENCE"
+          ],
+          [
+            "next",
+            "NEXT"
+          ],
+          [
+            "external_patterns",
+            "UNKNOWN"
+          ]
+        ]
+      },
+      {
+        "id": "queue",
+        "root": "exam-queue",
+        "commit": "63f66283b05524e30c2bcf3f026b664a52ca3e2c",
+        "path": "data/jfp-r7b4/QUEUE.json",
+        "blob": "7529cd4968b562c85a69213f3d9ccaacf4ae52bf",
+        "schema": "janus.jfp.mailbox_queue.v1",
+        "fields": [
+          [
+            "state",
+            "STATUS"
+          ],
+          [
+            "receipt",
+            "EVIDENCE"
+          ],
+          [
+            "policy",
+            "BOUNDARY"
+          ],
+          [
+            "request_sha256",
+            "EVIDENCE"
+          ],
+          [
+            "peer_request_commit",
+            "EVIDENCE"
+          ],
+          [
+            "permanent_signing_key",
+            "BOUNDARY"
+          ],
+          [
+            "action_authority",
+            "BOUNDARY"
+          ],
+          [
+            "peer",
+            "UNKNOWN"
+          ],
+          [
+            "pilot",
+            "UNKNOWN"
+          ],
+          [
+            "operator_relay",
+            "UNKNOWN"
+          ]
+        ]
+      }
+    ]
+  },
+  "evaluation": {
+    "baselines": [
+      "R51_FROZEN_RULE",
+      "R51_CONTEXTUAL_NB_TRAINED_ON_R62_TRAIN_ONLY",
+      "EXACT_KEY_TRAIN_ONLY"
+    ],
+    "candidates": [
+      "ORACLE_ONLY_SMALL_NEURAL_ROLE_CLASSIFIER",
+      "TRINITY_ADMITTED_SMALL_NEURAL_ROLE_CLASSIFIER"
+    ],
+    "min_admitted": 9,
+    "min_classes": 4,
+    "threshold": 0.55,
+    "criteria": "Compare on same rows; report unseen keys, unknown false acceptance, per-schema accuracy; no model promotion even if gain."
+  },
+  "cortex": {
+    "source_commit": "00910a3e1ea2d50650c20308ab66e3c2f7be46ab",
+    "mode": "DISPOSABLE_INDEX_WITH_VERIFIED_ORIGINAL_BYTES_AND_ATLAS",
+    "durable_production": false
+  },
+  "trinity": {
+    "source": "existing pinned R1.4 parent loader",
+    "qwen": "proposal",
+    "smollm": "advisory exact YES",
+    "oracle": "curated training label veto",
+    "native_weights_changed": false
+  },
+  "boundaries": {
+    "action_authority": false,
+    "production_writeback": false,
+    "automatic_dispatch": false,
+    "model_promotion": false,
+    "external_validation": false,
+    "foreign_code_copied": false
+  }
+}
