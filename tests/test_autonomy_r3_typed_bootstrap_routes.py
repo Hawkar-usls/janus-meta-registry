@@ -79,6 +79,21 @@ class TypedRoutes(unittest.TestCase):
         self.assertEqual(state["observation"]["observation_gate"],"HOLD")
         self.assertEqual(state["boundaries"]["action_authority"],False)
 
+    def test_schema_explorer_real_ci_preserves_partial_coverage(self):
+        x=self.m["registry_schema_explorer"]
+        self.assertEqual(x["total_public_data_json_paths"],4615)
+        self.assertEqual(x["bounded_json_objects_parsed"],3922)
+        self.assertEqual(x["schema_families_detected"],1080)
+        self.assertEqual(x["files_unparsed_or_skipped"],693)
+        self.assertEqual(x["ci_run_url"],
+                         "https://github.com/Hawkar-usls/Janus/actions/runs/45297638911")
+        self.assertEqual(x["ci_conclusion"],"success")
+        self.assertRegex(x["inner_receipt_sha256"],r"^[0-9a-f]{64}$")
+        for name in ("all_documents_authoritative","active_state_verified_for_each_json",
+                     "source_code_executed","auto_admitted_modules",
+                     "latest_main_auto_refresh_enabled"):
+            self.assertFalse(x[name],name)
+
     def test_meta_catalog_cannot_be_sole_phase_authority(self):
         self.assertIn("DRAFT",self.m["status"])
         self.assertIn("HOLD",self.m["status"])
