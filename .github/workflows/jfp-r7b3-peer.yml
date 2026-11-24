@@ -1,0 +1,49 @@
+name: JFP R7B.3 bounded node stage
+on:
+  workflow_call:
+    inputs:
+      stage:
+        required: true
+        type: string
+      node:
+        required: true
+        type: string
+      request_bundle:
+        required: false
+        type: string
+        default: ''
+      response_bundle:
+        required: false
+        type: string
+        default: ''
+    outputs:
+      bundle:
+        value: ${{ jobs.stage.outputs.bundle }}
+permissions:
+  contents: read
+jobs:
+  stage:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    outputs:
+      bundle: ${{ steps.packet.outputs.bundle }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: Hawkar-usls/Janus
+          ref: fe9d84c787050fac14b302493e6202112ea4164c
+          path: jfp-code
+          persist-credentials: false
+          sparse-checkout: |
+            autonomy/federation
+      - name: Run fixed public fixture stage
+        id: packet
+        env:
+          JFP_STAGE: ${{ inputs.stage }}
+          JFP_NODE: ${{ inputs.node }}
+          JFP_REQUEST: ${{ inputs.request_bundle }}
+          JFP_RESPONSE: ${{ inputs.response_bundle }}
+        run: |
+          set -euo pipefail
+          test "$JFP_NODE" = meta:r7b3
+          python3 jfp-code/autonomy/federation/auto_exchange_r7b3.py
