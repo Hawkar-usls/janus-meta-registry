@@ -1,0 +1,45 @@
+{
+  "schema": "janus.registry.memory_continuity.r68.protocol.v1",
+  "status": "G1_REOPEN_CI_PENDING__G2_SWITCH_HOLD",
+  "r67": {
+    "runs": [
+      45403619237,
+      45403624469
+    ],
+    "jobs_pass": 6,
+    "tests_pass": 18,
+    "engineering_recovery_pass": true,
+    "science_unchanged": true
+  },
+  "evidence": {
+    "path": "data/autonomy_map/JANUS-R68-MEMORY-CONTINUITY-EVIDENCE.json",
+    "commit": "eb82f0a13fac1db659b5eabdd5580068b68e0ccc",
+    "blob": "49cf923c44d3c9d92c255d4638adec433344ca2f"
+  },
+  "pilots": [
+    {
+      "repository": "Hawkar-usls/Janus-Demiurge",
+      "pr": 716,
+      "head": "2aebcec8fd47080146953d9bf5ef059659234e35",
+      "initial_pointer_commit": "5ce1847dcb57651b4220c64994192c5d3ce1a901"
+    },
+    {
+      "repository": "Hawkar-usls/Janus_Genesis",
+      "pr": 360,
+      "head": "bfbc7e4be84c9398a273f1ec19a515a26a48d5f8",
+      "initial_pointer_commit": "a1a24a535a530f5112a6362a6efdf53954cfba38"
+    }
+  ],
+  "phase1": "Existing ESSENCE PR workflow opens G1 from committed local pointer, validates R67 prior receipts, builds deterministic G2 candidate, exercises real planner CLI on controlled inputs with unchanged decisions.",
+  "phase2": "Only after actual G1 workflow success: record prior run evidence, commit reviewed pointer G2 bound to G1 receipt; separate existing ESSENCE PR run verifies G2 and prior G1 from Git. No claim of scheduled default-branch runs until deployed and observed.",
+  "pointer": ".janus/essence/registry_continuity_r68_current.json",
+  "boundaries": {
+    "automatic_publication": false,
+    "production_merge": false,
+    "model_promotion": false,
+    "action_authority": false,
+    "scientific_release_changed": false,
+    "expansion": false
+  },
+  "limitations": "Fixed two-generation review contract, no external validation, no adaptive schema or general live release automation. Existing planners read advisory context, not a learned semantic policy."
+}
