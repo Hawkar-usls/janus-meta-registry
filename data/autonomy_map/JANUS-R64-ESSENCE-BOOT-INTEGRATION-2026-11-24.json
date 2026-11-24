@@ -1,0 +1,65 @@
+{
+  "schema": "janus.registry.essence_boot.r64.v1",
+  "status": "RESEARCH_INTEGRATION_PR_PENDING_CI",
+  "r63": {
+    "run": 45364817524,
+    "passed_jobs": 9,
+    "consumer_jobs": 8,
+    "artifacts": [
+      {
+        "organ": "demiurge",
+        "id": 14905918469,
+        "receipt": "cdc480f0f3c5828cb4b604484ba33b887a6af628778d3a79f51a622656104e18",
+        "raw_bytes": 11145
+      },
+      {
+        "organ": "genesis",
+        "id": 14906621266,
+        "receipt": "badb4b57f72efebe805997f3c7307ad8f3ade63da9e2e6856aefc78ee5aafabe",
+        "raw_bytes": 7841
+      }
+    ],
+    "artifact_receipts_independently_rehashed": true
+  },
+  "pilot": [
+    {
+      "repository": "Hawkar-usls/Janus-Demiurge",
+      "workflow": ".github/workflows/essence-v53-neural-loop.yml",
+      "entrypoint": "tools/essence_v53_neural_loop.py",
+      "commit": "18995a7c273671eced99fd940cb07c604087b5eb",
+      "project": "COSMOS"
+    },
+    {
+      "repository": "Hawkar-usls/Janus_Genesis",
+      "workflow": ".github/workflows/essence-v54-neural-witness.yml",
+      "entrypoint": "tools/essence_v54_neural_witness.py",
+      "commit": "2aed1c4d1f54ac22cdd1503b2972d8174f0723d0",
+      "project": "TRUMP"
+    }
+  ],
+  "seed": ".janus/essence/registry_boot_r64_seed.json",
+  "consumer": "tools/registry_boot_r64.py",
+  "policy": {
+    "identical_relevant_git_blobs": "REUSE_VERIFIED_HISTORICAL_CAPSULE",
+    "changed": "REFRESH_REQUIRED__REVIEW_NEW_CAPSULE",
+    "unknown": "HOLD_SOURCE_CHECK_UNAVAILABLE",
+    "historical_map": "pinned historical draft; not available on main; no live authority",
+    "metadata_only": true,
+    "automatic_generation_and_publication_of_refreshed_capsule": false
+  },
+  "tests": [
+    "existing planner decision equality on fixtures",
+    "recipient and independent pin",
+    "relevant change and missing source",
+    "unrelated source ignored",
+    "fresh-runner reopen"
+  ],
+  "boundaries": {
+    "production_promotion": false,
+    "automatic_dispatch": false,
+    "live_state_verified": false,
+    "model_weights_changed": false,
+    "scheduled_main_enabled_by_this_PR": false
+  },
+  "next": "R6.5 selective reviewed producer; build a new capsule only on relevant source change, verify schema and provenance, protect monotonic release index, publish without requiring consumers to scan archives. Then review staged integration into actual default branches."
+}
