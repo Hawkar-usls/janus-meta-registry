@@ -1,0 +1,109 @@
+{
+  "schema": "janus.meta_registry.trinity_parental_r11_r12_status/1.0",
+  "id": "JANUS-TRINITY-PARENTAL-CPU-2026-11-23-R11-R12",
+  "date_utc": "2026-11-23",
+  "status": "TRINITY_R11_R12_R13_REAL_CPU_COMPLETE__CRITIC_RELIABILITY_HOLD__JANUS_GRADUATION_HOLD",
+  "work": {
+    "repo": "Hawkar-usls/Janus-Demiurge",
+    "original_R0_pr": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/704",
+    "fail_closed_R1_pr": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/705",
+    "real_shadow_R11_pr": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/706",
+    "label_alignment_R12_pr": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/707",
+    "r11_result": "https://github.com/Hawkar-usls/Janus-Demiurge/blob/research/trinity-r11-shadow-training-20261123/research/essence/trinity_parental_school/RESULT_R11_REAL_CPU_20261123.json",
+    "r12_protocol": "https://github.com/Hawkar-usls/Janus-Demiurge/blob/research/trinity-r12-critic-label-alignment-20261123/research/essence/trinity_parental_school/R12_ALIGNMENT_PROTOCOL_20261123.json",
+    "balanced_R13_pr": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/708",
+    "r13_result": "https://github.com/Hawkar-usls/Janus-Demiurge/blob/research/trinity-r13-balanced-critic-20261123/research/essence/trinity_parental_school/R13_REAL_CPU_RESULT_20261123.json"
+  },
+  "evidence": {
+    "r11_success_push_ci": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/45195390658",
+    "r11_success_pr_ci": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/45195404724",
+    "r11_critic_baseline_wrong_approved": "12/12",
+    "r11_critic_trained_wrong_veto": "0/12",
+    "r11_critic_trained_all_abstain": 36,
+    "r11_student_fresh_exact_by_context": {
+      "128": "0/36",
+      "256": "0/36",
+      "512": "0/36"
+    },
+    "r11_context_fit_by_context": {
+      "128": "12/36",
+      "256": "24/36",
+      "512": "36/36"
+    },
+    "r11_real_shadow_checkpoints_saved_not_promoted": true,
+    "r12_source_root_cause": "Hugging Face causal LM already shifts labels internally; R11 pre-shifted both inputs and labels, causing wrong-token training loss.",
+    "r12_corrected_train_ci": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/45197279127",
+    "r12_new_firstlook_ci": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/45197279127",
+    "r12_new_firstlook_metrics": {
+      "firstlook_run": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/45197279127",
+      "baseline_ambiguity": "12/12 ABSTAIN on correct; 11/12 ABSTAIN and 1/12 wrong APPROVE on wrong",
+      "trained_correct_APPROVE": "0/12",
+      "trained_correct_VETO": "12/12",
+      "trained_incorrect_VETO": "12/12",
+      "trained_ambiguous_VETO": "12/12",
+      "base_model_revision": "12fd25f77366fa6b3b4b768ec3050bf629380bac",
+      "corrected_training_loss_first": 3.8169898986816406,
+      "corrected_training_loss_last": 0.005780230276286602,
+      "firstlook_original_sha256": "6822912798bbe49ac56b896cf6b3a61585c49924b1a53396d661c5538798669c",
+      "original_interim_label": "INTERNAL_CRITIC_IMPROVEMENT_OBSERVED__EXTERNAL_HOLD",
+      "corrected_adjudication": "HOLD_CRITIC_GENERALIZATION_NOT_PROVEN",
+      "original_gate_flaw": "All-veto shortcut initially passed relative-only positive-approval condition when baseline positive approval=0",
+      "corrected_absolute_floor": "At least 8/12 correct APPROVE and >=8/12 incorrect VETO, simultaneously",
+      "result_source": "https://github.com/Hawkar-usls/Janus-Demiurge/blob/research/trinity-r12-critic-label-alignment-20261123/research/essence/trinity_parental_school/RESULT_R12_POSTHOC_ADJUDICATION_20261123.json",
+      "no_new_blind_after_reanalysis": true
+    },
+    "r12_original_R11_firstlook_reused": false,
+    "previous_genesis64_reused_as_new_blind": false,
+    "r13": {
+      "real_cpu_actions": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/45202599277",
+      "full_run_conclusion": "success",
+      "train_only_examples": 192,
+      "balanced_label_counts": {
+        "YES": 96,
+        "NO": 96
+      },
+      "LoRA_trainable_parameters": 230400,
+      "adapter_sha256": "52b022a9111ce05e0d73e6e5c37081b8d446158402df7c9dd7c56457b42569ce",
+      "source_eval_git_blob_sha1": "b3cc1624f0eef3e12bf7b2c442a383d6ad265b95",
+      "new_fourth_firstlook_cases": 36,
+      "original_firstlook_sha256": "b67b326c78b62e6f87418c95c9f6ed97b039d9b7a30f3fa9a196d171820b3fe4",
+      "base": {
+        "correct_approve": 11,
+        "wrong_veto": 0,
+        "wrong_approve": 11,
+        "ambiguous_approve": 12
+      },
+      "trained": {
+        "correct_approve": 12,
+        "wrong_veto": 0,
+        "wrong_approve": 12,
+        "ambiguous_veto": 12,
+        "ambiguous_approve": 0
+      },
+      "status": "HOLD_CRITIC_GENERALIZATION_NOT_PROVEN",
+      "identified_failure": "Format-only classification: correct and incorrect canonical integers both APPROVE; ambiguous prose VETO.",
+      "training_loss_first": 0.9771685004234314,
+      "training_loss_last": 2.049473285675049,
+      "external_validation": false,
+      "active_critic_changed": false,
+      "next_exam_must_be_new_fifth_or_external": true
+    }
+  },
+  "science": {
+    "HF_hub_is_not_a_model": true,
+    "Qwen_teacher_truth_is_not_authoritative": true,
+    "SmolLM_critic_votes_do_not_override_deterministic_math_truth": true,
+    "all_new_diagnostic_sets_are_same_owner_not_external_blind": true,
+    "external_independent_cohorts_completed": 0,
+    "model_own_generated_labels_used_as_truth": false,
+    "JANUS_parent_surpass_claim": false,
+    "graduation_R1": false,
+    "self_directed_R3": false,
+    "production_model_updated": false,
+    "automated_model_promotion": false,
+    "all_PRs_are_review_only": true,
+    "critic_structural_error_remains_unresolved": true,
+    "independent_critic_graduation_pass": false
+  },
+  "next": "R13 correctly blocked format-only critic: wrong veto 0/12, wrong approval 12/12 despite 12/12 correct approval and 12/12 ambiguous veto. Preserve fourth first-look, no retuning on it. Favor deterministic math/reference tooling and distinguish criticism of answer format vs criticism of mathematical truth; only new fifth prospective or outside independently sourced validation can test a different approach. Student still 0/36 on R11 diagnostic; no autonomous training."
+}
