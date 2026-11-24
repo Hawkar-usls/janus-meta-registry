@@ -1,0 +1,26 @@
+name: JFP R7B.1 remote handshake
+on:
+  pull_request:
+    paths:
+      - 'data/jfp-remote-pilot/**'
+      - '.github/workflows/jfp-r7b1-remote.yml'
+permissions:
+  contents: read
+jobs:
+  handshake:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: Hawkar-usls/Janus
+          ref: cd0d2d8c0f3d08320387ce54a9e57d2ca00d3bd3
+          path: jfp-pinned
+          persist-credentials: false
+          sparse-checkout: |
+            autonomy/federation
+      - name: Execute one bounded public packet phase
+        run: python3 jfp-pinned/autonomy/federation/remote_pilot.py
