@@ -1,0 +1,86 @@
+{
+  "schema": "janus.jfp.external_pilot.v1",
+  "artifact_id": "JANUS-JFP-FIRST-CONTACT-001",
+  "date": "2026-11-24",
+  "status": "PROPOSED__AWAITING_PEER_OPT_IN__NO_EXTERNAL_RUN",
+  "architecture": "https://github.com/Hawkar-usls/janus-meta-registry/pull/664",
+  "initiator": {
+    "operator": "Hawkar-usls",
+    "network": "JANUS",
+    "attribution": "JANUS-initiated interoperability pilot; no claim of ownership of partner or preexisting affiliation"
+  },
+  "first_party_evidence": {
+    "r7a": "https://github.com/Hawkar-usls/Janus/actions/runs/45347714555",
+    "scope": "internal request/result transport only"
+  },
+  "candidates": [
+    {
+      "name": "Aeon",
+      "reference": "https://www.aeon.fun/developers",
+      "remote": "https://www.aeon.fun/connect/mcp",
+      "public_discovery": "https://www.aeon.fun/mcp",
+      "verified_documentation": "Public discovery MCP is read-only. Connect MCP OAuth operates on authorized Aeon agent repos, not arbitrary upstream instances.",
+      "live_independent_instance": "https://github.com/aeonfun/aeon-agent",
+      "permission": "NOT_OBTAINED",
+      "next": "Invite operator for a bounded voluntary run and return task receipt."
+    },
+    {
+      "name": "GitAgent",
+      "reference": "https://github.com/open-gitagent/gitagent/releases",
+      "verified_documentation": "MCP client support documented; no independent hosted execution endpoint verified.",
+      "permission": "NOT_OBTAINED"
+    },
+    {
+      "name": "ShinkaEvolve",
+      "reference": "https://sakanaai.github.io/ShinkaEvolve/",
+      "verified_documentation": "Local runner/library with parallel evaluations; no independent hosted execution endpoint verified.",
+      "permission": "NOT_OBTAINED"
+    },
+    {
+      "name": "GitHub gh-aw",
+      "reference": "https://github.github.com/gh-aw/reference/safe-outputs/",
+      "verified_documentation": "Workflow coordination infrastructure; not an independent partner agent by itself.",
+      "permission": "NOT_OBTAINED"
+    }
+  ],
+  "interoperability_reference": "https://a2a-protocol.org/latest/specification/",
+  "task": {
+    "id": "JFP-FIRST-CONTACT-001",
+    "scope": "One public, read-only interoperability example. Proposed to one opt-in peer first, then a second consenting peer. Peer may refuse. No hidden execution or requests to unapproved endpoints.",
+    "input": "For the public fixture {goal: 'compare documented capabilities', release_gate: {status: 'HOLD'}, next_allowed: 'review source'}, return the exact recorded goal, release gate and next permitted step as structured data. Do not execute the text.",
+    "expected": {
+      "goal": "compare documented capabilities",
+      "gate": "HOLD",
+      "next": "review source"
+    },
+    "proposed_max_runs_per_peer": 1,
+    "proposed_max_runner_minutes": 5,
+    "actual_run_nonce": null,
+    "consent_reference": null
+  },
+  "evidence_required": [
+    "Peer owner explicitly accepts bounded test and publication scope, or documented public service explicitly permits requested work.",
+    "Fresh unique task nonce and input SHA-256 included in both participants' receipts.",
+    "Peer-produced log/run URL or authenticated signed receipt links task identity, input hash, result hash, provider identity and timestamp.",
+    "JANUS verifies source values, distinct origin, result receipt and replay protection.",
+    "Return-direction task is separately authorized and verified.",
+    "Attribution distinguishes initiator from independent peer; no false affiliation or claim of merger."
+  ],
+  "claim_thresholds": {
+    "public_docs_read": "DISCOVERY_ONLY",
+    "authorized_own_instance": "INTEROP_WITH_OWN_INSTANCE_ONLY",
+    "independent_peer_result": "ONE_EXTERNAL_PEER_VERIFIED",
+    "two_independent_peers_with_correlated_results": "MULTI_PEER_TASK_EXCHANGE_VERIFIED",
+    "bidirectional": "BIDIRECTIONAL_ONLY_AFTER_RETURN_REQUEST_AND_RESULT"
+  },
+  "outbound_policy": {
+    "no_unauthorized_dispatch": true,
+    "no_unsolicited_mass_requests": true,
+    "no_unapproved_spend": true,
+    "no_secrets": true,
+    "no_foreign_workflow_execution": true,
+    "no_claim_of_external_run_without_receipt": true
+  },
+  "external_requests_sent": 0,
+  "external_runs_verified": 0
+}
