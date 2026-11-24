@@ -1,0 +1,58 @@
+name: JFP R7B.4 independent mailbox pilot
+on:
+  pull_request:
+    types: [opened]
+    paths:
+      - '.github/workflows/jfp-r7b4-mailbox.yml'
+      - 'autonomy/federation/mailbox_r7b4.py'
+permissions:
+  contents: read
+jobs:
+  exchange:
+    if: github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'research/jfp-r7b4-mailbox-20261124' && (github.repository == 'Hawkar-usls/Janus' || github.repository == 'Hawkar-usls/janus-meta-registry')
+    permissions:
+      contents: write
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      checkpoint: ${{ steps.exchange.outputs.checkpoint }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: true
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: Hawkar-usls/Janus
+          ref: 325b962df3216541227aff740e4d07279c20c3e3
+          path: jfp-code
+          persist-credentials: false
+          sparse-checkout: |
+            autonomy/federation
+      - name: One bounded exchange on the research branch
+        id: exchange
+        env:
+          JFP_HEAD_BRANCH: ${{ github.event.pull_request.head.ref }}
+          JFP_HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+        run: python3 jfp-code/autonomy/federation/mailbox_r7b4.py exchange
+  audit:
+    needs: exchange
+    permissions:
+      contents: read
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ needs.exchange.outputs.checkpoint }}
+          persist-credentials: false
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: Hawkar-usls/Janus
+          ref: 325b962df3216541227aff740e4d07279c20c3e3
+          path: jfp-code
+          persist-credentials: false
+          sparse-checkout: |
+            autonomy/federation
+      - name: Reopen committed queue on a fresh runner, archive only
+        run: python3 jfp-code/autonomy/federation/mailbox_r7b4.py audit
