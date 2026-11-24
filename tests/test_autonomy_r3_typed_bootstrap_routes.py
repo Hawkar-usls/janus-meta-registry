@@ -94,6 +94,20 @@ class TypedRoutes(unittest.TestCase):
                      "latest_main_auto_refresh_enabled"):
             self.assertFalse(x[name],name)
 
+    def test_actual_main_head_drift_keeps_boot_hold(self):
+        x=self.m["live_meta_freshness"]
+        self.assertEqual(x["live_ci_conclusion"],"success")
+        self.assertEqual(x["status"],"HOLD_MAIN_OR_BOOT_INDEX_DRIFT__REVALIDATION_REQUIRED")
+        self.assertNotEqual(x["expected_main_commit"],x["observed_main_commit"])
+        self.assertEqual(x["expected_boot_index_blob_sha1"],x["observed_boot_index_blob_sha1"])
+        self.assertEqual(x["same_chat_manual_compare_readonly"]["changed_paths_count"],15)
+        self.assertEqual(x["same_chat_manual_compare_readonly"]["changed_data_json_paths_count"],0)
+        self.assertEqual(x["same_chat_manual_compare_readonly"]["changed_eye_generated_json_paths_count"],12)
+        self.assertTrue(x["same_chat_manual_compare_readonly"]["compare_tool_evidence_is_not_part_of_automated_freshness_artifact"])
+        self.assertFalse(x["schedule_active_on_default_branch"])
+        self.assertFalse(x["auto_reindex_new_commit"])
+        self.assertFalse(x["protected_release_admitted"])
+
     def test_meta_catalog_cannot_be_sole_phase_authority(self):
         self.assertIn("DRAFT",self.m["status"])
         self.assertIn("HOLD",self.m["status"])
