@@ -1,0 +1,56 @@
+name: Meta Registry R8 internal teaching node
+on:
+  pull_request:
+    types: [opened]
+    paths:
+      - '.github/workflows/r8-internal-teacher.yml'
+permissions:
+  contents: read
+concurrency:
+  group: r8-internal-one-shot
+  cancel-in-progress: false
+jobs:
+  teach:
+    if: github.repository == 'Hawkar-usls/janus-meta-registry' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'research/r8-live-learning-20261125' && github.run_attempt == 1
+    permissions:
+      contents: write
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: true
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: Hawkar-usls/Janus
+          ref: 2a20291185c39f0b2bc6d3eb42d2e174b3f009af
+          path: r8-code
+          persist-credentials: false
+          sparse-checkout: |
+            autonomy/federation/r8_learning.py
+            autonomy/federation/jfp_gateway.py
+          sparse-checkout-cone-mode: false
+      - env:
+          R8_HEAD: ${{ github.event.pull_request.head.ref }}
+        run: python3 r8-code/autonomy/federation/r8_learning.py teacher
+  verify_return:
+    needs: teach
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: Hawkar-usls/Janus
+          ref: 2a20291185c39f0b2bc6d3eb42d2e174b3f009af
+          path: r8-code
+          persist-credentials: false
+          sparse-checkout: |
+            autonomy/federation/r8_learning.py
+            autonomy/federation/jfp_gateway.py
+          sparse-checkout-cone-mode: false
+      - run: python3 r8-code/autonomy/federation/r8_learning.py teacher_audit
