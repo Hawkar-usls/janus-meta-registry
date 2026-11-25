@@ -1,0 +1,42 @@
+name: JDG R7C2 intake verified tool result
+on:
+  pull_request:
+    types: [opened]
+    paths:
+      - 'tools/jdg/JDG_R7C2_PIN.json'
+      - 'tools/jdg/jdg_r7c2.py'
+      - '.github/workflows/jdg-r7c2-intake.yml'
+permissions:
+  contents: read
+jobs:
+  archive:
+    if: github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'research/jdg-r7c2-intake-20261125' && github.repository == 'Hawkar-usls/janus-meta-registry'
+    permissions:
+      contents: write
+      actions: read
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    outputs:
+      checkpoint: ${{ steps.archive.outputs.checkpoint }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: true
+      - name: Verify and publish inert data on isolated research branch
+        id: archive
+        env:
+          JDG_HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+          JDG_HEAD_BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: python3 tools/jdg/jdg_r7c2.py intake
+  audit:
+    needs: archive
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ needs.archive.outputs.checkpoint }}
+          persist-credentials: false
+      - name: Fresh runner re-verifies immutable archive
+        run: python3 tools/jdg/jdg_r7c2.py audit 'reports/2026-11-25/JDG-R7C2-GH-AW-VERIFIED' intake
