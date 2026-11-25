@@ -2,7 +2,7 @@
 
 Automatically rebuilt from pinned public evidence.
 
-Status: **AUTONOMY_PARTIAL** · observed 2026-11-25T20:13:58Z
+Status: **AUTONOMY_PARTIAL** · observed 2026-11-25T21:37:22Z
 
 Current phase: **P0.2**
 
@@ -27,9 +27,9 @@ A successful collector is not proof of useful work or full autonomy.
 ```json
 {
   "native_model": {
-    "attempt_count": 2142,
+    "attempt_count": 2143,
     "promotion_count": 62,
-    "rejection_count": 2080,
+    "rejection_count": 2081,
     "checkpoint_sha256": "06d7e6228ca9aef2dc58eb55fe1c805aa3b66e4f8fb90b0e946ce6af47b1a662",
     "last_training_status": "REJECTED",
     "retained_history_count": 64,
@@ -60,10 +60,10 @@ A successful collector is not proof of useful work or full autonomy.
   },
   "beetle_delivery": {
     "status": "WARN",
-    "observed_at": "2026-11-25T13:33:35.449948Z",
-    "health_age_minutes": 400,
+    "observed_at": "2026-11-25T20:17:16.451933Z",
+    "health_age_minutes": 80,
     "health_clock": "VERIFIED_TIMESTAMP",
-    "routing_gate_age_minutes": 400,
+    "routing_gate_age_minutes": 80,
     "routing_gate_clock": "VERIFIED_TIMESTAMP",
     "max_health_age_minutes": 120,
     "total_pending": 2,
@@ -78,35 +78,32 @@ A successful collector is not proof of useful work or full autonomy.
   "native_decision": "NO_ACTION",
   "forge": "SEARCHED_NO_NOVEL_FALLBACK_CANDIDATE",
   "p03_preflight": {
-    "authority_delta": 0,
+    "schema": "janus.autonomy.p03_preflight.v1",
+    "status": "P03_PREFLIGHT_BLOCKED",
     "blockers": [
       "PRIVATE_ACK_AUTH_UNKNOWN",
       "PRODUCER_ROUTING_HELD"
     ],
-    "full_issue_162_acceptance": false,
-    "home_model_call_attested": false,
-    "home_sequence": 444,
-    "p03_acceptance": false,
-    "pre_route_gate_allowed": false,
+    "public_receiver_count": 18,
+    "public_receiver_pending": 0,
+    "public_receiver_lagging": 0,
     "private_ack_visibility": "UNAVAILABLE",
     "private_receiver_pending": 2,
+    "home_sequence": 444,
+    "home_model_call_attested": false,
+    "pre_route_gate_allowed": false,
     "producer_after_route_pending": 2,
-    "public_receiver_count": 18,
-    "public_receiver_lagging": 0,
-    "public_receiver_pending": 0,
-    "runtime_consumption_attested": false,
-    "schema": "janus.autonomy.p03_preflight.v1",
-    "status": "P03_PREFLIGHT_BLOCKED"
+    "authority_delta": 0,
+    "full_issue_162_acceptance": false,
+    "p03_acceptance": false,
+    "runtime_consumption_attested": false
   }
 }
 ```
 
 ## Evidence-driven tasks
 
-- **P0.2** ROWAN_GENERATION_DRIFT_COORDINATION: 45519309057
 - **P0.2** ROWAN_GENERATION_DRIFT_COSMOS: 45519309057
-- **P0.3** BEETLE_DELIVERY_HEALTH_STALE: {"age_minutes": 400, "max_minutes": 120}
-- **P0.3** BEETLE_ROUTING_GATE_STALE: {"age_minutes": 400, "max_minutes": 120}
 - **P0.3** BEETLE_DELIVERY_PENDING: {"total_pending": 2, "receiver_states": {"UP_TO_DATE": 18, "ACK_UNAVAILABLE": 1}}
 - **P0.3** BEETLE_ROUTING_HELD: "HOLD_SINGLE_RECEIVER_BACKLOG"
 - **P0.3** EXTERNAL_WITNESS_GENESIS_HIGHWATER: "ANCHOR_PENDING_WITHIN_GRACE"
@@ -115,9 +112,9 @@ A successful collector is not proof of useful work or full autonomy.
 - **P0.5** SCOUT_MODEL_SYNTHESIS_DEGRADED: {"snapshots": 17, "synthesis": 0, "expected": 17}
 - **P2** SELF_WRITER_REVIEWED_TASKS_REMAINING: {"accepted": 9, "admitted": 10}
 - **P3** RECENT_TRAINING_ALL_REJECTED: 64
-- **P0.2** WORKFLOW_NOT_SUCCESS_COSMOS_WITNESS: {"conclusion": "failure", "created_at": "2026-11-25T20:13:00Z", "event": "workflow_run", "head_sha": "fb67e8f5e5057acf6c7da2b48db20491be5e3128", "repository": "Hawkar-usls/Janus-Cosmos", "run_attempt": 1, "run_id": 45692787978, "status": "OBSERVED", "url": "https://github.com/Hawkar-usls/Janus-Cosmos/actions/runs/45692787978", "workflow": "cosmos-rowan-ecosystem-witness.yml"}
-- **P0.2** WORKFLOW_NOT_SUCCESS_CROSS_ORGAN_WITNESS: {"conclusion": "failure", "created_at": "2026-11-25T17:34:36Z", "event": "workflow_run", "head_sha": "f99d58d3212c859e18de3908707c2127c20307e1", "repository": "Hawkar-usls/janus-meta-registry", "run_attempt": 1, "run_id": 45666215240, "status": "OBSERVED", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/45666215240", "workflow": "janus-cross-organ-source-witness.yml"}
-- **P0.2** WORKFLOW_NOT_SUCCESS_ROWAN_WITNESS: {"conclusion": "failure", "created_at": "2026-11-25T17:44:08Z", "event": "schedule", "head_sha": "f99d58d3212c859e18de3908707c2127c20307e1", "repository": "Hawkar-usls/janus-meta-registry", "run_attempt": 1, "run_id": 45667861124, "status": "OBSERVED", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/45667861124", "workflow": "janus-rowan-ecosystem-sync-witness.yml"}
+- **P0.2** WORKFLOW_NOT_SUCCESS_COSMOS_WITNESS: {"repository": "Hawkar-usls/Janus-Cosmos", "workflow": "cosmos-rowan-ecosystem-witness.yml", "status": "OBSERVED", "run_id": 45692787978, "run_attempt": 1, "event": "workflow_run", "conclusion": "failure", "head_sha": "fb67e8f5e5057acf6c7da2b48db20491be5e3128", "created_at": "2026-11-25T20:13:00Z", "url": "https://github.com/Hawkar-usls/Janus-Cosmos/actions/runs/45692787978"}
+- **P0.2** WORKFLOW_NOT_SUCCESS_CROSS_ORGAN_WITNESS: {"repository": "Hawkar-usls/janus-meta-registry", "workflow": "janus-cross-organ-source-witness.yml", "status": "OBSERVED", "run_id": 45693230008, "run_attempt": 1, "event": "workflow_run", "conclusion": "failure", "head_sha": "8e7944a73c0134633d21762a6ab0e675c7e4108a", "created_at": "2026-11-25T20:15:38Z", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/45693230008"}
+- **P0.2** WORKFLOW_NOT_SUCCESS_ROWAN_WITNESS: {"repository": "Hawkar-usls/janus-meta-registry", "workflow": "janus-rowan-ecosystem-sync-witness.yml", "status": "OBSERVED", "run_id": 45693230205, "run_attempt": 1, "event": "workflow_run", "conclusion": "failure", "head_sha": "8e7944a73c0134633d21762a6ab0e675c7e4108a", "created_at": "2026-11-25T20:15:38Z", "url": "https://github.com/Hawkar-usls/janus-meta-registry/actions/runs/45693230205"}
 - **P0.3** P03_SOURCE_PREFLIGHT_BLOCKED: ["PRIVATE_ACK_AUTH_UNKNOWN", "PRODUCER_ROUTING_HELD"]
 
 ## Owner-directed self-assembly (registered, not executable)
