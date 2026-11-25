@@ -1,0 +1,60 @@
+name: Meta Registry R84B teacher and witness
+on:
+  pull_request:
+    types: [opened]
+    paths:
+      - '.github/workflows/r84b-teacher.yml'
+permissions:
+  contents: read
+concurrency:
+  group: r84b-internal-one-shot
+  cancel-in-progress: false
+jobs:
+  teach:
+    if: github.repository == 'Hawkar-usls/janus-meta-registry' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'research/r84b-live-intake-20261125' && github.run_attempt == 1
+    permissions:
+      contents: write
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: true
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: Hawkar-usls/Janus
+          ref: ecf0b675a0e26f05e2baccf32496a77c09c266d4
+          path: r84b-code
+          persist-credentials: false
+          sparse-checkout: |
+            autonomy/federation/r84b_intake.py
+            autonomy/federation/r84_loop.py
+            autonomy/federation/r8_learning.py
+            autonomy/federation/jfp_gateway.py
+          sparse-checkout-cone-mode: false
+      - env:
+          R84B_HEAD: ${{ github.event.pull_request.head.ref }}
+        run: python3 r84b-code/autonomy/federation/r84b_intake.py teacher
+  witness:
+    needs: teach
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: Hawkar-usls/Janus
+          ref: ecf0b675a0e26f05e2baccf32496a77c09c266d4
+          path: r84b-code
+          persist-credentials: false
+          sparse-checkout: |
+            autonomy/federation/r84b_intake.py
+            autonomy/federation/r84_loop.py
+            autonomy/federation/r8_learning.py
+            autonomy/federation/jfp_gateway.py
+          sparse-checkout-cone-mode: false
+      - run: python3 r84b-code/autonomy/federation/r84b_intake.py witness
