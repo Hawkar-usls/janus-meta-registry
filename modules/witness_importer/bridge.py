@@ -220,6 +220,9 @@ def classify_workflow(runs: list, repo: str, name: str, now: dt.datetime, get_jo
     if finished is None:
         ret["reason"] = "COMPLETED_AT_UNVERIFIED"
         return ret
+    if finished > now:
+        ret["reason"] = "COMPLETION_AFTER_OBSERVATION_CUTOFF"
+        return ret
     age = (now - finished).total_seconds() / 60
     ret["age_minutes"] = round(age, 2)
     if active:
