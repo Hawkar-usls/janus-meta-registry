@@ -1,0 +1,44 @@
+name: CHRONO-DNA R9B B
+on:
+  push:
+    branches: [research/chrono-dna-r9b-b]
+    paths: ['research/chrono_dna_r9b/request.json']
+permissions:
+  contents: read
+  attestations: read
+concurrency:
+  group: chrono-r9b-B
+  cancel-in-progress: false
+jobs:
+  lineage:
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Reconstruct and verify durable lineage
+        id: record
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python research/chrono_dna_r9b/lineage.py B
+      - name: Attest record using workload identity
+        if: steps.record.outputs.record != ''
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6
+        with:
+          subject-path: ${{ steps.record.outputs.record }}
+      - name: Publish only attested synthetic record
+        if: steps.record.outputs.record != ''
+        env:
+          RECORD: ${{ steps.record.outputs.record }}
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF" = refs/heads/research/chrono-dna-r9b-b
+          case "$RECORD" in research/chrono_dna_r9b/v9.json|research/chrono_dna_r9b/v10.json|research/chrono_dna_r9b/v11.json|research/chrono_dna_r9b/v12.json) ;; *) exit 1;; esac
+          git config user.name 'chrono-r9b-research[bot]'
+          git config user.email 'chrono-r9b-research@users.noreply.github.com'
+          git add -- "$RECORD"
+          git commit -m 'R9B attested synthetic lineage record'
+          git push origin HEAD:refs/heads/research/chrono-dna-r9b-b
