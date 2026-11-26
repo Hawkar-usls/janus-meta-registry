@@ -1,0 +1,38 @@
+name: CHRONO-DNA R8 node B
+on:
+  push:
+    branches: [research/chrono-dna-r8-node-b]
+    paths:
+      - 'research/chrono_dna_r8/**'
+      - '.github/workflows/chrono-dna-r8-b.yml'
+permissions:
+  contents: write
+concurrency:
+  group: chrono-r8-node-b
+  cancel-in-progress: false
+jobs:
+  receive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Fetch immutable node A outbox and verify recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF" = refs/heads/research/chrono-dna-r8-node-b
+          test ! -e research/chrono_dna_r8/inbox
+          source_commit=479cebfe4c6bdb4b6bbb58ec1ab9b2eec538df41
+          tmp=$(mktemp -d)
+          trap 'rm -rf "$tmp"' EXIT
+          git init -q "$tmp"
+          git -C "$tmp" fetch --depth=1 https://github.com/Hawkar-usls/Janus.git "$source_commit"
+          test "$(git -C "$tmp" rev-parse FETCH_HEAD)" = "$source_commit"
+          git -C "$tmp" show FETCH_HEAD:research/chrono_dna_r8/outbox/bundle.json > "$tmp/bundle.json"
+          test "$(git -C "$tmp" rev-parse FETCH_HEAD:research/chrono_dna_r8/outbox/bundle.json)" = dc086e14ff2db2b9a800b11301483cfefc7db1a4
+          python research/chrono_dna_r8/pilot.py receive "$tmp/bundle.json" research/chrono_dna_r8/inbox "$source_commit"
+          git config user.name 'chrono-r8-research[bot]'
+          git config user.email 'chrono-r8-research@users.noreply.github.com'
+          git add research/chrono_dna_r8/inbox/ack.json
+          git commit -m 'R8 signed recovery acknowledgement'
+          git push origin HEAD:refs/heads/research/chrono-dna-r8-node-b
