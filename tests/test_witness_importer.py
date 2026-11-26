@@ -76,6 +76,13 @@ class TestSchedule(unittest.TestCase):
         self.assertEqual(observed["status"], "SCHEDULE_OK")
         self.assertEqual(observed["last_schedule_run"]["completed_at"], "2026-10-28T09:00:00Z")
 
+    def test_future_completion_is_unknown(self):
+        result = classify_workflow([run()], LAPIS_REPO, "JANUS Universal Beetle hourly", NOW,
+                                   lambda _: [{"completed_at": "2026-10-28T10:54:00Z"}])
+        self.assertEqual(result["status"], "UNKNOWN")
+        self.assertEqual(result["reason"], "COMPLETION_AFTER_OBSERVATION_CUTOFF")
+        self.assertNotIn("age_minutes", result)
+
     def test_silence_requires_completed_at(self):
         self.assertEqual(classify_workflow([run()], LAPIS_REPO,
                          "JANUS Universal Beetle hourly", NOW)["status"], "UNKNOWN")
