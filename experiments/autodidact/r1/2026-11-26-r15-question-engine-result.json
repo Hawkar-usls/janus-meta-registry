@@ -1,0 +1,464 @@
+{
+  "schema": "janus.autodidact.r15.result.v1",
+  "status": "FINITE_CONTROL_PASS__REAL_DIAGNOSTIC_HOLD",
+  "run_id": 45886857861,
+  "job_id": 140139587291,
+  "artifact_id": 15149926035,
+  "artifact_zip_digest": "sha256:478095b6af2d521a17a6876c683c66d181dcbe520746d453ab695358901a8cd2",
+  "result": {
+    "captain": "ADMIT_REPORT_ONLY",
+    "catalog": [
+      {
+        "axis": 0,
+        "cost_proxy": 1,
+        "design": {
+          "batches_per_seed": 16,
+          "criterion": "record cosine, norms, uncertainty; inconclusive if zero norm or conflicting seeds",
+          "measure": "paired adaptation/retention gradients at same frozen parent"
+        },
+        "fingerprint": "b7052e63b171197e65b2930f7cf350d85157606de773090a63a5b3b90f436356",
+        "id": "GRADIENT_COSINE",
+        "requires_fit": false
+      },
+      {
+        "axis": 1,
+        "cost_proxy": 2,
+        "design": {
+          "comparison": "same seeds, data, steps; separate retention and adaptation losses",
+          "lambda_grid": [
+            0,
+            100,
+            1000
+          ]
+        },
+        "fingerprint": "2c2d32d2862964c67506574c9318e7ab80ae5131dbd1734d4a4c5c317f1b5532",
+        "id": "EWC_STRENGTH",
+        "requires_fit": true
+      },
+      {
+        "axis": 2,
+        "cost_proxy": 2,
+        "design": {
+          "comparison": "matched total token budget; record adaptation exposure",
+          "fractions": [
+            0,
+            0.125,
+            0.25,
+            0.5
+          ]
+        },
+        "fingerprint": "c31f584e75070f31804628f2770e16b530ed4e57858f242ec4f2c33bae73282b",
+        "id": "REPLAY_RATIO",
+        "requires_fit": true
+      },
+      {
+        "axis": 3,
+        "cost_proxy": 2,
+        "design": {
+          "comparison": "same paired inputs and frozen teacher",
+          "temperature": 2,
+          "weights": [
+            0,
+            0.05,
+            0.1,
+            0.5
+          ]
+        },
+        "fingerprint": "544110a22aa77e8ec2eb1001da5a36cdac58298a25ca38850858b67795de3002",
+        "id": "DISTILL_WEIGHT",
+        "requires_fit": true
+      }
+    ],
+    "claim_ceiling": {
+      "costs_are_not_measured_runtime": true,
+      "gradient_measured": false,
+      "independent_exam_passed": false,
+      "information_scores_are_model_assumptions": true,
+      "new_training_executed": false,
+      "production_changed": false,
+      "promotion_authority": false,
+      "real_hypothesis_truth_established": false
+    },
+    "history": [
+      {
+        "evidence_root": "1f84a30d18544bba266bbfb08c6db4674b53375a8065fffdda6066b5c59ac350",
+        "general_method_refuted": false,
+        "id": "R13_DISTILL_0_5_T2",
+        "scope": {
+          "evaluation": "retrospective development only",
+          "lr": 0.0003,
+          "parent_sha256": "06d7e6228ca9aef2dc58eb55fe1c805aa3b66e4f8fb90b0e946ce6af47b1a662",
+          "partition": "r12-preservation historical train-labeled proxies",
+          "registry_commit": "106463de92f57fb21785c59146b63e3013aaaa62",
+          "seeds": [
+            27021,
+            27022
+          ],
+          "steps": 60
+        },
+        "status": "OBSERVED_WORSE_BOTH_8_OF_8_MATCHED"
+      },
+      {
+        "evidence_root": "1f84a30d18544bba266bbfb08c6db4674b53375a8065fffdda6066b5c59ac350",
+        "general_method_refuted": false,
+        "id": "R13_EWC_100",
+        "scope": {
+          "evaluation": "retrospective development only",
+          "lr": 0.0003,
+          "parent_sha256": "06d7e6228ca9aef2dc58eb55fe1c805aa3b66e4f8fb90b0e946ce6af47b1a662",
+          "partition": "r12-preservation historical train-labeled proxies",
+          "registry_commit": "106463de92f57fb21785c59146b63e3013aaaa62",
+          "seeds": [
+            27021,
+            27022
+          ],
+          "steps": 60
+        },
+        "status": "OBSERVED_TINY_IMPROVEMENT_8_OF_8_MATCHED"
+      },
+      {
+        "evidence_root": "1f84a30d18544bba266bbfb08c6db4674b53375a8065fffdda6066b5c59ac350",
+        "general_method_refuted": false,
+        "id": "R13_REPLAY_0_25",
+        "scope": {
+          "evaluation": "retrospective development only",
+          "lr": 0.0003,
+          "parent_sha256": "06d7e6228ca9aef2dc58eb55fe1c805aa3b66e4f8fb90b0e946ce6af47b1a662",
+          "partition": "r12-preservation historical train-labeled proxies",
+          "registry_commit": "106463de92f57fb21785c59146b63e3013aaaa62",
+          "seeds": [
+            27021,
+            27022
+          ],
+          "steps": 60
+        },
+        "status": "OBSERVED_MEAN_TRADEOFF"
+      }
+    ],
+    "inconclusive_preserves_states": true,
+    "negative_controls": [
+      "forged_score",
+      "forged_authority",
+      "root_drift",
+      "unknown_question",
+      "repeat",
+      "scope_drift",
+      "invalid_outcome",
+      "contradiction"
+    ],
+    "proposal": {
+      "disposition": "ADVISORY_ONLY",
+      "next_question": "GRADIENT_COSINE",
+      "promotion_authority": false,
+      "ranking": [
+        {
+          "cost_proxy": 1,
+          "fingerprint": "b7052e63b171197e65b2930f7cf350d85157606de773090a63a5b3b90f436356",
+          "id": "GRADIENT_COSINE",
+          "information_bits": 1,
+          "requires_fit": false,
+          "score": 1,
+          "worst_case_eliminated": 8
+        },
+        {
+          "cost_proxy": 2,
+          "fingerprint": "544110a22aa77e8ec2eb1001da5a36cdac58298a25ca38850858b67795de3002",
+          "id": "DISTILL_WEIGHT",
+          "information_bits": 1,
+          "requires_fit": true,
+          "score": 0.5,
+          "worst_case_eliminated": 8
+        },
+        {
+          "cost_proxy": 2,
+          "fingerprint": "2c2d32d2862964c67506574c9318e7ab80ae5131dbd1734d4a4c5c317f1b5532",
+          "id": "EWC_STRENGTH",
+          "information_bits": 1,
+          "requires_fit": true,
+          "score": 0.5,
+          "worst_case_eliminated": 8
+        },
+        {
+          "cost_proxy": 2,
+          "fingerprint": "c31f584e75070f31804628f2770e16b530ed4e57858f242ec4f2c33bae73282b",
+          "id": "REPLAY_RATIO",
+          "information_bits": 1,
+          "requires_fit": true,
+          "score": 0.5,
+          "worst_case_eliminated": 8
+        }
+      ],
+      "root": "1f84a30d18544bba266bbfb08c6db4674b53375a8065fffdda6066b5c59ac350",
+      "state_sha256": "c1ea5ff302f1d859176b355367c0c850b7411b5c65887e9e4544b55a44913500",
+      "training_allowed": false
+    },
+    "root": "1f84a30d18544bba266bbfb08c6db4674b53375a8065fffdda6066b5c59ac350",
+    "root_preserved": true,
+    "schema": "janus.autodidact.r15.question_engine.v1",
+    "scope": {
+      "evaluation": "retrospective development only",
+      "lr": 0.0003,
+      "parent_sha256": "06d7e6228ca9aef2dc58eb55fe1c805aa3b66e4f8fb90b0e946ce6af47b1a662",
+      "partition": "r12-preservation historical train-labeled proxies",
+      "registry_commit": "106463de92f57fb21785c59146b63e3013aaaa62",
+      "seeds": [
+        27021,
+        27022
+      ],
+      "steps": 60
+    },
+    "source_artifact_id": 15148409356,
+    "source_file_sha256": "571b2cd5cdfeb5f723740eaa1f16c75be8551655058256024a46f3b9ee243c10",
+    "source_run": 45884698747,
+    "sovereign": "OPEN_RESEARCH_PROPOSAL_ONLY",
+    "synthetic": {
+      "full_fixed_questions": 4,
+      "no_speedup_claim": true,
+      "partial_state_questions_remaining": 2,
+      "recovered": 16,
+      "total": 16,
+      "traces": [
+        {
+          "questions": [
+            "GRADIENT_COSINE",
+            "DISTILL_WEIGHT",
+            "EWC_STRENGTH",
+            "REPLAY_RATIO"
+          ],
+          "recovered": true,
+          "truth": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "questions": [
+            "GRADIENT_COSINE",
+            "DISTILL_WEIGHT",
+            "EWC_STRENGTH",
+            "REPLAY_RATIO"
+          ],
+          "recovered": true,
+          "truth": [
+            0,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "questions": [
+            "GRADIENT_COSINE",
+            "DISTILL_WEIGHT",
+            "EWC_STRENGTH",
+            "REPLAY_RATIO"
+          ],
+          "recovered": true,
+          "truth": [
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "questions": [
+            "GRADIENT_COSINE",
+            "DISTILL_WEIGHT",
+            "EWC_STRENGTH",
+            "REPLAY_RATIO"
+          ],
+          "recovered": true,
+          "truth": [
+            0,
+            0,
+            1,
+            1
+          ]
+        },
+        {
+          "questions": [
+            "GRADIENT_COSINE",
+            "DISTILL_WEIGHT",
+            "EWC_STRENGTH",
+            "REPLAY_RATIO"
+          ],
+          "recovered": true,
+          "truth": [
+            0,
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "questions": [
+            "GRADIENT_COSINE",
+            "DISTILL_WEIGHT",
+            "EWC_STRENGTH",
+            "REPLAY_RATIO"
+          ],
+          "recovered": true,
+          "truth": [
+            0,
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "questions": [
+            "GRADIENT_COSINE",
+            "DISTILL_WEIGHT",
+            "EWC_STRENGTH",
+            "REPLAY_RATIO"
+          ],
+          "recovered": true,
+          "truth": [
+            0,
+            1,
+            1,
+            0
+          ]
+        },
+        {
+          "questions": [
+            "GRADIENT_COSINE",
+            "DISTILL_WEIGHT",
+            "EWC_STRENGTH",
+            "REPLAY_RATIO"
+          ],
+          "recovered": true,
+          "truth": [
+            0,
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "questions": [
+            "GRADIENT_COSINE",
+            "DISTILL_WEIGHT",
+            "EWC_STRENGTH",
+            "REPLAY_RATIO"
+          ],
+          "recovered": true,
+          "truth": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "questions": [
+            "GRADIENT_COSINE",
+            "DISTILL_WEIGHT",
+            "EWC_STRENGTH",
+            "REPLAY_RATIO"
+          ],
+          "recovered": true,
+          "truth": [
+            1,
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "questions": [
+            "GRADIENT_COSINE",
+            "DISTILL_WEIGHT",
+            "EWC_STRENGTH",
+            "REPLAY_RATIO"
+          ],
+          "recovered": true,
+          "truth": [
+            1,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "questions": [
+            "GRADIENT_COSINE",
+            "DISTILL_WEIGHT",
+            "EWC_STRENGTH",
+            "REPLAY_RATIO"
+          ],
+          "recovered": true,
+          "truth": [
+            1,
+            0,
+            1,
+            1
+          ]
+        },
+        {
+          "questions": [
+            "GRADIENT_COSINE",
+            "DISTILL_WEIGHT",
+            "EWC_STRENGTH",
+            "REPLAY_RATIO"
+          ],
+          "recovered": true,
+          "truth": [
+            1,
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "questions": [
+            "GRADIENT_COSINE",
+            "DISTILL_WEIGHT",
+            "EWC_STRENGTH",
+            "REPLAY_RATIO"
+          ],
+          "recovered": true,
+          "truth": [
+            1,
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "questions": [
+            "GRADIENT_COSINE",
+            "DISTILL_WEIGHT",
+            "EWC_STRENGTH",
+            "REPLAY_RATIO"
+          ],
+          "recovered": true,
+          "truth": [
+            1,
+            1,
+            1,
+            0
+          ]
+        },
+        {
+          "questions": [
+            "GRADIENT_COSINE",
+            "DISTILL_WEIGHT",
+            "EWC_STRENGTH",
+            "REPLAY_RATIO"
+          ],
+          "recovered": true,
+          "truth": [
+            1,
+            1,
+            1,
+            1
+          ]
+        }
+      ]
+    }
+  }
+}
