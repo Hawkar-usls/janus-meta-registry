@@ -1,0 +1,64 @@
+{
+  "schema": "janus.autodidact.r112.protocol.v1",
+  "date": "2026-11-27",
+  "status": "FROZEN_BEFORE_PR_OPEN",
+  "head": "4cb9698bfec354437472a14a982577cf849de9a5",
+  "workflow": ".github/workflows/autodidact-r112-immune-homeostasis.yml",
+  "prior": {
+    "run": 45908194997,
+    "artifact": 15159176609,
+    "registry_result_commit": "f39c6ee9235ba463d8faebdfcd2a5391de30cb0e",
+    "accepted_fixed": 40,
+    "accepted_adaptive": 11,
+    "all_six_zero_old_lost": true,
+    "all_six_acquisition_gate_failed": true
+  },
+  "design": {
+    "seeds": [
+      67061,
+      67062
+    ],
+    "arms": [
+      "fixed_replay",
+      "adaptive_replay",
+      "homeostatic_replay"
+    ],
+    "trials": 120,
+    "step_radius": 0.07,
+    "total_radius": 0.5,
+    "train_tokens_per_arm_seed": 92160,
+    "gate_tokens_per_arm_seed": 683520,
+    "source_policy": "same R1.11B restricted G7 metadata-copy admission, exclude all 36 previous sources and paths; 12 each replay/gate/exam",
+    "controller": {
+      "initial_weight": 0.125,
+      "min": 0.0625,
+      "max": 0.25,
+      "decay": 0.875,
+      "risk_cap": 4,
+      "alert_identity": "accepted state generation plus protected item",
+      "cooldown_trials": 8,
+      "fresh_increment": 0.03125,
+      "repeat_or_accept_decrement": 0.015625,
+      "diversity": "one prioritized and one scheduled non-Cortex slot; two Cortex slots"
+    },
+    "diagnostics": [
+      "fresh and repeat alerts",
+      "accepted Cortex example exposure versus proposed exposure",
+      "per-form label recall and predicted class counts",
+      "old exact item retention"
+    ],
+    "controls": {
+      "gate": 5,
+      "homeostasis": 5,
+      "admission": 4
+    },
+    "exam": "same fixed criteria: >=20/32 both forms, net >=4, zero old parent-correct losses, >=16 parent-correct old; fresh world seeds and source hashes; no selection on final"
+  },
+  "limits": [
+    "fresh synthetic forced-choice worlds, not external independent exam; possible arithmetic or numeric semantic overlap across experiments",
+    "Cortex public metadata-copy exercises only, no raw corpus training authority",
+    "combined controller intervention (not single-factor causal proof); token work matched but wall time and replay selection differ",
+    "no production changes, promotion or exported candidate"
+  ],
+  "result": null
+}
