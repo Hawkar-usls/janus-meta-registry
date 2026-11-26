@@ -1,0 +1,65 @@
+{
+  "schema": "janus.autodidact.r19.protocol.v1",
+  "date": "2026-11-26",
+  "status": "PROTOCOL_FROZEN__PR_OPEN__EXTERNAL_EXAM_HOLD",
+  "prior": {
+    "run": 45891500794,
+    "artifact": 15152245966,
+    "registry_commit": "a1911de0b5e5d585e71d6a4d6a6f43bc9b018e79"
+  },
+  "pr": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/779",
+  "head": "0b4e41de0ff8ef28214882bae59a02ea06772379",
+  "parent_sha256": "06d7e6228ca9aef2dc58eb55fe1c805aa3b66e4f8fb90b0e946ce6af47b1a662",
+  "registry_commit": "106463de92f57fb21785c59146b63e3013aaaa62",
+  "design": {
+    "seeds": [
+      37031,
+      37032
+    ],
+    "worlds": 2,
+    "facts_per_world": 32,
+    "balanced_labels": [
+      0,
+      1
+    ],
+    "train_forms": 2,
+    "gate_forms": 1,
+    "exam_forms": 2,
+    "arms": [
+      "fixed_bounded",
+      "adaptive_bounded"
+    ],
+    "trials_per_arm": 120,
+    "train_batch": 8,
+    "train_sequence": 64,
+    "step_l2_limit": 0.07,
+    "total_l2_limit": 0.5,
+    "menu": [
+      0.0001,
+      0.00003,
+      0.00001
+    ],
+    "budget": "same schedule, 61440 train forward/backward tokens, 491520 gate forward tokens per arm/seed; equal model work count, not equal wall time",
+    "adaptive_variant": "one proposal per trial, adjust next trial LR; exact rollback",
+    "old_panel": [
+      "addition",
+      "sequence",
+      "word_completion",
+      "json_closure"
+    ],
+    "old_items_per_world": 64,
+    "criterion": {
+      "both_forms_correct_entities_at_least": 20,
+      "net_entity_gain_at_least": 4,
+      "old_parent_correct_min": 32,
+      "old_lost_max": 0
+    }
+  },
+  "limits": [
+    "Synthetic associations are genuinely new controlled labels, not externally verified real-world facts",
+    "Held-out prompt templates; same author and process, not independent external blind exam",
+    "Forced choice, not open generation; old panel items may share patterns or prompts",
+    "No promotion, production change or checkpoint export; unequal wall time and rollback overhead"
+  ],
+  "result": null
+}
