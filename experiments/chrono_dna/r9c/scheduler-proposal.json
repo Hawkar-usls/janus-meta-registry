@@ -1,0 +1,32 @@
+{
+  "id": "JANUS-CHRONO-DNA-R9C-SCHEDULE-PROPOSAL",
+  "status": "DESIGN_REVIEW_ONLY__NOT_ENABLED",
+  "parent": "experiments/chrono_dna/r9b/summary.json",
+  "schedule": {
+    "A": "7,22,37,52 * * * *",
+    "B": "12,27,42,57 * * * *",
+    "timezone": "UTC",
+    "note": "Proposed staggered 15-minute ticks; not a real-time guarantee. Default-branch workflow review required in both repositories."
+  },
+  "controls": {
+    "enable": "Explicit repo-level opt-in variable, default off",
+    "stop": "Disable variable or workflow immediately; hard upper bound of four new synthetic versions (13-16) and one write per tick; no self-modification or automatic expansion",
+    "permissions": "Only reviewed workload may attest synthetic fixture and write own dedicated research state branch; no writes to main, no secrets or cross-repo write token",
+    "identity": "Verify repository ID/name, workflow path, trusted ref, expected reviewed code revision or explicit allowlist; transition from R9B identity approved separately",
+    "state": "Durable immutable records, deterministic writer parity, parent and previous record byte hash, verify all preceding attestations, no operation on missing peer record; CAS/no force push; repeated tick no-op",
+    "failure": "Fail closed on invalid attestation, fork, missing version, unexpected identity; record read-only receipt; no automatic merge; do not circumvent scheduler limits"
+  },
+  "exam": [
+    "Real event=schedule runs after reviewed activation in both repos, not manual dispatch substitutes",
+    "At least two separate scheduled writer runs per node, four new versions, no interstitial operator commits",
+    "Missing peer tick/restart and duplicate retry must be exercised",
+    "Verify both final histories in read-only runner with explicit least privilege",
+    "Keep bounded trial separate from R7 repair and JFP production"
+  ],
+  "sources": [
+    "https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows",
+    "https://docs.github.com/en/actions/how-tos/troubleshoot-workflows",
+    "https://cli.github.com/manual/gh_attestation_verify"
+  ],
+  "implementation": "Specification only; executable schedule/worker and approval not included in this PR."
+}
