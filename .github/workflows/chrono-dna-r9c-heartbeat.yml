@@ -1,0 +1,84 @@
+name: CHRONO-DNA R9C HEARTBEAT B
+on:
+  schedule:
+    - cron: '12,27,42,57 * 26-28 11 *'
+  push:
+    branches: [main]
+    paths:
+      - 'autonomy/chrono_dna/heartbeat.py'
+      - 'autonomy/chrono_dna/heartbeat_policy.json'
+      - '.github/workflows/chrono-dna-r9c-heartbeat.yml'
+permissions:
+  contents: read
+  attestations: read
+concurrency:
+  group: chrono-dna-r9c-B
+  cancel-in-progress: false
+jobs:
+  plan:
+    if: vars.CHRONO_R9C_ENABLED != 'false'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      write: ${{ steps.plan.outputs.write }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Local controls
+        run: python autonomy/chrono_dna/heartbeat.py selftest
+      - name: Verify lineage and decide next owner
+        id: plan
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python autonomy/chrono_dna/heartbeat.py B plan
+  write:
+    needs: plan
+    if: github.event_name == 'schedule' && github.ref == 'refs/heads/main' && needs.plan.outputs.write == 'true' && vars.CHRONO_R9C_ENABLED != 'false'
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Reverify before producing one bounded record
+        id: record
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python autonomy/chrono_dna/heartbeat.py B write
+      - name: Attest scheduled record
+        if: steps.record.outputs.record != ''
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6
+        with:
+          subject-path: ${{ steps.record.outputs.record }}
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        if: steps.record.outputs.record != ''
+        with:
+          ref: research/chrono-dna-r9c-state-b
+          path: r9c-state
+      - name: Append only to dedicated state branch
+        if: steps.record.outputs.record != ''
+        env:
+          RECORD: ${{ steps.record.outputs.record }}
+          EXPECTED: ${{ steps.record.outputs.state_head }}
+        run: |
+          set -euo pipefail
+          test "$GITHUB_EVENT_NAME" = schedule
+          test "$GITHUB_REF" = refs/heads/main
+          test "$(date -u +%s)" -lt "$(date -u -d '2026-11-29T00:00:00Z' +%s)"
+          case "$RECORD" in r9c-out/v13.json|r9c-out/v14.json|r9c-out/v15.json|r9c-out/v16.json) ;; *) exit 1;; esac
+          test "$(git -C r9c-state rev-parse HEAD)" = "$EXPECTED"
+          dst="research/chrono_dna_r9c/records/$(basename "$RECORD")"
+          test ! -e "r9c-state/$dst"
+          mkdir -p "r9c-state/research/chrono_dna_r9c/records"
+          cp -- "$RECORD" "r9c-state/$dst"
+          git -C r9c-state config user.name 'chrono-r9c-research[bot]'
+          git -C r9c-state config user.email 'chrono-r9c-research@users.noreply.github.com'
+          git -C r9c-state add -- "$dst"
+          test "$(git -C r9c-state diff --cached --name-only)" = "$dst"
+          git -C r9c-state commit -m 'R9C scheduled attested fixture record'
+          git -C r9c-state push origin HEAD:refs/heads/research/chrono-dna-r9c-state-b
