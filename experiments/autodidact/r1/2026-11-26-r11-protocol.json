@@ -1,0 +1,65 @@
+{
+  "schema": "janus.autodidact.r11.protocol.v1",
+  "date": "2026-11-26",
+  "status": "PR_OPEN__RUN_NOT_YET_OBSERVED",
+  "prior_audit": "https://github.com/Hawkar-usls/janus-meta-registry/pull/769",
+  "diagnostic_pr": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/770",
+  "diagnostic_head": "5d22c5ba1cd963997cefed7f9fa8c4fb26c15070",
+  "trainer_blob": "7501747f27ce7e6e4c176f1f5647b4782ef113ae",
+  "historical": {
+    "profile_1": {
+      "steps": 240,
+      "lr": 0.0003,
+      "attempts": 62,
+      "adaptive_improvements": 0,
+      "anchor_improvements": 1,
+      "median_adaptive_delta_pct": 1.2213033315974342,
+      "median_anchor_delta_pct": 3.055476059592499
+    },
+    "profile_2": {
+      "steps": 320,
+      "lr": 0.0002,
+      "attempts": 2,
+      "adaptive_improvements": 2,
+      "anchor_improvements": 0,
+      "median_adaptive_delta_pct": -0.34165825943067163,
+      "median_anchor_delta_pct": 3.1063070753894584
+    },
+    "profile_3": {
+      "steps": 180,
+      "lr": 0.0004,
+      "attempts": 0
+    },
+    "root_cause": "Corpus digest churn is associated with profile 1 dominance; causal effect on loss not established."
+  },
+  "experiment": {
+    "parent_commit": "fc4293c972c231e9b06dd286a74c840b69131baa",
+    "parent_checkpoint_sha256": "06d7e6228ca9aef2dc58eb55fe1c805aa3b66e4f8fb90b0e946ce6af47b1a662",
+    "registry_commit": "106463de92f57fb21785c59146b63e3013aaaa62",
+    "fixed_arms": [
+      "no_update_control",
+      "historical_1",
+      "historical_2",
+      "historical_3",
+      "short_conservative"
+    ],
+    "paired_seeds": [
+      17021,
+      17022
+    ],
+    "historical_train_only": true,
+    "exact_source_hash_disjoint": true,
+    "fresh_exam": false,
+    "limits": "historical source subset, parent may have previously seen both splits; no generalization or acceptance claim; no full corpus replay or TRINITY exam in R1.1 diagnostic",
+    "protected_exams_read": false,
+    "persist_candidate_weights": false,
+    "production_mutation": false,
+    "workflow_schedule": false,
+    "promotion_authority": false
+  },
+  "independent_exam": {
+    "status": "HOLD",
+    "requirement": "Externally reviewed source-disjoint tasks and source provenance, preregistered grading, separation from all tuning and disclosed historical exams; preserve existing acceptance gates."
+  },
+  "results": null
+}
