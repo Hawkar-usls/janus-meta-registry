@@ -1,0 +1,183 @@
+{
+  "schema": "janus.autodidact.r15.protocol.v1",
+  "date": "2026-11-26",
+  "status": "R14_REPLAY_PASS__R15_PR_OPEN__REAL_PROBES_HOLD",
+  "r14": {
+    "run_id": 45884698747,
+    "job_id": 140132377711,
+    "artifact_id": 15148409356,
+    "artifact_zip_digest": "sha256:fe2dac4e5d6e97597837d31fa1db767461c2b6e8bec5c0d683f74b5abe9305dd",
+    "result": {
+      "captain": "ADMIT_REPORT_ONLY",
+      "negative_controls_passed": [
+        "forged_answer",
+        "forged_authority",
+        "root_drift",
+        "unknown_question",
+        "missing_row",
+        "duplicate_row",
+        "forged_metric",
+        "nonfinite"
+      ],
+      "proposal": {
+        "candidate_selected": null,
+        "contrasts": {
+          "distill": {
+            "adapt_better": 0,
+            "both_worse": 8,
+            "mean_delta": [
+              0.013109933097865095,
+              0.022046130469177153
+            ],
+            "n": 8,
+            "retain_better": 0
+          },
+          "ewc": {
+            "adapt_better": 8,
+            "both_worse": 0,
+            "mean_delta": [
+              -0.00010490596288412202,
+              -0.00005789737939322637
+            ],
+            "n": 8,
+            "retain_better": 8
+          },
+          "replay": {
+            "adapt_better": 6,
+            "both_worse": 2,
+            "mean_delta": [
+              -0.0018398692715971,
+              0.004895650092380563
+            ],
+            "n": 8,
+            "retain_better": 2
+          }
+        },
+        "decision": "OPEN_INDEPENDENT_EXAM",
+        "promotion_authority": false,
+        "root_sha256": "4f959cbb02c1dda922c222bc1126ca72b856a14b15c81c659248565c3adae29c",
+        "trace": [
+          {
+            "answer": false,
+            "question": "ANY_DUAL_GAIN_OVER_PARENT",
+            "witness_count": 0
+          },
+          {
+            "answer": true,
+            "question": "DISTILL_UNIFORMLY_WORSE_MATCHED"
+          },
+          {
+            "answer": true,
+            "question": "EWC_EFFECT_BELOW_DESCRIPTIVE_0_05_PP"
+          },
+          {
+            "answer": true,
+            "question": "REPLAY_MEAN_TRADEOFF"
+          },
+          {
+            "answer": "OPEN",
+            "question": "CAUSE_OF_STAGNATION_ESTABLISHED",
+            "reason": "two seeds; historical proxy cohorts; no causal root or semantic exam"
+          }
+        ],
+        "training_allowed": false
+      },
+      "root_preserved": true,
+      "schema": "janus.autodidact.r14.akinator_replay.v1",
+      "scope": "Retrospective structural question replay on already disclosed R1.3 metrics; no new training, no independent semantic exam or authority.",
+      "source_artifact_id": 15147728828,
+      "source_file_sha256": "82d35017759f7940a0c9f94e7b2bfffb164bff440a868a683e18bdf465943019",
+      "source_job": 140129867245,
+      "source_run": 45883940735,
+      "sovereign": "OPEN_INDEPENDENT_EXAM"
+    }
+  },
+  "r15": {
+    "pr": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/774",
+    "head": "c0394eb5e4a2ef7d4714f4d70102c8ce4265a449",
+    "questions": [
+      {
+        "id": "GRADIENT_COSINE",
+        "cost_proxy": 1,
+        "fit": false
+      },
+      {
+        "id": "EWC_STRENGTH",
+        "lambda_grid": [
+          0,
+          100,
+          1000
+        ],
+        "cost_proxy": 2
+      },
+      {
+        "id": "REPLAY_RATIO",
+        "fractions": [
+          0,
+          0.125,
+          0.25,
+          0.5
+        ],
+        "cost_proxy": 2
+      },
+      {
+        "id": "DISTILL_WEIGHT",
+        "weights": [
+          0,
+          0.05,
+          0.1,
+          0.5
+        ],
+        "temperature": 2,
+        "cost_proxy": 2
+      }
+    ],
+    "ranking": "finite abstract 16-state uniform counting model; entropy per assumed cost proxy; tie by worst-case elimination then id; not empirical information gain or measured runtime",
+    "expected_first": "GRADIENT_COSINE",
+    "synthetic_controls_planned": 16,
+    "negative_controls_planned": 8,
+    "scope_bound_history": true,
+    "results": null,
+    "run_observed": false
+  },
+  "history": [
+    {
+      "method": "Distillation",
+      "weight": 0.5,
+      "temperature": 2,
+      "observation": "worse both 8/8 contrasts",
+      "general_method_refuted": false
+    },
+    {
+      "method": "EWC",
+      "lambda": 100,
+      "observation": "tiny improvement both 8/8 contrasts",
+      "general_method_refuted": false
+    },
+    {
+      "method": "Replay",
+      "fraction": 0.25,
+      "observation": "mean tradeoff",
+      "general_method_refuted": false
+    }
+  ],
+  "scope": {
+    "parent": "06d7e6228ca9aef2dc58eb55fe1c805aa3b66e4f8fb90b0e946ce6af47b1a662",
+    "registry": "106463de92f57fb21785c59146b63e3013aaaa62",
+    "partition": "historical r12-preservation",
+    "steps": 60,
+    "lr": 0.0003,
+    "seeds": [
+      27021,
+      27022
+    ]
+  },
+  "limits": {
+    "new_training": false,
+    "gradient_measurement": false,
+    "independent_semantic_exam": false,
+    "production_mutation": false,
+    "promotion_authority": false,
+    "automatic_dispatch": false
+  }
+}
