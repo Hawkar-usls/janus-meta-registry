@@ -1,0 +1,71 @@
+name: JANUS R4B5 identifiability diagnosis
+on:
+  push:
+    branches: [janus-singularity-gpt-r4b5-identifiability]
+    paths:
+      - 'registry/physics/singularity_gpt/r4b5/**'
+      - '.github/workflows/janus-singularity-gpt-r4b5.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  signed-error:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            registry/physics/singularity_gpt/r4b3
+            registry/physics/singularity_gpt/r4b4
+            registry/physics/singularity_gpt/r4b5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install numpy==2.2.6 scipy==1.15.3
+      - name: Signed error and objective audit
+        env:
+          OPENBLAS_NUM_THREADS: '1'
+          OMP_NUM_THREADS: '1'
+        run: python registry/physics/singularity_gpt/r4b5/diagnose.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: r4b5-signed-error
+          path: r4b5-output/
+          if-no-files-found: warn
+          retention-days: 30
+  controls:
+    needs: signed-error
+    strategy:
+      fail-fast: false
+      matrix:
+        mode: [geometry, envelope, pit]
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            registry/physics/singularity_gpt/r4b2
+            registry/physics/singularity_gpt/r4b3
+            registry/physics/singularity_gpt/r4b4
+            registry/physics/singularity_gpt/r4b5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install numpy==2.2.6 scipy==1.15.3
+      - name: Independent diagnostic control
+        env:
+          OPENBLAS_NUM_THREADS: '1'
+          OMP_NUM_THREADS: '1'
+        run: python registry/physics/singularity_gpt/r4b5/controls.py ${{ matrix.mode }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: r4b5-${{ matrix.mode }}
+          path: r4b5-output/
+          if-no-files-found: warn
+          retention-days: 30
