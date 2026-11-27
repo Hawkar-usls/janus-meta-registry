@@ -1,0 +1,92 @@
+{
+  "id": "JANUS-R4B0-UNIFORM-RESOLUTION-DECISIVE-TEST",
+  "status": "PRECOMMITTED_BEFORE_EVOLUTION",
+  "parent": {
+    "pr": 775,
+    "commit": "141a34eff27e390b5a65d229323bca76aad00e35",
+    "solver_blob": "71ef15312166337a9ee41d71d75a29674d00e5d3",
+    "diagnostic_blob": "28a39be912cb560f1a9ad4fd1b1058ef7a626761"
+  },
+  "resolution_note_ru": "R4A локализует область недостаточной сходимости, а не устанавливает физическую аномалию. Переклассификация одной точки второго семейства при продлении эволюции не является полной бисекцией. Знак производной компактности — диагностическое свидетельство, не достаточный критерий окончательного рассеивания.",
+  "cases": [
+    {
+      "id": "critical_1536",
+      "A": 0.11484375,
+      "n": 1536,
+      "r0": 5,
+      "w": 1,
+      "R": 30,
+      "checkpoints": [
+        16
+      ]
+    },
+    {
+      "id": "critical_3072",
+      "A": 0.11484375,
+      "n": 3072,
+      "r0": 5,
+      "w": 1,
+      "R": 30,
+      "checkpoints": [
+        16
+      ]
+    },
+    {
+      "id": "critical_6144",
+      "A": 0.11484375,
+      "n": 6144,
+      "r0": 5,
+      "w": 1,
+      "R": 30,
+      "checkpoints": [
+        16
+      ]
+    },
+    {
+      "id": "noncritical_6144",
+      "A": 0.05,
+      "n": 6144,
+      "r0": 5,
+      "w": 1,
+      "R": 30,
+      "checkpoints": [
+        16
+      ]
+    },
+    {
+      "id": "held_shell",
+      "A": 0.1609375,
+      "n": 4096,
+      "r0": 6,
+      "w": 1.4,
+      "R": 80,
+      "checkpoints": [
+        16,
+        32,
+        64
+      ]
+    }
+  ],
+  "classification": {
+    "primary": "R4A unchanged: near-trapping proxy if peak C>=.85, dispersal proxy if inner mass fraction<.05 and final C<.2, else unresolved; numerical failure preserved",
+    "diagnostic": "DISPERSAL_TREND_ONLY if no prior near trapping, inner mass fraction<.05 and fitted compactness slope strictly negative in each of four contiguous coordinate-time windows of width .5 ending at checkpoint, plus strictly decreasing endpoint C in each; never overrides primary class; report sample counts",
+    "mass_drift_max_strict": 0.01,
+    "interpretation": "mass drift gate applies on entire recorded interval; failure invalidates scientific interpretation, not the raw class record; no claim of horizon or converged continuum outcome"
+  },
+  "comparisons": "match central proper time over common support; compare central derivative L2 all and jointly resolved (both curvature length/h>=8), fraction resolved, both curvature estimators at peak, peak curvature ratios; report 1536/3072 and 3072/6144; no extrapolated critical exponent",
+  "decision_tree": {
+    "if_reproduction_fails": "REPLAY_MISMATCH_HOLD",
+    "if_mass_budget_fails": "MASS_BUDGET_HOLD",
+    "if_6144_dispersal": "FINE_GRID_DISPERSAL_PROXY__AMR_VALIDATION_JUSTIFIED_NOT_CONVERGED",
+    "if_6144_near_trapping": "NONMONOTONE_PROXY__SCHEME_AUDIT_BEFORE_AMR",
+    "if_6144_unresolved": "CLASSIFIER_OR_RESOLUTION_HOLD",
+    "if_numerical_failure": "NUMERICAL_FAILURE_HOLD"
+  },
+  "future": {
+    "n12288": "separate preregistered extension if 6144 not decisive; no inference until actual run",
+    "amr": "conservative transfer, constraints, CFL, uniform comparison and >=8 resolved cells before DSS",
+    "dss": "freeze observable, proper-time transform, lag range, search statistic, false alarm calibration and sampling before execution. Include shuffled residual controls and noncritical amplitude 0.05; log-uniform offsets around independently bounded critical amplitude 5–10 per decade as initial sampling design, validate actual coverage in log proper time; do not tune to expected Delta. No echo detection in R4B0.",
+    "third_family": "blind independent amplitude family, criteria and hyperparameters sealed before first run; not included in R4B0"
+  },
+  "scientific_hold": true
+}
