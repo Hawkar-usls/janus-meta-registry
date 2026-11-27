@@ -22,7 +22,8 @@ jobs:
       - name: Retrieve frozen echo artifact
         env:
           GH_TOKEN: ${{ github.token }}
-        run: curl --fail --location --retry 3 -H "Authorization: Bearer $GH_TOKEN" "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/15193297197/zip" -o echo.zip
+        run: |
+          curl --fail --location --retry 3 -H "Authorization: Bearer $GH_TOKEN" "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/15193297197/zip" -o echo.zip
       - run: python registry/physics/singularity_gpt/r3c/audit.py
       - uses: actions/upload-artifact@v4
         with:
