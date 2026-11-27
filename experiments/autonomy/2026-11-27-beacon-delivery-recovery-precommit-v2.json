@@ -1,0 +1,74 @@
+{
+  "schema": "janus.beacon.delivery.recovery.precommit.v2",
+  "date": "2026-11-27",
+  "status": "TIMING_MODE_CORRECTED__RECOVERY_UNVERIFIED__PROVENANCE_UNVERIFIED",
+  "scope": "delivery recovery only, independent of physics scientific holds; BEACON_BLOCKS_CLOSED_LOOP remains",
+  "configuration": {
+    "witness_task": "6ad5040159608191b7ed6036b85ef700",
+    "mode": "exact_schedule",
+    "configuration_updated_at": "2026-11-27T19:40:48.576343Z",
+    "first_eligible_nominal_slot": "2026-11-27T20:39:09Z",
+    "relay_slots_utc": [
+      "2026-11-27T20:55:00Z",
+      "2026-11-27T21:55:00Z",
+      "2026-11-27T22:55:00Z"
+    ],
+    "witness_slots_utc": [
+      "2026-11-27T20:39:09Z",
+      "2026-11-27T21:39:09Z",
+      "2026-11-27T22:39:09Z"
+    ],
+    "earliest_nominal_third_relay_kyiv": "2026-11-28T00:55:00+02:00",
+    "earliest_nominal_following_audit_kyiv": "2026-11-28T01:20:00+02:00",
+    "note": "Not guaranteed execution or PASS time; receiver persistence and verified audit may be later; actual execution may differ from scheduled slot. No pre-intervention result counts."
+  },
+  "rejections": [
+    {
+      "id": "be3d93d6-44bc-8327-95dd-c7a21b9e915d",
+      "stage": "RELAY_PRE_WRITE",
+      "primary_relay_run": "a1d94e3d-308c-8325-bae1-245d1119c1a0",
+      "reason": "TIME_ORDER; scheduled 18:39:09Z, observed 18:14:20Z, completed 18:14:33.286312Z; no file",
+      "inbox_http": 404
+    },
+    {
+      "id": "8ec6c61e-ade4-8330-9496-c2fcbec83171",
+      "stage": "RELAY_REJECTION_REPORTED_BY_PRIOR_EXTERNAL_AUDIT",
+      "primary_receipt": "UNAVAILABLE",
+      "reason": "prior audit reports previous UUID rejected; exact timestamps and original reason not independently recovered; do not attribute cause",
+      "inbox_http": 404
+    }
+  ],
+  "receiver": {
+    "state_blob": "cc27447df5fbe7d9455aa2421c82238f945c3a10",
+    "code_blob": "7fba733ad4afbdbbabb7f4836da70b0fef00c637",
+    "report_blob": "a1b29c71098507241e9fe1e907c035de974d885e",
+    "distinct_packets": 9,
+    "manual_seed": 1,
+    "observations": 45,
+    "corroborated_occurrences": 16,
+    "distinct_completion_keys": 7,
+    "repeated_completion_occurrences": 9,
+    "uncorroborated": 11,
+    "unknown": 18,
+    "rejected_in_latest_receiver_report": 0,
+    "dedupe_key": [
+      "line",
+      "run_id",
+      "completed_at"
+    ],
+    "interpretation": "9/9 parsed-content readback among already persisted packets only; no delivery rate or proof of complete history. Seven distinct events and nine packet IDs are different denominators. Historical rejected IDs differ from persisted packet IDs; source completion overlap for older rejected packet unknown."
+  },
+  "gate": {
+    "time": "Preserve existing receiver scheduled_for <= observed_at_utc <= source_completed_at, source_completed_at - observed_at_utc <=900 seconds, UTC Z. Equal timestamps allowed; zero early-observation tolerance, late dispatch relative to nominal slot not forbidden by current receiver. Independently require started_at <= observed_at_utc <= completed_at, started_at <= result.created_at <= completed_at, run/result matching scheduled and completed timestamps, completed status, nontruncated result. Do not change source timestamps. Enforce freshness for recovery: new post-intervention slot, transfer of that slot not stale prior result; no synthesized data. Validate existing receiver's coverage/age/authority restrictions.",
+    "identity": "Witness last_run.id == latest_result.run_id == explicit Relay receipt source UUID == inbox filename stem == inbox run_id == durable receiver record key and observation.run_id; record Witness run and Relay execution IDs separately. Verify normalized allowed payload fields directly against Witness result and both saved JSONs; verify raw mailbox SHA256 against receiver record when byte access available; if unavailable mark byte proof UNKNOWN rather than claiming it. No manual seed, duplicate, missing or conflicting record, or synthetic receipt.",
+    "persistence": "Read both actual inbox file and durable receiver state/report; check exact observation, receiver state seal and mailbox byte hash; record source and receiver Git blobs, readback time. Receiver validation-only artifact not durable persistence. Report full/partial coverage separately; UNKNOWN-only can demonstrate transport but not useful sensory information. For closed-loop prerequisite require at least one independently corroborated usable observation in addition to provenance requirements.",
+    "streak": "Three distinct consecutive nominal hourly Witness scheduled_for slots after configuration change with complete evidence. A rejected or definitively missed slot breaks streak; UNKNOWN or delayed evidence remains pending, cannot skip gap or count toward PASS. Preserve failed/pending slots; only extend consecutive verified series once evidence obtained. No manual run counted. Existing audit history may be incomplete; no inferred success. No claim 3/3 until receiver readback for all three.",
+    "falsification": "New exact_schedule source producing early observation and TIME_ORDER rejection shows intervention insufficient. Three successes demonstrate delivery recovery, not causal proof. If authoritative logs establish different explanation for prior rejection(s), mode-mismatch causal hypothesis rejected or narrowed. Old condition_watch successful packets show mode not sufficient for failure. Retry, scheduler semantics, metadata skew remain open. Strict time rule correctness depends on actual scheduler contract; late dispatch is allowed, early observation rejected, possible fragility to valid early dispatch and missing freshness bound. No time tolerance relaxation or production change."
+  },
+  "axes": {
+    "delivery": "RECOVERY_UNVERIFIED until 3 consecutive verified transfers",
+    "provenance": "PROVENANCE_UNVERIFIED independent of delivery. Cross-log consistency and hash binding do not authenticate source; separate trusted source attestation or independently verifiable source receipt binding actual observation time, payload digest, run ID and anti-replay nonce/identity needed. Do not grant command, runtime, science or training authority from relay-normalized output.",
+    "autonomy": "BEACON_BLOCKS_CLOSED_LOOP; no training or budget expansion"
+  },
+  "evidence_limit": "Automations peek exposes latest run only, no attempt/retry history. Earlier refusal primary log unavailable. No historical outcome rewritten. This addendum was written before first eligible nominal post-intervention slot according to supplied current time 2026-11-27 21:48 Kyiv and config readback."
+}
