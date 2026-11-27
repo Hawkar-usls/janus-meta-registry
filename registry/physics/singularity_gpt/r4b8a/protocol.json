@@ -1,0 +1,108 @@
+{
+  "id": "JANUS-R4B8A-AVAILABILITY-SELECTION",
+  "parent_run": 46023044434,
+  "parent_protocol_blob": "571e4a0fe06a04ed5829078e11e9ad822201f401",
+  "date": "2026-11-27",
+  "availability": {
+    "seed": 195731,
+    "classes": [
+      "positive",
+      "stationary",
+      "near_dss_chirp"
+    ],
+    "n_per_class": 100,
+    "noise_levels": [
+      0.01
+    ],
+    "missing": [
+      0
+    ],
+    "noise_types": [
+      "iid",
+      "long_memory",
+      "narrowband"
+    ],
+    "note": "R4B7 latent replay, verify legacy counts; report actual status reasons",
+    "candidate": "smooth sign lobes with 5-point median filter, then estimate log contraction by robust fit to all successive peak intervals, estimate final gap from all triplet-derived positive gaps with scaling, compare conditional and unconditional correctness after same frozen joint optimizer"
+  },
+  "selection": {
+    "seed": 638129,
+    "n_per_class": 100,
+    "classes": [
+      "positive",
+      "stationary",
+      "near_dss_chirp"
+    ],
+    "noise_levels": [
+      0.001,
+      0.01
+    ],
+    "missing": [
+      0,
+      0.3
+    ],
+    "noise_types": [
+      "iid",
+      "long_memory",
+      "narrowband"
+    ],
+    "thresholds": [
+      0.15,
+      0.25,
+      0.35,
+      0.45,
+      0.55
+    ],
+    "random_seed": 851933,
+    "starts": 4,
+    "primary_threshold": 0.35,
+    "comparison": "min objective vs largest cluster using |log gap difference|<=.1 and relative period difference<=.05, ties by objective; cluster is diagnostic not independent votes; no selection of winning threshold on this bank",
+    "metrics": [
+      "parameter accuracy",
+      "DSS/AMBIGUOUS/REJECT",
+      "negative FP by subgroup",
+      "any correct candidate versus selected wrong",
+      "prefit accepted correctness",
+      "prefit rejected correctness"
+    ],
+    "scope": "ordinary paired noise; no oracle tangent noise injection in this arm; do not claim direct tangent-specific basin-selection test"
+  },
+  "forecast": {
+    "seed": 815207,
+    "classes": [
+      "positive"
+    ],
+    "n_per_class": 100,
+    "noise_levels": [
+      0.0001,
+      0.001,
+      0.01
+    ],
+    "missing": [
+      0,
+      0.3
+    ],
+    "noise_types": [
+      "iid",
+      "long_memory",
+      "narrowband"
+    ],
+    "fractions": [
+      0.95,
+      0.99,
+      1
+    ],
+    "method": "frozen R4B8 single geometric init; 95/100 anchors and added 99, bank generator unchanged for positive cases"
+  },
+  "calibration": "R4B9 separate; profile threshold calibration and disjoint coverage exam necessary; not implemented here",
+  "gates": {
+    "gap_relative_error_max": 0.05,
+    "period_relative_error_max": 0.05,
+    "positive_min": 0.9,
+    "ambiguous_max": 0.05,
+    "negative_DSS_max": 0.05
+  },
+  "scientific_hold": true,
+  "physical_use_authorized": false,
+  "production_changed": false
+}
