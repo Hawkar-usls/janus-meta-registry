@@ -1,0 +1,109 @@
+{
+  "id": "JANUS-R4B5A.4-COMPACTNESS-LOCALIZATION",
+  "status": "PRECOMMITTED_BEFORE_EVOLUTION",
+  "parent": {
+    "run": 46042569254,
+    "archive_commit": "0c774caeae410fd4057d3d3f3d2c967b0c921303",
+    "archive_blob": "93ed07e6ed359cfaf23d61bcad086383252e10c7",
+    "original_audit_blob": "a7a28d2630c128ecbc6beeffe25dc88262833ae6",
+    "solver_blob": "71ef15312166337a9ee41d71d75a29674d00e5d3",
+    "boundary_blob": "2a3222c222412f327666e10db2219acde71cdeb3",
+    "artifact": 15221965959,
+    "zip_sha256": "257e16cdbdde7a847d573b77e4e1d1d594ee2199c600603325bca1cc43151f96"
+  },
+  "configuration": {
+    "family": "original",
+    "A": 0.1152,
+    "r0": 5,
+    "w": 1,
+    "R": 30,
+    "end": 16,
+    "grids": [
+      12288,
+      24576,
+      49152
+    ],
+    "CFL": 0.3,
+    "reference_radius": 12,
+    "stop": 0.9
+  },
+  "snapshots": {
+    "tau": [
+      4.5,
+      5,
+      5.4,
+      5.425,
+      5.45,
+      5.475,
+      5.5,
+      5.51,
+      5.515,
+      5.5175,
+      5.518,
+      5.519
+    ],
+    "method": "At each fixed tau bracket, retain previous and next native cell-centered profiles p,q,m,C and alpha/a; linear interpolation in proper time without fitting. No extrapolation: late snapshots beyond any run support are explicitly missing, not silently dropped. First ten windows mandatory; final two late diagnostics. Compare common physical radii on intersection of native grids (coarsest center to last coarsest center), 12288 points at coarse centers; separate near-origin dense audit on common support r<=.5 using coarse centers, and local peak neighborhood. Report maximum over full profile and inner region; no extrapolation to origin or outer face."
+  },
+  "peak": {
+    "native": "record all integration steps argmax radius, top distinct local maxima, gap between largest two; local maxima determined by neighbor comparisons, ties deterministic leftmost, exclude boundary endpoints from quadratic fits",
+    "subcell": "three-point quadratic vertex only if concave and vertex inside adjacent centers; otherwise native value flagged invalid. Diagnostic only, no replacement of original peak gate.",
+    "shift": "abs(rmax_i-rmax_j)>h_coarser flags shift; report shift in both grid units. Shift alone is not proof of branch switching. Competing branch diagnostic: two separated local maxima (>2*h_coarser) with gap <=.0005; report locations and relative heights; compare nearest candidates across grids; no post hoc threshold selection.",
+    "metrics": "separate native max, maximum interpolated on common physical grid, subcell fitted max; decompose signed native peak difference into common-grid peak difference plus differences of sampling increments; also compare same-radius C at both native peak locations where supported."
+  },
+  "profile": {
+    "C_absolute_Linf_max": 0.0005,
+    "C_relative_L2_Linf_max": 0.01,
+    "order_range": [
+      1.5,
+      2.5
+    ],
+    "mass_relative_L2_Linf_max": 0.01,
+    "mass_order_range": [
+      1.5,
+      2.5
+    ],
+    "diagnostics": "full and inner C/m profiles on common radii; common radius differences and observed L2/Linf orders; same radius peak neighborhood; compare both pairs, medium-fine thresholds; peak gate retained unchanged; if profile fails cannot blame argmax only"
+  },
+  "synthetic_mass": {
+    "analytic": "constant density mass m=k*r^3, C=2*k*r^2, k=.002, R=4; choose p=sqrt(3*k/(2*pi*(1-2*k*r^2))), q=0 to solve same radial constraint; test original geometry against analytic center mass and C, grids 256/512/1024. Also analytic smooth isolated C peak and two competing peaks, test native and quadratic peak reconstruction on known functions, no solver modification.",
+    "criteria": "C analytic Linf <=.0005 on finest and observed order 1.5–2.5; record mass errors and order; analytic interpolation of m versus direct C separate, quadratic synthetic peak errors and validity; synthetic pass not physical validation"
+  },
+  "crossing": {
+    "thresholds": [
+      0.8,
+      0.82,
+      0.85,
+      0.88,
+      0.9
+    ],
+    "linear": "historical first upward bracket",
+    "quadratic": "three native samples ending at first crossing i (i-2,i-1,i), fit polynomial in shifted/scaled tau; require finite unique real root inside historical bracket and positive derivative; otherwise unresolved, no substitute. Compare event tau, slope dC/dtau, local peak slope, interpolation difference and cross-grid error ratio. Compute order and monotonicity for both. Sign reversal or >.5 order shift is estimator sensitivity, not proof ill-conditioning; report local inverse-slope condition and C error/slope prediction as first-order diagnostic only.",
+    "event_tau_abs_max": 0.0005,
+    "order_range": [
+      1.5,
+      2.5
+    ],
+    "Ricci_relative_max": 0.02,
+    "late": "Evaluate Ricci at both interpolated crossing times via linear interpolation of Ricci on each native trajectory. Compare also fixed common tau before late crossing, decompose event-time contribution vs common-support difference using exact signed algebra; no causal claim from decomposition alone."
+  },
+  "replay": {
+    "mode": "original artifact available; verify ZIP SHA256 and exact all 19-column native trace bytes for each of three spatial runs before interpreting new profiles. No fallback, no changed environment claim.",
+    "safety": "unchanged solver and thresholds; numeric gates same as R4B5A.3; compare prefix .85 and full .90 historical trace; if mismatch technical hold; no scientific diagnosis from mismatched replay."
+  },
+  "budget": {
+    "timeout_minutes": 60,
+    "max_projected_total_s": 3000,
+    "priority": "synthetic, coarse, medium, fine; check projected fine=4*medium runtime before launching; partial evidence retained"
+  },
+  "scientific_hold": true,
+  "forbidden": [
+    "98304",
+    "DSS",
+    "AMR",
+    "bracket narrowing",
+    "main promotion",
+    "threshold changes",
+    "global convergence claim"
+  ],
+  "claim_ceiling": "diagnostic localization only; separate fixed-time C, event-time and late Ricci holds; never declare resolution from improved diagnostic estimator alone"
+}

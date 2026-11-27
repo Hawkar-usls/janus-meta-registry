@@ -1,0 +1,82 @@
+{
+  "id": "JANUS-R4B5A.4-INTERPRETATION-ADDENDUM",
+  "status": "POST_EXECUTION_BEFORE_READING_SCIENTIFIC_LOGS__NOT_ORIGINAL_PRECOMMIT",
+  "run": 46048239157,
+  "head": "dc034da06ebfbbe5979dee24198ce985f7bc6521",
+  "scope": "No change to existing numerical results, gates or solver. Future new tests require separate frozen protocol.",
+  "snapshots": {
+    "kind": "instantaneous full radial profiles at prescribed central proper time tau, not fixed radial points or cumulative peak windows",
+    "mandatory": [
+      4.5,
+      5,
+      5.4,
+      5.425,
+      5.45,
+      5.475,
+      5.5,
+      5.51,
+      5.515,
+      5.5175
+    ],
+    "late": [
+      5.518,
+      5.519
+    ],
+    "rationale": "early controls 4.5 and 5; five points in [5.4,5.5]; near-event 5.51,5.515,5.5175; late 5.518,5.519",
+    "missing_late": "NOT_REACHED, not evidence of PASS or FAIL; original report boolean preserved, interpret missing separately; missing mandatory support is admission failure"
+  },
+  "configuration": {
+    "grids": [
+      12288,
+      24576,
+      49152
+    ],
+    "CFL": 0.3,
+    "half_CFL": "previous R4B5A.3a medium half-CFL result; no new half-CFL run in this protocol"
+  },
+  "argmax": {
+    "shift_limit": "one coarser cell",
+    "interpretation": "shift above limit means pointwise correspondence invalid (OBSERVABLE_INVALID for interpreting the maxima as same location); global max values remain mathematically comparable as scalar functionals, and frozen peak error must still be reported. Shift alone neither proves branch switch nor explains nonconvergence. Fixed physical radius and full profile diagnostic required; no removal of original gate."
+  },
+  "synthetic": {
+    "existing": "analytic m=k*r^3 plus smooth isolated and two competing peak profiles already implemented; peak tests diagnostic only in existing protocol",
+    "future_gate": "on 256/512/1024 grids check both expected local maxima within one h of known positions, order of peak heights when height gap exceeds sampling error bound, valid concave subcell fits within 1e-10 for exact local quadratics; test equal-height ties and intentionally swapped heights separately before physical interpretation"
+  },
+  "decision_tree": [
+    {
+      "if": "shift or competing maxima and full/common-radius profiles pass, common-grid peak passes but native peak fails, sampling increment quantitatively accounts for difference",
+      "then": "peak sampling/branch correspondence candidate; retain original HOLD, validate new observable separately; no 98304 required solely for this diagnosis"
+    },
+    {
+      "if": "full profile fails even with stable argmax",
+      "then": "field/mass/discretization candidate; inspect mass and metric constraints, not proof of particular solver fault"
+    },
+    {
+      "if": "profiles and argmax pass but native peak fails",
+      "then": "peak representation or undersampling candidate; examine common-grid and subcell peaks; max functional is Lipschitz on same support, so also test unresolved fine radial structure"
+    },
+    {
+      "if": "linear/quadratic orders change sign or differ >.5",
+      "then": "estimator sensitivity; independent inverse-slope perturbation control needed, not automatic ill-conditioning or scheme verdict; keep EVENT_INVARIANCE_HOLD"
+    }
+  ],
+  "future_crossing_conditioning": {
+    "diagnostic_proposal": "dimensionless gain G=abs(1/slope)*0.0005/0.0005 (proper-time tolerance divided by C tolerance); G>1 means a C perturbation at admitted amplitude could exceed event time tolerance. Units fixed by original normalization. Separate actual error/slope prediction and direct +/-0.0005 perturbation bracket control with no extrapolation; use only under a new precommit, not as retroactive gate."
+  },
+  "ricci": "Report event Ricci per threshold and separate historical .85 nonregression; radial snapshots do not contain central Ricci scalar columns but historical time traces do. For future fixed-snapshot Ricci test compare both proxies at same tau, threshold 2%, early/late separate; current audit only event Ricci and radial C/m, do not invent snapshot results.",
+  "replay": "Existing run requires exact full historical traces for all three grids, stronger observed identity but incomplete historical environment. If mismatch, technical hold; future separate matched uninstrumented/instrumented pair same pinned environment with exact arrays before diagnosing. Do not weaken existing gate after result.",
+  "holds": [
+    "COMPACTNESS_CONVERGENCE_HOLD",
+    "EVENT_INVARIANCE_HOLD",
+    "LATE_TIME_RICCI_HOLD",
+    "IDENTIFIABILITY_HOLD independent",
+    "SCIENTIFIC_HOLD"
+  ],
+  "forbidden": [
+    "DSS",
+    "AMR",
+    "98304 without separate discrimination protocol",
+    "main promotion",
+    "bracket narrowing"
+  ]
+}
