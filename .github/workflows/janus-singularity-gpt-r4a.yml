@@ -1,0 +1,34 @@
+name: JANUS R4A resolution diagnostics
+on:
+  push:
+    branches: [janus-singularity-gpt-r4a]
+    paths:
+      - 'registry/physics/singularity_gpt/r4a/**'
+      - '.github/workflows/janus-singularity-gpt-r4a.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  diagnostics:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            registry/physics/singularity_gpt/r3b
+            registry/physics/singularity_gpt/r4a
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install numpy==2.2.6 numba==0.61.2
+      - name: Matched amplitude and long time evolution
+        run: python registry/physics/singularity_gpt/r4a/diagnose.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: r4a-resolution-diagnostics
+          path: r4a-output/
+          if-no-files-found: warn
+          retention-days: 30
