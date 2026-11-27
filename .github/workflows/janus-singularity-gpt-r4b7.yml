@@ -1,0 +1,86 @@
+name: JANUS R4B7 joint optimization
+on:
+  push:
+    branches: [janus-singularity-gpt-r4b7-joint]
+    paths:
+      - 'registry/physics/singularity_gpt/r4b7/**'
+      - '.github/workflows/janus-singularity-gpt-r4b7.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  diagnostic:
+    strategy:
+      fail-fast: false
+      matrix:
+        mode: [iid, long_memory, narrowband, projection]
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            registry/physics/singularity_gpt/r4b2
+            registry/physics/singularity_gpt/r4b3
+            registry/physics/singularity_gpt/r4b4
+            registry/physics/singularity_gpt/r4b5
+            registry/physics/singularity_gpt/r4b6
+            registry/physics/singularity_gpt/r4b7
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install numpy==2.2.6 scipy==1.15.3
+      - name: Frozen transition and projection
+        env:
+          OPENBLAS_NUM_THREADS: '1'
+          OMP_NUM_THREADS: '1'
+          MODE: ${{ matrix.mode }}
+        run: |
+          if [ "$MODE" = projection ]; then
+            python registry/physics/singularity_gpt/r4b7/projection.py
+          else
+            python registry/physics/singularity_gpt/r4b7/examine.py transition "$MODE"
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: r4b7-diagnostic-${{ matrix.mode }}
+          path: r4b7-output/
+          if-no-files-found: warn
+          retention-days: 30
+  joint:
+    needs: diagnostic
+    strategy:
+      fail-fast: false
+      matrix:
+        mode: [iid, long_memory, narrowband]
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            registry/physics/singularity_gpt/r4b2
+            registry/physics/singularity_gpt/r4b3
+            registry/physics/singularity_gpt/r4b4
+            registry/physics/singularity_gpt/r4b5
+            registry/physics/singularity_gpt/r4b6
+            registry/physics/singularity_gpt/r4b7
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install numpy==2.2.6 scipy==1.15.3
+      - name: Equal-budget joint optimization
+        env:
+          OPENBLAS_NUM_THREADS: '1'
+          OMP_NUM_THREADS: '1'
+        run: python registry/physics/singularity_gpt/r4b7/examine.py joint ${{ matrix.mode }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: r4b7-joint-${{ matrix.mode }}
+          path: r4b7-output/
+          if-no-files-found: warn
+          retention-days: 30
