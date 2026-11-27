@@ -1,0 +1,85 @@
+{
+  "id": "JANUS-R4B10B-CONDITIONAL-PATH-WITNESS",
+  "source_run": 46035084112,
+  "source_head": "ed724df1d7f79239113c9e688780972858056c52",
+  "source_blob": "d2cefb885c50e9ca05c72d17c225f227ec0206c1",
+  "source_protocol_blob": "c28f0c2d1155a67cd7eab37bfdf4633c304834a6",
+  "source_artifacts": {
+    "thresholds": 15216557208,
+    "router": 15216696082,
+    "evaluation_iid": 15217420244
+  },
+  "test": {
+    "calibration_rebuild": "exact frozen thresholds function on all 3600 source calibration scores, compare global/routes/oracle and cell counts to frozen artifact",
+    "controlled_fixture": "execute exact original decision AST with global 10, IID 5, grid [-.012,0,.012], scores [8,0,8], screen=true, success=true, estimate=0, truth score 8; expect GLOBAL AMBIGUOUS/included, CONDITIONAL DSS/not included",
+    "replay": "run original evaluate iid, same archived router and seeds, append only additional threshold variants to the original loop; compare original input hashes, route and all three original outputs against archived IID trials; original scope 1080",
+    "mutations": [
+      {
+        "name": "conditional_half",
+        "iid": "0.5*global"
+      },
+      {
+        "name": "conditional_oracle",
+        "iid": "oracle IID"
+      },
+      {
+        "name": "conditional_zero",
+        "iid": 0
+      }
+    ],
+    "mutation_gate": "fixture must separate label and truth inclusion; baseline replay identical; verify per-row selected threshold and unchanged non-IID routes; report label and truth-inclusion changes for each mutation, not scientific sensitivity or threshold selection"
+  },
+  "numerical_counterfactual": {
+    "scope": "A=.11484375 dispersal, not A=.1152 near trapping",
+    "source_values": [
+      0.5045585169607167,
+      0.503472341319628,
+      0.5031986242510851,
+      0.5031321211128095
+    ],
+    "grids": [
+      6144,
+      12288,
+      24576,
+      49152
+    ],
+    "observed_orders": [
+      1.9885001077183615,
+      2.041191073631335
+    ],
+    "transferred_p": 1.449384137824638,
+    "rows": [
+      {
+        "name": "R4B0",
+        "actual": 0.5031986242510851,
+        "prior": [
+          0.5045585169607167,
+          0.503472341319628
+        ],
+        "original": 0.5032003,
+        "tolerance": 0.000005,
+        "counterfactual": 0.5030746080153735,
+        "counterfactual_error": 0.00012401623571156595,
+        "original_error": 0.000001675748914964359
+      },
+      {
+        "name": "R4B2",
+        "actual": 0.5031321211128095,
+        "prior": [
+          0.503472341319628,
+          0.5031986242510851
+        ],
+        "original": 0.5031301949839493,
+        "tolerance": 0.000005,
+        "counterfactual": 0.5030983951629117,
+        "counterfactual_error": 0.000033725949897811525,
+        "original_error": 0.0000019261288601857274
+      }
+    ],
+    "interpretation": "counterfactual only; no retrospective gate changes; no physical transfer of p"
+  },
+  "scientific_hold": true,
+  "identifiability_hold": true,
+  "critical_bracket_hold": true,
+  "production_changed": false
+}
