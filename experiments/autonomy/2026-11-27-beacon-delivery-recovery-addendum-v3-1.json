@@ -1,0 +1,36 @@
+{
+  "schema": "janus.beacon.delivery.recovery.v3_1.addendum",
+  "date": "2026-11-27",
+  "recorded_after_first_nominal_slot": true,
+  "scope": "Prospective for remaining eligible slots; no retrospective gate change for 22:39 slot; interpret first slot using v2/v3 only. No source result for first slot inspected in this turn before writing.",
+  "parent_commit": "62ee700444d879b64348354c84d2cd99da455dca",
+  "source_policy": {
+    "known_relay_contract": "Poll Automations peek latest last_run and latest_result only, require matching IDs, completed nontruncated result, never fall back to prior data; exact UUID inbox path, no overwrite.",
+    "queue": "No explicit retry queue in documented Relay prompt. Underlying scheduler retry history and internal buffering unknown; do not assert empty or purge. Repeated old UUID can arise from repeated reads of unchanged latest result; distinguish polling from scheduler retry.",
+    "classification": {
+      "fresh": "distinct UUID, scheduled_for equals eligible nominal slot, actual execution and observation after intervention; exact v2/v3 time, payload and receipt gates",
+      "old_poll": "same previously observed/rejected source UUID; not a new Witness observation or eligible transfer; preserve source and relay IDs separately",
+      "retry": "requires affirmative source attempt/retry metadata; do not infer from repeated UUID alone",
+      "duplicate": "existing inbox UUID with identical payload; no overwrite, no new delivery credit",
+      "conflict": "same UUID different payload; reject, quarantine as permitted, no overwrite"
+    }
+  },
+  "slot_policy": "Do not mix old UUID or manual seed with new slots. Keep each eligible slot pending until evidence complete or definitive miss established. At next nominal hourly slot, flag previous unverified slot UNKNOWN_PENDING, do not skip it or count contiguous streak. No new hard timeout invented; pending may settle later, definitive missed/rejected slot breaks streak. If latest-only source history lost, classify evidence unavailable and no PASS across that gap. No claim old rejection is a new mode failure.",
+  "required_fields": [
+    "nominal_slot",
+    "witness_run_id",
+    "relay_run_id",
+    "source_class",
+    "scheduled_for",
+    "started_at",
+    "observed_at",
+    "completed_at",
+    "observed_minus_scheduled_seconds",
+    "relay_disposition",
+    "inbox_readback",
+    "receiver_readback",
+    "evidence_limit"
+  ],
+  "status": "DELIVERY_RECOVERY_UNVERIFIED__PROVENANCE_UNVERIFIED",
+  "no_mutations": "No clearing queues, no manual relay, no changes to production, learning, schedule, permissions, or physics holds."
+}
