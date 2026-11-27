@@ -1,0 +1,111 @@
+{
+  "id": "JANUS-R4B5A-CURVATURE-RECOVERY",
+  "status": "FROZEN_BEFORE_NEW_EVOLUTION",
+  "parent": {
+    "run": 46015240544,
+    "archive_commit": "f2d9f22c43c534538f4152663b972959835dc5bc",
+    "archive_blob": "6f04904b321d85abf3555ac1894de93b830cb57a",
+    "solver_blob": "71ef15312166337a9ee41d71d75a29674d00e5d3",
+    "boundary_blob": "2a3222c222412f327666e10db2219acde71cdeb3",
+    "audit_blob": "7178830daae07f71854f9e81f66fa3366586a6e8"
+  },
+  "configuration": {
+    "A": 0.1152,
+    "family": "original",
+    "R": 30,
+    "r0": 5,
+    "w": 1,
+    "end": 16,
+    "stop_compactness": 0.85,
+    "reference_radius": 12,
+    "grids": [
+      12288,
+      24576,
+      49152
+    ],
+    "CFL": 0.3,
+    "temporal_CFL": 0.15,
+    "temporal_n": 24576
+  },
+  "replay": {
+    "relative_max": 1e-8,
+    "coarse": {
+      "peak_compactness": 0.8500250109731984,
+      "curvature_peak": 1297.610618734216,
+      "t": 10.165283203125,
+      "proper_time": 5.518371250115308
+    },
+    "medium": {
+      "peak_compactness": 0.850065666183325,
+      "curvature_peak": 1247.6366750039192,
+      "t": 10.09130859375,
+      "proper_time": 5.517709052224047
+    }
+  },
+  "admission": {
+    "class": "NEAR_TRAPPING_PROXY",
+    "min_cells": 8,
+    "max_outer_interior_mass_residual_strict": 0.01,
+    "max_closed_mass_drift_strict": 0.01,
+    "finite_trace": true,
+    "original_stop_preserved": true
+  },
+  "time_support": {
+    "samples": 32769,
+    "common_tau": "minimum final central proper time among all three spatial runs; no shifts or rescaling",
+    "temporal_tau": "minimum final central proper time among coarse, medium and half-CFL medium",
+    "peak_extraction": "max of original integration samples before common cutoff and linearly interpolated value at cutoff, not merely max of downsampled trace",
+    "decomposition": "signed native peak difference = signed common-cutoff peak difference + signed difference of excluded-tail peak increments; separate per Ricci proxy. Temporal and spatial separately. Common cutoff is not proof of matching physical event.",
+    "report": "native and common peak values, signed/absolute relative difference, cutoff tail increments, time of maxima, stop time in t and tau, threshold overshoot"
+  },
+  "thresholds": {
+    "C_absolute_max": 0.0005,
+    "C_relative_max": 0.01,
+    "Ricci_peak_relative_max": 0.02,
+    "trajectory_L2_Linf_max": 0.1,
+    "temporal_relative_strict": 0.01,
+    "temporal_over_spatial_max": 0.25,
+    "second_order_range": [
+      1.5,
+      2.5
+    ],
+    "require_decreasing_absolute_differences": true,
+    "scalar_monotonicity": true,
+    "zero_order_unidentifiable": true
+  },
+  "recovery_policy": "Keep historical R4B5 coarse-medium native Ricci FAIL unchanged. Recovery needs medium-fine native AND common-time peak Ricci <=2%, both proxies, all other pair criteria, temporal gate, all nine common-support observed orders within frozen 1.5–2.5, and decreasing native peak differences reported separately. Original lower endpoint already passed. Result only revised resolution-specific upper endpoint, not retroactive coarse pair pass. Native orders reported separately; if inconsistent, label native-order hold, do not silently promote.",
+  "boundary": {
+    "per_run": "actual face flux and separately integrated interior flux r=12, normalized residual <1%, distinguish near-zero outer flux from outgoing validation",
+    "independent_family": {
+      "family": "novel",
+      "A": 0.14,
+      "R": 12.5,
+      "n": 4096,
+      "reference_R": 25,
+      "reference_n": 8192,
+      "end": 22,
+      "probe_radius": 10,
+      "min_outgoing": 0.25,
+      "flux_agreement": 0.05,
+      "balance_strict": 0.01,
+      "field_relative_L2_max": 0.05,
+      "incoming_relative_L2_max": 0.05
+    },
+    "near_trapping_scope": "finite pre-stop balance only, no assertion of outgoing strong-field validation"
+  },
+  "budget": {
+    "timeout_min": 60,
+    "max_projected_total_s": 3000,
+    "projected_fine_s": "4*medium elapsed",
+    "before_fine": "elapsed + projected <=3000; replay, temporal and independent boundary all pass"
+  },
+  "forbidden": [
+    "DSS including synthetic/null tests in this branch",
+    "AMR",
+    "critical exponent",
+    "new bracket narrowing",
+    "production merge",
+    "threshold changes after result"
+  ],
+  "scientific_hold": true
+}
