@@ -1,0 +1,100 @@
+{
+  "schema": "janus.h38n8a.representational_limits.addendum.v2",
+  "date": "2026-11-28",
+  "parent": {
+    "commit": "40a4a2b31ef2429596fdc3aa7a0b17c631406a1f",
+    "blob": "eb37a26dd6d877f65ca3cafa72724bc3c9d5777d"
+  },
+  "status": "PROSPECTIVE_DESIGN__CORPUS_NOT_GENERATED__PROBE_NOT_EXECUTED__JANUS_TRAIN_HOLD",
+  "scope": "Supersedes conflicting prospective analysis details only. Original source, factor cells, sample counts, data boundaries, production and training holds unchanged.",
+  "axis_mapping": {
+    "TYPE": {
+      "0_requires": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "1_prevents": [
+        12,
+        13,
+        14,
+        15
+      ]
+    },
+    "DIRECTION": {
+      "0_A_to_B": [
+        8,
+        10,
+        12,
+        14
+      ],
+      "1_B_to_A": [
+        9,
+        11,
+        13,
+        15
+      ]
+    },
+    "POLARITY": {
+      "0_affirmed": [
+        8,
+        9,
+        12,
+        13
+      ],
+      "1_negated": [
+        10,
+        11,
+        14,
+        15
+      ]
+    },
+    "G2": "For known gold, map actual predict() label to axis value even if other axis wrong. None is abstention, counts as incorrect for unconditional balanced accuracy. Report per-context 2x3 confusion (0,1,abstain), per-value coverage and answered-only accuracy (undefined if no answers), raw argmax axis accuracy separately. Gold HOLD excluded from semantic axes. Compare G2 and conditioned probe on identical evaluation rows; probe unconditional binary decision, no rejection threshold. Both pooled and 4 conditioned contexts per axis; pooled accuracy not substitute for contexts."
+  },
+  "upper_bound": {
+    "primary": "For each conditioned pair of balanced known cells, group EVAL examples by exact sorted unique SHA256 bin indices (equivalent to exact normalized feature vector). Let n_g0,n_g1 be counts of each axis label per vector. U=sum_g max(n_g0,n_g1)/N; equal class sizes make this also balanced accuracy ceiling. If imbalance occurs, HOLD dataset audit; additionally formula weighted by 1/(2*N_label) for balanced accuracy. Report pooled axis U, full 9-class raw-accuracy U, separate known/HOLD balanced U with inverse-class frequencies, and matched-pair conflicts. Never group by cosine or Jaccard for deterministic bound.",
+    "decision": "U<.80 in any conditioned context => COLLISION_LIMITED_ON_THIS_CONTEXT_AND_CORPUS regardless of probe. This precludes axis admission at 80% threshold on this finite corpus; not universal impossibility. U>=.80 necessary not sufficient. Retain original <1%,1–5%,>5% conflicting-row bands and strict <1% admission per context. U>=.80 and probe fails => PROBE_INCONCLUSIVE unless other integrity flags; possible nonlinear signal, distribution shift, data or solver limits. Nonlinear MLP only separate future diagnostic precommit, not automatic architecture change. U>=.80 and valid probe passes => linear signal accessible on tested distribution, G2 utilization determined separately.",
+    "near_collisions": "Jaccard>=.8, Hamming distance and cosine>=.99 diagnostic distributions; no merging, no removal, no claim that near-collisions prove deterministic impossibility. Report NEAR_COLLISION_BURDEN descriptive only."
+  },
+  "probe": {
+    "solver": "sklearn LogisticRegression, L2, lbfgs, max_iter=2000, tol=1e-8, fit_intercept=false, float64, random_state=381801; 9-way multinomial and conditioned binary models; class_weight=None except known/HOLD balanced; pin sklearn/numpy/scipy and Python versions before execution.",
+    "selection": "Keep C=1 fixed for primary comparability and avoid extra hyperparameter search, not asserted optimal. 5-fold grouped CV within TRAIN as validation diagnostic only, groups=preassigned family clusters, all counterfactuals together, balanced per-cell composition verified, deterministic group assignment with seed381801. Report fold scores, mean and SD, full TRAIN accuracy and untouched EVAL accuracy, identical balanced-accuracy definition per task. No C selection on EVAL or historical exam; future tuned C requires separate precommit and fresh evaluation. Convergence warnings invalidate associated fit for admission.",
+    "gap": "TRAIN minus EVAL balanced accuracy >.15 => GENERALIZATION_GAP_HOLD; report train/CV/EVAL differences and distribution-shift possibility. Does not prove overfit; block positive admission even if point metric passes. Negative U proof unaffected. Fixed fit C justified as reproducible regularized probe; no claim chance-like result exhausts linear classifiers.",
+    "curve": "15,30,45,60 nested TRAIN family counts fixed seed381801; 5 grouped folds per count, full fit on respective subset, EVAL for descriptive comparison only, mean/SD CV error bars; no adaptive selection. If groups too few or fold infeasible report HOLD. Historical 27 EXAM run as secondary exposed historical check after primary outputs frozen; not blind, no fitting/tuning on these rows.",
+    "hold": "Separate binary known/HOLD with balanced class weights and balanced accuracy, separate G2 argmax16 vs argmax-known below .65 refusal mechanisms; report confusion and coverage, not semantic-axis average. No claim of general novelty detection."
+  },
+  "generator": {
+    "method": "Deterministic authored grammatical templates, no LLM-generated rows during execution, no external corpus. Template manifest authored before scores; human/independent reviewer semantic check required before fit. One family = distinct lexical/syntactic construction cluster containing exactly one realization per 8 known labels and two matched unsupported relation texts, 10 rows per family. A family is not a synonym substitution or adverb variation of another; group near-duplicate construction variants under same cluster; if merged clusters reduce counts, HOLD not fill after results. Counterfactuals differ only target semantics, grammatical edits allowed; HOLD matched for length/structure, no class-ID or family tokens.",
+    "split": "90 families preassigned 60 TRAIN/30 EVAL by disjoint construction clusters; held-out constructions, stratified by predeclared broad grammar strata, deterministic seeded assignment within strata (seed381801), no outcome-informed split. Freeze strata quotas and exact template roster before generating texts; 600/300 unchanged. Audit lexical cue overlap, length distributions and lexical-only baseline; same-author template study, no independent natural-language claim.",
+    "dedup": "Compare all new normalized texts with historical 54 attempted +27 exam (36 retained subset), union of approved forbidden normalized SHA256, cross split, and within corpus. Normalized exact duplicates prohibited; token Levenshtein similarity 1-distance/max(token counts)>=.85 or set-of-token-bigrams Jaccard>=.8 flags manual blind semantic/construction review. Do not delete within-family intended counterfactuals. Cross-split shared construction cluster forbidden, reassign entire cluster before corpus freeze or HOLD. No guarantee semantic dedup exhaustive. Exact feature conflicts retained. Record original synthetic authorship, generator version, rights/license declaration (no external sources claimed), template ID, cluster ID, label, per-row normalized SHA256, canonical UTF8 sorted-key compact JSON corpus SHA256, split manifest hash, historical source hashes. Freeze generator, roster, audit, counts and hashes before first probe/G2 score; missing review or corpus hash blocks execution."
+  },
+  "statistics": {
+    "scope": "Exploratory diagnostic, not confirmatory population inference; no nominal family-wise claim. To make engineering admission conservative, for 12 conditioned axis contrasts plus one HOLD binary probe use Bonferroni alpha=.05/13 for one-sided family-bootstrap lower bounds; fixed 10000 resamples by family seed381802, lower quantile .05/13; report ordinary 95% intervals as descriptive too. 30 eval families small and bootstrap approximate, no guarantee FWER exact. Point BA>=.8, adjusted lower bound>.5, conflict<.01, U>=.8, convergence and gap gates all required for each semantic contrast. HOLD independently report BA>=.8 and adjusted lower bound>.5 with same integrity gates; no semantic average. G2 high defined unconditional balanced accuracy>=.8 per same context, low otherwise, no confidence claim. Missing/invalid metric=>UNDETERMINED."
+  },
+  "diagnoses": {
+    "priority": [
+      "CORPUS_OR_EXECUTION_HOLD",
+      "COLLISION_LIMITED_ON_CORPUS if exact U<.8",
+      "GENERALIZATION_GAP_HOLD if gap>.15",
+      "PROBE_INCONCLUSIVE if probe fails remaining gate",
+      "LINEAR_SIGNAL_AVAILABLE if probe passes"
+    ],
+    "cases": {
+      "G2_high_probe_high": "SIGNAL_AVAILABLE_AND_G2_UTILIZES",
+      "G2_low_probe_high": "DATA_OR_LEARNING_LIMITED_NOT_DISAMBIGUATED",
+      "G2_low_probe_low": "PROBE_INCONCLUSIVE unless independent ceiling evidence",
+      "G2_high_probe_low": "PROBE_G2_DISAGREEMENT; check solver, training-domain mismatch, confounds and sampling; neither G2 overfit nor representational failure inferred"
+    },
+    "note": "High pooled results cannot hide failed conditioned contrast. 3/3 semantic axes required for original domain, HOLD separate. Any narrowing requires new explicit label semantics and precommit, fresh eval, no automatic training."
+  },
+  "authorization": {
+    "diagnostic_fit_only": true,
+    "janus_train": false,
+    "production": false,
+    "architecture_change": false,
+    "beacon_closed_loop_blocked": true,
+    "max_diagnostic_job_minutes": 10,
+    "execution": "not launched; concrete template roster and audit pending; budget estimate not measured. If all controls exceed limit, report technical HOLD; no unapproved retries."
+  }
+}
