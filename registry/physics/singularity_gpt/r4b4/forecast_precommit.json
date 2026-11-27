@@ -1,0 +1,106 @@
+{
+  "schema": "janus.singularity.r4b4.forecast_precommit.v1",
+  "status": "FROZEN_BEFORE_49152__NO_EVOLUTION_AUTHORIZED_BY_THIS_RECORD",
+  "parent": {
+    "run": 46002143341,
+    "head": "cd123677d8e3ac0e7cf8c875e895604f3c665bb6",
+    "archive_commit": "631ef763ec7868301e70db89a946c0b4d4910588",
+    "solver_blob": "71ef15312166337a9ee41d71d75a29674d00e5d3",
+    "boundary_solver_blob": "2a3222c222412f327666e10db2219acde71cdeb3",
+    "prior_audit_blob": "81698826a8250d414624bc258c639ff0f97acee0",
+    "prior_rivals_protocol_blob": "4c16c70aa3d295216bb763a85c10f3e0380d1721",
+    "prior_rivals_pr": 782
+  },
+  "configuration": {
+    "A": 0.11484375,
+    "r0": 5,
+    "w": 1,
+    "R": 30,
+    "t_end": 16,
+    "grids": [
+      12288,
+      24576,
+      49152
+    ],
+    "CFL": 0.3,
+    "bc": "spherical_characteristic candidate from R4B3",
+    "no_parameter_tuning": true
+  },
+  "bc_bridge": {
+    "absolute_C_tolerance": 0.000001,
+    "relative_Ricci_tolerance": 0.06,
+    "measured": [
+      {
+        "n": 12288,
+        "old_C": 0.503472341319628,
+        "new_C": 0.503472341319628,
+        "C_abs_delta": 0,
+        "old_Ricci": 1561.2975822765497,
+        "new_Ricci": 1561.2975822765497,
+        "Ricci_relative_delta": 0,
+        "old_class": "DISPERSAL_PROXY",
+        "new_class": "DISPERSAL_PROXY"
+      },
+      {
+        "n": 24576,
+        "old_C": 0.5031986242510851,
+        "new_C": 0.5031986242510851,
+        "C_abs_delta": 0,
+        "old_Ricci": 1463.190473367423,
+        "new_Ricci": 1463.190473367423,
+        "Ricci_relative_delta": 0,
+        "old_class": "DISPERSAL_PROXY",
+        "new_class": "DISPERSAL_PROXY"
+      }
+    ],
+    "interpretation": "Two new-BC grid points directly measured, not assumed transfer. Finite-time bridge, not proof of asymptotic order."
+  },
+  "forecast": {
+    "hypothesis": "leading error c*h^2; not established, two points cannot determine p independently",
+    "formula": "Q_49152=Q_24576+(Q_24576-Q_12288)/4; Q_limit=Q_24576+(Q_24576-Q_12288)/3",
+    "C": {
+      "coarse": 0.503472341319628,
+      "fine": 0.5031986242510851,
+      "forecast_49152": 0.5031301949839493,
+      "conditional_limit": 0.5031073852282374
+    },
+    "R": {
+      "coarse": 1561.2975822765497,
+      "fine": 1463.190473367423,
+      "forecast_49152": 1438.6636961401414,
+      "conditional_limit": 1430.4881037310474
+    },
+    "thresholds": {
+      "C_absolute_tolerance": 0.000005,
+      "Ricci_relative_tolerance": 0.02,
+      "source": "retain exact earlier PR782 thresholds rather than tune after result"
+    },
+    "interpretation": "forecast pass/fail separate from convergence and numerical integrity; predicted Ricci is central proxy, not full invariant curvature; conditional limits are not measured"
+  },
+  "future_audit": {
+    "replay_new_bc_pair": true,
+    "common_proper_time_samples": 32769,
+    "full_history_no_shift": true,
+    "all_three_local_cells_min": 8,
+    "all_three_mass_residual_strict": 0.01,
+    "relative_L2_Linf_max": 0.1,
+    "report_adjacent_differences_and_observed_order": true,
+    "require_decreasing_absolute_L2": true,
+    "observed_order_formula": "log2(norm(Q_h-Q_h/2)/norm(Q_h/2-Q_h/4)) on same common support; scalar peak order reported separately; nonmonotone or zero differences flagged",
+    "temporal_step_control": "separate CFL=.15 run at fixed n=24576 proposed; no temporal-order claim without measured control",
+    "status": "full execution protocol and stronger-field boundary coverage still required before physical claims"
+  },
+  "detector_scope": {
+    "prior_PR": 782,
+    "modified": false,
+    "synthetic_only": true,
+    "metrics_user_reported_not_reverified": {
+      "positive_correct_percent": 99.83,
+      "near_dss_chirp_false_positive_percent": 8.17
+    }
+  },
+  "scientific_hold": true,
+  "dss_authorized": false,
+  "amr_authorized": false,
+  "run_49152": false
+}
