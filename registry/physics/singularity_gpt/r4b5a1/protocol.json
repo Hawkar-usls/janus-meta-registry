@@ -1,0 +1,96 @@
+{
+  "id": "JANUS-R4B5A.1-REFERENCE-DOMAIN-RECOVERY",
+  "status": "PRECOMMITTED_BEFORE_NEW_EVOLUTION",
+  "parent": {
+    "run": 46026592791,
+    "archive_commit": "7853e8c5c527061ff03fe9b5fa45436ff1612162",
+    "archive_blob": "20722786f2c66efd8c82f559a66aa4c26af6c279",
+    "audit_blob": "f84f5a9336794e7d9a19ca301d5da1927f5dac13",
+    "solver_blob": "71ef15312166337a9ee41d71d75a29674d00e5d3",
+    "boundary_blob": "2a3222c222412f327666e10db2219acde71cdeb3"
+  },
+  "configuration": {
+    "family": "novel",
+    "A": 0.14,
+    "r0": 5,
+    "w": 1,
+    "CFL": 0.3,
+    "end": 22,
+    "h": 0.0030517578125,
+    "probe_radius": 10,
+    "interior_flux_radius": 12.5,
+    "cases": [
+      {
+        "id": "small",
+        "R": 12.5,
+        "n": 4096,
+        "candidate": true
+      },
+      {
+        "id": "r25_legacy",
+        "R": 25,
+        "n": 8192,
+        "candidate": false
+      },
+      {
+        "id": "r25_candidate",
+        "R": 25,
+        "n": 8192,
+        "candidate": true
+      },
+      {
+        "id": "r50",
+        "R": 50,
+        "n": 16384,
+        "candidate": true
+      },
+      {
+        "id": "r62_5",
+        "R": 62.5,
+        "n": 20480,
+        "candidate": true
+      }
+    ]
+  },
+  "causal": {
+    "coordinate_speed_bound": 1,
+    "derivation": "positive mass and polar areal geometry imply a>=1, alpha at outer boundary <=1, radial lapse gradient nonnegative, hence alpha/a<=1; record measured maximum per step and check. R50 to comparison sphere r12.5 >=37.5 > t_end22. Gaussian has noncompact tails, and constrained lapse is nonlocal gauge; not exact compact-support causality nor proof of discrete stencil causality. Compare R50 to R62.5 empirically on common central proper time.",
+    "reference_check": "characteristic candidate at both far boundaries; raw mass drift only a diagnostic, not a gate unless explicitly using closed-volume control; direct face and independent interior residual each <1%."
+  },
+  "time": {
+    "primary": "central proper time tau integral alpha(0) dt, trapezoid from start, same origin, no fit, shift or scale; 32769 uniform samples on common overlap, no extrapolation",
+    "diagnostic": "coordinate-time comparison at same t also reported separately; at r10 probe compare on slices indexed by central tau, not local probe clock; flux integrals evaluated at common tau endpoint",
+    "minimum_common_coverage": 0.95,
+    "incoming_window": "tau corresponding to small-domain t=12 through common end, fixed before runs"
+  },
+  "thresholds": {
+    "mass_balance_strict": 0.01,
+    "minimum_outgoing": 0.25,
+    "flux_agreement_abs": 0.05,
+    "field_l2_max": 0.05,
+    "incoming_l2_max": 0.05,
+    "far_reference_trace_l2_linf_max": 0.01,
+    "far_reference_C_abs_max": 0.0005,
+    "far_reference_C_rel_max": 0.01,
+    "far_reference_Ricci_rel_max": 0.02,
+    "minimum_local_cells": 8,
+    "legacy_replay_relative_max": 1e-8
+  },
+  "gates": [
+    "replay historical small/R25 results",
+    "both far references complete and numerically valid",
+    "same h and coordinate characteristic speed bound with causal margin",
+    "R50 vs R62.5 central trajectories and probe field agree, peak C/Ricci separate",
+    "small vs each far reference common-tau field, incoming proxy, matched integrated outgoing fractions and both balance residuals"
+  ],
+  "closure_vs_flux": "Nonzero raw mass loss alone is not a conservation failure. Historical R25 residual was flux-corrected and cannot be explained solely by mass loss. Report raw drift, final mass loss, integrated face flux, independently integrated interior flux and residual separately. Closure requires negligible actual flux, not merely ingoing initial data. R25 candidate and legacy are diagnostics, not required to pass for valid far reference.",
+  "scientific_hold": true,
+  "forbidden": [
+    "A=.1152 evolution including temporal and 49152",
+    "DSS",
+    "AMR",
+    "bracket narrowing",
+    "production merge"
+  ],
+  "claim_ceiling": "finite reference validation for time-symmetric A=.14 only; does not prove global BC or curvature recovery"
+}
