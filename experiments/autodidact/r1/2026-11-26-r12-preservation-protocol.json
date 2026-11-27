@@ -1,0 +1,84 @@
+{
+  "schema": "janus.autodidact.r12.protocol.v1",
+  "date": "2026-11-26",
+  "status": "R11_DIAGNOSTIC_PASS__R12_PR_OPEN__INDEPENDENT_EXAM_HOLD",
+  "r11": {
+    "run": 45883456145,
+    "job": 140128214782,
+    "ci": "success",
+    "arms": 9,
+    "trained_improved_development": 8,
+    "parent_unchanged": true,
+    "profiles": [
+      {
+        "name": "historical_1",
+        "seeds": [
+          17021,
+          17022
+        ],
+        "relative_development_delta": [
+          -0.02369446067812908,
+          -0.02681486973095215
+        ],
+        "mean_pct": -2.525466520454062
+      },
+      {
+        "name": "historical_2",
+        "relative_development_delta": [
+          -0.04444800026219253,
+          -0.04361456751227033
+        ],
+        "mean_pct": -4.403128388723143
+      },
+      {
+        "name": "historical_3",
+        "relative_development_delta": [
+          -0.005029702655006907,
+          -0.006590512688006922
+        ],
+        "mean_pct": -0.5810107671506914
+      },
+      {
+        "name": "short_conservative",
+        "relative_development_delta": [
+          -0.02201018773551633,
+          -0.022778778981436765
+        ],
+        "mean_pct": -2.239448335847655
+      }
+    ],
+    "source": "https://github.com/Hawkar-usls/Janus-Demiurge/actions/runs/45883456145",
+    "limitation": "Historical train-labeled data, not new independent competence; no candidate promotion."
+  },
+  "r12": {
+    "pr": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/771",
+    "head": "987bc3a6db9689274faa5f01b6a0c461b8e6640f",
+    "parent_sha256": "06d7e6228ca9aef2dc58eb55fe1c805aa3b66e4f8fb90b0e946ce6af47b1a662",
+    "registry_commit": "106463de92f57fb21785c59146b63e3013aaaa62",
+    "arms": [
+      "no_update",
+      "plain",
+      "replay",
+      "ewc",
+      "distill"
+    ],
+    "seeds": [
+      27021,
+      27022
+    ],
+    "steps": 60,
+    "lr": 0.0003,
+    "replay_fraction": 0.25,
+    "ewc_lambda": 100,
+    "fisher_estimator": "mean squared minibatch gradient, 16 retention-fit batches",
+    "distillation": {
+      "temperature": 2,
+      "weight": 0.5,
+      "teacher": "frozen native parent"
+    },
+    "partition": "historical train-labeled documents, disjoint exact content hashes, 40/10/40/10 adaptation-fit/eval retention-fit/eval; semantic near-duplicates and prior parent exposure possible",
+    "results": null,
+    "claim_ceiling": "No semantic retention or independent exam proof. No weights exported, no authority change, no production change. Fixed constants, not selected from R11."
+  },
+  "principle": "New learning must not trade away independently verified existing abilities; retention requires task-level evidence, not just text loss or teacher agreement."
+}

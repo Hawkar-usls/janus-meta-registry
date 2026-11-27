@@ -1,0 +1,52 @@
+{
+  "schema": "janus.autodidact.r18.protocol.v1",
+  "date": "2026-11-26",
+  "status": "PROTOCOL_FROZEN__PR_OPEN__RESULT_PENDING",
+  "prior": {
+    "run": 45888778318,
+    "artifact": 15150083214,
+    "registry_commit": "3ef4da3f9b8c6c1cd630f4803c539810bf27adbd",
+    "registry_path": "experiments/autodidact/r1/2026-11-26-r17-step-geometry-result.json"
+  },
+  "pr": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/778",
+  "head": "b94b08b77fda1c812317ed491351aecea39bc07a",
+  "parent_sha256": "06d7e6228ca9aef2dc58eb55fe1c805aa3b66e4f8fb90b0e946ce6af47b1a662",
+  "registry_commit": "106463de92f57fb21785c59146b63e3013aaaa62",
+  "design": {
+    "arms": [
+      "fixed_3e-4",
+      "fixed_1e-4",
+      "trust_region"
+    ],
+    "seeds": [
+      27021,
+      27022
+    ],
+    "attempts_per_arm": 60,
+    "batch_size": 8,
+    "menu": [
+      0.0001,
+      0.00003,
+      0.00001
+    ],
+    "step_l2_limit": 0.07,
+    "total_l2_limit": 0.5,
+    "gate_split": "r18-gate salted SHA256 mod5, 20% of historical fit records",
+    "gate_seed": 78131,
+    "gate_batches": 8,
+    "final_seed": 46117,
+    "final_batches": 24,
+    "mode": "real AdamW eval mode, dropout disabled",
+    "gate": "adaptation improvement >=1e-6 relative to current, no retention deterioration versus current or parent, adaptation <= parent, geometry bounds",
+    "rollback": "exact tensor and optimizer state digests, forced rollback each trust seed",
+    "captain": "deterministic alternate predicate and gate replay",
+    "controls": 6
+  },
+  "limits": [
+    "Step and total radius chosen as exploratory bounds, not calibrated optimum",
+    "Equal batch attempts, unequal trial/evaluation compute",
+    "Historical proxy final evaluation already disclosed in R17; not independent semantic competence",
+    "No automatic dispatch, production changes, checkpoint export or promotion"
+  ],
+  "result": null
+}

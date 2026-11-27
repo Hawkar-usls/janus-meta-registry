@@ -1,0 +1,58 @@
+{
+  "schema": "janus.autodidact.r118.protected_gradient.protocol.v1",
+  "date": "2026-11-27",
+  "status": "FROZEN_BEFORE_PR_OPEN",
+  "head": "092f8fc092bc9647d79059f20591da3c4a86c040",
+  "workflow": ".github/workflows/autodidact-r118-protected-gradient.yml",
+  "workflow_blob": "f03bd199704f732e34dbd59e33c334e08bfeaa4b",
+  "prior": {
+    "r116_run": 45960673058,
+    "r116_result_commit": "87da785e75dae09f3526af239572ca3306e466ec",
+    "accepted": 36,
+    "rollbacks": 1044,
+    "all_gates_failed": true,
+    "policy_commit": "134eee23da70e53cef9c49c88a5e146237530319"
+  },
+  "design": {
+    "seeds": [
+      118101,
+      118102
+    ],
+    "arms": [
+      "adamw_raw",
+      "adamw_norm_matched",
+      "protected_displacement"
+    ],
+    "trials": 180,
+    "stage_trials": [
+      60,
+      60,
+      60
+    ],
+    "step_radius": 0.07,
+    "total_radius": 0.5,
+    "replay_weight": 0.25,
+    "source_policy": "unchanged R116 restricted source admission, exclude 344 prior source hashes/paths, 36 new source-copy examples and 64 separate crystals",
+    "proposal": "PyTorch AdamW on shadow parameter tensors, real model hash unchanged before applying actual displacement; raw clipped objective gradient updates moments; exact rollback on rejected or zero step",
+    "constraint": "fresh normalized gradients of 4 weakest parent-correct pairwise margins and 4 open-token margins including >=2 historical witnesses, current highest competing token for open margins; all other old items still checked by exact veto",
+    "projection": "cyclic halfspace correction of actual AdamW displacement in float64 Gram space, up to 24 sweeps, tolerance 1e-7*max(raw_norm,1e-12), zero step on infeasible; no nearest-point optimality claim",
+    "controls": "raw actual displacement vs scalar shrinkage to local projected norm vs projected displacement; all arms compute same constraints and projection; same curriculum, replay and target counts",
+    "retention": "R116 exact post-step acquisition CE, paired/open historical veto and geometry unchanged; zero steps not accepted; same final foundation and relation gates",
+    "train_padded_positions_per_arm_seed": 138240,
+    "gate_padded_positions_per_arm_seed": 2419200,
+    "constraint_forward_positions_per_arm_seed": 933120,
+    "constraint_vjp_calls_per_arm_seed": 1440,
+    "decision": "report acceptance, exact rollback, zero abstentions, projected feasibility, raw/applied norms and predicted vs actual constraint margin directions, old losses and new full-sequence performance; do not promote any candidate; reduction in rejected attempts alone is not learning"
+  },
+  "limits": [
+    "Only selected eight local linearized margins, not all old facts; finite steps may still lose knowledge, so exact veto remains",
+    "Open competitors may switch after the step; projected float64 direction rounded to model precision",
+    "Norm matching is against the same local counterfactual at each arm's current weights, not a guarantee of equal realized norms across diverged trajectories",
+    "AdamW moments follow raw gradient, not projected displacement; this is a modified optimizer policy",
+    "All arms pay projection overhead for matched comparison; absolute runtime advantage not established",
+    "New source and seeds differ from R116; use contemporaneous raw arm, not historical acceptance as causal comparator",
+    "Historical document cohorts reused, synthetic tasks and metadata-derived facts, no independently administered blind exam",
+    "No production change, export, promotion or dependency removal"
+  ],
+  "result": null
+}

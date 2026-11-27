@@ -1,0 +1,53 @@
+{
+  "schema": "janus.autodidact.r115.protocol.v1",
+  "date": "2026-11-27",
+  "status": "FROZEN_BEFORE_PR_OPEN",
+  "head": "43491b7cbbca1a458eec25a076d8075006f07dc1",
+  "workflow": ".github/workflows/autodidact-r115-knowledge-crystallization.yml",
+  "prior": {
+    "run": 45957923624,
+    "artifact": 15179652423,
+    "registry_result_commit": "a828faab803e19c6ab7b2ba1e58639c2471a81c1",
+    "raw_both": 30,
+    "global_offset_both": 25,
+    "reference_centered_both": 25,
+    "old_lost": 2,
+    "all_gates_failed": true
+  },
+  "design": {
+    "seeds": [
+      97091,
+      97092
+    ],
+    "arms": [
+      "pair_ce_plain",
+      "full_ce_plain",
+      "full_ce_crystal"
+    ],
+    "trials": 120,
+    "step_radius": 0.07,
+    "total_radius": 0.5,
+    "replay_weight": 0.25,
+    "source_policy": "restricted exact-source metadata digit derivation only, exclude 144 previous source hashes/paths and 36 new replay/gate/exam sources from 64 new crystal sources; two disjoint groups of 32",
+    "crystals": "source alias, derived last_digit property, exact verified value, source SHA256, registry commit/path, field pointer digest; source alias determined from hash, not answer; stratified selection independent of model scores",
+    "comparison": "two shared natural forms, two plain vs two structured JSON/triple prefixes; same supervised targets, sampling, token positions and replay; paired CE versus full-vocab CE versus full-vocab structured CE",
+    "open_exam": "greedy single next byte across entire 258-token vocabulary, two novel natural prompt forms per trained source alias; no answer options, retrieval or teacher in candidate forward",
+    "preservation": "both pairwise and full-vocab parent-correct item veto and exact rollback; both new gate losses <= parent; final separate old item exam",
+    "gate": ">=20/32 exact both forms, net gain >=4, zero old pair and open item losses, >=16 old paired parent correct, >=5 distinct digits predicted per form",
+    "train_tokens_per_arm_seed": 92160,
+    "gate_tokens_per_arm_seed": 929280,
+    "controls": {
+      "gate": 7,
+      "admission": 4
+    }
+  },
+  "limits": [
+    "New scoped admission of factual metadata-derived last-digit associations, not full raw document training or scientific truth",
+    "JSON prefixes and triple prefixes teach structure; no proof of complete JSON generation",
+    "Single-token open generation, not full autonomous natural-language output",
+    "Same source identities used during training and held-out wording exam, not unseen-source inference; same-process scoring, no independently administered blind or network-isolation proof",
+    "Cortex corpus only used for source preparation, not candidate exam inference; candidate and parent weights frozen before final prompts",
+    "No promotion, export, production change or quarantine override"
+  ],
+  "result": null
+}

@@ -1,0 +1,60 @@
+{
+  "schema": "janus.autodidact.r113.protocol.v1",
+  "date": "2026-11-27",
+  "status": "FROZEN_BEFORE_PR_OPEN",
+  "head": "7f6589554c48c473150edd6a9944b7068fec0a68",
+  "workflow": ".github/workflows/autodidact-r113-anti-collapse.yml",
+  "prior": {
+    "run": 45909423791,
+    "artifact": 15159268061,
+    "registry_result_commit": "858a53bd2f03cb6a1cc2c7c9bbb2279972896173",
+    "models_with_constant_exam_form": 5,
+    "total_models": 6,
+    "all_acquisition_gate_failed": true
+  },
+  "design": {
+    "seeds": [
+      77071,
+      77072
+    ],
+    "arms": [
+      "random_ce",
+      "balanced_ce",
+      "balanced_contrast"
+    ],
+    "trials": 120,
+    "step_radius": 0.07,
+    "total_radius": 0.5,
+    "replay_weight": 0.25,
+    "source_policy": "same restricted G7 metadata-copy admission; exclude all 72 sources and paths used in R1.11B and R1.12; 12 new sources per replay/gate/exam group",
+    "train_forms": 4,
+    "gate_forms": 2,
+    "exam_forms": 2,
+    "train_tokens_per_arm_seed": 92160,
+    "gate_tokens_per_arm_seed": 929280,
+    "balanced_batch": "4 entities, 2 per label, each in the same 2 training forms; 8 rows",
+    "contrast": "CE + .25*softplus(1-sum of opposite-label correct margins) + .05*same-entity squared margin difference",
+    "diagnostics": [
+      "per-form label recall",
+      "predicted class counts",
+      "opposite-label rank AUC",
+      "train/gate/exam accuracy and AUC",
+      "item retention"
+    ],
+    "exam": "original >=20/32 both forms, net >=4, zero parent-correct old losses, >=16 old parent-correct; additionally each exam form recall for each label >=.5 and rank AUC >=.7",
+    "controls": {
+      "gate": 5,
+      "contrast": 2,
+      "auc": 2,
+      "admission": 4
+    }
+  },
+  "limits": [
+    "Synthetic balanced binary associations, not open generation or scientific knowledge",
+    "Fresh source hashes and template strings do not prove independent external blind exam or semantic disjointness",
+    "Fixed replay deliberately isolates acquisition; no claim of homeostasis improvement",
+    "Equal model-token budget, different sampling and additional scalar loss arithmetic",
+    "No weight export, promotion, production changes"
+  ],
+  "result": null
+}

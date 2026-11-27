@@ -1,0 +1,50 @@
+{
+  "schema": "janus.autodidact.r16.protocol.v1",
+  "date": "2026-11-26",
+  "status": "PROTOCOL_FROZEN__PR_OPEN__RESULT_PENDING",
+  "question": {
+    "source_run": 45886857861,
+    "source_artifact_id": 15149926035,
+    "id": "GRADIENT_COSINE",
+    "fingerprint": "b7052e63b171197e65b2930f7cf350d85157606de773090a63a5b3b90f436356"
+  },
+  "pr": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/775",
+  "head": "af58e1777ca8c8bc0f24363415122708defd5cae",
+  "parent_commit": "fc4293c972c231e9b06dd286a74c840b69131baa",
+  "parent_sha256": "06d7e6228ca9aef2dc58eb55fe1c805aa3b66e4f8fb90b0e946ce6af47b1a662",
+  "registry_commit": "106463de92f57fb21785c59146b63e3013aaaa62",
+  "design": {
+    "seeds": [
+      27021,
+      27022
+    ],
+    "batches_per_seed": 16,
+    "batch_size": 8,
+    "paired_cross": 32,
+    "within_adapt": 32,
+    "within_retain": 32,
+    "mode": "eval dropout disabled, autograd enabled",
+    "measurements": [
+      "global and layer family cosine",
+      "dot products",
+      "norms",
+      "per-seed cosine of mean gradients",
+      "sign counts and spread",
+      "within-cohort controls"
+    ],
+    "analytic_controls": [
+      "parallel",
+      "antiparallel",
+      "orthogonal",
+      "zero-norm"
+    ],
+    "decision_rule": "descriptive concordance of per-seed mean batch cosine and cosine of mean gradients; mixed/undefined OPEN",
+    "optimizer_steps": 0
+  },
+  "limits": [
+    "Historical exact-hash-disjoint train-only proxy partitions; not chronological new versus old knowledge",
+    "No causal root or statistical significance established by sign rule",
+    "No independent exam, candidate export, production mutation or promotion"
+  ],
+  "result": null
+}

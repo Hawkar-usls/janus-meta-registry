@@ -1,0 +1,58 @@
+{
+  "schema": "janus.autodidact.r110.protocol.v1",
+  "date": "2026-11-26",
+  "status": "PROTOCOL_FROZEN__PR_OPEN__EXTERNAL_EXAM_HOLD",
+  "prior": {
+    "run": 45896563118,
+    "artifact": 15154500615,
+    "registry_commit": "cdc041fc34d5cfbae1a2b391892651b7aa993655",
+    "observed_loss": "one parent-correct addition item lost in each method, seed 37032"
+  },
+  "pr": "https://github.com/Hawkar-usls/Janus-Demiurge/pull/781",
+  "head": "716efe6d931d29c3cc0a16d4b4b425bfdb55cab4",
+  "parent_sha256": "06d7e6228ca9aef2dc58eb55fe1c805aa3b66e4f8fb90b0e946ce6af47b1a662",
+  "registry_commit": "106463de92f57fb21785c59146b63e3013aaaa62",
+  "design": {
+    "seeds": [
+      47041,
+      47042
+    ],
+    "arms": [
+      "fixed_geometry",
+      "item_gate",
+      "item_gate_replay"
+    ],
+    "trials": 120,
+    "facts_per_world": 32,
+    "step_l2_limit": 0.07,
+    "total_l2_limit": 0.5,
+    "menu": [
+      0.0001,
+      0.00003,
+      0.00001
+    ],
+    "old_pools": {
+      "replay": 45,
+      "gate": 45,
+      "exam": 45,
+      "families": [
+        "addition",
+        "subtraction",
+        "json_closure",
+        "copy"
+      ]
+    },
+    "replay_weight": 0.25,
+    "replay_source": "rule-verified synthetic examples; parent-correct only; prioritized arithmetic and low margins",
+    "gate": "zero parent-correct gate losses, new gate loss <= parent + 1e-7, geometry",
+    "controls": 5,
+    "budget": "92160 train forward/backward token positions and 591360 gate token positions per arm/seed, 120 trials; wall time not matched",
+    "exam": "two novel forms >=20/32 entities and net gain >=4, zero old parent-correct item losses, >=16 parent-correct old items"
+  },
+  "limits": [
+    "Memory Cortex sample retrieval not confirmed; synthetic rule replay substitute, not claimed connected",
+    "Same-process synthetic forced-choice exam; not external blind or open generation",
+    "No candidate export or promotion; no production mutation or autonomous dispatch"
+  ],
+  "result": null
+}

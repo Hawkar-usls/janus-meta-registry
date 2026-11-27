@@ -1,0 +1,82 @@
+{
+  "schema": "janus.autodidact.r123.epistemic_metacognition.protocol.v1",
+  "date": "2026-11-27",
+  "status": "FROZEN_BEFORE_PR_OPEN",
+  "head": "f58e9f7cb601cd8553b23d8cfe5446ab5733f7b2",
+  "workflow": ".github/workflows/autodidact-r123-epistemic-metacognition.yml",
+  "workflow_blob": "2cb7ece9a1d9a279e04c5955d2e5ccdfcb215d0e",
+  "prior": {
+    "run": 45980340306,
+    "result_commit": "7b18b69dae98472f0cb43c6a395180806e2f7d8b",
+    "corrected_rank": 166,
+    "raw_rank": 23,
+    "decisive": 174,
+    "all_acquisition_failed": true
+  },
+  "design": {
+    "seeds": [
+      123101,
+      123102
+    ],
+    "arms": [
+      "cold_ce",
+      "cold_epistemic",
+      "inherited_epistemic"
+    ],
+    "trials": 180,
+    "active_parameters_per_probe": 198272,
+    "stage_trials": [
+      60,
+      60,
+      60
+    ],
+    "step_radius": 0.07,
+    "geometry_tiers": [
+      0.5,
+      0.625,
+      0.75
+    ],
+    "replay_weight": 0.25,
+    "source_policy": {
+      "cortex_generation": 8,
+      "cortex_commit": "9eadbd308078282959e4e8a6956710b6bb808cd1",
+      "active_documents": 6326,
+      "reported_bytes": 86947532,
+      "manifest_seal": "4d4040a00ca7cccb7e588bd60688a5e5a60be6202a6970b07c70faacf7d4993f",
+      "allowed_origin_commits": [
+        "c8e47bb54e954ab122e111c97198131f048bd5fd",
+        "db0130736d1e82714ab51a1ac9078d63ac9ec91c"
+      ],
+      "guard": "same public Registry JSON metadata-only rules, CAS bytes exactly equal pinned source, prior hash/path exclusions, native holdout exclusions, explicit denial and pinned quarantine, fixed split",
+      "replay": "fresh parent-correct replay preferred; if insufficient, revalidate only exact R122 train receipts, no prior gate or exam reuse; no split reassignment; 12 replay, 12 fresh gate, 12 fresh exam; fail closed if insufficient",
+      "synthetic_associations": 64,
+      "prior_source_receipts": 652
+    },
+    "reward": "all arms perform exact full-vocabulary terminated answer generation on 80 internal gate prompts per probe; prohibit any loss of previously correct gate item; same prior pair/open/historical veto, geometry, nontrivial step and current CE gain; cold CE uses feasible CE gain; both epistemic arms use count of newly exact correct items + .49*gain/(1+gain); separate exact acquisition steps and CE-only steps",
+    "inheritance": "recompute two R122 calibrated histories from zero over 180 trials each, verify stored before/after errors and final scalars; mean final errors transferred into inherited arm, no old checkpoint weights or exam labels; cold arms start at zero; compare first 30 decisions and entire run on new seeds",
+    "probes": "same paired actual AdamW candidate evaluation, restore both model and optimizer after each probe, commit at most one exactly sealed candidate; all arms prechoose before current outcomes and update online error",
+    "work_per_arm_seed": {
+      "objective_padded_positions": 138240,
+      "gate_padded_positions": 4838400,
+      "constraint_forward_positions": 933120,
+      "constraint_vjps": 1440,
+      "router_group_projections": 900,
+      "actual_probes": 360,
+      "verified_probe_rollbacks": 360,
+      "skill_generation_prompts": 28800,
+      "max_generation_tokens_per_prompt": 7
+    },
+    "evaluation": "report acquisition steps vs CE-only, exact gate item gains and losses, cold/warm prequential ranking early/all, new held-out exact generation and old pair/open/historical losses; all six candidates subject to unchanged final criteria; no promotion",
+    "controls_count": 28,
+    "admission_controls": 4
+  },
+  "limits": [
+    "G8 corpus growth not proof of newly admitted examples; original admission policy unchanged except audited second pinned origin snapshot and explicit training-only replay reuse",
+    "Warm start transfers CE-share error to epistemic reward, not an established compatible learned policy; compare cold and inherited on new seeds only",
+    "Exact gate generation is internal repeated feedback, not proof of generalized skill; final exam separate, no external independent blind exam",
+    "CE-only admissible updates remain allowed as auxiliary progress, not knowledge acquisition",
+    "Different reward scales prohibit cross-reward regret comparison; autoregressive stopping makes compute not exactly equal despite matched prompt budget",
+    "No production change, model export or promotion"
+  ],
+  "result": null
+}

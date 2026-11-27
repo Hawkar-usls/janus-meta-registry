@@ -1,0 +1,73 @@
+{
+  "schema": "janus.autodidact.r117.native_neural_core.protocol.v1",
+  "status": "FROZEN_BEFORE_PR_OPEN",
+  "date": "2026-11-27",
+  "head": "d7b36b886725601e5410488bc59d33a267f9991c",
+  "blobs": {
+    "research/autodidact_r117/native_core.py": "bed8dac01d7b1a5b50b827112b0f84639402a57d",
+    "research/autodidact_r117/reference.py": "27a183cc288f7525d35670bf0498512685d63294",
+    "research/autodidact_r117/exam.py": "de7e03a4c5f21739778a3d8a84824b2eeaf81d19",
+    ".github/workflows/autodidact-r117-native-neural-core.yml": "52b8e815f67b31e1339caa1717c84daf3cc88c07"
+  },
+  "previous": {
+    "r116_run": 45960673058,
+    "registry_result_commit": "87da785e75dae09f3526af239572ca3306e466ec",
+    "accepted": 36,
+    "rollbacks": 1044,
+    "all_gates_failed": true
+  },
+  "legacy": {
+    "pr": 398,
+    "merge": "f37ea7b17af26d7a9048e8cd2cb0fd1a7934a59c",
+    "path": "archaeology/nas_early_cores_20261031/microgpt.py",
+    "blob": "1a734747ab0ccb3c9aff378d5de2d1af74e5a868",
+    "findings": [
+      "NumPy dependency, own scalar autodiff",
+      "softmax denominator and RMS norm detached from graph, so full derivative not correct",
+      "different geometry and vocabulary, RMSNorm/ReLU vs LayerNorm/GELU and tied weights; no direct legacy checkpoint transfer",
+      "legacy pickle loading and runtime config not reused"
+    ]
+  },
+  "design": {
+    "parent_commit": "fc4293c972c231e9b06dd286a74c840b69131baa",
+    "parent_sha256": "06d7e6228ca9aef2dc58eb55fe1c805aa3b66e4f8fb90b0e946ce6af47b1a662",
+    "parameters": 446208,
+    "math": "NumPy 1.26.4, explicit analytical reverse pass, causal multi-head attention, LayerNorm, exact GELU, tied embedding gradient, AdamW",
+    "temporary_reference": "separate PyTorch 2.5.1 job; verified parent load weights_only, numeric NPZ fixture allow_pickle=False, retention 1 day",
+    "native_runtime": "fresh venv NumPy only, check torch/tensorflow/jax absent and torch not imported",
+    "cases": [
+      [
+        2,
+        9
+      ],
+      [
+        2,
+        32
+      ],
+      [
+        1,
+        128
+      ]
+    ],
+    "dtype": "float64",
+    "thresholds": {
+      "logits_max_abs": 1e-8,
+      "gradient_max_abs": 1e-8,
+      "weight_max_abs": 1e-8,
+      "moment_max_abs": 1e-8,
+      "loss_abs": 1e-10,
+      "top1_agreement": 1,
+      "causal_prefix_max_abs": 1e-10,
+      "finite_difference": "absolute <=1e-7 + 1e-5*abs(analytical)"
+    },
+    "controls": "six directional finite differences, causal prefix, three sequential optimizer steps, two five-token generation comparisons, three new native-only fit steps and exact parameter+optimizer rollback"
+  },
+  "limits": [
+    "Not pure Python/no dependencies: NumPy and underlying BLAS remain",
+    "Evaluation-mode float64 parity, dropout training and production float32 not tested",
+    "Numerical parity and repeated fit sanity, not real knowledge acquisition or independent external exam",
+    "Temporary artifact contains parent and synthetic-reference intermediate tensors, not a promoted candidate; native job publishes metrics only",
+    "No runtime production changes or removal of PyTorch across unrelated organs; no automatic promotion"
+  ],
+  "result": null
+}

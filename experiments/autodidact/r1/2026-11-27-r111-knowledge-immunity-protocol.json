@@ -1,0 +1,57 @@
+{
+  "schema": "janus.autodidact.r111.protocol.v1",
+  "date": "2026-11-27",
+  "status": "FROZEN_BEFORE_PR_OPEN",
+  "prior_run": 45901099930,
+  "prior_registry_commit": "fff94309351c181a9bf799439c6b9a558f2ab596",
+  "head": "96d6428caa5c94c5fe083c46ecf9cd902e8884ef",
+  "workflow": ".github/workflows/autodidact-r111-knowledge-immunity.yml",
+  "parent_sha256": "06d7e6228ca9aef2dc58eb55fe1c805aa3b66e4f8fb90b0e946ce6af47b1a662",
+  "registry_commit": "106463de92f57fb21785c59146b63e3013aaaa62",
+  "cortex": {
+    "commit": "2aed183856ca286374a2f6b88169ade6a01e89de",
+    "generation": 7,
+    "manifest_sha256": "a09bf5834eba12f0ca3f96068c839e440a2c7ed4b90512049efc7b5ce7759fe5",
+    "authority": "intersection of sealed active G7 CAS and historical native train-labeled manifest; verified byte equality; only parent-correct replay; no H38K admission changes",
+    "examples": "bounded digit-copy from scrubbed JSON integer, no claim of scientific truth",
+    "splits": [
+      "retain_fit_train",
+      "retain_fit_gate",
+      "retain_eval"
+    ],
+    "minimum_per_split": 8,
+    "maximum_per_split": 12
+  },
+  "design": {
+    "seeds": [
+      57051,
+      57052
+    ],
+    "arms": [
+      "item_gate",
+      "fixed_replay",
+      "adaptive_replay"
+    ],
+    "trials": 120,
+    "fixed_weight": 0.25,
+    "adaptive": {
+      "initial": 0.125,
+      "min": 0.0625,
+      "max": 0.5,
+      "increase_on_protected_loss": 0.0625,
+      "decrease_on_accept": 0.015625
+    },
+    "risk": "R1.9/R1.10 category losses and online gate losses, never final answers",
+    "step_radius": 0.07,
+    "total_radius": 0.5,
+    "controls": 5,
+    "exam": "two held-out fact forms >=20/32, net gain >=4, zero parent-correct old item losses, >=16 parent-correct old items",
+    "budget": "same model train/gate token positions and optimizer trials; adaptive selection and rollback overhead not equal"
+  },
+  "limits": [
+    "Cortex intersection sufficiency not yet proven; fail closed if insufficient",
+    "Synthetic forced choice; historical source and canonical arithmetic overlaps across rounds possible; not external blind exam",
+    "No checkpoint export, promotion, production change, or autonomous dispatch"
+  ],
+  "result": null
+}
