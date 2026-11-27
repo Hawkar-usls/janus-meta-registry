@@ -1,0 +1,74 @@
+name: JANUS R4B5A4b cold JIT verification
+on:
+  pull_request:
+    types: [opened]
+    paths:
+      - 'registry/physics/singularity_gpt/r4b5a4b/**'
+      - '.github/workflows/janus-singularity-gpt-r4b5a4b.yml'
+permissions:
+  contents: read
+  actions: read
+jobs:
+  audit:
+    if: github.repository == 'Hawkar-usls/janus-meta-registry' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'janus-singularity-gpt-r4b5a4b-cold-jit-verification' && github.run_attempt == 1
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      OMP_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      NUMBA_NUM_THREADS: '1'
+      BLIS_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+          sparse-checkout: |
+            registry/physics/singularity_gpt/r3b
+            registry/physics/singularity_gpt/r4b3
+            registry/physics/singularity_gpt/r4b5a3
+            registry/physics/singularity_gpt/r4b5a4
+            registry/physics/singularity_gpt/r4b5a4a
+            registry/physics/singularity_gpt/r4b5a4b
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11.18'
+      - run: pip install numpy==2.2.6 numba==0.61.2 llvmlite==0.44.0
+      - name: Verify frozen source and precommit
+        run: |
+          test "$(git hash-object registry/physics/singularity_gpt/r3b/solver_lib.py)" = "71ef15312166337a9ee41d71d75a29674d00e5d3"
+          test "$(git hash-object registry/physics/singularity_gpt/r4b3/boundary_solver.py)" = "2a3222c222412f327666e10db2219acde71cdeb3"
+          test "$(git hash-object registry/physics/singularity_gpt/r4b5a3/audit.py)" = "a7a28d2630c128ecbc6beeffe25dc88262833ae6"
+          test "$(git hash-object registry/physics/singularity_gpt/r4b5a3/protocol.json)" = "224496bd9513a3b9ecf551499ec27366f972bfaa"
+          test "$(git hash-object registry/physics/singularity_gpt/r4b5a4/audit.py)" = "4adee56538805027f6678f6be38afa1874970c2d"
+          test "$(git hash-object registry/physics/singularity_gpt/r4b5a4/protocol.json)" = "8be8a0feb7b8a6c649f87d460cade4e6488ab259"
+          test "$(git hash-object registry/physics/singularity_gpt/r4b5a4a/audit.py)" = "dd7ec4bcbf69f54da4081cdd803256fc93be49ba"
+          test "$(git hash-object registry/physics/singularity_gpt/r4b5a4a/protocol.json)" = "628b26e9cb181f50fbbd63b732ea8910b37cb60e"
+          test "$(git hash-object registry/physics/singularity_gpt/r4b5a4a/execution_precommit.json)" = "7b401f1ad057240331a7ef5ebc552d29f6333dc3"
+          test "$(git hash-object registry/physics/singularity_gpt/r4b5a4a/result_archive.json)" = "415ae793a415ee2c1fb652907080a27bdffc7de0"
+          test "$(git hash-object registry/physics/singularity_gpt/r4b5a4b/protocol.json)" = "c48724e5bedc0e44553f7c882683f28997ca5a7e"
+          test "$(git hash-object registry/physics/singularity_gpt/r4b5a4b/audit.py)" = "07b356a5db28bace4d8fdf3f686276af3b816494"
+          python -m py_compile registry/physics/singularity_gpt/r4b5a4b/audit.py
+      - name: Retrieve three sealed parent archives
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for id in 15221965959 15223003250 15224352340; do
+            curl --fail --silent --show-error --location --header "Authorization: Bearer ${GH_TOKEN}" --header "Accept: application/vnd.github+json" --output "${RUNNER_TEMP}/${id}.zip" "https://api.github.com/repos/Hawkar-usls/janus-meta-registry/actions/artifacts/${id}/zip"
+          done
+          echo "257e16cdbdde7a847d573b77e4e1d1d594ee2199c600603325bca1cc43151f96  ${RUNNER_TEMP}/15221965959.zip" | sha256sum -c -
+          echo "986a3036b75303e125575d20f8fe2152c6527f94e171d21284b4e40912bf9062  ${RUNNER_TEMP}/15223003250.zip" | sha256sum -c -
+          echo "70cd54df6d2ce598a1206428b8ba8ff47bd1e50c1be3286b0ead6c1add35144d  ${RUNNER_TEMP}/15224352340.zip" | sha256sum -c -
+      - name: Source and environment diff, ULP, synthetic and cold paired replay
+        run: python registry/physics/singularity_gpt/r4b5a4b/audit.py "${RUNNER_TEMP}/15221965959.zip" "${RUNNER_TEMP}/15223003250.zip" "${RUNNER_TEMP}/15224352340.zip"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: r4b5a4b-cold-jit-verification
+          path: |
+            r4b5a4b-output/
+            !r4b5a4b-output/**/*.nbc
+            !r4b5a4b-output/**/*.nbi
+          if-no-files-found: warn
+          retention-days: 30
