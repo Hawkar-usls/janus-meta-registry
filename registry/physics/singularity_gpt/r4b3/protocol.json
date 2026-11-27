@@ -1,0 +1,93 @@
+{
+  "id": "JANUS-R4B3-BOUNDARY-RECOVERY",
+  "status": "PRECOMMITTED_BEFORE_EVOLUTION",
+  "parent": {
+    "run": 45999421638,
+    "archive": "f9349f51042f80f020b618abc1ad12734c6232e5",
+    "solver_blob": "71ef15312166337a9ee41d71d75a29674d00e5d3",
+    "historical_status": "OPEN_BOUNDARY_FLUX_HOLD"
+  },
+  "design": {
+    "arms": [
+      "legacy_zero_ghost",
+      "spherical_characteristic"
+    ],
+    "legacy": "original R3B rhs unchanged, zero ghost face averages retained; evolve scalar psi alongside gradients for diagnostics",
+    "candidate": "same radial constraints, RK4, interior finite-volume flux and dissipation; integrate scalar psi_t=(alpha/a)Pi; at outer ghosts extrapolate outgoing Pi-Phi and impose incoming Pi+Phi=-psi/r (spherical Sommerfeld, exact for flat outgoing spherical wave, approximate curved BC); use ghost values in actual flux and dissipation stencil; no geometry update changes",
+    "face": "compute numerical face U=(vPi)_face and W=(vPhi)_face from exact same reconstruction as RHS; independent signed energy flux F=4pi R² U W/(v_R a_R²); v_R=1-2M/R, a_R^-2=v_R, so F=4pi R² U W at physical boundary with solver lapse normalization; not exactly conservative ADM mass discretization, separate balance tested; dissipation not silently included in inferred physical flux",
+    "legacy_estimator": "also report old 1.5/-0.5 center field extrapolated flux for every case; never use mass difference to estimate flux",
+    "flat_analytic": "initial exact spherical Gaussian solution psi=A*(exp(-((r+t-r0)/w)^2)-exp(-((-r+t-r0)/w)^2))/r; Phi,Pi analytic initial(r,A,r0,w,t); flat mass proxy E=2pi sum r²(Phi²+Pi²)h, compare numerical flux to analytic boundary flux integrated on identical times, analytical energy difference is independent check",
+    "cases": {
+      "flat": {
+        "A": 0.01,
+        "r0": 5,
+        "w": 1,
+        "R": 12.5,
+        "n": 4096,
+        "end": 22,
+        "probe_radius": 10
+      },
+      "curved_small": {
+        "A": 0.01,
+        "r0": 5,
+        "w": 1,
+        "R": 12.5,
+        "n": 4096,
+        "end": 22,
+        "probe_radius": 10
+      },
+      "curved_reference": {
+        "A": 0.01,
+        "r0": 5,
+        "w": 1,
+        "R": 25,
+        "n": 8192,
+        "end": 22,
+        "probe_radius": 10,
+        "reference_radius": 12.5
+      },
+      "critical": {
+        "A": 0.11484375,
+        "r0": 5,
+        "w": 1,
+        "R": 30,
+        "end": 16,
+        "grids": [
+          12288,
+          24576
+        ]
+      },
+      "domain_extension": {
+        "A": 0.11484375,
+        "r0": 5,
+        "w": 1,
+        "R": 60,
+        "n": 24576,
+        "end": 16
+      }
+    },
+    "comparisons": "reflection measured at r=10, t in [12,22] using incoming characteristic Pi+Phi+psi/r; norm of error versus analytic flat or large-domain curved reference divided by reference outgoing characteristic norm Pi-Phi-psi/r, plus full field L2 on same coordinate time; time sampling same steps for equal h, no alignment; curved reference at r12.5 flux integrated independently, compare actual outer direct face; report reflection proxy, not exact scattering coefficient",
+    "gates": {
+      "mass_residual_strict": 0.01,
+      "net_outgoing_min": 0.25,
+      "net_outgoing_difference_max": 0.05,
+      "reflection_relative_l2_max": 0.05,
+      "flat_reference_field_relative_l2_max": 0.05,
+      "central_relative_l2_linf_max": 0.1,
+      "central_domain_and_legacy_relative_l2_linf_max": 0.01,
+      "local_cells_min": 8,
+      "closed_mass_drift_strict": 0.01,
+      "stable_class": "DISPERSAL_PROXY",
+      "central_comparison": "signed central derivative and both Ricci proxies on common central proper time, 32769 points, no shift, no cropping; preserve original 12288 and 24576 peak/mass/scale exact within 1e-8 if legacy replay",
+      "boundary_reference": "curved reference domain closed mass budget <1%, net outward at interior >=25%, flux-corrected balance; candidate open raw drift is physical loss, not gate"
+    },
+    "scope": "run both BC arms flat and curved small; curved large reference legacy (boundary causally remote for pulse); candidate critical pair plus legacy replay pair and extended-domain candidate. All predeclared gates independent. No 49152, DSS, AMR, critical exponent or threshold fitting."
+  },
+  "scientific_hold": true,
+  "limitations": [
+    "Characteristic Sommerfeld is approximate in curved spacetime; one weak pulse does not establish all boundary regimes.",
+    "Direct numerical face flux is a diagnostic based on face field fluxes, not a proven exactly conservative discretization of Misner-Sharp mass; explicit KO term may contribute residual.",
+    "A passing domain extension is finite-time evidence only; lapse normalization differences may persist.",
+    "No asymptotic order from pair."
+  ]
+}
