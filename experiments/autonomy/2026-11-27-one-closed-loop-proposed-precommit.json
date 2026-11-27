@@ -1,0 +1,128 @@
+{
+  "schema": "janus.autonomy.one_closed_loop.proposed_precommit.v1",
+  "date": "2026-11-27",
+  "status": "DESIGN_FROZEN__BEACON_BLOCKS_CLOSED_LOOP__NOT_EXECUTED",
+  "scope": "Documentation-only, no training, no new budgets, no production or scheduler changes. Proposed new criteria require approval before execution.",
+  "h38n7": {
+    "source_commit": "390d5e5d174af1228b4c52a74a318b325c0d3b8c",
+    "executor_blob": "903624863a60dd8799c167d4536c2824eda5c1a7",
+    "approved_plan_blob": "439b751a56f7831f586e2b58f3cabcf478eb3d37",
+    "rule": "lost==0 and wrong==0 and unknown==0 and fresh_child_correct>fresh_parent_correct",
+    "confidence_threshold": 0.65,
+    "scope_of_wrong": "non-unknown gold, non-abstaining wrong prediction, across old plus new exam",
+    "attempts": [
+      {
+        "run": 45914846160,
+        "job": 140231640863,
+        "fresh_parent": 1,
+        "fresh_child": 5,
+        "new_n": 9,
+        "lost": 0,
+        "wrong": 1,
+        "unknown_false": 0,
+        "decision": "ROLLBACK_KEEP_FROZEN"
+      },
+      {
+        "run": 45965127169,
+        "job": 140392157513,
+        "fresh_parent": 0,
+        "fresh_child": 4,
+        "new_n": 9,
+        "old_n": 18,
+        "old_parent_correct": 2,
+        "old_retained": 2,
+        "lost": 0,
+        "wrong": 0,
+        "unknown_false": 0,
+        "decision": "SHADOW_ACCEPT"
+      }
+    ],
+    "active_state_blob": "5406ad473d8a061e95360480e25cd97a4d05f4d6",
+    "weights_shape": [
+      9,
+      128
+    ],
+    "resolution": "same pre-existing decision rule, not a comparison of raw scores; exact offending item unknown without replay. Small synthetic same-author samples do not establish generalization. All three approved banks consumed; AUTONOMOUS_LOOP_STALLED_AFTER_G2 applies to H38N7 only."
+  },
+  "beacon": {
+    "status": "BEACON_BLOCKS_CLOSED_LOOP",
+    "witness_run": "be3d93d6-44bc-8327-95dd-c7a21b9e915d",
+    "relay_run": "a1d94e3d-308c-8325-bae1-245d1119c1a0",
+    "scheduled": "2026-11-27T18:39:09Z",
+    "started": "2026-11-27T18:14:14.146076Z",
+    "completed": "2026-11-27T18:14:33.286312Z",
+    "delta_seconds": -1475.713688,
+    "relay_result": "REJECTED; no files created",
+    "causal_diagnosis": "unknown. Both times UTC; early execution or metadata semantics possible; no proof replay, timezone error, or clock skew. Do not waive temporal validation or fabricate ACK.",
+    "prerequisite": "Read authoritative scheduler semantics and fresh run metadata; distinguish scheduled slot from actual observation time; only if authoritative semantics permit early dispatch define separate fields under a new reviewed protocol. Verify fresh source run id and observation digest, actual observation interval, anti-replay and freshness, transfer, receiver persistence and independent receiver readback. Reject invalid, duplicate, altered or missing receipts. No training until valid end-to-end receipt and reason for original discrepancy resolved or verified semantics documented."
+  },
+  "one_closed_loop": {
+    "status": "BLOCKED",
+    "scope": "one bounded shadow training decision then separate fresh wake consumes exact prior receipt and selects next action without executing second training cycle",
+    "policy": "fixed transparent bounded decision policy, not unrestricted meta-autonomy",
+    "required_inputs": [
+      "verified BEACON receipt and digest",
+      "parent state and weights hashes",
+      "approved finite task catalog with disjoint TRAIN and EXAM hashes",
+      "separate verifier result",
+      "budget ledger",
+      "previous decision receipt"
+    ],
+    "admission": "zero old correct answers lost; zero confident wrong and false unknown on applicable H38N7 protected exams; new exact correct count strictly increases; fresh independent exam at least 100 cases per applicable family, plus fixed old retention suite. Report coverage and abstentions; sample size not itself proof of statistical power.",
+    "decision_priority": [
+      {
+        "if": "receipt missing, invalid, stale, duplicate, state mismatch, pause or exhausted budget",
+        "action": "STOP_HOLD; no training; record reason"
+      },
+      {
+        "if": "exam invalid or lineage unverifiable",
+        "action": "STOP_HOLD; preserve parent"
+      },
+      {
+        "if": "any retained answer lost or wrong/unknown veto",
+        "action": "ROLLBACK; propose approved remediation task targeted to failing family; do not train again in this trial"
+      },
+      {
+        "if": "all admission gates pass and budget remains",
+        "action": "PERSIST_SHADOW; select approved task with largest measured validation deficit, tie-break by fixed task id; propose next cycle only"
+      },
+      {
+        "if": "no qualifying task or no positive improvement without veto",
+        "action": "ABSTAIN_STOP or propose additional approved data for measured deficit; no automatic budget expansion"
+      }
+    ],
+    "proof": "event id -> source and receiver digest -> parent -> chosen task and alternative scores -> training -> independent exam -> committed shadow state or rollback -> distinct subsequent wake reading same receipt -> decision. Include counterfactual fixtures with distinct inputs leading to different decisions, replay rejection and budget exhaustion. No automatic execution of new task, no production promotion; no three-generation claim."
+  },
+  "autodidact": {
+    "scope": "calibration inheritance, not H38N7 weight lineage",
+    "primary": "paired seed-level mean exact accuracy difference inherited_epistemic minus cold_epistemic, all new held-out tasks, same model/data/compute per pair; retention lexicographically prior to acquisition",
+    "hypotheses": "H0 mean paired difference <=0 vs H1 >0; proposed one-sided alpha .025 (equivalent positive lower bound of two-sided 95% paired t interval under assumptions); report paired seed effects and two-sided 95% CI, robust sensitivity at seed level. No claim if power or assumptions inadequate.",
+    "baselines": [
+      "unchanged parent",
+      "most frequent exact response computed TRAIN only with fixed tie rule; per-family only if family known at inference",
+      "previous frozen predictor, no exam-label access",
+      "predeclared simple input-only rule; report unsupported cases as abstentions"
+    ],
+    "retention": "0 loss of previously correct protected and independent old items in every admitted candidate; no aggregate accuracy compensation; no production promotion",
+    "power": {
+      "pilot": "two paired differences -2/124 and +8/124; sample SD about 0.0570 (highly uncertain)",
+      "ten_seed_normal_approx_mde": "2.8*0.057/sqrt(10) ~=0.0505, 5.05 percentage points, optimistic ignoring finite t correction",
+      "independent_item_approx": "1240 per arm p=.1 gives 3.37pp MDE under iid items; not valid as seed-cluster proof",
+      "seed_plan": "target minimum 0.02 absolute accuracy improvement, 80% power, alpha .025 one-sided. Approx 64 independent paired seeds under pilot SD assumption; choose fixed sample after independent variance-only pilot and paired t power calculation, pre-register before confirmatory exam; no efficacy peeking; 10 seeds only pilot, no claim of 2pp resolving power. If budget insufficient report underpowered HOLD.",
+      "exam": "at least 100 fresh cases per applicable family per defined cohort subject to power calculation; disjoint train/gate/test, no reuse of exposed R1.23 exam; report exact scoring, item-level paired correctness, family, seed, and data hashes."
+    }
+  },
+  "evidence_levels": [
+    "workflow logs and durable artifacts verified directly",
+    "external LLM observer read-only independent environment, not independent scientific oracle",
+    "independent examiner with blinded held-out data and immutable ground truth"
+  ],
+  "forbidden": [
+    "new training until BEACON precondition",
+    "new budget without approval",
+    "production weight changes",
+    "unrestricted self-modification",
+    "claim autonomy from cron"
+  ],
+  "next": "BEACON receipt provenance and timestamp semantics audit first; no live changes"
+}
