@@ -1,0 +1,155 @@
+{
+  "schema": "janus.h38n8a.power_sensitivity.addendum.v1",
+  "date": "2026-11-28",
+  "parent": "2087563e4eb9ba44ed869cce44f30de63f3db9a6",
+  "status": "FAMILY_DIVERSITY_HOLD__SENSITIVITY_COMPLETE__NO_CORPUS",
+  "method": {
+    "q": [
+      0.1,
+      0.2,
+      0.3,
+      0.5
+    ],
+    "icc": [
+      0,
+      0.1,
+      0.3,
+      0.5
+    ],
+    "alpha": 0.0125,
+    "power": 0.8,
+    "known_rows_per_family": 8,
+    "formula": "Exact iid one-sided McNemar power by binomial mixture as in parent. For positive ICC use floor(N/(1+7*ICC)) as illustrative effective iid count only; not exact cluster power. ICC pertains to paired correctness difference, not text similarity. Absolute gain MDE approx scales sqrt(q/N), not inverse sqrt(q); gain<=q, low q with few discordances may make target power infeasible.",
+    "mde_pp_40": [
+      [
+        9.25774,
+        13.6059,
+        16.70011,
+        21.71302
+      ],
+      [
+        null,
+        17.08473,
+        21.51844,
+        28.03769
+      ],
+      [
+        null,
+        null,
+        28.01379,
+        37.20647
+      ],
+      [
+        null,
+        null,
+        null,
+        43.11857
+      ]
+    ],
+    "mde_pp_55": [
+      [
+        7.97645,
+        11.61074,
+        14.3088,
+        18.45418
+      ],
+      [
+        null,
+        14.89836,
+        18.59099,
+        24.12057
+      ],
+      [
+        null,
+        19.50773,
+        24.17643,
+        32.28574
+      ],
+      [
+        null,
+        null,
+        28.42039,
+        37.66136
+      ]
+    ],
+    "effective_n_40": [
+      104,
+      61.17647,
+      33.54839,
+      23.11111
+    ],
+    "effective_n_55": [
+      144,
+      84.70588,
+      46.45161,
+      32
+    ],
+    "interpretation": "None of grid scenarios reaches 80% power for 5pp. Null MDE means target power unattainable even at delta=q in that illustrative scenario. No empirical q or ICC yet. Probe vs G2 q is not G3 vs G2 q; do not use as measured future candidate discordance. No automatic stop based on q<.2; evaluate feasible effect, uncertainty, prospective cluster-aware power and budget. No claim about global grammar capacity or GitHub-only compute limit."
+  },
+  "probe_chance_sensitivity": {
+    "test": "Illustrative one-sided iid binomial test vs .5 at alpha=.05/13; equal correctness probability across rows, not actual conditioned family bootstrap nor exact BA test when class recalls differ. No McNemar MDE imported into chance test.",
+    "scenarios": [
+      {
+        "n": 26,
+        "k": 21,
+        "rejection_threshold": 0.8076923,
+        "true_accuracy_for_80power": 0.84636727,
+        "power_at_75": 0.33714411,
+        "power_at_80": 0.57748639
+      },
+      {
+        "n": 36,
+        "k": 27,
+        "rejection_threshold": 0.75,
+        "true_accuracy_for_80power": 0.79213449,
+        "power_at_75": 0.58831847,
+        "power_at_80": 0.8324202
+      },
+      {
+        "n": 104,
+        "k": 67,
+        "rejection_threshold": 0.64423077,
+        "true_accuracy_for_80power": 0.67782247,
+        "power_at_65": 0.59318724,
+        "power_at_80": 0.99993205
+      }
+    ],
+    "limits": "Pooled 104 does not replace 26 per conditioned contrast. Actual family-level dependence and unequal recall need group-aware simulation. MDE is true effect giving design power, not observed rejection threshold or new PASS cut. Retain v3 engineering gates unchanged (point BA>=.8, adjusted lower bound>.5, exact U, collision, convergence/gap etc.) until explicit prospective revised design; no threshold lowering."
+  },
+  "noninferiority": {
+    "status": "PROPOSED_SECONDARY_DESIGN_NOT_AUTHORIZED_NOT_FROZEN_FINAL_MARGIN",
+    "margin_example": 0.1,
+    "q": 0.3,
+    "true_difference": 0,
+    "target_power": 0.8,
+    "method": "Normal approximation for paired differences at null delta=-margin vs true delta=0, n≈(z_(1-alpha)*sqrt(q-margin²)+z_.8*sqrt(q))²/margin²; no validated exact clustered test.",
+    "approx_iid_n": [
+      {
+        "alpha": 0.05,
+        "n": 182
+      },
+      {
+        "alpha": 0.0125,
+        "n": 279
+      },
+      {
+        "alpha": 0.0038461538461538464,
+        "n": 360
+      }
+    ],
+    "approx_n_at_icc03": [
+      563,
+      863,
+      1115
+    ],
+    "rule": "Non-inferiority tests unacceptable degradation margin, not proof zero forgetting or no degradation; proposed margin requires owner/domain justification before training, retain zero protected loss veto. If prespecified NI passes and superiority not established, label NON_INFERIOR_WITHIN_MARGIN__SUPERIORITY_NOT_ESTABLISHED; SUPERIORITY_UNTESTED only when not tested. Predeclare hierarchy or multiplicity; no switching post hoc. Report paired effect estimate and cluster-aware interval. No inference from this planning calculation."
+  },
+  "next": "Semantic validation 13 directional and 27 factorial candidates before final F; then cluster-aware power and precision plan, compare A/B/C before generating corpus, no reduction of polarity based on power alone. Diagnostic probe, diagnostic G3 and confirmatory gain exam separate; G3 training remains HOLD pending separate authorization/budget and revised protocol.",
+  "authorization": {
+    "janus_train": false,
+    "probe_executed": false,
+    "corpus_generated": false,
+    "production": false,
+    "architecture_change": false
+  }
+}
