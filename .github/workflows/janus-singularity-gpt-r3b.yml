@@ -1,0 +1,66 @@
+name: JANUS Singularity GPT R3B Critical Point Learning
+on:
+  push:
+    branches: [janus-singularity-gpt-r3b]
+    paths:
+      - 'registry/physics/singularity_gpt/r3b/**'
+      - '.github/workflows/janus-singularity-gpt-r3b.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  forecast:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: registry/physics/singularity_gpt/r3b
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install CPU dependencies
+        run: |
+          python -m pip install numpy==2.2.6
+          python -m pip install torch==2.6.0 --index-url https://download.pytorch.org/whl/cpu
+      - name: Retrieve frozen R3A trajectory archive
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          curl --fail --location --retry 3 -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/15192248348/zip" -o r3a.zip
+          echo "9986c8872e58e8ad34d4318c2fd25c7b37501d22f297329fc256a3aa50902cb2  r3a.zip" | sha256sum -c -
+      - name: Train initial-state forecast transformer
+        run: python registry/physics/singularity_gpt/r3b/forecast.py
+      - name: Archive forecast results and checkpoints
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: singularity-gpt-r3b-forecast
+          path: singularity-r3b-output/
+          if-no-files-found: warn
+          retention-days: 30
+  echo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: registry/physics/singularity_gpt/r3b
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install CPU solver dependencies
+        run: python -m pip install numpy==2.2.6 numba==0.61.2
+      - name: Search for resolved echoes without reference period
+        run: python registry/physics/singularity_gpt/r3b/echo_probe.py
+      - name: Archive near-critical traces and candidate estimates
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: singularity-gpt-r3b-echo
+          path: singularity-r3b-output/
+          if-no-files-found: warn
+          retention-days: 30

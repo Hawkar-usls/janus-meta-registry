@@ -1,0 +1,60 @@
+{
+  "id": "JANUS-SINGULARITY-GPT-R3B",
+  "parent_run": 45989119629,
+  "parent_artifact": 15192248348,
+  "parent_zip_sha256": "9986c8872e58e8ad34d4318c2fd25c7b37501d22f297329fc256a3aa50902cb2",
+  "training": {
+    "family": "train_shell",
+    "evaluation_family": "held_shell",
+    "resolution": 1536,
+    "eligible": "R3A same label at 768 and 1536, mass drift <0.05; momentum relative L2 <0.02 at both",
+    "input": "initial Phi,Pi,a,alpha radial profile and requested coordinate time only",
+    "horizons": [
+      1,
+      2,
+      4,
+      6
+    ],
+    "seeds": [
+      1729,
+      2718,
+      3141
+    ],
+    "baselines": [
+      "initial persistence",
+      "nearest initial profile",
+      "initial mass linear interpolation"
+    ],
+    "metrics": "per trajectory channel errors normalized by training scales, derived compactness, Ricci; all seeds must beat best baseline to admit forecast; known test family historical, not external blind"
+  },
+  "echo_probe": {
+    "families": [
+      {
+        "r0": 5,
+        "width": 1,
+        "bracket": [
+          0.1,
+          0.15
+        ]
+      },
+      {
+        "r0": 6,
+        "width": 1.4,
+        "bracket": [
+          0.15,
+          0.22
+        ]
+      }
+    ],
+    "resolutions": [
+      1536,
+      3072
+    ],
+    "bisection_steps": 10,
+    "trace": "central proper time and signed Pi/a at every integration step",
+    "method": "alternating extrema of signed central derivative; estimate full log-time period as twice log ratio of successive proper-time intervals; require >=5 consecutive resolved alternating peaks, increasing absolute peak amplitude, stable interval ratios and agreement across resolutions; no reference period in estimator",
+    "minimum_resolved_length_cells": 8,
+    "reference_comparison": "separate future read-only evaluation after artifact frozen; no target value in probe code"
+  },
+  "claim_ceiling": "historical family-held forecast and candidate echo estimate only; no true horizon, no independent proof of criticality; no production promotion"
+}
