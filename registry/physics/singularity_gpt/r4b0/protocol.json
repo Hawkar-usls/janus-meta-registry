@@ -1,0 +1,97 @@
+{
+  "id": "R4B0-RETINA-NOISE",
+  "parent_run": 45996373266,
+  "cosmos_sources": [
+    {
+      "repo": "Hawkar-usls/Janus-Cosmos",
+      "commit": "9def4748436758b375be380dec9d785ad1d87ed1",
+      "path": "research/seti/r41s1h_retina_profile.py",
+      "transfer": "held-block prediction, rival models"
+    },
+    {
+      "repo": "Hawkar-usls/Janus-Cosmos",
+      "commit": "6716b84a7367b209f482e5d7eb05cc0ae552a992",
+      "path": "research/seti/r41s1e_noise_model.py",
+      "transfer": "median, Savitzky-Golay, residual MAD, lag correlation, FFT high-frequency energy, Haar detail"
+    }
+  ],
+  "fixed": {
+    "A": 0.11484375,
+    "r0": 5,
+    "w": 1,
+    "R": 30,
+    "n": 24576,
+    "checkpoints": [
+      16
+    ],
+    "predicted_C": 0.5032003,
+    "richardson_limit": 0.50311028,
+    "C_tolerance": 0.00015,
+    "mass_budget": 0.01
+  },
+  "bracket": {
+    "A": [
+      0.11491699218749998,
+      0.11494140624999999
+    ],
+    "r0": 5,
+    "w": 1,
+    "R": 30,
+    "n": 12288,
+    "checkpoints": [
+      16
+    ],
+    "mass_budget": 0.01,
+    "min_cells": 8,
+    "rule": "verify endpoints only; bisect only if both resolve and labels oppose; no claim of true threshold"
+  },
+  "detector": {
+    "original": "frozen R3B",
+    "structural_diagnosis": "five extrema require 4 half-periods; relative cutoff 1e-4 limits amplitude ratio to 1e4, ideal growing envelope at period 5.2 implies ratio exp(10.4)>1e4; verify funnel",
+    "candidate": "multiscale median/Savitzky-Golay, sign lobes, robust residual diagnostics, fit interval-ratio on earlier peaks and validate later peaks, agree across two scales; no reference period",
+    "windows": [
+      31,
+      61
+    ],
+    "min_peaks": 7,
+    "relative_cutoff": 1e-12,
+    "interval_ratio_tolerance": 0.12,
+    "heldout_tolerance": 0.15,
+    "cross_scale_tolerance": 0.1,
+    "local_snr_min": 5
+  },
+  "synthetic": {
+    "n_per_noise_type_level_class": 100,
+    "noise_types": [
+      "iid",
+      "ar1",
+      "structured"
+    ],
+    "noise_levels": [
+      0.001,
+      0.01
+    ],
+    "positive_period_range": [
+      1.2,
+      5.6
+    ],
+    "seed": 897221,
+    "points": 4096,
+    "clean_periods": [
+      1.3,
+      2.3,
+      3.7,
+      4.1,
+      5.2
+    ],
+    "positive_gate": "each noise stratum >=90/100 within 5% of truth",
+    "negative_gate": "each noise stratum <=5/100 detections",
+    "negative_classes": [
+      "linear_period",
+      "irregular_log_oscillation"
+    ],
+    "holdout": "fixed generated cases after protocol; no tuning; not independent physical simulation"
+  },
+  "physical_claim": "none; no physical DSS or AMR; retain old negative receipts and append reinterpretation",
+  "third_family_reserved": true
+}
