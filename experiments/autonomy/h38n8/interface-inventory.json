@@ -1,0 +1,52 @@
+{
+  "schema": "janus.h38n8.interface_inventory.v1",
+  "status": "INTERFACE_INVENTORY_COMPLETE__GENERAL_JSON_DOMAIN_NOT_ADMITTED__TRAIN_HOLD",
+  "source": {
+    "repository": "Hawkar-usls/Janus-Demiurge",
+    "commit": "390d5e5d174af1228b4c52a74a318b325c0d3b8c",
+    "executor_blob": "903624863a60dd8799c167d4536c2824eda5c1a7",
+    "g2_state_blob": "5406ad473d8a061e95360480e25cd97a4d05f4d6",
+    "g2_weights_sha256": "73bc032564836efa62c102de050be995cfa394f84dcaf9970d665807daa56851"
+  },
+  "interface": {
+    "shape": [
+      9,
+      128
+    ],
+    "labels": {
+      "8": "A requires B",
+      "9": "B requires A",
+      "10": "A does not require B",
+      "11": "B does not require A",
+      "12": "A prevents B",
+      "13": "B prevents A",
+      "14": "A does not prevent B",
+      "15": "B does not prevent A",
+      "16": "HOLD unsupported relation"
+    },
+    "label_semantics_evidence": "inferred from actual persisted labeled examples; not independent formal ontology validation",
+    "input": "ASCII lower-case letters, digits, spaces, 8-180 chars, normalized spaces; exactly one evone and evtwo per row",
+    "features": "bias, indexed unigrams, unigrams, bigrams, trigrams; SHA256 first four bytes little endian modulo 128; unique sorted bins; linear scores normalized by sqrt(active bins)",
+    "output": "9-way softmax; argmax first tie; emit label iff max>=0.65 and argmax not label16, otherwise None",
+    "scoring": "correct only known label!=16 and prediction matches; wrong known non-None mismatches; unknown_false unknown label16 non-None. Correct abstentions not counted as correct by historical scorer.",
+    "limitations": "No raw JSON parser, arbitrary values, generation, multilabel output, arbitrary causal semantics or general equivalence. Hash collisions possible. Feature-level identifiability not yet measured. Adapter must not leak answer or solve task before classifier; deterministic parser baseline separate.",
+    "bounds": {
+      "rows_per_bank_or_exam": 96,
+      "total_replay_or_exam": 288,
+      "attempt_limit": 3,
+      "active_training_rows": 36,
+      "historical_exam_rows": 27,
+      "attempted_texts": 54
+    }
+  },
+  "next": {
+    "domain_spec": "Freeze broad intended JSON task taxonomy and family weights before corpus generation; audit input/output semantic mapping and collision counterexamples; no narrowing denominator retroactively. General JSON is not supported by current interface; propose separately scoped binary event-relation domain only after explicit specification, no claim >=90% until measured.",
+    "protected": "historical 27 exposed regression controls separate from fresh protected holdout; propose 200 fresh protected examples stratified over 8 known classes and HOLD; held out train/diagnostic, exact split and provenance before baseline",
+    "diagnostic": "500 items only after domain admission, separate sealed final exam, no weight updates; existing rows cap means read-only scoring batches or separate diagnostic harness, not modifying training cap",
+    "training": "one future candidate fixed weights shape, replay allowed, L2-SP/distillation/NAS prohibited. Historical replay implementation concatenates prior accepted train rows with new bank, ratio depends on bank size; prospective fixed ratio, hyperparameters and budget require precommit. Existing fit 120 passes, step .12 / sqrt(active bins), deterministic ordered SGD cross entropy; no new training.",
+    "power": "paired exact McNemar, alpha .05, target >=.8 power at 5pp planning effect, discordance assumptions independently justified; final n frozen before training, no retune on final exam.",
+    "authorization": "read-only diagnostic independent of BEACON. Current training budget exhausted; owner-approved separate bounded new budget plus domain, data, power, retention and reproducibility gates required. Autonomous closed loop additionally requires BEACON delivery/provenance/time contract. No training or publication under this record."
+  },
+  "production": false,
+  "training_executed": false
+}
