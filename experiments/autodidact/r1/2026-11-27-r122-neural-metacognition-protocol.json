@@ -1,0 +1,71 @@
+{
+  "schema": "janus.autodidact.r122.neural_metacognition.protocol.v1",
+  "date": "2026-11-27",
+  "status": "FROZEN_BEFORE_PR_OPEN",
+  "head": "c05a00bcacbf698386ff0982fca1190af232748c",
+  "workflow": ".github/workflows/autodidact-r122-neural-metacognition.yml",
+  "workflow_blob": "69583950039dc056722dfbbe37b314f1df9b175f",
+  "prior": {
+    "run": 45974550069,
+    "result_commit": "a90fdef00296b0c44cefbbc40f76f2eddc54d2c9",
+    "dynamic_block0_choices": 360,
+    "exact_by_arm": [
+      36,
+      49,
+      48
+    ],
+    "all_acquisition_failed": true,
+    "expansions": 10
+  },
+  "design": {
+    "seeds": [
+      122101,
+      122102
+    ],
+    "arms": [
+      "random_block",
+      "calibrated_block",
+      "observed_best_block"
+    ],
+    "trials": 180,
+    "active_parameters_per_probe": 198272,
+    "stage_trials": [
+      60,
+      60,
+      60
+    ],
+    "step_radius": 0.07,
+    "geometry_tiers": [
+      0.5,
+      0.625,
+      0.75
+    ],
+    "replay_weight": 0.25,
+    "source_policy": "exclude 616 previous real source hashes and paths; 36 fresh admitted numeric-copy examples and 64 synthetic balanced arbitrary associations; pinned G7 remaining replay reserve 17 before selection, fail closed if insufficient",
+    "probes": "two actual shadow AdamW protected-displacement probes per trial from same pretrial model/optimizer snapshot, same gradient, same constraints, same learning rate; both rolled back and digest verified; at most one admissible saved model and optimizer committed exactly",
+    "feedback": "raw prediction normalized share of nonnegative projected objective descent; corrected score = clamp(raw share + per-block EWMA error,0,1); error update .8 old + .2(observed share minus raw share) on informative trials; reward feasible current-gate CE gain or zero for veto; no update if both rewards zero; prechoice frozen before probes for calibrated and random arms; observed-best chooses after probes, diagnostic oracle not prospective prediction",
+    "memory": "record both offers, gain, flags, projection, raw and corrected shares, before/after error, chosen and observed-best block in metrics artifact per trial; no cross-run persistent learner yet",
+    "geometry": "unchanged R121 frozen group metric and capped expansion .5/.625/.75, full original retention checks plus actual step>=1e-6 and CE gain>=1e-6",
+    "work_per_arm_seed": {
+      "objective_padded_positions": 138240,
+      "gate_padded_positions": 4838400,
+      "constraint_forward_positions": 933120,
+      "constraint_vjps": 1440,
+      "router_group_projections": 900,
+      "actual_probes": 360,
+      "verified_probe_rollbacks": 360
+    },
+    "evaluation": "report regret relative to best feasible offer at same states, raw vs corrected share MAE on informative trials, ranking correctness on decisive trials, switches and block counts, accepted updates, held-out exact generated answers and all historical and old losses; separate final exam with unchanged criteria, no promotion",
+    "controls_count": 26,
+    "admission_controls": 4
+  },
+  "limits": [
+    "Calibration score is relative predicted gain, not a probability or proof of understanding; CE reward surrogate differs from exact answer correctness",
+    "Observed-best uses internal gate lookahead and serves as local oracle; not blind future prediction",
+    "Raw predictor is a diagnostic on same states, not independent raw-prediction training arm; trajectories differ across arms",
+    "Error memory exists within a run and metrics archive, not yet cross-generation inheritance",
+    "New source reserve may be insufficient; no admission relaxation or reuse of previous exam sources",
+    "No external independent blind exam, production mutation or candidate export"
+  ],
+  "result": null
+}
