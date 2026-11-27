@@ -1,0 +1,82 @@
+{
+  "schema": "janus.singularity.r4b5a3.technical_failure.v1",
+  "status": "TECHNICAL_SERIALIZATION_HOLD",
+  "run": 46041627958,
+  "head": "7a2209f4132b67fe564b87231140f31d8b3298a5",
+  "artifacts": [
+    {
+      "id": 15221615064,
+      "name": "r4b5a3-event-invariance",
+      "size_in_bytes": 1177038,
+      "url": "https://api.github.com/repos/Hawkar-usls/janus-meta-registry/actions/artifacts/15221615064",
+      "archive_download_url": "https://api.github.com/repos/Hawkar-usls/janus-meta-registry/actions/artifacts/15221615064/zip",
+      "expired": false,
+      "created_at": "2026-11-27T17:25:41Z",
+      "expires_at": "2026-12-27T17:25:40Z",
+      "updated_at": "2026-11-27T17:25:41Z",
+      "digest": "sha256:a385b5c898be39bb5f6559fa75951ad7f88a12767e2fff5acf0c56e6b855f7e1",
+      "workflow_run": {
+        "id": 46041627958,
+        "repository_id": 1142511425,
+        "head_repository_id": 1142511425,
+        "head_branch": "janus-singularity-gpt-r4b5a3-event-invariance",
+        "head_sha": "7a2209f4132b67fe564b87231140f31d8b3298a5"
+      }
+    }
+  ],
+  "case": {
+    "id": "coarse",
+    "A": 0.1152,
+    "family": "original",
+    "CFL": 0.3,
+    "n": 12288,
+    "R": 30,
+    "h": 0.00244140625,
+    "candidate": true,
+    "flat": false,
+    "status": "EVENT_090_REACHED",
+    "t": 10.52197265625,
+    "proper_time": 5.51988085675377,
+    "steps": 14366,
+    "peak_compactness": 0.9000883823966395,
+    "final_compactness": 0.9000883823966395,
+    "inner_mass_fraction": 0.7550961764560825,
+    "initial_mass_or_flat_energy": 0.20127579857337327,
+    "mass_drift": 0.001631998032017171,
+    "final_mass_loss_fraction": 0.001631998032017171,
+    "direct_outward_fraction": 1.034527401007073e-198,
+    "old_extrapolated_outward_fraction": 1.0345279953890601e-198,
+    "direct_balance_residual_max": 0.001631998032017171,
+    "old_balance_residual_max": 0.001631998032017171,
+    "analytic_outward_fraction": null,
+    "analytic_energy_loss_fraction": null,
+    "reference_interior_outward_fraction": 0.0000026712555975704614,
+    "reference_interior_balance_residual_max": 0.0016319981432572146,
+    "curvature_peak": 1385.5723734035537,
+    "curvature_peak_alt": 1385.5742221949263,
+    "scale": 11.003867193965727,
+    "scale_alt": 11.0038598526551,
+    "elapsed_seconds": 30.699756300000004
+  },
+  "traceback": [
+    "2026-11-27T17:25:39.9688637Z Traceback (most recent call last):",
+    "2026-11-27T17:25:39.9694544Z   File \"/home/runner/work/janus-meta-registry/janus-meta-registry/registry/physics/singularity_gpt/r4b5a3/audit.py\", line 145, in <module>",
+    "2026-11-27T17:25:39.9696255Z   File \"/home/runner/work/janus-meta-registry/janus-meta-registry/registry/physics/singularity_gpt/r4b5a3/audit.py\", line 141, in check_run",
+    "2026-11-27T17:25:39.9697729Z   File \"/home/runner/work/janus-meta-registry/janus-meta-registry/registry/physics/singularity_gpt/r4b5a3/audit.py\", line 15, in emit",
+    "2026-11-27T17:25:39.9699217Z   File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/json/__init__.py\", line 238, in dumps",
+    "2026-11-27T17:25:40.0172145Z   File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/json/encoder.py\", line 200, in encode",
+    "2026-11-27T17:25:40.0174048Z   File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/json/encoder.py\", line 258, in iterencode",
+    "2026-11-27T17:25:40.0175435Z   File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/json/encoder.py\", line 180, in default",
+    "2026-11-27T17:25:40.0176294Z     raise TypeError(f'Object of type {o.__class__.__name__} '",
+    "2026-11-27T17:25:40.0177145Z TypeError: Object of type bool is not JSON serializable",
+    "2026-11-27T17:25:40.1499832Z ##[error]Process completed with exit code 1."
+  ],
+  "prior_archive": {
+    "blob": "4e8807e1422b2fc907be157469d7100010e01ba7",
+    "parsed": true,
+    "rows": 12,
+    "status": "CURVATURE_RECOVERY_HOLD"
+  },
+  "source_review": "execute calls run to completion, writes cases.json and traces.npz, emits CASE, returns; check_run is called afterward and emits EVENTS. fixed_support compares NumPy array scalar with float, producing numpy.bool_. Traceback at emit in check_run, after completed run and persisted outputs; no partial evolution step at failure site. Full raw trace not independently downloaded in this audit.",
+  "claim": "Partial coarse numerical output only; no compactness convergence result; historical scientific holds unchanged."
+}

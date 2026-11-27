@@ -1,0 +1,110 @@
+{
+  "id": "JANUS-R4B5A.3-EVENT-INVARIANCE",
+  "status": "PRECOMMITTED_BEFORE_EVOLUTION",
+  "parent": {
+    "run": 46038335603,
+    "archive_commit": "35f042220f331fa4054b40c8f04216d7128d3cf8",
+    "archive_blob": "4e8807e1422b2fc907be157469d7100010e01ba7",
+    "audit_blob": "7e9eefb914f89fecdef5b48cbad1314ffaff22fa",
+    "solver_blob": "71ef15312166337a9ee41d71d75a29674d00e5d3",
+    "boundary_blob": "2a3222c222412f327666e10db2219acde71cdeb3"
+  },
+  "configuration": {
+    "family": "original",
+    "A": 0.1152,
+    "r0": 5,
+    "w": 1,
+    "R": 30,
+    "end": 16,
+    "grids": [
+      12288,
+      24576,
+      49152
+    ],
+    "CFL": 0.3,
+    "temporal_n": 24576,
+    "temporal_CFL": 0.15,
+    "reference_radius": 12
+  },
+  "events": {
+    "thresholds": [
+      0.8,
+      0.82,
+      0.85,
+      0.88,
+      0.9
+    ],
+    "rationale": [
+      "earlier crossing",
+      "near original stop from below",
+      "historical stop and exact prefix replay",
+      "later crossing",
+      "bounded later diagnostic in polar-areal chart, not horizon"
+    ],
+    "method": "one causal evolution prefix per grid to first sampled C>=.90; first upward crossings only; linear interpolation of tau,t and Ricci between adjacent integration samples; no fitting, no rephasing. Interpolated C at crossing equals prescribed threshold by definition and is not convergence evidence. Native maximum through first crossing, overshoot and monotonicity reported per threshold, not substituted for physical convergence.",
+    "safety": "At original .85 stop check numeric integrity, local cells >=8 and mass balances <1%; after that check at every step, stop on violation or nonfinite. No evolution beyond first sampled .90. Missing event is HOLD. Historical .85 prefixes must replay archived peaks, stop times and masses within 1e-8 relative. Parent independent-family boundary PASS checked in sealed archive, no new universal boundary claim."
+  },
+  "fixed_windows": {
+    "tau_ends": [
+      4.5,
+      5,
+      5.4,
+      5.5,
+      5.5175
+    ],
+    "start": 0,
+    "samples": 32769,
+    "reason": "explicitly chosen before new runs using previously archived stop tau>=5.517594915315282; final window deliberately retains near-event dynamics, no choosing convenient earlier cutoff; all windows mandatory and no extrapolation",
+    "quantities": [
+      "C full trace L2/Linf",
+      "C peak on fixed support",
+      "signed derivative",
+      "two Ricci proxies"
+    ],
+    "peak_extraction": "max native integration samples plus interpolated fixed end; trace common uniform tau; each pair and order separately"
+  },
+  "gates": {
+    "C_abs_pair_max": 0.0005,
+    "C_rel_pair_max": 0.01,
+    "Ricci_peak_relative_max": 0.02,
+    "trace_relative_L2_Linf_max": 0.1,
+    "mass_residual_strict": 0.01,
+    "local_cells_min": 8,
+    "order_range": [
+      1.5,
+      2.5
+    ],
+    "temporal_relative_strict": 0.01,
+    "temporal_over_spatial_max": 0.25,
+    "event_tau_pair_absolute_max": 0.0005,
+    "event_tau_order_range": [
+      1.5,
+      2.5
+    ],
+    "interpretation": "Fixed-time C peak and C L_inf absolute difference <=.0005 required for medium-fine on every fixed window; report coarse-medium historical/new comparison separately. C L2/Linf and fixed peak orders must be monotone/decreasing and in 1.5–2.5, zero differences unidentifiable. Event time orders and absolute pair errors separate (same numerical value .0005 in proper-time units, not compactness tolerance). Require medium-fine event time and event Ricci relative <=2% at each threshold; native overshoot orders diagnostic; old native compactness gate not retrospectively passed. If fixed-time compactness fails, cannot blame threshold alone."
+  },
+  "ricci_nonregression": {
+    "historical_stop": 0.85,
+    "reference_medium_fine_native_relative": 0.007741814296897015,
+    "reference_medium_fine_common_relative": 0.0030639674204689564,
+    "tolerance_additive": 1e-10,
+    "policy": "exact prefix replay incl fine, both Ricci proxies <=2%; primary Ricci relative errors no worse than archived values + numerical tolerance; recompute signed native/common/tail decomposition for both adjacent pairs with same min tau of .85 prefixes. Report native p separately."
+  },
+  "budget": {
+    "timeout_minutes": 60,
+    "maximum_projected_total_seconds": 3000,
+    "projected_fine": "4*medium elapsed",
+    "gate_before_fine": "coarse/medium replay and safety, half-CFL medium at same fixed windows and all event taus; temporal change <=25% of spatial differences and <1% relative, no native overshoot temporal order claim"
+  },
+  "scientific_hold": true,
+  "independent_identifiability_hold": "R4B.10 user-stated, independent, not re-audited",
+  "forbidden": [
+    "DSS",
+    "AMR",
+    "critical exponent",
+    "bracket narrowing",
+    "main promotion",
+    "change thresholds after result"
+  ],
+  "claim_ceiling": "Finite event and fixed-time convergence audit, no horizon or universal asymptotics; native threshold overshoot is diagnostic, historical failures immutable."
+}
