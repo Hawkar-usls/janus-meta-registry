@@ -1,0 +1,85 @@
+{
+  "schema": "janus.h38n8a.minimal_pair_hierarchy.addendum.v5",
+  "date": "2026-11-28",
+  "parent": {
+    "commit": "0e4213275a3c625186903a1e0df54107e48707d1",
+    "blob": "2822a6fd527630d4d7d05ab51a515e551587ab03"
+  },
+  "status": "DIAGNOSTIC_ONLY__MINIMAL_PAIR_TEST_FROZEN__FAMILY_DIVERSITY_HOLD__NO_CORPUS",
+  "scope": "Prospective clarification before semantic validation, no outcomes available. H38N8A is diagnostic on current same-author construction roster; a conditional inferential minimal-pair analysis is allowed only if its family-level null and sampling assumptions are justified independently before execution. No new claim of admission, G3 training or confirmed power.",
+  "corrections": {
+    "mcnemar": "McNemar comparing correctness on opposing members tests marginal correctness asymmetry, not discrimination. Perfectly correct pairs are concordant; constant-class prediction can yield extreme asymmetry. Do not use that test for discrimination. McNemar comparing G3 and G2 on same row is legitimate under independent paired rows; clustering still requires family-aware inference.",
+    "counts": "Four matched pairs per axis per complete family, but 40 total proposals with provisional 27/13 split provide 52 EVAL pairs per axis, 13 family units, not 160 independent EVAL pairs. TRAIN pairs are never counted as confirmatory observations. Actual validated F unknown.",
+    "hoeffding": "v4 bound at F_eval=13 and alpha=.0125 gives mean threshold about .91054. Very stringent, not mathematical impossibility. It is a statistical threshold, never replacement for engineering BA>=.8. No claim of universally impossible inference at 13 clusters.",
+    "gain": "100 independent EVAL families may be a planning scenario, not a proven necessary or sufficient sample size; power depends on effect, family score variation, dependence, margin and test. No transfer of probe discordance or ICC to G3 comparison as measured values."
+  },
+  "hierarchy": {
+    "pooled": "Retain v4 pooled binary probes, raw metrics, family scores and descriptive family-level intervals with limitations. For current roster pooled results descriptive only, no confirmatory label; iid binomial planning calculations not actual inference. Keep raw nine-way probe and G2 comparisons. HOLD separate, no directional test.",
+    "minimal_pairs": {
+      "target": "Directional sensitivity to the controlled semantic change, not absolute accuracy or uniform correct classification. Report both.",
+      "primary_model": "Fixed pooled binary linear probe per semantic axis from v4, fitted only on PROBE TRAIN with fixed C and parameters. G2 forced-known probabilities, nine-way probe derived scores and context-conditioned probes secondary descriptive, no cherry-picking model for inference.",
+      "pair": "For axis a and each fixed combination of other axes, identify gold0 and gold1 rows in EVAL family. Use unthresholded decision score s oriented toward axis value1. For G2 secondary use sum of softmax probabilities over axis1 known labels divided by total known probability, or stable equivalent logsumexp difference; no threshold changes. Primary pooled logistic decision_function oriented by classes_ (verify labels 0/1). Contrast d=s(gold1)-s(gold0). Positive means correctly oriented response change; zero means no change; negative reversed. Use sign(d) with absolute tolerance 1e-12 on primary logits, report raw differences; G2 secondary use stable log odds with same logit tolerance.",
+      "family": "Each family contributes exactly one sign from S_f=(sum of four pair signs)/4. S_f>0 positive, <0 negative, =0 tie. All pair contrasts, family scores, ties, positive/negative counts, family mean, pair accuracy and orientation are retained. No pooling of dependent pair observations as independent. Report hard prediction categories BOTH_CORRECT, BOTH_REVERSED, CONSTANT_0, CONSTANT_1 for each pair and pair both-correct rate; G2 operational abstentions separate, not forced into hard categories. A positive score change can occur while both hard predictions remain incorrect/constant; do not equate score discrimination with accurate classification.",
+      "null_and_test": "H0: among non-tied independent EVAL family signs, probability positive <=.5 (conditional on fixed TRAIN/fitted model and non-tie; each family conditional probability <=.5 or iid sign-null). Exact one-sided binomial sign test with n=positive+negative and k=positive, p=P(Bin(n,.5)>=k); n=0 -> INCONCLUSIVE, report all ties and effective n. No unverified exchangeability, no randomization claim from deterministic labels, no 52 independent-pair test. Holm step-down across exactly three primary semantic axis p-values, familywise alpha=.05 if all assumptions justified. If independence/sign-null/sampling not justified, report descriptive signs and sensitivity only, no confirmatory claim. Do not use approximate bootstrap intervals as p-values.",
+      "interpretation": "A valid rejection supports positive directional score discrimination on defined sampled family distribution conditional on non-ties; not universal semantic capability, absolute accuracy, no forgetting or G3 gain. If invalid assumptions, DIRECTIONAL_PATTERN_DESCRIPTIVE. If valid nonrejection, DIRECTIONAL_EVIDENCE_INCONCLUSIVE. If valid rejection, DIRECTIONAL_SIGNAL_DETECTED, still engineering hold if v3 context gates unmet. No rescue by changing scoring, thresholds, tie handling, sample size or inference level after outcomes."
+    },
+    "engineering": "Retain v3/v4 conditioned BA>=.8, exact collision upper bound>=.8, conflict rate<.01, corrected bootstrap engineering bound, fit and generalization-gap gates; HOLD separate. No automatic permission to train. If smaller diagnostic design adopted, explicit prospective amendment required; previous 90-family requirement stays HOLD."
+  },
+  "planning": {
+    "test": "Exact independent non-tied family signs at first Holm threshold alpha=.05/3, conditional on n non-tied; assumed P(positive|non-tie)=.8 for sensitivity, not empirical. Ties reduce n. These are not row-level accuracy or effect-size power estimates.",
+    "scenarios": [
+      {
+        "n": 8,
+        "k": 8,
+        "power_at_positive_probability_80": 0.16777216,
+        "p_positive_for_power80": 0.97249247
+      },
+      {
+        "n": 10,
+        "k": 9,
+        "power_at_positive_probability_80": 0.37580964,
+        "p_positive_for_power80": 0.91674006
+      },
+      {
+        "n": 12,
+        "k": 11,
+        "power_at_positive_probability_80": 0.27487791,
+        "p_positive_for_power80": 0.93074265
+      },
+      {
+        "n": 13,
+        "k": 11,
+        "power_at_positive_probability_80": 0.50165218,
+        "p_positive_for_power80": 0.87956097
+      },
+      {
+        "n": 18,
+        "k": 14,
+        "power_at_positive_probability_80": 0.71635382,
+        "p_positive_for_power80": 0.82345075
+      },
+      {
+        "n": 30,
+        "k": 22,
+        "power_at_positive_probability_80": 0.87134925,
+        "p_positive_for_power80": 0.77935963
+      },
+      {
+        "n": 100,
+        "k": 62,
+        "power_at_positive_probability_80": 0.99999032,
+        "p_positive_for_power80": 0.65486332
+      }
+    ],
+    "note": "Discreteness causes non-monotonic power. At 13 nontied families 11 positive gives p=.01123046875, power .501652 at .8 true sign probability. Not a guarantee of 80% power. Recompute after semantic validation including tie-rate sensitivity, family-dependent scores, actual split and feasible estimands."
+  },
+  "next": "Semantic validation of all 13 directional and 27 factorial proposals, independent review still required. Then freeze final F and prospective smaller diagnostic design if needed, recalculate family-level and illustrative iid power; no new corpus prior to resolution. Separate future GAIN EXAM with cluster-aware power and justified margin if NI proposed; MARGIN_UNJUSTIFIED remains. No architecture change or G3 training.",
+  "authorization": {
+    "corpus_generated": false,
+    "probe_executed": false,
+    "janus_train": false,
+    "production": false,
+    "architecture_change": false,
+    "beacon_closed_loop_blocked": true
+  }
+}
