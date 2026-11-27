@@ -1,0 +1,31 @@
+name: JANUS R4B10A route coverage audit
+on:
+  push:
+    branches: [janus-singularity-gpt-r4b10a-route-audit]
+    paths:
+      - '.github/workflows/janus-singularity-gpt-r4b10a.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  cross-tab:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: registry/physics/singularity_gpt/r4b10a
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46035084112
+          pattern: r4b10-evaluation-*
+          path: source-artifacts
+      - run: python registry/physics/singularity_gpt/r4b10a/audit.py source-artifacts
+      - uses: actions/upload-artifact@v4
+        with:
+          name: r4b10a-route-coverage
+          path: r4b10a-output/
+          retention-days: 30
