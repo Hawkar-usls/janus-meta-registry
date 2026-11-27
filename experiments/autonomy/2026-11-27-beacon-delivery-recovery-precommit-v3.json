@@ -1,0 +1,119 @@
+{
+  "schema": "janus.beacon.delivery.recovery.precommit.v3.addendum",
+  "date": "2026-11-27",
+  "parent": {
+    "commit": "d3d45bcab9799d3c4d36f91587a426a8b9ee0c93",
+    "blob": "052950525791224e3e6f464f9bfbb584e99ebd1f"
+  },
+  "status": "TIMING_MODE_CORRECTED__RECOVERY_UNVERIFIED__PROVENANCE_UNVERIFIED",
+  "scope": "Additive prospective rules; v2 time/identity/persistence/sequence rules unchanged. Physics holds independent.",
+  "pre_result_readback": {
+    "witness_last": "be3d93d6-44bc-8327-95dd-c7a21b9e915d",
+    "witness_next": "2026-11-27T22:39:09+02:00",
+    "mode": "exact_schedule",
+    "updated_at": "2026-11-27T19:40:48.576343Z",
+    "relay_run": "65c31fc1-20bc-8325-b29a-e5f7e6723f17",
+    "relay_completed": "2026-11-27T19:58:50.907306Z",
+    "relay_outcome": "same old rejected UUID; no new result, no write; not a second unique refusal and not an eligible post-intervention slot"
+  },
+  "evidence_precision": {
+    "direct_temporal_refusal": 1,
+    "earlier_reported_refusal": 1,
+    "earlier_primary_reason": "UNKNOWN",
+    "stored_packets": 9,
+    "corroborated_occurrences": 16,
+    "unique_completion_keys": 7,
+    "not_corroborated": 11,
+    "unknown": 18,
+    "copy_readback_scope": "survivors only; no rate estimate or semantic truth claim"
+  },
+  "failure_taxonomy": {
+    "TIME_ORDER": "Fresh eligible exact_schedule packet with observed<scheduled, or invalid actual execution ordering: temporal recovery failed for that slot. Early-source recurrence specifically falsifies sufficiency of mode change for eliminating that failure; does not alone identify cause.",
+    "UUID_MISMATCH": "Integrity failure, break streak, quarantine; not evidence for or against scheduler-mode hypothesis.",
+    "PAYLOAD_HASH_OR_SCHEMA_CONFLICT": "Integrity failure; quarantine; no overwrite; break streak; no temporal causal inference.",
+    "STALE_OR_DUPLICATE": "No new eligible transfer; never count replay. If slot definitively missed break streak; otherwise pending.",
+    "SOURCE_MISSING_OR_TRUNCATED": "UNKNOWN until verified or definitively missed; no success or scheduler attribution.",
+    "RELAY_WRITE_FAILURE": "Transport failure, break streak if definitive; distinguish explicit error from pending visibility.",
+    "INBOX_MISSING": "Pending if expected transfer not settled; definitive failure only with affirmative failure receipt or established missed slot. No temporal causal inference.",
+    "RECEIVER_REJECTED": "Record exact reason and source stage; time-related only if actual receiver TIME_ORDER evidence; other rejection breaks streak independently.",
+    "RECEIVER_PERSISTENCE_PENDING": "No pass until durable readback; no skip over pending slot.",
+    "PARTIAL_OR_UNKNOWN_COVERAGE": "May count as transport if all v2 identity/time/hash/receipt checks satisfied; cannot count as useful corroborated sensory observation or learning label.",
+    "PROVENANCE_MISSING": "Do not conflate transport with origin; provenance remains unverified."
+  },
+  "end_states": {
+    "delivery_pass": "DELIVERY_RECOVERY_PASS__PROVENANCE_UNVERIFIED",
+    "after_three": "Record exactly three consecutive eligible slots with Witness, Relay, inbox and durable receiver binding; retain failures, no causal claim, no automatic training or permissions. BEACON_BLOCKS_CLOSED_LOOP remains until separate provenance and useful independently corroborated sensory evidence gates pass.",
+    "delivery_hold": "RECOVERY_UNVERIFIED or RECOVERY_FAILED_FOR_SLOT; never skip unknown gap",
+    "configuration": "CONFIGURATION_READBACK_PASS only; actual exact_schedule behavior not established"
+  },
+  "provenance_proposed_gate": {
+    "status": "DESIGN_ONLY__NOT_IMPLEMENTED__NO_TRUST_ROOT_PROVISIONED",
+    "claim": "Authenticated source-origin and payload binding under explicitly trusted signer/time authority; not truth of all observations or autonomy.",
+    "trust": "Separate trusted source-side signer or authoritative provider-signed execution receipt, public verification key pinned outside relay and receiver write authority, protected signing key inaccessible to relay, approved identity and key lifecycle. Self-signed relay output, matching UUIDs, Git hashes and LLM reports alone insufficient. No credentials created or exposed.",
+    "signed_envelope": [
+      "schema/version",
+      "source task ID",
+      "source execution UUID",
+      "scheduled slot UTC",
+      "actual start/observation/completion UTC",
+      "canonical allowed observation payload SHA-256",
+      "monotonic sequence or unique source nonce",
+      "signer key ID",
+      "trusted timestamp or independently verifiable authoritative execution time binding"
+    ],
+    "verification": "Verify signature over canonical envelope, pinned signer identity and key validity, independent trusted timestamp/authoritative source receipt, exact payload digest and all IDs across source, relay, inbox, receiver; reject replay, altered payload, wrong key, wrong task, stale/invalid time, missing attestation and unknown key. Record durable verifier receipt and independent readback. Preserve current time gate. Never sign on behalf of source in relay. If provider does not expose authenticatable source evidence, report PROVENANCE_UNVERIFIED rather than substitute local signing.",
+    "exam": "Before any provenance PASS, separate precommitted exam: 3 fresh consecutive source-attested deliveries verified by independent verifier with trusted key and time binding; negative controls altered payload/time/UUID, wrong signer, revoked/unknown key, duplicated nonce, stale receipt, missing signature, relay-only signature all rejected. Actual source key/receipt mechanism and test artifacts must be specified and approved before execution. A pass limited to these source attestations and trust assumptions."
+  },
+  "causal_limits": "No guarantee exact_schedule implies observed>=scheduled established; existing relay also observed early relative to own nominal slot. No contemporaneous old-mode control; three successes only post-change delivery evidence. Retry and original scheduler semantics open. No tolerance relaxation.",
+  "observation_checklist": [
+    {
+      "slot": "2026-11-27T22:39:09+02:00",
+      "relay": "2026-11-27T22:55:00+02:00",
+      "required": [
+        "fresh Witness UUID and actual time order",
+        "Relay exact source UUID and result",
+        "inbox persisted payload",
+        "receiver durable readback and hash",
+        "classification and consecutive streak"
+      ]
+    },
+    {
+      "slot": "2026-11-27T23:39:09+02:00",
+      "relay": "2026-11-27T23:55:00+02:00",
+      "required": [
+        "fresh Witness UUID and actual time order",
+        "Relay exact source UUID and result",
+        "inbox persisted payload",
+        "receiver durable readback and hash",
+        "classification and consecutive streak"
+      ]
+    },
+    {
+      "slot": "2026-11-28T00:39:09+02:00",
+      "relay": "2026-11-28T00:55:00+02:00",
+      "required": [
+        "fresh Witness UUID and actual time order",
+        "Relay exact source UUID and result",
+        "inbox persisted payload",
+        "receiver durable readback and hash",
+        "classification and consecutive streak"
+      ]
+    }
+  ],
+  "independent_physics_holds": [
+    "COMPACTNESS_CONVERGENCE_HOLD",
+    "EVENT_INVARIANCE_HOLD",
+    "LATE_TIME_RICCI_HOLD",
+    "CROSS_ARCHITECTURE_HOLD",
+    "IDENTIFIABILITY_HOLD"
+  ],
+  "forbidden": [
+    "DSS",
+    "AMR",
+    "98304",
+    "new training",
+    "production promotion",
+    "manual source attestation",
+    "alter timestamps"
+  ]
+}
