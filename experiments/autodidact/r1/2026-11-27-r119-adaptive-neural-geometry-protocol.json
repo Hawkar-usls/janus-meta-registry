@@ -1,0 +1,67 @@
+{
+  "schema": "janus.autodidact.r119.adaptive_neural_geometry.protocol.v1",
+  "date": "2026-11-27",
+  "status": "FROZEN_BEFORE_PR_OPEN",
+  "head": "26d63c8f7d4e8cea821475c8eae9a83bdd359ad8",
+  "workflow": ".github/workflows/autodidact-r119-adaptive-neural-geometry.yml",
+  "workflow_blob": "96b217aaaea1fef70dec7c1c35bde1549622bd53",
+  "prior": {
+    "run": 45962655375,
+    "result_commit": "a1c90c598bcff0b0f206abf5a5c6ab9684036697",
+    "protected_exact": 29,
+    "raw_exact": 8,
+    "protected_accepted": 29,
+    "raw_accepted": 11,
+    "seed118102_geometry_rejections": 163,
+    "seed118102_final_radius": 0.49968397684272864,
+    "all_acquisition_failed": true
+  },
+  "design": {
+    "seeds": [
+      119101,
+      119102
+    ],
+    "arms": [
+      "fixed_050",
+      "fixed_075",
+      "adaptive_layer_geometry"
+    ],
+    "trials": 180,
+    "stage_trials": [
+      60,
+      60,
+      60
+    ],
+    "step_radius": 0.07,
+    "geometry_tiers": [
+      0.5,
+      0.625,
+      0.75
+    ],
+    "replay_weight": 0.25,
+    "source_policy": "same restricted metadata source admission, exclude 444 previous source hashes and paths, 36 new copy examples and 64 separate crystals; fail closed if reserves insufficient",
+    "projection": "unchanged R118 actual shadow AdamW displacement, eight fresh normalized margin gradients, 24 cyclic halfspace sweeps; scalar clipping to step cap and Euclidean plus weighted ball before actual weight change",
+    "layer_metric": "frozen parent eight constraint gradients per seed; five disjoint groups token/position/block0/block1/final_norm; weight clamp(sqrt(group normalized-gradient RMS/global RMS),0.7,1.4); not individual parameter curvature",
+    "controls": "fixed .50 and fixed .75 Euclidean bounds; all arms clip, use same projection and curriculum/replay schedule; adaptive begins .50 with both Euclidean and weighted constraint, staged expansion .625 then .75",
+    "expansion": "only propose when unbounded projected step crosses current cap, >=5 accepted updates since last expansion, >=5% gate CE improvement since last expansion; commit expanded cap only with unchanged exact semantic veto and additional current-state CE gain >=1e-7; otherwise rollback weights and optimizer, retain old cap",
+    "retention": "unchanged old parent-correct pair/open, 16 historical witnesses, parent CE guard, exact item veto and final held-out exam; zero step not accepted",
+    "train_padded_positions_per_arm_seed": 138240,
+    "gate_padded_positions_per_arm_seed": 2419200,
+    "constraint_forward_positions_per_arm_seed": 933120,
+    "constraint_vjp_calls_per_arm_seed": 1440,
+    "additional_metric_work": "one common parent constraint set per seed; scalar arithmetic and layer norms differ by arm; elapsed time recorded",
+    "decision": "report exact answer count, pair and open old loss separately, acceptance, zero steps, boundary/clipping/geometry veto counts, committed cap transitions and per-layer movement; no promotion based on acceptance only",
+    "controls_count": 17,
+    "admission_controls": 4
+  },
+  "limits": [
+    "Expansion alters research geometry only, hard step cap .07 and absolute cap .75, not authorization of production expansion",
+    "Adaptive arm combines group weighting and staged expansion, cannot attribute effect to one alone; fixed arms also introduce clipping compared with R118",
+    "Layer sensitivity estimated from eight parent margins, not all knowledge or per-parameter sensitivity; metric remains frozen",
+    "Exact internal gate cannot guarantee held-out retention; no independently administered blind exam",
+    "Different new sources and seeds; causal comparison only within same R119 seed",
+    "Shared historical document cohorts and derived numeric metadata; not verified scientific claims",
+    "No production mutation, promotion, export, or additional autonomy"
+  ],
+  "result": null
+}
