@@ -1,0 +1,36 @@
+name: JANUS R4B10B1 replay audit
+on:
+  push:
+    branches: [janus-singularity-gpt-r4b10b1-replay-audit]
+    paths:
+      - '.github/workflows/janus-singularity-gpt-r4b10b1.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: registry/physics/singularity_gpt/r4b10b1
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46035084112
+          name: r4b10-evaluation-iid
+          path: original
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46045519105
+          name: r4b10b-path-witness
+          path: replay
+      - run: python registry/physics/singularity_gpt/r4b10b1/audit.py original replay
+      - uses: actions/upload-artifact@v4
+        with:
+          name: r4b10b1-replay-audit
+          path: r4b10b1-output/
