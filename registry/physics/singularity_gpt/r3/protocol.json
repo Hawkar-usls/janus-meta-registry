@@ -1,0 +1,71 @@
+{
+  "id": "JANUS-SINGULARITY-GPT-R3A",
+  "date": "2026-11-27",
+  "parent_run": 45986760554,
+  "parent_admission": "REJECT_NEURAL_PHYSICS_SOLVER",
+  "reference": [
+    "https://link.springer.com/article/10.12942/lrr-2007-5",
+    "https://arxiv.org/abs/gr-qc/9506044"
+  ],
+  "model": "4D spherical Einstein massless real scalar field, G=c=1, polar areal coordinates",
+  "equations": {
+    "metric": "ds^2=-alpha^2 dt^2+a^2 dr^2+r^2 dOmega^2",
+    "Phi": "d_r phi",
+    "Pi": "a/alpha d_t phi",
+    "Phi_t": "d_r(alpha/a Pi)",
+    "Pi_t": "r^-2 d_r(r^2 alpha/a Phi)",
+    "mass_r": "2 pi r^2 (Phi^2+Pi^2)(1-2m/r)",
+    "lapse_r": "d_r log(alpha)=(a^2-1)/(2r)+2 pi r(Phi^2+Pi^2)",
+    "mass_flux": "d_t m=4 pi r^2 alpha/a^3 Phi Pi",
+    "Ricci": "8 pi (Phi^2-Pi^2)/a^2"
+  },
+  "numerics": {
+    "domain_radius": 30,
+    "grid_cells": [
+      384,
+      768,
+      1536
+    ],
+    "CFL": 0.3,
+    "t_end": 16,
+    "compactness_stop": 0.85,
+    "initial_compactness_limit": 0.65,
+    "amplitudes": [
+      0.01,
+      0.03,
+      0.06,
+      0.1,
+      0.15,
+      0.22,
+      0.32,
+      0.45,
+      0.6,
+      0.85,
+      1.1
+    ],
+    "families": [
+      {
+        "name": "train_shell",
+        "r0": 5,
+        "width": 1
+      },
+      {
+        "name": "held_shell",
+        "r0": 6,
+        "width": 1.4
+      }
+    ],
+    "initial_data": "regular reflected ingoing flat-space Gaussian shell used as scalar initial data; solve GR constraints",
+    "integrator": "RK4, shell-volume flux divergence, centered flux, weak fourth-difference dissipation"
+  },
+  "gates": {
+    "flat_wave": "relative L2 errors decrease with each resolution; finest error <0.05",
+    "vacuum": "exact Minkowski",
+    "mass_drift": "<0.05 relative for accepted trajectories",
+    "dispersal": "t=16, inner mass at r=3 <5% initial outer mass and final max compactness <0.2",
+    "strong": "stop when compactness >=0.85 after initial compactness <0.65; proxy only",
+    "resolution": "same class at 768 and 1536; label agreement is not event horizon detection",
+    "neural": "only if controls and sufficient converged labels; train on first family, evaluate second; compare logistic-like threshold baseline; no promotion"
+  },
+  "claim_ceiling": "Finite-resolution dynamical scalar field evolution and near-trapping proxy; no trapped surface crossing, no event horizon, no measured Choptuik exponent, no DSS discovery. Old R1/R2 data kept for reference; weights not inherited."
+}
