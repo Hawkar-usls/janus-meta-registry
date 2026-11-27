@@ -1,0 +1,41 @@
+{
+  "id": "JANUS-R4B5A.3a-SERIALIZATION-RECOVERY",
+  "scope": "Reporting-only correction and deterministic reproduction, not new numerical protocol",
+  "parent": {
+    "failed_run": 46041627958,
+    "archive_commit": "4bde5b1efdf86c86a60818717dc3cb45c7ac0454",
+    "archive_blob": "8980d2c0736aabd48dc673d1aa3d6aa1052a83c3",
+    "original_audit_blob": "a7a28d2630c128ecbc6beeffe25dc88262833ae6",
+    "unchanged_protocol_blob": "224496bd9513a3b9ecf551499ec27366f972bfaa",
+    "previous_archive_blob": "4e8807e1422b2fc907be157469d7100010e01ba7"
+  },
+  "fix": "json default accepts numpy.bool_, numpy.integer, numpy.floating by .item() converting to Python scalar only; allow_nan=False unchanged; unknown types rejected; no stringification, rounding, array coercion or numerical state mutation",
+  "validation": "synthetic nested event record with numpy bool_, float64, int64, negative type tests for nonfinite and unsupported object, JSON roundtrip schema; compare original run source and patched source byte-for-byte after removing reporting-only changes; numeric prefix replay all logged CASE fields except elapsed_seconds and id (id checked separately), exact equality, no relative tolerance; recompute independent safety from new saved trace values and compare to logged outputs; verify R4B5A.2 archive blob and parse all 12 entries; full historical trace unavailable for direct comparison, do not claim bitwise array equality",
+  "temporal_interpretation": {
+    "historical_limit": 0.25,
+    "diagnostic_bands": [
+      {
+        "max": 0.05,
+        "label": "TIGHT"
+      },
+      {
+        "max": 0.15,
+        "label": "MODERATE"
+      },
+      {
+        "max": 0.25,
+        "label": "NEAR_GATE"
+      }
+    ],
+    "note": "Classification only; no change to precommitted numerical PASS criterion. Relative ratio near .25 weakens confidence in pure spatial interpretation; not an additional admission gate."
+  },
+  "forbidden": [
+    "alter original protocol.json",
+    "alter solver or numerical expressions",
+    "DSS",
+    "AMR",
+    "bracket narrowing",
+    "main promotion"
+  ],
+  "scientific_hold": true
+}
