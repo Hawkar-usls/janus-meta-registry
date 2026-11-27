@@ -1,0 +1,69 @@
+{
+  "schema": "janus.autodidact.r116.protocol.v1",
+  "date": "2026-11-27",
+  "status": "FROZEN_BEFORE_PR_OPEN",
+  "head": "ebd354d33d0aef47822021dced144991fad19cac",
+  "workflow": ".github/workflows/autodidact-r116-neural-foundations.yml",
+  "prior": {
+    "run": 45958509075,
+    "artifact": 15179986195,
+    "registry_result_commit": "88612d5a0b1099e944bb59d5b889b8fc8a35d8cb",
+    "parent_open_old": 1,
+    "parent_old_items": 114,
+    "all_prior_open_gate_parent_correct": 0,
+    "all_acquisition_failed": true
+  },
+  "design": {
+    "seeds": [
+      107101,
+      107102
+    ],
+    "arms": [
+      "first_byte",
+      "sequence_uniform",
+      "sequence_curriculum"
+    ],
+    "trials": 180,
+    "step_radius": 0.07,
+    "total_radius": 0.5,
+    "stage_trials": [
+      60,
+      60,
+      60
+    ],
+    "replay_weight": 0.25,
+    "source_policy": "same limited metadata derivation, exclude 244 prior source hashes and paths, 36 new source copy examples and 64 separate new crystals; exact-byte and quarantine controls retained",
+    "families": [
+      "symbol",
+      "number",
+      "json",
+      "source_copy",
+      "relation"
+    ],
+    "train_per_seed": 172,
+    "gate_per_seed": 80,
+    "exam_per_seed": 124,
+    "curriculum": "one-symbol/one-digit/short relations first; level 1 two-character tasks; level 2 longer tasks; 60 trials each cumulative levels, uniform control and first-byte control",
+    "generation": "greedy all 258 tokens, no length oracle, max 7 generated tokens, exact answer followed by newline required; early EOS is not counted as newline",
+    "preservation": "old paired and open masks plus 16 actual parent-correct historical next-byte witnesses at every step; separate 16 from historical retain_eval at final exam; fail closed if not enough",
+    "exam": "each primitive family >=50% exact terminated and >= parent, zero old pair/open/historical losses; separately preserve R1.15 relation gate >=20/32 both formulations with gain >=4",
+    "trinity": "local deterministic alternate veto predicate; no external teacher claim",
+    "akinator": "parent deficit ranking per family, fixed curriculum rather than autonomous material choice",
+    "train_padded_positions_per_arm_seed": 138240,
+    "gate_padded_positions_per_arm_seed": 2419200,
+    "controls": {
+      "foundation": 8,
+      "admission": 4
+    }
+  },
+  "limits": [
+    "Historical witness documents are historical train-labelled, not external blind; may be familiar to parent; cross-document duplicate semantics possible",
+    "Synthetic primitive tasks use new prompt instances but input and target values may recur; source-copy tasks are derived numeric metadata, not scientific facts",
+    "Source copy training prompts also appear in old replay; gate/exam source-copy prompts also in corresponding retention cohorts; all three source cohorts disjoint",
+    "Same relation source identities during training and final wording test; not unseen-source reasoning",
+    "Equal padded model positions, different supervised target counts; no wall-time equality",
+    "TRINITY checks are local deterministic predicates; AKINATOR diagnostic does not independently choose curriculum",
+    "No production change, promotion or candidate export; no external blind exam or network isolation proof"
+  ],
+  "result": null
+}
