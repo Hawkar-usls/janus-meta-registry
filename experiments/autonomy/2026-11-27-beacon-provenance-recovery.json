@@ -1,0 +1,52 @@
+{
+  "schema": "janus.beacon.provenance.recovery.v1",
+  "date": "2026-11-27",
+  "status": "CONFIGURATION_CONFOUND_FOUND__CONTROLLED_INTERVENTION_PRECOMMIT",
+  "source": {
+    "task": "6ad5040159608191b7ed6036b85ef700",
+    "mode": "condition_watch",
+    "schedule": "BEGIN:VEVENT\nDTSTART:20261018T173909Z\nRRULE:FREQ=HOURLY\nEND:VEVENT",
+    "run": {
+      "id": "be3d93d6-44bc-8327-95dd-c7a21b9e915d",
+      "recorded_status": "completed",
+      "scheduled_for": "2026-11-27T18:39:09Z",
+      "started_at": "2026-11-27T18:14:14.146076Z",
+      "completed_at": "2026-11-27T18:14:33.286312Z",
+      "chat_ref": {
+        "type": "chatgpt",
+        "id": "6b00f2b3-2ea4-83ed-a598-278e1ff95188"
+      }
+    },
+    "observation": "2026-11-27T18:14:20Z"
+  },
+  "relay": {
+    "task": "Automation_d2f54f5742b08191931bfcb6de836266",
+    "mode": "exact_schedule",
+    "run": "a1d94e3d-308c-8325-bae1-245d1119c1a0",
+    "result": "REJECTED; no file created"
+  },
+  "receiver": {
+    "code_blob": "7fba733ad4afbdbbabb7f4836da70b0fef00c637",
+    "state_blob": "cc27447df5fbe7d9455aa2421c82238f945c3a10",
+    "state_sha256": "5440c289e6e354ed55774213d136e91f3f31e3539093bc84f700fe552e2b9ee4",
+    "report_blob": "a1b29c71098507241e9fe1e907c035de974d885e",
+    "feedback_report_blob": "d415e4bf56f982b163774982e51f35dc3110a466",
+    "inbox_semantic_readback": "9/9 exact parsed JSON, raw SHA256 not independently recomputed",
+    "unique_corroborated_completions": 7,
+    "manual_seed_count": 1,
+    "auto_origin": "not independently proven",
+    "missing_rejected": [
+      "be3d93d6-44bc-8327-95dd-c7a21b9e915d",
+      "8ec6c61e-ade4-8330-9496-c2fcbec83171"
+    ],
+    "latest_feedback_quality": "HOLD",
+    "new_distinct_completions_learned": 0
+  },
+  "hypothesis": "condition_watch schedule slot may differ from actual observation time; actual semantics and retry history unavailable, not proven causal. Exact schedule intervention tests compatibility without loosening receiver.",
+  "intervention": {
+    "only_change": "Witness timing_mode condition_watch -> exact_schedule; preserve task ID, original RRULE, DTSTART, timezone, prompt, enabled state; do not change relay, audit, receiver, permissions, any repository main, budgets or training",
+    "acceptance": "read back task configuration; observe three distinct future scheduled Witness IDs after intervention, exact run/result binding, scheduled<=observed<=completed, fresh structured results, actual relay receipts for same IDs, mailbox files and durable receiver readback; no manual seed or reused packet; partial coverage UNKNOWN, not training label. If no history available remain OPEN. No claim of causal attribution solely from post-intervention success; no new training until BEACON prerequisites and independent provenance resolved.",
+    "failure": "if task update unsupported or readback differs, report blocker; do not bypass timestamps or manually create packets; preserve previous task."
+  },
+  "scientific_and_training_hold": true
+}
