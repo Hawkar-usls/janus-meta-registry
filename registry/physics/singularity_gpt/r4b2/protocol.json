@@ -1,0 +1,73 @@
+{
+  "id": "JANUS-R4B2-RIVAL-MODELS",
+  "parent_run": 45998354899,
+  "fixed": {
+    "A": 0.11484375,
+    "r0": 5,
+    "w": 1,
+    "R": 30,
+    "n": 49152,
+    "checkpoints": [
+      16
+    ],
+    "C_prediction": 0.5031301949839493,
+    "C_limit": 0.5031073852282374,
+    "C_absolute_tolerance": 0.000005,
+    "R_prediction_conditional_second_order": 1438.6636961401414,
+    "R_limit_conditional": 1430.4881037310474,
+    "R_prediction_relative_tolerance": 0.02,
+    "mass_budget": 0.01,
+    "min_cells": 8
+  },
+  "reference": {
+    "n": 24576,
+    "C": 0.5031986242510851,
+    "R": 1463.190473367423,
+    "cells": 21.41605685847866
+  },
+  "detector": {
+    "domain": "synthetic only; supplied synthetic accumulation time zero and known normalized generator envelope; real trace estimation not solved",
+    "models": [
+      "DSS constant log-frequency sinusoid",
+      "CHIRP quadratic log-phase",
+      "TRANSIENT linear-time oscillation with exponential envelope and localized log-time wave packet",
+      "NOISE stationary mean with AR(1) residual"
+    ],
+    "fit": "variable projection of sin/cos/constant; training blocks 0-55%; validation 55-78%; test 78-100%; fit only training; scores Gaussian predictive loss using shared training noise scale plus complexity penalty; AR1 prewhitening estimated from training DSS residual clipped at 0.95; not calibrated posterior probabilities",
+    "decision": "DSS heldout normalized RMSE <=0.15 and phase coherence, no rival improvement >0.015 normalized RMSE; conservative abstain if indistinguishable; report each rival score",
+    "seed": 940225,
+    "noise_levels": [
+      0.001,
+      0.01
+    ],
+    "noise_types": [
+      "iid",
+      "ar1",
+      "structured"
+    ],
+    "n_each_positive_and_each_negative_subtype": 100,
+    "negative_subtypes": [
+      "chirp",
+      "linear_time",
+      "transient",
+      "noise",
+      "near_dss_chirp"
+    ],
+    "points": 1024,
+    "period_range": [
+      1.2,
+      5.6
+    ],
+    "cycles": 6,
+    "paired_bank": true,
+    "gate": {
+      "positive_correct_min": 90,
+      "negative_hits_max_per_subtype": 5,
+      "period_relative_error_max": 0.05
+    },
+    "limitations": "Synthetic known accumulation time and envelope, no physical use, near-DSS indistinguishability explicitly retained, no tuning on audit. Raw prior detector replay for matched generator audit plus original artifact subtype unavailable because labels were not stored.",
+    "legacy_filter_audit": "period sweep from 1 to 6 at 0.25 increment, count loss through old relative peak threshold"
+  },
+  "amr": "not implemented; 49152 reference check before AMR; existing bracket not verified",
+  "scientific_hold": true
+}
