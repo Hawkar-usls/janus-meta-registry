@@ -1,0 +1,60 @@
+{
+  "schema": "janus.beacon.delivery.recovery.slot_result.v1",
+  "date": "2026-11-27",
+  "parent_precommit": "62ee700444d879b64348354c84d2cd99da455dca",
+  "later_clarification": "ff6814d256b5e82cf3aa3a1ef596eb61a9497831",
+  "assessment": "First post-intervention slot evaluated under v2/v3, not retrospectively under v3.1.",
+  "configuration": {
+    "mode": "exact_schedule",
+    "updated_at": "2026-11-27T19:40:48.576343Z"
+  },
+  "witness": {
+    "run_id": "c64ca7f3-9dc8-832b-af58-1d874eb888e7",
+    "scheduled_for": "2026-11-27T20:39:09Z",
+    "started_at": "2026-11-27T20:35:57.643863Z",
+    "observed_at": "2026-11-27T20:36:20Z",
+    "completed_at": "2026-11-27T20:36:27.243535Z",
+    "observed_minus_scheduled_seconds": -169,
+    "coverage": {
+      "pages": 20,
+      "records": 200,
+      "api_status": "OK"
+    },
+    "source_class": "FRESH_DISTINCT_UUID",
+    "actual_observation_inside_execution": true
+  },
+  "relay": {
+    "run_id": "31902845-e3d8-8321-b842-b579ea0d75aa",
+    "scheduled_for": "2026-11-27T20:55:00Z",
+    "started_at": "2026-11-27T20:53:56.325539Z",
+    "completed_at": "2026-11-27T20:54:09.096216Z",
+    "source_uuid": "c64ca7f3-9dc8-832b-af58-1d874eb888e7",
+    "disposition": "RELAY_PRE_WRITE_TIME_ORDER_REJECTED",
+    "receipt": "new source UUID, completed, full structured result; completed before scheduled time; no file created"
+  },
+  "persistence": {
+    "inbox_http": 404,
+    "receiver_blob": "cc27447df5fbe7d9455aa2421c82238f945c3a10",
+    "receiver_contains_uuid": false,
+    "receiver_record_count": 9
+  },
+  "old_poll": {
+    "relay_run": "65c31fc1-20bc-8325-b29a-e5f7e6723f17",
+    "source_uuid": "be3d93d6-44bc-8327-95dd-c7a21b9e915d",
+    "classification": "REPEATED_READ_OF_UNCHANGED_LATEST_RESULT",
+    "support": "Relay prompt explicitly reads only latest peek result; receipt says still returns same previously rejected source UUID, no new result. No evidence of queue consumption or scheduler retry. No file created. Internal queues/retry history not accessible; no purge."
+  },
+  "result": {
+    "eligible_slots_seen": 1,
+    "confirmed_deliveries": 0,
+    "definitive_failures": 1,
+    "consecutive_streak": 0,
+    "original_three_slot_window_pass_possible": false,
+    "mode_change_sufficiency": "FALSIFIED_FOR_ELIMINATING_EARLY_OBSERVATION_TIME_ORDER_REFUSAL",
+    "root_cause": "UNRESOLVED",
+    "delivery": "RECOVERY_FAILED_FOR_SLOT__RECOVERY_UNVERIFIED",
+    "provenance": "UNVERIFIED",
+    "closed_loop": "BLOCKED"
+  },
+  "next": "Preserve failed slot and monitor remaining slots with same gate. Separate authoritative scheduler semantics investigation from recovery; only consider new time contract after authentic source-time binding and precommit; no loosening, timestamp fabrication, queue clearing, training, main changes or physics changes."
+}
