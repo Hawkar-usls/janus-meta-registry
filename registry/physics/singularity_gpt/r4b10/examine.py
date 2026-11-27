@@ -34,7 +34,9 @@ def examples(seed,kind):
                 keep=mask(c,missing);t=c["t"][keep];v=(c["env"]*(c["base"]+level*z))[keep]
                 yield c,keep,level,missing,t,v
 def fit(t,v,c):
-    fits,_=candidates(t,v,c["sub"],c["i"]);return min(fits,key=lambda x:x["rmse"])
+    
+    # Fixed neutral seed namespace: true class is never used for initialization.
+    fits,_=candidates(t,v,"positive",c["i"]);return min(fits,key=lambda x:x["rmse"])
 def features(t,v,a):
     q=a["q"];d=(t[-1]-t)/(t[-1]-t[0]);s=np.log1p((1-d)/(d+np.exp(q[0])));u=s/s[-1]
     y=v/np.exp(np.clip(q[2]*(s-s[-1]),-700,0));y/=max(np.sqrt(np.mean(y*y)),1e-30)
