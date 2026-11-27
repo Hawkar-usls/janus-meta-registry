@@ -1,0 +1,57 @@
+{
+  "schema": "janus.autodidact.r114.protocol.v1",
+  "date": "2026-11-27",
+  "status": "FROZEN_BEFORE_PR_OPEN",
+  "head": "903ec0e68f783588509cfd1cf69fa02c502da46c",
+  "workflow": ".github/workflows/autodidact-r114-semantic-calibration.yml",
+  "prior": {
+    "run": 45909944388,
+    "artifact": 15158669444,
+    "registry_result_commit": "a9ae5ecc609be2dda1793e290fae990d011befcb",
+    "random_ce_both": 32,
+    "old_lost": 0,
+    "first_seed_auc": 0.86328125,
+    "all_six_acquisition_gate_failed": true
+  },
+  "design": {
+    "seeds": [
+      87081,
+      87082
+    ],
+    "fit": "Random CE, 120 trials, 48 new synthetic associations (32 exam identities +16 calibration identities), four training forms, same frozen parent and replay .25, original geometry and protected-item veto",
+    "source_policy": "same restricted G7 numeric-copy admission, exclude prior 108 source hashes and paths, 12 each replay/gate/exam",
+    "calibration": "after model freeze, 16 balanced learned calibration entities, two new calibration templates; 32 labeled calibration prompts, disjoint from final 32 entities and final two prompts per entity; scalar offset fit by fixed 64-iteration bisection of ridge NLL, [-4,4], lambda=.01",
+    "readouts": [
+      "raw",
+      "global_offset",
+      "reference_centered"
+    ],
+    "reference": "eight fixed synthetic null identities absent from training, compute mean logit difference for each form; subtract it before applying single fitted offset, no exam labels or identities used for reference estimate",
+    "parent_control": "same calibration methods on original parent; compare candidate against both matched and raw parent",
+    "metrics": [
+      "both-form fact correctness",
+      "per-class recall",
+      "rank AUC",
+      "NLL",
+      "Brier",
+      "old parent-correct item loss"
+    ],
+    "gate": "original >=20/32 both, gain >=4 versus max(raw parent, matched parent), zero old losses, >=16 parent-correct old; per form each recall >=.5 and AUC >=.7",
+    "controls": {
+      "gate": 5,
+      "calibration": 6,
+      "admission": 4
+    },
+    "train_tokens_per_seed": 92160,
+    "gate_tokens_per_seed": 929280
+  },
+  "limits": [
+    "Calibration changes decision readout, not neural weights; constant offset cannot improve within-form rank AUC",
+    "48 trained associations instead of 32, so not a direct learning comparison to R1.13",
+    "Calibration entities are separate from exam entities but both have training facts, as required to test acquired associations; not unseen-fact inference",
+    "Reference centering uses extra unlabeled forward passes per template and a task-scoped readout; not proof of generic routing",
+    "Same-process synthetic exam, not external blind, open-generation or scientific truth proof",
+    "No raw Cortex training, production modification, checkpoint export or promotion"
+  ],
+  "result": null
+}
