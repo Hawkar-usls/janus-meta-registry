@@ -1,0 +1,108 @@
+{
+  "id": "JANUS-R4B10-CONDITIONAL-CALIBRATION",
+  "parent_run": 46028924940,
+  "parent_result": "registry/physics/JANUS_SINGULARITY_GPT_R4B9_RESULT_2026-11-27.json",
+  "parent_archive_commit": "070b48e088fcb1ea4d458e04f478fbc68b889406",
+  "margin": {
+    "value": 0.012,
+    "source": "r4b3/protocol.json blob b87126f45d2637f9fc276c5f0f7d613840ab7792",
+    "physical_justification": "not established in cited protocol",
+    "phase_parameter": "quadratic phase coefficient; endpoint extra phase .006 cycles at fixed linear parameters"
+  },
+  "bank": {
+    "classes": [
+      "positive",
+      "near_dss_chirp",
+      "stationary"
+    ],
+    "noise_types": [
+      "iid",
+      "long_memory",
+      "narrowband",
+      "tangent",
+      "orthogonal"
+    ],
+    "noise_levels": [
+      0.0001,
+      0.001,
+      0.01
+    ],
+    "missing": [
+      0,
+      0.3
+    ],
+    "n_per_class": 60,
+    "router_train_seed": 702319,
+    "router_exam_seed": 806217,
+    "calibration_seed": 193847,
+    "evaluation_seed": 652931,
+    "paired_variants": true
+  },
+  "router": {
+    "features": [
+      "residual lag1 correlation",
+      "residual lag4 correlation",
+      "residual lag16 correlation",
+      "residual spectral concentration",
+      "residual spectral entropy",
+      "log residual RMS",
+      "log sample count"
+    ],
+    "fit": "nearest standardized class centroid using ordinary iid/long_memory/narrowband only; training data independent; scale computed training only; reject outside max training class 95th percentile distance or nearest/second distance ratio > .8; unknown included in calibration",
+    "exam": "first separate held-out router test, confusion matrix and high-risk routing of tangent/narrowband to iid; report per noise and missingness; no tuning after exam",
+    "oracle_controls": "true family only diagnostic, never used by candidate"
+  },
+  "conditional": {
+    "score": "R4B9 local joint profile true drift score unchanged",
+    "groups": "predicted route including unknown, no true family or true class supplied at inference; max 95% split conformal quantile across observed-route x actual generator stratum with >=20 calibration points; rare routes/strata use global maximum, any infinite quantile implies abstain",
+    "guard": "use maximum of global and route-specific for unknown; route-specific for accepted known routes only; tangent and orthogonal included in calibration and evaluation; no claim of conditional distribution-free coverage of sparse intersections",
+    "compare": [
+      "global",
+      "conditional",
+      "oracle_noise_diagnostic"
+    ],
+    "grid": "same R4B9 grid, no continuous confidence certificate",
+    "failures": "missing scores included as infinity, fail closed for invalid grid",
+    "gate": "each positive stratum >=90% correct DSS, <=5% ambiguous; each negative stratum <=5% DSS; truth inclusion >=90% per nonstationary stratum; exact mimic no scientific promotion"
+  },
+  "forecast": {
+    "seed": 815207,
+    "classes": [
+      "positive"
+    ],
+    "noise_types": [
+      "iid",
+      "long_memory",
+      "narrowband"
+    ],
+    "noise_levels": [
+      0.001,
+      0.01
+    ],
+    "missing": [
+      0,
+      0.3
+    ],
+    "n_per_class": 100,
+    "fractions": [
+      0.55,
+      0.7,
+      0.8,
+      0.9,
+      0.95,
+      0.99,
+      1
+    ],
+    "compare": [
+      "legacy_single",
+      "sequence_single"
+    ],
+    "metric": "local and final gap accuracy; measured estimator process time per call; no physical solver CPU savings inference"
+  },
+  "execution": "router train then router exam; calibration uses frozen router artifact and hash; evaluation uses frozen thresholds and same router; forecast separate; retain scientific hold; no solver or production changes",
+  "scientific_hold": true,
+  "physical_use_authorized": false,
+  "production_changed": false,
+  "amr_implemented": false,
+  "early_stop_enabled": false
+}
