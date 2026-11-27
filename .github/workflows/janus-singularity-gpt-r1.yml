@@ -1,0 +1,35 @@
+name: JANUS Singularity GPT R1
+on:
+  push:
+    branches: [janus-singularity-gpt-r1]
+    paths:
+      - 'registry/physics/singularity_gpt/r1/**'
+      - '.github/workflows/janus-singularity-gpt-r1.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  train:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install CPU dependencies
+        run: |
+          python -m pip install numpy==2.2.6
+          python -m pip install torch==2.6.0 --index-url https://download.pytorch.org/whl/cpu
+      - name: Execute frozen three-seed experiment
+        run: python registry/physics/singularity_gpt/r1/train.py
+      - name: Archive results and actual trained weights
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: singularity-gpt-r1
+          path: singularity-r1-output/
+          if-no-files-found: warn
+          retention-days: 30
