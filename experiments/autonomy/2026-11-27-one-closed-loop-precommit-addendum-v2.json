@@ -1,0 +1,95 @@
+{
+  "schema": "janus.autonomy.one_closed_loop.proposed_precommit.addendum.v2",
+  "date": "2026-11-27",
+  "status": "PROSPECTIVE_DESIGN__BEACON_BLOCKS_CLOSED_LOOP__NOT_EXECUTED",
+  "supersedes_for_future_exam": {
+    "commit": "58d7b61761cd71de6aeec2a87f12e30fb9394d2a",
+    "blob": "5b046a830f4f9111a97b192d2d748561ae5d513c",
+    "path": "experiments/autonomy/2026-11-27-one-closed-loop-proposed-precommit.json",
+    "scope": "Clarifies proposed design before execution; no retrospective change to H38N7 or R1.23. Statistical design and acceptance thresholds require review before confirmatory execution."
+  },
+  "h38n7": {
+    "claim": "ONE_SHADOW_ACCEPT_OF_TWO_SCHEDULE_TRIGGERED_ATTEMPTS; weight transfer and rollback observed; safety/admission gate passed by G2, population quality and autonomous continuation unestablished.",
+    "safety_gate": "lost==0 && wrong==0 && unknown==0 && ag>bg; finite-sample no-loss/no-wrong/no-false-unknown plus new correct count increase, not statistical evidence of improvement or low population risk.",
+    "lost_definition": "All parent-correct items in union of historical replay exams and current held-out exam, not a separately selected protected subset. Attempt 3 old: 2 retained of 2 parent-correct across 18; fresh parent correct 0 of 9. Wrong/unknown counts across union. Attempt 2 exact offending class not available in summary log; replay with pinned source and banks needed to identify, no inference of criticality.",
+    "next_exam": "Keep all historical parent-correct items as regression controls, use separate newly sealed old-domain generalization set, >=100 fresh examples per relevant family with independent ground truth and prespecified power. Report denominator of prior-correct items. Zero losses is hard veto, not proof population forgetting zero.",
+    "calibration": {
+      "threshold": 0.65,
+      "status": "FIXED_NOT_VALIDATED",
+      "sets": "separate CALIBRATION and independent EXAM; no training or policy access to exam labels; calibration set excluded from train, diagnostic and test; predeclare known classes and unknown/OOD families.",
+      "method": "Freeze threshold .65 for current validation. Report reliability bins [0,.2,.4,.6,.65,.8,1], max softmax confidence, answered and abstained counts by known/unknown group, coverage, selective error, false-known rate on unknown cases, false-abstention rate on known cases, exact binomial CIs. Threshold does not define whether a true case is unknown; label fixed by independent oracle. Record top confidence and predicted/true class and reason code in sealed verifier only. No threshold retuning on final exam.",
+      "proposed_admission": "at least 100 answered known cases, at least 100 labeled unknown cases (and family coverage checks); one-sided 95% exact upper bound for answered known error and false-known rate on unknown <=.05 each; zero old-correct loss and historical veto unchanged; if coverage too low INSUFFICIENT_COVERAGE. This 5% target is prospective engineering choice not an existing validated tolerance. Any threshold tuning on separate calibration requires new frozen threshold and fresh final test.",
+      "interpretation": "All-correct at n9 does not certify low population error; for iid errors p=.05 P(no errors)=.95^9~.63, p=.2 gives .8^9~.134."
+    }
+  },
+  "beacon": {
+    "status": "BEACON_BLOCKS_CLOSED_LOOP",
+    "witness_run": "be3d93d6-44bc-8327-95dd-c7a21b9e915d",
+    "scheduled_for": "2026-11-27T18:39:09Z",
+    "started_at": "2026-11-27T18:14:14.146076Z",
+    "observed_at": "2026-11-27T18:14:20Z",
+    "created_at": "2026-11-27T18:14:33.139117Z",
+    "completed_at": "2026-11-27T18:14:33.286312Z",
+    "schedule": "DTSTART:20261018T173909Z; RRULE:FREQ=HOURLY",
+    "relay": {
+      "run": "a1d94e3d-308c-8325-bae1-245d1119c1a0",
+      "scheduled_for": "2026-11-27T18:55:00Z",
+      "completed_at": "2026-11-27T18:54:50.806158Z",
+      "result": "REJECTED; no files created"
+    },
+    "retry_hypothesis": "UNRESOLVED. scheduled_for matches regular hourly slot; same UUID in last_run/latest_result, actual observed/created times inside execution. No retry_at field or full attempt history in available interface. Relay also ran early relative to scheduled_for; early scheduling/metadata semantics plausible, not established. Replay, timezone, clock skew not formally excluded. Need authoritative schedule semantics and per-attempt history with source IDs; no inferred timestamps, no synthetic receipt or bypass."
+  },
+  "autodidact": {
+    "primary": "exact paired one-sided sign test on independent seed-level held-out exact accuracy differences inherited minus cold epistemic; H0 P(positive | non-tie)<=.5, H1 >.5. Alpha .05. Ties excluded only from binomial denominator; report all ties and total seeds; fixed sample before confirmatory experiment; no optional stopping.",
+    "secondary": "paired mean and two-sided 95% paired t interval if assumptions credible, also seed-level effect distribution and robust interval; sign test does not estimate mean effect size or prove 2pp improvement. Any claim of practical 2pp improvement needs separate effect size CI gate, lower bound >.02 and adequate prespecified power.",
+    "planning": {
+      "power_table": [
+        {
+          "non_tied_pairs": 10,
+          "positive_required": 9,
+          "null_p": 0.0107421875,
+          "power_if_positive_probability_point8": 0.37580963840000015
+        },
+        {
+          "non_tied_pairs": 12,
+          "positive_required": 10,
+          "null_p": 0.019287109375,
+          "power_if_positive_probability_point8": 0.5583457484800001
+        },
+        {
+          "non_tied_pairs": 20,
+          "positive_required": 15,
+          "null_p": 0.020694732666015625,
+          "power_if_positive_probability_point8": 0.8042077854595496
+        },
+        {
+          "non_tied_pairs": 30,
+          "positive_required": 20,
+          "null_p": 0.04936857335269451,
+          "power_if_positive_probability_point8": 0.9743837446646736
+        }
+      ],
+      "assumption": "conditional on independent non-tied pairs, true P(positive)=.8; pilot tie frequency and dependence unknown; 10-12 pairs not automatically adequately powered. Fixed seed count chosen from independent pilot sign/tie rates and precision target before confirmation; previous n=2 variance estimate too uncertain for final power calculation.",
+      "alpha_change": "prospective replacement of proposed primary mean test (.025 one-sided) by directional sign test (.05 one-sided); no historical p-value reclassification."
+    },
+    "retention": "hard veto: no previously correct protected or independently tested old item lost. Report raw candidates, rejected candidates, and all paired results; do not condition primary inference on acceptance.",
+    "baseline": "unchanged frozen parent, TRAIN-only mode with deterministic tie handling, previous frozen predictor and input-only deterministic rule; no test label access."
+  },
+  "decision_policy": {
+    "type": "bounded selection from a finite preapproved task catalog, no task generation, no permission/budget expansion",
+    "sets": [
+      "TRAIN",
+      "CALIBRATION",
+      "DIAGNOSTIC",
+      "INTERNAL_GATE",
+      "SEALED_FINAL_EXAM",
+      "RETENTION"
+    ],
+    "split": "disjoint item IDs/content and near-duplicate/template-family clusters across partitions as appropriate; independent final examiner holds labels and per-item errors. Only coarse pass/fail/hold receipt and signed aggregate needed for admission visible to policy; diagnostics from DIAGNOSTIC only. After exam failure, select repair from independent diagnostic deficits, never from sealed exam classes/items. No exam label feedback to model or task selector; retire exam for future adaptive use if exposed. Log selected task, eligible alternatives, deficit source hash and deterministic tie rule.",
+    "deficit": "max prespecified family deficit on DIAGNOSTIC with sufficient family support, otherwise ABSTAIN; tie by stable task ID. No new execution after second wake; budget/authorization/pause/receipt checks always dominate selection.",
+    "status_if_success": "LOOP_CLOSED_THROUGH_DECIDE__ACTION_REQUIRES_OPERATOR",
+    "limits": "Does not establish second action execution, successive generations, generalization, or unrestricted autonomy."
+  },
+  "evidence": "Source/receipts direct, external read-only LLM observer, independent blinded examiner reported separately. No training, no main/production or schedules changed.",
+  "next": "Resolve BEACON provenance/attempt metadata and verify fresh genuine end-to-end transfer with receiver readback before one-loop admission. Prepare calibration and diagnostic datasets but no model training while blocked."
+}
