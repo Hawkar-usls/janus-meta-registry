@@ -1,0 +1,45 @@
+{
+  "id": "JANUS-R4B3-COMMON-BANK-AND-PHASE",
+  "parent_run": 45999666862,
+  "reference_commit": "7cd2859b5da3668935006ad8a7ada957100170b2",
+  "cross_benchmark": {
+    "banks": [
+      "r4b0",
+      "r4b2"
+    ],
+    "detectors": [
+      "R4B0",
+      "R4B2"
+    ],
+    "rule": "exact regenerate old seeded banks in original ordering; both receive same raw waveform, R4B2 additionally receives oracle normalization and accumulation time as in historical model; separately report information asymmetry; no threshold tuning; each trace has hash"
+  },
+  "phase": {
+    "new_seed": 752914,
+    "per_subtype_per_noise": 100,
+    "subtypes": [
+      "positive",
+      "near_dss_chirp",
+      "chirp",
+      "noise",
+      "transient",
+      "linear_time"
+    ],
+    "noise_types": [
+      "iid",
+      "long_memory",
+      "narrowband"
+    ],
+    "noise_levels": [
+      0.001,
+      0.01
+    ],
+    "generator": "new independent code: irregular log sampling 600-1100 points, 5-8 cycles, variable power envelope, unknown accumulation time, chirp slopes and transient rivals, colored additive and multiplicative noise; same waveform across noise variants",
+    "decision": "three-way: DSS only if held-block validation and curvature equivalence confidence interval entirely within +-0.012 cycles over normalized log span; ambiguous otherwise if rival model not demonstrably better; explicit positive ambiguous <=5/100, positive correct >=90/100, near DSS false positives <=5/100 each stratum",
+    "ci": "fit sinusoidal chirp by nonlinear variable projection, approximate sandwich covariance from block sums for phase curvature, 95% interval; exploratory confidence not coverage-qualified",
+    "oracle_control": "known accumulation time and normalized envelope; evaluate separately from blind; no physical use",
+    "blind_control": "estimate nuisance time and envelope on training block only via bounded candidate scan; not guaranteed identifiable; all precommit thresholds same; report failure and coverage"
+  },
+  "scientific_hold": true,
+  "production_changed": false,
+  "amr_implemented": false
+}
