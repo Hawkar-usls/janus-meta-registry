@@ -1,0 +1,70 @@
+{
+  "schema": "janus.autodidact.r120.selective_neural_plasticity.protocol.v1",
+  "date": "2026-11-27",
+  "status": "FROZEN_BEFORE_PR_OPEN",
+  "head": "058a853ca960c27514b91c55525d976762ca40de",
+  "workflow": ".github/workflows/autodidact-r120-selective-plasticity.yml",
+  "workflow_blob": "5100a1dc5261498954bfa4fed9d9c33dcf28ce11",
+  "prior": {
+    "run": 45966243734,
+    "result_commit": "1f8098dc6211606760c8051415e918300dd64313",
+    "exact_per_arm": 32,
+    "parent_exact": 6,
+    "accepted_per_arm": 24,
+    "open_retention_rejections": 163,
+    "historical_open_retention_rejections": 173,
+    "boundary_trials": 0,
+    "old_pair_exam_losses": 4,
+    "historical_open_exam_losses": 2
+  },
+  "design": {
+    "seeds": [
+      120101,
+      120102
+    ],
+    "arms": [
+      {
+        "name": "all_parameters",
+        "trainable": 446208
+      },
+      {
+        "name": "freeze_embeddings",
+        "trainable": 396800,
+        "frozen": 49408
+      },
+      {
+        "name": "block1_only",
+        "trainable": 198272,
+        "frozen": 247936
+      }
+    ],
+    "trials": 180,
+    "stage_trials": [
+      60,
+      60,
+      60
+    ],
+    "step_radius": 0.07,
+    "total_radius": 0.5,
+    "replay_weight": 0.25,
+    "source_policy": "exclude 544 previously admitted source hashes and paths; 36 fresh real Cortex metadata-copy examples in existing split; reserve depletion precludes 64 fresh real crystals, instead 64 balanced synthetic associations, explicitly not Registry facts",
+    "plasticity": "zero forbidden objective gradient before clipping, shadow AdamW excludes frozen parameters (including weight decay and moments), project in active coordinates with restricted normalized normals, reinflate with exact zeros, verify bitwise frozen parameter digest after every trial and final tensor equality",
+    "retention": "same complete R119 old pair/open and 16 historical witness veto, parent CE guard, exact rollback, separate held-out generation and retention exam",
+    "train_padded_positions_per_arm_seed": 138240,
+    "gate_padded_positions_per_arm_seed": 2419200,
+    "constraint_forward_positions_per_arm_seed": 933120,
+    "constraint_vjp_calls_per_arm_seed": 1440,
+    "decision": "compare same-seed exact new generation, old pair/open/historical losses, accepted and rejected steps, protected margin directions, per-group movement, runtime; no claim of selective advantage unless exam shows gains without losses",
+    "controls_count": 20,
+    "admission_controls": 4
+  },
+  "limits": [
+    "R119 group sensitivity is an estimate from selected local margin gradients; no established knowledge/plasticity partition",
+    "Frozen embeddings include tied output head; changing other groups can still change prior outputs",
+    "All arms compute full backward and eight VJPs; active optimizer/projection dimensions differ, wall-time recorded; not equal FLOPs",
+    "Synthetic arbitrary associations replace real source crystals because pinned training reserve is depleted; compare only within R120, not historical absolute counts",
+    "Historical document cohorts reused; no independently administered blind exam",
+    "No production mutation, candidate export, promotion or removal of PyTorch"
+  ],
+  "result": null
+}
