@@ -1,0 +1,48 @@
+{
+  "id": "JANUS-R4B5A.4a-INSTRUMENTATION-ISOLATION",
+  "status": "FROZEN_BEFORE_NEW_COMPUTATION",
+  "parent": {
+    "archive_commit": "d1d3f93b4b7686d891c74e3b551544b263ab1d52",
+    "archive_blob": "554be14afb11c36dde9e74a7115d1c17392c4ec4",
+    "addendum_blob": "cbfd76c15eded02d14bd6ac32f130d942f847147",
+    "original_audit_blob": "a7a28d2630c128ecbc6beeffe25dc88262833ae6",
+    "instrumentation_blob": "4adee56538805027f6678f6be38afa1874970c2d",
+    "historical_artifact": 15221965959,
+    "historical_zip_sha256": "257e16cdbdde7a847d573b77e4e1d1d594ee2199c600603325bca1cc43151f96",
+    "failed_artifact": 15223003250,
+    "failed_zip_sha256": "986a3036b75303e125575d20f8fe2152c6527f94e171d21284b4e40912bf9062"
+  },
+  "configuration": {
+    "A": 0.1152,
+    "family": "original",
+    "R": 30,
+    "r0": 5,
+    "w": 1,
+    "n": 12288,
+    "CFL": 0.3,
+    "end": 16,
+    "stop": 0.9,
+    "reference_radius": 12
+  },
+  "environment": {
+    "mode": "one process and same hosted VM for both runs, shared original solver imports; fixed CPython 3.11.18 NumPy 2.2.6 Numba 0.61.2 llvmlite 0.44.0; OMP/MKL/OPENBLAS/NUMBA/BLIS threads 1, log actual runtime CPU/BLAS/versions before evolution; no assertion of historical environment equality. This is a paired within-environment control, not portable pinned-container reproduction."
+  },
+  "sequence": [
+    "Verify both original ZIP digests, extract coarse historical and failed instrumented trace arrays",
+    "Run original uninstrumented coarse baseline, then identical source with only R4B5A.4 capture inserted",
+    "Compare same-environment pair exactly: dtype shape C-order bytes and all CASE fields except elapsed_seconds",
+    "For each pair baseline/instrumented/historical/failed, report per-column mismatch counts, max absolute differences, signed-zero/bit-only mismatches, first mismatch indices and values; no numeric tolerance fallback",
+    "If baseline vs instrumented mismatch, instrumentation effect or within-process nondeterminism unresolved; no profiles admitted; otherwise demonstrate observed capture neutrality in this environment only, and compare historical traces diagnostically. Historical gate R4B5A.4 stays failed."
+  ],
+  "future_localization": "Use immutable interpretation addendum as prospective criteria only in a separately frozen new full localization protocol. A new three-grid baseline/instrumented pair design must validate each grid, not use coarse success as global proof; preserve all old peak gates and separate pointwise correspondence, NOT_REACHED, late Ricci and crossing conditioning. No new scientific computation here.",
+  "forbidden": [
+    "medium/fine grids in this technical experiment",
+    "98304",
+    "DSS",
+    "AMR",
+    "bracket narrowing",
+    "main promotion",
+    "retroactive reinterpretation"
+  ],
+  "scientific_hold": true
+}

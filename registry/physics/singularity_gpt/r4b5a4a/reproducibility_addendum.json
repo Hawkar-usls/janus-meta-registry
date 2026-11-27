@@ -1,0 +1,75 @@
+{
+  "id": "JANUS-R4B5A.4a-PROSPECTIVE-REPRODUCIBILITY",
+  "status": "RECORDED_DURING_ACTIVE_CI_BEFORE_READING_NUMERICAL_RESULT__NOT_ORIGINAL_PRECOMMIT",
+  "active_run": 46050643551,
+  "active_head": "f3b563beb7dc2df54258285472513d6f7f4455e4",
+  "active_gate_policy": "Original protocol and execution_precommit remain authoritative. Do not change active run, reclassify failed gate or activate fallback.",
+  "historical_mismatch": {
+    "first": {
+      "run": 46042569254,
+      "artifact": 15221965959,
+      "zip_sha256": "257e16cdbdde7a847d573b77e4e1d1d594ee2199c600603325bca1cc43151f96",
+      "member": "traces.npz",
+      "key": "coarse"
+    },
+    "second": {
+      "run": 46048239157,
+      "artifact": 15223003250,
+      "zip_sha256": "986a3036b75303e125575d20f8fe2152c6527f94e171d21284b4e40912bf9062",
+      "member": "coarse-radial.npz",
+      "key": "trace"
+    },
+    "array_sha256": "Computed directly from each verified ZIP's decompressed C-order numerical array by current COMPARE report; not yet observed. ZIP digest is not an array digest."
+  },
+  "neutrality": "All 19 historical columns, dtype, shape, C-order bytes, and all CASE fields except elapsed_seconds must exactly match for A/B/C. New argmax and snapshot arrays are separate files, excluded only because they do not modify historical trace schema.",
+  "outcomes": {
+    "baseline_mismatch": "TECHNICAL_OR_INTEGRITY_HOLD__BASELINE_REPEATABILITY; no capture or fine grids",
+    "capture_mismatch": "TECHNICAL_OR_INTEGRITY_HOLD__CAPTURE_NEUTRALITY_UNRESOLVED; no scientific interpretation",
+    "paired_match_historical_mismatch": "Within-VM neutrality evidence only; HISTORICAL_REPLAY_HOLD remains. No automatic new reference adoption and no 24576/49152 localization until separate approved precommit and exact independently replicated new reference. Historical mismatch reason unresolved.",
+    "paired_match_historical_match": "Technical paired replay established for coarse only; archive first, then separate full localization precommit including per-grid paired controls; no automatic scientific promotion."
+  },
+  "environment": {
+    "active": "Actual equality of stable normalized fingerprint dictionaries is a machine-enforced criterion; contains versions, CPU flags, BLAS binary hashes, thread settings, compiler and JIT settings. Current run uses shared JIT cache configuration and hosted VM, not isolated fresh cache or pinned OCI. This limits claims.",
+    "future": "For a new cold-JIT matched trial, before computation capture machine-readable runtime manifest and SHA256 canonical JSON sorted keys, UTF-8, no NaN; exclude only documented address noise and unique cache directory path (verify cache policy independently). Require exact digest match for stable fields including CPU, compiler flags, libraries and thread env. Pin OCI digest if containerized; hosted VM cannot supply nonexistent OCI digest. Record all raw manifests. Capture installed wheel hashes and LLVM target, optimization flags, solver decorators.",
+    "jit": "Each fresh subprocess receives distinct newly created empty NUMBA_CACHE_DIR, verify directory empty before compilation and disjoint from others, log actual cache dir and generated cache inventory; no reuse across A/B/C. Keep cache semantics of solver source unchanged. If isolated cache execution fails or equality fails, technical hold. Compare cold compile baseline A and B before C."
+  },
+  "second_strong_field": {
+    "status": "PROSPECTIVE_TEST_NOT_RUN",
+    "r0": 1,
+    "R": 4,
+    "M": "0.9*3*sqrt(3)/4",
+    "mass": "m(r)=M*r^3/(r^2+r0^2)^(3/2)",
+    "compactness": "C(r)=2*M*r^2/(r^2+r0^2)^(3/2)",
+    "derivative": "m'(r)=3*M*r^2*r0^2/(r^2+r0^2)^(5/2)",
+    "source": "q=0; p=sqrt(3*M*r0^2/(2*pi*(r^2+r0^2)^(5/2)*(1-C(r))))",
+    "analytic_peak": {
+      "r": "sqrt(2)*r0",
+      "C": 0.9
+    },
+    "rationale": "regular m~r^3 at center, finite positive source, interior maximum and decreasing outer compactness, structurally different from cubic mass. Manufactured radial constraint, not evolution solution.",
+    "grids": [
+      256,
+      512,
+      1024
+    ],
+    "criteria": "finite geometry, C<.999; finest native C Linf against exact <=.0005; both exact-error orders 1.5–2.5; report mass Linf, argmax shift in coarse cells, native and quadratic peak errors; peak location and height diagnostics not new scientific admission gates. Preserve weak and strong cubic tests."
+  },
+  "reporting": "NEAR GATE explicitly NOT_EVALUATED in technical-only run; NOT_REACHED explicitly named. Archive full structured rows before next execution.",
+  "holds": [
+    "COMPACTNESS_CONVERGENCE_HOLD",
+    "EVENT_INVARIANCE_HOLD",
+    "LATE_TIME_RICCI_HOLD",
+    "IDENTIFIABILITY_HOLD independent",
+    "SCIENTIFIC_HOLD"
+  ],
+  "forbidden": [
+    "automatic fallback",
+    "retroactive gate change",
+    "24576",
+    "49152",
+    "98304",
+    "DSS",
+    "AMR",
+    "main promotion"
+  ]
+}
