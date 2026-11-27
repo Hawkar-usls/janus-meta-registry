@@ -1,0 +1,111 @@
+{
+  "id": "JANUS-R4B4-ASYMPTOTIC-CONVERGENCE",
+  "status": "PRECOMMITTED_EXECUTION_PROTOCOL",
+  "forecast_blob": "44c9dc760dd3eb44f2c394cf60b108588630ee7a",
+  "forecast_commit": "c9c1402e9d35b9a77d8eac85d3eea41b4c66dd1c",
+  "parent_run": 46002143341,
+  "solver_blob": "71ef15312166337a9ee41d71d75a29674d00e5d3",
+  "boundary_solver_blob": "2a3222c222412f327666e10db2219acde71cdeb3",
+  "parent_audit_blob": "81698826a8250d414624bc258c639ff0f97acee0",
+  "parent_protocol_blob": "ec56604db45dd316701615cc5deb93343cb0ca08",
+  "stages": [
+    "boundary replay and stronger field control",
+    "legacy and candidate bridge plus R60 domain extension",
+    "temporal refinement gate",
+    "compute budget gate",
+    "n49152 only after all gates",
+    "three-grid order and frozen prediction assessment"
+  ],
+  "boundary": {
+    "weak_A": 0.01,
+    "stronger_A": 0.04,
+    "small_R": 12.5,
+    "small_n": 4096,
+    "reference_R": 25,
+    "reference_n": 8192,
+    "end": 22,
+    "probe_radius": 10,
+    "minimum_outgoing": 0.25,
+    "maximum_flux_balance": 0.01,
+    "maximum_reference_outward_difference": 0.05,
+    "maximum_incoming_proxy_l2": 0.05,
+    "maximum_field_l2": 0.05,
+    "independent_check": "separate signed flux at inner sphere R=12.5 in doubled domain, computed from Phi,Pi and metric; direct numerical outer face flux from actual RHS face values, not previous extrapolation or mass difference; analytic flat flux benchmark; no independent conservative mass evolution scheme claimed",
+    "scope": "two weak/stronger subcritical amplitudes; no universal strong-field BC claim"
+  },
+  "bridge": {
+    "A": 0.11484375,
+    "r0": 5,
+    "w": 1,
+    "R": 30,
+    "end": 16,
+    "n": [
+      12288,
+      24576
+    ],
+    "CFL": 0.3,
+    "compare_legacy_candidate_full_trajectory_max": 0.01,
+    "peak_C_absolute_delta_max": 0.000001,
+    "peak_Ricci_relative_delta_max": 0.06,
+    "domain_extension": {
+      "R": 60,
+      "n": 24576
+    },
+    "domain_peak_C_abs_max": 0.000001,
+    "domain_peak_Ricci_rel_max": 0.01,
+    "domain_trajectory_max": 0.01,
+    "replay_rel_max": 1e-8,
+    "local_cells_min": 8,
+    "mass_residual_strict": 0.01,
+    "stable_class": "DISPERSAL_PROXY"
+  },
+  "temporal": {
+    "n": 24576,
+    "CFL_baseline": 0.3,
+    "CFL_refined": 0.15,
+    "relative_max_strict": 0.01,
+    "spatial_fraction_max": 0.25,
+    "interpretation": "For each peak scalar and each full-trace L2/Linf difference, temporal change must be <1% of refined norm and <=25% of corresponding 12288-to-24576 spatial difference on the identical common proper-time support. This checks temporal contamination at medium grid, not a temporal convergence order or proof at finest grid."
+  },
+  "budget": {
+    "ci_timeout_minutes": 60,
+    "pre_fine_elapsed_max_seconds": 1800,
+    "projected_fine_seconds": "4 times measured candidate medium wall time",
+    "maximum_projected_total_seconds": 3000,
+    "reason": "reserve 10 min for artifacts, conservative O(n^2) projection; if hold, no retry with changed thresholds"
+  },
+  "three_grid": {
+    "grids": [
+      12288,
+      24576,
+      49152
+    ],
+    "CFL": 0.3,
+    "common_proper_time_samples": 32769,
+    "full_trace_no_shift": true,
+    "relative_L2_Linf_max": 0.1,
+    "require_decreasing_abs_differences": true,
+    "scalar_monotone_required": true,
+    "observed_order_range_for_second_order_consistency": [
+      1.5,
+      2.5
+    ],
+    "report_separately": [
+      "peak_compactness",
+      "peak_central_Ricci_proxy",
+      "peak_alternative_Ricci_proxy",
+      "signed_central_derivative L2/Linf",
+      "curvature L2/Linf",
+      "alternative curvature L2/Linf"
+    ],
+    "interpretation": "p=log2(d12/d23) for each observable and norm, finite triplet consistency only, no averaging, no theorem of asymptotic convergence. Zero/nonfinite difference yields unidentifiable order. Second-order consistency separate from decreasing-difference gate and forecast gate."
+  },
+  "forecast_policy": "use exact frozen values and tolerances from forecast_precommit.json without change; absolute and relative errors reported; mismatch remains a scientific result",
+  "scientific_hold": true,
+  "forbidden": [
+    "DSS search or null test",
+    "critical amplitude/exponent fit",
+    "AMR implementation",
+    "production change"
+  ]
+}
