@@ -1,0 +1,80 @@
+{
+  "schema": "janus.autodidact.r121.dynamic_neural_plasticity.protocol.v1",
+  "date": "2026-11-27",
+  "status": "FROZEN_BEFORE_PR_OPEN",
+  "head": "75cc9f4831b10c3e1c49bdd97b9d10bb69fe6fe6",
+  "workflow": ".github/workflows/autodidact-r121-dynamic-plasticity.yml",
+  "workflow_blob": "b8763eb25faa63743657d733c18f11ec72882e64",
+  "prior": {
+    "run": 45970905093,
+    "result_commit": "acd08deb37cba9bc1f1cee5c67a3e141ff7a234f",
+    "accepted": 478,
+    "zero_step_abstentions": 602,
+    "exact_by_arm": [
+      39,
+      35,
+      23
+    ],
+    "historical_open_losses": [
+      4,
+      3,
+      2
+    ],
+    "all_gates_failed": true
+  },
+  "design": {
+    "seeds": [
+      121101,
+      121102
+    ],
+    "arms": [
+      {
+        "name": "all_parameters",
+        "trainable": 446208
+      },
+      {
+        "name": "random_block",
+        "trainable": 198272
+      },
+      {
+        "name": "dynamic_block",
+        "trainable": 198272
+      }
+    ],
+    "trials": 180,
+    "stage_trials": [
+      60,
+      60,
+      60
+    ],
+    "step_radius": 0.07,
+    "geometry_tiers": [
+      0.5,
+      0.625,
+      0.75
+    ],
+    "replay_weight": 0.25,
+    "source_policy": "exclude 580 previously admitted real source hashes/paths, 36 fresh verified metadata-copy examples and 64 fresh balanced synthetic associations; fail closed on insufficient source reserve",
+    "router": "compute current objective gradient including replay and eight current normalized protected margin gradients; probe negative objective gradient at norm .01 separately in five groups; project within each group; score negative dot of full objective gradient with projected direction, select greater predicted descent of two equal-sized transformer blocks; deterministic tie block1; all arms compute five diagnostics, random schedule seeded independently",
+    "optimizer": "mask forbidden objective gradients before clipping, inactive shadow AdamW grad=None, actual displacement projected within selected subspace; exact inactive weight digest each trial; exact model/optimizer rollback on veto; permanently freeze embeddings and final norm in single-block arms",
+    "geometry": "same parent-derived group metric and Euclidean cap for all arms, stage .50 -> .625 -> .75 after 5 accepted steps and 5% CE gain since last tier plus boundary crossing and exact gate, hard step .07",
+    "acceptance": "unchanged parent-correct paired/open and historical witness retention, parent gate CE and geometry checks; additionally actual L2 step >=1e-6 and current gate CE decrease >=1e-6 on every accepted step; measure cumulative gain and report rejected tiny/no-gain steps separately",
+    "train_padded_positions_per_arm_seed": 138240,
+    "gate_padded_positions_per_arm_seed": 2419200,
+    "constraint_forward_positions_per_arm_seed": 933120,
+    "constraint_vjp_calls_per_arm_seed": 1440,
+    "router_group_projections_per_arm_seed": 900,
+    "decision": "compare dynamic vs random same active dimension and same-seed full control; final exact generation, relation both forms, old pair/open/historical losses; do not infer acquisition from gate CE alone; report routing counts, group diagnostics and expansion receipts; no promotion",
+    "controls_count": 23,
+    "admission_controls": 4
+  },
+  "limits": [
+    "Router observes all five groups but chooses only between equal-sized transformer blocks to isolate selection effect; no free allocation across all groups yet",
+    "Projected gradient probe is first-order heuristic, not actual AdamW future loss or causal proof of knowledge location",
+    "All arms compute full gradients and identical diagnostic counts; optimizer and projection dimensions differ versus full control",
+    "New source and synthetic seeds, compare only within R121; limited real source reserve may block admission",
+    "Historical document cohorts reused, no independently administered blind exam; current CE gain is not exact generated answer gain",
+    "No production mutation, candidate export or promotion"
+  ],
+  "result": null
+}
