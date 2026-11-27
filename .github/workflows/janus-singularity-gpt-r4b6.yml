@@ -1,0 +1,71 @@
+name: JANUS R4B6 geometric robustness
+on:
+  push:
+    branches: [janus-singularity-gpt-r4b6-geometric]
+    paths:
+      - 'registry/physics/singularity_gpt/r4b6/**'
+      - '.github/workflows/janus-singularity-gpt-r4b6.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  conditioning:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            registry/physics/singularity_gpt/r4b3
+            registry/physics/singularity_gpt/r4b6
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install numpy==2.2.6 scipy==1.15.3
+      - run: python registry/physics/singularity_gpt/r4b6/diagnostics.py conditioning
+      - uses: actions/upload-artifact@v4
+        with:
+          name: r4b6-conditioning
+          path: r4b6-output/
+          retention-days: 30
+  exam:
+    needs: conditioning
+    strategy:
+      fail-fast: false
+      matrix:
+        mode: [floor, pit, iid, long_memory, narrowband]
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            registry/physics/singularity_gpt/r4b2
+            registry/physics/singularity_gpt/r4b3
+            registry/physics/singularity_gpt/r4b4
+            registry/physics/singularity_gpt/r4b5
+            registry/physics/singularity_gpt/r4b6
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install numpy==2.2.6 scipy==1.15.3
+      - name: Frozen diagnostic
+        env:
+          OPENBLAS_NUM_THREADS: '1'
+          OMP_NUM_THREADS: '1'
+          MODE: ${{ matrix.mode }}
+        run: |
+          case "$MODE" in
+            floor) python registry/physics/singularity_gpt/r4b6/diagnostics.py floor ;;
+            pit) python registry/physics/singularity_gpt/r4b6/pit.py ;;
+            *) python registry/physics/singularity_gpt/r4b6/sweep.py "$MODE" ;;
+          esac
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: r4b6-${{ matrix.mode }}
+          path: r4b6-output/
+          if-no-files-found: warn
+          retention-days: 30
