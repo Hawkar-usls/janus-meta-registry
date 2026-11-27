@@ -1,0 +1,90 @@
+{
+  "schema": "janus.h38n8a.test_hierarchy.addendum.v4",
+  "date": "2026-11-28",
+  "parents": {
+    "v3": "b7dd6de54c96ad2e3ba9ad777168938a60c77922",
+    "power_sensitivity": "0d3f4c3dbc4d6c5b74b0d4f6eaabac0699a2b423",
+    "refinement": "7429f1b7e52ba8b671ca49df8bd207967cd43a2f"
+  },
+  "status": "HIERARCHY_FROZEN__FAMILY_DIVERSITY_HOLD__SEMANTIC_REVIEW_PENDING__NO_CORPUS",
+  "scope": "Prospective addition before semantic validation, generation or model scores. Distinguish pooled evidence of signal from uniform conditioned engineering admission. No reduction of previous admission requirements or authorization for G3.",
+  "hierarchy": {
+    "level1": {
+      "name": "POOLED_AXIS_SIGNAL_SCREEN",
+      "tests": [
+        "TYPE",
+        "DIRECTION",
+        "POLARITY",
+        "KNOWN_VS_HOLD"
+      ],
+      "estimator": "Three dedicated pooled binary logistic probes on all known TRAIN rows, same frozen normalized H38N7 features, C=1, L2, lbfgs, fit_intercept=false, max_iter=2000, tol=1e-8; balanced known labels. HOLD uses existing class_weight=balanced and balanced accuracy. Retain nine-way probe and G2 comparisons unchanged; new pooled binary probe is a diagnostic auxiliary, not deployed model. Evaluate all on same EVAL families, no tuning.",
+      "family_unit": "For each semantic axis use each family's mean of its 8 binary correctness indicators. For HOLD use half of within-family known recall (8 rows) plus half of within-family HOLD recall (2 rows). Average over families; equal cell counts give pooled balanced accuracy. No pooling of HOLD into axes.",
+      "inference": "Four pooled signal tests against mean family score <=.5, Holm step-down at family-wise alpha=.05 only with valid individual p-values under explicitly justified sampling assumptions. Conservative prespecified bounded-score Hoeffding p=min(1,exp(-2*F_eval*max(mean-.5,0)^2)) if independent EVAL families and null mean assumptions defensible, conditional on fitted model. Report raw p, Holm adjusted p, effect and family-level uncertainty; if independence/sampling unsupported, DESCRIPTIVE_SIGNAL_ONLY, no inferential PASS. Same-author synthetic construction sample does not establish natural-language population inference. No row-level binomial p as empirical primary result.",
+      "interpretation": "Pooled evidence above chance does not imply every conditioned context works or that 80% engineering target is met. Label POOLED_SIGNAL_DETECTED only when valid test passes, otherwise POOLED_SIGNAL_INCONCLUSIVE; descriptive evidence always reported."
+    },
+    "level2": {
+      "name": "CONDITIONED_HETEROGENEITY_AND_ENGINEERING_GATES",
+      "tests": 12,
+      "definition": "3 axes x 4 fixed remaining-factor combinations; per-combo confusion, coverage, G2 underlying/raw/end-to-end, conditional probe BA, exact collision ceiling, collision rates, gap/convergence. Report descriptive family uncertainty; no pooled test can hide a weak context. Preserve original v3 strict per-context admission criteria incl point BA>=.8, exact U>=.8, conflict rate<.01, adjusted bootstrap lower bound>.5 at .05/13 and other integrity gates; approximate engineering criteria, not exact FWER claim. HOLD separate original gate. If pooled positive but any context fails, POOLED_SIGNAL__CONTEXT_ADMISSION_HOLD. No post-hoc hierarchy, no claim of uniformly available signal. Learning curves descriptive only.",
+      "multiplicity": "Holm is weakly more powerful than Bonferroni for valid p-values, not strictly better on every dataset. It is not applicable directly to the old approximate bootstrap lower bounds as though they were valid p-values. Retain v3 engineering bounds; do not switch their correction in response to outcomes."
+    }
+  },
+  "planning": {
+    "model": "Exact one-sided iid binomial sensitivity vs .5, equal success probability, not cluster-aware actual power or confirmatory inference. Pooled alpha .0125 represents first Holm threshold/worst-case Bonferroni; conditioned alpha .05/13 is prior engineering comparison illustration.",
+    "scenarios": [
+      {
+        "F": 30,
+        "eval_families": 10,
+        "n_pooled": 80,
+        "pooled_k": 51,
+        "pooled_true_accuracy_80power": 0.67510537,
+        "pooled_power_65": 0.64117049,
+        "pooled_power_70": 0.90840211,
+        "n_conditioned": 20,
+        "conditioned_k": 17,
+        "conditioned_true_accuracy_80power": 0.88295317,
+        "conditioned_power_80": 0.41144886
+      },
+      {
+        "F": 35,
+        "eval_families": 12,
+        "n_pooled": 96,
+        "pooled_k": 60,
+        "pooled_true_accuracy_80power": 0.66031231,
+        "pooled_power_65": 0.73461612,
+        "pooled_power_70": 0.95456132,
+        "n_conditioned": 24,
+        "conditioned_k": 19,
+        "conditioned_true_accuracy_80power": 0.83321278,
+        "conditioned_power_80": 0.65589243
+      },
+      {
+        "F": 40,
+        "eval_families": 13,
+        "n_pooled": 104,
+        "pooled_k": 64,
+        "pooled_true_accuracy_80power": 0.64980761,
+        "pooled_power_65": 0.80116169,
+        "pooled_power_70": 0.97471212,
+        "n_conditioned": 26,
+        "conditioned_k": 21,
+        "conditioned_true_accuracy_80power": 0.84636727,
+        "conditioned_power_80": 0.57748639
+      }
+    ],
+    "cluster_warning": "At 13 independent bounded family scores, Hoeffding first Holm threshold requires mean >=.5+sqrt(log(80)/(2*13)) about .9105; conservative and not a forecast of actual power. Correlation for probe correctness is not ICC of future G3-G2 paired differences. Need final F and separate family-aware planning assumptions; no empirical ICC or G3 discordance yet. Do not claim iid 80% applies to actual cluster-aware analysis."
+  },
+  "noninferiority": {
+    "status": "MARGIN_UNJUSTIFIED__NOT_ADMITTED",
+    "delta_10pp": "Illustration only, no domain/utility justification. Do not freeze margin or use NI as fallback until justified prospectively, with protected zero-loss unchanged. No NI test or claim permitted now."
+  },
+  "next": "Semantic review of 13 directional and 27 factorial candidate clusters; then final F, family-level power and precision for pooled and conditioned estimands, q/ICC sensitivity for separate GAIN EXAM; choose A/B/C and explicitly revise 90-family roster and counts if necessary before generation. Independent semantic reviewer still required. No automatic scope shrink.",
+  "authorization": {
+    "corpus_generated": false,
+    "probe_executed": false,
+    "janus_train": false,
+    "production": false,
+    "architecture_change": false,
+    "beacon_closed_loop_blocked": true
+  }
+}
