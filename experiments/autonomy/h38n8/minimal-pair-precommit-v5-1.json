@@ -1,0 +1,120 @@
+{
+  "schema": "janus.h38n8a.minimal_pair_clarification.v5_1",
+  "date": "2026-11-28",
+  "parent": {
+    "path": "experiments/autonomy/h38n8/minimal-pair-precommit-v5.json",
+    "verified_blob": "4f48dbb6eca3c6debaa46e554e613e1877b06e90",
+    "verified_ref": "research/h38n8-domain-admission",
+    "previous_reported_commit": "7f0fd976ef815acbd70c7c6a3c2d8d15af8f3",
+    "verification_note": "Previously reported commit ref returned 404 during this check; branch file fetched successfully and blob matched earlier reported blob. Do not claim immutable commit ref resolved."
+  },
+  "status": "DIAGNOSTIC_ONLY__SCORING_FROZEN__POWER_GATE_FROZEN__SEMANTIC_REVIEW_PENDING__NO_CORPUS",
+  "scope": "Clarifies existing v5 rather than replacing its primary score, aggregation or exclusion of tied family signs. No model outcomes available. Current same-author construction pool remains diagnostic only.",
+  "score": {
+    "primary": "For fixed pooled binary logistic probe per axis, x is exact normalized H38N7 feature vector, s(x)=decision_function(x)=w^T x (fit_intercept=false), verify classes_=[0,1]. Score is log odds for positive binary class 1 vs 0; no softmax, temperature adjustment or top-2 margin. Positive direction means higher score on gold1 than gold0, not difference of two class probabilities on same row.",
+    "class_map": {
+      "TYPE": {
+        "zero": [
+          8,
+          9,
+          10,
+          11
+        ],
+        "one": [
+          12,
+          13,
+          14,
+          15
+        ]
+      },
+      "DIRECTION": {
+        "zero": [
+          8,
+          10,
+          12,
+          14
+        ],
+        "one": [
+          9,
+          11,
+          13,
+          15
+        ]
+      },
+      "POLARITY": {
+        "zero": [
+          8,
+          9,
+          12,
+          13
+        ],
+        "one": [
+          10,
+          11,
+          14,
+          15
+        ]
+      }
+    },
+    "g2_secondary": "s=logsumexp(logits for axis1 known labels)-logsumexp(logits for axis0 known labels), equivalent to closed-known log odds. Exclude class16 from this counterfactual score, but retain actual HOLD and confidence metrics separately. No probability-difference substitution. Secondary diagnostic only; no interchangeable score selection.",
+    "pair": "d=s(x_gold1)-s(x_gold0); +1 if d>1e-12, -1 if d< -1e-12, otherwise 0. Nonfinite/missing values or incomplete factorial family invalidate associated evaluation, not ties."
+  },
+  "aggregation": {
+    "rule": "S_f=(t1+t2+t3+t4)/4 with t_j signs of d. Positive if S_f>0, negative if S_f<0, family tie if S_f=0. Equal weighting; no raw magnitude sum or median used for sign. 3+ and 1- => positive; 2+ and 2- => tie; 2+,1-,1 zero => positive; all zero => tie. Each axis has exactly four predeclared disjoint pairs within family.",
+    "ties": "Exclude tied families only from conditional sign-test denominator n=F_eval-T, keep all in diagnostics and coverage. n=0 -> INCONCLUSIVE. Define excessive family ties as T/F_eval>2/13 (integer threshold floor(2*F_eval/13)); for 13 families, 3 or more -> TIE_COVERAGE_HOLD. This is an engineering coverage veto for inferential promotion, not claim that the conditional sign-test p-value is mathematically invalid; ties can reflect balanced positive/negative changes as well as insensitivity. Report pair ties, all-zero families and cancellation ties separately. No counting ties as wins, no replacement or post-hoc dropping."
+  },
+  "effect_size": {
+    "per_axis_model": "Report all d, median signed d, median absolute d, IQR and quantiles, counts positive/zero/negative, pair both-correct and constant/reversed outcomes. Report per-family summaries, family-weighted aggregate and paired probability-of-positive excluding ties with denominator, plus unconditional fraction positive and tie rate. Raw logit magnitudes within each fixed model are descriptive and not directly comparable across models/scales. No new effect-size pass threshold without justification; small stable signs do not imply strong or operationally useful signal.",
+    "negative_direction": "Prespecified descriptive reverse orientation flag if more negative than positive non-tied family signs; also report exact two-sided binomial sign p-value (min(1,2*min(lower tail,upper tail))) only under stated null assumptions, labelled exploratory, not in primary Holm family, no significance claim or promotion on it. If sampling/null invalid, counts and effect sizes only. REVERSED_DIRECTION_PATTERN, not INVERTED_WEIGHTS: may reflect feature confounds, label/role mapping, distribution shift or learned weights. No automatic sign flipping, retraining or architecture change."
+  },
+  "power_gate": {
+    "rule": "For current H38N8A no confirmatory claim regardless of observed p-value, because roster is unvalidated, independent sampling/null not established and prospective power insufficient in current scenarios. A later explicitly amended design must justify independent family signs and target alternative P(positive|non-tie)=.8, calculate exact prospective power >=.8 at first Holm threshold .05/3 for three axes with prespecified tie-rate sensitivity or conservative allowed tie counts, before generation/fit; no observed-power recalculation as rescue. A small p-value can be valid under null even in a low-power design; this is project admission policy, not a mathematical requirement of significance. No arbitrary F>=40 sufficiency rule.",
+    "examples_no_ties": [
+      {
+        "n": 10,
+        "k": 9,
+        "power": 0.3758096384
+      },
+      {
+        "n": 12,
+        "k": 11,
+        "power": 0.274877906944
+      },
+      {
+        "n": 13,
+        "k": 11,
+        "power": 0.501652180173
+      },
+      {
+        "n": 24,
+        "k": 18,
+        "power": 0.811071055119
+      },
+      {
+        "n": 25,
+        "k": 19,
+        "power": 0.780035330552
+      },
+      {
+        "n": 26,
+        "k": 19,
+        "power": 0.868708829314
+      },
+      {
+        "n": 30,
+        "k": 22,
+        "power": 0.871349246086
+      }
+    ],
+    "note": "24 non-tied families is first crossing in this assumed model, not a universal minimum or monotonic guarantee; 25 falls below target. After semantic validation calculate actual held-out family count and full tie sensitivity. Holm only on valid individual p-values. Existing engineering admission thresholds unchanged; current 90-family requirement remains HOLD. No noninferiority margin."
+  },
+  "next": "Review all 13 directional and 27 factorial construction proposals without model scores, obtain independent semantic review; freeze actual validated F and revised diagnostic roster and split only in prospective amendment; compute family-level power under tie assumptions; then corpus generation if authorized. No claim that semantic validation is already done.",
+  "authorization": {
+    "corpus_generated": false,
+    "probe_executed": false,
+    "janus_train": false,
+    "production": false,
+    "architecture_change": false,
+    "beacon_closed_loop_blocked": true
+  }
+}
