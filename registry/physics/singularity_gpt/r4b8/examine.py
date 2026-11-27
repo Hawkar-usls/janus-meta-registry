@@ -116,6 +116,16 @@ for (sub,level,missing,fraction),a in sorted(groups.items()):
         if mode=="profile":
             item["median_relative_objective_change"]= [float(np.median([r["profile"][j]["relative_change"] for r in a])) for j in range(9)]
     summary.append(item)
-result={"mode":mode,"kind":kind,"n":len(rows),"summary":summary,"protocol_sha256":hashlib.sha256((HERE/"protocol.json").read_bytes()).hexdigest(),"scientific_hold":True,"physical_use_authorized":False,"limitations":["Adaptive replacement has equal selected-start count, but audit computes both paths and diagnostic prior/geometry separately; nfev is not total CPU.","Profile assumes DSS and is local, not calibrated confidence.","Classifier phase CI remains unqualified; no scientific admission."]}
+paired=[]
+if mode=="adaptive":
+    for missing in cfg["missing"]:
+        aa={r["i"]:r for r in rows if r["sub"]=="positive" and r["missing"]==missing and r["noise"]==.0001}
+        bb={r["i"]:r for r in rows if r["sub"]=="positive" and r["missing"]==missing and r["noise"]==.01}
+        ids=sorted(set(aa)&set(bb))
+        for name in ("prior","random_single","random","adaptive"):
+            x=[(aa[i][name+"_score"]["local_correct"],bb[i][name+"_score"]["local_correct"]) for i in ids]
+            shifts=[abs(aa[i][name if name in ("prior","random_single") else name+"_best"]["q"][0]-bb[i][name if name in ("prior","random_single") else name+"_best"]["q"][0]) for i in ids]
+            paired.append({"missing":missing,"method":name,"n":len(ids),"both_correct":sum(a and b for a,b in x),"lost":sum(a and not b for a,b in x),"gained":sum(not a and b for a,b in x),"neither":sum(not a and not b for a,b in x),"median_abs_log_gap_shift":float(np.median(shifts)) if shifts else None})
+result={"paired":paired,"mode":mode,"kind":kind,"n":len(rows),"summary":summary,"protocol_sha256":hashlib.sha256((HERE/"protocol.json").read_bytes()).hexdigest(),"scientific_hold":True,"physical_use_authorized":False,"limitations":["Adaptive replacement has equal selected-start count, but audit computes both paths and diagnostic prior/geometry separately; nfev is not total CPU.","Profile assumes DSS and is local, not calibrated confidence.","Classifier phase CI remains unqualified; no scientific admission."]}
 for name,obj in (("trials.json",rows),("result.json",result)):(OUT/name).write_text(json.dumps(obj,indent=2,allow_nan=False)+"\n")
 print("R4B8_RESULT",json.dumps(result,allow_nan=False),flush=True)
