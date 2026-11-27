@@ -1,0 +1,30 @@
+{
+  "id": "JANUS-R4B10A-ROUTE-COVERAGE-AUDIT",
+  "source_run": 46035084112,
+  "source_head": "ed724df1d7f79239113c9e688780972858056c52",
+  "source_protocol_blob": "c28f0c2d1155a67cd7eab37bfdf4633c304834a6",
+  "artifacts": {
+    "iid": 15217420244,
+    "long_memory": 15217035954,
+    "narrowband": 15215813776,
+    "tangent": 15217220925,
+    "orthogonal": 15216971046
+  },
+  "required_rows_per_kind": 1080,
+  "required_nonstationary_per_kind": 720,
+  "methods": [
+    "global",
+    "conditional",
+    "oracle_noise_diagnostic"
+  ],
+  "route_status": "For ordinary noise exact family match=correct, other known family=incorrect, unknown=abstained. For tangent and orthogonal no trained true label; report known vs unknown separately, never call UNKNOWN correct.",
+  "metrics": [
+    "cross-tab route status × truth inclusion on nonstationary traces, separately per true family/subtype/level/missing and aggregated",
+    "DSS/AMBIGUOUS/REJECT on all traces",
+    "coverage and decision paired difference conditional vs global",
+    "diagnostic oracle comparison per route status"
+  ],
+  "note": "Descriptive retrospective audit; paired latent variants not independent. Identical global/conditional thresholds cannot establish a causal effect of routing; no threshold selection, no calibration changes.",
+  "scientific_hold": true,
+  "production_changed": false
+}
