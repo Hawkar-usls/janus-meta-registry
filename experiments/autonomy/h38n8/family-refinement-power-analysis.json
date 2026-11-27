@@ -1,0 +1,182 @@
+{
+  "schema": "janus.h38n8a.power_planning.v1",
+  "parent": {
+    "commit": "7429f1b7e52ba8b671ca49df8bd207967cd43a2f",
+    "blob": "01c788d5f5399495b51154007d250013cbdc4310"
+  },
+  "status": "FAMILY_DIVERSITY_HOLD__CONFIRMATORY_POWER_INSUFFICIENT_UNDER_PLANNING_ASSUMPTIONS__NO_CORPUS",
+  "scope": "Analytical prospective sensitivity calculation, not model execution, not a new admission protocol. 40 remaining proposals in current roster, zero independently admitted; not a global upper bound on grammar space. H38N8A absolute probe engineering gates distinct from future paired G3-vs-G2 improvement test.",
+  "method": {
+    "test": "one-sided exact conditional McNemar, unconditional planning power integrating random discordant count",
+    "assumptions": {
+      "independent_identically_distributed_paired_rows": true,
+      "discordance_q": 0.3,
+      "alpha_sensitivity": 0.0125,
+      "target_power": 0.8,
+      "target_effect": 0.05
+    },
+    "formula": "M~Bin(n,q); B|M=m~Bin(m,(q+delta)/(2q)); k(m)=smallest k with P(Bin(m,.5)>=k)<=alpha; power=sum_m P(M=m) P(B>=k(m)|M=m). MDE by bisection delta in [0,q], null if max power<.8. Numerical binomial recurrence and bisection in chat tool, no runner/model fit.",
+    "limits": "Rows within construction families are dependent; iid is a simplifying sensitivity scenario, not validated actual power nor guaranteed upper/lower bound. Need pilot estimates of family-level paired contrasts, discordance, correlation, and cluster-aware power simulation with independent final exam families. Alpha .0125 is hypothetical four-test planning scenario, not modification of existing H38N8A .05/13 bootstrap gates. HOLD uses separate weighted BA ceiling, no subsampling. No empirical q or feasible effect estimate; MDE is not maximum possible gain, and low power is not model FAIL."
+  },
+  "scenarios": [
+    {
+      "families": 25,
+      "train": 17,
+      "eval": 8,
+      "n_known": 64,
+      "mde": 0.21091121,
+      "power_at_5pp": 0.0397005
+    },
+    {
+      "families": 30,
+      "train": 20,
+      "eval": 10,
+      "n_known": 80,
+      "mde": 0.19046752,
+      "power_at_5pp": 0.05125593
+    },
+    {
+      "families": 35,
+      "train": 23,
+      "eval": 12,
+      "n_known": 96,
+      "mde": 0.17380513,
+      "power_at_5pp": 0.06415019
+    },
+    {
+      "families": 40,
+      "train": 27,
+      "eval": 13,
+      "n_known": 104,
+      "mde": 0.16700112,
+      "power_at_5pp": 0.07021516
+    },
+    {
+      "families": 40,
+      "train": 20,
+      "eval": 20,
+      "n_known": 160,
+      "mde": 0.13595182,
+      "power_at_5pp": 0.10925046
+    },
+    {
+      "families": 50,
+      "train": 33,
+      "eval": 17,
+      "n_known": 136,
+      "mde": 0.1469722,
+      "power_at_5pp": 0.09163024
+    },
+    {
+      "families": 55,
+      "train": 37,
+      "eval": 18,
+      "n_known": 144,
+      "mde": 0.14308795,
+      "power_at_5pp": 0.09706633
+    },
+    {
+      "families": 70,
+      "train": 47,
+      "eval": 23,
+      "n_known": 184,
+      "mde": 0.12657747,
+      "power_at_5pp": 0.12956631
+    },
+    {
+      "families": 80,
+      "train": 53,
+      "eval": 27,
+      "n_known": 216,
+      "mde": 0.11671046,
+      "power_at_5pp": 0.15586718
+    },
+    {
+      "families": 90,
+      "train": 60,
+      "eval": 30,
+      "n_known": 240,
+      "mde": 0.11087204,
+      "power_at_5pp": 0.17434145
+    }
+  ],
+  "current": {
+    "total_eval": 130,
+    "known_eval": 104,
+    "hold_eval": 26,
+    "per_conditioned_contrast": 26,
+    "eval_clusters": 13,
+    "all_rows_hypothetical_mde": 0.15009091,
+    "contrast_max_power_at_delta_q": 0.70349503,
+    "contrast_power5": 0.01405255,
+    "discordance_sensitivity": [
+      {
+        "q": 0.1,
+        "mde": 0.09257741,
+        "power5": 0.1783288
+      },
+      {
+        "q": 0.2,
+        "mde": 0.13605905,
+        "power5": 0.09110829
+      },
+      {
+        "q": 0.3,
+        "mde": 0.16700112,
+        "power5": 0.07021516
+      },
+      {
+        "q": 0.4,
+        "mde": 0.19400349,
+        "power5": 0.05599825
+      },
+      {
+        "q": 0.5,
+        "mde": 0.2171303,
+        "power5": 0.0490939
+      }
+    ],
+    "alpha_sensitivity": [
+      {
+        "alpha": 0.05,
+        "mde": 0.13812718,
+        "power5": 0.19092856
+      },
+      {
+        "alpha": 0.0125,
+        "mde": 0.16700112,
+        "power5": 0.07021516
+      },
+      {
+        "alpha": 0.0038461538461538464,
+        "mde": 0.18775084,
+        "power5": 0.02738687
+      }
+    ]
+  },
+  "target_n_iid_approx_crossing": [
+    {
+      "alpha": 0.05,
+      "n": 776,
+      "power": 0.80021935
+    },
+    {
+      "alpha": 0.0125,
+      "n": 1172,
+      "power": 0.80016434
+    },
+    {
+      "alpha": 0.0038461538461538464,
+      "n": 1506,
+      "power": 0.80028493
+    }
+  ],
+  "decision": "Recommend semantic validation of remaining 13 directional and 27 factorial candidates first. A smaller explicitly revised exploratory probe may be useful; no claim of confirmatory 5pp gain and no change of target to MDE merely to get PASS. B expansion modestly improves planning power, not enough for 5pp; C 1:1 improves eval precision at cost of fit data; compare after review with group-aware uncertainty and fixed budget. D polarity removal unsupported by sample size alone. Original H38N8A 90 family design remains HOLD; no silent change, no corpus, G2 unchanged, no model fitting. Future independent gain exam design separate.",
+  "authorization": {
+    "janus_train": false,
+    "probe_executed": false,
+    "production": false,
+    "architecture_change": false,
+    "corpus_generated": false
+  }
+}
