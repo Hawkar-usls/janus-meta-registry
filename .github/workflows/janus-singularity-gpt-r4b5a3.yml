@@ -1,0 +1,46 @@
+name: JANUS R4B5A3 event invariance
+on:
+  pull_request:
+    types: [opened]
+    paths:
+      - 'registry/physics/singularity_gpt/r4b5a3/**'
+      - '.github/workflows/janus-singularity-gpt-r4b5a3.yml'
+permissions:
+  contents: read
+jobs:
+  audit:
+    if: github.repository == 'Hawkar-usls/janus-meta-registry' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'janus-singularity-gpt-r4b5a3-event-invariance' && github.run_attempt == 1
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+          sparse-checkout: |
+            registry/physics/singularity_gpt/r3b
+            registry/physics/singularity_gpt/r4b3
+            registry/physics/singularity_gpt/r4b5a2
+            registry/physics/singularity_gpt/r4b5a3
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install numpy==2.2.6 numba==0.61.2
+      - name: Verify frozen event protocol, archive and unchanged solver
+        run: |
+          test "$(git hash-object registry/physics/singularity_gpt/r3b/solver_lib.py)" = "71ef15312166337a9ee41d71d75a29674d00e5d3"
+          test "$(git hash-object registry/physics/singularity_gpt/r4b3/boundary_solver.py)" = "2a3222c222412f327666e10db2219acde71cdeb3"
+          test "$(git hash-object registry/physics/singularity_gpt/r4b5a2/audit.py)" = "7e9eefb914f89fecdef5b48cbad1314ffaff22fa"
+          test "$(git hash-object registry/physics/singularity_gpt/r4b5a2/result_archive.json)" = "4e8807e1422b2fc907be157469d7100010e01ba7"
+          test "$(git hash-object registry/physics/singularity_gpt/r4b5a3/protocol.json)" = "224496bd9513a3b9ecf551499ec27366f972bfaa"
+          test "$(git hash-object registry/physics/singularity_gpt/r4b5a3/audit.py)" = "a7a28d2630c128ecbc6beeffe25dc88262833ae6"
+          python -m py_compile registry/physics/singularity_gpt/r4b5a3/audit.py
+      - name: Event crossings and mandatory fixed-time compactness
+        run: python registry/physics/singularity_gpt/r4b5a3/audit.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: r4b5a3-event-invariance
+          path: r4b5a3-output/
+          if-no-files-found: warn
+          retention-days: 30
