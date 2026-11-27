@@ -1,0 +1,47 @@
+name: JANUS R4B0 uniform resolution decisive test
+on:
+  pull_request:
+    types: [opened]
+    paths:
+      - 'registry/physics/singularity_gpt/r4b0/**'
+      - '.github/workflows/janus-singularity-gpt-r4b0.yml'
+permissions:
+  contents: read
+jobs:
+  decisive:
+    if: github.repository == 'Hawkar-usls/janus-meta-registry' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'janus-singularity-gpt-r4b0-resolution' && github.run_attempt == 1
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+          sparse-checkout: |
+            registry/physics/singularity_gpt/r3b
+            registry/physics/singularity_gpt/r4a
+            registry/physics/singularity_gpt/r4b0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install numpy==2.2.6 numba==0.61.2
+      - name: Verify unchanged solver and frozen precommit
+        run: |
+          test "$(git hash-object registry/physics/singularity_gpt/r3b/solver_lib.py)" = "71ef15312166337a9ee41d71d75a29674d00e5d3"
+          test "$(git hash-object registry/physics/singularity_gpt/r4a/diagnose.py)" = "28a39be912cb560f1a9ad4fd1b1058ef7a626761"
+          python - <<'PY'
+          from pathlib import Path
+          old=Path('registry/physics/singularity_gpt/r4a/diagnose.py').read_text()
+          new=Path('registry/physics/singularity_gpt/r4b0/diagnose.py').read_text()
+          assert old[old.index('def run('):old.index('rows=[];traces={}')] == new[new.index('def run('):new.index('def trend(')].rstrip('\n')+'\n'
+          PY
+          python -m py_compile registry/physics/singularity_gpt/r4b0/diagnose.py
+      - name: Fixed amplitude uniform refinement and trend diagnostic
+        run: python registry/physics/singularity_gpt/r4b0/diagnose.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: r4b0-uniform-resolution-diagnostics
+          path: r4b0-output/
+          if-no-files-found: warn
+          retention-days: 30
