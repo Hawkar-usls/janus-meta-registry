@@ -1,0 +1,68 @@
+{
+  "id": "JANUS-R4B5A.4c-THREAD-ATTRIBUTION",
+  "status": "FROZEN_BEFORE_EXECUTION",
+  "parent": {
+    "archive_commit": "2528e993ddbbde3247bb3ffcead1db030631041a",
+    "archive_blob": "81c757a19b6cf8799dd96fb01568544350ab6208",
+    "run": 46052336458,
+    "artifact": 15224798158,
+    "zip_sha256": "cdf700600ad29f88763c42b06d063367ae05fb45423fb262700236f528ed7408",
+    "historical_artifact": 15221965959,
+    "historical_zip_sha256": "257e16cdbdde7a847d573b77e4e1d1d594ee2199c600603325bca1cc43151f96",
+    "historical_array_sha256": "d28c18c669ac32524e7605a9bca994bd85469162e395a1222cb9791566fb84b2",
+    "failed_artifact": 15223003250,
+    "failed_zip_sha256": "986a3036b75303e125575d20f8fe2152c6527f94e171d21284b4e40912bf9062",
+    "failed_array_sha256": "5eb3de24ab9cdf096cbf082e380a012afd3a3c103ac6a803c26cf3404164ab4a"
+  },
+  "configuration": "Original instrumented R4B5A.4 coarse evolution n12288 A=.1152 CFL=.3 stop=.90. No changed numerical expressions.",
+  "factorial": {
+    "cells": [
+      {
+        "id": "N1B1",
+        "numba": 1,
+        "blas": 1
+      },
+      {
+        "id": "N2B1",
+        "numba": 2,
+        "blas": 1
+      },
+      {
+        "id": "N1B2",
+        "numba": 1,
+        "blas": 2
+      },
+      {
+        "id": "N2B2",
+        "numba": 2,
+        "blas": 2
+      }
+    ],
+    "repetitions": 2,
+    "order": "N1B1_1,N1B1_2 first; require exact within-cell and historical replay before other cells; remaining cells in listed order, repeated twice.",
+    "environment": "one hosted VM; exact pinned CPython3.11.18 NumPy2.2.6 Numba0.61.2 llvmlite0.44.0 threadpoolctl3.6.0; set OMP/MKL/OPENBLAS/BLIS to B, NUMBA to N; require actual NumPy BLAS threadpool reports and numba configured threads equal requested; record CPU/flags, loaded library hashes, normalized runtime fingerprint; compare within each cell and stable non-thread fields across cells; fresh independent empty cache each trial; no CPU vendor control in same VM. No OCI claim."
+  },
+  "decision": {
+    "baseline": "if N1B1 fails exact historical replay or repeatability, technical HOLD, no changed-thread cells",
+    "cell": "if within-cell repeat differs, thread-conditioned repeatability HOLD; no causal attribution from unstable result",
+    "effect": "repeatable different array from N1B1 is observed factor effect on this VM; exact failed hash in both trials is reproduction of historic mismatch signature in this VM, not proof historical cause because CPU and prior settings confounded; matching columns without exact hash weaker",
+    "no_effect": "all eight exact historical = no observed effect for tested counts/VM only; CPU/dispatch/harness remain candidates",
+    "physics": "no hard-gate column exemption, no production changes, no scientific promotion; preserve cold PASS for tested n12288."
+  },
+  "diagnostics": {
+    "near_zero": "historical vs failed all mismatch values per column; count both abs<1e-30, count either >= threshold, magnitude range and max abs pair, relative and ULP maxima, counts exceeding 8 ULP or 2e-15 for non-near-zero; no change to strict exact gate",
+    "subcell": "manufactured interior max profile on 256/512/1024 with same analytic mass source; compare nodal and concave 3-point vertex errors vs r=sqrt(2), C=.9. Diagnostic, prior full profile gate preserved.",
+    "reporting": "NOT_REACHED explicit for time snapshots; NEAR GATE NOT_EVALUATED technical only"
+  },
+  "forbidden": [
+    "24576",
+    "49152",
+    "98304",
+    "DSS",
+    "AMR",
+    "main merge",
+    "new reference adoption",
+    "retroactive relaxation"
+  ],
+  "scientific_hold": true
+}
