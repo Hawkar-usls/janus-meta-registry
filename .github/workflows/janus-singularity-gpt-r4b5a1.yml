@@ -1,0 +1,46 @@
+name: JANUS R4B5A1 reference domain recovery
+on:
+  pull_request:
+    types: [opened]
+    paths:
+      - 'registry/physics/singularity_gpt/r4b5a1/**'
+      - '.github/workflows/janus-singularity-gpt-r4b5a1.yml'
+permissions:
+  contents: read
+jobs:
+  audit:
+    if: github.repository == 'Hawkar-usls/janus-meta-registry' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'janus-singularity-gpt-r4b5a1-reference-domain' && github.run_attempt == 1
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+          sparse-checkout: |
+            registry/physics/singularity_gpt/r3b
+            registry/physics/singularity_gpt/r4b3
+            registry/physics/singularity_gpt/r4b5a
+            registry/physics/singularity_gpt/r4b5a1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install numpy==2.2.6 numba==0.61.2
+      - name: Verify frozen archive and reference recovery protocol
+        run: |
+          test "$(git hash-object registry/physics/singularity_gpt/r3b/solver_lib.py)" = "71ef15312166337a9ee41d71d75a29674d00e5d3"
+          test "$(git hash-object registry/physics/singularity_gpt/r4b3/boundary_solver.py)" = "2a3222c222412f327666e10db2219acde71cdeb3"
+          test "$(git hash-object registry/physics/singularity_gpt/r4b5a/audit.py)" = "f84f5a9336794e7d9a19ca301d5da1927f5dac13"
+          test "$(git hash-object registry/physics/singularity_gpt/r4b5a/result_archive.json)" = "20722786f2c66efd8c82f559a66aa4c26af6c279"
+          test "$(git hash-object registry/physics/singularity_gpt/r4b5a1/protocol.json)" = "c86ac14765935424780595245e9c47087ef2e561"
+          test "$(git hash-object registry/physics/singularity_gpt/r4b5a1/audit.py)" = "5f49a423156fd8e8199d5d63e4de66b31bdada51"
+          python -m py_compile registry/physics/singularity_gpt/r4b5a1/audit.py
+      - name: Same-h reference isolation and proper-time comparison
+        run: python registry/physics/singularity_gpt/r4b5a1/audit.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: r4b5a1-reference-domain
+          path: r4b5a1-output/
+          if-no-files-found: warn
+          retention-days: 30
