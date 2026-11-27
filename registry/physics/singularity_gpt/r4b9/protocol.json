@@ -1,0 +1,146 @@
+{
+  "id": "JANUS-R4B9-CALIBRATED-IDENTIFIABILITY",
+  "date": "2026-11-27",
+  "parent_run": 46025303313,
+  "parent_protocol_blob": "9bb057ef2f47d87d69e3d55fe49d04c711ba6baf",
+  "parent_archive_commit": "0e2792087e58ae7b779a7869f3a4f9fc7a97c6e5",
+  "frozen": {
+    "prior_log_gap": [
+      -45,
+      -1
+    ],
+    "frequency": [
+      0.2,
+      45
+    ],
+    "envelope_exponent": [
+      0.1,
+      3
+    ],
+    "drift_bounds": [
+      -0.3,
+      0.3
+    ],
+    "equivalence_margin": 0.012,
+    "selection_prefit_rmse": 0.35,
+    "starts": 4,
+    "max_nfev": 80,
+    "relative_gap_error": 0.05,
+    "relative_period_error": 0.05,
+    "positive_DSS_min": 0.9,
+    "positive_AMBIGUOUS_max": 0.05,
+    "negative_DSS_max": 0.05
+  },
+  "stress": {
+    "seed": 904731,
+    "n_per_class": 100,
+    "classes": [
+      "positive",
+      "near_dss_chirp",
+      "stationary"
+    ],
+    "levels": [
+      0.001,
+      0.01
+    ],
+    "missing": [
+      0,
+      0.3
+    ],
+    "components": [
+      "ordinary",
+      "tangent",
+      "orthogonal"
+    ],
+    "noise_law": "paired raw narrowband realization; tangent projection onto chirp derivative residualized against constant, sine, cosine, frequency direction; orthogonal complement; original component amplitudes, no renormalization; exact phase mimic pair as separate impossibility control",
+    "methods": [
+      "min_objective",
+      "consensus"
+    ],
+    "start_policy": "R4B8A legacy geometry with prefit .35 replacing one of four fixed random starts; same candidates",
+    "metric": "candidate availability, true parameters, correct candidate existed but selection wrong, labels, drift and confidence coverage; exact indistinguishability evaluated separately, no requirement impossible to satisfy"
+  },
+  "forecast": {
+    "seed": 815207,
+    "n_per_class": 100,
+    "classes": [
+      "positive"
+    ],
+    "noise_types": [
+      "iid",
+      "long_memory",
+      "narrowband"
+    ],
+    "noise_levels": [
+      0.001,
+      0.01
+    ],
+    "missing": [
+      0,
+      0.3
+    ],
+    "fractions": [
+      0.95,
+      0.99,
+      1
+    ],
+    "compare": [
+      "legacy_single",
+      "sequence_single"
+    ],
+    "note": "same historical R4B8A bank; measure final versus local gap accuracy; no real early stopping"
+  },
+  "calibration": {
+    "seed": 923781,
+    "evaluation_seed": 419683,
+    "n_per_class": 100,
+    "classes": [
+      "positive",
+      "near_dss_chirp",
+      "stationary"
+    ],
+    "noise_types": [
+      "iid",
+      "long_memory",
+      "narrowband"
+    ],
+    "noise_levels": [
+      0.001,
+      0.01
+    ],
+    "missing": [
+      0,
+      0.3
+    ],
+    "generator": "new explicit-truth bank, six logarithmic cycles, 769 samples, period 1.2..5.6, envelope beta .6..1.4, near-chirp signed drift .015..15e-2; stationary has no finite tstar or phase truth",
+    "alpha": 0.05,
+    "score": "n*log(RSS_profile_at_true_drift/RSS_unrestricted) clipped at zero, same fit-window data weights; jointly refit gap, frequency, envelope and linear amplitudes, unrestricted fit also drift; diagnostic of actual truth inclusion; calibration global maximum of per-stratum split conformal order statistics k=ceil((n+1)*.95); no noise-family truth supplied to inference; failed profiles treated as infinite, no deletion",
+    "grid": [
+      -0.3,
+      -0.15,
+      -0.075,
+      -0.03,
+      -0.015,
+      -0.012,
+      -0.006,
+      0,
+      0.006,
+      0.012,
+      0.015,
+      0.03,
+      0.075,
+      0.15,
+      0.3
+    ],
+    "classification": "frozen rival/period screen; accept DSS only if unrestricted best drift strictly inside margin, nonempty profiled grid set and all admitted grid points strictly within margin; numerical grid approximation only; continuous confidence region not certified; no expansion of physical admission; report baseline and candidate separately",
+    "coverage_gate": ">=90% empirical per eligible nonstationary stratum, report exact binomial uncertainty and failures, nominal 95%; scientific hold remains even if gates pass",
+    "calibration_data_disjoint": true,
+    "ambiguity_diagnostic": "old CI unconditional on all nonstationary; oracle versus blind nuisance; old gate decomposition fit failure, width>2margin, center outside, boundary overlap, equivalent; cross-tab correct parameters and labels; PIT for positive true drift zero; no causal conclusion from CI alone"
+  },
+  "execution": "tangent stress completes before forecast and calibration; evaluation consumes frozen calibration artifact after its hash is verified; protocol file immutable; synthetic only; if tangent mimic nonidentifiable, preserve ambiguous evidence, no threshold relaxation",
+  "scientific_hold": true,
+  "physical_use_authorized": false,
+  "production_changed": false,
+  "amr_implemented": false,
+  "early_stop_enabled": false
+}
