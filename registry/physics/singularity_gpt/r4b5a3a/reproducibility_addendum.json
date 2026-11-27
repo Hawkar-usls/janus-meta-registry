@@ -1,0 +1,79 @@
+{
+  "id": "JANUS-R4B5A.3a-REPRODUCIBILITY-ADDENDUM",
+  "status": "PROSPECTIVE_ONLY__CURRENT_RUN_NOT_MODIFIED",
+  "current_run": 46042569254,
+  "current_head": "4a1423c1f84616a39b3f266af9e4972f183cb844",
+  "observation_at_adoption": "run already in progress; source verification and artifact retrieval SHA256 check passed; exact replay not yet observed; no fallback permitted for this run",
+  "historical_environment": {
+    "runner": "2.338.2",
+    "image": "ubuntu-24.04",
+    "image_version": "20261122.23.1",
+    "provisioner": "20261111.635",
+    "python_requested": "3.11",
+    "numpy": "2.2.6",
+    "numba": "0.61.2",
+    "llvmlite": "0.44.0",
+    "container_digest": null,
+    "blas_actual": null,
+    "thread_environment_actual": null,
+    "cpu_actual": null,
+    "compiler_flags_actual": null,
+    "limitation": "Original hosted VM was not a pinned container; full historical fingerprint not logged. Cannot retroactively claim environment equality."
+  },
+  "artifact": {
+    "id": 15221615064,
+    "expired": false,
+    "expires_at": "2026-12-27T17:25:40Z",
+    "sha256": "a385b5c898be39bb5f6559fa75951ad7f88a12767e2fff5acf0c56e6b855f7e1",
+    "retrieval_verified_by_completed_CI_step": true
+  },
+  "future_environment_policy": {
+    "capture_before_any_evolution": [
+      "immutable OCI image digest if containerized, otherwise runner image/version and OS/kernel",
+      "CPU architecture/model and instruction flags",
+      "Python full version and build flags",
+      "NumPy version and show_config / show_runtime",
+      "BLAS/LAPACK runtime vendor/version/threadpool configuration",
+      "Numba/llvmlite versions and CPU target/fastmath/parallel flags",
+      "OMP_NUM_THREADS MKL_NUM_THREADS OPENBLAS_NUM_THREADS NUMBA_NUM_THREADS BLIS_NUM_THREADS",
+      "installed wheel hashes and package lock"
+    ],
+    "new_controlled_pair": "For future independent numerical reruns, freeze same OCI digest, package wheel hashes and CPU target, set thread variables to 1 in both baseline and repair run. Do not claim this reconstructs undocumented historical environment.",
+    "comparison": "Strict exact mode is mandatory for active run. Future alternate mode must be chosen from evidence about environment or artifact availability before new computation and recorded in a separate frozen protocol; never auto-fallback after observing numerical mismatch.",
+    "alternate_numeric_proposal_not_activated": {
+      "condition": "documented environment difference or artifact genuinely unavailable, separate new precommit required",
+      "case_abs_relative_rule": "for finite floating-point fields abs(x-y)<=1e-12+1e-10*max(abs(x),abs(y)); exact discrete fields, classification and steps; if artifact available same trace shape and dtype, elementwise same tolerance, no alignment; check near-zero flux separately; two independent same-environment coarse replays must match exactly",
+      "claim_ceiling": "NUMERICAL_REPLAY_ONLY, not historical byte equality; no scientific promotion based on fallback alone"
+    }
+  },
+  "serialization_scope": {
+    "required_scalar_tests": [
+      "numpy.bool_",
+      "numpy.float64",
+      "numpy.int64"
+    ],
+    "future_additional_tests": [
+      "numpy.str_ expected JSON string if actually present",
+      "numpy.ndarray rejected unless explicit schema requires array conversion; current report uses Python lists, arrays saved separately"
+    ],
+    "note": "Do not broaden accepted serializer types unnecessarily; strict rejection is tested and no scientific data are silently coerced."
+  },
+  "byte_comparison": "Compare exact dtype, shape and C-order serialized array payload bytes (not object identity/address). NPZ ZIP envelope can differ due to metadata/compression; for future check also compare decompressed coarse.npy member bytes and separately verify original ZIP digest. Do not demand identical ZIP bytes across separate archives.",
+  "failure_policy": "If current exact replay fails or ZIP cannot be fetched, TECHNICAL_SERIALIZATION_HOLD; no medium/fine evolution after gate failure, no compactness scientific conclusion. Any later fallback requires separate preregistration.",
+  "temporal_reporting": {
+    "bands": "TIGHT <=5%; MODERATE >5% to 15%; NEAR GATE >15% to 25%; FAIL >25%",
+    "requirement": "Every NEAR GATE metric explicitly named in subsequent report with actual ratio, not only color. If none, report maximum measured ratio. No threshold change."
+  },
+  "scientific_holds": [
+    "COMPACTNESS_CONVERGENCE_HOLD",
+    "CURVATURE_RECOVERY_HOLD",
+    "IDENTIFIABILITY_HOLD independent R4B.10 not re-audited",
+    "SCIENTIFIC_HOLD"
+  ],
+  "forbidden": [
+    "DSS",
+    "AMR",
+    "bracket narrowing",
+    "production promotion"
+  ]
+}

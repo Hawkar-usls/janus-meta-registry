@@ -1,0 +1,57 @@
+name: JANUS R4B5A3a serialization recovery
+on:
+  pull_request:
+    types: [opened]
+    paths:
+      - 'registry/physics/singularity_gpt/r4b5a3a/**'
+      - '.github/workflows/janus-singularity-gpt-r4b5a3a.yml'
+permissions:
+  contents: read
+  actions: read
+jobs:
+  audit:
+    if: github.repository == 'Hawkar-usls/janus-meta-registry' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'janus-singularity-gpt-r4b5a3a-serialization-recovery' && github.run_attempt == 1
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+          sparse-checkout: |
+            registry/physics/singularity_gpt/r3b
+            registry/physics/singularity_gpt/r4b3
+            registry/physics/singularity_gpt/r4b5a2
+            registry/physics/singularity_gpt/r4b5a3
+            registry/physics/singularity_gpt/r4b5a3a
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install numpy==2.2.6 numba==0.61.2
+      - name: Verify immutable original protocol, numerical code and repair
+        run: |
+          test "$(git hash-object registry/physics/singularity_gpt/r3b/solver_lib.py)" = "71ef15312166337a9ee41d71d75a29674d00e5d3"
+          test "$(git hash-object registry/physics/singularity_gpt/r4b3/boundary_solver.py)" = "2a3222c222412f327666e10db2219acde71cdeb3"
+          test "$(git hash-object registry/physics/singularity_gpt/r4b5a2/result_archive.json)" = "4e8807e1422b2fc907be157469d7100010e01ba7"
+          test "$(git hash-object registry/physics/singularity_gpt/r4b5a3/protocol.json)" = "224496bd9513a3b9ecf551499ec27366f972bfaa"
+          test "$(git hash-object registry/physics/singularity_gpt/r4b5a3/audit.py)" = "a7a28d2630c128ecbc6beeffe25dc88262833ae6"
+          test "$(git hash-object registry/physics/singularity_gpt/r4b5a3/technical_failure_archive.json)" = "8980d2c0736aabd48dc673d1aa3d6aa1052a83c3"
+          test "$(git hash-object registry/physics/singularity_gpt/r4b5a3a/repair_protocol.json)" = "405591e8a60c7ec6df2810d6535603ddd3b0ab37"
+          test "$(git hash-object registry/physics/singularity_gpt/r4b5a3a/trace_verification_precommit.json)" = "e50f440bb2b5b702f8f94c23b2b7c90d21366e4d"
+          test "$(git hash-object registry/physics/singularity_gpt/r4b5a3a/repair_runner.py)" = "9cca3f7702e65e8d07c2f09f465616993c0a0b19"
+          python -m py_compile registry/physics/singularity_gpt/r4b5a3a/repair_runner.py
+      - name: Retrieve immutable partial artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          curl --fail --silent --show-error --location --header "Authorization: Bearer ${GH_TOKEN}" --header "Accept: application/vnd.github+json" --output "${RUNNER_TEMP}/r4b5a3-original.zip" "https://api.github.com/repos/Hawkar-usls/janus-meta-registry/actions/artifacts/15221615064/zip"
+          echo "a385b5c898be39bb5f6559fa75951ad7f88a12767e2fff5acf0c56e6b855f7e1  ${RUNNER_TEMP}/r4b5a3-original.zip" | sha256sum -c -
+      - name: Strict JSON preflight and exact coarse trace replay then original exam
+        run: python registry/physics/singularity_gpt/r4b5a3a/repair_runner.py "${RUNNER_TEMP}/r4b5a3-original.zip"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: r4b5a3a-serialization-recovery
+          path: r4b5a3-output/
+          if-no-files-found: warn
+          retention-days: 30
