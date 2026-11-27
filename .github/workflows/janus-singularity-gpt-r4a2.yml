@@ -1,0 +1,40 @@
+name: JANUS R4A2 scheme validation
+on:
+  push:
+    branches: [janus-singularity-gpt-r4a2]
+    paths:
+      - 'registry/physics/singularity_gpt/r4a2/**'
+      - '.github/workflows/janus-singularity-gpt-r4a2.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  examine:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            registry/physics/singularity_gpt/r3b
+            registry/physics/singularity_gpt/r4a2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install numpy==2.2.6 numba==0.61.2
+      - name: Retrieve frozen R4A artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          curl --fail --location --retry 3 -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/15194010923/zip" -o r4a.zip
+      - name: Fixed point and shadow classifier examination
+        run: python registry/physics/singularity_gpt/r4a2/examine.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: r4a2-scheme-validation
+          path: r4a2-output/
+          if-no-files-found: warn
+          retention-days: 30
