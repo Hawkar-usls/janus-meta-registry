@@ -1,0 +1,31 @@
+name: JANUS R3C frozen echo audit
+on:
+  push:
+    branches: [janus-singularity-gpt-r3c-audit]
+    paths: ['.github/workflows/janus-singularity-gpt-r3c-audit.yml', 'registry/physics/singularity_gpt/r3c/**']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: registry/physics/singularity_gpt/r3c
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install numpy==2.2.6
+      - name: Retrieve frozen echo artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: curl --fail --location --retry 3 -H "Authorization: Bearer $GH_TOKEN" "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/15193297197/zip" -o echo.zip
+      - run: python registry/physics/singularity_gpt/r3c/audit.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: r3c-echo-audit
+          path: r3c-audit/
+          if-no-files-found: error
