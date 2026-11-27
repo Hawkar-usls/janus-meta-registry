@@ -1,0 +1,82 @@
+{
+  "id": "JANUS-R4A3-PRE-AMR-VALIDATION",
+  "parent_run": 45995373643,
+  "parent_sha": "be649a231085c9ad6f51b77d6dd69e0119e99c26",
+  "artifacts": {
+    "r4a": {
+      "id": 15194010923,
+      "sha256": "dd6e3f585de7223f101f40e294485cbb698bc7501322840101e26185ca6b60df"
+    },
+    "r4a2": {
+      "id": 15196105655,
+      "sha256": "a1cd132998fe61ec5f954936183ea269cd60d056625b979fcd2b1d628543e00a"
+    }
+  },
+  "fixed": {
+    "A": 0.11484375,
+    "n": 12288,
+    "R": 30,
+    "r0": 5,
+    "w": 1,
+    "checkpoints": [
+      16
+    ],
+    "comparison": "all 4 grids on same common central proper time, and last 3 on same longer common interval; no order from distinct intervals"
+  },
+  "bracket": {
+    "Alo": 0.11484375,
+    "Ahi": 0.115625,
+    "n": 6144,
+    "R": 30,
+    "r0": 5,
+    "w": 1,
+    "steps": 5,
+    "checkpoints": [
+      16
+    ],
+    "rule": "evaluate upper endpoint, retain lower from R4A2, update only mass-gated proxy labels; stop on unresolved or budget failure; no true threshold"
+  },
+  "controls": {
+    "A": [
+      0.163125,
+      0.185,
+      0.22
+    ],
+    "n": [
+      3072,
+      6144
+    ],
+    "R": 30,
+    "r0": 6,
+    "w": 1.4,
+    "checkpoints": [
+      16
+    ],
+    "rule": "eligible near-trapping proxy pairs require same class and mass drift <1% at both resolutions, not physical horizon evidence"
+  },
+  "mass_budget": 0.01,
+  "positive": {
+    "periods": [
+      1.3,
+      2.3,
+      3.7,
+      4.1,
+      5.2
+    ],
+    "log_span_cycles": 5,
+    "points": 16384,
+    "n": 12288,
+    "seed": 8261,
+    "relative_noise": [
+      0,
+      0.001,
+      0.01
+    ],
+    "accept_clean_relative_error": 0.05,
+    "method": "exact frozen R3B peak estimator; synthetic log-time oscillations with growing amplitude, independent artificial periods, no physical target. Clean recovery for core periods <=4.1 required; 5.2 stress case reported separately. Noise sensitivities reported without tuning."
+  },
+  "no_early_stop": true,
+  "amr_implemented": false,
+  "third_family_reserved": true,
+  "scientific_hold": true
+}
