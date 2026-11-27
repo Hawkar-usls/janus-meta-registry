@@ -1,0 +1,55 @@
+{
+  "id": "JANUS-R4A2-SCHEME-VALIDATION",
+  "source_r4a_run": 45991125030,
+  "source_artifact": 15194010923,
+  "source_zip_sha256": "dd6e3f585de7223f101f40e294485cbb698bc7501322840101e26185ca6b60df",
+  "source_solver": "f4db65fc5717c43a56716852008fc0112848f15d",
+  "fixed_case": {
+    "A": 0.11484375,
+    "r0": 5,
+    "width": 1,
+    "R": 30,
+    "n": 6144,
+    "t_end": 16
+  },
+  "noncritical_control": {
+    "A": 0.05,
+    "r0": 5,
+    "width": 1,
+    "R": 30,
+    "n": 3072,
+    "t_end": 16
+  },
+  "held_confirmation": {
+    "A": 0.1609375,
+    "r0": 6,
+    "width": 1.4,
+    "R": 80,
+    "n": 8192,
+    "checkpoints": [
+      16,
+      32
+    ]
+  },
+  "mass_relative_budget": 0.01,
+  "early_indicator": {
+    "minimum_t": 4,
+    "window": 2,
+    "max_current_compactness": 0.2,
+    "max_inner_mass_fraction": 0.2,
+    "negative_compactness_slope": true,
+    "negative_inner_mass_slope": true,
+    "require_end_value_below_start_for_both": true,
+    "require_negative_slopes_in_each_half": true,
+    "no_early_stop": true,
+    "admission": "historical diagnostic only; future unseen family validation required"
+  },
+  "echo_negative_control": {
+    "method": "existing R3B target-free echo rule, noncritical physical trajectory and 199 block-shuffled residual surrogates of each trace after moving-average detrending; report empirical hit rates separately, no target value, exploratory null not sufficient to establish DSS",
+    "block_size": 16,
+    "seed": 8271
+  },
+  "third_family": "reserved, not run; require independent frozen protocol before evaluation",
+  "amr": "not implemented; 6144 is diagnostic, not proof of convergence; 12288 deferred until result",
+  "scientific_hold": true
+}
