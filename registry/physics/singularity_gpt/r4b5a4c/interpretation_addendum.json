@@ -1,0 +1,36 @@
+{
+  "id": "JANUS-R4B5A.4c-INTERPRETATION-ADDENDUM",
+  "status": "POST_EXECUTION_BEFORE_READING_NUMERICAL_LOGS__NOT_ORIGINAL_PRECOMMIT",
+  "run": 46052924002,
+  "original_gate": "Preserve all 19 columns, both within-cell repeats and exact historical PASS reference from R4B5A.3a. No retrospective relaxation. R4B5A.4 failed AMD array is a diagnostic comparator, not baseline acceptance reference. Actual CPU of current VM must be read, not assumed Intel.",
+  "decisions": {
+    "repeat_failure": "TECHNICAL_OR_INTEGRITY_HOLD; no cross-cell attribution",
+    "baseline_failure": "ENVIRONMENT_HOLD; no thread attribution",
+    "all_equal": "no observed effect of requested threads in {1,2} on tested VM",
+    "numba_only": "N1B1=N1B2 != N2B1=N2B2; Numba factor-associated effect in tested environment",
+    "blas_only": "N1B1=N2B1 != N1B2=N2B2; BLAS factor-associated effect",
+    "other_patterns": "joint dependence or interaction candidate; four different hashes alone do not establish interaction on numerical scale; report pairwise differences, repeatability and unresolved mechanism"
+  },
+  "near_zero": "all mismatch points classified using both magnitudes <1e-30; do not exclude any historical exact gate even if zero transitions; separate prospective numerical equivalence protocol necessary for alternative gate",
+  "ulp": "8 ULP and 2e-15 only prospective diagnostic limits in R4B5A.4c, not retrospective R4B5A.4 acceptance",
+  "subcell": "diagnostic only; previously passed native full profile error gate does not require sampled peak exactly equal .9; smooth isolated analytic peak has quadratic sampling value error, not necessarily monotone location error",
+  "cross_architecture_hold": "OPEN independent of thread factorial outcome. Historical AMD EPYC 9V74 versus Intel Xeon 6975P-C and unset versus one-thread settings confounded. Future matched CPU comparison required; do not claim historical reference CPU without evidence.",
+  "future_cross_architecture": {
+    "design": "Separate precommit: same exact software, thread counts N1B1, independent cold caches and two repeats per CPU family; record actual model, flags, dispatch, library hashes, image and manifests; compare within CPU first then between CPU. Prefer same pinned OCI digest plus controlled ISA/compiler target when possible. Hosted runner labels do not guarantee CPU vendor; if requested CPU unavailable report NOT_TESTED, never relabel another CPU. Cross-family mismatch shows platform-associated effect, not isolated microarchitectural causality; CPU/dispatch interaction needs controlled experiment."
+  },
+  "holds": [
+    "CROSS_ARCHITECTURE_HOLD",
+    "COMPACTNESS_CONVERGENCE_HOLD",
+    "EVENT_INVARIANCE_HOLD",
+    "LATE_TIME_RICCI_HOLD",
+    "IDENTIFIABILITY_HOLD independent",
+    "SCIENTIFIC_HOLD"
+  ],
+  "forbidden": [
+    "DSS",
+    "AMR",
+    "98304",
+    "main promotion",
+    "automatic new reference"
+  ]
+}
