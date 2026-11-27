@@ -1,0 +1,41 @@
+{
+  "schema": "janus.beacon.time_contract.diagnostic.precommit.v1",
+  "date": "2026-11-27",
+  "parent": "8e16ef21e60df7691b7da07ca10760db61c8c6b1",
+  "status": "TIMING_CONTRACT_HOLD__DELIVERY_RECOVERY_FAILED__PROVENANCE_UNVERIFIED",
+  "original_exam": {
+    "status": "FAILED",
+    "slot1": "c64ca7f3-9dc8-832b-af58-1d874eb888e7",
+    "observed_minus_slot_s": -169,
+    "remaining_slots": "DIAGNOSTIC_ONLY; no recovery credits"
+  },
+  "timing": {
+    "exact_schedule_guarantee": "UNKNOWN; actual first result violates not-before property. Available interface documentation describes exact schedule selection for named clock times but not execution SLA or not-before guarantee.",
+    "clock": "UNKNOWN; scheduler/relay wall or monotonic clock sources, synchronization and skew not exposed by peek. UTC offset conversion confirmed, 169s not integer-hour offset; DST alone not evidenced. No attribution to VM wakeup, NTP, clock skew or retry.",
+    "phase_definitions": {
+      "start": "started_at - scheduled_for",
+      "observation": "observed_at_utc - scheduled_for",
+      "completion": "completed_at - scheduled_for",
+      "execution_to_observation": "observed_at_utc - started_at",
+      "relay_start": "relay.started_at - relay.scheduled_for"
+    },
+    "source": "matched last_run and latest_result fields; actual observation inside run; no trust attestation assumed"
+  },
+  "diagnostic": {
+    "first_slot": "2026-11-27T21:39:09Z",
+    "nominal_count": 20,
+    "cadence": "existing hourly slots, no new Witness or Relay schedule",
+    "capture": "Existing read-only audit collects source run UUID, slot, actual start/observation/completion, result-created, relay ID and disposition, coverage, and missing/suppressed flags. Append only unique allowlisted technical metadata to diagnostic branch via separately authorized monitor if available. No source content or secrets. No manual run counted.",
+    "missing": "Latest-only access can lose samples. Denominator 20 nominal slots; explicitly list missing/unknown, no retrospective filling from inbox survivors. If fewer than 10 complete distinct exact-mode samples, descriptive only and insufficient baseline; even 20 cannot establish hard guarantee.",
+    "analysis": "Report observed count, early count and fraction with exact binomial CI (sampling limitations), min/max/median, quartiles, phase deltas separately; no assumed IID for scheduler series; compare historical accepted packets separately as selected sample, not control. No causal inference from pre/post nonrandomized series.",
+    "existing_first_failure": "Historical first exact-mode slot retained as known failure, not included in prospective 20-slot cohort."
+  },
+  "restart": "Original three-slot exam closed FAIL; no reset at 23:39. Future recovery requires new precommit after authoritative scheduler/time semantics or independently verified source-time contract, separate provenance admission plan, and authorized implementation; 3 fresh consecutive slots starting after that precommit. No diagnostic slot counts.",
+  "security": "Existing strict TIME_ORDER and no replay/overwrite protections unchanged. Do not synthesize timestamps or signatures. No training, permission, production, main or physics changes. Signed timestamps only prove claims under verified signer/time trust; do not equate actual observation with nominal schedule.",
+  "holds": [
+    "TIMING_CONTRACT_HOLD",
+    "BEACON_BLOCKS_CLOSED_LOOP",
+    "PROVENANCE_UNVERIFIED"
+  ],
+  "limits": "Provider internal attempt history and clock telemetry unavailable; source exact_schedule semantics not established. Scheduled diagnostic may continue under current protections; no recovery inference."
+}
