@@ -1,0 +1,230 @@
+name: JANUS R4B10 conditional calibration
+on:
+  push:
+    branches: [janus-singularity-gpt-r4b10-conditional]
+    paths:
+      - 'registry/physics/singularity_gpt/r4b10/**'
+      - '.github/workflows/janus-singularity-gpt-r4b10.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+env:
+  OPENBLAS_NUM_THREADS: '1'
+  OMP_NUM_THREADS: '1'
+jobs:
+  train-router:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            registry/physics/singularity_gpt/r4b2
+            registry/physics/singularity_gpt/r4b3
+            registry/physics/singularity_gpt/r4b5
+            registry/physics/singularity_gpt/r4b7
+            registry/physics/singularity_gpt/r4b8
+            registry/physics/singularity_gpt/r4b8a
+            registry/physics/singularity_gpt/r4b9
+            registry/physics/singularity_gpt/r4b10
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install numpy==2.2.6 scipy==1.15.3
+      - run: python -m compileall -q registry/physics/singularity_gpt/r4b10
+      - run: python registry/physics/singularity_gpt/r4b10/examine.py fit-router
+      - run: cd r4b10-output && sha256sum router.json > router.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: r4b10-router
+          path: r4b10-output/
+          retention-days: 30
+  router-exam:
+    needs: train-router
+    strategy:
+      fail-fast: false
+      matrix:
+        kind: [iid, long_memory, narrowband, tangent, orthogonal]
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            registry/physics/singularity_gpt/r4b2
+            registry/physics/singularity_gpt/r4b3
+            registry/physics/singularity_gpt/r4b5
+            registry/physics/singularity_gpt/r4b7
+            registry/physics/singularity_gpt/r4b8
+            registry/physics/singularity_gpt/r4b8a
+            registry/physics/singularity_gpt/r4b9
+            registry/physics/singularity_gpt/r4b10
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install numpy==2.2.6 scipy==1.15.3
+      - run: python -m compileall -q registry/physics/singularity_gpt/r4b10
+      - uses: actions/download-artifact@v4
+        with:
+          name: r4b10-router
+          path: router
+      - run: cd router && sha256sum -c router.sha256
+      - run: python registry/physics/singularity_gpt/r4b10/examine.py router-exam ${{ matrix.kind }} router/router.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: r4b10-router-exam-${{ matrix.kind }}
+          path: r4b10-output/
+          if-no-files-found: warn
+          retention-days: 30
+  calibrate:
+    needs: router-exam
+    strategy:
+      fail-fast: false
+      matrix:
+        kind: [iid, long_memory, narrowband, tangent, orthogonal]
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            registry/physics/singularity_gpt/r4b2
+            registry/physics/singularity_gpt/r4b3
+            registry/physics/singularity_gpt/r4b5
+            registry/physics/singularity_gpt/r4b7
+            registry/physics/singularity_gpt/r4b8
+            registry/physics/singularity_gpt/r4b8a
+            registry/physics/singularity_gpt/r4b9
+            registry/physics/singularity_gpt/r4b10
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install numpy==2.2.6 scipy==1.15.3
+      - run: python -m compileall -q registry/physics/singularity_gpt/r4b10
+      - uses: actions/download-artifact@v4
+        with:
+          name: r4b10-router
+          path: router
+      - run: cd router && sha256sum -c router.sha256
+      - run: python registry/physics/singularity_gpt/r4b10/examine.py calibrate ${{ matrix.kind }} router/router.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: r4b10-calibration-${{ matrix.kind }}
+          path: r4b10-output/
+          if-no-files-found: warn
+          retention-days: 30
+  freeze:
+    needs: calibrate
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            registry/physics/singularity_gpt/r4b2
+            registry/physics/singularity_gpt/r4b3
+            registry/physics/singularity_gpt/r4b5
+            registry/physics/singularity_gpt/r4b7
+            registry/physics/singularity_gpt/r4b8
+            registry/physics/singularity_gpt/r4b8a
+            registry/physics/singularity_gpt/r4b9
+            registry/physics/singularity_gpt/r4b10
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install numpy==2.2.6 scipy==1.15.3
+      - run: python -m compileall -q registry/physics/singularity_gpt/r4b10
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: r4b10-calibration-*
+          path: calibration
+      - run: python registry/physics/singularity_gpt/r4b10/examine.py freeze calibration
+      - run: cd r4b10-output && sha256sum thresholds.json > thresholds.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: r4b10-thresholds
+          path: r4b10-output/
+          retention-days: 30
+  evaluate:
+    needs: freeze
+    strategy:
+      fail-fast: false
+      matrix:
+        kind: [iid, long_memory, narrowband, tangent, orthogonal]
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            registry/physics/singularity_gpt/r4b2
+            registry/physics/singularity_gpt/r4b3
+            registry/physics/singularity_gpt/r4b5
+            registry/physics/singularity_gpt/r4b7
+            registry/physics/singularity_gpt/r4b8
+            registry/physics/singularity_gpt/r4b8a
+            registry/physics/singularity_gpt/r4b9
+            registry/physics/singularity_gpt/r4b10
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install numpy==2.2.6 scipy==1.15.3
+      - run: python -m compileall -q registry/physics/singularity_gpt/r4b10
+      - uses: actions/download-artifact@v4
+        with:
+          name: r4b10-router
+          path: router
+      - run: cd router && sha256sum -c router.sha256
+      - uses: actions/download-artifact@v4
+        with:
+          name: r4b10-thresholds
+          path: thresholds
+      - run: cd thresholds && sha256sum -c thresholds.sha256
+      - run: python registry/physics/singularity_gpt/r4b10/examine.py evaluate ${{ matrix.kind }} router/router.json thresholds/thresholds.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: r4b10-evaluation-${{ matrix.kind }}
+          path: r4b10-output/
+          if-no-files-found: warn
+          retention-days: 30
+  forecast:
+    strategy:
+      fail-fast: false
+      matrix:
+        kind: [iid, long_memory, narrowband]
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            registry/physics/singularity_gpt/r4b2
+            registry/physics/singularity_gpt/r4b3
+            registry/physics/singularity_gpt/r4b5
+            registry/physics/singularity_gpt/r4b7
+            registry/physics/singularity_gpt/r4b8
+            registry/physics/singularity_gpt/r4b8a
+            registry/physics/singularity_gpt/r4b9
+            registry/physics/singularity_gpt/r4b10
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install numpy==2.2.6 scipy==1.15.3
+      - run: python -m compileall -q registry/physics/singularity_gpt/r4b10
+      - run: python registry/physics/singularity_gpt/r4b10/examine.py forecast ${{ matrix.kind }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: r4b10-forecast-${{ matrix.kind }}
+          path: r4b10-output/
+          if-no-files-found: warn
+          retention-days: 30
