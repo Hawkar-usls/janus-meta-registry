@@ -1,0 +1,46 @@
+name: JANUS R4B5A curvature recovery
+on:
+  pull_request:
+    types: [opened]
+    paths:
+      - 'registry/physics/singularity_gpt/r4b5a/**'
+      - '.github/workflows/janus-singularity-gpt-r4b5a.yml'
+permissions:
+  contents: read
+jobs:
+  audit:
+    if: github.repository == 'Hawkar-usls/janus-meta-registry' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'janus-singularity-gpt-r4b5a-curvature-recovery' && github.run_attempt == 1
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+          sparse-checkout: |
+            registry/physics/singularity_gpt/r3b
+            registry/physics/singularity_gpt/r4b3
+            registry/physics/singularity_gpt/r4b5-bracket
+            registry/physics/singularity_gpt/r4b5a
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install numpy==2.2.6 numba==0.61.2
+      - name: Verify frozen archive, protocol and unchanged solver
+        run: |
+          test "$(git hash-object registry/physics/singularity_gpt/r3b/solver_lib.py)" = "71ef15312166337a9ee41d71d75a29674d00e5d3"
+          test "$(git hash-object registry/physics/singularity_gpt/r4b3/boundary_solver.py)" = "2a3222c222412f327666e10db2219acde71cdeb3"
+          test "$(git hash-object registry/physics/singularity_gpt/r4b5-bracket/audit.py)" = "7178830daae07f71854f9e81f66fa3366586a6e8"
+          test "$(git hash-object registry/physics/singularity_gpt/r4b5-bracket/result_archive.json)" = "6f04904b321d85abf3555ac1894de93b830cb57a"
+          test "$(git hash-object registry/physics/singularity_gpt/r4b5a/protocol.json)" = "b1e832c98be3b5d192ce1d1ff87e931c22cec320"
+          test "$(git hash-object registry/physics/singularity_gpt/r4b5a/audit.py)" = "f84f5a9336794e7d9a19ca301d5da1927f5dac13"
+          python -m py_compile registry/physics/singularity_gpt/r4b5a/audit.py
+      - name: Boundary, replay, temporal and native/common curvature exam
+        run: python registry/physics/singularity_gpt/r4b5a/audit.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: r4b5a-curvature-recovery
+          path: r4b5a-output/
+          if-no-files-found: warn
+          retention-days: 30
