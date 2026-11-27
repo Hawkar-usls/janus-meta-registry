@@ -1,0 +1,139 @@
+{
+  "id": "JANUS-R4B1-CONVERGENCE-AUDIT",
+  "status": "PRECOMMITTED_BEFORE_EVOLUTION",
+  "parent": {
+    "run": 45995774080,
+    "head": "4dba726c8a6c3406f5bc54283f0150fd0bbf7216",
+    "archive_commit": "4624498e94e2c964334852b1804da3ef69e48d9a",
+    "solver_blob": "71ef15312166337a9ee41d71d75a29674d00e5d3",
+    "historical_status": "MASS_BUDGET_HOLD",
+    "historical_failure_grid": 1536
+  },
+  "critical": {
+    "A": 0.11484375,
+    "r0": 5,
+    "w": 1,
+    "R": 30,
+    "end": 16,
+    "inference_grids": [
+      3072,
+      6144,
+      12288
+    ],
+    "diagnostic_grids": [
+      1536
+    ],
+    "diagnostic_policy": "historical archive only; never use for threshold or inference"
+  },
+  "replay_reference": {
+    "3072": {
+      "status": "DISPERSAL_PROXY",
+      "peak": 0.5091512377544359,
+      "mass": 0.006657656174115002,
+      "scale": 1.402322984593779
+    },
+    "6144": {
+      "status": "DISPERSAL_PROXY",
+      "peak": 0.5045585169607167,
+      "mass": 0.0008908124421901459,
+      "scale": 4.478647676999694
+    }
+  },
+  "replay_relative_tolerance": 1e-8,
+  "control": {
+    "A": 0.05,
+    "r0": 5,
+    "w": 1,
+    "R": 30,
+    "n": 12288,
+    "end": 16
+  },
+  "classification": {
+    "near_trapping_peak": 0.85,
+    "dispersal_inner_fraction": 0.05,
+    "dispersal_final_C": 0.2,
+    "unchanged_proxy": true
+  },
+  "mass": {
+    "raw_drift_strict": 0.01,
+    "integrated_flux_residual_strict": 0.01,
+    "include_inference_and_control_and_held": true,
+    "exclude_historical_1536": true,
+    "identity": "For ds²=-alpha² dt²+a² dr²+r²dOmega², Phi=partial_r phi, Pi=(a/alpha)partial_t phi, m=r(1-a^-2)/2, m_t=4*pi*r²*alpha*Phi*Pi/a³; positive means inward mass increase. Check m(t,r)-m(0,r)-integral F_in dt, normalized by initial DOMAIN mass M0; independent time equation not radial geometry solve. Not independent numerical solver.",
+    "radii": [
+      3,
+      6,
+      12
+    ],
+    "boundary": "linear extrapolation Phi,Pi from two outermost centers to R; a(R)=(1-2M/R)^-1/2 and alpha(R)=1/a(R) match solver outer lapse; signed flux not set to zero by assumption",
+    "interior": "linear interpolation of m and field-derived flux at fixed areal radii; never use m differences to infer flux",
+    "quadrature": "trapezoid each accepted integration step; max over every recorded time and all fixed radii plus outer face; local instantaneous L2 optional diagnostic, normalized by flux energy; report signed accumulated flux and residual separately",
+    "controls": "analytic constant inward/outward flux and injected imbalance; physical noncritical control, interior sphere crossing tested; outer boundary near vacuum in actual cases, nontrivial outgoing-boundary test not claimed"
+  },
+  "convergence": {
+    "time": "central proper time trapezoid alpha[0] as R4B0; report alternative 2-cell even lapse extrapolation as diagnostic only",
+    "common_support": "0 to minimum final proper time across all three; no time shift, no fitted peak alignment; all comparisons use identical 32769 uniformly spaced points",
+    "norm": "L2 and Linfinity normalized by finer-grid norm for each pair; observed order uses unnormalized L2 differences on same support and sample grid; no Richardson extrapolation",
+    "observables": [
+      "signed central Pi/a 2-cell even estimate",
+      "central abs Ricci proxy 8*pi*v²"
+    ],
+    "pairs": [
+      [
+        3072,
+        6144
+      ],
+      [
+        6144,
+        12288
+      ]
+    ],
+    "max_relative_error": 0.1,
+    "require_decreasing_absolute_L2": true,
+    "local_cells_min": 8,
+    "local_rule": "all three inference grids must meet minimum over full trace; both 2-cell and 3-cell estimators required; report common resolved mask fraction and norms separately, never substitute masked result for full-window test",
+    "interpretation": "engineering criteria only; 3072/6144 already below 8; expected resolution HOLD even if finest resolves. No dropping grids after seeing results. Diagnostic observed order is not proven asymptotic order."
+  },
+  "adaptive": {
+    "A": 0.1609375,
+    "r0": 6,
+    "w": 1.4,
+    "R": 80,
+    "n": 4096,
+    "check_every": 0.5,
+    "first_check": 16,
+    "windows": 4,
+    "window_width": 0.5,
+    "require_negative_slope_and_endpoint_delta": true,
+    "inner_fraction_strict": 0.05,
+    "final_C_strict": 0.2,
+    "full_end": 64,
+    "rule": "four consecutive nonoverlapping windows ending at checkpoint; no previous near trapping; raw class dispersal; drift and flux residual <1%; actual early run and full identical checkpoint schedule, verify prefix and full class; no threshold change; compare step counts and drift, no generalization from one case"
+  },
+  "gates": [
+    "replay",
+    "numerical_integrity",
+    "noncritical_control",
+    "inference_mass_budget",
+    "stable_class",
+    "local_resolution",
+    "cross_grid_convergence",
+    "adaptive_validation"
+  ],
+  "forbidden": [
+    "DSS period search",
+    "DSS null tests",
+    "critical amplitude estimation",
+    "critical exponent extraction",
+    "production AMR",
+    "continuum claim"
+  ],
+  "scientific_hold": true,
+  "methodology_sources": [
+    "https://doi.org/10.1103/PhysRevLett.70.9",
+    "https://doi.org/10.1103/PhysRevD.53.1938",
+    "https://doi.org/10.1103/PhysRevD.66.041501",
+    "https://doi.org/10.1016/0021-9991(84)90073-1",
+    "https://pmc.ncbi.nlm.nih.gov/articles/PMC5256106/"
+  ]
+}
