@@ -1,0 +1,114 @@
+{
+  "id": "JANUS-R4B6-GEOMETRIC-ROBUSTNESS",
+  "parent_run": 46009994122,
+  "reference_head": "f718e0736d8c181be04010f58b66de976694257a",
+  "historical_floor": {
+    "actual_log_gap": -45,
+    "upper": -1,
+    "grid_points": 29,
+    "note": "Histogram is signed error, not estimated log gap."
+  },
+  "conditioning": {
+    "q": "exp(-Delta/2)",
+    "formula": "t_star=t2+(t2-t1)^2/(t1-t0-(t2-t1))",
+    "metric": "absolute Jacobian l1 and l2 for peak time perturbations; relative to local and final remaining gap; distinguish common shift from independent errors",
+    "periods": [
+      0.2,
+      0.5,
+      1.2,
+      2,
+      3.445453,
+      4.5,
+      5.6,
+      8
+    ],
+    "cycles": 6,
+    "prefix": 0.55
+  },
+  "floor_audit": {
+    "n": 30,
+    "seed_source": "R4B4 clean first 30",
+    "compare": [
+      "frozen FFT grid score",
+      "frequency-refined grid score",
+      "refined frequency at truth diagnostic",
+      "floor sensitivity -40/-45/-50"
+    ],
+    "no_detector_tuning": true
+  },
+  "sweep": {
+    "seed": 718391,
+    "n_per_class": 100,
+    "classes": [
+      "positive",
+      "stationary",
+      "near_dss_chirp"
+    ],
+    "noise_types": [
+      "iid",
+      "long_memory",
+      "narrowband"
+    ],
+    "noise_levels": [
+      0,
+      0.0001,
+      0.001,
+      0.01,
+      0.1
+    ],
+    "missing": [
+      0,
+      0.1,
+      0.3,
+      0.5
+    ],
+    "points_per_cycle": 128,
+    "cycles": 6,
+    "period_range": [
+      1.2,
+      5.6
+    ],
+    "envelope_exponent_range": [
+      0.6,
+      1.4
+    ],
+    "chirp_range": [
+      0.015,
+      0.15
+    ],
+    "sampling": "paired masks nested via uniform draw; endpoints retained; noise scaled to local envelope; same latent waveform across perturbations; uniform log-coordinate before deletion; no truth supplied to estimator",
+    "modes": [
+      "prefix",
+      "full"
+    ],
+    "estimator": "frozen R4B5 geometric and envelope peak regression; no smoothing or tuning; full-window joint fit diagnostic not held-out predictive decision",
+    "criteria": {
+      "relative_gap_error_max": 0.05,
+      "relative_period_error_max": 0.05,
+      "positive_recovery_min": 0.9,
+      "false_finite_max": 0.05,
+      "positive_ambiguity_max": 0.05,
+      "near_dss_FP_max": 0.05
+    },
+    "joint": "prefix geometric estimate, peak envelope fit on prefix, frozen R4B2 rival screen and R4B3 phase CI on complete signal; evaluate a preregistered subset: 0,0.001,0.01 noise; missing 0,0.3; use same input; record failure stage and ambiguity; no claims of physical validity"
+  },
+  "pit": {
+    "historical_seed": 912734,
+    "paired_noise_scale": true,
+    "unconditional_positive_n": 600,
+    "bins": 20,
+    "report": [
+      "PIT mean variance",
+      "QQ quantiles",
+      "standardized drift mean sd",
+      "paired drift and SE scaling",
+      "coverage",
+      "narrowband residual spectral concentration"
+    ],
+    "limits": "diagnostic of fixed zero drift under Gaussian approximation; no calibration or causal distinction from model misspecification alone"
+  },
+  "scientific_hold": true,
+  "production_changed": false,
+  "physical_use_authorized": false,
+  "amr_implemented": false
+}
