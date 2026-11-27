@@ -1,0 +1,154 @@
+{
+  "schema": "janus.h38n8a.representational_limits.precommit.v1",
+  "date": "2026-11-28",
+  "status": "DESIGN_FROZEN__CORPUS_NOT_GENERATED__PROBE_NOT_EXECUTED__TRAIN_HOLD",
+  "parent": "9dc701d2d7ecc83bd0c70f6a0041565048d53c7d",
+  "source": {
+    "executor_commit": "390d5e5d174af1228b4c52a74a318b325c0d3b8c",
+    "executor_blob": "903624863a60dd8799c167d4536c2824eda5c1a7",
+    "g2_blob": "5406ad473d8a061e95360480e25cd97a4d05f4d6",
+    "g2_weights_sha256": "73bc032564836efa62c102de050be995cfa394f84dcaf9970d665807daa56851",
+    "train_bank_blobs": [
+      "e56f5de218c063d70400ca760b825d2792331060",
+      "5ed6b91d026b59148e0f6634c367fbff34a75693",
+      "f266d84c0c72f557706749e88dc7e95decefa454"
+    ],
+    "attempted_text_set_match": true,
+    "coverage": {
+      "accepted_per_class": 4,
+      "historical_exam_per_class": 3,
+      "attempted_per_class": 6,
+      "classes": [
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16
+      ],
+      "accepted_total": 36,
+      "historical_exam_total": 27,
+      "attempted_total": 54,
+      "empty_cells": 0
+    },
+    "limits": "Actual bank content and text sets inspected; not independent cryptographic recomputation in this audit. Coverage is not linguistic diversity."
+  },
+  "domain": {
+    "name": "BINARY_EVENT_RELATIONS",
+    "axes": [
+      "TYPE",
+      "DIRECTION",
+      "POLARITY"
+    ],
+    "cells": [
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "hold_separate": true,
+    "paired_contrasts": {
+      "TYPE": [
+        [
+          8,
+          12
+        ],
+        [
+          9,
+          13
+        ],
+        [
+          10,
+          14
+        ],
+        [
+          11,
+          15
+        ]
+      ],
+      "DIRECTION": [
+        [
+          8,
+          9
+        ],
+        [
+          10,
+          11
+        ],
+        [
+          12,
+          13
+        ],
+        [
+          14,
+          15
+        ]
+      ],
+      "POLARITY": [
+        [
+          8,
+          10
+        ],
+        [
+          9,
+          11
+        ],
+        [
+          12,
+          14
+        ],
+        [
+          13,
+          15
+        ]
+      ]
+    },
+    "specification": "One semantic variable changes per paired contrast, other two held fixed; use grammatical minimal edits where possible, not force one-token edits at cost of valid meaning. Matched unsupported relations in separate HOLD stratum; no raw JSON or arbitrary causality claims."
+  },
+  "design": {
+    "probe_train": {
+      "semantic_families": 60,
+      "known_per_cell": 60,
+      "known_total": 480,
+      "hold": 120,
+      "total": 600
+    },
+    "probe_eval": {
+      "semantic_families": 30,
+      "known_per_cell": 30,
+      "known_total": 240,
+      "hold": 60,
+      "total": 300
+    },
+    "split": "Disjoint authored lexical/syntactic template families across train and eval; each known family realizes full 2x2x2. HOLD matched by family/context without spurious length or punctuation cues, balanced binary known/HOLD scoring by balanced accuracy, not raw majority accuracy. Group all counterfactuals and near duplicates together. Same-author synthetic exploratory study, not independent final exam.",
+    "seed": 381801,
+    "provenance": "Versioned generator and explicit template manifests, per-row family ID, template ID, label, original synthetic authorship and rights declaration; exact normalized text SHA256 and canonical corpus SHA256 before execution. Compare against union of 54 attempted training texts and 27 historical exams (36 retained subset). Also compare forbidden hash list from approved banks. Token edit similarity >=0.85 or token-bigram Jaccard >=0.8 flags for blinded semantic/template audit; no claim of exhaustive semantic dedup. Cross-split exact text or shared family forbidden. Do not remove exact feature collisions with differing labels; log them as observations. If invalid/ambiguous templates or contamination discovered, HOLD before fitting, no selective deletions after scores. Actual generator, family list and corpus hashes not yet available; freeze in second immutable manifest before any evaluation.",
+    "feature": "Exact existing H38N7 feature function; x_i=1/sqrt(number of active bins) on active bins, zero elsewhere, same linear score space. Also report binary-set collision metrics before normalization.",
+    "probe": {
+      "primary": "fresh 9-way multinomial logistic regression, no intercept beyond encoded bias feature, L2 penalty C=1, lbfgs max_iter=2000 tol=1e-8 float64, seed 381801, sklearn version frozen in execution manifest. Fit on probe TRAIN only, no eval tuning. Evaluate argmax full-class and derived axes; HOLD separate.",
+      "secondary": "three conditioned binary probes for each axis (four fixed-context contrasts per axis; fit/evaluate only corresponding pair cells) and one known-vs-HOLD probe; identical solver and regularization; balanced accuracy and both-sided confusion. No intercept; fixed class weights balanced for HOLD only. Secondary diagnostic capacity not equivalent to deployed 9-way model.",
+      "controls": "TRAIN-only majority/tie baseline, deterministic label-shuffle control with fixed seed, un-hashed symbolic lexical baseline with same split to detect template confounds (not production candidate), train and eval accuracy; report convergence warnings. Fixed learning curve train family counts 15,30,60, same eval diagnostic, no model/threshold selection by eval. No diagnostic model weights imported into JANUS or Cortex."
+    }
+  },
+  "metrics": {
+    "collisions": "Within each fixed-other-axes contrast, fraction of eval rows with identical binary feature set to at least one opposing-label eval row, and matched-pair collision rate separately. Report cross train-eval feature collisions without filtering, counts denominators and group conflict examples. Also report cross-class groups all known classes, per-group majority-count oracle upper bound on finite sample; exact collisions imply local impossibility for any deterministic feature-based decoder. Jaccard, Hamming and >=0.8 Jaccard diagnostic fractions, never treat high overlap as equality.",
+    "thresholds": "Prospective engineering bands: exact conflicting-row rate <1% local, 1–5% inclusive borderline, >5% systemic collision burden within tested distribution, NOT automatic impossibility of whole axis. Probe point balanced accuracy >=0.8 and cluster bootstrap one-sided 95% lower bound >0.5 per conditioned context, no convergence failure, and conflict rate <1% needed for conservative axis admission. 2000 family bootstrap resamples fixed seed 381802; account for related pairs; no universal guarantee. Chance-like performance with low or high collision rate cannot alone establish loss of axis; report PROBE_INCONCLUSIVE or COLLISION_LIMITED for measured cases. A strong probe with >5% conflicts does not erase those conflicts; axis HOLD pending explicit narrower scope. All three axes must pass (90% of 3 implies 3/3), HOLD separate gate not folded into denominator.",
+    "G2": "Report raw argmax confusion 9x9, predicted semantic-axis confusion conditional on known gold, both unconditional coverage-aware (abstain counts wrong) and answered-only; report full-class exact correctness; HOLD path argmax16 vs argmax known and maxp<.65, mutually exclusive, both by known/unknown gold. Original p>=.65 threshold, no score() edits or recalibration. G2 vs probe evaluated identical rows, no claim of data vs optimization attribution from one contrast.",
+    "decisions": "Any proven collisions quantify finite-sample irreducible error only. Probe success + weak G2 demonstrates recoverable signal in tested distribution, DATA_OR_LEARNING_LIMITED unresolved unless separate fixed learning curve/controlled experiments. If axis not admitted, preserve complete original denominator and results; narrower domain needs new explicit mapping/label aggregation and fresh evaluation, no silent dropping axes or changing architecture."
+  },
+  "authorization": {
+    "diagnostic_fit_only": true,
+    "janus_train": false,
+    "production": false,
+    "beacon_closed_loop_blocked": true,
+    "budget": "proposed one isolated GitHub CPU diagnostic job <=10 minutes, no retry or deployment without review; probe fits are ephemeral research controls, not H38N7 training budget. No actual job launched in this record.",
+    "next": "Freeze concrete generator and provenance manifest, then isolated diagnostic execution; H38N8B 500-task baseline is distinct later dataset, no reuse as sealed final exam."
+  }
+}
