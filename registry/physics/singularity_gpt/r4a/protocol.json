@@ -1,0 +1,39 @@
+{
+  "id": "JANUS-R4A-RESOLUTION-DIAGNOSTICS",
+  "parent_run": 45990302098,
+  "source_solver_commit": "d41e06f2ddbc86b6492bd619765ac4a4facc52bf",
+  "fixed_amplitudes": [
+    0.1125,
+    0.1140625,
+    0.114453125,
+    0.1146484375,
+    0.11474609375,
+    0.11484375
+  ],
+  "resolution": [
+    1536,
+    3072
+  ],
+  "domain": 30,
+  "t_end": 16,
+  "extended": {
+    "family": "held_shell",
+    "amplitude": 0.1609375,
+    "r0": 6,
+    "width": 1.4,
+    "domain": 80,
+    "n": 4096,
+    "checkpoints": [
+      16,
+      32,
+      64
+    ]
+  },
+  "extended_controls": "same h=30/1536=80/4096, compare original domain at t16; inner mass fraction, compactness slope over last 0.5 coordinate time, mass drift, boundary shell mass fraction; no binary inference from slope alone",
+  "curvature": "central signed Pi/a via 2-cell even extrapolation and 3-cell quadratic-in-r^2 extrapolation; report raw curvature length/h, estimator disagreement, resolved threshold >=8, common proper-time matched histories, no claim of invariant full curvature radius",
+  "classification": "same R3B proxy criteria; do not force unresolved into binary class",
+  "gates": "amplitude trend alone cannot distinguish physical scaling from noise; require convergence at matched amplitudes and proper times, local resolution and robustness to estimator",
+  "amr": "design and validate conservative transfers, constraint reintegration, CFL and coarse/fine comparisons after diagnosis; no AMR implemented here",
+  "echo": "no target period; null tests and log offset scan after threshold and resolution validation",
+  "scientific_hold": true
+}
