@@ -1,0 +1,72 @@
+{
+  "id": "JANUS-SINGULARITY-GPT-R2",
+  "source_commit": "f002d0af1680abb967e694a121cb2a8de2984b5d",
+  "source_repository": "EckerChristian/CriticalSpacetimeCrystal",
+  "files": [
+    {
+      "path": "complete_data/boundaryData.json",
+      "bytes": 21170743,
+      "git_blob_sha1": "5d22755285b90730faa693ce24554c3074bc0f61"
+    },
+    {
+      "path": "complete_data/critcoll_data.json",
+      "bytes": 37114416,
+      "git_blob_sha1": "c8a8de44205b9703f6a99dc0652a40e360939ce6"
+    },
+    {
+      "path": "complete_data/critcoll_data_plot.json",
+      "bytes": 37123352,
+      "git_blob_sha1": "10f5b9c17e71eed00179af5d606bd6000653352a"
+    },
+    {
+      "path": "complete_data/3D_plot_data/fields_3.046000_0.json",
+      "bytes": 7645124,
+      "git_blob_sha1": "0bff03bec07af66d82678968e451af7268791a27"
+    },
+    {
+      "path": "complete_data/3D_plot_data/fields_4.000000_0.json",
+      "bytes": 4079412,
+      "git_blob_sha1": "4d75d48c8b8609eee5458fac512af6a134878a5c"
+    },
+    {
+      "path": "complete_data/3D_plot_data/fields_5.500000_0.json",
+      "bytes": 4091716,
+      "git_blob_sha1": "6abef91d07f2d6504fa21a1009d98eeed012163a"
+    }
+  ],
+  "source_paper": "https://arxiv.org/abs/2602.10185",
+  "schema_reference": "https://github.com/tobjec/parallel-critical-collapse/blob/main/scripts/plot_simulation_results.py",
+  "r1_run": 45981370677,
+  "r1_artifact": 15189976344,
+  "protocol": {
+    "boundary_train": "all eligible initial-condition arrays except 3.9<=D<=4.1; interpolate on normalized phase without duplicating plot file",
+    "boundary_test": "3.9<=D<=4.1",
+    "field_train": [
+      3.046,
+      5.5
+    ],
+    "field_test": [
+      4
+    ],
+    "seeds": [
+      1729,
+      2718,
+      3141
+    ],
+    "baseline": "linear interpolation in D for radial fields; nearest dimension interpolation for boundary",
+    "geometry": "g=e^(-2tau) a^2 [[x^2-f^2,-x],[-x,1]], radius=e^(-tau)x, null slopes x±f, Ricci from psi_- = U*(D-2)^1.5/2 and psi_+ = V*(D-2)^1.5/2, Misner-Sharp compactness=1-a^-2; proper time fixed x only where |x|<f",
+    "negative_controls": [
+      "null vector with perturbed slope",
+      "wrong DSS sign",
+      "do not treat self-similarity horizon as event horizon"
+    ],
+    "limitations": [
+      "same upstream solver family, not independent observational evidence",
+      "no full supercritical evolution, no event horizon reconstruction",
+      "no full Riemann or Kretschmann evaluation at R2",
+      "raw data retrieved at runtime rather than republished in git",
+      "plot configuration derivative excluded from training duplication",
+      "fresh weights, previous R1 retained"
+    ]
+  }
+}
