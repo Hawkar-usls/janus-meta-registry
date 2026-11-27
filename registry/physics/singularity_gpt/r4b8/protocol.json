@@ -1,0 +1,110 @@
+{
+  "id": "JANUS-R4B8-ADAPTIVE-MULTISTART",
+  "parent_run": 46020551141,
+  "prior_bounds": [
+    -45,
+    -1
+  ],
+  "metric": {
+    "gap_relative_error_max": 0.05,
+    "period_relative_error_max": 0.05,
+    "positive_min": 0.9,
+    "ambiguous_max": 0.05,
+    "negative_dss_max": 0.05,
+    "all_denominators_include_unavailable": true
+  },
+  "bank": {
+    "seed": 815207,
+    "n_per_class": 100,
+    "classes": [
+      "positive",
+      "stationary",
+      "near_dss_chirp"
+    ],
+    "noise_levels": [
+      0,
+      0.00001,
+      0.0001,
+      0.001,
+      0.01
+    ],
+    "missing": [
+      0,
+      0.3
+    ],
+    "noise_types": [
+      "iid",
+      "long_memory",
+      "narrowband"
+    ],
+    "clean_deduplicate": true
+  },
+  "init_audit": {
+    "same_random_start_across_noise": true,
+    "seed": 851933,
+    "prior_center_diagnostic_only": true,
+    "compare": "paired success transitions and fitted gap distributions by latent case; unavailable vs incorrect conditional on available; prefit residual versus actual postfit correctness",
+    "prefit_gate": {
+      "normalized_rmse_max": 0.35,
+      "defined_before_run": true,
+      "interpretation": "candidate eligibility heuristic, not proof of basin; report accepted/rejected correctness separately"
+    }
+  },
+  "multistart": {
+    "strategies": [
+      "random_fixed_4",
+      "adaptive_4"
+    ],
+    "starts": 4,
+    "nfev_cap_per_start": 80,
+    "adaptive": "replace first fixed random start with geometric only when finite and prefit residual <= .35; same other three starts",
+    "selection": "minimum identical objective; no truth-dependent selection",
+    "windows": [
+      "full"
+    ],
+    "classification": "apply frozen rival screen and phase CI to selected reconstructed time/envelope; require parameter period consistency within 5%; keep AMBIGUOUS separate; uncalibrated phase intervals block admission regardless of counts"
+  },
+  "forecast": {
+    "fractions": [
+      0.55,
+      0.7,
+      0.8,
+      0.9,
+      0.95,
+      1
+    ],
+    "subset_noise": [
+      0.0001,
+      0.001,
+      0.01
+    ],
+    "missing": [
+      0,
+      0.3
+    ],
+    "estimator": "single geometric start, frozen joint fit",
+    "metric": "local gap and final gap relative errors separately; no actual early termination",
+    "scope": "synthetic, no mass drift proxy for peak timing error"
+  },
+  "profile": {
+    "n_per_stratum": 20,
+    "noise_levels": [
+      0.00001,
+      0.001,
+      0.01
+    ],
+    "missing": [
+      0
+    ],
+    "window_fractions": [
+      0.55,
+      1
+    ],
+    "method": "profile log gap around selected joint solution using fixed offsets [-1,-.3,-.1,-.05,0,.05,.1,.3,1], refit frequency and envelope at each fixed gap, 40 nfev cap; compare objective relative changes and parameter tradeoff; not a confidence interval",
+    "note": "profile sensitivity conditional on assumed DSS and local solution; cannot establish global identifiability or calibrated uncertainty"
+  },
+  "scientific_hold": true,
+  "physical_use_authorized": false,
+  "production_changed": false,
+  "amr_implemented": false
+}
