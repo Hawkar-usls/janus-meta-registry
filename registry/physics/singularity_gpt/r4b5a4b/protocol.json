@@ -1,0 +1,75 @@
+{
+  "id": "JANUS-R4B5A.4b-COLD-JIT-VERIFICATION",
+  "status": "FROZEN_BEFORE_EXECUTION",
+  "parent": {
+    "archive_commit": "40835faf7afbfcce35f973088aba587347725e0c",
+    "archive_blob": "415ae793a415ee2c1fb652907080a27bdffc7de0",
+    "paired_audit_blob": "dd7ec4bcbf69f54da4081cdd803256fc93be49ba",
+    "localization_audit_blob": "4adee56538805027f6678f6be38afa1874970c2d",
+    "source_audit_blob": "a7a28d2630c128ecbc6beeffe25dc88262833ae6",
+    "historical": {
+      "artifact": 15221965959,
+      "zip_sha256": "257e16cdbdde7a847d573b77e4e1d1d594ee2199c600603325bca1cc43151f96",
+      "array_sha256": "d28c18c669ac32524e7605a9bca994bd85469162e395a1222cb9791566fb84b2"
+    },
+    "failed": {
+      "artifact": 15223003250,
+      "zip_sha256": "986a3036b75303e125575d20f8fe2152c6527f94e171d21284b4e40912bf9062",
+      "array_sha256": "5eb3de24ab9cdf096cbf082e380a012afd3a3c103ac6a803c26cf3404164ab4a"
+    },
+    "paired": {
+      "artifact": 15224352340,
+      "zip_sha256": "70cd54df6d2ce598a1206428b8ba8ff47bd1e50c1be3286b0ead6c1add35144d"
+    }
+  },
+  "scope": "Only n12288 A=.1152 CFL=.3 stop=.90. No scientific localization or medium/fine.",
+  "environment": {
+    "mode": "same hosted VM, fresh Python subprocesses with private empty JIT cache; no OCI claim",
+    "python": "3.11.18",
+    "numpy": "2.2.6",
+    "numba": "0.61.2",
+    "llvmlite": "0.44.0",
+    "threads": 1,
+    "manifest": "reuse parent stable fingerprint, additionally canonical SHA256 sorted JSON; exclude only process-specific pointer noise and private cache path after independently verifying cache isolation; compare stable manifest hashes across cold trials",
+    "cache": "distinct empty directories for each child set before importing numba, require no files before trial, capture compiled cache inventory afterward, require nonempty .nbc and .nbi files, no source cache deletion, no shared cache reuse"
+  },
+  "source_diff": "verify original run body with capture line removed byte-identical, extract exact Capture implementation from R4B5A.4 in both harnesses; report source hashes of collect, reference and full run; compare harness differences; no inferred causality from source identity.",
+  "historical_environment_diff": "read original environment.txt and paired baseline/instrumented JSON from verified ZIPs; parse CPU, kernel, BLAS runtime and threads, package versions, CPU flags, cache config. Missing historical fields explicit UNKNOWN, no equality inferred; retain raw reports. No causal attribution solely from correlation.",
+  "mismatch": "all 19 columns strict; per differing column count, first and maximum absolute-error pair and values, relative error with max(abs(a),abs(b)) denominator, ULP distance (ordered float64 bit patterns), zero and subnormal classifications based on actual values, max relative and max ULP. Never exclude near-zero flux; 1e-56 not inherently subnormal, float64 tiny ~2.225e-308. Diagnostic rounding hypothesis only.",
+  "synthetic": {
+    "profiles": [
+      "weak cubic",
+      "strong cubic",
+      "regular interior maximum"
+    ],
+    "new_profile": "m=M*r^3/(r^2+1)^(3/2), C=2*M*r^2/(r^2+1)^(3/2), M=.9*3*sqrt(3)/4, R=4; q=0, p=sqrt(3*M/(2*pi*(r^2+1)^(5/2)*(1-C))). Peak C=.9 at r=sqrt(2). Manufactured radial constraint not evolution solution.",
+    "grids": [
+      256,
+      512,
+      1024
+    ],
+    "gate": "finite geometry and C<.999; finest native C Linf<=.0005, exact-error orders each 1.5–2.5; native/subcell max and location diagnostic. Prior cubic checks retained in sealed archive, rerun both."
+  },
+  "sequence": [
+    "verify all 3 ZIP digests",
+    "source and environment diff and mismatch ULP analysis",
+    "three synthetic profiles",
+    "cold baseline A",
+    "cold baseline B, exact trace and CASE except elapsed, exact environment digest",
+    "cold instrumented C, exact vs A/B and historical; all 19 columns, no tolerance fallback"
+  ],
+  "decision": "PASS only if synthetic, cold cache isolation, fingerprints, all exact replay gates pass. If A/B mismatch, no C. If C or historical mismatch, technical HOLD and no scientific promotion. PASS supports cold replay on this VM, not root cause or universal determinism. Archive before separate full localization precommit; unknown original cause must be reported, no requirement to invent it.",
+  "reporting": "NEAR GATE NOT_EVALUATED; NOT_REACHED explicit. Keep historical holds unchanged.",
+  "forbidden": [
+    "24576",
+    "49152",
+    "98304",
+    "DSS",
+    "AMR",
+    "bracket narrowing",
+    "main promotion",
+    "column exclusion",
+    "new reference adoption"
+  ],
+  "scientific_hold": true
+}

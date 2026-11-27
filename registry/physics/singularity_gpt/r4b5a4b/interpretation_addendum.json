@@ -1,0 +1,60 @@
+{
+  "id": "JANUS-R4B5A.4b-PROSPECTIVE-THREAD-AND-ULP-CONTROL",
+  "status": "POST_EXECUTION_BEFORE_READING_NUMERICAL_LOGS__NOT_ORIGINAL_PRECOMMIT",
+  "run": 46052336458,
+  "original_gate": "unchanged all 19 historical columns exactly identical; never exclude a column from historical byte gate",
+  "future_thread_control": {
+    "mode": "same VM, independent cold caches and subprocesses, original R4B5A.4 capture source, n12288 only",
+    "factorial": [
+      {
+        "NUMBA_NUM_THREADS": 1,
+        "BLAS_threads": 1
+      },
+      {
+        "NUMBA_NUM_THREADS": 2,
+        "BLAS_threads": 1
+      },
+      {
+        "NUMBA_NUM_THREADS": 1,
+        "BLAS_threads": 2
+      },
+      {
+        "NUMBA_NUM_THREADS": 2,
+        "BLAS_threads": 2
+      }
+    ],
+    "replicates": 2,
+    "BLAS_threads": "set OMP/MKL/OPENBLAS/BLIS consistently; record actual BLAS threadpool and Numba parallel configuration; no assumption that serial @njit routines launch parallel reductions",
+    "causal_rule": "exact baseline matches historical in both repetitions and changed factor reproduces historical failed array exactly in both repetitions: evidence of reproducible factor effect in this VM; partial same columns or same ULP magnitudes alone not proof historical cause. No effect only excludes tested configurations. Check CPU/NumPy dispatch and harness differences separately if needed."
+  },
+  "near_zero": {
+    "threshold": 1e-30,
+    "rule": "both magnitudes strictly below threshold at every mismatch point -> label NEAR_ZERO for those points; otherwise mixed/non-near-zero. No hard-gate exemption in this or future historical exact tests; an alternative numerical equivalence test would require separate protocol. Small normal values not denormal."
+  },
+  "ulp": {
+    "diagnostic_max_ulp": 8,
+    "diagnostic_max_relative": 2e-15,
+    "applies": "where max(abs(a),abs(b))>=1e-30, report all exceedances. Thresholds prospective diagnostic only; no relaxation of exact historical gate."
+  },
+  "synthetic": "Existing gate is full native sampled C Linf versus analytic profile and exact-error orders, not merely nodal peak. Smooth interior peak permits O(h^2) sampling error in maximum value, but peak-location accuracy and subcell reconstruction are separate. Future report compare both native and concave three-point vertex against analytic r=sqrt(2), C=.9. Native sample below .9 is expected sampling, not a time-event NOT_REACHED; use NOT_REACHED only for unsupported time slices. Do not require sampled C to exceed analytic max.",
+  "environment_manifest": [
+    "CPython version/build flags",
+    "NumPy/Numba/llvmlite versions",
+    "BLAS vendor/version/runtime and loaded library hashes",
+    "CPU model/flags",
+    "kernel and image version",
+    "OMP/MKL/OPENBLAS/NUMBA/BLIS env",
+    "Numba CPU target/features/optimization/JIT config",
+    "compiler flags"
+  ],
+  "normalization": "exclude documented address noise and unique cache path only, separately verify isolated cache receipts; no timestamp comparison",
+  "decision": {
+    "A_ne_B": "TECHNICAL_OR_INTEGRITY_HOLD__COLD_BASELINE; do not run C",
+    "A_eq_B_ne_C": "TECHNICAL_OR_INTEGRITY_HOLD__COLD_CAPTURE; column diagnosis only",
+    "ABC_eq_historical": "cold replay PASS scoped to VM; archive before separate experiment",
+    "ABC_ne_historical": "HISTORICAL_REPLAY_HOLD; no automatic new reference",
+    "synthetic_fail": "SYNTHETIC_INTERIOR_MAX_HOLD; inspect analytic discretization and sampling, no 98304",
+    "ulp_exceedance": "diagnostic investigation; no change to exact gate"
+  },
+  "limitations": "Single-thread PASS not multi-thread production admission. Existing production unchanged. No DSS, AMR, 98304; all scientific holds remain."
+}
