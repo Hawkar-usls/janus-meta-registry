@@ -1,0 +1,108 @@
+{
+  "id": "JANUS-R4B5-CRITICAL-BRACKET",
+  "status": "PRECOMMITTED_BEFORE_EVOLUTION",
+  "parent": {
+    "run": 46006121201,
+    "archive_commit": "b8600c276e8d77d4def1a52dd644b2e312b45867",
+    "forecast_blob": "44c9dc760dd3eb44f2c394cf60b108588630ee7a",
+    "solver_blob": "71ef15312166337a9ee41d71d75a29674d00e5d3",
+    "boundary_solver_blob": "2a3222c222412f327666e10db2219acde71cdeb3",
+    "r4b4_audit_blob": "5e1ae378d569f52278f3cef9358911fbb772a7d1"
+  },
+  "family_definitions": {
+    "original": "R3B Gaussian ingoing regular spherical wave, r0=5,w=1",
+    "wide": "R3B single Gaussian, r0=6,w=1.4, historically explored in R3B/R4B1; new amplitudes, not blind family",
+    "novel": "time-symmetric regular scalar Gaussian shell at r0=5,w=1, Phi from original scalar profile and Pi=0; distinct momentum initial data, no external blindness"
+  },
+  "scan": {
+    "R": 30,
+    "end": 16,
+    "CFL": 0.3,
+    "diagnostic_n": 12288,
+    "confirm_n": 24576,
+    "original": [
+      0.05,
+      0.1145,
+      0.1152,
+      0.12,
+      0.15
+    ],
+    "wide": [
+      0.15,
+      0.17,
+      0.19,
+      0.22
+    ],
+    "novel": [
+      0.08,
+      0.14,
+      0.22,
+      0.32
+    ],
+    "policy": "fixed scan no search tuning; NEAR_TRAPPING_PROXY threshold .85, not apparent horizon. Endpoint accepted only with both grids same proxy class, full finite history to class event or end, mass and local resolution gates; no assumption any amplitude supercritical. If unresolved/underresolved, no interpolation or bisection; report bracket width only for adjacent confirmed opposing classes, nonmonotonic scan flags. For near-trapping, use full common proper time, report stop time difference and peak overshoot; do not claim full beyond-stop comparison. Independent families not external blind."
+  },
+  "convergence": {
+    "A": 0.05,
+    "family": "original",
+    "n": [
+      12288,
+      24576,
+      49152
+    ],
+    "CFL": 0.3,
+    "repeat_medium_CFL": 0.15,
+    "common_samples": 32769,
+    "peak_C_absolute_pair_max": 0.0005,
+    "peak_C_relative_pair_max": 0.01,
+    "peak_R_relative_pair_max": 0.02,
+    "derivative_and_curvature_relative_L2_Linf_max": 0.1,
+    "minimum_cells": 8,
+    "mass_strict": 0.01,
+    "require_decreasing_abs_differences": true,
+    "scalar_monotone": true,
+    "order_range": [
+      1.5,
+      2.5
+    ],
+    "temporal_relative_strict": 0.01,
+    "temporal_fraction_of_spatial_max": 0.25,
+    "policy": "independent amplitude not new family; report nine orders separately, no averaging or explanation of p>2 without evidence; peak compactness and Ricci have distinct tolerances; no new forecast claim"
+  },
+  "boundary": {
+    "weak_reference_from_R4B4": true,
+    "per_new_amplitude": "integrate actual numerical face flux and independently reconstructed interior field flux at r=12; max normalized residual <1% of initial domain mass at both locations; report net outer flux and whether nontrivial (>=25%); if near-vacuum this is not independent outgoing validation",
+    "nontrivial_controls": {
+      "family": "original",
+      "A": [
+        0.05,
+        0.1
+      ],
+      "small_R": 12.5,
+      "small_n": 4096,
+      "reference_R": 25,
+      "reference_n": 8192,
+      "end": 22,
+      "probe_radius": 10,
+      "minimum_outgoing": 0.25,
+      "maximum_residual": 0.01,
+      "maximum_flux_difference": 0.05,
+      "maximum_field_and_incoming_proxy_relative_l2": 0.05
+    },
+    "policy": "additional subcritical outgoing controls before scan; no universal boundary certification, actual near-critical outbound propagation can require further test"
+  },
+  "budget": {
+    "job_timeout_minutes": 60,
+    "execution_budget_seconds": 3000,
+    "admit_case": "elapsed + projected cost <=3000; projection 4 times prior same-grid cost per doubling or 160 s at 24576, 650 s at 49152, scaled by end/16 and CFL; if budget holds, retain partial results, no changed criteria",
+    "priority": "boundary, independent triplet and temporal gate, then fixed scan and conditional confirmation of adjacent opposite candidates; no uncontrolled bisection"
+  },
+  "scientific_hold": true,
+  "forbidden": [
+    "DSS null or period tests including .05",
+    "critical exponent fit",
+    "physical supercritical or horizon claim",
+    "AMR",
+    "production merge"
+  ],
+  "claim_ceiling": "Finite proxy bracket only, not established a*, no DSS. Independent amplitude convergence does not prove universality."
+}
