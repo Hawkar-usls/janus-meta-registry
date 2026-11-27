@@ -1,0 +1,41 @@
+{
+  "schema": "janus.h38n8a.representational_limits.addendum.v3",
+  "date": "2026-11-28",
+  "parent": {
+    "commit": "ba8c44ea64b299830986d545b16c637866912e07",
+    "blob": "285b66e640c9f7a1286fbaf0b5b3dde002cc7073"
+  },
+  "status": "PROSPECTIVE_DESIGN__CORPUS_NOT_GENERATED__PROBE_NOT_EXECUTED__JANUS_TRAIN_HOLD",
+  "scope": "Prospective clarification only; v1/v2 source pins, sample counts, C, grouped CV, diagnostic budget, collision gates and training/production holds remain unchanged.",
+  "g2_metrics": {
+    "evaluation": "All primary G2 and probe comparisons use exactly the same frozen PROBE EVAL row IDs and conditioned contexts: 240 known plus 60 HOLD; no weights fitted on EVAL. G2 may be scored on PROBE TRAIN as descriptive diagnostic only, not assumed to have seen it in historical training. Historical EXAM 27 exposed rows secondary only.",
+    "end_to_end": "For known gold labels, actual predict() (p>=.65 and argmax!=16) mapped to TYPE, DIRECTION, POLARITY using v2 map; None counts incorrect; per-value recall averaged as balanced accuracy. Report 2x3 confusion, coverage by gold axis value and conditional answered accuracy.",
+    "raw_argmax": "Argmax of all nine logits, before confidence cutoff. For semantic metrics class16 counts incorrect; no removal of rows.",
+    "underlying": "Forced argmax restricted to labels8..15 on original logits, first index wins ties; no retraining, no re-normalization needed for ordering. Map to axes, balanced accuracy on same known rows. This is counterfactual closed-set discrimination, not deployable accuracy or evidence of correct novelty rejection.",
+    "decompose": "For each known row retain forced_known_prediction, full_argmax, max softmax, actual prediction, gold; cross-tab correct/incorrect for all three stages. Separate lost correct axis decisions when full argmax16 wins (HOLD_CLASS_SUPPRESSION) vs full argmax known correct axis but maxp<.65 (CONFIDENCE_CUTOFF_SUPPRESSION). Record also erroneous answers suppressed, not only recovered correct. No threshold retuning or label16 changes. High>=.80, low<.80 for all point comparisons; report numerical values, not just bins.",
+    "diagnosis": "If forced-known high but end-to-end low, ABSTENTION_LIMITED on measured known cohort; use THRESHOLD_LIMITED only when confidence-cutoff suppression alone crosses the .80 boundary (raw full-argmax BA>=.80, actual BA<.80). If raw full-argmax low and forced-known high, HOLD_CLASS_LIMITED contribution; if both mechanisms present report mixed. Threshold adjustment not authorized; separately evaluate unknown false acceptance and calibration before proposing changes. Underlying low + probe high => DATA_OR_LEARNING_LIMITED_NOT_DISAMBIGUATED; both low => PROBE_INCONCLUSIVE unless exact ceiling proof. Underlying high + probe high => LINEAR_SIGNAL_AVAILABLE, G2 closed-set discrimination; use end-to-end and HOLD outcomes to assess operational utilization. Underlying high + probe low => PROBE_G2_DISAGREEMENT; audit row identities, feature parity, class map, objective/conditioning, solver convergence, training-vs-eval gap, historical exposure, and synthetic-domain shift. No automatic diagnosis of G2 overfit. If unresolved, separate precommit for nonlinear probe or alternate linear solver on fresh evaluation; no NAS."
+  },
+  "family": {
+    "unit": "One authored construction cluster is one matched counterfactual block: exactly eight grammatical sentences, one for each TYPE x DIRECTION x POLARITY combination, plus two unsupported relation sentences. Fixed within block: event markers evone/evtwo, shared grammatical frame/context wherever semantically valid, tense/aspect/register and nonsemantic modifiers. Vary target relation lexeme/construction, assignment of event roles, and polarity with necessary grammar changes; unsupported texts preserve comparable context/length without implying known relation. No family ID or class tokens injected.",
+    "construction_identity": "Before generating/scoring, assign each template a canonical structural signature consisting of clause structure, predicate argument mapping, active/passive or nominalization frame, polarity realization/scope, and semantic construction/paraphrase group. Mask event markers and interchangeable lexical slots; synonym substitutions, adverbs, punctuation, role swaps, negation variants, inflection or repeated surface renderings alone do not create independent families. Same or equivalent construction signatures grouped in same cluster. One cluster contributes exactly one block, not multiple pseudo-independent blocks.",
+    "independence": "90 distinct reviewed construction clusters required, 60 TRAIN/30 EVAL, no shared cluster. Broad grammatical strata and quotas, exact roster/signatures and seeded split frozen before realization. Compare masked structural signatures (exact match=>merge), token Levenshtein similarity>=.85 or token bigram Jaccard>=.8 on normalized and masked texts flags cross-family review; thresholds are screening not proof of semantic independence. Independent reviewer assesses paraphrase/construction equivalence and label fidelity without seeing model scores; record disagreements and disposition. Audit all cross-split flagged pairs and signature matches; no relabeling to manufacture independent clusters. If fewer than90 credible clusters after review or review unavailable, FAMILY_DIVERSITY_HOLD; no padding with synonyms or silent quota reduction. No assumption that 90 independent constructions are feasible until roster reviewed.",
+    "manifest": "Record all 90 signatures, grammar strata, cluster IDs, split, 10 exact rows per cluster, reviewer evidence, lexical cue overlap and template provenance, per-row and corpus SHA256. Retain prior historical dedup and forbidden hash checks; no outcome-driven deletion. Generated synthetic templates not independent natural-language population; final blind exam separate."
+  },
+  "hold_bound": {
+    "definition": "For EVAL only: N_known=240,N_hold=60 (4:1, not5:1; TRAIN480:120). Group by exact feature equality; U_HOLD=sum_g max(n_g_known/(2*N_known),n_g_hold/(2*N_hold)). This is maximum balanced accuracy on finite corpus for any deterministic binary feature decoder, even with imbalanced class counts. Constant prediction ceiling baseline .5. No subsampling or discarding rows. Separate raw nine-way accuracy ceiling and semantic-axis ceilings; do not average U_HOLD into them.",
+    "gate": "U_HOLD<.80 => COLLISION_LIMITED_HOLD_STRATUM_ON_CORPUS; cannot admit HOLD gate; if >=.80 necessary not sufficient. Existing balanced binary probe and strict v2 gap, conflict, convergence and adjusted lower bound gates unchanged. G2 HOLD accuracy/path metrics separate."
+  },
+  "multiple_comparisons": {
+    "count": 13,
+    "explanation": "12=3 axes x 4 fixed-other-axis contexts, not learning curve. Every context individually must meet admission criterion; plus 1 HOLD. Keep existing .05/13 one-sided bootstrap lower quantile for all 13 engineering gates; no reduction to4 unless separate precommit redefines axis-level inference, e.g. intersection-union procedure with appropriate valid component tests. Descriptive learning curve points 15/30/45/60 and pooled axis summaries not in adjustment, no inferential claims. Bootstrap approximate and 30 families limited; no guaranteed exact FWER.",
+    "cv": "At 15 families, each validation fold has 3 families; mark LOW_PRECISION_CV, report fold-level values and SD, not independent replicates or evidence of optimal C. No selection by EVAL."
+  },
+  "authorization": {
+    "corpus_generated": false,
+    "probe_executed": false,
+    "janus_train": false,
+    "production": false,
+    "architecture_change": false,
+    "scope": "Only documentation in isolated research branch. Actual roster and independent semantic audit still pending; no claim of domain admission."
+  }
+}
