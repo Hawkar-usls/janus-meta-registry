@@ -1,0 +1,59 @@
+name: JANUS R4B5A4 compactness localization
+on:
+  pull_request:
+    types: [opened]
+    paths:
+      - 'registry/physics/singularity_gpt/r4b5a4/**'
+      - '.github/workflows/janus-singularity-gpt-r4b5a4.yml'
+permissions:
+  contents: read
+  actions: read
+jobs:
+  audit:
+    if: github.repository == 'Hawkar-usls/janus-meta-registry' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'janus-singularity-gpt-r4b5a4-compactness-localization' && github.run_attempt == 1
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+          sparse-checkout: |
+            registry/physics/singularity_gpt/r3b
+            registry/physics/singularity_gpt/r4b3
+            registry/physics/singularity_gpt/r4b5a3
+            registry/physics/singularity_gpt/r4b5a3a
+            registry/physics/singularity_gpt/r4b5a4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11.18'
+      - run: pip install numpy==2.2.6 numba==0.61.2 llvmlite==0.44.0
+      - name: Verify immutable protocol, archive and numerical solver
+        run: |
+          test "$(git hash-object registry/physics/singularity_gpt/r3b/solver_lib.py)" = "71ef15312166337a9ee41d71d75a29674d00e5d3"
+          test "$(git hash-object registry/physics/singularity_gpt/r4b3/boundary_solver.py)" = "2a3222c222412f327666e10db2219acde71cdeb3"
+          test "$(git hash-object registry/physics/singularity_gpt/r4b5a3/audit.py)" = "a7a28d2630c128ecbc6beeffe25dc88262833ae6"
+          test "$(git hash-object registry/physics/singularity_gpt/r4b5a3/protocol.json)" = "224496bd9513a3b9ecf551499ec27366f972bfaa"
+          test "$(git hash-object registry/physics/singularity_gpt/r4b5a3a/result_archive.json)" = "93ed07e6ed359cfaf23d61bcad086383252e10c7"
+          test "$(git hash-object registry/physics/singularity_gpt/r4b5a4/protocol.json)" = "8be8a0feb7b8a6c649f87d460cade4e6488ab259"
+          test "$(git hash-object registry/physics/singularity_gpt/r4b5a4/audit.py)" = "4adee56538805027f6678f6be38afa1874970c2d"
+          python -m py_compile registry/physics/singularity_gpt/r4b5a4/audit.py
+      - name: Record actual runtime fingerprint before evolution
+        run: |
+          mkdir -p r4b5a4-output
+          { uname -a; lscpu; python -VV; python -m pip freeze; python -c 'import numpy as n; n.show_config(); n.show_runtime()'; python -c 'import os, numba; print({k:os.environ.get(k) for k in ("OMP_NUM_THREADS","MKL_NUM_THREADS","OPENBLAS_NUM_THREADS","NUMBA_NUM_THREADS","BLIS_NUM_THREADS")}); print("CPU_NAME",numba.config.CPU_NAME,"CPU_FEATURES",numba.config.CPU_FEATURES,"NUMBA_NUM_THREADS",numba.config.NUMBA_NUM_THREADS)' ; } > r4b5a4-output/environment.txt
+      - name: Retrieve sealed parent trajectory artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          curl --fail --silent --show-error --location --header "Authorization: Bearer ${GH_TOKEN}" --header "Accept: application/vnd.github+json" --output "${RUNNER_TEMP}/r4b5a3a.zip" "https://api.github.com/repos/Hawkar-usls/janus-meta-registry/actions/artifacts/15221965959/zip"
+          echo "257e16cdbdde7a847d573b77e4e1d1d594ee2199c600603325bca1cc43151f96  ${RUNNER_TEMP}/r4b5a3a.zip" | sha256sum -c -
+      - name: Synthetic mass control and exact replay with radial diagnostics
+        run: python registry/physics/singularity_gpt/r4b5a4/audit.py "${RUNNER_TEMP}/r4b5a3a.zip"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: r4b5a4-compactness-localization
+          path: r4b5a4-output/
+          if-no-files-found: warn
+          retention-days: 30
