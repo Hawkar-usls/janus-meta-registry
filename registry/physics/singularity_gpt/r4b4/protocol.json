@@ -1,0 +1,74 @@
+{
+  "id": "JANUS-R4B4-TEMPORAL-RECONSTRUCTION",
+  "parent_run": 46001981775,
+  "solver_provenance": {
+    "commits": [
+      "f4ab8cdb13c8a7a6713b740c11a7c44dddaad12b",
+      "7cd2859b5da3668935006ad8a7ada957100170b2",
+      "18dbc3b5af2bc4de4072e19dde86a5e97d448189"
+    ],
+    "solver_blob": "71ef15312166337a9ee41d71d75a29674d00e5d3",
+    "diagnostic_blob": "e3bfb0eea297feab528b37f4f4014e94c1242dfe",
+    "scope": "these commits only; no claim about other branches"
+  },
+  "generator": {
+    "parent_commit": "390edcff6a036ab8e03d5bb84b36fcbbfe1e7ba8",
+    "parent_sha256": "bd0b4dab70aa0291b723a246532d7ad042c6c65a32b16d2fc19714b4070d7edc",
+    "seed": 912734,
+    "subtypes": [
+      "positive",
+      "near_dss_chirp",
+      "chirp",
+      "noise",
+      "transient",
+      "linear_time"
+    ],
+    "noise_types": [
+      "iid",
+      "long_memory",
+      "narrowband"
+    ],
+    "noise_levels": [
+      0,
+      0.001,
+      0.01
+    ],
+    "per_subtype_per_noise": 100,
+    "clean_unique_positive_count": 100,
+    "rule": "same exact raw signal and timestamps in A/B/C/D; clean deduplicate noise types; original generator unchanged, new seed and noise level zero"
+  },
+  "modes": {
+    "A": "oracle time and envelope",
+    "B": "blind time grid with known envelope; fit training phase residual only",
+    "C": "oracle time with estimated envelope from training",
+    "D": "original R4B3 blind nuisance function unchanged"
+  },
+  "diagnostic": {
+    "first": "clean positive D, 100 unique latent signals",
+    "then": "all A/B/C/D on same bank; separate jobs dependent on clean run success (engineering only)",
+    "stages": [
+      "nuisance_failure",
+      "rival_screen_rejection",
+      "phase_ambiguous",
+      "DSS"
+    ],
+    "metrics": [
+      "positive correct",
+      "positive rejected",
+      "positive ambiguous",
+      "negative false DSS",
+      "nuisance time relative-to-final-gap error",
+      "envelope log RMSE after constant gain removal",
+      "phase curvature coverage for positives where estimated"
+    ],
+    "positive_gate": 90,
+    "ambiguity_gate": 5,
+    "negative_gate": 5,
+    "decision_unchanged": "frozen R4B3 rivals and phase CI; not a repair or tuning",
+    "downstream": "AMBIGUOUS preserve raw evidence and request more resolved samples/independent trajectories; never counted as confirmed DSS; no deletion, no promotion",
+    "limitations": "B and C diagnostic adapters not production estimators; no guarantee of independent identifiability; physical use prohibited"
+  },
+  "scientific_hold": true,
+  "amr_implemented": false,
+  "production_changed": false
+}
