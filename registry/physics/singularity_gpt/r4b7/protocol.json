@@ -1,0 +1,117 @@
+{
+  "id": "JANUS-R4B7-JOINT-OPTIMIZATION",
+  "parent_run": 46014952203,
+  "parent_head": "0e6941f6a06bf613c0b027eac399dee327825524",
+  "prior": {
+    "log_gap_bounds": [
+      -45,
+      -1
+    ],
+    "frequency_bounds": [
+      0.2,
+      45
+    ],
+    "beta_bounds": [
+      0.1,
+      3
+    ],
+    "note": "-45 inherited from R4B3 historical grid, not new selection; coordinate relative to end and span of supplied fit window"
+  },
+  "transition": {
+    "seed": 718391,
+    "bank": "exact R4B6 latent generation; old frozen geometry + envelope + classifier",
+    "noise_levels": [
+      0,
+      0.00001,
+      0.0001
+    ],
+    "missing": [
+      0,
+      0.1,
+      0.3
+    ],
+    "noise_types": [
+      "iid",
+      "long_memory",
+      "narrowband"
+    ],
+    "classes": [
+      "positive",
+      "stationary",
+      "near_dss_chirp"
+    ],
+    "n_per_class": 100,
+    "clean_deduplicate": true
+  },
+  "joint": {
+    "seed": 195731,
+    "random_init_seed": 851933,
+    "n_per_class": 100,
+    "classes": [
+      "positive",
+      "stationary",
+      "near_dss_chirp"
+    ],
+    "noise_levels": [
+      0,
+      0.0001,
+      0.001,
+      0.01
+    ],
+    "missing": [
+      0,
+      0.3
+    ],
+    "noise_types": [
+      "iid",
+      "long_memory",
+      "narrowband"
+    ],
+    "clean_deduplicate": true,
+    "windows": [
+      "prefix",
+      "full"
+    ],
+    "strategies": [
+      "geometric",
+      "prior_center",
+      "random"
+    ],
+    "fit": "same single start per strategy, equal 80 function evaluations; log gap, log-time frequency, envelope exponent; linear sin/cos/offset profiled; residual divided by fixed local RMS scale estimated solely from fit samples; no true t* or envelope supplied; geometry unavailable counts separately, no fallback",
+    "metrics": [
+      "finite admissible estimate",
+      "local relative gap error",
+      "final relative gap error",
+      "period error",
+      "objective evaluations",
+      "convergence",
+      "stationary finite candidates",
+      "near_dss false acceptance"
+    ],
+    "admission": "candidate estimator diagnostic only; joint fit assumes DSS and is not standalone detector; report stationary/near DSS candidate rate, not DSS false positives; no early stop or bisection change",
+    "positive_target": 0.9,
+    "gap_error_max": 0.05,
+    "period_error_max": 0.05
+  },
+  "projection": {
+    "seed": 912734,
+    "noise_levels": [
+      0.001,
+      0.01
+    ],
+    "n": 100,
+    "oracle_time_and_envelope": true,
+    "components": [
+      "original",
+      "parallel",
+      "orthogonal"
+    ],
+    "tangent": "columns constant,sin,cos,frequency derivative,chirp derivative of fitted or true noiseless waveform; diagnostic uses true synthetic parameters; orthogonal projection onto tangent via SVD/QR; preserve original component amplitudes, not renormalize; test unconditional phase confidence intervals; additionally phase/chirp derivative-only projection after removing nuisance tangent",
+    "interpretation": "first-order tangent-space sensitivity diagnostic, not causal proof of covariance versus misspecification; orthogonal noise can have near-zero first-order parameter effect; report drift, SE, z moments, coverage and component energy"
+  },
+  "staging": "transition and projection first; optimization comparison depends on transition engineering completion; no tuning on these results",
+  "scientific_hold": true,
+  "production_changed": false,
+  "physical_use_authorized": false,
+  "amr_implemented": false
+}
