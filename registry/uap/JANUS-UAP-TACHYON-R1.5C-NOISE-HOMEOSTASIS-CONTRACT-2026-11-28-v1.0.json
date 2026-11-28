@@ -1,0 +1,76 @@
+{
+  "schema": "janus.uap_tachyon.noise_homeostasis.contract.v1",
+  "date": "2026-11-28",
+  "status": "FROZEN_BEFORE_EXECUTION__SHADOW_ONLY",
+  "source_commit": "629648457bff479d32a6274b38d60fcd091a1e73",
+  "parent_code": "research/uap_poss1/janus_uap_tachyon_r15b_correlated_noise.py",
+  "parent_code_blob": "78920a1434b3f5f8e61cfe218c3ff2e9b691c16c",
+  "parent_result": "registry/uap/JANUS-UAP-TACHYON-R1.5B-CORRELATED-NOISE-IMMUNITY-RESULT-2026-11-28-v1.0.json",
+  "parent_result_blob": "a8bd030632410dced72528372963c5f00affb584",
+  "experiment": {
+    "seeds": [
+      616101,
+      616103,
+      616107
+    ],
+    "views": 8,
+    "background_samples": 2048,
+    "scenarios": [
+      "STABLE_REF",
+      "PERSISTENT_SHIFT",
+      "REF_LEAK",
+      "ALIGNED_NO_REF",
+      "IID",
+      "EVENT_ONLY_SHIFT"
+    ],
+    "families": [
+      "weak_F",
+      "weak_R",
+      "strong_F",
+      "strong_R",
+      "symmetric_weak",
+      "symmetric_strong",
+      "noise",
+      "double",
+      "clipped"
+    ],
+    "per_family": 40,
+    "calibration_amplitudes": [
+      0,
+      0.035,
+      0.07,
+      0.14,
+      0.28,
+      0.56,
+      1.12,
+      2.24,
+      3.2
+    ],
+    "calibration_per_amplitude": 96,
+    "validation_per_amplitude": 32,
+    "minimum_cell": 60,
+    "alpha": 0.025,
+    "description": "Each session has fixed eight channel gains and independent noise realizations for old/current/validation background, pilot, calibration and evaluation. Session scenario used only by simulator and grouping; inference receives measured background, reference availability and pilot, not scenario/family. Stable old model is known prior. No real radio or external blind custodian."
+  },
+  "monitor": {
+    "covariance": "Regularized symmetric generalized eigenvalue ratio max(abs(log lambda)) comparing current and previous covariance, plus absolute mean-envelope lag-one correlation difference. Drift if log ratio > log(1.8) or lag delta > .20. Fixed before execution; report empirical false alarms and detection.",
+    "reference": "Known independent injected pilot with randomized +/-1 signal (not science event). Fit reference response to pilot, bound abs slope + 3 standard errors <= .12 (nominal heuristic, not guaranteed coverage under correlation). Independently require background reference explains >= 15% average channel variance on held-out current background using training coefficient. Reference availability explicit; no pilot or bad transfer => no subtraction.",
+    "recalibration": "If measured drift, fit fresh covariance and temporal precision on current independent background; otherwise retain old fit unless reference validity changes. Build null score calibration by injecting symmetric templates into independent signal-free synthetic background windows under same session noise law, no science samples or labels. Calibration at both epochs uses separate windows, fixed bin and quantile rules, lock before evaluation; separate validation nulls.",
+    "routing": "Reference qualified => FULL; otherwise EQ (preserve original channel average, no blind covariance removal). If held-out current null validation >5%, quarantine directional output; raw and baseline candidates always retained. Unsupported bin abstains. No automatic veto. Drift monitor has no guarantee for event-only shifts; test explicitly, do not tune."
+  },
+  "comparators": {
+    "old": "R1.5B FULL with prior background and historical per-regime lock; old prior regime known from simulated instrument setup, reference availability prior metadata. EQ with current independent calibration on identical samples as fair comparator.",
+    "new": "Homeostasis routes using measured monitor and pilot. Candidate retention is separate from directional decision; track paired strong directional losses vs EQ and old FULL, no claiming retained candidate equals correctly classified.",
+    "mirror": "Reverse all time axes including background, pilot, event and references, ensure route/qualification invariant and sign-flip scores. No hidden labels. Mirror for all eval."
+  },
+  "gates": {
+    "drift": "Per seed persistent shift detected, stable ref not flagged; event-only shift diagnostic, not guaranteed observable.",
+    "reference": "Per seed reject REF_LEAK and unavailable ALIGNED_NO_REF; qualify stable and persistent shift when pilot and heldout background support; report false rejection.",
+    "stable_and_shift": "Each seed STABLE_REF and PERSISTENT_SHIFT: weak correct >= current EQ+10 pp; wrong <=5%; null <=5%; strong >=85%; zero paired strong directional losses versus EQ.",
+    "protection": "Each seed IID and ALIGNED_NO_REF, REF_LEAK: null <=5%, weak wrong <=5%, strong >=85%, zero paired strong losses versus EQ. All raw candidates retained in all scenarios.",
+    "event_only": "Report null <=5%, weak wrong <=5%, strong >=85%, zero paired strong losses as separate stress gate; expect possible fail because no independent event-time monitor.",
+    "reconstruction": "Run unchanged R15 on IID double/clipped raw means; pooled double median <= linear and R14. No directional veto of reconstruction."
+  },
+  "spiral": "Canonical five axes; measured covariance eigenspectrum, pilot bound, validation error, chosen path and source-bound state hashes. Competing explanations for drift (gain, common noise, reference leakage, event-only) remain unless measured; synthetic ground truth only for exam grading.",
+  "scientific_ceiling": "Synthetic tests only, no physical causality or carrier claim, no real qualified off-band radio data, no production or main changes."
+}
