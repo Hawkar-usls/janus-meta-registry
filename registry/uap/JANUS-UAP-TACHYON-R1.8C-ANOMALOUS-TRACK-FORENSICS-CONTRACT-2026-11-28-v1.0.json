@@ -1,0 +1,64 @@
+{
+  "schema": "janus.uap_tachyon.anomalous_track_forensics.contract.v1",
+  "date": "2026-11-28",
+  "source_commit": "6515f15e84b44dcaa7b4c9ff9fc5de5a2f427323",
+  "pins": {
+    "registry/uap/JANUS-UAP-TACHYON-R1.8B-INSTRUMENTAL-EVIDENCE-RECONSTRUCTION-RESULT-2026-11-28-v1.0.json": "1fafdf90c5c246e6fc1a3eb417bf1d3be5a25724",
+    "registry/uap/JANUS-UAP-TACHYON-R1.8A-PRIMARY-EVIDENCE-ACQUISITION-RESULT-2026-11-28-v1.0.json": "4ac96050b48ce98888bebe54c01931f847861881",
+    "research/uap_poss1/janus_uap_tachyon_r18a_primary_evidence.py": "7d9a4ae0f410bdb0d92e68d140c0fd91804d7f3e",
+    "research/uap_poss1/janus_uap_tachyon_r14_temporal_arrow.py": "33b26706c1dbd6a1706e59f03158234097348b5f",
+    "registry/uap/JANUS-UAP-TACHYON-R1.4-TEMPORAL-ARROW-CONTRACT-2026-11-28-v1.0.json": "f08559a9387af11fdbb6cf63625a071f306af902"
+  },
+  "windows": [
+    [
+      "DOW-UAP-PR168",
+      8,
+      34,
+      "aaeadff49daf715b597bc32b7867e3b05555606360c133554f83cc08dc7ad023"
+    ],
+    [
+      "DOW-UAP-PR168",
+      9,
+      409,
+      "3b5af95eb21f763035a074eff2f0931d92a4e58aefbcd831226a67c1aa1f329b"
+    ],
+    [
+      "DOW-UAP-PR168",
+      9,
+      667,
+      "3b5af95eb21f763035a074eff2f0931d92a4e58aefbcd831226a67c1aa1f329b"
+    ],
+    [
+      "DOW-UAP-PR168",
+      33,
+      1974,
+      "e1562df49cfe8738993a9804222f03808a66c50a8d58c08221b4666f367bea50"
+    ],
+    [
+      "DOW-UAP-PR168",
+      48,
+      3044,
+      "dd91a83a198a6a1e2b6894c600bae8510875fd3d87a34b712b3da87bfbcd1a9b"
+    ],
+    [
+      "DOW-UAP-PR135",
+      56,
+      692,
+      "f7088576901bbc8c27d3b14655fb24d64bdc29803e3ca8ed362dab2cf55b9d50"
+    ],
+    [
+      "DOW-UAP-PR135",
+      74,
+      1068,
+      "daf69dde20097fc82fd6640ef64cc86fc3373952fb86b290de953a68bcf89e25"
+    ]
+  ],
+  "scope": "Frozen post-hoc forensic examination of all seven R18B R windows, no selection or threshold tuning after execution. R18B same decoded 320-wide frame geometry and exact gray SHA. Original R14 score replay; no physical time arrow.",
+  "registration": {
+    "method": "For each window estimate frame-to-first-frame affine partial transform via goodFeaturesToTrack, LK, forward-backward error, RANSAC. Exclude candidate radius 24px and fixed possible HUD zones: normalized x<.18,y<.20 OR |x-.5|<.045, |y-.5|<.085; exclude 6% borders. These zones are conservative exclusions, not proof of HUD. Fit uses separate deterministic points (even index) and validate held-out odd index; require >=12 fit inliers, >=8 validation points, validation median residual <=1.5px, inlier fraction >=.6, no excessive scale [.95,1.05], rotation <=5deg, translation<=30px; all 129 frames required for compensated curve, no filling. Reference transforms current->first; raw tracked aperture local mean minus annulus, radii 3/6/10 in 320px grid, signed by prior polarity. Compare fixed screen aperture and moving track aperture, same stabilized photometry at transformed track center; report screen-zone overlap and span, no automatic dismissal solely from position. Three fixed aperture radius sensitivity lanes [2,3,5] with annuli [2r,3r+1]. A compensated window remains candidate only if all 3 raw and stabilized scores R, all frames validated, no possible HUD intersection, no static screen span<=2px; failure is HOLD/NOT_ROBUST, not object identity. No extrapolation from camera registration to 3D speed. Registration controls synthetic textured moving scene with affine translation, and stationary foreground candidate; no ground truth for real tracks."
+  },
+  "comparison": "Retrieve pinned Zenodo pr135_tracks.csv, pr135_lightcurves.csv, README.md, SHA256SUMS; verify bytes SHA/MD5 against R18A. Inspect column names and README/code for exact frame indexing and source geometry. Compare every PR135 window to published coordinate rows only under explicit verified schema, frame origin and resolution; otherwise report diagnostic nearest for 0/1 index alternatives, no verified match. Same source video, not independent observation. No third-party code executed. Preserve all outcomes.",
+  "d165": "Public mirrored PDF exact SHA, read page text; adjudicate 8 detections/84s, estimated 55000–70000 ft, 38.5 miles, 1650 mph conditional on single object, 39 degrees after 48s, 12s sweep, no continuous trajectory/identity. Verify source text normalized regex, compute conditional path length/time only, no fabricated points. Preserve discrepant catalog date 7/15/05 vs 2023. Need original radar timestamps, positions, covariance, sensor association. Public mirror is not official byte authentication.",
+  "baass": "Exact hash PDF; bounded discovery across all pages, report page pointers for radar/radio/clock/measurement topics and explicit DOI/arXiv identifiers. Query DOI metadata via Crossref and arXiv canonical abstract only, max 20 identifiers in deterministic order; compare citation existence, no claim validation from metadata. Technical assertion verification requires linked original measurements; preserve HOLD absent evidence. Store only page hashes, numeric tokens, reference IDs and counts, no personal details. Use public endpoints only.",
+  "gates": "Exact seven manifest, frame SHA/PTS replay, registration synthetic controls, all seven raw replays, per-window aperture robustness recorded, Zenodo integrity, D165 source assertions verified, BAASS explicit reference search; no gate substitutes for physical evidence. Production unchanged."
+}
