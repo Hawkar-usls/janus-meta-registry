@@ -1,0 +1,42 @@
+name: JANUS UAP R1.2 primary source acquisition
+on:
+  push:
+    branches: [janus-uap-r1-master-reconsolidation-20261128]
+    paths:
+      - 'research/uap_poss1/janus_uap_r12_primary_acquisition.py'
+      - '.github/workflows/janus-uap-r12-primary-acquisition.yml'
+permissions:
+  contents: write
+concurrency:
+  group: janus-uap-r12-primary-acquisition
+  cancel-in-progress: false
+jobs:
+  acquire:
+    if: github.ref == 'refs/heads/janus-uap-r1-master-reconsolidation-20261128'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install XLSX reader
+        run: python3 -m pip install 'openpyxl==3.1.5'
+      - name: Validate chronology and acquire public sources
+        run: |
+          set -euo pipefail
+          python3 research/uap_poss1/janus_uap_r12_primary_acquisition.py | tee /tmp/janus-uap-r12-summary.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-uap-r12-primary-acquisition
+          path: |
+            /tmp/janus-uap-r12-summary.json
+            registry/uap/JANUS-UAP-R1.2-SPATIOTEMPORAL-RECONSTRUCTION-2026-11-28-v1.0.json
+            registry/uap/JANUS-UAP-R1.2-PRIMARY-ACQUISITION-2026-11-28-v1.0.json
+      - name: Commit acquisition receipt only
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          git add -- registry/uap/JANUS-UAP-R1.2-PRIMARY-ACQUISITION-2026-11-28-v1.0.json
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name "JANUS UAP R1.2"
+          git config user.email "actions@users.noreply.github.com"
+          git commit -m "JANUS UAP R1.2: public primary source acquisition receipt"
+          git push origin HEAD:refs/heads/janus-uap-r1-master-reconsolidation-20261128
