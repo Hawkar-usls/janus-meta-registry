@@ -1,0 +1,61 @@
+name: JANUS UAP Tachyon R1.7 real spectral corpus
+on:
+  push:
+    branches: [research/uap-tachyon-r17-real-spectral-corpus-20261128]
+    paths:
+      - 'research/uap_poss1/janus_uap_tachyon_r17_real_spectral_corpus.py'
+      - '.github/workflows/janus-uap-tachyon-r17-real-spectral-corpus.yml'
+permissions:
+  contents: read
+jobs:
+  exam:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install fixed wheels
+        run: python -m pip install --only-binary=:all: numpy==2.2.6 scipy==1.15.3 h5py==3.13.0
+      - name: Execute real corpus pilot
+        run: |
+          set -euo pipefail
+          python research/uap_poss1/janus_uap_tachyon_r17_real_spectral_corpus.py | tee /tmp/r17-summary.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-r17-real-corpus
+          path: |
+            /tmp/r17-summary.json
+            registry/uap/JANUS-UAP-TACHYON-R1.7-REAL-SPECTRAL-CORPUS-RESULT-2026-11-28-v1.0.json
+          if-no-files-found: error
+  publish:
+    needs: exam
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: janus-r17-real-corpus
+          path: /tmp/r17
+      - name: Publish only receipt
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          f="$(find /tmp/r17 -name 'JANUS-UAP-TACHYON-R1.7-REAL-SPECTRAL-CORPUS-RESULT-2026-11-28-v1.0.json' -type f)"
+          test -f "$f"
+          python -m json.tool "$f" >/dev/null
+          cp "$f" 'registry/uap/JANUS-UAP-TACHYON-R1.7-REAL-SPECTRAL-CORPUS-RESULT-2026-11-28-v1.0.json'
+          git add -- 'registry/uap/JANUS-UAP-TACHYON-R1.7-REAL-SPECTRAL-CORPUS-RESULT-2026-11-28-v1.0.json'
+          git config user.name "JANUS Real Spectral Corpus"
+          git config user.email "actions@users.noreply.github.com"
+          git commit -m "JANUS R1.7: bounded real spectral corpus receipt"
+          git push origin HEAD:refs/heads/research/uap-tachyon-r17-real-spectral-corpus-20261128

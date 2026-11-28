@@ -1,0 +1,39 @@
+{
+  "schema": "janus.uap_tachyon.real_spectral_corpus.contract.v1",
+  "date": "2026-11-28",
+  "source_commit": "75ebdeb2579b8c3f24f1c6143d7d57bf947dc79c",
+  "status": "FROZEN_BEFORE_EXECUTION__BOUNDED_REAL_CORPUS_PILOT",
+  "pins": {
+    "research/uap_poss1/janus_uap_tachyon_r16_real_spectral_witness.py": "33d350064c072e308cc86a92b995b832b38c68cf",
+    "registry/uap/JANUS-UAP-TACHYON-R1.6-REAL-SPECTRAL-WITNESS-RESULT-2026-11-28-v1.0.json": "a6c2789948de4d33eeabe1e824b18467abd2d3b4",
+    "research/uap_poss1/janus_uap_tachyon_r15_causal_discrimination.py": "81d02d6d4186b45dc3676b193719dc88b9909916",
+    "research/uap_poss1/janus_uap_tachyon_r14_temporal_arrow.py": "33b26706c1dbd6a1706e59f03158234097348b5f"
+  },
+  "catalog": {
+    "url": "https://assets.chime-frb.ca/catalogs/catalog1/releases/210806.vFINAL/data/catalog1.210806.vFINAL.csv",
+    "sha256": "affd86573fee8fe94be9d0d85e73cc787fa260b2497ccec5d9d93e1d26610ed5",
+    "rows": 600,
+    "bursts": 536,
+    "archive": "https://www.cadc-ccda.hia-iha.nrc-cnrc.gc.ca/files/vault/AstroDataCitationDOI/CISTI.CANFAR/21.0007/data/waterfalls/data/",
+    "documentation": [
+      "https://chime-frb-open-data.github.io/waterfall/",
+      "https://chime-frb.ca/catalogs/catalog1",
+      "https://chime-frb.ca/tutorials"
+    ],
+    "anchor": "FRB20180725A",
+    "anchor_sha256": "783ddfbfbaf4ac1ef0b903adfb08564b015c1de9c3e93051bc2e2ca3e617c0b4",
+    "selection": "Freeze candidate manifest from pinned CSV before waveform download. Deduplicate by TNS name; conservative exclude any nonzero or unknown excluded_flag for population. Group repeaters by repeater_name; one-off by event. Hash-order source groups using R17-v1|source, choose first 24 groups, one hash-ordered event per group, plus excluded anchor. Split source groups by SHA256(R17-split|group) modulo 10 <7 reference, else holdout. No replacements on download failure. Candidate URLs from documented filename pattern; not asserted available until successful GET. All other candidates deferred, not searched for byte availability. Archive listing not authenticated. This is bounded pilot, not full corpus.",
+    "pilot_sources": 24,
+    "max_file_bytes": 134217728,
+    "max_cells": 12000000,
+    "max_time_samples": 2048
+  },
+  "analysis": {
+    "arrays": "Audit wfall and calibrated_wfall separately; actual shape, hashes, all-time finite rows, partial rows, NaN/Inf counts, time-valid counts, finite row mask runs, observed mean profile from all-time finite rows only. No masked values filled. Use native plot_time only for wfall; calibrated_wfall time step same per provider but origin unknown when shape differs, analyze sample indices and relative cadence only, no inferred absolute alignment. Axis orientation from extent and spec reversal check; no frequency-specific claims on mismatched grids. Archive fit residual is descriptive only.",
+    "temporal": "Exact R14 score on native finite-row mean, normalized positive scale from full profile only for descriptive score (R14 scale invariant mathematically); record D/Q/F/R/ABSTAIN and mirrored D sign/Q parity, original synthetic threshold not astrophysical significance. For calibrated and wfall scores separate; no mixing windows.",
+    "reconstruction": "Execute pinned R15 fit and exact template bank definitions, not synthetic calibration. Interpolate TEMPLATE banks from 129 to native grid, never upsample or interpolate observed samples. Use R15 block geometry (abs(t)<=.16 outer held, .235-.40 and .48-.65 inner pseudo-gaps). Construct blind vector with held values zero before any model/scale selection; choose linear or R15 families by same inner CV, ties deterministic order. R14 native bank fit and select F/R/S by observed loss. Fit only observed samples, compute errors after choices frozen. Report relative RMSE divided by observed RMS around observed mean, raw RMSE, all models, held indices, actual/predicted vectors for held; compare reversed input using same masks; causal_smooth and unequal double-ratio bank may not be mirror invariant; report deviations honestly, do not force parity or cherry-pick direction. Use all-time finite rows; no reconstruction of originally missing channels; not latent truth or forecasting.",
+    "statistics": "For each split and array separately, population-eligible sources only. Record D, absD, Q, decision counts, quantiles, fixed metadata strata SNR<20,20-50,>=50; DM<300,300-800,>=800; width seconds<.001,.001-.005,>=.005; scatter seconds<.001,.001-.005,>=.005; mask fraction<.2,.2-.5,>=.5. Numeric missing separately. Reference distribution only; holdout empirical rank (1+count reference absD>=test)/(n+1); descriptive, no significance claim, minimum 100 reference source groups for any tail-screening review. Pilot cannot reach that threshold. Report per-source dependence and selection/missingness, no population representativeness claim.",
+    "gates": "Anchor hash and both arrays processed; exact R14 mirror parity all admitted profiles; all original masks intact; pilot acquisition >=20/25; reconstruction median normalized selected <= linear and R14 for each array with matched cases, report wins and losses. R15 reverse replay nonparity diagnostic. Reference support insufficient => population HOLD. Native RETINA ON/OFF/REPEAT roles absent, no physical causality or paired witness promotion."
+  },
+  "spiral": "Canonical five axes, per-source receipt hashes, forward/mirror scores, competing held-out reconstruction, source grouping and archive provenance. Report alternatives and limitations. No main/production changes."
+}
