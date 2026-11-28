@@ -1,0 +1,43 @@
+name: JANUS UAP R1.1 geo forensic verification
+on:
+  push:
+    branches: [janus-uap-r1-master-reconsolidation-20261128]
+    paths:
+      - 'research/uap_poss1/janus_uap_r11_geo_forensics.py'
+      - '.github/workflows/janus-uap-r11-geo-forensics.yml'
+permissions:
+  contents: write
+concurrency:
+  group: janus-uap-r11-geo-forensics
+  cancel-in-progress: false
+jobs:
+  audit:
+    if: github.ref == 'refs/heads/janus-uap-r1-master-reconsolidation-20261128'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 5
+      - name: Validate adjudication and recover parse failures
+        run: |
+          set -euo pipefail
+          python3 research/uap_poss1/janus_uap_r11_geo_forensics.py | tee /tmp/janus-uap-r11-summary.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-uap-r11-forensic-audit
+          path: |
+            /tmp/janus-uap-r11-summary.json
+            registry/uap/JANUS-UAP-R1.1-GEO-FORENSICS-2026-11-28-v1.0.json
+            registry/uap/JANUS-UAP-R1.1-CURATED-CORE-2026-11-28-v1.0.json
+            registry/uap/JANUS-UAP-R1.1-PARSE-RECOVERY-2026-11-28-v1.0.json
+      - name: Publish recovery and curated index to experiment branch
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          git add -- registry/uap/JANUS-UAP-R1.1-CURATED-CORE-2026-11-28-v1.0.json registry/uap/JANUS-UAP-R1.1-PARSE-RECOVERY-2026-11-28-v1.0.json
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name "JANUS UAP R1.1"
+          git config user.email "actions@users.noreply.github.com"
+          git commit -m "JANUS UAP R1.1: parse recovery and curated topical index"
+          git push origin HEAD:refs/heads/janus-uap-r1-master-reconsolidation-20261128
