@@ -1,0 +1,58 @@
+name: JANUS UAP Tachyon R1.2 measurement contract
+on:
+  push:
+    branches: [janus-uap-r1-master-reconsolidation-20261128]
+    paths:
+      - 'research/uap_poss1/janus_uap_tachyon_r12_measurement.py'
+      - '.github/workflows/janus-uap-tachyon-r12-measurement.yml'
+permissions:
+  contents: read
+concurrency:
+  group: janus-uap-tachyon-r12-measurement
+  cancel-in-progress: false
+jobs:
+  exam:
+    if: github.ref == 'refs/heads/janus-uap-r1-master-reconsolidation-20261128'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install fixed scientific libraries
+        run: python3 -m pip install 'numpy==2.2.6' 'scipy==1.15.3' 'h5py==3.13.0'
+      - name: Execute frozen model, public controls and native organ entrypoints
+        run: |
+          set -euo pipefail
+          python3 research/uap_poss1/janus_uap_tachyon_r12_measurement.py | tee /tmp/janus-measurement-r12-summary.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-uap-tachyon-r12-measurement
+          path: |
+            /tmp/janus-measurement-r12-summary.json
+            registry/uap/JANUS-UAP-TACHYON-R1.2-MEASUREMENT-RESULT-2026-11-28-v1.0.json
+  publish:
+    needs: exam
+    if: github.ref == 'refs/heads/janus-uap-r1-master-reconsolidation-20261128'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: janus-uap-tachyon-r12-measurement
+          path: /tmp/janus-r12-artifact
+      - name: Verify and publish only result
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          candidate="$(find /tmp/janus-r12-artifact -name 'JANUS-UAP-TACHYON-R1.2-MEASUREMENT-RESULT-2026-11-28-v1.0.json' -type f)"
+          test -f "$candidate"
+          python3 -m json.tool "$candidate" >/dev/null
+          cp "$candidate" 'registry/uap/JANUS-UAP-TACHYON-R1.2-MEASUREMENT-RESULT-2026-11-28-v1.0.json'
+          git add -- 'registry/uap/JANUS-UAP-TACHYON-R1.2-MEASUREMENT-RESULT-2026-11-28-v1.0.json'
+          git config user.name "JANUS Measurement R1.2"
+          git config user.email "actions@users.noreply.github.com"
+          git commit -m "JANUS UAP Tachyon R1.2: measurement control receipts"
+          git push origin HEAD:refs/heads/janus-uap-r1-master-reconsolidation-20261128
