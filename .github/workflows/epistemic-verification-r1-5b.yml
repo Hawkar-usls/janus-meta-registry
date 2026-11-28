@@ -1,0 +1,32 @@
+name: Epistemic Witness R1.5B
+on:
+  push:
+    branches:
+      - research/epistemic-verification-r1
+    paths:
+      - .github/workflows/epistemic-verification-r1-5b.yml
+permissions:
+  contents: read
+  actions: read
+jobs:
+  witness-byte-audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Retrieve fixed parent evidence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/r1-5b"
+          mkdir "$root"
+          api="https://api.github.com/repos/Hawkar-usls/janus-meta-registry/actions"
+          curl --fail --silent --show-error --max-time 30 -H "Authorization: Bearer $GH_TOKEN" "$api/runs/46165295807" -o "$root/run.json"
+          curl --fail --silent --show-error --max-time 30 -H "Authorization: Bearer $GH_TOKEN" "$api/artifacts/15270934037" -o "$root/artifact.json"
+          curl --fail --silent --show-error --location --max-time 60 --max-filesize 131072 -H "Authorization: Bearer $GH_TOKEN" "$api/artifacts/15270934037/zip" -o "$root/checkpoint.zip"
+      - name: Reverify history and isolated export
+        run: python3 -I experiments/autonomy/epistemic-verification-r1-5/witness_audit.py
