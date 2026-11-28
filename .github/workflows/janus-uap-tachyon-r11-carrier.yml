@@ -1,0 +1,42 @@
+name: JANUS UAP Tachyon R1.1 carrier identifiability
+on:
+  push:
+    branches: [janus-uap-r1-master-reconsolidation-20261128]
+    paths:
+      - 'research/uap_poss1/janus_uap_tachyon_r11_carrier.py'
+      - '.github/workflows/janus-uap-tachyon-r11-carrier.yml'
+permissions:
+  contents: write
+concurrency:
+  group: janus-uap-tachyon-r11-carrier
+  cancel-in-progress: false
+jobs:
+  audit:
+    if: github.ref == 'refs/heads/janus-uap-r1-master-reconsolidation-20261128'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Execute fixed counterexamples and evidence gates
+        run: |
+          set -euo pipefail
+          python3 research/uap_poss1/janus_uap_tachyon_r11_carrier.py | tee /tmp/janus-carrier-r11-summary.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-uap-tachyon-r11-carrier
+          path: |
+            /tmp/janus-carrier-r11-summary.json
+            registry/uap/JANUS-UAP-TACHYON-R1.1-CARRIER-IDENTIFIABILITY-PREREG-2026-11-28-v1.0.json
+            registry/uap/JANUS-UAP-TACHYON-R1.1-CARRIER-IDENTIFIABILITY-RESULT-2026-11-28-v1.0.json
+      - name: Publish result only to experiment branch
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          git add -- registry/uap/JANUS-UAP-TACHYON-R1.1-CARRIER-IDENTIFIABILITY-RESULT-2026-11-28-v1.0.json
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name "JANUS Carrier R1.1"
+          git config user.email "actions@users.noreply.github.com"
+          git commit -m "JANUS UAP Tachyon R1.1: synthetic carrier identifiability audit"
+          git push origin HEAD:refs/heads/janus-uap-r1-master-reconsolidation-20261128
