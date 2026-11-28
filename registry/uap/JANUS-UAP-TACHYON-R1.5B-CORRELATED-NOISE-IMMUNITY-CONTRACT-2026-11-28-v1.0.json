@@ -1,0 +1,86 @@
+{
+  "schema": "janus.uap_tachyon.correlated_noise_immunity.contract.v1",
+  "date": "2026-11-28",
+  "source_commit": "cbb45c0345a507330e2af2aa4f9c697fff831348",
+  "status": "FROZEN_BEFORE_EXECUTION__SHADOW_ONLY",
+  "parent_result": "registry/uap/JANUS-UAP-TACHYON-R1.5A-ADAPTIVE-TEMPORAL-SENSITIVITY-RESULT-2026-11-28-v1.0.json",
+  "parent_result_blob": "29f6d46b0dbceeed89333dcaeb4dbdccfcf6cd80",
+  "parent_code": "research/uap_poss1/janus_uap_tachyon_r15a_adaptive_sensitivity.py",
+  "parent_code_blob": "8c5aa169aefd342d5a9507f7c4255aac8adbf56f",
+  "r15_code": "research/uap_poss1/janus_uap_tachyon_r15_causal_discrimination.py",
+  "r15_blob": "81d02d6d4186b45dc3676b193719dc88b9909916",
+  "experiment": {
+    "primary_views": 8,
+    "descriptive_views": 16,
+    "background_samples": 384,
+    "regimes": [
+      "IID",
+      "HETERO_COMMON_REF",
+      "ALIGNED_COMMON_NO_REF"
+    ],
+    "stress": [
+      "REFERENCE_UNQUALIFIED",
+      "COVARIANCE_SHIFT"
+    ],
+    "calibration_seeds": [
+      615901,
+      615903
+    ],
+    "eval_seeds": [
+      615911,
+      615913,
+      615917
+    ],
+    "stress_seed": 615991,
+    "calibration_amplitudes": [
+      0,
+      0.035,
+      0.07,
+      0.14,
+      0.28,
+      0.56,
+      1.12,
+      2.24
+    ],
+    "calibration_per_amplitude": 96,
+    "eval_per_family": 40,
+    "families": [
+      "weak_F",
+      "weak_R",
+      "strong_F",
+      "strong_R",
+      "symmetric_weak",
+      "symmetric_strong",
+      "noise",
+      "double",
+      "clipped"
+    ],
+    "stress_families": [
+      "weak_F",
+      "weak_R",
+      "strong_F",
+      "strong_R",
+      "symmetric_weak",
+      "symmetric_strong",
+      "noise"
+    ],
+    "model": "Synthetic central narrow-band envelopes, simultaneous noisy off-band reference where qualified by construction, matched signal-free calibration backgrounds. Not real radio spectrograms. Independent noise AR(1) rho .35, common AR(1) rho .75, nonuniform gains and per-view variances in hetero regime. Equal unit signal response, externally aligned views; no hidden signal parameters in inference."
+  },
+  "methods": {
+    "R15A": "Frozen bank and thresholds from parent receipt, plain mean; descriptive historical comparator.",
+    "EQ": "Plain mean with new matched per-regime null calibration; fair primary comparator.",
+    "GLS": "Shrinkage covariance of signal-free background only, inverse covariance weighting w=C^-1 1/(1^T C^-1 1).",
+    "REF": "Off-band regression coefficient estimated using background only; subtract measured reference variation with fixed response calibration; equal mean.",
+    "FULL": "Qualified reference subtraction + GLS + symmetric AR(1) temporal precision matched-template score. Unqualified reference ignored, no fitted event regression. Separate ablations GLS and REF; compare with EQ on identical inputs.",
+    "calibration": "Same null generator for all methods; bins observed E [0,4,8,16,32,64,128,256], per regime and view count and algorithm, 97.5 percentile higher, min 60, unsupported abstain. Frozen lock before eval, no label-guided routing. Stress uses HETERO_COMMON_REF lock with no re-fit thresholds.",
+    "mirror": "Reverse event AND background AND reference in time; weights and rho invariant; D sign flips and E invariant; input hashes preserved.",
+    "identifiability": "If signal and noise are both a(t)*ones, observations have exactly identical likelihood under exchanged decomposition; no method can separate without independent information. Construct exact paired example; never promote carrier."
+  },
+  "gates": {
+    "primary": "At 8 views HETERO_COMMON_REF, per seed FULL weak correct >= EQ+10 percentage points, weak wrong <=5%, pooled null declarations <=5%, strong correct >=85%, no paired strong hit lost relative to EQ. All seeds must pass. Matched calibration budgets; report exact counts and null breakdown.",
+    "protection": "IID and ALIGNED_COMMON_NO_REF per seed at 8: FULL weak correct not more than 5 percentage points below EQ, null <=5%, zero paired strong losses, strong coverage >=85%. No expectation of recovering nonidentifiable common signal.",
+    "stress": "For each stress type 8 views: null declarations <=5%, weak wrong <=5%, strong >=85%, no new strong losses vs EQ; report HOLD on fail.",
+    "reconstruction": "Frozen R15 reconstructor on raw equal-mean 8-view IID double/clipped cases, compare R14 and linear; no selector change; double median <= both, clipped diagnostic. Do not let shadow scores erase candidates."
+  },
+  "scientific_ceiling": "No real independent radio measurement, no calibrated exotic carrier response, no UAP linkage, no external blind exam. Morphology only; production unchanged. 5D canonical axes, preserve failed gates and all ordinary alternatives."
+}
