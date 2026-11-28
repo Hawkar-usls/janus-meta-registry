@@ -1,0 +1,71 @@
+{
+  "schema": "janus.uap_tachyon.primary_evidence_acquisition.contract.v1",
+  "date": "2026-11-28",
+  "source_commit": "812f2f704a4a1aaf0cf4fa3b2ae9e5b7e5af95fa",
+  "status": "FROZEN_BEFORE_EXECUTION__PUBLIC_PRIMARY_SHADOW",
+  "pins": {
+    "registry/uap/JANUS-UAP-TACHYON-OPEN-EVIDENCE-ACQUISITION-2026-11-28-v1.0.json": "a0b37286adc177c79690f51e0155521df172ff63",
+    "research/uap_poss1/janus_uap_tachyon_r14_temporal_arrow.py": "33b26706c1dbd6a1706e59f03158234097348b5f",
+    "registry/uap/JANUS-UAP-TACHYON-R1.4-TEMPORAL-ARROW-CONTRACT-2026-11-28-v1.0.json": "f08559a9387af11fdbb6cf63625a071f306af902"
+  },
+  "target_ids": [
+    "DOW-UAP-D165",
+    "DOW-UAP-PR166",
+    "DOW-UAP-PR168",
+    "DOW-UAP-PR169",
+    "DOW-UAP-D108",
+    "DOW-UAP-PR135",
+    "DOW-UAP-D176",
+    "FBI-UAP-D043",
+    "DOW-UAP-D172",
+    "DOW-UAP-D185"
+  ],
+  "target_selection": "Exact ID anchored at beginning of title in pinned 522-record JSON; exactly one per ID. Mirror URL and published byte count/SHA-256 frozen by parent blob. Each PDF GET official and public mirror separately; official video URL is landing page, not MP4; compare byte-identical video only if exact same media file independently acquired (PR135 Zenodo replica). No bypass of 403, no retry with spoofed credentials. Admission requires mirror bytes equal stated size/hash and valid magic; mismatch quarantine. Hash agreement with mirror-published checksum is integrity, not primary authority.",
+  "limits": {
+    "max_file_bytes": 100663296,
+    "max_page_bytes": 4000000,
+    "max_pdf_pages": 600,
+    "transfer_deadline_s": 150,
+    "timeout_s": 35,
+    "max_video_frames": 387,
+    "frame_width": 160,
+    "frame_height": 120
+  },
+  "pdf": "Read authenticated-by-hash PDF text pages with pypdf. Retain page numbers, page text SHA, extracted numeric time tokens (UTC/local not inferred), explicit lat/lon pair with labelled axes only, numeric measurement tokens with unit and line-level hash, uncertainty markers, counts and truncation. Do not publish full text, individual names, exact addresses, or personal identifiers. No OCR, mark image-only/empty pages HOLD. Treat tokens as unadjudicated report assertions, not calibrated observations; conflicting title/catalog dates retain verbatim metadata. No date or coordinate inferred from publication date, observer vs object not established.",
+  "video": "Use ffprobe stream metadata and ffmpeg grayscale showinfo native PTS, first up to 387 frames, 160x120 spatial downsample, no FPS conversion. EYE shadow adapter records frame count, PTS cadence, global brightness mean and frame difference; not target segmentation or native EYE execution. R14 exact temporal scorer on fixed consecutive 129-frame windows of global brightness if PTS monotonic/uniform within 1% of median and nonconstant; mirror D/Q/decision parity. No physical speed, distance, thermal units, or RF measurement from pixels. Native RETINA roles absent; temporal shadow adapter only. PR135 Zenodo same video if hash identical; five published animal comparison clips same global frame method, no object identity or wingbeat conclusion from global brightness. Preserve temporal control curves, hash, limitations.",
+  "zenodo": "Pinned deposit 23021686 file metadata from parent. Download all CSV files, SHA256SUMS, README, reproduce_analysis.py, five flyer MP4s and PR135 MP4 within cap. Verify listed MD5, calculate SHA256; cross-check SHA256SUMS if available. Do not execute external code. Store numeric summary of derived table columns only (finite counts, min, median, max), not pretend independent measurements; no arbitrary fitting of column semantics. Same global EYE analysis for five clips; compare coverage, not object identification.",
+  "noaa": {
+    "stations": [
+      {
+        "case": "AGUADILLA",
+        "station": "78514011603",
+        "year": 2013,
+        "windows": [
+          [
+            "2013-04-26T00:00:00",
+            "2013-04-26T03:00:00"
+          ],
+          [
+            "2013-04-27T00:00:00",
+            "2013-04-27T03:00:00"
+          ]
+        ]
+      },
+      {
+        "case": "PHOENIX",
+        "station": "72278023183",
+        "year": 1997,
+        "windows": [
+          [
+            "1997-03-14T02:00:00",
+            "1997-03-14T06:00:00"
+          ]
+        ]
+      }
+    ],
+    "rule": "First annual NCEI global-hourly CSV; inspect actual headers and reject HTML, BOM/whitespace/quoted header normalization; exact station ID and UTC date required. If header or request fails, official NCEI access/services/data/v1 API exact station and date windows. Preserve both failed and successful receipts; no substitution of other station or invented time. Surface context only."
+  },
+  "csv": "Use pinned tracker URL; parse comma CSV via csv.reader(strict=True), actual header, reject duplicate headers, quarantine rows with differing column count, invalid release date, unanchored ID, invalid type; do not reconstruct missing fields or count ambiguous rows. Detect title IDs exact, compare valid records to mirror IDs and release label, report duplicates/conflicts; CSV not official. Do not copy description or witness data.",
+  "timing_admission": "No calibrated common emitter/receiver, path, clocks, front, independent carrier-specific response from any report/video by default. Numeric tokens remain unverified; H4/H5 HOLD. 5D canonical axes hash chain actual receipts and alternatives; no unique causal reconstruction.",
+  "gates": "10 targets manifest exact, matched mirror count, primary match count separate, all 4 target video streams analyzed, all scored windows mirror pass, NOAA contexts acquired, CSV valid and rejected counts, Zenodo controls integrity and analysis counts; explicit partial/HOLD. No main or production changes."
+}
