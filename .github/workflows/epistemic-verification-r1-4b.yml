@@ -1,0 +1,47 @@
+name: Epistemic Persistence R1.4B
+on:
+  push:
+    branches:
+      - research/epistemic-verification-r1
+    paths:
+      - .github/workflows/epistemic-verification-r1-4b.yml
+permissions:
+  contents: read
+  actions: read
+jobs:
+  checkpoint-restorer:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Retrieve exact pinned checkpoint
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/epistemic-r1-4b"
+          mkdir "$root"
+          anchor=2c74bb359f78f7e3037f3b1fa95135e48f9ed113
+          git merge-base --is-ancestor "$anchor" HEAD
+          git show "$anchor:experiments/autonomy/epistemic-verification-r1-4/run_a_anchor.json" > "$root/anchor.json"
+          api="https://api.github.com/repos/Hawkar-usls/janus-meta-registry/actions"
+          curl --fail --silent --show-error --max-time 30 -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" "$api/runs/46135500190" -o "$root/run.json"
+          curl --fail --silent --show-error --max-time 30 -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" "$api/artifacts/15259401931" -o "$root/artifact.json"
+          curl --fail --silent --show-error --location --max-time 60 --max-filesize 65536 -H "Authorization: Bearer $GH_TOKEN" "$api/artifacts/15259401931/zip" -o "$root/checkpoint.zip"
+          unset GH_TOKEN
+      - name: Restore and verify
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -I experiments/autonomy/epistemic-verification-r1-4/run_b.py
+      - name: Publish isolated successor evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: epistemic-r1-4b-successor
+          path: ${{ runner.temp }}/epistemic-r1-4b/output/*.json
+          if-no-files-found: error
+          retention-days: 7
