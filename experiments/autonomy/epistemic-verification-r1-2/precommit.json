@@ -1,0 +1,285 @@
+{
+  "schema": "janus.epistemic_verification.r1_2.precommit.v1",
+  "status": "PROSPECTIVE_ENGINEERING_TEST",
+  "baseline": {
+    "run": 46128464602,
+    "checks": 54,
+    "passed": 54
+  },
+  "scope": "Offline Ed25519 signed synthetic document authentication and integrity. Test trust root generated ephemerally within the CI harness and passed separately to verifier, never taken from untrusted envelope. Root is pinned by SHA256 of DER public key for that run; not independently enrolled external trust. No persistent secret keys, no network retrieval, no production trust or claim of external identity.",
+  "format": "Envelope exact keys document,sha256,signature. Document exact keys schema,issuer,key_id,context,audience,claim,asserted_truth,note. JSON canonical UTF8 sorted keys compact separators ensure_ascii=True allow_nan=False; typed strict bounded object. SHA256 checks bytes; Ed25519 verifies canonical bytes through OpenSSL pkeyutl -verify -rawin with pinned external-to-envelope test root. Context, audience, issuer and key ID fixed. Canonical proposition binding via R1.1 typed normalized comparison. No date freshness, revocation, unique nonce or persistent replay protection; repeating same signed document is authenticated again, not fresh proof. Unknown/rejected provenance never changes truth. Valid origin cannot promote a symbolic query out of HOLD. Even authenticated source may lie.",
+  "tests": [
+    {
+      "id": "S01",
+      "mutation": "valid_true",
+      "claim": "2 = 2",
+      "expected": {
+        "origin": "AUTHENTICATED_TEST_ORIGIN",
+        "truth": "TRUE"
+      }
+    },
+    {
+      "id": "S02",
+      "mutation": "valid_false",
+      "claim": "2 = 3",
+      "expected": {
+        "origin": "AUTHENTICATED_TEST_ORIGIN",
+        "truth": "FALSE"
+      }
+    },
+    {
+      "id": "S03",
+      "mutation": "valid_symbolic",
+      "claim": "P = NP",
+      "expected": {
+        "origin": "AUTHENTICATED_TEST_ORIGIN",
+        "truth": "UNRESOLVED"
+      }
+    },
+    {
+      "id": "S04",
+      "mutation": "valid_symbolic",
+      "claim": "P != NP",
+      "expected": {
+        "origin": "AUTHENTICATED_TEST_ORIGIN",
+        "truth": "UNRESOLVED"
+      }
+    },
+    {
+      "id": "S05",
+      "mutation": "signed_false_assertion",
+      "claim": "2 = 3",
+      "expected": {
+        "origin": "AUTHENTICATED_TEST_ORIGIN",
+        "truth": "FALSE"
+      }
+    },
+    {
+      "id": "S06",
+      "mutation": "signed_false_assertion",
+      "claim": "2 = 2",
+      "expected": {
+        "origin": "AUTHENTICATED_TEST_ORIGIN",
+        "truth": "TRUE"
+      }
+    },
+    {
+      "id": "S07",
+      "mutation": "tamper_body",
+      "claim": "2 = 2",
+      "expected": {
+        "origin": "REJECTED_DIGEST",
+        "truth": "TRUE"
+      }
+    },
+    {
+      "id": "S08",
+      "mutation": "tamper_rehash",
+      "claim": "2 = 2",
+      "expected": {
+        "origin": "REJECTED_SIGNATURE",
+        "truth": "TRUE"
+      }
+    },
+    {
+      "id": "S09",
+      "mutation": "tamper_signature",
+      "claim": "2 = 2",
+      "expected": {
+        "origin": "REJECTED_SIGNATURE",
+        "truth": "TRUE"
+      }
+    },
+    {
+      "id": "S10",
+      "mutation": "wrong_key",
+      "claim": "2 = 2",
+      "expected": {
+        "origin": "REJECTED_SIGNATURE",
+        "truth": "TRUE"
+      }
+    },
+    {
+      "id": "S11",
+      "mutation": "unknown_issuer",
+      "claim": "2 = 2",
+      "expected": {
+        "origin": "REJECTED_ISSUER",
+        "truth": "TRUE"
+      }
+    },
+    {
+      "id": "S12",
+      "mutation": "unknown_key_id",
+      "claim": "2 = 2",
+      "expected": {
+        "origin": "REJECTED_KEY_ID",
+        "truth": "TRUE"
+      }
+    },
+    {
+      "id": "S13",
+      "mutation": "other_claim",
+      "claim": "2 = 2",
+      "expected": {
+        "origin": "REJECTED_BINDING",
+        "truth": "TRUE"
+      }
+    },
+    {
+      "id": "S14",
+      "mutation": "other_operator",
+      "claim": "2 = 2",
+      "expected": {
+        "origin": "REJECTED_BINDING",
+        "truth": "TRUE"
+      }
+    },
+    {
+      "id": "S15",
+      "mutation": "other_context",
+      "claim": "2 = 2",
+      "expected": {
+        "origin": "REJECTED_CONTEXT",
+        "truth": "TRUE"
+      }
+    },
+    {
+      "id": "S16",
+      "mutation": "other_audience",
+      "claim": "2 = 2",
+      "expected": {
+        "origin": "REJECTED_AUDIENCE",
+        "truth": "TRUE"
+      }
+    },
+    {
+      "id": "S17",
+      "mutation": "extra_verified_flag",
+      "claim": "2 = 2",
+      "expected": {
+        "origin": "REJECTED_SCHEMA",
+        "truth": "TRUE"
+      }
+    },
+    {
+      "id": "S18",
+      "mutation": "wrong_assertion_type",
+      "claim": "2 = 2",
+      "expected": {
+        "origin": "REJECTED_SCHEMA",
+        "truth": "TRUE"
+      }
+    },
+    {
+      "id": "S19",
+      "mutation": "bad_digest_format",
+      "claim": "2 = 2",
+      "expected": {
+        "origin": "REJECTED_SCHEMA",
+        "truth": "TRUE"
+      }
+    },
+    {
+      "id": "S20",
+      "mutation": "bad_signature_encoding",
+      "claim": "2 = 2",
+      "expected": {
+        "origin": "REJECTED_SCHEMA",
+        "truth": "TRUE"
+      }
+    },
+    {
+      "id": "S21",
+      "mutation": "missing_signature",
+      "claim": "2 = 2",
+      "expected": {
+        "origin": "REJECTED_SCHEMA",
+        "truth": "TRUE"
+      }
+    },
+    {
+      "id": "S22",
+      "mutation": "invalid_claim",
+      "claim": "2 == 2",
+      "expected": {
+        "origin": "REJECTED_BINDING",
+        "truth": "INVALID"
+      }
+    },
+    {
+      "id": "S23",
+      "mutation": "equivalent_operands",
+      "claim": "2 != 3",
+      "expected": {
+        "origin": "AUTHENTICATED_TEST_ORIGIN",
+        "truth": "TRUE"
+      }
+    },
+    {
+      "id": "S24",
+      "mutation": "equivalent_zero",
+      "claim": "0 = -0",
+      "expected": {
+        "origin": "AUTHENTICATED_TEST_ORIGIN",
+        "truth": "TRUE"
+      }
+    },
+    {
+      "id": "S25",
+      "mutation": "wrong_schema_version",
+      "claim": "2 = 2",
+      "expected": {
+        "origin": "REJECTED_SCHEMA",
+        "truth": "TRUE"
+      }
+    },
+    {
+      "id": "S26",
+      "mutation": "changed_issuer_rehash",
+      "claim": "2 = 2",
+      "expected": {
+        "origin": "REJECTED_ISSUER",
+        "truth": "TRUE"
+      }
+    },
+    {
+      "id": "S27",
+      "mutation": "oversize_document",
+      "claim": "2 = 2",
+      "expected": {
+        "origin": "REJECTED_SCHEMA",
+        "truth": "TRUE"
+      }
+    },
+    {
+      "id": "S28",
+      "mutation": "malformed_envelope",
+      "claim": "2 = 2",
+      "expected": {
+        "origin": "REJECTED_SCHEMA",
+        "truth": "TRUE"
+      }
+    },
+    {
+      "id": "S29",
+      "mutation": "signed_unknown_proof",
+      "claim": "P = NP",
+      "expected": {
+        "origin": "AUTHENTICATED_TEST_ORIGIN",
+        "truth": "UNRESOLVED"
+      }
+    },
+    {
+      "id": "S30",
+      "mutation": "same_document_repeated",
+      "claim": "2 = 2",
+      "expected": {
+        "origin": "AUTHENTICATED_TEST_ORIGIN",
+        "truth": "TRUE"
+      }
+    }
+  ],
+  "gate": "54 prior checks + 30 provenance cases all pass; actual crypto negative controls; no source assertion changes baseline truth; no production/train/knowledge writes. Same-author synthetic cases not independent real source authentication. Separate future real enrollment/rotation/revocation and temporal replay gate.",
+  "execution": "One branch-only GitHub Actions CPU job, timeout 5 min, contents read, pinned checkout, ephemeral test keypair and adversary keypair generated by OpenSSL in temporary directory, cleaned at exit, do not print private keys. Log public key fingerprint and versions, exact test outcomes. No integration."
+}
