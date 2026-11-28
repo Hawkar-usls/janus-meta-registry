@@ -1,0 +1,72 @@
+name: JANUS UAP Tachyon R1.7A spectral population expansion
+on:
+  push:
+    branches: [research/uap-tachyon-r17a-population-expansion-20261128]
+    paths:
+      - 'research/uap_poss1/janus_uap_tachyon_r17a_population_expansion.py'
+      - '.github/workflows/janus-uap-tachyon-r17a-population-expansion.yml'
+permissions:
+  contents: read
+jobs:
+  exam:
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install fixed wheels
+        run: |
+          python -m pip install --only-binary=:all: numpy==2.2.6 scipy==1.15.3 h5py==3.13.0
+      - name: Execute bounded shard
+        run: |
+          python research/uap_poss1/janus_uap_tachyon_r17a_population_expansion.py ${{ matrix.shard }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: r17a-shard-${{ matrix.shard }}
+          path: shard.json
+          if-no-files-found: error
+  publish:
+    needs: exam
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install fixed wheels
+        run: |
+          python -m pip install --only-binary=:all: numpy==2.2.6 scipy==1.15.3 h5py==3.13.0
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: r17a-shard-*
+          path: /tmp/r17a
+      - name: Verify full manifest, calibrate and publish receipt
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          python research/uap_poss1/janus_uap_tachyon_r17a_population_expansion.py merge /tmp/r17a | tee /tmp/r17a-summary.json
+          git add -- 'registry/uap/JANUS-UAP-TACHYON-R1.7A-SPECTRAL-POPULATION-EXPANSION-RESULT-2026-11-28-v1.0.json'
+          git config user.name "JANUS Spectral Population"
+          git config user.email "actions@users.noreply.github.com"
+          git commit -m "JANUS R1.7A: spectral population audit receipt"
+          git push origin HEAD:refs/heads/research/uap-tachyon-r17a-population-expansion-20261128
+      - uses: actions/upload-artifact@v4
+        with:
+          name: r17a-population-summary
+          path: /tmp/r17a-summary.json

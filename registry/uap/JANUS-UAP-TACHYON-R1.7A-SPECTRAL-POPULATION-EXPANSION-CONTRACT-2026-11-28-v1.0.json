@@ -1,0 +1,48 @@
+{
+  "schema": "janus.uap_tachyon.spectral_population_expansion.contract.v1",
+  "date": "2026-11-28",
+  "source_commit": "f23b5f3994254ed537e54cf3069756b640183edc",
+  "status": "FROZEN_BEFORE_EXECUTION__SHADOW_ONLY",
+  "parent_result": "registry/uap/JANUS-UAP-TACHYON-R1.7-REAL-SPECTRAL-CORPUS-RESULT-2026-11-28-v1.0.json",
+  "parent_blob": "5ea92cd1d7d77511708649b09efcb2cefd77f92f",
+  "parent_manifest_sha256": "87eabc430fc82190b25c53b5cd0fbc035d34caa11939b7fb0b16d7e180027ca8",
+  "r14_code": "research/uap_poss1/janus_uap_tachyon_r14_temporal_arrow.py",
+  "r14_blob": "33b26706c1dbd6a1706e59f03158234097348b5f",
+  "r14_contract": "registry/uap/JANUS-UAP-TACHYON-R1.4-TEMPORAL-ARROW-CONTRACT-2026-11-28-v1.0.json",
+  "selection": {
+    "reference": 144,
+    "holdout": 44,
+    "pilot_diagnostic": 25,
+    "shards": 16,
+    "split": "Preserve parent source split; exclude all pilot source groups from new reference and holdout. Pick one event per source by fixed SHA256 rank and rank groups with fixed R17A salt, separately per split. No replacement of failed files. Pilot diagnostic only. Source IDs are catalog group proxies, not proof of physical independence.",
+    "max_parallel": 4,
+    "cap_bytes": 402653184,
+    "max_cells": 48000000,
+    "max_samples": 2048,
+    "timeout_seconds": 90
+  },
+  "recovery": {
+    "download_cap_failures": [
+      "FRB20190103B",
+      "FRB20190412B"
+    ],
+    "array_cap_failures": [
+      "FRB20181018A",
+      "FRB20190403F",
+      "FRB20190423D"
+    ],
+    "cause": "Parent file BYTE_CAP 128MiB; expanded arrays 16384*768=12582912 exceed previous 12000000 cells. Increase bounded caps; stream bytes to temp file; no missing values filled."
+  },
+  "documentation": [
+    "https://chime-frb-open-data.github.io/waterfall/",
+    "https://chime-frb.ca/tutorials"
+  ],
+  "analysis": {
+    "profile": "Exact R14 score on native sample grid, all-time finite rows only. Per-array hash, mask hash, count and profile. Same dt documented; calibrated origin not given. Mirror D/Q/decision check. R14 thresholds synthetic, descriptive only.",
+    "alignment": "Assume same row index as documented waterfall plotting; verify empirical integer offset of short wfall within calibrated_wfall by per-row normalized correlation across sampled common full rows, no peak-only centering. Frequency rows split deterministically into train even/validation odd indices; max 128 rows per partition spaced across band. Train chooses best mean Pearson across offsets; require train>=.80, held>=.80, train runner-up margin>=.02, held best same offset, >=32 nonconstant rows per split; record second-best and reversed-time control. Fail closed; no alignment from peak alone. This is within-file empirical registration, not absolute timing. No inference of causal direction.",
+    "ablation": "For aligned files, A wfall own full rows; B wfall common full rows; C calibrated crop same rows/same time bins; D calibrated full same rows; E calibrated full own rows. F calibrated crop rows individually standardized to unit variance using crop alone; G wfall common crop standardized analogously. Report each D,Q,decision; paired changes isolate mask, representation, window, and relative gain effects; no uniquely causal attribution without calibration metadata. Preserve raw arrays and masks. Compare all profiles including pilot separately; source split retained.",
+    "population": "Score T=abs(D) if Q>=.25 else 0. For each array lane and matched common crop separately, lock empirical reference scores only; holdout p=(1+count(ref>=T))/(n+1), candidate if p<=.05 and n>=100. Report reference quantiles, support, holdout rates and exact binomial interval descriptive, not evidence of physical anomaly. No calibration against true causal direction labels. Require >=100 source groups reference and >=30 holdout for each lane, no claims for unsupported lanes. Pilot excluded. No production threshold changes.",
+    "spiral": "Five canonical axes, hashed source receipts and matched representations, alternative explanations, calibration lock and heldout ranks. No native RETINA calls without required roles, no physical or paired witness promotion."
+  },
+  "gates": "100 reference sources on wfall and calibrated separately; >=30 independent holdout groups per lane; matched registration coverage >=80% of paired files; R14 mirror all scored profiles; five parent failures recovered separately. Report actual failure and uncertainty; no threshold tuning."
+}
