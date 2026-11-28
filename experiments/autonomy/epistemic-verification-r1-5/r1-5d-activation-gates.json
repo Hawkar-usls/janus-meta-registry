@@ -1,0 +1,86 @@
+{
+  "schema": "janus.epistemic.r1_5d.activation_gates.v1",
+  "date": "2026-11-28",
+  "status": "BEACON_FINAL_DIAGNOSTIC_PENDING__EXTERNAL_ANCHOR_HOLD",
+  "parent_review": {
+    "commit": "e286fad58c59f8e78b891bd075b22ba4cc228ae1",
+    "blob": "4aa731b71f560e61c29cc5aa6fea7bc4343ca09c"
+  },
+  "beacon": {
+    "precommit": "6513d68f93daaaca9d4b58c365b76398d65dc0b2",
+    "nominal_slots": 20,
+    "latest_diagnostic_report": 19,
+    "slot_files_observed": 17,
+    "last_witness": {
+      "uuid": "7a820cee-4904-832b-9645-033fd17e22a4",
+      "scheduled_for": "2026-11-28T16:39:09Z",
+      "started_at": "2026-11-28T16:38:54.899265Z",
+      "completed_at": "2026-11-28T16:39:17.850248Z"
+    },
+    "next_relay_reported": "2026-11-28T18:55:00+02:00",
+    "next_diagnostic_reported": "2026-11-28T19:10:00+02:00",
+    "final_diagnostic_verified": false,
+    "original_recovery_status": "HOLD; diagnostic slots do not count"
+  },
+  "anchor_review": {
+    "research_branch": {
+      "name": "research/epistemic-verification-r1",
+      "head": "e286fad58c59f8e78b891bd075b22ba4cc228ae1",
+      "protected": false
+    },
+    "visible_repo_rulesets": [],
+    "analog": {
+      "url": "https://github.com/Hawkar-usls/janus-lapis/issues/21",
+      "sequence": 460,
+      "schema": "janus.genesis.home.highwater.v1",
+      "assessment": "Useful cross-repository pattern, not independently protected immutable store; Issue editable. Do not reuse or alter HOME anchor."
+    },
+    "status": "NO_VERIFIED_PROTECTED_INDEPENDENT_MONOTONIC_STORE"
+  },
+  "proposed_contract": {
+    "namespace": "epistemic-trust-only; no BEACON relay or HOME issue reuse",
+    "observation": "Read-only optional EPISTEMIC_TRUST_WITNESS_V1 as frozen compatibility review, appended only after final diagnostic report and archive verified. No change to schedule, existing prompt, BEACON JSON, deduplication or relay policy. No extra task.",
+    "anchor": "Separate authority-owned store with write ACL excluding producer, authenticated source observation, independently retained highwater, atomic CAS against version and prior commitment, no overwrite/delete/force push permitted for producer. GitHub-only separate repo can reduce producer risk but does not establish global protection against shared privileged admins.",
+    "genesis": {
+      "version": 6,
+      "checkpoint_sha256": "03c33f440dd7ba5ee7f6a3c12d84ac15a978a8fed3a64c5842fc382f66e5e045",
+      "artifact_id": 15270934037,
+      "producer_run": 46165295807,
+      "audit_run": 46165797356,
+      "classification": "BOOTSTRAP_CANDIDATE_NOT_EXTERNAL_ATTESTATION"
+    },
+    "transition_rules": [
+      "Missing prior anchor, source authorization or exact evidence => HOLD.",
+      "Lower version => ROLLBACK_HOLD; equal version different digest => CONFLICT_HOLD; equal version same digest => NOOP, not new cycle.",
+      "Next version exactly prior+1, parent digest equals prior commitment, distinct successful run and verified artifact bytes, valid signed external witness receipt and expected CAS token required before append.",
+      "Separate writer must atomically check expected prior commitment and append; reread exact committed record. No overwrite. Authentication, timestamp and protection policy need separate tests. Fail closed on stale CAS, fork, unavailable external witness or missing artifact."
+    ],
+    "negative_controls": [
+      "unauthorized producer write",
+      "replayed witness receipt",
+      "stale CAS",
+      "same version hash conflict",
+      "lower version",
+      "wrong parent",
+      "wrong run identity",
+      "partial observation",
+      "unauthorized force update/delete",
+      "missing prior highwater"
+    ]
+  },
+  "gates": {
+    "final_beacon_diagnostic": false,
+    "live_witness_addendum": false,
+    "actual_external_observation": false,
+    "protected_store": false,
+    "automatic_successor_runs": 0
+  },
+  "changes": {
+    "automations": false,
+    "production": false,
+    "training": false,
+    "active_cortex_write": false,
+    "existing_anchor": false,
+    "permissions": false
+  }
+}
