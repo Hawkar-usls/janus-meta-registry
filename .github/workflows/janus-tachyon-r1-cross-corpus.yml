@@ -1,0 +1,43 @@
+name: JANUS TACHYON R1 cross corpus
+on:
+  push:
+    branches: [janus-uap-r1-master-reconsolidation-20261128]
+    paths:
+      - 'research/uap_poss1/janus_tachyon_r1_cross_corpus.py'
+      - '.github/workflows/janus-tachyon-r1-cross-corpus.yml'
+permissions:
+  contents: write
+concurrency:
+  group: janus-tachyon-r1-cross-corpus
+  cancel-in-progress: false
+jobs:
+  scan:
+    if: github.ref == 'refs/heads/janus-uap-r1-master-reconsolidation-20261128'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Scan pinned JSON corpus and compare UAP
+        run: |
+          set -euo pipefail
+          git cat-file -e 'a927c3e46f78adff4ab586019f5caec29939b04b^{commit}'
+          python3 research/uap_poss1/janus_tachyon_r1_cross_corpus.py | tee /tmp/janus-tachyon-r1-summary.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-tachyon-r1-cross-corpus
+          path: |
+            /tmp/janus-tachyon-r1-summary.json
+            registry/uap/JANUS-TACHYON-MASTER-INDEX-2026-11-28-v1.0.json
+            registry/uap/JANUS-UAP-TACHYON-CROSS-CORPUS-2026-11-28-v1.0.json
+      - name: Publish only generated indexes
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          git add -- registry/uap/JANUS-TACHYON-MASTER-INDEX-2026-11-28-v1.0.json registry/uap/JANUS-UAP-TACHYON-CROSS-CORPUS-2026-11-28-v1.0.json
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name "JANUS TACHYON R1"
+          git config user.email "actions@users.noreply.github.com"
+          git commit -m "JANUS TACHYON R1: full corpus scan and UAP crosswalk"
+          git push origin HEAD:refs/heads/janus-uap-r1-master-reconsolidation-20261128
