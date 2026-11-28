@@ -1,0 +1,48 @@
+name: JANUS UAP R1 pinned corpus scan
+on:
+  push:
+    branches:
+      - janus-uap-r1-master-reconsolidation-20261128
+    paths:
+      - 'research/uap_poss1/janus_uap_r1_master_reconsolidation.py'
+      - '.github/workflows/janus-uap-r1-reconsolidation.yml'
+permissions:
+  contents: write
+concurrency:
+  group: janus-uap-r1-reconsolidation
+  cancel-in-progress: false
+jobs:
+  scan:
+    if: github.ref == 'refs/heads/janus-uap-r1-master-reconsolidation-20261128'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 3
+      - name: Scan frozen source and validate JSON
+        run: |
+          set -euo pipefail
+          source=1c07716e240132632037cb855785b31bec2cf7a9
+          git cat-file -e "$source^{commit}"
+          python3 research/uap_poss1/janus_uap_r1_master_reconsolidation.py --source "$source" | tee /tmp/janus-uap-r1-summary.json
+          python3 -m json.tool registry/uap/JANUS-UAP-MASTER-INDEX-2026-11-28-v1.0.json >/dev/null
+          python3 -m json.tool registry/uap/JANUS-UAP-NEVADA-ARIZONA-GEO-INDEX-2026-11-28-v1.0.json >/dev/null
+      - name: Publish audit artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: janus-uap-r1-pinned-corpus
+          path: |
+            /tmp/janus-uap-r1-summary.json
+            registry/uap/JANUS-UAP-MASTER-INDEX-2026-11-28-v1.0.json
+            registry/uap/JANUS-UAP-NEVADA-ARIZONA-GEO-INDEX-2026-11-28-v1.0.json
+      - name: Commit only the two generated indexes to this branch
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          git add -- registry/uap/JANUS-UAP-MASTER-INDEX-2026-11-28-v1.0.json registry/uap/JANUS-UAP-NEVADA-ARIZONA-GEO-INDEX-2026-11-28-v1.0.json
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name "JANUS UAP R1"
+          git config user.email "actions@users.noreply.github.com"
+          git commit -m "JANUS UAP R1: full pinned JSON corpus scan"
+          git push origin HEAD:refs/heads/janus-uap-r1-master-reconsolidation-20261128
