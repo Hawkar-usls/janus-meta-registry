@@ -23,7 +23,8 @@ jobs:
         with:
           python-version: '3.11'
       - name: Install fixed scientific libraries
-        run: python3 -m pip install --only-binary=:all: 'numpy==2.2.6' 'scipy==1.15.3' 'h5py==3.13.0'
+        run: |
+          python3 -m pip install --only-binary=:all: 'numpy==2.2.6' 'scipy==1.15.3' 'h5py==3.13.0'
       - name: Execute frozen model, public controls and native organ entrypoints
         run: |
           set -euo pipefail
