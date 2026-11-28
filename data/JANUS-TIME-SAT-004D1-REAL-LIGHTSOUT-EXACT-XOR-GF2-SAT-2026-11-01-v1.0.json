@@ -1,0 +1,91 @@
+{
+  "schema": "janus.meta_registry.time_sat_004d1_exact_xor_source_model.v1",
+  "artifact_id": "JANUS-TIME-SAT-004D1-REAL-SATCOMP26-LIGHTSOUT-EXACT-XOR-GF2-SAT-2026-11-01",
+  "date_utc": "2026-11-01",
+  "status": "REAL_ORIGINAL_CNF_EXACT_XOR_625_EQUATIONS_SAT_MODEL_VERIFIED_TWO_HOSTS_SPECIALIZED_BASELINE_PENDING",
+  "scientific_lineage": {
+    "issue": "https://github.com/Hawkar-usls/Janus-Fundamentum/issues/575",
+    "prior_negative": "data/JANUS-TIME-SAT-004D0-REAL-CNF-ZERO-WEDGES-ALL-CPU-CENSORED-2026-11-01-v1.0.json",
+    "original_public_source": "SAT Competition 2026 official Main Track GBD",
+    "previous_raw_CDCL_test_run": 41326432087,
+    "draft_004D1_PR": "https://github.com/Hawkar-usls/Janus-Fundamentum/pull/582",
+    "archive_commit": "f24449ccfe48477243aace5be27b4477093d167a",
+    "parent_research_branches_remain_draft": true
+  },
+  "origin": {
+    "public_GBD_id_is_not_sha256": "01d6fa8efd18ebfecd06af408958477b",
+    "source_family": "lights-out",
+    "upstream_organizer_metadata_label": "sat",
+    "original_compressed_sha256": "59704ea1179fc5eab68989230b53158a67fffb955a6780b2f93c0aea341a356b",
+    "original_decoded_CNF_sha256": "6be9bfe6b44454a061a2e93350f589643f8a16f5bca6babdaa50a2d3d7069361",
+    "number_of_variables": 625,
+    "original_clauses": 9216,
+    "original_literal_occurrences": 45312,
+    "source_archive": "experiments/time_sat_004_external/lightsout_01d6fa8_verified/original.cnf",
+    "compressed_original": "experiments/time_sat_004_external/lightsout_01d6fa8_verified/original.download.xz",
+    "original_model": "experiments/time_sat_004_external/lightsout_01d6fa8_verified/model.json",
+    "model_json_sha256": "add33523d7d4f598c7a9da46d3ba7fe86326c59db45792c6ca649469347608cd"
+  },
+  "method": {
+    "name": "Exact complete XOR-to-CNF support/sign parity recognition + classical Gaussian elimination over GF(2)",
+    "no_p_equals_np_or_novel_universal_solver": true,
+    "source_witness": "For every support size k<=6 require exactly 2^(k-1) unique clause-falsifying assignments, all of identical blocked parity; all source clauses covered by completed groups",
+    "algebraic_equation_count": 625,
+    "source_SAT_model_replayed_every_original_clause": true,
+    "incomplete_or_mixed_CNF_policy": "ABSTAIN_NO_SAT_CLAIM",
+    "no_clause_deletions_or_unsound_extensions": true,
+    "original_preprocessor_004D0_binary_wedges": 0,
+    "scientific_explanation": "Standard Lights-out 25x25 GF2 linear puzzle; 529 interior length5, 92 edge length4, four corner length3 XOR equations exactly match 9216 clauses and 45312 literals; unlike prior 004D0 two-clause resolution"
+  },
+  "evidence": {
+    "source_code": "experiments/direct/janus_time_sat_004d1_xor.py",
+    "source_probe": "experiments/direct/janus_time_sat_004d1_probe.py",
+    "tests": "tests/test_time_sat_004d1.py",
+    "dual_host_test_run": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/41329133105",
+    "two_host_ci": "BOTH_UBUNTU_22_04_AND_24_04_COMPLETED_SUCCESS",
+    "offline_unit_tests_each_worker": "5/5 PASS",
+    "source_xor_CNF_cover": "625/625 EXACT",
+    "original_SAT_model_verified": "PASS_ON_EXACT_9216_ORIGINAL_CNF_CLAUSES",
+    "both_hosts_same_model_signed_625_lits": true,
+    "GF2_only_stage_seconds": {
+      "ubuntu22": 0.05122684200000549,
+      "ubuntu24": 0.05261020000000016
+    },
+    "green_tao_negative_control": {
+      "n": 527,
+      "clauses": 12692,
+      "verdict": "ABSTAIN_NOT_FULL_XOR_COVER"
+    },
+    "permanent_original_archive": {
+      "workflow": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/41329436130",
+      "status": "SUCCESS",
+      "repo": "Hawkar-usls/Janus-Fundamentum",
+      "commit": "f24449ccfe48477243aace5be27b4477093d167a",
+      "path": "experiments/time_sat_004_external/lightsout_01d6fa8_verified/manifest.json",
+      "exact_original_actions_zip_sha256": {
+        "ubuntu22": "5a59326d3a308b23099e8fd7892da89b712e92173ac5459e940dad3dcd6383d7",
+        "ubuntu24": "4ccb7036b48941db7ca56a8d931373c31f18e7b42a2cee8b0eb4c5dc2bfe8aa1"
+      },
+      "source_and_model_original_bytes": "SHA-verified Git archive (not only 30-day Action artifact)"
+    }
+  },
+  "claim_boundaries": [
+    "New result is a correct SAT model for one original public third-party CNF from a narrow algebraic family, not general SAT superiority.",
+    "0.051-0.053 seconds measure standalone GF2+model checking only, excluding source acquisition and interpreter startup; NOT matched full pipeline time.",
+    "Prior raw CDCL was 6-second CPU-censored on the same formula, so no numerical speedup ratio can be computed.",
+    "Native strong specialized parity/XOR-aware baselines, a baseline standalone GF(2), and standard solver built-in preprocessing are not yet compared.",
+    "Green-Tao was correctly declined as nonexact-XOR, and not solved.",
+    "The proof code and repeat hosts remain in the same GitHub administrative trust domain; third-party independent Witness not achieved.",
+    "Training/development sources are previously observed, public and not an external sealed hidden exam.",
+    "Full production C023 and main remain untouched. P vs NP remains open."
+  ],
+  "gates": {
+    "TIME_SAT_004A": "PASS",
+    "TIME_SAT_004B": "PUBLIC_ORIGIN_PILOT_PASS_HARD_HIDDEN_OPEN",
+    "TIME_SAT_004C": "EXTERNAL_ADMIN_PENDING",
+    "TIME_SAT_004D": "SPECIALIZED_004D1_FEASIBILITY_SAT_PASS_FAIR_COMPARISON_OPEN",
+    "TIME_SAT_004E": "NET_PROFIT_PREDICTION_NOT_TESTED",
+    "TIME_SAT_004F": "NOT_READY"
+  },
+  "append_only": true
+}

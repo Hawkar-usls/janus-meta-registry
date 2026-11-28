@@ -1,0 +1,142 @@
+{
+  "schema": "janus.meta_registry.time_sat_004d3b_new_public_sat_unsat_case_dependent_native_xor_v1",
+  "id": "JANUS-TIME-SAT-004D3B-NEW-LIGHTSOUT-COMPARISON-60-ISOLATED-TRIALS-20261101",
+  "date_utc": "2026-11-01",
+  "scientific_status": "EXTERNAL_PUBLIC_TWO_NEW_SOURCES_MATCHED_BENCHMARK_PASS_CASE_DEPENDENT_PERFORMANCE_NOT_GENERAL",
+  "parent": "data/JANUS-TIME-SAT-004D3-REAL-NINE-SATCOMP26-XOR-SAT-UNSAT-MIXED-2026-11-01-v1.0.json",
+  "sources": {
+    "official_origin": "SAT Competition 2026 main track pinned upstream",
+    "public_not_hidden": true,
+    "parent_preregister": "Hawkar-usls/Janus-Fundamentum#585",
+    "external_source_records_sha_pinned": true,
+    "two_new_source_ids": {
+      "sat": "28dcc4119e1bbb5fbd3fdd8f4140f28d",
+      "unsat": "0efcbd10294eb001b16b4d126923372f"
+    },
+    "exact_original_CNF_SHA256": {
+      "sat": "b2c2008e5d24a7aa82499d1486af2550a53a7167e46836c4b9977846204ad483",
+      "unsat": "84729f80119b50efac42d9477438abbc58c8712654ffe1fcdf9f324e44ae165d"
+    },
+    "original_9_sources_confirmed_prior": true,
+    "remaining_7": "ABSTAIN_NOT_BENCHMARKED"
+  },
+  "github": {
+    "algorithm_comparison_draft_PR": "https://github.com/Hawkar-usls/Janus-Fundamentum/pull/586",
+    "branch": "research/time-sat-004d3b-fair-new-lightsout-20261101",
+    "experiment_CI": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/41333053744",
+    "tested_head_sha": "053882cb7bbc2c0b8e89c1b851c3c7a57ed51109",
+    "both_workers_success": true,
+    "test_checks_per_worker": 5,
+    "original_C023_standalone_verifier": "PASS",
+    "archive_CI": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/41333475926",
+    "archive_commit": "34a42b4c3a91eb097c74c3d6a8c8c0fa31d27df1",
+    "archive_JSON": "experiments/time_sat_004_external/time_sat_004d3b_evidence/summary.json",
+    "original_ZIP_SHA256": {
+      "ubuntu22": "da253df87b19b3e4b9f269cdedb9ca8fb33f0be2adfc5fe7b0a1fa0e4a4fa914",
+      "ubuntu24": "e79f57d294c1a2fb92774cceeb6f1a2b513842789a5b16c4df2e1e2d92caf619"
+    }
+  },
+  "study_design": {
+    "arms": [
+      "JANUS exact source-cover GF2 and original-source model/contradiction replay",
+      "CryptoMiniSat native XOR after same source recognition costs",
+      "CryptoMiniSat original unmodified CNF",
+      "CaDiCaL195 original CNF",
+      "Glucose4 original CNF"
+    ],
+    "os": [
+      "Ubuntu 22.04",
+      "Ubuntu 24.04"
+    ],
+    "num_new_original_CNF": 2,
+    "repeats_per_source_per_arm_worker": 3,
+    "total_child_processes": 60,
+    "CPU_limit_seconds": 8,
+    "wall_limit_seconds": 11,
+    "virtual_memory_limit_bytes": 2147483648,
+    "randomized_order": true,
+    "time_measure": "full original source checked, cold Python child, parse, algorithm and result verification",
+    "pinned_CMS": "pycryptosat==5.15.0",
+    "pinned_PySAT": "python-sat==1.9.dev17",
+    "SAT_model": "independently replay every original CNF clause for every SAT solver success",
+    "UNSAT_other_solvers": "SOLVER_ONLY_NO_PORTABLE_PROOF",
+    "UNSAT_JANUS": "SOURCE_GF2_ZERO_EQUALS_ONE_SAME_ADMIN_REPLAY",
+    "RAM_for_CPU_killed_children": "NOT_AVAILABLE",
+    "CI_platforms_same_GitHub_admin": true
+  },
+  "observed": {
+    "new_sat": {
+      "original_dimacs_n": 2702,
+      "original_CNF_rows": 8933,
+      "GF2_equations": 2702,
+      "median_full_seconds": {
+        "Ubuntu22": {
+          "janus_gf2": 0.1232505950000018,
+          "cryptominisat_native_XOR": null,
+          "cryptominisat_original_CNF": 4.063518323000011,
+          "cadical195": null,
+          "glucose4": null
+        },
+        "Ubuntu24": {
+          "janus_gf2": 0.12580816199999845,
+          "cryptominisat_native_XOR": null,
+          "cryptominisat_original_CNF": 4.053152719000003,
+          "cadical195": null,
+          "glucose4": null
+        }
+      },
+      "time_censoring": "Native XOR, CaDiCaL and Glucose each 3/3 SIGXCPU per runner; NO finite speed ratio is permissible",
+      "JANUS_SAT_model_replay": 6,
+      "CryptoMiniSat_original_CNF_SAT_model_replay": 6,
+      "catalog_label": "sat"
+    },
+    "new_unsat": {
+      "original_dimacs_n": 529,
+      "original_CNF_rows": 7744,
+      "GF2_equations": 529,
+      "median_full_seconds": {
+        "Ubuntu22": {
+          "janus_gf2": 0.1571005759999764,
+          "cryptominisat_native_XOR": 0.13553863699999624,
+          "cryptominisat_original_CNF": 2.507804928999974,
+          "cadical195": null,
+          "glucose4": null
+        },
+        "Ubuntu24": {
+          "janus_gf2": 0.1620337070000062,
+          "cryptominisat_native_XOR": 0.13139931399999227,
+          "cryptominisat_original_CNF": 2.498597794999995,
+          "cadical195": null,
+          "glucose4": null
+        }
+      },
+      "verified_GF2_same_admin_contradiction_replays": 6,
+      "CryptoMiniSat_native_UNSAT_solver_only": 6,
+      "CryptoMiniSat_original_UNSAT_solver_only": 6,
+      "native_CMS_faster_than_JANUS_on_this_source": true,
+      "catalog_label": "unsat"
+    },
+    "individual_signaled_timeouts": 30,
+    "individual_completed_successful": 30,
+    "all_60_original_cases_accounted": true,
+    "ratio_policy": "Never compute speedup from SIGXCPU-censored samples; ratios only when comparable end-to-end successful paired cases. 3 repeats on one family do not prove population effect."
+  },
+  "scientific_conclusion": [
+    "First JANUS pilot showed a source-bound solved original public XOR SAT problem; new 004D3 tests demonstrate both SAT and algebraic UNSAT on two previously unseen-by-JANUS Lights-out instances.",
+    "On new SAT, JANUS completes in ~0.12s while native XOR CryptoMiniSat is CPU-censored at 8s and CMS original CNF solves ~4s.",
+    "On new UNSAT, native XOR CryptoMiniSat completes faster than JANUS (~0.13s versus ~0.16s). Thus the relative engineering performance is case-specific and there is NO unconditional winning algorithm.",
+    "No successful transferable solution on the other 7 non-Lights-out public families; 004D overall remains OPEN.",
+    "Three repeats per same-admin worker are descriptive, not a statistically sound generalization test.",
+    "External independent administrative Witness, sealed holdout dataset and complete portable UNSAT proof replay remain OPEN.",
+    "No production C023/main modifications, no P=NP or retrocausality claim."
+  ],
+  "gates": {
+    "A": "PASS",
+    "B": "PUBLIC_ORIGIN_PILOT",
+    "C": "EXTERNAL_WITNESS_OPEN",
+    "D": "PUBLIC_TWO_SOURCE_COMPARISON_PASS_FULL_GATE_OPEN",
+    "E": "NET_PROFIT_PREDICTION_OPEN",
+    "F": "NOT_READY"
+  },
+  "append_only": true
+}

@@ -1,0 +1,667 @@
+{
+  "schema": "janus.meta_registry.research_experiment_result.v1",
+  "artifact_id": "JANUS-TIME-SAT-PARTIAL-001-CADICAL-GLUCOSE-REPLICATION-2026-11-01-v1.0",
+  "date_utc": "2026-11-01",
+  "topic": "Entropy, Time, Causality, Reversibility and SAT model partial-state consistency",
+  "source_topic_manifest": {
+    "repo": "Hawkar-usls/janus-meta-registry",
+    "main_path": "data/JANUS-ENTROPY-TIME-CAUSALITY-REGISTRY-SYNTHESIS-2026-11-01-v1.0.json",
+    "merged_PR": 433,
+    "merged_sha": "6335f51bbe57085411de36d3b34a9839cdeb3723",
+    "experimental_program_id": "TIME-SAT-PARTIAL-001",
+    "preserved_original_registration_status": "PROPOSED_NOT_EXECUTED",
+    "new_status_this_append_only_receipt": "EXECUTED_ON_PUBLIC_FROZEN_CONTROLS_STRONG_CDCL_NEGATIVE_PERFORMANCE"
+  },
+  "implementation": {
+    "repo": "Hawkar-usls/Janus-Fundamentum",
+    "PR": 574,
+    "PR_stays_draft": true,
+    "branch": "research/ufr-001-structural-renaming-20261101",
+    "tested_source_sha": "f48ad8d6690aaf2c6f24550287364ece769c35a0",
+    "code": "experiments/direct/janus_time_sat_partial_001.py",
+    "tests": "tests/test_time_sat_partial_001.py",
+    "runner_workflow": ".github/workflows/validate-time-sat-partial-001.yml",
+    "evidence_json": "experiments/TIME_SAT_PARTIAL_001_CDCL_EVIDENCE_20261101.json",
+    "methods": "docs/TIME_SAT_PARTIAL_001_RESEARCH.md",
+    "verified_ci_run_id": 41310145885,
+    "verified_ci_url": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/41310145885",
+    "full_logs": {
+      "ubuntu22": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/41310145885/artifacts/13084158937",
+      "ubuntu24": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/41310145885/artifacts/13084148956",
+      "retention_days": 30
+    }
+  },
+  "method": {
+    "algorithms": [
+      "CaDiCaL195 via python-sat==1.9.dev17",
+      "Glucose4 via python-sat==1.9.dev17"
+    ],
+    "variant_baselines": [
+      "raw_same_strong_CDCL",
+      "forward_sound_unit_preprocessing_same_CDCL",
+      "forward_plus_goal_ordered_5_percent_failed_literal_same_CDCL"
+    ],
+    "goal_priority": "Tighter clause goals, chosen only from known original clauses; no future witness, no hidden answer",
+    "soundness": "Derived units only after actual propagation contradiction of negated unit, independently challenged against original formula by CaDiCaL",
+    "timing": "Full wall from original clause encoding through preparation, implication audits, cold external solver and independent SAT model validation",
+    "frozen_instances": {
+      "small_count": 60,
+      "small_suite_sha256": "865af20c649740dc7847a7204d9cd0c36470ddb66777c4e92c26bde33c58c53b",
+      "small_repeats": 3,
+      "large_cases": 5,
+      "large_repeats": 2,
+      "source_cnf_manifest_sha256": "669eb31ff55e95239334e571616304e4b2b5bec6293c1003598e121fefa7a40f"
+    },
+    "cloud_independence": "Two GitHub-hosted virtual machines Ubuntu 22.04 and Ubuntu 24.04; shared repo/infrastructure trust",
+    "external_hidden_holdout": "NOT_PERFORMED",
+    "per_variant_peak_memory": "NOT_PERFORMED",
+    "independent_new_UNSAT_proof": "NOT_PERFORMED"
+  },
+  "hosts": {
+    "ubuntu-22.04": {
+      "run_id": 41310145885,
+      "job_id": 124858610057,
+      "tests": [
+        "Ran 7 tests in 0.328s",
+        "Ran 8 tests in 1.436s",
+        "JANUS_POLICY0A_FC_SERIALIZED_VERIFIER = PASS"
+      ],
+      "python_sat_version": "1.9.dev17",
+      "aggregate_60": {
+        "cadical195": {
+          "bidirectional": {
+            "faster_cases": 3,
+            "median_full_pipeline_ratio_vs_strong_CDCL_raw": 2.9636946310764154,
+            "slower_cases": 57,
+            "total_cases": 60,
+            "total_derived_units": 103,
+            "total_probe_clause_visits": 7646
+          },
+          "forward": {
+            "faster_cases": 6,
+            "median_full_pipeline_ratio_vs_strong_CDCL_raw": 1.2137086607599863,
+            "slower_cases": 54,
+            "total_cases": 60,
+            "total_derived_units": 0,
+            "total_probe_clause_visits": 0
+          }
+        },
+        "glucose4": {
+          "bidirectional": {
+            "faster_cases": 0,
+            "median_full_pipeline_ratio_vs_strong_CDCL_raw": 3.290012977588501,
+            "slower_cases": 60,
+            "total_cases": 60,
+            "total_derived_units": 103,
+            "total_probe_clause_visits": 7646
+          },
+          "forward": {
+            "faster_cases": 3,
+            "median_full_pipeline_ratio_vs_strong_CDCL_raw": 1.2607966524544834,
+            "slower_cases": 57,
+            "total_cases": 60,
+            "total_derived_units": 0,
+            "total_probe_clause_visits": 0
+          }
+        }
+      },
+      "large_cases": [
+        {
+          "name": "MAJ3_K4",
+          "n": 18,
+          "status": "UNSAT",
+          "encoded_clauses": 1024,
+          "controls": {
+            "cadical195": {
+              "bidirectional": {
+                "whole_pipeline_ms": 45.5083,
+                "ratio_to_raw": 1.6271,
+                "derived_units": 0,
+                "probe_clause_visits": 7001
+              },
+              "forward": {
+                "whole_pipeline_ms": 29.566,
+                "ratio_to_raw": 1.0571,
+                "derived_units": 0,
+                "probe_clause_visits": 0
+              },
+              "raw": {
+                "whole_pipeline_ms": 27.9685,
+                "ratio_to_raw": 1,
+                "derived_units": 0,
+                "probe_clause_visits": 0
+              }
+            },
+            "glucose4": {
+              "bidirectional": {
+                "whole_pipeline_ms": 51.5136,
+                "ratio_to_raw": 1.5213,
+                "derived_units": 0,
+                "probe_clause_visits": 7001
+              },
+              "forward": {
+                "whole_pipeline_ms": 35.7166,
+                "ratio_to_raw": 1.0548,
+                "derived_units": 0,
+                "probe_clause_visits": 0
+              },
+              "raw": {
+                "whole_pipeline_ms": 33.8622,
+                "ratio_to_raw": 1,
+                "derived_units": 0,
+                "probe_clause_visits": 0
+              }
+            }
+          }
+        },
+        {
+          "name": "PLANTED_3SAT_220",
+          "n": 220,
+          "status": "SAT",
+          "encoded_clauses": 660,
+          "controls": {
+            "cadical195": {
+              "bidirectional": {
+                "whole_pipeline_ms": 15.1218,
+                "ratio_to_raw": 3.5606,
+                "derived_units": 0,
+                "probe_clause_visits": 7001
+              },
+              "forward": {
+                "whole_pipeline_ms": 4.934,
+                "ratio_to_raw": 1.1618,
+                "derived_units": 0,
+                "probe_clause_visits": 0
+              },
+              "raw": {
+                "whole_pipeline_ms": 4.247,
+                "ratio_to_raw": 1,
+                "derived_units": 0,
+                "probe_clause_visits": 0
+              }
+            },
+            "glucose4": {
+              "bidirectional": {
+                "whole_pipeline_ms": 14.7651,
+                "ratio_to_raw": 3.7252,
+                "derived_units": 0,
+                "probe_clause_visits": 7001
+              },
+              "forward": {
+                "whole_pipeline_ms": 4.7885,
+                "ratio_to_raw": 1.2081,
+                "derived_units": 0,
+                "probe_clause_visits": 0
+              },
+              "raw": {
+                "whole_pipeline_ms": 3.9636,
+                "ratio_to_raw": 1,
+                "derived_units": 0,
+                "probe_clause_visits": 0
+              }
+            }
+          }
+        },
+        {
+          "name": "PLANTED_3SAT_240",
+          "n": 240,
+          "status": "SAT",
+          "encoded_clauses": 720,
+          "controls": {
+            "cadical195": {
+              "bidirectional": {
+                "whole_pipeline_ms": 15.7613,
+                "ratio_to_raw": 3.3895,
+                "derived_units": 0,
+                "probe_clause_visits": 7001
+              },
+              "forward": {
+                "whole_pipeline_ms": 5.4454,
+                "ratio_to_raw": 1.171,
+                "derived_units": 0,
+                "probe_clause_visits": 0
+              },
+              "raw": {
+                "whole_pipeline_ms": 4.65,
+                "ratio_to_raw": 1,
+                "derived_units": 0,
+                "probe_clause_visits": 0
+              }
+            },
+            "glucose4": {
+              "bidirectional": {
+                "whole_pipeline_ms": 15.6031,
+                "ratio_to_raw": 3.5799,
+                "derived_units": 0,
+                "probe_clause_visits": 7001
+              },
+              "forward": {
+                "whole_pipeline_ms": 5.1748,
+                "ratio_to_raw": 1.1873,
+                "derived_units": 0,
+                "probe_clause_visits": 0
+              },
+              "raw": {
+                "whole_pipeline_ms": 4.3586,
+                "ratio_to_raw": 1,
+                "derived_units": 0,
+                "probe_clause_visits": 0
+              }
+            }
+          }
+        },
+        {
+          "name": "UNSAT_CORE_220",
+          "n": 220,
+          "status": "UNSAT",
+          "encoded_clauses": 676,
+          "controls": {
+            "cadical195": {
+              "bidirectional": {
+                "whole_pipeline_ms": 13.3576,
+                "ratio_to_raw": 5.5923,
+                "derived_units": 0,
+                "probe_clause_visits": 7001
+              },
+              "forward": {
+                "whole_pipeline_ms": 3.1151,
+                "ratio_to_raw": 1.3042,
+                "derived_units": 0,
+                "probe_clause_visits": 0
+              },
+              "raw": {
+                "whole_pipeline_ms": 2.3886,
+                "ratio_to_raw": 1,
+                "derived_units": 0,
+                "probe_clause_visits": 0
+              }
+            },
+            "glucose4": {
+              "bidirectional": {
+                "whole_pipeline_ms": 13.109,
+                "ratio_to_raw": 5.8136,
+                "derived_units": 0,
+                "probe_clause_visits": 7001
+              },
+              "forward": {
+                "whole_pipeline_ms": 3.0149,
+                "ratio_to_raw": 1.3371,
+                "derived_units": 0,
+                "probe_clause_visits": 0
+              },
+              "raw": {
+                "whole_pipeline_ms": 2.2549,
+                "ratio_to_raw": 1,
+                "derived_units": 0,
+                "probe_clause_visits": 0
+              }
+            }
+          }
+        },
+        {
+          "name": "UNSAT_CORE_240",
+          "n": 240,
+          "status": "UNSAT",
+          "encoded_clauses": 736,
+          "controls": {
+            "cadical195": {
+              "bidirectional": {
+                "whole_pipeline_ms": 14.0081,
+                "ratio_to_raw": 5.3001,
+                "derived_units": 0,
+                "probe_clause_visits": 7001
+              },
+              "forward": {
+                "whole_pipeline_ms": 3.4892,
+                "ratio_to_raw": 1.3202,
+                "derived_units": 0,
+                "probe_clause_visits": 0
+              },
+              "raw": {
+                "whole_pipeline_ms": 2.643,
+                "ratio_to_raw": 1,
+                "derived_units": 0,
+                "probe_clause_visits": 0
+              }
+            },
+            "glucose4": {
+              "bidirectional": {
+                "whole_pipeline_ms": 13.6601,
+                "ratio_to_raw": 5.6291,
+                "derived_units": 0,
+                "probe_clause_visits": 7001
+              },
+              "forward": {
+                "whole_pipeline_ms": 3.2587,
+                "ratio_to_raw": 1.3429,
+                "derived_units": 0,
+                "probe_clause_visits": 0
+              },
+              "raw": {
+                "whole_pipeline_ms": 2.4267,
+                "ratio_to_raw": 1,
+                "derived_units": 0,
+                "probe_clause_visits": 0
+              }
+            }
+          }
+        }
+      ]
+    },
+    "ubuntu-24.04": {
+      "run_id": 41310145885,
+      "job_id": 124858610143,
+      "tests": [
+        "Ran 7 tests in 0.265s",
+        "Ran 8 tests in 1.449s",
+        "JANUS_POLICY0A_FC_SERIALIZED_VERIFIER = PASS"
+      ],
+      "python_sat_version": "1.9.dev17",
+      "aggregate_60": {
+        "cadical195": {
+          "bidirectional": {
+            "faster_cases": 3,
+            "median_full_pipeline_ratio_vs_strong_CDCL_raw": 2.6307225792362954,
+            "slower_cases": 57,
+            "total_cases": 60,
+            "total_derived_units": 103,
+            "total_probe_clause_visits": 7646
+          },
+          "forward": {
+            "faster_cases": 3,
+            "median_full_pipeline_ratio_vs_strong_CDCL_raw": 1.2166384857316062,
+            "slower_cases": 57,
+            "total_cases": 60,
+            "total_derived_units": 0,
+            "total_probe_clause_visits": 0
+          }
+        },
+        "glucose4": {
+          "bidirectional": {
+            "faster_cases": 0,
+            "median_full_pipeline_ratio_vs_strong_CDCL_raw": 3.290503963221393,
+            "slower_cases": 60,
+            "total_cases": 60,
+            "total_derived_units": 103,
+            "total_probe_clause_visits": 7646
+          },
+          "forward": {
+            "faster_cases": 1,
+            "median_full_pipeline_ratio_vs_strong_CDCL_raw": 1.3069865309752446,
+            "slower_cases": 59,
+            "total_cases": 60,
+            "total_derived_units": 0,
+            "total_probe_clause_visits": 0
+          }
+        }
+      },
+      "large_cases": [
+        {
+          "name": "MAJ3_K4",
+          "n": 18,
+          "status": "UNSAT",
+          "encoded_clauses": 1024,
+          "controls": {
+            "cadical195": {
+              "bidirectional": {
+                "whole_pipeline_ms": 43.0409,
+                "ratio_to_raw": 1.547,
+                "derived_units": 0,
+                "probe_clause_visits": 7001
+              },
+              "forward": {
+                "whole_pipeline_ms": 28.9482,
+                "ratio_to_raw": 1.0405,
+                "derived_units": 0,
+                "probe_clause_visits": 0
+              },
+              "raw": {
+                "whole_pipeline_ms": 27.822,
+                "ratio_to_raw": 1,
+                "derived_units": 0,
+                "probe_clause_visits": 0
+              }
+            },
+            "glucose4": {
+              "bidirectional": {
+                "whole_pipeline_ms": 49.0278,
+                "ratio_to_raw": 1.4914,
+                "derived_units": 0,
+                "probe_clause_visits": 7001
+              },
+              "forward": {
+                "whole_pipeline_ms": 34.8283,
+                "ratio_to_raw": 1.0595,
+                "derived_units": 0,
+                "probe_clause_visits": 0
+              },
+              "raw": {
+                "whole_pipeline_ms": 32.8738,
+                "ratio_to_raw": 1,
+                "derived_units": 0,
+                "probe_clause_visits": 0
+              }
+            }
+          }
+        },
+        {
+          "name": "PLANTED_3SAT_220",
+          "n": 220,
+          "status": "SAT",
+          "encoded_clauses": 660,
+          "controls": {
+            "cadical195": {
+              "bidirectional": {
+                "whole_pipeline_ms": 12.7299,
+                "ratio_to_raw": 3.5487,
+                "derived_units": 0,
+                "probe_clause_visits": 7001
+              },
+              "forward": {
+                "whole_pipeline_ms": 4.113,
+                "ratio_to_raw": 1.1466,
+                "derived_units": 0,
+                "probe_clause_visits": 0
+              },
+              "raw": {
+                "whole_pipeline_ms": 3.5872,
+                "ratio_to_raw": 1,
+                "derived_units": 0,
+                "probe_clause_visits": 0
+              }
+            },
+            "glucose4": {
+              "bidirectional": {
+                "whole_pipeline_ms": 12.7451,
+                "ratio_to_raw": 3.9222,
+                "derived_units": 0,
+                "probe_clause_visits": 7001
+              },
+              "forward": {
+                "whole_pipeline_ms": 3.915,
+                "ratio_to_raw": 1.2048,
+                "derived_units": 0,
+                "probe_clause_visits": 0
+              },
+              "raw": {
+                "whole_pipeline_ms": 3.2495,
+                "ratio_to_raw": 1,
+                "derived_units": 0,
+                "probe_clause_visits": 0
+              }
+            }
+          }
+        },
+        {
+          "name": "PLANTED_3SAT_240",
+          "n": 240,
+          "status": "SAT",
+          "encoded_clauses": 720,
+          "controls": {
+            "cadical195": {
+              "bidirectional": {
+                "whole_pipeline_ms": 13.2206,
+                "ratio_to_raw": 3.3944,
+                "derived_units": 0,
+                "probe_clause_visits": 7001
+              },
+              "forward": {
+                "whole_pipeline_ms": 4.5683,
+                "ratio_to_raw": 1.1729,
+                "derived_units": 0,
+                "probe_clause_visits": 0
+              },
+              "raw": {
+                "whole_pipeline_ms": 3.8949,
+                "ratio_to_raw": 1,
+                "derived_units": 0,
+                "probe_clause_visits": 0
+              }
+            },
+            "glucose4": {
+              "bidirectional": {
+                "whole_pipeline_ms": 13.2224,
+                "ratio_to_raw": 3.6815,
+                "derived_units": 0,
+                "probe_clause_visits": 7001
+              },
+              "forward": {
+                "whole_pipeline_ms": 4.3131,
+                "ratio_to_raw": 1.2009,
+                "derived_units": 0,
+                "probe_clause_visits": 0
+              },
+              "raw": {
+                "whole_pipeline_ms": 3.5916,
+                "ratio_to_raw": 1,
+                "derived_units": 0,
+                "probe_clause_visits": 0
+              }
+            }
+          }
+        },
+        {
+          "name": "UNSAT_CORE_220",
+          "n": 220,
+          "status": "UNSAT",
+          "encoded_clauses": 676,
+          "controls": {
+            "cadical195": {
+              "bidirectional": {
+                "whole_pipeline_ms": 11.3208,
+                "ratio_to_raw": 5.5161,
+                "derived_units": 0,
+                "probe_clause_visits": 7001
+              },
+              "forward": {
+                "whole_pipeline_ms": 2.685,
+                "ratio_to_raw": 1.3083,
+                "derived_units": 0,
+                "probe_clause_visits": 0
+              },
+              "raw": {
+                "whole_pipeline_ms": 2.0523,
+                "ratio_to_raw": 1,
+                "derived_units": 0,
+                "probe_clause_visits": 0
+              }
+            },
+            "glucose4": {
+              "bidirectional": {
+                "whole_pipeline_ms": 11.2674,
+                "ratio_to_raw": 5.8736,
+                "derived_units": 0,
+                "probe_clause_visits": 7001
+              },
+              "forward": {
+                "whole_pipeline_ms": 2.5842,
+                "ratio_to_raw": 1.3471,
+                "derived_units": 0,
+                "probe_clause_visits": 0
+              },
+              "raw": {
+                "whole_pipeline_ms": 1.9183,
+                "ratio_to_raw": 1,
+                "derived_units": 0,
+                "probe_clause_visits": 0
+              }
+            }
+          }
+        },
+        {
+          "name": "UNSAT_CORE_240",
+          "n": 240,
+          "status": "UNSAT",
+          "encoded_clauses": 736,
+          "controls": {
+            "cadical195": {
+              "bidirectional": {
+                "whole_pipeline_ms": 11.7804,
+                "ratio_to_raw": 5.1932,
+                "derived_units": 0,
+                "probe_clause_visits": 7001
+              },
+              "forward": {
+                "whole_pipeline_ms": 3.0188,
+                "ratio_to_raw": 1.3308,
+                "derived_units": 0,
+                "probe_clause_visits": 0
+              },
+              "raw": {
+                "whole_pipeline_ms": 2.2684,
+                "ratio_to_raw": 1,
+                "derived_units": 0,
+                "probe_clause_visits": 0
+              }
+            },
+            "glucose4": {
+              "bidirectional": {
+                "whole_pipeline_ms": 11.5939,
+                "ratio_to_raw": 5.7461,
+                "derived_units": 0,
+                "probe_clause_visits": 7001
+              },
+              "forward": {
+                "whole_pipeline_ms": 2.7559,
+                "ratio_to_raw": 1.3659,
+                "derived_units": 0,
+                "probe_clause_visits": 0
+              },
+              "raw": {
+                "whole_pipeline_ms": 2.0177,
+                "ratio_to_raw": 1,
+                "derived_units": 0,
+                "probe_clause_visits": 0
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "research_conclusion": {
+    "correctness": "PASS_7_NEW_GROUPS_8_PRIOR_GROUPS_C023_VERIFIER_PER_WORKER",
+    "performance": "NEGATIVE",
+    "small_case_report": "On both workers bidirectional slower than raw CaDiCaL in 57/60 and Glucose4 in 60/60 small cases; median slowdown 2.63–2.96x / 3.29x respectively.",
+    "large_case_report": "MAJ3-K4 UNSAT solved by both CDCL; n220/n240 generated SAT/UNSAT solved, but no additional useful units derived by the bounded reverse filter.",
+    "causal_claim": "Forward-time classical bidirectional constraint propagation only; no tachyon, closed timelike curve, retrocausal communication, or entropy-driven SAT advantage established.",
+    "gates": {
+      "software_correctness": "PASS",
+      "two_runner_repro": "PASS",
+      "modern_CDCL_speedup": "FAIL",
+      "external_blind": "NOT_TESTED",
+      "independent_portable_new_UNSAT_proof": "NOT_TESTED",
+      "per_variant_RSS": "NOT_TESTED",
+      "production_C023": "UNCHANGED",
+      "P_vs_NP": "OPEN"
+    },
+    "binding_stop_rule": "No acceleration on predefined public suite: keep enhancement research-only and disabled in C023; retain negative data."
+  },
+  "future_protocol": [
+    "Obtain truly external sealed SAT/Exact-One challenges and preregister input SHA and gate before any labels or seeds revealed.",
+    "Compare against same CaDiCaL195/Glucose4/C023 on same hardware; measure wall, native peak RSS, clause visits, proof replay and failed literal success.",
+    "Allow nontrivial partial filters only on preregistered high-conflict structures, not on every state; compare with equivalent CDCL built-in preprocessing.",
+    "Do not promote unless independent proof and performance gates pass with confidence intervals across independent workers."
+  ],
+  "append_only": true
+}

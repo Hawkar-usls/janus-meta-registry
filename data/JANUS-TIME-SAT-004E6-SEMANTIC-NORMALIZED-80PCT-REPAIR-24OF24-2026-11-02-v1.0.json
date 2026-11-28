@@ -1,0 +1,137 @@
+{
+  "schema": "JANUS-TIME-SAT-004E6-REPAIR-OF-SEMANTIC-80PCT-XOR-SELECTOR-24OF24-2026-11-02-V1",
+  "date_utc": "2026-11-02",
+  "domain": "JANUS TIME-SAT research experiment",
+  "owner_repo": "Hawkar-usls/Janus-Fundamentum",
+  "research_draft_PR": "https://github.com/Hawkar-usls/Janus-Fundamentum/pull/604",
+  "research_branch": "research/time-sat-004e6-semantic-normalized-selector-20261102",
+  "parent_004E5": "https://github.com/Hawkar-usls/Janus-Fundamentum/pull/602",
+  "parent_issue": "https://github.com/Hawkar-usls/Janus-Fundamentum/issues/603",
+  "preregistered_immutable_policy_git_blob": "9b33d072c5253bcd4039bf0e6e3d90136b70686a",
+  "original_scientific_run": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/41441179716",
+  "original_scientific_HEAD": "f00da47e46c665e388defe1be89c484bf8f7541e",
+  "original_science_jobs": {
+    "preflight": 1,
+    "workers": 12,
+    "same_admin_separate_audit": 1,
+    "all_14_success": true,
+    "max_parallel_actual": 12
+  },
+  "archived_originals": {
+    "archive_run": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/41441383765",
+    "result": "SUCCESS",
+    "original_13_zips_verified_against_GitHub_artifact_SHA256": true,
+    "original_trial_JSON_from_12_workers_preserved": true,
+    "original_96_children_preserved": true,
+    "summary_path": "experiments/time_sat_004_external/time_sat_004e6_evidence/SUMMARY.json",
+    "original_worker_path": "experiments/time_sat_004_external/time_sat_004e6_evidence/original-worker-JSON/",
+    "original_zips_path": "experiments/time_sat_004_external/time_sat_004e6_evidence/original-actions-ZIPs/",
+    "posthoc_analysis": "experiments/time_sat_004_external/time_sat_004e6_evidence/POSTHOC_ADAPTIVE_GATE_REPAIR_BY_ARM_20261102.json",
+    "exact_archive_is_internal_not_independent_admin": true
+  },
+  "protocol": {
+    "prior_problem": "004E5 found original-clause coverage 80% threshold flips on equivalent CNF after only 5% tautological clause padding. Binary-tree old switch lost 4/4 SAT under 6 CPU; native_all retained 4/4 verified SAT.",
+    "new_policy": "Normalize each OR clause by removing repeated literals, discard tautologies containing v and -v, sort literals canonical, discard exact normalized duplicates, do not discard independent nontrivial constraints or empty clauses. Use unchanged complete sign-mask XOR source scanner on normalized semantic core and >=80% threshold. If normalization or feature scan abstains, use original raw CryptoMiniSat without unearned normalization advantage. Always verify SAT model against full pre-normalization transformed original CNF.",
+    "limitations": "Mathematical equivalence under tautology/duplicate removal not arbitrary redundancies, resolution consequences, unseen SAT encodings or an ML general-purpose model selector.",
+    "source_preseen_public": true,
+    "source_count": 2,
+    "original_sources_sha256": {
+      "lights_out": "6be9bfe6b44454a061a2e93350f589643f8a16f5bca6babdaa50a2d3d7069361",
+      "binary_tree_parity": "8d94924bef8978b28a2bf95472556b280bef5d98b6833c6db33554098f52d2d8"
+    },
+    "new_deterministic_seed": 20261102086,
+    "new_transform_states": [
+      "rename_only",
+      "taut5_duplicate5",
+      "taut30_duplicate20"
+    ],
+    "four_frozen_arms": [
+      "old_adaptive80",
+      "new_semantic80",
+      "native_all",
+      "raw_cms"
+    ],
+    "two_Ubuntu_versions": [
+      "ubuntu-22.04",
+      "ubuntu-24.04"
+    ],
+    "paired_two_repeats_same_VM": true,
+    "CPU_soft_limit_s": 6,
+    "WALL_limit_s": 10,
+    "memory_limit_bytes": 2147483648,
+    "full_cold_process_time_includes_read_scan_normalize_solver_and_original_model_replay": true
+  },
+  "results": {
+    "original_children": 96,
+    "SAT_models_fully_verified_on_original_CNF": 68,
+    "UNKNOWN_CPU_SIGXCPU": 27,
+    "UNKNOWN_WALL_TIMEOUT": 1,
+    "solver_only_UNSAT": 0,
+    "wrong_verified_SAT_models": 0,
+    "new_semantic80": {
+      "SAT": 24,
+      "UNKNOWN": 0
+    },
+    "native_all": {
+      "SAT": 24,
+      "UNKNOWN": 0
+    },
+    "old_adaptive80": {
+      "SAT": 12,
+      "UNKNOWN": 12
+    },
+    "raw_cms": {
+      "SAT": 8,
+      "UNKNOWN": 16
+    },
+    "original_binary_tree_fraction_all_transformed_states": 0.8385518590998043,
+    "original_lightsout_fraction_all_transformed_states": 1,
+    "binary_tree_original_XOR_equations_recovered_each_state": 857,
+    "lightsout_original_XOR_equations_recovered_each_state": 625,
+    "specific_falsified_old_gate": {
+      "binary_tree_5pct_taut_5pct_duplicates": {
+        "old_SAT": 0,
+        "corrected_SAT": 4,
+        "native_all_SAT": 4,
+        "raw_SAT": 0
+      },
+      "binary_tree_30pct_taut_20pct_duplicates": {
+        "old_SAT": 0,
+        "corrected_SAT": 4,
+        "native_all_SAT": 4,
+        "raw_SAT": 0
+      },
+      "lightsout_30pct_taut_20pct_duplicates": {
+        "old_SAT": 0,
+        "corrected_SAT": 4,
+        "native_all_SAT": 4,
+        "raw_SAT": 0
+      }
+    },
+    "generalizable_SAT_speedup": "NOT_ESTABLISHED",
+    "global_champion": "NOT_ESTABLISHED",
+    "actually_new_external_independent_SAT_source_count": 0,
+    "improvement_classification": "ENGINEERING_REPAIR_REPRODUCED_ON_PRESEEN_SOURCES_ONLY",
+    "exact_finite_speedup_ratio": "NOT_CLAIMED_FOR_CENSORED_CONTROLS"
+  },
+  "historical_failed_preflight": {
+    "run": 41441047992,
+    "cause": "Incorrect synthetic test fixture treated width-one XOR unit clause as non-XOR. Preflight failed before any matrix science.",
+    "corrected": "Only synthetic test example changed, original immutable preregistered policy and algorithm unchanged. Successful original science is run 41441179716.",
+    "retained_negative_evidence": true
+  },
+  "science_gates": {
+    "TIME_SAT_004C": "OPEN",
+    "TIME_SAT_004D": "PARTIAL",
+    "TIME_SAT_004E": "REPAIR_ENGINEERING_PASS_GENERAL_PREDICTIVE_GATE_OPEN",
+    "TIME_SAT_004F": "NOT_READY",
+    "external_contact_004D9B": "AWAITING_EXTERNAL_RESPONSE",
+    "P_equals_NP": "NOT_PROVEN"
+  },
+  "main": "UNCHANGED",
+  "production_C023": "UNCHANGED",
+  "paid_Rowan": "NONE",
+  "owner_NAS_PC": "NOT_USED",
+  "keep_draft": true,
+  "append_only": true
+}

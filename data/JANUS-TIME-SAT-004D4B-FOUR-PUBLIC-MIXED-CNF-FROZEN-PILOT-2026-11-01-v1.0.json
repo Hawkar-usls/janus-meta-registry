@@ -1,0 +1,85 @@
+{
+  "schema": "janus.meta_registry.time_sat_004d4b_public_mixed_pilot_frozen_v1",
+  "id": "JANUS-TIME-SAT-004D4B-PUBLIC-MIXED-CNF-SHA-FROZEN-20261101",
+  "date_utc": "2026-11-01",
+  "status": "EXTERNAL_ORIGIN_PRIORLY_SEEN_PUBLIC_FOUR_SOURCE_PILOT_FROZEN_BEFORE_MIXED_ALGORITHM_RESULTS",
+  "origin": {
+    "parent_004d4_synthetic": "data/JANUS-TIME-SAT-004D4-MIXED-XOR-SYNTHETIC-CORRECTNESS-2026-11-01-v1.0.json",
+    "parent_004d3_public_9": "data/JANUS-TIME-SAT-004D3-REAL-NINE-SATCOMP26-XOR-SAT-UNSAT-MIXED-2026-11-01-v1.0.json",
+    "official_upstream": "satcompetition/2026",
+    "official_upstream_commit": "3e2dee7cf5aa643c77bf946280a3c1c520756ef9",
+    "original_004d3_dual_runner_replay": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/41332411998",
+    "original_004d3_archive_commit": "00e3e06442e1ddf514b7e8b7406ba4eab2b6668f",
+    "reused_public_seen_CNF_NOT_HIDDEN": true
+  },
+  "implementation": {
+    "repo": "Hawkar-usls/Janus-Fundamentum",
+    "source_prototype_draft_PR": "https://github.com/Hawkar-usls/Janus-Fundamentum/pull/587",
+    "new_research_draft_PR": "https://github.com/Hawkar-usls/Janus-Fundamentum/pull/588",
+    "research_branch": "research/time-sat-004d4b-real-mixed-cnf-20261101",
+    "frozen_source_json": "experiments/time_sat_004_external/PREREGISTERED_004D4B_PUBLIC_FOUR_MIXED_20261101.json",
+    "frozen_source_json_git_blob_SHA": "0cbf0eee23aa77b399ad2057f113ac1e48bd8405",
+    "sha_bound_mixed_CNF_runner": "experiments/direct/janus_time_sat_004d4b_real_pilot.py",
+    "adversarial_tests": "tests/test_time_sat_004d4b_real.py",
+    "dual_host_ci": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/41340944813",
+    "CI_status_at_freeze": "STARTED_NOT_YET_EVALUATED"
+  },
+  "cases": [
+    {
+      "family": "linear-equations",
+      "GBD_id_NOT_SHA256": "247e42e46495f1c4b8707e497af8c93e",
+      "original_decoded_CNF_SHA256": "dd2e52c12cafa012316052c6c2ac06ea48ccf1c999a5ae57a25c5f208e1cb9bc",
+      "partial_XOR_equations": "PENDING_SOURCE_INSPECTION",
+      "full_process_runtimes": "NOT_YET_OBSERVED"
+    },
+    {
+      "family": "xor-shifting",
+      "GBD_id_NOT_SHA256": "1707c4c24e66b2cfe6c03955b638bebf",
+      "original_decoded_CNF_SHA256": "03bae774557f351990c0348c7b11933d8760f4d7a8cf60455f1d4754fe9739c0",
+      "partial_XOR_equations": "PENDING_SOURCE_INSPECTION",
+      "full_process_runtimes": "NOT_YET_OBSERVED"
+    },
+    {
+      "family": "minimum-disagreement-parity",
+      "GBD_id_NOT_SHA256": "16ca57f2cdffd5b0260fc771017e1f04",
+      "original_decoded_CNF_SHA256": "6e054967f4c71d900b2bba2508fea2054ac13de78fa0b0b6a94753f66e9e95fc",
+      "partial_XOR_equations": "PENDING_SOURCE_INSPECTION",
+      "full_process_runtimes": "NOT_YET_OBSERVED"
+    },
+    {
+      "family": "binary-tree-parity",
+      "GBD_id_NOT_SHA256": "7db30d12cb06f0dc2f30abff80d96d6a",
+      "original_decoded_CNF_SHA256": "8d94924bef8978b28a2bf95472556b280bef5d98b6833c6db33554098f52d2d8",
+      "partial_XOR_equations": "PENDING_SOURCE_INSPECTION",
+      "full_process_runtimes": "NOT_YET_OBSERVED"
+    }
+  ],
+  "safety": {
+    "selection": "Four fixed prior-SHA verified non-Lights-out and full-XOR-abstaining 004D3 sources; used for partial-XOR transfer engineering. No posthoc replacement.",
+    "input": "Original compressed+decoded SHA and DIMACS shape rechecked, no name-based XOR inference",
+    "logic": "Every complete group of source signs yields a native-XOR equation; all remaining original clauses retained",
+    "SAT_model": "Must replay against every original clause",
+    "UNSAT": "Solver only; no portable certificate nor outside-admin Witness",
+    "profit_filter": "No XOR extraction implies skip all expensive solver comparisons",
+    "full_cost": "Reparse original SHA, cold Python startup, extraction, native solve, original model replay",
+    "limits": {
+      "CPU_seconds": 8,
+      "WALL_seconds": 11,
+      "RLIMIT_AS_bytes": 2147483648,
+      "github_workers": 2,
+      "github_job_minutes": 8,
+      "repeats": 2
+    },
+    "production_C023_main": "UNCHANGED",
+    "paid_Rowan": "NOT_USED"
+  },
+  "gates": {
+    "A": "PASS",
+    "B": "PUBLIC_PRESEEN_SOURCES",
+    "C": "OPEN",
+    "D": "004D4B_STARTED_NOT_PASS",
+    "E": "OPEN",
+    "F": "NOT_READY"
+  },
+  "append_only": true
+}

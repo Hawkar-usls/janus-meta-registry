@@ -1,0 +1,137 @@
+{
+  "schema": "janus.meta_registry.time_sat_004d4b_real_mixed_source_and_performance_v1",
+  "id": "JANUS-TIME-SAT-004D4B-PUBLIC-FOUR-MIXED-SOURCES-PARTIAL-XOR-SAT-20261101",
+  "date_utc": "2026-11-01",
+  "status": "REAL_PREVIOUSLY_SEEN_PUBLIC_MIXED_CNF_EXTRACTION_3_OF_4_ONE_SOURCE_BOUND_SAT_MODEL_OTHER_SOURCES_TIMEOUT_OR_ABSTAIN_NO_GENERAL_SPEEDUP",
+  "scientific_lineage": {
+    "prereq_synthetic": "data/JANUS-TIME-SAT-004D4-MIXED-XOR-SYNTHETIC-CORRECTNESS-2026-11-01-v1.0.json",
+    "frozen_before_test": "data/JANUS-TIME-SAT-004D4B-FOUR-PUBLIC-MIXED-CNF-FROZEN-PILOT-2026-11-01-v1.0.json",
+    "original_source_origin": "SAT Competition 2026 Main Track public original GBD source with prior 004D3 dual-runner SHA receipt",
+    "source_not_blinded": true,
+    "sources_previously_analyzed_for_whole_CNF_XOR_abstention": true
+  },
+  "github": {
+    "repo": "Hawkar-usls/Janus-Fundamentum",
+    "algorithm_draft_PR_587": "https://github.com/Hawkar-usls/Janus-Fundamentum/pull/587",
+    "benchmark_and_archive_draft_PR_588": "https://github.com/Hawkar-usls/Janus-Fundamentum/pull/588",
+    "frozen_commit": "7518dcef7f994fd5b843a7ffd81dc4bc07591ee0",
+    "frozen_git_blob": "0cbf0eee23aa77b399ad2057f113ac1e48bd8405",
+    "source_CI": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/41340944813",
+    "tested_sha": "d41c11fb7120119d58d34d8d38b866a2238a5080",
+    "source_CI_ubuntu22": "SUCCESS",
+    "source_CI_ubuntu24": "SUCCESS",
+    "parent_004D4_synthetic_unit_tests_each_worker": 10,
+    "new_004D4B_tests_each_worker": 5,
+    "independent_C023_serialized_verifier_both": "PASS",
+    "archive_CI": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/41341372468",
+    "archive_CI_status": "SUCCESS",
+    "archive_commit": "f0b9d03d4b8034b356c6c51e8e8c6e0b959eb0e7",
+    "archive_manifest": "experiments/time_sat_004_external/time_sat_004d4b_evidence/summary.json",
+    "archival_action": "Exact original two SHA-verified ZIPs and their JSON contents + all 4 original compressed/decoded CNFs + separately recomputed signed SAT model",
+    "archive_signed_SAT_model": "experiments/time_sat_004_external/time_sat_004d4b_evidence/binary-tree-parity-SAT-original-model.json",
+    "archive_signed_SAT_model_sha256": "649c39123a5562a26bdf8aadb27d9bcef2d4ee993a92b0ebc2defa7761b066b3",
+    "original_actions_zip_sha256": {
+      "ubuntu22": "c39c219e9964977a4619f6dfaec26af2ac3bb36a746f9c519bfff9f9ca8d8f40",
+      "ubuntu24": "adecbeedcfbe5d42e13a62bf7d2ddd97505f646a7653a8f7c54fe832ede7c4b5"
+    }
+  },
+  "methods": {
+    "exact_source_partial_XOR": "Source sign-mask full-parity group equivalence, only matched original clause sets replaced; others remain original CNF",
+    "XOR_engine": "pycryptosat==5.15.0 native add_xor_clause for extracted groups",
+    "comparators": [
+      "Original unchanged source CNF to pycryptosat 5.15.0",
+      "Original unchanged source CNF to CaDiCaL195"
+    ],
+    "CPU_seconds_per_child": 8,
+    "WALL_seconds_per_child": 11,
+    "RAM_AS_bytes": 2147483648,
+    "hosted_workers": [
+      "Ubuntu 22.04",
+      "Ubuntu 24.04"
+    ],
+    "paired_repeats": 2,
+    "conditional_admission": "Only partial full-source-proven XOR blocks >0 and residual original CNF >0; otherwise no expensive solver run",
+    "SAT_validation": "Every successful SAT model verified on every original unchanged clause",
+    "UNSAT_validation": "Solver-only, no portable verified proof generated",
+    "all_original_sources_SHA256_against_previously_archived_dual_runner_SHA": "PASS",
+    "n_compared_children_total": 36,
+    "n_successful_source_bound_SAT_children": 4,
+    "n_CPU_censored_children": 32,
+    "n_frozen_competition_original_sources": 4
+  },
+  "observed": {
+    "linear_equations": {
+      "GBD_id_NOT_SHA256": "247e42e46495f1c4b8707e497af8c93e",
+      "original_variables": 1200,
+      "original_clauses": 21040,
+      "source_CNF_sha256": "dd2e52c12cafa012316052c6c2ac06ea48ccf1c999a5ae57a25c5f208e1cb9bc",
+      "structural_status": "ABSTAIN_GROUP_BUDGET",
+      "xor_equations": "UNMEASURED_DUE_TO_LIMIT",
+      "additional_solver_trials": 0
+    },
+    "xor_shifting": {
+      "GBD_id_NOT_SHA256": "1707c4c24e66b2cfe6c03955b638bebf",
+      "original_variables": 2273,
+      "original_clauses": 8366,
+      "source_CNF_sha256": "03bae774557f351990c0348c7b11933d8760f4d7a8cf60455f1d4754fe9739c0",
+      "xor_equations": 1643,
+      "original_clauses_replaced_by_XOR": 6476,
+      "unmodified_residual_clauses": 1890,
+      "original_clause_coverage_fraction": 0.7740855845087258,
+      "all_12_children": "UNKNOWN_CPU_LIMIT_SIGXCPU",
+      "performance": "NO_SOLVE_TIME_COMPARISON"
+    },
+    "minimum_disagreement_parity": {
+      "GBD_id_NOT_SHA256": "16ca57f2cdffd5b0260fc771017e1f04",
+      "original_variables": 1250,
+      "original_clauses": 7190,
+      "source_CNF_sha256": "6e054967f4c71d900b2bba2508fea2054ac13de78fa0b0b6a94753f66e9e95fc",
+      "xor_equations": 639,
+      "original_clauses_replaced_by_XOR": 4953,
+      "unmodified_residual_clauses": 2237,
+      "original_clause_coverage_fraction": 0.6888734353268429,
+      "all_12_children": "UNKNOWN_CPU_LIMIT_SIGXCPU",
+      "performance": "NO_SOLVE_TIME_COMPARISON"
+    },
+    "binary_tree_parity": {
+      "GBD_id_NOT_SHA256": "7db30d12cb06f0dc2f30abff80d96d6a",
+      "original_variables": 1023,
+      "original_clauses": 4088,
+      "source_CNF_sha256": "8d94924bef8978b28a2bf95472556b280bef5d98b6833c6db33554098f52d2d8",
+      "xor_equations": 857,
+      "original_clauses_replaced_by_XOR": 3428,
+      "unmodified_residual_clauses": 660,
+      "original_clause_coverage_fraction": 0.8385518590998043,
+      "mixed_native_JANUS_SAT_verified_in_original_CNF": 4,
+      "separately_recomputed_and_source_replayed_SAT_model": "PASS_SAME_GITHUB_OWNER",
+      "median_full_process_seconds": {
+        "Ubuntu22": 3.587024207999889,
+        "Ubuntu24": 3.884245559500002
+      },
+      "successful_peak_RSS_kib_per_worker_upper_observed": {
+        "Ubuntu22": 39892,
+        "Ubuntu24": 40976
+      },
+      "raw_CryptoMiniSat": "CPU_CENSORED_2_OF_2_ON_EACH_WORKER",
+      "raw_CaDiCaL195": "CPU_CENSORED_2_OF_2_ON_EACH_WORKER",
+      "no_finite_speedup_ratio": "CPU_CENSORING"
+    }
+  },
+  "scientific_boundaries": [
+    "These four public original external-origin CNFs were previously known in JANUS 004D3; no sealed hidden challenge.",
+    "For mixed CNF, CryptoMiniSat native-XOR+residual performed SAT faster than two CPU-censored untouched-CNF engines only on binary-tree-parity; no broad advantage shown.",
+    "The algorithm uses classical complete-parity extraction and CryptoMiniSat for residual, so no new universal SAT algorithm or P=NP claim.",
+    "No false UNSAT proof claim: all 32 other solver attempts were UNKNOWN_CPU_LIMIT_SIGXCPU, not UNSAT.",
+    "No portable independent UNSAT certificate or outside-GitHub independent administrative witness; cross-family generalization very limited.",
+    "No production C023/main changes and no paid scientific Rowan tasks."
+  ],
+  "gates": {
+    "A": "PASS",
+    "B": "PUBLIC_ORIGIN_PILOT",
+    "C": "EXTERNAL_WITNESS_OPEN",
+    "D": "PARTIAL_REAL_MIXED_CNF_ENGINEERING_SAT_WIN_ONE_SOURCE_OTHER_TWO_TIME_OUT",
+    "E": "CALIBRATED_NET_PROFIT_PREDICTION_NOT_PROVEN",
+    "F": "NOT_READY"
+  },
+  "append_only": true
+}

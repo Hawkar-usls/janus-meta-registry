@@ -1,0 +1,46 @@
+{
+  "schema": "janus.meta_registry.time_sat_004d4_synthetic_mixed_xor_correctness_v1",
+  "id": "JANUS-TIME-SAT-004D4-MIXED-XOR-RESEARCH-PROTOTYPE-20261101",
+  "date_utc": "2026-11-01",
+  "scientific_status": "SYNTHETIC_STRUCTURAL_CORRECTNESS_2_WORKERS_PASS_NO_EXTERNAL_MIXED_BENCHMARK",
+  "parent": "data/JANUS-TIME-SAT-004D3B-NEW-LIGHTSOUT-CASE-DEPENDENT-NATIVE-XOR-COMPARISON-2026-11-01-v1.0.json",
+  "github": {
+    "draft_pr": "https://github.com/Hawkar-usls/Janus-Fundamentum/pull/587",
+    "branch": "research/time-sat-004d4-mixed-xor-safe-extraction-20261101",
+    "tested_head_sha": "4993509ee929e6ffbe14d1891e5c4388dcf9fcb3",
+    "two_worker_CI": "https://github.com/Hawkar-usls/Janus-Fundamentum/actions/runs/41338356353",
+    "CI_conclusion": "SUCCESS",
+    "runners": [
+      "ubuntu-22.04",
+      "ubuntu-24.04"
+    ],
+    "tests_passed_per_runner": 10,
+    "C023_standalone_serialized_verifier": "PASS_BOTH",
+    "implementation": "experiments/direct/janus_time_sat_004d4_mixed_xor.py",
+    "test_source": "tests/test_time_sat_004d4_mixed_xor.py",
+    "notes": "Workflow initially failed due YAML colon in inline pip command; fixed with folded YAML scalar. One test fixture accidentally contained a complete unit XOR, corrected to isolate residual behavior. Earlier failure history remains in GitHub."
+  },
+  "algorithm": {
+    "representation": "Each complete sign-mask parity group selected from original CNF becomes one XOR equation; every other original clause remains verbatim in residual CNF; source indices account for every source clause exactly once.",
+    "native_solver": "CryptoMiniSat 5.15.0 with native XOR for extracted blocks and ordinary CNF for residual",
+    "SAT_claim": "SAT_ORIGINAL_MODEL_VERIFIED_ONLY_AFTER_REPLAY_ALL_ORIGINAL_CLAUSES",
+    "UNSAT_claim": "SOLVER_ONLY_NO_PORTABLE_CERTIFICATE",
+    "source_limits": "n<=5000, clauses<=30000, literal occurrences<=120000; complete sign-mask XOR support width<=6",
+    "tests": "Adversarial and deterministic-random small formula exhaustive assignment equivalence; tiny mixed SAT and UNSAT original-model/safe-classification smoke",
+    "real_004D3_mixed_sources_tested": 0,
+    "external_Witness": "NOT_PERFORMED",
+    "performance_data": "NONE",
+    "hidden_holdout": "NONE",
+    "statistical_advantage": "NOT_TESTED",
+    "production_C023": "UNCHANGED"
+  },
+  "gates": {
+    "A": "PASS_PRIOR_004A",
+    "B": "PUBLIC_ORIGIN_PILOT_NOT_HIDDEN",
+    "C": "EXTERNAL_WITNESS_OPEN",
+    "D": "004D4_SYNTHETIC_CORRECTNESS_ONLY_PERFORMANCE_GATE_OPEN",
+    "E": "NET_PROFIT_GATE_OPEN",
+    "F": "NOT_READY"
+  },
+  "append_only": true
+}
