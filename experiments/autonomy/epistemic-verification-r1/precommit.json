@@ -1,0 +1,138 @@
+{
+  "schema": "janus.epistemic_verification.r1.precommit.v1",
+  "date": "2026-11-28",
+  "status": "PROSPECTIVE_BOUNDED_ENGINEERING_TEST",
+  "motivation": "Nonempty strings 'P = NP' and 'P != NP' both coerce to True in Python; syntax and claim evidence are distinct.",
+  "domain": "Only ASCII signed integer literals with = or != and named symbolic equality P vs NP. Finite bounded input, no general math theorem prover, no eval, no model, no retrieval, no claimed semantic understanding. Symbolic P/NP query can be parsed but truth cannot be established by this verifier; no proof admission mechanism.",
+  "contract": {
+    "syntax_valid": "Recognized grammar only, not arbitrary syntax.",
+    "semantic_status": "PARSED_INTEGER_EQUALITY or PARSED_SYMBOLIC_QUERY, not understanding.",
+    "truth_status": "TRUE/FALSE only via exact integer comparison; UNRESOLVED for P vs NP regardless of self-assertion; INVALID for unsupported syntax. CONFLICT reserved for future independently verified contradictory evidence; not reachable in R1.",
+    "epistemic_action": "ACCEPT_TRUE, ACCEPT_FALSE, HOLD, REJECT_INPUT. Unsupported or unverified evidence never upgrades verdict. No asserted_bool or nonempty text as proof.",
+    "provenance": "Evidence generated internally from exact integer operation and operands; supplied evidence opaque unverified. No externally supplied proof or citations accepted in R1."
+  },
+  "tests": [
+    {
+      "id": "T01",
+      "claim": "2 = 2",
+      "status": "TRUE"
+    },
+    {
+      "id": "T02",
+      "claim": "2 = 3",
+      "status": "FALSE"
+    },
+    {
+      "id": "T03",
+      "claim": "2 != 3",
+      "status": "TRUE"
+    },
+    {
+      "id": "T04",
+      "claim": "2 != 2",
+      "status": "FALSE"
+    },
+    {
+      "id": "T05",
+      "claim": "-7 = -7",
+      "status": "TRUE"
+    },
+    {
+      "id": "T06",
+      "claim": "-7 != 7",
+      "status": "TRUE"
+    },
+    {
+      "id": "T07",
+      "claim": "P = NP",
+      "status": "UNRESOLVED"
+    },
+    {
+      "id": "T08",
+      "claim": "P != NP",
+      "status": "UNRESOLVED"
+    },
+    {
+      "id": "T09",
+      "claim": "P = NP",
+      "assertion": true,
+      "status": "UNRESOLVED"
+    },
+    {
+      "id": "T10",
+      "claim": "P != NP",
+      "assertion": true,
+      "status": "UNRESOLVED"
+    },
+    {
+      "id": "T11",
+      "claim": "2 = 3",
+      "assertion": true,
+      "status": "FALSE"
+    },
+    {
+      "id": "T12",
+      "claim": "2 = 2",
+      "assertion": false,
+      "status": "TRUE"
+    },
+    {
+      "id": "T13",
+      "claim": "",
+      "status": "INVALID"
+    },
+    {
+      "id": "T14",
+      "claim": "2 == 2",
+      "status": "INVALID"
+    },
+    {
+      "id": "T15",
+      "claim": "2 + 2 = 4",
+      "status": "INVALID"
+    },
+    {
+      "id": "T16",
+      "claim": "P = NP because true",
+      "status": "INVALID"
+    },
+    {
+      "id": "T17",
+      "claim": "P = NP",
+      "evidence": {
+        "verified": true,
+        "proof": "trust me"
+      },
+      "status": "UNRESOLVED"
+    },
+    {
+      "id": "T18",
+      "claim": "2 != 2",
+      "evidence": {
+        "verified": true,
+        "proof": "trust me"
+      },
+      "status": "FALSE"
+    },
+    {
+      "id": "T19",
+      "claim": "0 = -0",
+      "status": "TRUE"
+    },
+    {
+      "id": "T20",
+      "claim": "NP != P",
+      "status": "UNRESOLVED"
+    }
+  ],
+  "gates": "20/20 expected truth statuses, correct action and evidence policy for each; no fabricated verified symbolic proof; complementary arithmetic controls; malformed input fails closed. Same-author public engineering fixtures, not independent generalization or proof of intelligence.",
+  "execution": "Separate GitHub Actions branch-only bounded CPU test; no training, no G2 or Cortex writes; no network during verifier itself; no secrets or external proof. Workflow run must be confirmed by actual evidence; no PASS from code creation alone.",
+  "integration": "Proposed only: TRINITY verifies supported formal operations, AUTODIDACT receives verified records only, Memory Cortex retains typed assertion and evidence separately. Current organs' exact interfaces not established in this pass. No production integration, no automatic knowledge writes, no relation with H38N8A gates.",
+  "next": "Implement reference verifier + test harness, then run independently on GitHub Actions and archive actual results. Later external source verifier, conflict resolution, independent exam, explicit adapter contracts.",
+  "authorization": {
+    "training": false,
+    "production": false,
+    "architecture_change": false,
+    "knowledge_write": false
+  }
+}
