@@ -1,0 +1,22 @@
+{
+  "schema": "janus.epistemic_verification.r1_4a.precommit.v1",
+  "status": "AUTHORIZED_BOUNDED_RESEARCH__RUN_A_FIRST",
+  "parent_archive": {
+    "commit": "a27089d7499c41dbc45175ef2fd375631a236179",
+    "blob": "8a7ac73cb8c3975ce60d91939d0810703ac4de14",
+    "passed": 116
+  },
+  "proposal_blob": "9b234dec24adb6a5a2e373d63a0228d3a97e45c2",
+  "trust_memory_blob": "9f13745be78a0fbb6c5a85f61608e74750ad438e",
+  "scope": "Two separate push-triggered Actions runs, one synthetic checkpoint, manual operator-mediated anchor via connector after successful A, no active Cortex or production. No private key exported. A uses fixed logical time NOW; B uses NOW+20. Registry revision 2 revokes old key at NOW+10 and retains new key. Old receipt verified historically under revision 1, old key now revoked. Unseen documents signed in A for use B. No live source or time claim.",
+  "A": "Create old/new ephemeral Ed25519 keys, two registry revisions, stage one old-key receipt with nonce 1 and signed true arithmetic. Export canonical JSON checkpoint with version 1, zero parent hash, source run metadata, registry history, public PEMs, original envelope, and three presigned B envelopes (rotated-key replay nonce 1, symbolic nonce 2, false arithmetic nonce 3). Log checkpoint SHA256 and source metadata; upload exact file. Fresh runner B must not receive private keys.",
+  "B": "Download exact A artifact using pinned ID and independently recorded archive SHA256, check canonical JSON checkpoint SHA256, source run ID/attempt/commit, version, parent and registry revision against separately committed operator anchor. Restore SQLite via historical signature verification of receipt; verify exact snapshot. Reject old-key receipt under revocation, rotated-key reuse nonce 1, altered envelope (no state change), stale CAS, then accept symbolic and false arithmetic as receipts only. Export linked successor checkpoint and Cortex staging rows with knowledge_admitted=false; no writes to active Cortex. Validate older version, equal-version altered payload, wrong parent, registry rollback, artifact metadata substitution and missing anchor against frozen anchor. No claims beyond relative-to-anchor rollback detection. Manual anchor trusted, not autonomous or independent witness.",
+  "gate": "Run A successful, artifact exact, then run B separate ID, complete all controls; preserve A and B evidence. No automatic retries. If metadata unavailable HOLD.",
+  "authorization": {
+    "run_A": true,
+    "run_B_after_anchor": true,
+    "training": false,
+    "production": false,
+    "active_cortex_write": false
+  }
+}
