@@ -1,0 +1,119 @@
+{
+  "schema": "janus.uap_tachyon.retina_native.contract.v1",
+  "artifact_id": "JANUS-UAP-TACHYON-R1.2A-RETINA-NATIVE-CONTRACT-2026-11-28-v1.0",
+  "date": "2026-11-28",
+  "parent_commit": "d972d2b01e8ac85d6032a10cc70b6d87681d28c9",
+  "parent_contract": "registry/uap/JANUS-UAP-TACHYON-R1.2-MEASUREMENT-CONTRACT-2026-11-28-v1.0.json",
+  "status": "FROZEN_NATIVE_RADIO_COMPONENT_ADAPTER__SYNTHETIC_TRANSFER_ONLY",
+  "authority_changed": false,
+  "native": {
+    "repo": "Hawkar-usls/Janus-Cosmos",
+    "commit": "74a023786d23e567e1f91d84688c2945bdca53a5",
+    "code": "research/seti/r41s1h1_physical_profile.py",
+    "code_blob": "43683dee60433ea2612bb1a433d8e7afc9704494",
+    "protocol": "research/seti/r41s1h1_physical_protocol.json",
+    "protocol_blob": "f05c58e83c4aa053bae4a37ea24db5be5ad597c8",
+    "interface": "templates(df_hz,dt_s), score(cube,bank,params,df_hz), generate(rng,kind,df_hz,dt_s,held)",
+    "input": {
+      "shape": [
+        4,
+        16,
+        49
+      ],
+      "roles": [
+        "ON",
+        "OFF",
+        "REPEAT_ON",
+        "REPEAT_OFF"
+      ],
+      "axis_order": [
+        "role",
+        "time",
+        "frequency"
+      ],
+      "units": [
+        "calibrated channel spacing Hz",
+        "integration seconds",
+        "power relative to background"
+      ]
+    }
+  },
+  "interface_contract": {
+    "TOPA": "source digest and role provenance; authentic physical roles required for real data",
+    "EYE": "preserve frequency and integration axes, clocks and uncertainty; no trajectory inference",
+    "RETINA": "native score returned verbatim; no filtering or automatic veto",
+    "TACHYON": "diagnostic score is not a carrier observation; require independent detection response and emission/receive pairing"
+  },
+  "frozen_exam": {
+    "seeds": [
+      612821,
+      612823,
+      612827
+    ],
+    "examples_per_class_per_seed": 12,
+    "classes": [
+      "target_narrow",
+      "target_weak",
+      "target_intermittent",
+      "shared_narrow",
+      "broad_rfi",
+      "stationary_off",
+      "noise",
+      "shifted_rival"
+    ],
+    "contexts_hz_s": [
+      [
+        1,
+        10
+      ],
+      [
+        2.794,
+        18.25
+      ],
+      [
+        5,
+        8
+      ]
+    ],
+    "thresholds": {
+      "physical": -0.1438110998221716,
+      "fixed": -0.035691888748720604,
+      "source": "data/JANUS-COSMOS-SETI-R41S1H2-FROZEN-OPERATING-POINT-2026-11-20.json",
+      "scope": "historical synthetic operating point, shadow counters only; no tuning"
+    },
+    "primary": "Native functions must execute on all 288 newly generated, seed-disjoint compatible cubes; verify code and protocol blob hashes; direct-versus-adapter exact score parity on first cube per seed; input digest unchanged for every sample; fail closed for incompatible or unauthenticated roles; no mutation, no actual veto.",
+    "secondary": "Report per-seed and pooled AUC, weak retention, shadow losses vs frozen fixed comparator; do not treat new seeds from same generator as independent physical evidence.",
+    "science_gate": "HOLD_REAL_RADIO_INPUT_AND_CALIBRATED_CARRIER_RESPONSE"
+  },
+  "real_data_admission": {
+    "requires": [
+      "raw calibrated radio spectrogram data",
+      "real independently authenticated ON/OFF/repeat observations",
+      "channel width and integration duration",
+      "UTC and timing uncertainties",
+      "source hash",
+      "matched pointing and independent RFI control"
+    ],
+    "rejections": [
+      {
+        "source": "CHIME/FRB catalog 1",
+        "reason": "derived DM catalog, no compatible four-role spectrogram cube; cannot make up OFF/repeat data"
+      },
+      {
+        "source": "GWOSC strain",
+        "reason": "not a radio spectrogram"
+      },
+      {
+        "source": "Phoenix Lights, FAA",
+        "reason": "reports, not calibrated spectrum"
+      }
+    ],
+    "status": "NO_QUALIFIED_NATIVE_REAL_GROUPS_IN_PARENT_CONTRACT"
+  },
+  "limits": [
+    "No claim of real telescope data or independent blind test; generator is same native generator but new seeds.",
+    "No change to native repository, frozen thresholds or production.",
+    "Only native physical-profile scorer, not full end-to-end COSMOS production detector.",
+    "Separate stacked branch to avoid race with ongoing R1.2 result publication."
+  ]
+}
