@@ -1,0 +1,18 @@
+{
+  "schema": "janus.uap_tachyon.reverse_5d.repair.v1",
+  "date": "2026-11-28",
+  "failed_run": 46129491342,
+  "failed_job": 140931318067,
+  "source_commit": "767b32fc29e0d7f778ef8ba73c1e0d669de39889",
+  "failure": "ASYMMETRIC_AND_SYMMETRIC_CONTROLS",
+  "cause": "The integer fixture slope was evaluated after floating mean subtraction, then compared using exact floating equality. Replacing with algebraically equivalent exact integer centered weighted sum avoids cancellation; expected values 48,-48,0,0 for twice the original slope. No tolerance introduced.",
+  "changes": [
+    "Exact arithmetic for integer fixture only; require explicit nonzero known asymmetric result and exact zero symmetric result.",
+    "Regression tests translation invariance, perturbed symmetry and even-length mirror.",
+    "Checkout depth 3 retains frozen source commit after repair commit."
+  ],
+  "preregistered_science_contract_changed": false,
+  "source_data_changed": false,
+  "production_changed": false,
+  "physical_claim": false
+}
