@@ -1,0 +1,62 @@
+name: JANUS UAP Tachyon R1.5E protected multi witness
+on:
+  push:
+    branches: [research/uap-tachyon-r15e-protected-multi-witness-20261128]
+    paths:
+      - 'research/uap_poss1/janus_uap_tachyon_r15e_protected_multi_witness.py'
+      - '.github/workflows/janus-uap-tachyon-r15e-protected-multi-witness.yml'
+permissions:
+  contents: read
+jobs:
+  exam:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install fixed wheels
+        run: |
+          python -m pip install --only-binary=:all: numpy==2.2.6 scipy==1.15.3 h5py==3.13.0
+      - name: Run frozen protected multi witness exam
+        run: |
+          set -euo pipefail
+          python research/uap_poss1/janus_uap_tachyon_r15e_protected_multi_witness.py | tee /tmp/r15e-summary.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-r15e-protected-multi-witness
+          path: |
+            /tmp/r15e-summary.json
+            registry/uap/JANUS-UAP-TACHYON-R1.5E-PROTECTED-MULTI-WITNESS-RESULT-2026-11-28-v1.0.json
+          if-no-files-found: error
+  publish:
+    needs: exam
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: janus-r15e-protected-multi-witness
+          path: /tmp/r15e
+      - name: Publish only receipt
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          f="$(find /tmp/r15e -name 'JANUS-UAP-TACHYON-R1.5E-PROTECTED-MULTI-WITNESS-RESULT-2026-11-28-v1.0.json' -type f)"
+          test -f "$f"
+          python -m json.tool "$f" >/dev/null
+          cp "$f" 'registry/uap/JANUS-UAP-TACHYON-R1.5E-PROTECTED-MULTI-WITNESS-RESULT-2026-11-28-v1.0.json'
+          git add -- 'registry/uap/JANUS-UAP-TACHYON-R1.5E-PROTECTED-MULTI-WITNESS-RESULT-2026-11-28-v1.0.json'
+          git config user.name "JANUS Protected Multi Witness"
+          git config user.email "actions@users.noreply.github.com"
+          git commit -m "JANUS R1.5E: protected multi witness and real acquisition receipt"
+          git push origin HEAD:refs/heads/research/uap-tachyon-r15e-protected-multi-witness-20261128

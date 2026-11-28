@@ -1,0 +1,97 @@
+{
+  "schema": "janus.uap_tachyon.protected_multi_witness.contract.v1",
+  "date": "2026-11-28",
+  "source_commit": "cce4b1afcff843597a422f6fa996877c6095ccef",
+  "status": "FROZEN_BEFORE_EXECUTION__SHADOW_ONLY",
+  "parent_code": "research/uap_poss1/janus_uap_tachyon_r15d_event_local_noise.py",
+  "parent_code_blob": "a6dad7fa650b9d0566d9049ac815137472e03520",
+  "parent_result": "registry/uap/JANUS-UAP-TACHYON-R1.5D-EVENT-LOCAL-NOISE-RESULT-2026-11-28-v1.0.json",
+  "parent_result_blob": "fbc1036c2cf3cc9a4ea8b0c4639fde53aa876668",
+  "experiment": {
+    "seeds": [
+      616301,
+      616303,
+      616307
+    ],
+    "scenarios": [
+      "STABLE_REF",
+      "TRACKED_BURST",
+      "UNTRACKED_BURST",
+      "ALIGNED_HIDDEN",
+      "REF_LEAK",
+      "IID"
+    ],
+    "families": [
+      "weak_F",
+      "weak_R",
+      "strong_F",
+      "strong_R",
+      "symmetric_weak",
+      "symmetric_strong",
+      "noise",
+      "double",
+      "clipped"
+    ],
+    "per_family": 40,
+    "amplitudes": [
+      0,
+      0.035,
+      0.07,
+      0.14,
+      0.28,
+      0.56,
+      1.12,
+      2.24,
+      3.2
+    ],
+    "cal_per_amp": 192,
+    "validation_per_amp": 64,
+    "guard_controls": 384,
+    "min_cell": 80,
+    "description": "Pinned R15D synthetic acquisition and independent controlled transfer model; distinct seeds, three sessions each scenario; no event truth used in inference. Session scenario known to simulator only. Qualification based on independent pilot and heldout transfer; availability metadata explicit. Evaluation scenarios paired across seeds by construction, no external blind custodian."
+  },
+  "method": {
+    "route": "Qualified second witness power above 99th percentile of calm controls => TRACKED; below => CALM. If second unqualified and first available => UNKNOWN; neither available => NO_REFERENCE. Calibration includes calm and controlled burst examples for available-reference sessions (even if second missing/rejected); neither available receives calm-only calibration, no guarantee for hidden bursts in that case. Use observed route, not simulator burst label.",
+    "threshold": "Separate per-route and observed E-bin null calibration. EQ 97.5th percentile, CLEAN 99th percentile, minimum 80, no fallback for unsupported cells. Separate validation of combined output per observed route; if insufficient validation support (<80) or declaration >5%, suppress new CLEAN additions for that route; keep EQ as protected engineering baseline, mark combined confidence HOLD. No claim that EQ itself is validated in failed route. No labels or tuning from evaluation.",
+    "fusion": "Protected morphology output is EQ whenever EQ declares; otherwise CLEAN if validated and guard passes; conflicting signs logged and confidence HOLD. Store both alternatives, raw and residual hashes, original raw candidate retention; no production filtering. Paired direction preservation is by construction for this baseline only, NOT correctness guarantee. Assess false declarations of actual union, not individual lanes. Also report conservative confidence output with conflicts or validation failures abstained; report its losses separately.",
+    "reconstruction": "Preserve R15D local evidence and original R15 reconstruction; actual raw and cleaned 129-sample mean time series retained in receipt for a fixed first example per seed and family; additive replay is identity, not unique attribution. Run unchanged R15 selector on IID double/clipped; compare linear and R14.",
+    "mirror": "Mirror all event and witness time axes and context; observed route invariant, E same, D opposite, guard and fusion decisions mirrored. Exact same input hashes before/after.",
+    "comparators": "EQ and CLEAN separately on matched input and same calibration samples; CLEAN is guarded and route-qualified; parent historical failures reported, no comparison across different data as matched. Evaluate raw fusion and confidence separately."
+  },
+  "gates": {
+    "tracked": "Every seed TRACKED_BURST: protected weak correct >= EQ+10 pp, wrong weak <=5%, pooled null <=5%, strong >=85%, zero paired EQ strong losses.",
+    "stable": "Every seed STABLE_REF and IID: null<=5%, weak wrong<=5%, strong>=85%, zero paired EQ strong losses, weak correct no more than 5 pp below EQ.",
+    "untracked": "Every seed UNTRACKED_BURST, ALIGNED_HIDDEN, REF_LEAK: null<=5%, weak wrong<=5%, strong>=85%, zero paired EQ strong losses. Full failure remains HOLD; no attribution without independent witness.",
+    "protection": "No non-abstaining EQ decision overwritten; raw candidates retained; report conflicts, confidence hold and validation coverage. Report all per-seed results and route-specific false declarations.",
+    "reconstruction": "Double median <= linear and R14. Clipped diagnostic."
+  },
+  "real_acquisition": {
+    "sources": [
+      {
+        "name": "CHIME/FRB KKO Outrigger catalog",
+        "url": "https://assets.chime-frb.ca/catalogs/outriggers1/releases/2502.11217v2/data/outriggers1.csv",
+        "source": "https://chime-frb.ca/catalogs/outriggers1",
+        "role": "83 localized bursts published from CHIME and KKO; metadata candidates only, no synchronized per-site spectra in CSV."
+      },
+      {
+        "name": "CHIME/FRB known waterfall example",
+        "url": "https://www.cadc-ccda.hia-iha.nrc-cnrc.gc.ca/files/vault/AstroDataCitationDOI/CISTI.CANFAR/21.0007/data/waterfalls/data/FRB20180725A_waterfall.h5",
+        "source": "https://chime-frb-open-data.github.io/waterfall/",
+        "role": "Public processed intensity spectrum; no independent second witness. Attempt byte-bounded download and inspect documented frb/wfall, plot_time, plot_freq. No causal claim."
+      },
+      {
+        "name": "NRAO DRIFT",
+        "url": "https://science.nrao.edu/spectrum/projects/drift",
+        "role": "Public sweep amplitude/frequency CSV export; candidate matching requires actual timestamps, receiver bands and independent sensor IDs."
+      },
+      {
+        "name": "e-CALLISTO",
+        "url": "https://e-callisto.org/Data/data.html",
+        "role": "Public multi-station archive; provider requests contacting host before use. Discovery only, no data fetch or analysis until permission conditions handled."
+      }
+    ],
+    "cap_bytes": 67108864,
+    "admission": "No real multi-witness claim without paired time-aligned science and independent contemporaneous reference arrays, timing/frequency metadata, gain/leakage calibration and provenance. Catalog rows are not waveform data. Single waterfall is ordinary real spectral control, not independent witness. Keep physical HOLD and report actual download status, source hashes and errors."
+  },
+  "spiral": "Five canonical axes, evidence delta and hashes; distinguish morphology, noise attribution, provenance and physical causality; alternatives retained. No automatic veto, no main or production changes."
+}
