@@ -1,0 +1,81 @@
+{
+  "schema": "janus.uap_tachyon.event_local_noise.contract.v1",
+  "date": "2026-11-28",
+  "source_commit": "006b9767639b4a1e27a21eb055d83255102c7aa4",
+  "status": "FROZEN_BEFORE_EXECUTION__SHADOW_ONLY",
+  "parent_code": "research/uap_poss1/janus_uap_tachyon_r15c_noise_homeostasis.py",
+  "parent_code_blob": "b0606736a7290b0750d40fb43caea4ea715d7c2f",
+  "parent_result": "registry/uap/JANUS-UAP-TACHYON-R1.5C-NOISE-HOMEOSTASIS-RESULT-2026-11-28-v1.0.json",
+  "parent_result_blob": "cf931686954feed74a4047bb32efc82da0dcc075",
+  "experiment": {
+    "views": 8,
+    "samples": 129,
+    "background_samples": 2048,
+    "seeds": [
+      616201,
+      616203,
+      616207
+    ],
+    "scenarios": [
+      "STABLE_REF",
+      "TRACKED_BURST",
+      "UNTRACKED_BURST",
+      "ALIGNED_HIDDEN",
+      "REF_LEAK",
+      "IID"
+    ],
+    "families": [
+      "weak_F",
+      "weak_R",
+      "strong_F",
+      "strong_R",
+      "symmetric_weak",
+      "symmetric_strong",
+      "noise",
+      "double",
+      "clipped"
+    ],
+    "per_family": 40,
+    "calibration_amplitudes": [
+      0,
+      0.035,
+      0.07,
+      0.14,
+      0.28,
+      0.56,
+      1.12,
+      2.24,
+      3.2
+    ],
+    "cal_per_amp": 96,
+    "validation_per_amp": 32,
+    "guard_cal": 384,
+    "windows": [
+      0,
+      24,
+      48,
+      72,
+      96
+    ],
+    "window_length": 33,
+    "description": "Synthetic 8 aligned unit-response science channels, two simultaneous off-band witness channels. Independent AR noise and two common disturbances; second can occur only during event. Nonuniform channel gains except aligned hidden. Burst has symmetric smooth gate with random center offset, not supplied to inference. Missing witness is explicit instrument metadata; REF_LEAK is measured using independent pilot. All scenario and family labels withheld from inference; source law known to simulator only."
+  },
+  "methods": {
+    "baseline": "Frozen R15C reference-one model and feature from exact pinned code, calm null calibration; report EQ independently. Both use identical science samples. EQ also gets mixed-control calibration for matched comparison.",
+    "local": "Qualify each witness on independent known randomized pilot and separate measured response calibration. Regress science on qualified witnesses using independent controlled background, no event-fit coefficients. Fixed GLS weights from residual training covariance, unit signal gain. Score residual spatial covariance in mirrored sliding windows projected orthogonal to all-ones response; independently monitor witness-two local power. If significant residual contrast anomaly, abstain from direction (retain raw candidate). Witness power is local diagnostic, not proof of source. No unqualified subtraction.",
+    "calibration": "Separate calm and controlled disturbance background realizations with symmetric injected null pulses; local thresholds per observed matched-energy bin (same R15B bins), 97.5 percentile higher, min 60. Calibration includes the entire guard path, not event labels. Guard calibrated from 384 independent calm/controlled noise windows, 99th percentile; validation separately generated. No thresholds changed after eval. For unsupported bins abstain. Stress tests are not used to tune.",
+    "mirror": "Reverse event, references and measured background/pilot/controlled training arrays; mirror window starts closed under reversal; invariant qualification and guard, opposite signed morphology; fixed coefficients inferred independently of event.",
+    "reconstruction": "Unchanged R15 selector evaluated on raw means of IID double/clipped events, compare old and linear. Separate from local directional classification.",
+    "inverse": "For each event retain reference predicted disturbance, residual science series hash, per-window covariance/energy traces and replay error of additive decomposition; ordinary and hypothetical causes remain. Exact observational equivalence example with aligned unobserved disturbance; no attribution from replay identity alone."
+  },
+  "gates": {
+    "tracked": "Every seed TRACKED_BURST: LOCAL weak correct >= matched EQ +10 pp, null <=5%, weak wrong <=5%, strong correct >=85%, zero paired strong direction losses vs EQ. No automatic veto.",
+    "stable": "Every seed STABLE_REF/IID: null <=5%, weak wrong <=5%, strong correct >=85%, zero paired strong losses vs EQ, weak correct no more than 5 pp below EQ.",
+    "untracked": "Every seed UNTRACKED_BURST/REF_LEAK: null <=5%, weak wrong <=5%, strong >=85%, zero paired strong losses vs EQ. Raw candidates retained even if direction blocked.",
+    "aligned_hidden": "Separate stress gate same null and strong bounds, expected possible fail: identical signal loading and absent witness cannot be separated. No causal promotion.",
+    "monitor": "Report fraction tracked bursts identified by reference power and untracked bursts guarded, false alarms on stable; measured thresholds fixed, no inferred unique noise origin.",
+    "reconstruction": "Double median <= linear and R14; clipped diagnostic. Preserve all candidates. Mirror checks all events."
+  },
+  "scientific_ceiling": "Synthetic envelope and witness experiment only, no native radio spectrogram or externally authenticated witness, no external blind exam. Physical causality HOLD. Fixed covariance model assumes equal response, pilot transfer valid for synthetic scope only. No production change.",
+  "spiral": "Five canonical axes with parent hash chain, actual local evidence, replay and nonidentifiability; preserve gain, reference leakage, transient disturbance, ordinary cause and hypothetical carrier."
+}
