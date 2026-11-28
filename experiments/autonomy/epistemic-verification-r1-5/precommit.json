@@ -1,0 +1,20 @@
+{
+  "schema": "janus.epistemic.r1_5a.precommit.v1",
+  "status": "BOUNDED_AUTOMATED_JOB_CHAIN__NOT_AUTONOMOUS_RUN_CONTINUITY",
+  "parent": {
+    "archive_commit": "1406f2cf2d1f154aadec6c1bc2d65eb3465d9ad5",
+    "archive_blob": "84773d39f00f281c01d72ad62a14e40b202b0962",
+    "a_anchor_commit": "2c74bb359f78f7e3037f3b1fa95135e48f9ed113",
+    "a_artifact": 15259401931,
+    "b_artifact": 15259862057
+  },
+  "design": "One push-triggered workflow, migration plus three sequential distinct GitHub-hosted jobs. Exact parent ZIP and canonical member digests pinned from R1.4 logs/API; reconstruct R1.4 version3 from original signed envelopes and compare to B snapshot. Export self-contained public checkpoint with registry history, historical signed envelopes and admission times, pending pre-signed test envelopes, snapshot. New synthetic test key enrolled for this run only with registry revision3; revoke previous key in test context. Three automatic job-to-job handoffs using job outputs checkpoint digest and immutable artifact IDs, no manual anchors between jobs. Each job recreates SQLite by re-verifying all historical signed documents, checks parent digest and version, rejects replays and accepts exactly one distinct pre-signed receipt; v3->4->5->6. Final fresh restore check. All outputs staging only.",
+  "limits": "Three jobs in one workflow are NOT three separate runs or independent observer. Job output anchor within same trust domain, no global rollback resistance. Fixed synthetic clock. No real-time, real external source, persistent keys, live Cortex, production or training. No secrets, no write permissions except artifact service. No self-dispatch, default-branch change or permissions escalation.",
+  "gate": "Check both archived ZIP hashes and canonical members; reconstruct exact v3; three linked advances with rejection no mutation, all receipt knowledge_admitted false, no private key bytes. Final report from CI only. Independent witness and three distinct automatically triggered runs remain HOLD.",
+  "authorization": {
+    "production": false,
+    "training": false,
+    "active_cortex_write": false,
+    "independent_witness": false
+  }
+}
