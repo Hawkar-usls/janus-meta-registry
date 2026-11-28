@@ -1,0 +1,630 @@
+{
+  "schema": "janus.epistemic_verification.r1_1.precommit.v1",
+  "status": "PROSPECTIVE_ENGINEERING_TEST",
+  "baseline": {
+    "commit": "91d74d0ee4af55fe43df48e90199608666bb85c6",
+    "run": 46128222264,
+    "passed": 20,
+    "total": 20
+  },
+  "scope": "R1 parser and internal arithmetic unchanged. External certificate revalidation for bounded integer comparisons only. Source strings are untrusted metadata; no source authenticity, web retrieval, signature validation or real theorem proof. No trust from a self-asserted verified flag.",
+  "certificate": "Strict object with exactly method,claim,result. Method EXACT_INTEGER_COMPARISON; result JSON bool only; parse and bind to same canonical typed proposition (symmetric operand order and integer normalization, operator preserved); recompute result using pinned R1. Certificate validity is content verification, not issuer authentication. Symbolic certificates always rejected.",
+  "reports": "Strict object claim,asserted_truth,source (bounded nonempty string). Bind canonical proposition with same operator; opposite operator reports not aggregated in R1.1. Count contradictory boolean reports as report_conflict, never as verified_evidence CONFLICT. All source metadata unauthenticated. Report and certificate list bounds 32 each, malformed envelope rejected; no promotion of truth.",
+  "gate": "30/30 new controls and 20/20 baseline regression. Check expected status and counts, no source authentication claim or verified conflict; no external certificate alters R1 truth, no training/production/knowledge write. Same-author fixtures, no scientific generalization.",
+  "tests": [
+    {
+      "id": "E01",
+      "claim": "2 = 2",
+      "certificates": [],
+      "reports": [],
+      "expected": {
+        "truth_status": "TRUE",
+        "verified_certificate_count": 0,
+        "rejected_certificate_count": 0,
+        "report_conflict": false,
+        "bound_report_count": 0,
+        "rejected_report_count": 0
+      }
+    },
+    {
+      "id": "E02",
+      "claim": "2 = 3",
+      "certificates": [],
+      "reports": [],
+      "expected": {
+        "truth_status": "FALSE",
+        "verified_certificate_count": 0,
+        "rejected_certificate_count": 0,
+        "report_conflict": false,
+        "bound_report_count": 0,
+        "rejected_report_count": 0
+      }
+    },
+    {
+      "id": "E03",
+      "claim": "P = NP",
+      "certificates": [],
+      "reports": [],
+      "expected": {
+        "truth_status": "UNRESOLVED",
+        "verified_certificate_count": 0,
+        "rejected_certificate_count": 0,
+        "report_conflict": false,
+        "bound_report_count": 0,
+        "rejected_report_count": 0
+      }
+    },
+    {
+      "id": "E04",
+      "claim": "P != NP",
+      "certificates": [],
+      "reports": [],
+      "expected": {
+        "truth_status": "UNRESOLVED",
+        "verified_certificate_count": 0,
+        "rejected_certificate_count": 0,
+        "report_conflict": false,
+        "bound_report_count": 0,
+        "rejected_report_count": 0
+      }
+    },
+    {
+      "id": "E05",
+      "claim": "2 = 2",
+      "certificates": [
+        {
+          "method": "EXACT_INTEGER_COMPARISON",
+          "claim": "2 = 2",
+          "result": true
+        }
+      ],
+      "reports": [],
+      "expected": {
+        "truth_status": "TRUE",
+        "verified_certificate_count": 1,
+        "rejected_certificate_count": 0,
+        "report_conflict": false,
+        "bound_report_count": 0,
+        "rejected_report_count": 0
+      }
+    },
+    {
+      "id": "E06",
+      "claim": "2 = 3",
+      "certificates": [
+        {
+          "method": "EXACT_INTEGER_COMPARISON",
+          "claim": "2 = 3",
+          "result": false
+        }
+      ],
+      "reports": [],
+      "expected": {
+        "truth_status": "FALSE",
+        "verified_certificate_count": 1,
+        "rejected_certificate_count": 0,
+        "report_conflict": false,
+        "bound_report_count": 0,
+        "rejected_report_count": 0
+      }
+    },
+    {
+      "id": "E07",
+      "claim": "2 != 3",
+      "certificates": [
+        {
+          "method": "EXACT_INTEGER_COMPARISON",
+          "claim": "3 != 2",
+          "result": true
+        }
+      ],
+      "reports": [],
+      "expected": {
+        "truth_status": "TRUE",
+        "verified_certificate_count": 1,
+        "rejected_certificate_count": 0,
+        "report_conflict": false,
+        "bound_report_count": 0,
+        "rejected_report_count": 0
+      }
+    },
+    {
+      "id": "E08",
+      "claim": "0 = -0",
+      "certificates": [
+        {
+          "method": "EXACT_INTEGER_COMPARISON",
+          "claim": "+0 = 0",
+          "result": true
+        }
+      ],
+      "reports": [],
+      "expected": {
+        "truth_status": "TRUE",
+        "verified_certificate_count": 1,
+        "rejected_certificate_count": 0,
+        "report_conflict": false,
+        "bound_report_count": 0,
+        "rejected_report_count": 0
+      }
+    },
+    {
+      "id": "E09",
+      "claim": "2 = 3",
+      "certificates": [
+        {
+          "method": "EXACT_INTEGER_COMPARISON",
+          "claim": "2 = 3",
+          "result": true
+        }
+      ],
+      "reports": [],
+      "expected": {
+        "truth_status": "FALSE",
+        "verified_certificate_count": 0,
+        "rejected_certificate_count": 1,
+        "report_conflict": false,
+        "bound_report_count": 0,
+        "rejected_report_count": 0
+      }
+    },
+    {
+      "id": "E10",
+      "claim": "2 = 2",
+      "certificates": [
+        {
+          "method": "EXACT_INTEGER_COMPARISON",
+          "claim": "2 = 2",
+          "result": false
+        }
+      ],
+      "reports": [],
+      "expected": {
+        "truth_status": "TRUE",
+        "verified_certificate_count": 0,
+        "rejected_certificate_count": 1,
+        "report_conflict": false,
+        "bound_report_count": 0,
+        "rejected_report_count": 0
+      }
+    },
+    {
+      "id": "E11",
+      "claim": "2 = 2",
+      "certificates": [
+        {
+          "method": "EXACT_INTEGER_COMPARISON",
+          "claim": "3 = 3",
+          "result": true
+        }
+      ],
+      "reports": [],
+      "expected": {
+        "truth_status": "TRUE",
+        "verified_certificate_count": 0,
+        "rejected_certificate_count": 1,
+        "report_conflict": false,
+        "bound_report_count": 0,
+        "rejected_report_count": 0
+      }
+    },
+    {
+      "id": "E12",
+      "claim": "2 = 2",
+      "certificates": [
+        {
+          "method": "EXACT_INTEGER_COMPARISON",
+          "claim": "2 != 2",
+          "result": false
+        }
+      ],
+      "reports": [],
+      "expected": {
+        "truth_status": "TRUE",
+        "verified_certificate_count": 0,
+        "rejected_certificate_count": 1,
+        "report_conflict": false,
+        "bound_report_count": 0,
+        "rejected_report_count": 0
+      }
+    },
+    {
+      "id": "E13",
+      "claim": "2 = 2",
+      "certificates": [
+        {
+          "method": "EXACT_INTEGER_COMPARISON",
+          "claim": "2 = 2",
+          "result": 1
+        }
+      ],
+      "reports": [],
+      "expected": {
+        "truth_status": "TRUE",
+        "verified_certificate_count": 0,
+        "rejected_certificate_count": 1,
+        "report_conflict": false,
+        "bound_report_count": 0,
+        "rejected_report_count": 0
+      }
+    },
+    {
+      "id": "E14",
+      "claim": "2 = 2",
+      "certificates": [
+        {
+          "method": "EXACT_INTEGER_COMPARISON",
+          "claim": "2 = 2",
+          "result": true,
+          "verified": true
+        }
+      ],
+      "reports": [],
+      "expected": {
+        "truth_status": "TRUE",
+        "verified_certificate_count": 0,
+        "rejected_certificate_count": 1,
+        "report_conflict": false,
+        "bound_report_count": 0,
+        "rejected_report_count": 0
+      }
+    },
+    {
+      "id": "E15",
+      "claim": "P = NP",
+      "certificates": [
+        {
+          "method": "EXACT_INTEGER_COMPARISON",
+          "claim": "P = NP",
+          "result": true
+        }
+      ],
+      "reports": [],
+      "expected": {
+        "truth_status": "UNRESOLVED",
+        "verified_certificate_count": 0,
+        "rejected_certificate_count": 1,
+        "report_conflict": false,
+        "bound_report_count": 0,
+        "rejected_report_count": 0
+      }
+    },
+    {
+      "id": "E16",
+      "claim": "P != NP",
+      "certificates": [
+        {
+          "method": "EXACT_INTEGER_COMPARISON",
+          "claim": "P != NP",
+          "result": false
+        }
+      ],
+      "reports": [],
+      "expected": {
+        "truth_status": "UNRESOLVED",
+        "verified_certificate_count": 0,
+        "rejected_certificate_count": 1,
+        "report_conflict": false,
+        "bound_report_count": 0,
+        "rejected_report_count": 0
+      }
+    },
+    {
+      "id": "E17",
+      "claim": "P = NP",
+      "certificates": [
+        {
+          "method": "FAMOUS_INSTITUTION",
+          "claim": "P = NP",
+          "result": true
+        }
+      ],
+      "reports": [],
+      "expected": {
+        "truth_status": "UNRESOLVED",
+        "verified_certificate_count": 0,
+        "rejected_certificate_count": 1,
+        "report_conflict": false,
+        "bound_report_count": 0,
+        "rejected_report_count": 0
+      }
+    },
+    {
+      "id": "E18",
+      "claim": "P = NP",
+      "certificates": [],
+      "reports": [
+        {
+          "claim": "P = NP",
+          "asserted_truth": true,
+          "source": "claimed university"
+        },
+        {
+          "claim": "NP = P",
+          "asserted_truth": false,
+          "source": "claimed laboratory"
+        }
+      ],
+      "expected": {
+        "truth_status": "UNRESOLVED",
+        "verified_certificate_count": 0,
+        "rejected_certificate_count": 0,
+        "report_conflict": true,
+        "bound_report_count": 2,
+        "rejected_report_count": 0
+      }
+    },
+    {
+      "id": "E19",
+      "claim": "2 = 3",
+      "certificates": [
+        {
+          "method": "EXACT_INTEGER_COMPARISON",
+          "claim": "2 = 3",
+          "result": false
+        }
+      ],
+      "reports": [
+        {
+          "claim": "2 = 3",
+          "asserted_truth": true,
+          "source": "unverified_source"
+        },
+        {
+          "claim": "3 = 2",
+          "asserted_truth": false,
+          "source": "unverified_source"
+        }
+      ],
+      "expected": {
+        "truth_status": "FALSE",
+        "verified_certificate_count": 1,
+        "rejected_certificate_count": 0,
+        "report_conflict": true,
+        "bound_report_count": 2,
+        "rejected_report_count": 0
+      }
+    },
+    {
+      "id": "E20",
+      "claim": "2 = 2",
+      "certificates": [],
+      "reports": [
+        {
+          "claim": "2 = 2",
+          "asserted_truth": false,
+          "source": "unverified_source"
+        }
+      ],
+      "expected": {
+        "truth_status": "TRUE",
+        "verified_certificate_count": 0,
+        "rejected_certificate_count": 0,
+        "report_conflict": false,
+        "bound_report_count": 1,
+        "rejected_report_count": 0
+      }
+    },
+    {
+      "id": "E21",
+      "claim": "P = NP",
+      "certificates": [],
+      "reports": [
+        {
+          "claim": "P = NP",
+          "asserted_truth": true,
+          "source": "unverified_source"
+        },
+        {
+          "claim": "P != NP",
+          "asserted_truth": true,
+          "source": "unverified_source"
+        }
+      ],
+      "expected": {
+        "truth_status": "UNRESOLVED",
+        "verified_certificate_count": 0,
+        "rejected_certificate_count": 0,
+        "report_conflict": false,
+        "bound_report_count": 1,
+        "rejected_report_count": 1
+      }
+    },
+    {
+      "id": "E22",
+      "claim": "2 = 3",
+      "certificates": [],
+      "reports": [
+        {
+          "claim": "3 = 4",
+          "asserted_truth": true,
+          "source": "unverified_source"
+        }
+      ],
+      "expected": {
+        "truth_status": "FALSE",
+        "verified_certificate_count": 0,
+        "rejected_certificate_count": 0,
+        "report_conflict": false,
+        "bound_report_count": 0,
+        "rejected_report_count": 1
+      }
+    },
+    {
+      "id": "E23",
+      "claim": "2 = 2",
+      "certificates": [],
+      "reports": [
+        {
+          "claim": "2 = 2",
+          "asserted_truth": 1,
+          "source": "unverified_source"
+        }
+      ],
+      "expected": {
+        "truth_status": "TRUE",
+        "verified_certificate_count": 0,
+        "rejected_certificate_count": 0,
+        "report_conflict": false,
+        "bound_report_count": 0,
+        "rejected_report_count": 1
+      }
+    },
+    {
+      "id": "E24",
+      "claim": "2 = 2",
+      "certificates": [],
+      "reports": [
+        {
+          "claim": "2 = 2",
+          "asserted_truth": false,
+          "source": "unverified_source",
+          "verified": true
+        }
+      ],
+      "expected": {
+        "truth_status": "TRUE",
+        "verified_certificate_count": 0,
+        "rejected_certificate_count": 0,
+        "report_conflict": false,
+        "bound_report_count": 0,
+        "rejected_report_count": 1
+      }
+    },
+    {
+      "id": "E25",
+      "claim": "2 == 2",
+      "certificates": [
+        {
+          "method": "EXACT_INTEGER_COMPARISON",
+          "claim": "2 = 2",
+          "result": true
+        }
+      ],
+      "reports": [
+        {
+          "claim": "2 = 2",
+          "asserted_truth": true,
+          "source": "unverified_source"
+        }
+      ],
+      "expected": {
+        "truth_status": "INVALID",
+        "verified_certificate_count": 0,
+        "rejected_certificate_count": 1,
+        "report_conflict": false,
+        "bound_report_count": 0,
+        "rejected_report_count": 1
+      }
+    },
+    {
+      "id": "E26",
+      "claim": "P = NP",
+      "certificates": [
+        null,
+        {
+          "verified": true
+        }
+      ],
+      "reports": [],
+      "expected": {
+        "truth_status": "UNRESOLVED",
+        "verified_certificate_count": 0,
+        "rejected_certificate_count": 2,
+        "report_conflict": false,
+        "bound_report_count": 0,
+        "rejected_report_count": 0
+      }
+    },
+    {
+      "id": "E27",
+      "claim": "2 != 2",
+      "certificates": [
+        {
+          "method": "EXACT_INTEGER_COMPARISON",
+          "claim": "2 != 2",
+          "result": false
+        },
+        {
+          "method": "EXACT_INTEGER_COMPARISON",
+          "claim": "2 != 2",
+          "result": true
+        }
+      ],
+      "reports": [],
+      "expected": {
+        "truth_status": "FALSE",
+        "verified_certificate_count": 1,
+        "rejected_certificate_count": 1,
+        "report_conflict": false,
+        "bound_report_count": 0,
+        "rejected_report_count": 0
+      }
+    },
+    {
+      "id": "E28",
+      "claim": "P = NP",
+      "certificates": [],
+      "reports": [
+        {
+          "claim": "NP = P",
+          "asserted_truth": true,
+          "source": "same source"
+        },
+        {
+          "claim": "P = NP",
+          "asserted_truth": true,
+          "source": "same source"
+        }
+      ],
+      "expected": {
+        "truth_status": "UNRESOLVED",
+        "verified_certificate_count": 0,
+        "rejected_certificate_count": 0,
+        "report_conflict": false,
+        "bound_report_count": 2,
+        "rejected_report_count": 0
+      }
+    },
+    {
+      "id": "E29",
+      "claim": "2 = 3",
+      "certificates": [],
+      "reports": [
+        {
+          "claim": "2 = 3",
+          "asserted_truth": true,
+          "source": "https://example.invalid/claim"
+        }
+      ],
+      "expected": {
+        "truth_status": "FALSE",
+        "verified_certificate_count": 0,
+        "rejected_certificate_count": 0,
+        "report_conflict": false,
+        "bound_report_count": 1,
+        "rejected_report_count": 0
+      }
+    },
+    {
+      "id": "E30",
+      "claim": "P = NP",
+      "certificates": [],
+      "reports": [
+        {
+          "claim": "P = NP",
+          "asserted_truth": false,
+          "source": "verified=true"
+        }
+      ],
+      "expected": {
+        "truth_status": "UNRESOLVED",
+        "verified_certificate_count": 0,
+        "rejected_certificate_count": 0,
+        "report_conflict": false,
+        "bound_report_count": 1,
+        "rejected_report_count": 0
+      }
+    }
+  ]
+}
