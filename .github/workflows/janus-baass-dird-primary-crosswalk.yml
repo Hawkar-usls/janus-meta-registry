@@ -1,0 +1,58 @@
+name: JANUS BAASS DIRD primary crosswalk
+on:
+  push:
+    branches: [research/uap-baass-dird-primary-20261128]
+    paths:
+      - 'research/uap_poss1/janus_baass_dird_primary_crosswalk.py'
+      - '.github/workflows/janus-baass-dird-primary-crosswalk.yml'
+permissions:
+  contents: read
+jobs:
+  exam:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install PDF dependencies
+        run: |
+          python -m pip install --only-binary=:all: pypdf==5.4.0 cryptography==45.0.7
+      - name: Execute public primary source crosswalk
+        run: |
+          set -euo pipefail
+          python research/uap_poss1/janus_baass_dird_primary_crosswalk.py | tee /tmp/baass-summary.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: baass-dird-crosswalk
+          path: |
+            /tmp/baass-summary.json
+            registry/uap/JANUS-BAASS-DIRD-PRIMARY-SOURCE-ACQUISITION-2026-11-28-v1.0.json
+          if-no-files-found: error
+  publish:
+    needs: exam
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: baass-dird-crosswalk
+          path: /tmp/baass
+      - name: Publish receipt
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          f="$(find /tmp/baass -name 'JANUS-BAASS-DIRD-PRIMARY-SOURCE-ACQUISITION-2026-11-28-v1.0.json' -type f)"
+          test -f "$f"
+          python -m json.tool "$f" >/dev/null
+          cp "$f" 'registry/uap/JANUS-BAASS-DIRD-PRIMARY-SOURCE-ACQUISITION-2026-11-28-v1.0.json'
+          git add -- 'registry/uap/JANUS-BAASS-DIRD-PRIMARY-SOURCE-ACQUISITION-2026-11-28-v1.0.json'
+          git config user.name "JANUS BAASS Crosswalk"
+          git config user.email "actions@users.noreply.github.com"
+          git commit -m "JANUS: BAASS DIRD primary source crosswalk receipt"
+          git push origin HEAD:refs/heads/research/uap-baass-dird-primary-20261128
