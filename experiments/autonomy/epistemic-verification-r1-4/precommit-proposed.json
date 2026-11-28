@@ -1,0 +1,48 @@
+{
+  "schema": "janus.epistemic_verification.r1_4.persistence.proposal.v1",
+  "date": "2026-11-28",
+  "status": "PROPOSED__R1_3_RECOVERY_REQUIRED__NO_PERSISTENCE_RUN",
+  "parent": {
+    "failed_run": 46134488229,
+    "recovery_run": 46134763358,
+    "recovery_commit": "79a6d41cffe38b5aa1cd3ca9e2579c3dcbd9d4ed"
+  },
+  "scope": "Two distinct GitHub-hosted Actions runs with fresh runner state, synthetic trust roots and logical test clock only. No real identity, wall-clock assurance, production state or knowledge writes. No claim of independent security audit.",
+  "gates": [
+    "Verify recovery run on exact commit and all 116 controls before implementing or executing persistence experiment.",
+    "Freeze reviewed checkpoint schema and exact run A workflow/code commit before execution.",
+    "Bind run B to successful run A ID, attempt, head SHA, exact artifact ID, artifact digest and canonical checkpoint digest via separate trusted research anchor commit made after A and before B; missing/mismatched metadata => HOLD. Never select latest artifact silently.",
+    "Only accept strictly linked successor version and parent checkpoint hash; retained receipt identities survive key changes; monotonic trust registry revision and state version verified against anchor."
+  ],
+  "design": {
+    "run_A": "Create ephemeral synthetic keypair and signed test receipts; accept one via verified R1.3 staging; record canonical registry snapshot, receipt ledger, version, parent digest, source run/attempt/head, fixed logical test clock, signed fixture envelopes and public verification keys. Export bounded canonical JSON plus digest as artifact. Do not export private keys or production credentials. To make valid distinct test receipt available to B, pre-sign it in A and include it as separate fixture; no key persistence required.",
+    "anchor": "After A completion inspect job result and artifact metadata; an authorized operator independently records checkpoint SHA256 and artifact identity in append-only research commit, pin its SHA in B input. For experiment, operator/controller trust is explicit; do not treat hash stored with payload as independent monotonic anchor.",
+    "run_B": "Separate workflow run on fresh GitHub runner, download exact A artifact, verify artifact and checkpoint digests against anchor, validate schema/bounds, pinned issuer/public key map, reconstruct staged receipt ledger and revalidate canonical snapshot. Reject replay of accepted receipt, accept pre-signed unseen receipt only under valid test clock/policy. Demonstrate rejection of older version, wrong parent, altered ledger, wrong registry revision, artifact substitution and stale expected version. Produce successor checkpoint and bounded Cortex export artifact with all knowledge_admitted=false; never connect to active Cortex.",
+    "CAS": "SQLite transaction and version CAS local to B only; checkpoint publication not a distributed CAS. Future shared branch ref CAS with protected monotonic witness needed for concurrent writers and rollback resistance across later runs. No force push or weakening branch protections."
+  },
+  "negative_controls": [
+    "Missing anchor",
+    "Wrong run/attempt/artifact identity",
+    "Checkpoint digest mismatch",
+    "Older valid snapshot vs newer pinned anchor",
+    "Equal version but different hash",
+    "Wrong parent",
+    "Registry revision rollback",
+    "Previously accepted nonce after separate runner restart",
+    "Replay using rotated key",
+    "Stale expected version",
+    "Rejected document does not consume nonce",
+    "Signed symbolic claim remains unresolved",
+    "Signed false statement remains false",
+    "Export never admits knowledge"
+  ],
+  "limitations": "GitHub artifact retention/availability finite. A trusted pinned anchor can detect rollback relative to that anchor only; no global rollback resistance against privileged actors replacing the anchor, code or repository. A/B evidence required for cross-run claim; local SQLite restart is insufficient. No autonomous scheduler or active Cortex integration in this proposal.",
+  "authorization": {
+    "implementation": false,
+    "run_A": false,
+    "run_B": false,
+    "production": false,
+    "training": false,
+    "active_cortex_write": false
+  }
+}
