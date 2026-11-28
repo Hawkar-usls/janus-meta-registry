@@ -1,0 +1,75 @@
+{
+  "schema": "janus.uap_tachyon.reverse_causal_discrimination.contract.v1",
+  "date": "2026-11-28",
+  "source_commit": "528a6e185c839d64b35815f26d683df38b88e531",
+  "parent_result": "registry/uap/JANUS-UAP-TACHYON-R1.4-TEMPORAL-ARROW-RESULT-2026-11-28-v1.0.json",
+  "parent_code": "research/uap_poss1/janus_uap_tachyon_r14_temporal_arrow.py",
+  "parent_code_blob": "33b26706c1dbd6a1706e59f03158234097348b5f",
+  "parent_contract": "registry/uap/JANUS-UAP-TACHYON-R1.4-TEMPORAL-ARROW-CONTRACT-2026-11-28-v1.0.json",
+  "spiral": "data/JANUS-DEEP-ANALYSIS-5D-SPIRAL-ORIGIN-PRIME-ORACLE-PROTOCOL-2026-08-21-v2.1.json",
+  "status": "FROZEN_BEFORE_EXECUTION__NO_PHYSICAL_PROMOTION",
+  "scope": "Synthetic matched multiview shape exam, reconstruction and causal identifiability; independent public instrument control only, not external blind or a physical carrier experiment.",
+  "shape": {
+    "model": "Eight simulated independent repeated measurements of one aligned envelope, known identical acquisition axes; not eight physical detectors. Both methods get identical averaged data. Mean background from separate 256-point control per replicate, not supplied generator parameters.",
+    "score": "D=(RSS_R-RSS_F)/(N*sigma_mean^2), nonnegative amplitude and free offset; dense mirror bank; confidence threshold calibrated only on symmetric and noise families using 99th percentile of abs(D), higher order statistic. R14 score untouched, executed via AST-extracted exact definitions.",
+    "calibration_seeds": [
+      615001,
+      615003
+    ],
+    "eval_seeds": [
+      615101,
+      615103,
+      615107
+    ],
+    "per_family": 48,
+    "replicates": 8,
+    "noise": "AR(1) with rho 0.35; independent noise per replicate; sigma 0.14; background independently generated. No knowledge of true peak or class given to inference.",
+    "families": [
+      "weak_F",
+      "weak_R",
+      "strong_F",
+      "strong_R",
+      "symmetric",
+      "noise",
+      "double",
+      "clipped",
+      "causal_smoothed"
+    ],
+    "criteria": "Each seed: weak correct coverage at least +10 percentage points over R14, wrong orientation <=5%; symmetric and noise combined direction declaration <=5%; strong correct coverage >=85% and no more than 5 percentage points below R14. Report fail as HOLD; no tuning."
+  },
+  "reconstruction": {
+    "gap": "abs(t)<=0.16, true hidden values never passed to selector",
+    "models": [
+      "single F/R/S",
+      "equal-amplitude two-component template bank",
+      "clipped single response bank",
+      "causally smoothed single template bank",
+      "linear interpolation"
+    ],
+    "selection": "Blocked pseudo-gaps in observed wings; estimate observed prediction error separately for each family, choose lowest, with linear tie precedence. Fit chosen family on all visible points. Retain each family's latent ambiguity and hidden RMSE. For clipped signals target is detector output, not pre-clipping latent amplitude.",
+    "gate": "For double and clipped, median held-gap RMSE <= linear and <= frozen R14 reconstruction on pooled heldout. Report selection counts and paired win rates, no fallback using hidden truth."
+  },
+  "causality": {
+    "timing_model": "For specified common emitter/receiver and calibrated path L: interval delta=(t_receive-t_emit) with bounded errors. H0 causal TOF >= L/c, early if upper calibrated interval < minimum L/c. A timing anomaly alone cannot exclude unknown common cause, path misassociation, clock fault or unknown detector coupling.",
+    "cases": [
+      "ordinary",
+      "advanced_toy",
+      "clock_bias_explains",
+      "missing_clock",
+      "ambiguous_path",
+      "common_cause",
+      "leakage",
+      "unverified_coupling"
+    ],
+    "per_case": 32,
+    "seed": 615900,
+    "gate": "zero physical promotions. Known positive timing controls must flag interval conflict, ordinary/clock-corrected/ambiguous/missing must not. Always retain untested alternatives; toy advanced is constructed, not physical.",
+    "real_control": "GWOSC H1/L1 exact previously acquired HDF5 hashes; recalculate signed correlation lag using frozen R1.2 offline procedure. Two detector arrivals are not emitter-receiver TOF; no calibrated emission time or exclusive carrier response. OPERA and CHIME prior receipts retained as bounds/context. No invented real paired UAP measurements."
+  },
+  "spiral_rule": "5 canonical axes, actual deltas and alternatives; parent state hash excludes generation number; no gain recognized; preserve every failed model family and unresolved alternative. No native production change.",
+  "limits": [
+    "Identical observed envelopes cannot determine causal direction. No exclusive interaction model, calibrated signal-front measurement or real paired UAP event.",
+    "Known public GWOSC is not a blind holdout. Simulated repeated views do not establish real detector independence.",
+    "Native spectral scorer is protected by source blob parity and prior R1.4 receipt, not rerun on all 288 in this stage."
+  ]
+}
