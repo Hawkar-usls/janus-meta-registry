@@ -1,0 +1,59 @@
+name: JANUS UAP Tachyon R1.8 reconnection
+on:
+  push:
+    branches: [research/uap-tachyon-r18-reconnection-20261128]
+    paths:
+      - 'research/uap_poss1/janus_uap_tachyon_r18_reconnection.py'
+      - '.github/workflows/janus-uap-tachyon-r18-reconnection.yml'
+permissions:
+  contents: read
+jobs:
+  exam:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install pinned PDF reader
+        run: |
+          python -m pip install pypdf==5.4.0
+      - name: Execute UAP reconnection
+        run: |
+          set -euo pipefail
+          python research/uap_poss1/janus_uap_tachyon_r18_reconnection.py | tee /tmp/r18-summary.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: r18-uap-reconnection
+          path: |
+            /tmp/r18-summary.json
+            registry/uap/JANUS-UAP-TACHYON-R1.8-UAP-TACHYON-RECONNECTION-RESULT-2026-11-28-v1.0.json
+          if-no-files-found: error
+  publish:
+    needs: exam
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: r18-uap-reconnection
+          path: /tmp/r18
+      - name: Publish only receipt
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          f="$(find /tmp/r18 -name 'JANUS-UAP-TACHYON-R1.8-UAP-TACHYON-RECONNECTION-RESULT-2026-11-28-v1.0.json' -type f)"
+          test -f "$f"
+          python -m json.tool "$f" >/dev/null
+          cp "$f" 'registry/uap/JANUS-UAP-TACHYON-R1.8-UAP-TACHYON-RECONNECTION-RESULT-2026-11-28-v1.0.json'
+          git add -- 'registry/uap/JANUS-UAP-TACHYON-R1.8-UAP-TACHYON-RECONNECTION-RESULT-2026-11-28-v1.0.json'
+          git config user.name "JANUS UAP Reconnection"
+          git config user.email "actions@users.noreply.github.com"
+          git commit -m "JANUS R1.8: UAP reconnection audit receipt"
+          git push origin HEAD:refs/heads/research/uap-tachyon-r18-reconnection-20261128

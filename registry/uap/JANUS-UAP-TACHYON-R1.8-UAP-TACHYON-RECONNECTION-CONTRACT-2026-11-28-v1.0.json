@@ -1,0 +1,131 @@
+{
+  "schema": "janus.uap_tachyon.reconnection.contract.v1",
+  "date": "2026-11-28",
+  "source_commit": "f23b5f3994254ed537e54cf3069756b640183edc",
+  "status": "FROZEN_BEFORE_EXECUTION",
+  "pins": {
+    "core": [
+      "registry/uap/JANUS-UAP-R1.1-CURATED-CORE-2026-11-28-v1.0.json",
+      "4578358d6c0faada921fd125febc3b0587fac1b5"
+    ],
+    "cross": [
+      "registry/uap/JANUS-UAP-TACHYON-CROSS-CORPUS-2026-11-28-v1.0.json",
+      "64e63c8df9c1cb5a69e394142019b7220c93227f"
+    ],
+    "geo": [
+      "registry/uap/JANUS-UAP-R1.2-SPATIOTEMPORAL-RECONSTRUCTION-2026-11-28-v1.0.json",
+      "738ab6e54f418d6cbf3e012cd95079f79af71d9a"
+    ],
+    "primary": [
+      "registry/uap/JANUS-UAP-R1.2-PRIMARY-ACQUISITION-2026-11-28-v1.0.json",
+      "94e40922f2755830bca2e3ad5cc1921a53fbc9a6"
+    ],
+    "carrier": [
+      "registry/uap/JANUS-UAP-TACHYON-R1.1-CARRIER-IDENTIFIABILITY-RESULT-2026-11-28-v1.0.json",
+      "fa55818053faaeacc1e14e91596770f91f329f02"
+    ],
+    "control": [
+      "registry/uap/JANUS-UAP-TACHYON-R1.2-MEASUREMENT-RESULT-2026-11-28-v1.0.json",
+      "effc3f49db88cde7570e6c869cc2c078f5d03e06"
+    ],
+    "frb": [
+      "registry/uap/JANUS-UAP-TACHYON-R1.7-REAL-SPECTRAL-CORPUS-RESULT-2026-11-28-v1.0.json",
+      "5ea92cd1d7d77511708649b09efcb2cefd77f92f"
+    ]
+  },
+  "scope": "R1.8 parallel branch from completed R1.7; do not wait for or change R1.7A. FRB controls only, no further FRB downloads. Scan exact curated 186 plus cross co-mention 74 union, not all 5784 broad candidates; all matching strings discovery only; do not confuse document mentions and independent events.",
+  "terms": {
+    "RADAR": "\\bradar\\b|radar return|радиолокац|радар",
+    "RF": "radio signal|radio frequency|radiofrequency|radio burst|\\bRF\\b|радиосигнал|радиочастот",
+    "EM": "electromagnetic|magnetic field|electrical interference|электромагнит|магнитное поле",
+    "TIMING": "timestamp|time delay|arrival time|clock bias|time of flight|время прибытия|временн.{0,12}задерж",
+    "INSTRUMENT": "infrared|\\bEO/IR\\b|sensor|инфракрасн|датчик"
+  },
+  "sources": [
+    {
+      "id": "AGUADILLA",
+      "url": "https://www.aaro.mil/Portals/136/PDFs/case_resolution_reports/AARO_Puerto_Rico_UAP_Case_Resolution.pdf",
+      "markers": [
+        "Puerto Rico",
+        "April 26, 2013"
+      ],
+      "date": "2013-04-26",
+      "region": "Aguadilla airport",
+      "kind": "IR imagery and published reconstruction",
+      "alternatives": [
+        "two drifting objects",
+        "motion parallax",
+        "clouds/thermal contrast",
+        "unresolved sensor effects"
+      ],
+      "time": "Report date and 21:22 local versus figure 01:22:07; date/clock discrepancy. Test both possible UTC days, contextual only."
+    },
+    {
+      "id": "EGLIN",
+      "url": "https://www.aaro.mil/Portals/136/PDFs/case_resolution_reports/Case_Resolution_of_Eglin_UAP_2_508_.pdf",
+      "markers": [
+        "Eglin",
+        "26 January 2023"
+      ],
+      "date": "2023-01-26",
+      "region": "Florida coastal range",
+      "kind": "reported radar and EO/IR; two stills of one object; no raw calibrated pair",
+      "alternatives": [
+        "lighter-than-air object",
+        "preexisting circuit-breaker fault",
+        "unknown sensor interference"
+      ],
+      "time": "day only; no precise public calibrated clocks"
+    },
+    {
+      "id": "GOFAST",
+      "url": "https://www.aaro.mil/Portals/136/PDFs/case_resolution_reports/AARO_GoFast_Case_Resolution_Card_Methodology_Final.pdf",
+      "markers": [
+        "Go Fast",
+        "January 2015"
+      ],
+      "date": "2015-01",
+      "region": "Atlantic off Florida",
+      "kind": "FLIR published analysis",
+      "alternatives": [
+        "motion parallax",
+        "wind drift",
+        "ordinary object identity unresolved"
+      ],
+      "time": "month only"
+    }
+  ],
+  "weather": [
+    {
+      "case": "AGUADILLA",
+      "station": "78514011603",
+      "year": 2013,
+      "windows": [
+        [
+          "2013-04-26T00:00:00",
+          "2013-04-26T03:00:00"
+        ],
+        [
+          "2013-04-27T00:00:00",
+          "2013-04-27T03:00:00"
+        ]
+      ],
+      "role": "airport surface context, alternative UTC days; not object position or wind at target height"
+    },
+    {
+      "case": "PHOENIX",
+      "station": "72278023183",
+      "year": 1997,
+      "windows": [
+        [
+          "1997-03-14T02:00:00",
+          "1997-03-14T06:00:00"
+        ]
+      ],
+      "role": "airport surface context only; not object tracking"
+    }
+  ],
+  "timing": "Compute Phoenix reported UTC order with explicit offsets; no path or common-object association, no speed. T1 conditional kinematic prediction v/c=sqrt(1+r^2), advance=L/c*(1-1/sqrt(1+r^2)), r=mu*c^2/E. Synthetic positive/negative controls only. For real event require authenticated common emission/arrival, known path lower bound, calibrated relative clocks and uncertainties, measured signal-front, independent carrier-specific response; otherwise HOLD. Two receive times cannot alone establish emission time. Do not convert object speed to carrier speed. No carrier attribution even when timing conflict candidate exists.",
+  "spiral": "For each case preserve original evidence/alternative histories, source hash, missing fields and claim ceiling. Hash chain five axes; no unique reconstruction unless supported.",
+  "gates": "All pinned receipts verified, report scan coverage and per-path failures, no invented event timing, source acquisition and weather contexts separately, explicit timing gate, zero physical promotion. No main or production change."
+}
