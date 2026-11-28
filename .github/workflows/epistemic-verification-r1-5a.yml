@@ -1,0 +1,166 @@
+name: Epistemic Continuity R1.5A
+on:
+  push:
+    branches:
+      - research/epistemic-verification-r1
+    paths:
+      - .github/workflows/epistemic-verification-r1-5a.yml
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: epistemic-r1-5a-bounded
+  cancel-in-progress: false
+jobs:
+  migrate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      checkpoint: ${{ steps.advance.outputs.checkpoint_sha }}
+      artifact: ${{ steps.artifact.outputs.artifact-id }}
+      zip: ${{ steps.artifact.outputs.artifact-digest }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Retrieve pinned historical artifacts
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/r1-5a"
+          mkdir "$root"
+          api="https://api.github.com/repos/Hawkar-usls/janus-meta-registry/actions/artifacts"
+          curl --fail --silent --show-error --location --max-time 60 --max-filesize 131072 -H "Authorization: Bearer $GH_TOKEN" "$api/15259401931/zip" -o "$root/a.zip"
+          curl --fail --silent --show-error --location --max-time 60 --max-filesize 131072 -H "Authorization: Bearer $GH_TOKEN" "$api/15259862057/zip" -o "$root/b.zip"
+      - name: Rebuild self-contained checkpoint
+        id: advance
+        env:
+          CYCLE: "0"
+        run: python3 -I experiments/autonomy/epistemic-verification-r1-5/continuity.py
+      - name: Publish checkpoint
+        id: artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: epistemic-r1-5a-migration
+          path: ${{ runner.temp }}/r1-5a/output/*.json
+          if-no-files-found: error
+          retention-days: 7
+  cycle1:
+    needs: migrate
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      checkpoint: ${{ steps.advance.outputs.checkpoint_sha }}
+      artifact: ${{ steps.artifact.outputs.artifact-id }}
+      zip: ${{ steps.artifact.outputs.artifact-digest }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Retrieve exact preceding job artifact
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PARENT_ARTIFACT: ${{ needs.migrate.outputs.artifact }}
+        run: |
+          set -euo pipefail
+          [[ "$PARENT_ARTIFACT" =~ ^[0-9]+$ ]]
+          root="$RUNNER_TEMP/r1-5a"
+          mkdir "$root"
+          api="https://api.github.com/repos/Hawkar-usls/janus-meta-registry/actions/artifacts"
+          curl --fail --silent --show-error --location --max-time 60 --max-filesize 131072 -H "Authorization: Bearer $GH_TOKEN" "$api/$PARENT_ARTIFACT/zip" -o "$root/parent.zip"
+      - name: Restore and advance once
+        id: advance
+        env:
+          CYCLE: "1"
+          PARENT_CHECKPOINT: ${{ needs.migrate.outputs.checkpoint }}
+          PARENT_ZIP: ${{ needs.migrate.outputs.zip }}
+        run: python3 -I experiments/autonomy/epistemic-verification-r1-5/continuity.py
+      - name: Publish checkpoint
+        id: artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: epistemic-r1-5a-cycle1
+          path: ${{ runner.temp }}/r1-5a/output/*.json
+          if-no-files-found: error
+          retention-days: 7
+  cycle2:
+    needs: cycle1
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      checkpoint: ${{ steps.advance.outputs.checkpoint_sha }}
+      artifact: ${{ steps.artifact.outputs.artifact-id }}
+      zip: ${{ steps.artifact.outputs.artifact-digest }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Retrieve exact preceding job artifact
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PARENT_ARTIFACT: ${{ needs.cycle1.outputs.artifact }}
+        run: |
+          set -euo pipefail
+          [[ "$PARENT_ARTIFACT" =~ ^[0-9]+$ ]]
+          root="$RUNNER_TEMP/r1-5a"
+          mkdir "$root"
+          api="https://api.github.com/repos/Hawkar-usls/janus-meta-registry/actions/artifacts"
+          curl --fail --silent --show-error --location --max-time 60 --max-filesize 131072 -H "Authorization: Bearer $GH_TOKEN" "$api/$PARENT_ARTIFACT/zip" -o "$root/parent.zip"
+      - name: Restore and advance once
+        id: advance
+        env:
+          CYCLE: "2"
+          PARENT_CHECKPOINT: ${{ needs.cycle1.outputs.checkpoint }}
+          PARENT_ZIP: ${{ needs.cycle1.outputs.zip }}
+        run: python3 -I experiments/autonomy/epistemic-verification-r1-5/continuity.py
+      - name: Publish checkpoint
+        id: artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: epistemic-r1-5a-cycle2
+          path: ${{ runner.temp }}/r1-5a/output/*.json
+          if-no-files-found: error
+          retention-days: 7
+  cycle3:
+    needs: cycle2
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      checkpoint: ${{ steps.advance.outputs.checkpoint_sha }}
+      artifact: ${{ steps.artifact.outputs.artifact-id }}
+      zip: ${{ steps.artifact.outputs.artifact-digest }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Retrieve exact preceding job artifact
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PARENT_ARTIFACT: ${{ needs.cycle2.outputs.artifact }}
+        run: |
+          set -euo pipefail
+          [[ "$PARENT_ARTIFACT" =~ ^[0-9]+$ ]]
+          root="$RUNNER_TEMP/r1-5a"
+          mkdir "$root"
+          api="https://api.github.com/repos/Hawkar-usls/janus-meta-registry/actions/artifacts"
+          curl --fail --silent --show-error --location --max-time 60 --max-filesize 131072 -H "Authorization: Bearer $GH_TOKEN" "$api/$PARENT_ARTIFACT/zip" -o "$root/parent.zip"
+      - name: Restore and advance once
+        id: advance
+        env:
+          CYCLE: "3"
+          PARENT_CHECKPOINT: ${{ needs.cycle2.outputs.checkpoint }}
+          PARENT_ZIP: ${{ needs.cycle2.outputs.zip }}
+        run: python3 -I experiments/autonomy/epistemic-verification-r1-5/continuity.py
+      - name: Publish checkpoint
+        id: artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: epistemic-r1-5a-cycle3
+          path: ${{ runner.temp }}/r1-5a/output/*.json
+          if-no-files-found: error
+          retention-days: 7
