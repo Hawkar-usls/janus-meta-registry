@@ -1,0 +1,95 @@
+{
+  "schema": "janus.uap_tachyon.adaptive_temporal_sensitivity.contract.v1",
+  "date": "2026-11-28",
+  "source_commit": "afab29b61db77679214957ef298dd536eefdd2a0",
+  "parent_code": "research/uap_poss1/janus_uap_tachyon_r15_causal_discrimination.py",
+  "parent_blob": "81d02d6d4186b45dc3676b193719dc88b9909916",
+  "parent_result": "registry/uap/JANUS-UAP-TACHYON-R1.5-REVERSE-CAUSAL-DISCRIMINATION-RESULT-2026-11-28-v1.0.json",
+  "parent_result_blob": "21ffee9e9f8548ed86fd1c3cf62b00d4deaf9aa5",
+  "status": "FROZEN_BEFORE_EXECUTION__SHADOW_ONLY",
+  "hypothesis": "Global raw variance-normalized score can increase with fitted signal energy even for symmetric nulls because of grid mismatch; pooling bright and weak nulls may suppress weak signals. Diagnose on new calibration data; not established by previous run alone.",
+  "method": {
+    "repeats": [
+      1,
+      4,
+      8,
+      16
+    ],
+    "primary_repeats": 8,
+    "matched_comparison": "All algorithms see identical prefix averages, identical independently generated background variance. No phase estimates from hidden labels; aligned observations assumed. Never treat four prefixes of the same event as independent.",
+    "score": "A_F, A_R, A_S = best nonnegative centered unit-template projection; E=max(A_F,A_R,A_S)/sigma_background_mean; D=(A_F^2-A_R^2)/(sigma_background_mean^2*max(E,1)); E is observed matched-energy SNR proxy, not true injected SNR. R15 bank unchanged, exact time mirror.",
+    "bins": [
+      0,
+      4,
+      8,
+      16,
+      32,
+      64,
+      128,
+      256
+    ],
+    "upper_overflow_bin": true,
+    "threshold": "Per repeat count and observed E bin, 97.5th empirical percentile of abs(D), higher quantile, calibration nulls only. Minimum 80 samples; unsupported bin abstains. No global threshold fallback. No threshold optimization using positives or evaluation. Store lock before eval.",
+    "calibration": {
+      "seeds": [
+        615801,
+        615803
+      ],
+      "amplitudes": [
+        0,
+        0.035,
+        0.07,
+        0.14,
+        0.28,
+        0.56,
+        1.12,
+        2.24
+      ],
+      "per_amplitude_per_seed": 192,
+      "symmetric_tau_range": [
+        0.08,
+        0.28
+      ],
+      "noise": "independent AR(1), rho=.35, sigma=.14 per view; matched 256-point background per view"
+    },
+    "evaluation": {
+      "seeds": [
+        615811,
+        615813,
+        615817
+      ],
+      "per_family": 48,
+      "families": [
+        "weak_F",
+        "weak_R",
+        "strong_F",
+        "strong_R",
+        "symmetric_weak",
+        "symmetric_strong",
+        "noise",
+        "double",
+        "clipped",
+        "causal_smoothed"
+      ],
+      "primary": "At 8 repeats every seed: weak correct coverage >= R14+10 percentage points; weak wrong <=5%; null declaration <=5%; strong correct >=85% and no more than 5 percentage points below R14; zero paired strong hits lost vs R15 as separate protection gate. Report unsupported cells and per null family, all prefixes descriptive except primary. No use of old revealed eval rows.",
+      "stress": {
+        "seed": 615899,
+        "per_family": 48,
+        "families": [
+          "weak_F",
+          "weak_R",
+          "symmetric_weak",
+          "symmetric_strong",
+          "noise"
+        ],
+        "scenario": "Common AR(1) noise shared across repeats (correlation 0.4), plus per-view small random alignment jitter; same common-noise model for separate background. Stress is descriptive OOD, no threshold tuning. Require null declaration <=5% and weak wrong <=5% for stress gate; no generalization claim if failed."
+      }
+    }
+  },
+  "reconstruction": {
+    "rule": "Reuse exact frozen R15 implementation, no changes to reconstruction bank or selector, same y/truth for R15 and R15A. Evaluate on 8-repeat new double/clipped cases; report paired RMSE and linear baseline, do not claim old successes automatically transfer. Replay deterministic subset; no selection uses hidden truth.",
+    "gate": "Double median <= linear and <= R14 on each pooled new family; clipped separately report and retain prior HOLD. Do not mix direction decisions with reconstruction selection."
+  },
+  "scientific_ceiling": "Synthetic morphology discrimination only, not a detector of retrocausality. No calibrated carrier response, real independent radio or paired UAP measurement. No production change or automatic veto.",
+  "spiral": "Canonical 5D axis state chain with actual calibration, sensitivity, accumulation, reconstruction and OOD deltas. Preserve previous causal alternatives."
+}
