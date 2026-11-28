@@ -1,0 +1,30 @@
+name: Epistemic Persistence R1.4A
+on:
+  push:
+    branches:
+      - research/epistemic-verification-r1
+    paths:
+      - .github/workflows/epistemic-verification-r1-4a.yml
+      - experiments/autonomy/epistemic-verification-r1-4/run_a.py
+permissions:
+  contents: read
+jobs:
+  checkpoint-producer:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Produce checkpoint
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -I experiments/autonomy/epistemic-verification-r1-4/run_a.py
+      - name: Publish research checkpoint
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: epistemic-r1-4a-checkpoint
+          path: ${{ runner.temp }}/epistemic-r1-4a-checkpoint/checkpoint.json
+          if-no-files-found: error
+          retention-days: 7
