@@ -155,6 +155,7 @@ def main():
             env=document()
             target="2 = 2"
             registry=reg
+            fixture_pin=pin
             preliminary=[]
             if case=="old_key_after_rotation":
                 # Pre-rotation receipt accepted under separately pinned prior registry.
@@ -173,7 +174,12 @@ def main():
                 env["document"]["nonce" if case=="tamper_nonce" else "issued_at"]="2"*32 if case=="tamper_nonce" else NOW-31
                 env["sha256"]=digest(enc(env["document"]))
             if case=="tamper_digest": env["sha256"]="0"*64
-            if case=="stale": env=document(issued_at=NOW-301,expires_at=NOW-1)
+            if case=="stale":
+                # T10: valid key at issuance; stale takes precedence over expired.
+                registry=copy.deepcopy(reg)
+                next(k for k in registry["keys"] if k["key_id"]==keys["new"][2])["not_before"]=NOW-600
+                fixture_pin=digest(enc(registry))
+                env=document(issued_at=NOW-301,expires_at=NOW-1)
             if case=="future": env=document(issued_at=NOW+1)
             if case=="expired": env=document(expires_at=NOW-1)
             if case=="key_not_yet_valid": env=document("future")
@@ -217,7 +223,7 @@ def main():
             if case=="bad_time_type": env=document(issued_at=True)
             if case=="bad_lifetime": env=document(expires_at=NOW+400)
             before=snapshot(db)
-            status,receipt=stage(db,env,target,registry,pin,pubs,NOW,expected)
+            status,receipt=stage(db,env,target,registry,fixture_pin,pubs,NOW,expected)
             after=snapshot(db)
             accepted=status=="ACCEPTED_STAGED"
             mutation_ok=(after["version"]==before["version"]+1 and len(after["receipts"])==len(before["receipts"])+1) if accepted else after==before
