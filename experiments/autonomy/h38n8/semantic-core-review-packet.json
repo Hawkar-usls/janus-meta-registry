@@ -1,0 +1,674 @@
+{
+  "schema": "janus.h38n8a.semantic_core.review_packet.v1",
+  "date": "2026-11-28",
+  "status": "SEMANTIC_CORE_TEMPLATE_SCREEN_COMPLETE__INDEPENDENT_REVIEW_HOLD__NO_CORPUS",
+  "sources": {
+    "recovery": {
+      "commit": "965c98a7b1549434fc63c4a11bd102a275d473b3",
+      "blob": "0d761953220e3c90911f7e5578e95e587a7ab69c"
+    },
+    "v51": {
+      "ref": "research/h38n8-domain-admission",
+      "blob": "cbf332b90979fdc6c0f827e23fa7aac9f7a50b1c"
+    },
+    "executor": {
+      "commit": "390d5e5d174af1228b4c52a74a318b325c0d3b8c",
+      "blob": "903624863a60dd8799c167d4536c2824eda5c1a7"
+    }
+  },
+  "scope": "Symbolic templates for reviewer only; no realized event-marker texts generated, no dataset, labels for construction hypotheses not independently verified. No Python executor call, no features, no model inference or fitting. Static constraints checked analytically by substitution of length-matched dummy placeholder, not production validator execution.",
+  "event_contract": {
+    "A": "evone",
+    "B": "evtwo",
+    "X_Y": "Ordered distinct event roles, both event referents, same declared context across all cells.",
+    "R": "Occurrence of X requires occurrence of Y as actual prerequisite. Do not equate with obligation, enablement or mere logical implication absent stated event contract.",
+    "P": "X prevents occurrence of Y in declared context; stronger than hindrance, prohibition or symmetric incompatibility. No assumption P symmetric.",
+    "negation": "Logical negation of relation in same context, not negation of event, not converse or assertion of possibility/occurrence. Controlled ontology is a hypothesis for audit; model receives text only, not hidden relation definitions."
+  },
+  "templates": [
+    {
+      "id": "G01",
+      "anchor": "F001",
+      "forms": {
+        "R": "{X} requires {Y}",
+        "notR": "{X} does not require {Y}",
+        "P": "{X} prevents {Y}",
+        "notP": "{X} does not prevent {Y}"
+      },
+      "risk": "Requires/prevents may be interpreted broadly; controlled event-prerequisite contract required. Positive control, not proof of generalization.",
+      "judgment": "DIRECT_CORE_CANDIDATE",
+      "static_checks": [
+        {
+          "form": "R",
+          "one_X": true,
+          "one_Y": true,
+          "ascii_lowercase_space_only_after_expansion": true,
+          "normalized_spacing": true,
+          "min_max_length": [
+            20,
+            20
+          ],
+          "length_in_8_180": true,
+          "embedded_negation_or_relation_absence": false
+        },
+        {
+          "form": "notR",
+          "one_X": true,
+          "one_Y": true,
+          "ascii_lowercase_space_only_after_expansion": true,
+          "normalized_spacing": true,
+          "min_max_length": [
+            28,
+            28
+          ],
+          "length_in_8_180": true,
+          "embedded_negation_or_relation_absence": true
+        },
+        {
+          "form": "P",
+          "one_X": true,
+          "one_Y": true,
+          "ascii_lowercase_space_only_after_expansion": true,
+          "normalized_spacing": true,
+          "min_max_length": [
+            20,
+            20
+          ],
+          "length_in_8_180": true,
+          "embedded_negation_or_relation_absence": false
+        },
+        {
+          "form": "notP",
+          "one_X": true,
+          "one_Y": true,
+          "ascii_lowercase_space_only_after_expansion": true,
+          "normalized_spacing": true,
+          "min_max_length": [
+            28,
+            28
+          ],
+          "length_in_8_180": true,
+          "embedded_negation_or_relation_absence": true
+        }
+      ],
+      "all_static_checks_pass": true,
+      "label_realization_spec": [
+        {
+          "y": 8,
+          "form": "R",
+          "X": "A",
+          "Y": "B"
+        },
+        {
+          "y": 9,
+          "form": "R",
+          "X": "B",
+          "Y": "A"
+        },
+        {
+          "y": 10,
+          "form": "notR",
+          "X": "A",
+          "Y": "B"
+        },
+        {
+          "y": 11,
+          "form": "notR",
+          "X": "B",
+          "Y": "A"
+        },
+        {
+          "y": 12,
+          "form": "P",
+          "X": "A",
+          "Y": "B"
+        },
+        {
+          "y": 13,
+          "form": "P",
+          "X": "B",
+          "Y": "A"
+        },
+        {
+          "y": 14,
+          "form": "notP",
+          "X": "A",
+          "Y": "B"
+        },
+        {
+          "y": 15,
+          "form": "notP",
+          "X": "B",
+          "Y": "A"
+        }
+      ],
+      "admitted": false,
+      "verified_semantic_cells": [],
+      "hold_types_not_frozen": true
+    },
+    {
+      "id": "G02",
+      "anchor": "F005",
+      "forms": {
+        "R": "{X} requires that {Y} occur",
+        "notR": "{X} does not require that {Y} occur",
+        "P": "{X} prevents {Y} from occurring",
+        "notP": "{X} does not prevent {Y} from occurring"
+      },
+      "risk": "Matrix negation correctly targets relation, but R and P use different complement structures; lexical/syntactic shortcut. Same core predicate as G01, cannot assume independent family.",
+      "judgment": "COMPLEMENT_VARIANT_CANDIDATE",
+      "static_checks": [
+        {
+          "form": "R",
+          "one_X": true,
+          "one_Y": true,
+          "ascii_lowercase_space_only_after_expansion": true,
+          "normalized_spacing": true,
+          "min_max_length": [
+            31,
+            31
+          ],
+          "length_in_8_180": true,
+          "embedded_negation_or_relation_absence": false
+        },
+        {
+          "form": "notR",
+          "one_X": true,
+          "one_Y": true,
+          "ascii_lowercase_space_only_after_expansion": true,
+          "normalized_spacing": true,
+          "min_max_length": [
+            39,
+            39
+          ],
+          "length_in_8_180": true,
+          "embedded_negation_or_relation_absence": true
+        },
+        {
+          "form": "P",
+          "one_X": true,
+          "one_Y": true,
+          "ascii_lowercase_space_only_after_expansion": true,
+          "normalized_spacing": true,
+          "min_max_length": [
+            35,
+            35
+          ],
+          "length_in_8_180": true,
+          "embedded_negation_or_relation_absence": false
+        },
+        {
+          "form": "notP",
+          "one_X": true,
+          "one_Y": true,
+          "ascii_lowercase_space_only_after_expansion": true,
+          "normalized_spacing": true,
+          "min_max_length": [
+            43,
+            43
+          ],
+          "length_in_8_180": true,
+          "embedded_negation_or_relation_absence": true
+        }
+      ],
+      "all_static_checks_pass": true,
+      "label_realization_spec": [
+        {
+          "y": 8,
+          "form": "R",
+          "X": "A",
+          "Y": "B"
+        },
+        {
+          "y": 9,
+          "form": "R",
+          "X": "B",
+          "Y": "A"
+        },
+        {
+          "y": 10,
+          "form": "notR",
+          "X": "A",
+          "Y": "B"
+        },
+        {
+          "y": 11,
+          "form": "notR",
+          "X": "B",
+          "Y": "A"
+        },
+        {
+          "y": 12,
+          "form": "P",
+          "X": "A",
+          "Y": "B"
+        },
+        {
+          "y": 13,
+          "form": "P",
+          "X": "B",
+          "Y": "A"
+        },
+        {
+          "y": 14,
+          "form": "notP",
+          "X": "A",
+          "Y": "B"
+        },
+        {
+          "y": 15,
+          "form": "notP",
+          "X": "B",
+          "Y": "A"
+        }
+      ],
+      "admitted": false,
+      "verified_semantic_cells": [],
+      "hold_types_not_frozen": true
+    },
+    {
+      "id": "G03",
+      "anchor": "F031",
+      "forms": {
+        "R": "there is a necessary dependency of {X} on {Y}",
+        "notR": "there is no necessary dependency of {X} on {Y}",
+        "P": "there is prevention of {Y} by {X}",
+        "notP": "there is no prevention of {Y} by {X}"
+      },
+      "risk": "Necessary dependency must mean occurrence prerequisite; nominal prevention may imply an actual realized episode rather than dispositional prevention. Existential negation needs same event context and quantification. Not admitted without independent equivalence review.",
+      "judgment": "NOMINAL_SEMANTIC_SCOPE_HOLD",
+      "static_checks": [
+        {
+          "form": "R",
+          "one_X": true,
+          "one_Y": true,
+          "ascii_lowercase_space_only_after_expansion": true,
+          "normalized_spacing": true,
+          "min_max_length": [
+            49,
+            49
+          ],
+          "length_in_8_180": true,
+          "embedded_negation_or_relation_absence": false
+        },
+        {
+          "form": "notR",
+          "one_X": true,
+          "one_Y": true,
+          "ascii_lowercase_space_only_after_expansion": true,
+          "normalized_spacing": true,
+          "min_max_length": [
+            50,
+            50
+          ],
+          "length_in_8_180": true,
+          "embedded_negation_or_relation_absence": true
+        },
+        {
+          "form": "P",
+          "one_X": true,
+          "one_Y": true,
+          "ascii_lowercase_space_only_after_expansion": true,
+          "normalized_spacing": true,
+          "min_max_length": [
+            37,
+            37
+          ],
+          "length_in_8_180": true,
+          "embedded_negation_or_relation_absence": false
+        },
+        {
+          "form": "notP",
+          "one_X": true,
+          "one_Y": true,
+          "ascii_lowercase_space_only_after_expansion": true,
+          "normalized_spacing": true,
+          "min_max_length": [
+            40,
+            40
+          ],
+          "length_in_8_180": true,
+          "embedded_negation_or_relation_absence": true
+        }
+      ],
+      "all_static_checks_pass": true,
+      "label_realization_spec": [
+        {
+          "y": 8,
+          "form": "R",
+          "X": "A",
+          "Y": "B"
+        },
+        {
+          "y": 9,
+          "form": "R",
+          "X": "B",
+          "Y": "A"
+        },
+        {
+          "y": 10,
+          "form": "notR",
+          "X": "A",
+          "Y": "B"
+        },
+        {
+          "y": 11,
+          "form": "notR",
+          "X": "B",
+          "Y": "A"
+        },
+        {
+          "y": 12,
+          "form": "P",
+          "X": "A",
+          "Y": "B"
+        },
+        {
+          "y": 13,
+          "form": "P",
+          "X": "B",
+          "Y": "A"
+        },
+        {
+          "y": 14,
+          "form": "notP",
+          "X": "A",
+          "Y": "B"
+        },
+        {
+          "y": 15,
+          "form": "notP",
+          "X": "B",
+          "Y": "A"
+        }
+      ],
+      "admitted": false,
+      "verified_semantic_cells": [],
+      "hold_types_not_frozen": true
+    },
+    {
+      "id": "G04",
+      "anchor": "F087",
+      "forms": {
+        "R": "it is a fact that {X} requires {Y}",
+        "notR": "it is a fact that {X} does not require {Y}",
+        "P": "it is a fact that {X} prevents {Y}",
+        "notP": "it is a fact that {X} does not prevent {Y}"
+      },
+      "risk": "Factive wrapper asserts embedded content, not a new relation mechanism. Cannot use wrapper alone as independent construction.",
+      "judgment": "EMBEDDING_VARIANT_CANDIDATE",
+      "static_checks": [
+        {
+          "form": "R",
+          "one_X": true,
+          "one_Y": true,
+          "ascii_lowercase_space_only_after_expansion": true,
+          "normalized_spacing": true,
+          "min_max_length": [
+            38,
+            38
+          ],
+          "length_in_8_180": true,
+          "embedded_negation_or_relation_absence": false
+        },
+        {
+          "form": "notR",
+          "one_X": true,
+          "one_Y": true,
+          "ascii_lowercase_space_only_after_expansion": true,
+          "normalized_spacing": true,
+          "min_max_length": [
+            46,
+            46
+          ],
+          "length_in_8_180": true,
+          "embedded_negation_or_relation_absence": true
+        },
+        {
+          "form": "P",
+          "one_X": true,
+          "one_Y": true,
+          "ascii_lowercase_space_only_after_expansion": true,
+          "normalized_spacing": true,
+          "min_max_length": [
+            38,
+            38
+          ],
+          "length_in_8_180": true,
+          "embedded_negation_or_relation_absence": false
+        },
+        {
+          "form": "notP",
+          "one_X": true,
+          "one_Y": true,
+          "ascii_lowercase_space_only_after_expansion": true,
+          "normalized_spacing": true,
+          "min_max_length": [
+            46,
+            46
+          ],
+          "length_in_8_180": true,
+          "embedded_negation_or_relation_absence": true
+        }
+      ],
+      "all_static_checks_pass": true,
+      "label_realization_spec": [
+        {
+          "y": 8,
+          "form": "R",
+          "X": "A",
+          "Y": "B"
+        },
+        {
+          "y": 9,
+          "form": "R",
+          "X": "B",
+          "Y": "A"
+        },
+        {
+          "y": 10,
+          "form": "notR",
+          "X": "A",
+          "Y": "B"
+        },
+        {
+          "y": 11,
+          "form": "notR",
+          "X": "B",
+          "Y": "A"
+        },
+        {
+          "y": 12,
+          "form": "P",
+          "X": "A",
+          "Y": "B"
+        },
+        {
+          "y": 13,
+          "form": "P",
+          "X": "B",
+          "Y": "A"
+        },
+        {
+          "y": 14,
+          "form": "notP",
+          "X": "A",
+          "Y": "B"
+        },
+        {
+          "y": 15,
+          "form": "notP",
+          "X": "B",
+          "Y": "A"
+        }
+      ],
+      "admitted": false,
+      "verified_semantic_cells": [],
+      "hold_types_not_frozen": true
+    },
+    {
+      "id": "G05",
+      "anchor": "F080",
+      "forms": {
+        "R": "{Y} is an event that {X} requires",
+        "notR": "{Y} is an event that {X} does not require",
+        "P": "{Y} is an event that {X} prevents",
+        "notP": "{Y} is an event that {X} does not prevent"
+      },
+      "risk": "Object-relative gap links Y to embedded predicate; assertion includes event(Y), already assumed by contract. Verify negative relative scope, not negated event membership. Same relation predicate as G01; structural independence unverified.",
+      "judgment": "RELATIVE_VARIANT_CANDIDATE",
+      "static_checks": [
+        {
+          "form": "R",
+          "one_X": true,
+          "one_Y": true,
+          "ascii_lowercase_space_only_after_expansion": true,
+          "normalized_spacing": true,
+          "min_max_length": [
+            37,
+            37
+          ],
+          "length_in_8_180": true,
+          "embedded_negation_or_relation_absence": false
+        },
+        {
+          "form": "notR",
+          "one_X": true,
+          "one_Y": true,
+          "ascii_lowercase_space_only_after_expansion": true,
+          "normalized_spacing": true,
+          "min_max_length": [
+            45,
+            45
+          ],
+          "length_in_8_180": true,
+          "embedded_negation_or_relation_absence": true
+        },
+        {
+          "form": "P",
+          "one_X": true,
+          "one_Y": true,
+          "ascii_lowercase_space_only_after_expansion": true,
+          "normalized_spacing": true,
+          "min_max_length": [
+            37,
+            37
+          ],
+          "length_in_8_180": true,
+          "embedded_negation_or_relation_absence": false
+        },
+        {
+          "form": "notP",
+          "one_X": true,
+          "one_Y": true,
+          "ascii_lowercase_space_only_after_expansion": true,
+          "normalized_spacing": true,
+          "min_max_length": [
+            45,
+            45
+          ],
+          "length_in_8_180": true,
+          "embedded_negation_or_relation_absence": true
+        }
+      ],
+      "all_static_checks_pass": true,
+      "label_realization_spec": [
+        {
+          "y": 8,
+          "form": "R",
+          "X": "A",
+          "Y": "B"
+        },
+        {
+          "y": 9,
+          "form": "R",
+          "X": "B",
+          "Y": "A"
+        },
+        {
+          "y": 10,
+          "form": "notR",
+          "X": "A",
+          "Y": "B"
+        },
+        {
+          "y": 11,
+          "form": "notR",
+          "X": "B",
+          "Y": "A"
+        },
+        {
+          "y": 12,
+          "form": "P",
+          "X": "A",
+          "Y": "B"
+        },
+        {
+          "y": 13,
+          "form": "P",
+          "X": "B",
+          "Y": "A"
+        },
+        {
+          "y": 14,
+          "form": "notP",
+          "X": "A",
+          "Y": "B"
+        },
+        {
+          "y": 15,
+          "form": "notP",
+          "X": "B",
+          "Y": "A"
+        }
+      ],
+      "admitted": false,
+      "verified_semantic_cells": [],
+      "hold_types_not_frozen": true
+    }
+  ],
+  "summary": {
+    "groups_screened": 5,
+    "symbolic_forms": 20,
+    "proposed_label_slots": 40,
+    "static_shape_forms_pass": 20,
+    "independently_verified_cells": 0,
+    "admitted_families": 0,
+    "final_F": null,
+    "actual_corpus_rows": 0
+  },
+  "dedup_policy": {
+    "proposed_conservative_review_components": [
+      [
+        "G01",
+        "G02",
+        "G04",
+        "G05"
+      ],
+      [
+        "G03"
+      ]
+    ],
+    "reason": "G01/G02/G04/G05 share direct require/prevent predicate and core event argument semantics; wrappers, complement type and relativization may test transfer but not count as proven independent construction families. G03 is nominal and has separate semantic scope hold. Components are conservative possible leakage groups, not independently certified families or final F. No train/eval assignment until reviewer resolves equivalence.",
+    "lexical_baseline": "All four verbal groups share direct relation vocabulary; no claim of lexical generalization. HOLD stratum must include unsupported relation diversity and known-word distractors with independently clear labels; not fixed in this packet."
+  },
+  "review_checklist": [
+    "Verify all eight cells per group against exact relation, roles and polarity; independently label each eventual rendered row without seeing proposed gold or model output.",
+    "Check nominal occurrence vs disposition in G03, scope of negation, factive assertion and object relative gap. Reject ambiguous cells rather than repair after scores.",
+    "Decide equivalence groups without using held-out outcomes; freeze split by equivalence group, review historical text/forbidden hashes before any fitting.",
+    "Confirm exact H38N7 validator on realized review data only after authorized prospective reduced design; do not edit production rows(), score(), or caps.",
+    "Design HOLD templates separately; verify each unsupported relation and balance against lexical shortcuts."
+  ],
+  "diagnostic_plan": {
+    "status": "PROPOSAL_ONLY_NOT_ADMITTED",
+    "choice": "If reviewer retains a small core, use deterministic fixture-level diagnostic of feature equality, directional score and abstention on separately frozen review examples. Report counts and exact collisions without inferential claims or training. Any fresh probe requires prospective amended family split, independent review and explicit authorization; original 90-family precommit remains HOLD.",
+    "small_sample": "Five proposed groups (potentially two conservative components) cannot substantiate cross-family generalization or confirmatory power. Do not inflate independent sample size with wrappers, repeated variants, or HOLD."
+  },
+  "authorization": {
+    "corpus_generated": false,
+    "probe_executed": false,
+    "janus_train": false,
+    "production": false,
+    "architecture_change": false
+  }
+}
