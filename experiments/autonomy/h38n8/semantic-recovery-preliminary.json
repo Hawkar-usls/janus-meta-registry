@@ -1,0 +1,912 @@
+{
+  "schema": "janus.h38n8a.semantic_recovery.preliminary.v1",
+  "date": "2026-11-28",
+  "source": {
+    "semantic_screen_commit": "6cdf4f14833d59783c34503af5d2ac32d2ad7e22",
+    "blob": "8ce59904d793894790e105eab82720e6c0f34208",
+    "correction_commit": "0c7c8facec8af41851e02d445d9adaaf9b177267"
+  },
+  "v51": {
+    "path": "experiments/autonomy/h38n8/minimal-pair-precommit-v5-1.json",
+    "ref": "research/h38n8-domain-admission",
+    "blob": "cbf332b90979fdc6c0f827e23fa7aac9f7a50b1c",
+    "status": "DIAGNOSTIC_ONLY__SCORING_FROZEN__POWER_GATE_FROZEN__SEMANTIC_REVIEW_PENDING__NO_CORPUS",
+    "immutable_commit_not_verified": true
+  },
+  "status": "SEMANTIC_RECOVERY_SCREEN_COMPLETE__INDEPENDENT_REVIEW_HOLD__NO_CORPUS",
+  "decision_rule": "Admit only if complete eight-cell semantics are preserved and construction cluster distinct after independent review and validator check; before that all candidates unadmitted. Merge or exclude from independent count if rewrite collapses to existing frame; unresolved semantics HOLD, not final rejection. No corpus rows or model scores. Conservative grouping is a split precaution, not proof of linguistic identity.",
+  "summary": {
+    "original_full_candidates": 8,
+    "conservative_existing_groups": 4,
+    "recovery_reviewed": 31,
+    "recovery_counts": {
+      "EXCLUDE_AS_INDEPENDENT": 5,
+      "HOLD_EVENT_IDENTITY": 4,
+      "HOLD_PREVENTION_CONTRACT": 3,
+      "HOLD_NEGATION_SCOPE": 4,
+      "HOLD_DIRECTION": 13,
+      "GROUP_VARIANT": 1,
+      "RECOVERY_CANDIDATE": 1
+    },
+    "additional_provisional_groups": 1,
+    "provisional_group_anchors": [
+      "F001",
+      "F005",
+      "F031",
+      "F087",
+      "F080"
+    ],
+    "all_counts": {
+      "KEEP_GROUP_ANCHOR": 4,
+      "EXCLUDE_AS_INDEPENDENT": 5,
+      "HOLD_EVENT_IDENTITY": 4,
+      "GROUP_VARIANT": 5,
+      "HOLD_PREVENTION_CONTRACT": 3,
+      "HOLD_NEGATION_SCOPE": 4,
+      "HOLD_DIRECTION": 13,
+      "RECOVERY_CANDIDATE": 1
+    },
+    "independently_admitted": 0,
+    "final_F": null,
+    "prior_excluded_not_reopened": "F034",
+    "realized_corpus_rows": 0
+  },
+  "groups": {
+    "G01": [
+      "F001",
+      "F007",
+      "F016",
+      "F081"
+    ],
+    "G02": [
+      "F005",
+      "F017"
+    ],
+    "G05": [
+      "F027",
+      "F079",
+      "F080",
+      "F084"
+    ],
+    "G03": [
+      "F031",
+      "F037",
+      "F039"
+    ],
+    "G04": [
+      "F087",
+      "F088"
+    ]
+  },
+  "rows": [
+    {
+      "family_id": "F001",
+      "source_status": "FULL_CANDIDATE",
+      "construction": [
+        "direct_transitive"
+      ],
+      "reformulation": "Explicit matrix R/P predicate; swap roles and negate relation directly.",
+      "preserves_semantics": "PLAUSIBLE_NOT_VERIFIED",
+      "factorial_support": {
+        "plausible_labels": [
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "independently_verified_labels": []
+      },
+      "dedup_group": "G01",
+      "verdict": "KEEP_GROUP_ANCHOR",
+      "reason": "Direct transitive anchor; does not establish independence of paraphrases.",
+      "admitted": false
+    },
+    {
+      "family_id": "F005",
+      "source_status": "FULL_CANDIDATE",
+      "construction": [
+        "keep_from_gerund",
+        "object_infinitive",
+        "extraposed_object_clause"
+      ],
+      "reformulation": "Use prior F008 variant: matrix requires with finite occurrence complement, prevents with nonfinite occurrence complement; negate matrix predicate.",
+      "preserves_semantics": "PLAUSIBLE_NOT_VERIFIED",
+      "factorial_support": {
+        "plausible_labels": [
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "independently_verified_labels": []
+      },
+      "dedup_group": "G02",
+      "verdict": "KEEP_GROUP_ANCHOR",
+      "reason": "Event-complement frame; possible overlap G01 still requires reviewer.",
+      "admitted": false
+    },
+    {
+      "family_id": "F007",
+      "source_status": "PARTIAL_OR_REWRITE",
+      "construction": [
+        "coordination_explicit"
+      ],
+      "reformulation": "Removing redundant coordinated predicate leaves direct matrix R/P.",
+      "preserves_semantics": "NOT_ESTABLISHED_FOR_FULL_FACTORIAL",
+      "factorial_support": {
+        "plausible_labels": [],
+        "independently_verified_labels": []
+      },
+      "dedup_group": "G01",
+      "verdict": "EXCLUDE_AS_INDEPENDENT",
+      "reason": "Conjunction has distinct negation scope; repaired version is G01, not new family.",
+      "admitted": false
+    },
+    {
+      "family_id": "F009",
+      "source_status": "PARTIAL_OR_REWRITE",
+      "construction": [
+        "existence_predicate"
+      ],
+      "reformulation": "Would need independently specified equivalence of existence of event Y and occurrence of Y; replace existence only by explicit occurrence under revised contract.",
+      "preserves_semantics": "NOT_ESTABLISHED_FOR_FULL_FACTORIAL",
+      "factorial_support": {
+        "plausible_labels": [],
+        "independently_verified_labels": []
+      },
+      "dedup_group": null,
+      "verdict": "HOLD_EVENT_IDENTITY",
+      "reason": "No assumption of event-identity equivalence; if rewritten as occurrence complement, review G02 overlap.",
+      "admitted": false
+    },
+    {
+      "family_id": "F010",
+      "source_status": "PARTIAL_OR_REWRITE",
+      "construction": [
+        "completion_predicate",
+        "event_realization"
+      ],
+      "reformulation": "Do not replace completion with occurrence; need explicitly declared event as completion itself in a revised design.",
+      "preserves_semantics": "NOT_ESTABLISHED_FOR_FULL_FACTORIAL",
+      "factorial_support": {
+        "plausible_labels": [],
+        "independently_verified_labels": []
+      },
+      "dedup_group": null,
+      "verdict": "HOLD_EVENT_IDENTITY",
+      "reason": "Completion entails more than occurrence; original target changed.",
+      "admitted": false
+    },
+    {
+      "family_id": "F012",
+      "source_status": "PARTIAL_OR_REWRITE",
+      "construction": [
+        "enablement_contrast"
+      ],
+      "reformulation": "Define whether proceeding is the event itself; otherwise change frame to explicit occurrence complement.",
+      "preserves_semantics": "NOT_ESTABLISHED_FOR_FULL_FACTORIAL",
+      "factorial_support": {
+        "plausible_labels": [],
+        "independently_verified_labels": []
+      },
+      "dedup_group": null,
+      "verdict": "HOLD_EVENT_IDENTITY",
+      "reason": "Proceeding vs occurrence distinction and purpose scope; repaired frame may duplicate G02.",
+      "admitted": false
+    },
+    {
+      "family_id": "F016",
+      "source_status": "FULL_CANDIDATE",
+      "construction": [
+        "direct_passive"
+      ],
+      "reformulation": "Passive by-agent with role inversion; negate relation predicate.",
+      "preserves_semantics": "PLAUSIBLE_NOT_VERIFIED",
+      "factorial_support": {
+        "plausible_labels": [
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "independently_verified_labels": []
+      },
+      "dedup_group": "G01",
+      "verdict": "GROUP_VARIANT",
+      "reason": "Conservative same predicate-argument cluster as F001, active/passive transfer may be reported descriptively but not counted twice.",
+      "admitted": false
+    },
+    {
+      "family_id": "F017",
+      "source_status": "PARTIAL_OR_REWRITE",
+      "construction": [
+        "passive_infinitive",
+        "passive_modal"
+      ],
+      "reformulation": "Use direct prerequisite occurrence assertion instead of normative required-to-occur reading and explicit preventive complement.",
+      "preserves_semantics": "NOT_ESTABLISHED_FOR_FULL_FACTORIAL",
+      "factorial_support": {
+        "plausible_labels": [
+          12,
+          13,
+          14,
+          15
+        ],
+        "independently_verified_labels": []
+      },
+      "dedup_group": "G02",
+      "verdict": "EXCLUDE_AS_INDEPENDENT",
+      "reason": "Existing P side plausible; R rewrite would use F005/F016 patterns, not establish independent family.",
+      "admitted": false
+    },
+    {
+      "family_id": "F020",
+      "source_status": "PARTIAL_OR_REWRITE",
+      "construction": [
+        "passive_nominal_object",
+        "passive_completion"
+      ],
+      "reformulation": "Need identity of completion/existence and event occurrence prospectively.",
+      "preserves_semantics": "NOT_ESTABLISHED_FOR_FULL_FACTORIAL",
+      "factorial_support": {
+        "plausible_labels": [],
+        "independently_verified_labels": []
+      },
+      "dedup_group": null,
+      "verdict": "HOLD_EVENT_IDENTITY",
+      "reason": "Contingency/preclusion of completion cannot be transferred to event occurrence without contract.",
+      "admitted": false
+    },
+    {
+      "family_id": "F025",
+      "source_status": "PARTIAL_OR_REWRITE",
+      "construction": [
+        "predicative_prerequisite",
+        "predicative_barrier"
+      ],
+      "reformulation": "Keep necessary condition mapping Y necessary for X => R(X,Y); need explicit directional occurrence-precluding sufficient barrier for P(X,Y).",
+      "preserves_semantics": "NOT_ESTABLISHED_FOR_FULL_FACTORIAL",
+      "factorial_support": {
+        "plausible_labels": [
+          8,
+          9,
+          10,
+          11
+        ],
+        "independently_verified_labels": []
+      },
+      "dedup_group": null,
+      "verdict": "HOLD_PREVENTION_CONTRACT",
+      "reason": "Sufficiency alone or obstacle does not prove directional prevention. No new full family until exact negation and direction reviewed.",
+      "admitted": false
+    },
+    {
+      "family_id": "F027",
+      "source_status": "PARTIAL_OR_REWRITE",
+      "construction": [
+        "passive_relative"
+      ],
+      "reformulation": "Put negation inside relative predicate and avoid unique definite description; use indefinite relative frame as F080.",
+      "preserves_semantics": "NOT_ESTABLISHED_FOR_FULL_FACTORIAL",
+      "factorial_support": {
+        "plausible_labels": [
+          8,
+          9,
+          12,
+          13
+        ],
+        "independently_verified_labels": []
+      },
+      "dedup_group": "G05",
+      "verdict": "EXCLUDE_AS_INDEPENDENT",
+      "reason": "Current negative cleft/identity not exact relation negation; repaired form candidate G05, not independent.",
+      "admitted": false
+    },
+    {
+      "family_id": "F031",
+      "source_status": "FULL_CANDIDATE",
+      "construction": [
+        "dependency_nominal"
+      ],
+      "reformulation": "Role-marked dependency/prevention nominal; assert relation or its absence.",
+      "preserves_semantics": "PLAUSIBLE_NOT_VERIFIED",
+      "factorial_support": {
+        "plausible_labels": [
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "independently_verified_labels": []
+      },
+      "dedup_group": "G03",
+      "verdict": "KEEP_GROUP_ANCHOR",
+      "reason": "Nominal relation anchor; merge existential and absence realizations.",
+      "admitted": false
+    },
+    {
+      "family_id": "F032",
+      "source_status": "PARTIAL_OR_REWRITE",
+      "construction": [
+        "necessity_nominal"
+      ],
+      "reformulation": "Necessity of Y for X as prerequisite; replace impossibility with explicit role-bound prevention nominal.",
+      "preserves_semantics": "NOT_ESTABLISHED_FOR_FULL_FACTORIAL",
+      "factorial_support": {
+        "plausible_labels": [
+          8,
+          9,
+          10,
+          11
+        ],
+        "independently_verified_labels": []
+      },
+      "dedup_group": null,
+      "verdict": "HOLD_PREVENTION_CONTRACT",
+      "reason": "Replacement changes prevention-side meaning; likely G03 if repaired; not full independent frame.",
+      "admitted": false
+    },
+    {
+      "family_id": "F035",
+      "source_status": "PARTIAL_OR_REWRITE",
+      "construction": [
+        "condition_nominal"
+      ],
+      "reformulation": "Necessary condition R; explicit direction and sufficient event exclusion required for blocking condition P.",
+      "preserves_semantics": "NOT_ESTABLISHED_FOR_FULL_FACTORIAL",
+      "factorial_support": {
+        "plausible_labels": [
+          8,
+          9,
+          10,
+          11
+        ],
+        "independently_verified_labels": []
+      },
+      "dedup_group": null,
+      "verdict": "HOLD_PREVENTION_CONTRACT",
+      "reason": "Blocking condition ambiguous between causal blocker and logical condition. Possible F025 overlap.",
+      "admitted": false
+    },
+    {
+      "family_id": "F037",
+      "source_status": "FULL_CANDIDATE",
+      "construction": [
+        "dependence_statement",
+        "relation_existence",
+        "relation_obtains"
+      ],
+      "reformulation": "Existential/obtaining assertion over same explicitly role-marked relation nominal.",
+      "preserves_semantics": "PLAUSIBLE_NOT_VERIFIED",
+      "factorial_support": {
+        "plausible_labels": [
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "independently_verified_labels": []
+      },
+      "dedup_group": "G03",
+      "verdict": "GROUP_VARIANT",
+      "reason": "Do not count a support verb or existence wrapper as new independent semantics.",
+      "admitted": false
+    },
+    {
+      "family_id": "F039",
+      "source_status": "PARTIAL_OR_REWRITE",
+      "construction": [
+        "relation_absence"
+      ],
+      "reformulation": "Positive counterpart asserts presence of relation; negative asserts absence of relation.",
+      "preserves_semantics": "NOT_ESTABLISHED_FOR_FULL_FACTORIAL",
+      "factorial_support": {
+        "plausible_labels": [
+          10,
+          11,
+          14,
+          15
+        ],
+        "independently_verified_labels": []
+      },
+      "dedup_group": "G03",
+      "verdict": "EXCLUDE_AS_INDEPENDENT",
+      "reason": "This is already polarity realization in G03; no new full family.",
+      "admitted": false
+    },
+    {
+      "family_id": "F045",
+      "source_status": "PARTIAL_OR_REWRITE",
+      "construction": [
+        "noun_relative"
+      ],
+      "reformulation": "Need explicit role-bearing necessary-condition and preventive relative frame with relation-internal negation rather than negation of identity.",
+      "preserves_semantics": "NOT_ESTABLISHED_FOR_FULL_FACTORIAL",
+      "factorial_support": {
+        "plausible_labels": [
+          8,
+          9,
+          12,
+          13
+        ],
+        "independently_verified_labels": []
+      },
+      "dedup_group": null,
+      "verdict": "HOLD_NEGATION_SCOPE",
+      "reason": "Possible G05 or condition-nominal duplicate; no complete new form shown.",
+      "admitted": false
+    },
+    {
+      "family_id": "F046",
+      "source_status": "NEEDS_DIRECTION",
+      "construction": [
+        "necessary_if_absent"
+      ],
+      "reformulation": "Keep conditionals as necessity/incompatibility diagnostics only; require independent causal/functional semantics if direction intended.",
+      "preserves_semantics": "NOT_ESTABLISHED_FOR_FULL_FACTORIAL",
+      "factorial_support": {
+        "plausible_labels": [],
+        "independently_verified_labels": []
+      },
+      "dedup_group": null,
+      "verdict": "HOLD_DIRECTION",
+      "reason": "A absent=>B impossible vs A present=>B impossible does not alone identify the blocker.",
+      "admitted": false
+    },
+    {
+      "family_id": "F047",
+      "source_status": "NEEDS_DIRECTION",
+      "construction": [
+        "unless_clause"
+      ],
+      "reformulation": "Unless/if can express constraints; no reformulation retaining original conditional alone guarantees directional P.",
+      "preserves_semantics": "NOT_ESTABLISHED_FOR_FULL_FACTORIAL",
+      "factorial_support": {
+        "plausible_labels": [],
+        "independently_verified_labels": []
+      },
+      "dedup_group": null,
+      "verdict": "HOLD_DIRECTION",
+      "reason": "Replacing with explicit prevents adds semantics and overlaps G01/G02.",
+      "admitted": false
+    },
+    {
+      "family_id": "F048",
+      "source_status": "NEEDS_DIRECTION",
+      "construction": [
+        "only_if_clause"
+      ],
+      "reformulation": "Only-if relation cannot establish directed prevention via implication/contrapositive alone.",
+      "preserves_semantics": "NOT_ESTABLISHED_FOR_FULL_FACTORIAL",
+      "factorial_support": {
+        "plausible_labels": [],
+        "independently_verified_labels": []
+      },
+      "dedup_group": null,
+      "verdict": "HOLD_DIRECTION",
+      "reason": "No causal direction from logical incompatibility.",
+      "admitted": false
+    },
+    {
+      "family_id": "F056",
+      "source_status": "NEEDS_DIRECTION",
+      "construction": [
+        "provided_clause",
+        "event_case",
+        "conditional_necessary_exclusion",
+        "condition_fronted"
+      ],
+      "reformulation": "Fronted without/with adjunct needs explicit role-directed mechanism.",
+      "preserves_semantics": "NOT_ESTABLISHED_FOR_FULL_FACTORIAL",
+      "factorial_support": {
+        "plausible_labels": [],
+        "independently_verified_labels": []
+      },
+      "dedup_group": null,
+      "verdict": "HOLD_DIRECTION",
+      "reason": "Contextual impossibility not necessarily directional prevention; merged variants remain one group.",
+      "admitted": false
+    },
+    {
+      "family_id": "F050",
+      "source_status": "NEEDS_DIRECTION",
+      "construction": [
+        "conditional_inversion",
+        "conditional_subjunctive"
+      ],
+      "reformulation": "Inverted hypothetical conditional needs causal/functional context not present.",
+      "preserves_semantics": "NOT_ESTABLISHED_FOR_FULL_FACTORIAL",
+      "factorial_support": {
+        "plausible_labels": [],
+        "independently_verified_labels": []
+      },
+      "dedup_group": null,
+      "verdict": "HOLD_DIRECTION",
+      "reason": "Inversion changes syntax, not semantic insufficiency.",
+      "admitted": false
+    },
+    {
+      "family_id": "F051",
+      "source_status": "NEEDS_DIRECTION",
+      "construction": [
+        "counterfactual_had"
+      ],
+      "reformulation": "Counterfactual past dependence requires token-specific relation semantics, not inferred general dependency.",
+      "preserves_semantics": "NOT_ESTABLISHED_FOR_FULL_FACTORIAL",
+      "factorial_support": {
+        "plausible_labels": [],
+        "independently_verified_labels": []
+      },
+      "dedup_group": null,
+      "verdict": "HOLD_DIRECTION",
+      "reason": "Counterfactuality, scope and direction unresolved.",
+      "admitted": false
+    },
+    {
+      "family_id": "F053",
+      "source_status": "NEEDS_DIRECTION",
+      "construction": [
+        "condition_sufficiency"
+      ],
+      "reformulation": "Distinguish evidential rule-out from a sufficient causal/functional blocker; require explicit direction and exact negation.",
+      "preserves_semantics": "NOT_ESTABLISHED_FOR_FULL_FACTORIAL",
+      "factorial_support": {
+        "plausible_labels": [],
+        "independently_verified_labels": []
+      },
+      "dedup_group": null,
+      "verdict": "HOLD_DIRECTION",
+      "reason": "Sufficient constraint not automatically P.",
+      "admitted": false
+    },
+    {
+      "family_id": "F057",
+      "source_status": "NEEDS_DIRECTION",
+      "construction": [
+        "conditional_exception"
+      ],
+      "reformulation": "Exception construction constrains possibility; explicit preventive mechanism needed.",
+      "preserves_semantics": "NOT_ESTABLISHED_FOR_FULL_FACTORIAL",
+      "factorial_support": {
+        "plausible_labels": [],
+        "independently_verified_labels": []
+      },
+      "dedup_group": null,
+      "verdict": "HOLD_DIRECTION",
+      "reason": "No directional P from condition alone.",
+      "admitted": false
+    },
+    {
+      "family_id": "F062",
+      "source_status": "NEEDS_DIRECTION",
+      "construction": [
+        "modal_cannot",
+        "modal_under_condition"
+      ],
+      "reformulation": "Cannot proceed with/without requires explicit occurrence identity and blocker relation.",
+      "preserves_semantics": "NOT_ESTABLISHED_FOR_FULL_FACTORIAL",
+      "factorial_support": {
+        "plausible_labels": [],
+        "independently_verified_labels": []
+      },
+      "dedup_group": null,
+      "verdict": "HOLD_DIRECTION",
+      "reason": "Proceeding and modal incompatibility both unresolved.",
+      "admitted": false
+    },
+    {
+      "family_id": "F063",
+      "source_status": "NEEDS_DIRECTION",
+      "construction": [
+        "modal_possible",
+        "modal_ability",
+        "modal_infeasible",
+        "modal_negation_scope"
+      ],
+      "reformulation": "Feasibility and ability expressions need independently justified directed prevention reading.",
+      "preserves_semantics": "NOT_ESTABLISHED_FOR_FULL_FACTORIAL",
+      "factorial_support": {
+        "plausible_labels": [],
+        "independently_verified_labels": []
+      },
+      "dedup_group": null,
+      "verdict": "HOLD_DIRECTION",
+      "reason": "Symmetric incompatibility cannot be labelled causal P.",
+      "admitted": false
+    },
+    {
+      "family_id": "F065",
+      "source_status": "NEEDS_DIRECTION",
+      "construction": [
+        "modal_need"
+      ],
+      "reformulation": "Needing absence of X not sufficient to establish X as blocker; proceeding scope unresolved.",
+      "preserves_semantics": "NOT_ESTABLISHED_FOR_FULL_FACTORIAL",
+      "factorial_support": {
+        "plausible_labels": [],
+        "independently_verified_labels": []
+      },
+      "dedup_group": null,
+      "verdict": "HOLD_DIRECTION",
+      "reason": "No valid full rewrite without adding semantic assumptions.",
+      "admitted": false
+    },
+    {
+      "family_id": "F066",
+      "source_status": "NEEDS_DIRECTION",
+      "construction": [
+        "modal_no_way",
+        "modal_no_chance"
+      ],
+      "reformulation": "Existential possibility frame requires independently explicit directional event semantics.",
+      "preserves_semantics": "NOT_ESTABLISHED_FOR_FULL_FACTORIAL",
+      "factorial_support": {
+        "plausible_labels": [],
+        "independently_verified_labels": []
+      },
+      "dedup_group": null,
+      "verdict": "HOLD_DIRECTION",
+      "reason": "Not merely syntax repair.",
+      "admitted": false
+    },
+    {
+      "family_id": "F076",
+      "source_status": "PARTIAL_OR_REWRITE",
+      "construction": [
+        "cleft_relation",
+        "pseudocleft"
+      ],
+      "reformulation": "Move negation into embedded relation instead of negating focus; test wh-cleft presupposition and exact role binding.",
+      "preserves_semantics": "NOT_ESTABLISHED_FOR_FULL_FACTORIAL",
+      "factorial_support": {
+        "plausible_labels": [
+          8,
+          9,
+          12,
+          13
+        ],
+        "independently_verified_labels": []
+      },
+      "dedup_group": null,
+      "verdict": "HOLD_NEGATION_SCOPE",
+      "reason": "No verified full support; potentially duplicate relative/embedding frames G04/G05.",
+      "admitted": false
+    },
+    {
+      "family_id": "F077",
+      "source_status": "PARTIAL_OR_REWRITE",
+      "construction": [
+        "it_cleft"
+      ],
+      "reformulation": "Relation-internal negation in cleft rather than negation of focus.",
+      "preserves_semantics": "NOT_ESTABLISHED_FOR_FULL_FACTORIAL",
+      "factorial_support": {
+        "plausible_labels": [
+          8,
+          9,
+          12,
+          13
+        ],
+        "independently_verified_labels": []
+      },
+      "dedup_group": null,
+      "verdict": "HOLD_NEGATION_SCOPE",
+      "reason": "Focus exhaustivity/presupposition and role validity remain; possible G05 overlap.",
+      "admitted": false
+    },
+    {
+      "family_id": "F079",
+      "source_status": "PARTIAL_OR_REWRITE",
+      "construction": [
+        "relative_subject"
+      ],
+      "reformulation": "Use a complete subject-relative assertion with event head and explicit R/P inside clause; negate relative predicate; swap role markers.",
+      "preserves_semantics": "PLAUSIBLE_NOT_VERIFIED",
+      "factorial_support": {
+        "plausible_labels": [
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "independently_verified_labels": []
+      },
+      "dedup_group": "G05",
+      "verdict": "GROUP_VARIANT",
+      "reason": "Shares relative construction mechanism with F080; no new independent family.",
+      "admitted": false
+    },
+    {
+      "family_id": "F080",
+      "source_status": "PARTIAL_OR_REWRITE",
+      "construction": [
+        "relative_object"
+      ],
+      "reformulation": "Complete indefinite event assertion with object-relative gap, explicit subject and R/P; negate relative predicate not matrix identity. Both event referents declared events.",
+      "preserves_semantics": "PLAUSIBLE_NOT_VERIFIED",
+      "factorial_support": {
+        "plausible_labels": [
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "independently_verified_labels": []
+      },
+      "dedup_group": "G05",
+      "verdict": "RECOVERY_CANDIDATE",
+      "reason": "Plausible full support at template-design level, distinct syntax from G01 pending equivalence audit; no realized strings or independent semantic review.",
+      "admitted": false
+    },
+    {
+      "family_id": "F081",
+      "source_status": "FULL_CANDIDATE",
+      "construction": [
+        "topicalization",
+        "left_dislocation"
+      ],
+      "reformulation": "Fronted argument with resolved anaphora and explicit matrix R/P.",
+      "preserves_semantics": "PLAUSIBLE_NOT_VERIFIED",
+      "factorial_support": {
+        "plausible_labels": [
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "independently_verified_labels": []
+      },
+      "dedup_group": "G01",
+      "verdict": "GROUP_VARIANT",
+      "reason": "Topic/fronting only; grouping precaution, validator and anaphora remain unchecked.",
+      "admitted": false
+    },
+    {
+      "family_id": "F083",
+      "source_status": "PARTIAL_OR_REWRITE",
+      "construction": [
+        "appositive_relation"
+      ],
+      "reformulation": "Role-marked prerequisite apposition may express R; blocker must rule out occurrence; negative apposition requires exact scope.",
+      "preserves_semantics": "NOT_ESTABLISHED_FOR_FULL_FACTORIAL",
+      "factorial_support": {
+        "plausible_labels": [
+          8,
+          9
+        ],
+        "independently_verified_labels": []
+      },
+      "dedup_group": null,
+      "verdict": "HOLD_NEGATION_SCOPE",
+      "reason": "P and negatives unresolved; punctuation/validator risk, likely nominal overlap.",
+      "admitted": false
+    },
+    {
+      "family_id": "F084",
+      "source_status": "PARTIAL_OR_REWRITE",
+      "construction": [
+        "parenthetic_relation"
+      ],
+      "reformulation": "Recasting punctuation-dependent parenthetical as complete relative assertion is G05.",
+      "preserves_semantics": "NOT_ESTABLISHED_FOR_FULL_FACTORIAL",
+      "factorial_support": {
+        "plausible_labels": [],
+        "independently_verified_labels": []
+      },
+      "dedup_group": "G05",
+      "verdict": "EXCLUDE_AS_INDEPENDENT",
+      "reason": "Original not specified complete proposition and validator punctuation constraint; no independent full block.",
+      "admitted": false
+    },
+    {
+      "family_id": "F085",
+      "source_status": "NEEDS_DIRECTION",
+      "construction": [
+        "extraposition"
+      ],
+      "reformulation": "Extraposed impossibility requires explicit directed agent/mechanism; necessity counterpart must be actual prerequisite.",
+      "preserves_semantics": "NOT_ESTABLISHED_FOR_FULL_FACTORIAL",
+      "factorial_support": {
+        "plausible_labels": [],
+        "independently_verified_labels": []
+      },
+      "dedup_group": null,
+      "verdict": "HOLD_DIRECTION",
+      "reason": "Extraposition cannot supply direction by itself.",
+      "admitted": false
+    },
+    {
+      "family_id": "F087",
+      "source_status": "FULL_CANDIDATE",
+      "construction": [
+        "factitive_embedded"
+      ],
+      "reformulation": "Factive frame with explicitly asserted embedded R/P and embedded negation.",
+      "preserves_semantics": "PLAUSIBLE_NOT_VERIFIED",
+      "factorial_support": {
+        "plausible_labels": [
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "independently_verified_labels": []
+      },
+      "dedup_group": "G04",
+      "verdict": "KEEP_GROUP_ANCHOR",
+      "reason": "Separate candidate embedding group; factive wrapper may still be equivalent to G01.",
+      "admitted": false
+    },
+    {
+      "family_id": "F088",
+      "source_status": "FULL_CANDIDATE",
+      "construction": [
+        "assertive_embedded"
+      ],
+      "reformulation": "Established-that frame with embedded R/P negation.",
+      "preserves_semantics": "PLAUSIBLE_NOT_VERIFIED",
+      "factorial_support": {
+        "plausible_labels": [
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "independently_verified_labels": []
+      },
+      "dedup_group": "G04",
+      "verdict": "GROUP_VARIANT",
+      "reason": "Group with F087: wrapper changes epistemic framing but not core predicate relation.",
+      "admitted": false
+    }
+  ],
+  "planning": "F=15 TOTAL at 2:1 split implies 10 TRAIN and 5 EVAL families, 40 known and 10 HOLD EVAL rows, not 120 known EVAL. At 5 non-tied EVAL families minimum one-sided sign p=1/32=.03125, greater than first Holm threshold .05/3; all-axis confirmatory admission cannot be established. At current five provisional groups even fewer EVAL units; no final split or empirical power. For 15 EVAL families (distinct scenario), significance possible with sufficient positive signs, low power not impossibility. Family count and conditional sign test policy follow verified v5.1. H38N9 separate paired family-aware gain design, cluster bootstrap not guaranteed valid with few clusters; no claim paired comparison eliminates cluster dependence.",
+  "next": "Independent reviewer checks five provisional anchors, grouping boundaries, and unresolved constructions, using formal event-role/negation definitions and complete templates in a separately authorized review manifest; no corpus generation until revised prospective design and diversity gate. Preserve original 90-family gate HOLD, no automatic training or axis shrink.",
+  "authorization": {
+    "corpus_generated": false,
+    "probe_executed": false,
+    "janus_train": false,
+    "production": false,
+    "architecture_change": false
+  }
+}
