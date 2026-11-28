@@ -1,0 +1,70 @@
+{
+  "schema": "janus.epistemic.r1_5c.witness_compatibility_review.v1",
+  "date": "2026-11-28",
+  "status": "COMPATIBLE_IN_PRINCIPLE__BEACON_COHORT_HOLD__NOT_ACTIVATED",
+  "baseline": {
+    "archive_commit": "7a158af863ea585e5abd683cac355f3d1d17688b",
+    "archive_blob": "4d5e00485c469b27a424a6867dca8e75ad679ccb",
+    "run": 46165797356,
+    "job": 141042916336,
+    "checks": 10,
+    "version": 6,
+    "checkpoint_sha256": "03c33f440dd7ba5ee7f6a3c12d84ac15a978a8fed3a64c5842fc382f66e5e045",
+    "parent_run": 46165295807,
+    "artifact": 15270934037,
+    "zip_sha256": "d5940b5a37296e976c2216a5d19c32cf6838098c8fbc53811bddfd6c3886f878"
+  },
+  "review": {
+    "existing_witness": "Current prompt already supports separate read-only highwater checks, no repository writes or scientific authority; 13080 characters at observation, hourly exact_schedule. Latest visible completed result not truncated. Inherited environment config not proof of executor independence.",
+    "relay": "Strict allowlist of BEACON_EXTERNAL_OBSERVATION_V1 five lines. Relay is not authorized to transfer additional witness blocks or record trust anchors. No changes to relay, audit, notification, schema or schedule.",
+    "cohort": "BEACON Time Contract active COUNT=20, last accessible report 19/20 with 17 complete pairs; final slot not yet verified. Changing Witness prompt now confounds cohort and may increase runtime/truncation. Preserve existing contract until cohort completion and review."
+  },
+  "proposed_addendum": {
+    "name": "EPISTEMIC_TRUST_WITNESS_V1",
+    "scope": "Separate read-only optional observation after all mandatory BEACON work, no change to BEACON payload, notification policy or relay input. On time/API budget exhaustion omit or mark UNKNOWN; never replace mandatory data. Add only after cohort completion and explicit compatibility check.",
+    "fields": [
+      "observed_at_utc",
+      "status",
+      "producer_run_id",
+      "producer_attempt",
+      "producer_head_sha",
+      "artifact_id",
+      "artifact_zip_sha256_reported",
+      "checkpoint_version",
+      "checkpoint_sha256_reported",
+      "parent_checkpoint_sha256_reported",
+      "audit_run_id",
+      "audit_job_id",
+      "audit_status",
+      "prior_observed_version",
+      "prior_observed_hash",
+      "observation_scope",
+      "authority"
+    ],
+    "classification": [
+      "PIN_MATCH_METADATA_ONLY",
+      "NO_NEW_SUCCESSOR",
+      "POSSIBLE_ROLLBACK",
+      "SAME_VERSION_HASH_CONFLICT",
+      "PARENT_LINK_HOLD",
+      "API_UNKNOWN",
+      "ARTIFACT_UNAVAILABLE",
+      "PRIOR_OBSERVATION_UNKNOWN"
+    ],
+    "authority": {
+      "command": false,
+      "runtime": false,
+      "science": false,
+      "knowledge_write": false
+    },
+    "rules": "Read GitHub API metadata and exact audit logs; compare immutable commit pins. Do not claim direct ZIP byte verification unless actually downloaded and hashed; distinguish GitHub audit from observer's own observations. Prior highwater only if previous independent result provenance is actually accessible; no guess and no reset. Repeat v6 not a new successor. Separate block never passed through existing BEACON Relay. Preserve existing notifications; if result suppressed/truncated, classify external observation unavailable, do not make a receipt."
+  },
+  "gates": [
+    "Confirm diagnostic cohort completed and archived, document no interference with BEACON.",
+    "Freeze baseline automation prompt and review additive diff with unchanged existing schedule/contract. Obtain explicit approval before updating live witness.",
+    "Confirm distinct external observation run/result binding and compare exact pins, no missing fields, nontruncated result.",
+    "Obtain separately protected, durable monotonic witness store with independent authority and authenticated receipt path before using as gate. Current automation result retention alone is not independent monotonic storage.",
+    "Only after separate bounded protocol and fixture enrollment demonstrate three distinct auto-triggered successor runs; external metadata check alone cannot authorize them."
+  ],
+  "limitations": "No automation changed, no sixth task created, no observer receipt yet. Current GitHub audit same trust domain. No durable independent anchor, external source authentication, live time or autonomous state advancement. No active Cortex writes, production or training."
+}
