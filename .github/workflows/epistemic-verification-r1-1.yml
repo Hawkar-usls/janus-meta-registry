@@ -1,0 +1,27 @@
+name: Epistemic Verification R1.1
+on:
+  push:
+    branches:
+      - research/epistemic-verification-r1
+    paths:
+      - .github/workflows/epistemic-verification-r1-1.yml
+      - experiments/autonomy/epistemic-verification-r1-1/precommit.json
+      - experiments/autonomy/epistemic-verification-r1-1/evidence_verifier.py
+permissions:
+  contents: read
+jobs:
+  evidence-immunity:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Regression and evidence immunity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 --version
+          sha256sum experiments/autonomy/epistemic-verification-r1/{precommit.json,verifier.py} experiments/autonomy/epistemic-verification-r1-1/{precommit.json,evidence_verifier.py}
+          python3 -I experiments/autonomy/epistemic-verification-r1/verifier.py
+          python3 -I experiments/autonomy/epistemic-verification-r1-1/evidence_verifier.py
