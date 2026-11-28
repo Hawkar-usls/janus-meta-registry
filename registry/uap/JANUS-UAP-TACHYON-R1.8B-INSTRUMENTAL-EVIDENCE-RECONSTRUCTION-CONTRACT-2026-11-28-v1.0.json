@@ -1,0 +1,72 @@
+{
+  "schema": "janus.uap_tachyon.instrumental_reconstruction.contract.v1",
+  "date": "2026-11-28",
+  "source_commit": "8e7116cb5b0829fcd487372b6379f677481162d4",
+  "pins": {
+    "registry/uap/JANUS-UAP-TACHYON-R1.8A-PRIMARY-EVIDENCE-ACQUISITION-RESULT-2026-11-28-v1.0.json": "4ac96050b48ce98888bebe54c01931f847861881",
+    "research/uap_poss1/janus_uap_tachyon_r18a_primary_evidence.py": "7d9a4ae0f410bdb0d92e68d140c0fd91804d7f3e",
+    "research/uap_poss1/janus_uap_tachyon_r14_temporal_arrow.py": "33b26706c1dbd6a1706e59f03158234097348b5f",
+    "registry/uap/JANUS-UAP-TACHYON-R1.4-TEMPORAL-ARROW-CONTRACT-2026-11-28-v1.0.json": "f08559a9387af11fdbb6cf63625a071f306af902"
+  },
+  "status": "FROZEN_SHADOW_EXAM",
+  "scope": "Six public PDFs, four complete released videos, five independent published comparison clips; no new FRB work. Re-download exact previous public files and compare previous SHA256. No restricted access or passwords. Public media are processed transiently, no bulk replication.",
+  "pdf": "pypdf 5.4.0 + cryptography 45.0.7. Use empty-password readable public documents only; no password guessing or bypass of access restrictions. Reuse R18A extraction exactly; per-page receipts and numerical tokens, separate gates for all six and D165/BAASS. Empty image-only text layer not proof of absence; no OCR in this run. Review numerical tokens in report context before treating as physical measurement. No exact personal locations or full report reproduction.",
+  "video": {
+    "expected_frames": {
+      "DOW-UAP-PR166": 627,
+      "DOW-UAP-PR168": 3292,
+      "DOW-UAP-PR169": 408,
+      "DOW-UAP-PR135": 1798
+    },
+    "max_frames": 12000,
+    "width": 320,
+    "max_candidates": 24,
+    "edge_margin": 0.06,
+    "local_sigma": 3,
+    "min_threshold": 10,
+    "mad_factor": 6,
+    "min_area": 3,
+    "max_area": 150,
+    "max_jump_px": 12,
+    "max_gap": 2,
+    "min_track_frames": 20,
+    "min_span_px": 8,
+    "method": "All native frames decoded without temporal resampling; aspect ratio preserved at width 320, grayscale. Local contrast residual vs Gaussian background; bright and dark compact components; edge exclusion; greedily associate nearest same-polarity detections, bounded gaps. Track candidates only, not validated object identities. Estimate adjacent global phase correlation (Hanning, response>=0.25) as diagnostic; report coverage and scene shift, do not use uncertain registration to infer physical motion. Record candidate centroid in normalized image coordinates, local area/contrast, PTS, continuity, gaps; static rejection by span. R14 on contiguous 129-sample candidate contrast windows, only uniform valid PTS; same fixed algorithm on target and five Galileo clips. No measured object speed, distance, carrier identification or independently calibrated native thermal signal. Full frame count and PTS checks separate. Positive synthetic moving blob and negative static blob control (same settings, independent fixed seed); camera pan diagnostic not proof of immunity.",
+    "comparison": "Per-video candidate track length, contrast, area, relative pixel span and temporal morphology; compare pooled descriptive distributions across target/controls, no hypothesis test or object identification without labels and comparable optics; exclude duplicate PR135 Zenodo clip from independent denominator. No native EYE/RETINA execution claimed. No data-dependent parameter tuning."
+  },
+  "noaa": {
+    "source": "https://www.nesdis.noaa.gov/news/service-location-change-integrated-surface-data-global-hourly",
+    "registry": "https://registry.opendata.aws/noaa-isd/",
+    "url_template": "https://noaa-global-hourly-pds.s3.amazonaws.com/{year}/{station}.csv",
+    "rule": "NODD official public distribution, fixed prior station IDs and UTC windows. Require actual CSV header STATION,DATE, all records exact station, valid date, report counts by window. If station file missing, HOLD rather than guessing replacement. Surface context only, Aguadilla date remains ambiguous.",
+    "stations": [
+      {
+        "case": "AGUADILLA",
+        "station": "78514011603",
+        "year": 2013,
+        "windows": [
+          [
+            "2013-04-26T00:00:00",
+            "2013-04-26T03:00:00"
+          ],
+          [
+            "2013-04-27T00:00:00",
+            "2013-04-27T03:00:00"
+          ]
+        ]
+      },
+      {
+        "case": "PHOENIX",
+        "station": "72278023183",
+        "year": 1997,
+        "windows": [
+          [
+            "1997-03-14T02:00:00",
+            "1997-03-14T06:00:00"
+          ]
+        ]
+      }
+    ]
+  },
+  "gates": "PDF integrity all six; all six text nonempty and all pages parsed; D165/BAASS text available; full target frame count and complete monotonically increasing PTS; five comparison clips; synthetic positive/negative; temporal parity when supported; NOAA all requested windows. Record zero eligible temporal windows as HOLD; no physical claim. Main unchanged."
+}
