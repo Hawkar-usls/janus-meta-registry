@@ -1,0 +1,62 @@
+name: JANUS UAP Tachyon R1.6 real spectral witness
+on:
+  push:
+    branches: [research/uap-tachyon-r16-real-spectral-witness-20261128]
+    paths:
+      - 'research/uap_poss1/janus_uap_tachyon_r16_real_spectral_witness.py'
+      - '.github/workflows/janus-uap-tachyon-r16-real-spectral-witness.yml'
+permissions:
+  contents: read
+jobs:
+  exam:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install fixed wheels
+        run: |
+          python -m pip install --only-binary=:all: numpy==2.2.6 h5py==3.13.0
+      - name: Execute real spectral audit and witness discovery
+        run: |
+          set -euo pipefail
+          python research/uap_poss1/janus_uap_tachyon_r16_real_spectral_witness.py | tee /tmp/r16-summary.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: janus-r16-real-spectral-witness
+          path: |
+            /tmp/r16-summary.json
+            registry/uap/JANUS-UAP-TACHYON-R1.6-REAL-SPECTRAL-WITNESS-RESULT-2026-11-28-v1.0.json
+          if-no-files-found: error
+  publish:
+    needs: exam
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: janus-r16-real-spectral-witness
+          path: /tmp/r16
+      - name: Publish only receipt
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          f="$(find /tmp/r16 -name 'JANUS-UAP-TACHYON-R1.6-REAL-SPECTRAL-WITNESS-RESULT-2026-11-28-v1.0.json' -type f)"
+          test -f "$f"
+          python -m json.tool "$f" >/dev/null
+          cp "$f" 'registry/uap/JANUS-UAP-TACHYON-R1.6-REAL-SPECTRAL-WITNESS-RESULT-2026-11-28-v1.0.json'
+          git add -- 'registry/uap/JANUS-UAP-TACHYON-R1.6-REAL-SPECTRAL-WITNESS-RESULT-2026-11-28-v1.0.json'
+          git config user.name "JANUS Real Spectral Witness"
+          git config user.email "actions@users.noreply.github.com"
+          git commit -m "JANUS R1.6: real spectral witness audit receipt"
+          git push origin HEAD:refs/heads/research/uap-tachyon-r16-real-spectral-witness-20261128

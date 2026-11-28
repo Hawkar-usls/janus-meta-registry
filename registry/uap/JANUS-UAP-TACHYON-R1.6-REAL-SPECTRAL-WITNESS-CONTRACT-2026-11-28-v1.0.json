@@ -1,0 +1,61 @@
+{
+  "schema": "janus.uap_tachyon.real_spectral_witness.contract.v1",
+  "date": "2026-11-28",
+  "source_commit": "6fdff93dde13b272d1e5de637b93d2d930e6f664",
+  "status": "FROZEN_BEFORE_EXECUTION__REAL_PROCESSED_SINGLE_SITE_CONTROL",
+  "parent_result": "registry/uap/JANUS-UAP-TACHYON-R1.5E-PROTECTED-MULTI-WITNESS-RESULT-2026-11-28-v1.0.json",
+  "parent_result_blob": "64f9f42d55f33cfab258a29a07bef9643bde14a0",
+  "source": {
+    "tns": "FRB20180725A",
+    "url": "https://www.cadc-ccda.hia-iha.nrc-cnrc.gc.ca/files/vault/AstroDataCitationDOI/CISTI.CANFAR/21.0007/data/waterfalls/data/FRB20180725A_waterfall.h5",
+    "sha256": "783ddfbfbaf4ac1ef0b903adfb08564b015c1de9c3e93051bc2e2ca3e617c0b4",
+    "bytes": 35527920,
+    "shape": [
+      16384,
+      38
+    ],
+    "data_sha256": "90f2da620b17a4da6aabb95473e53430e87ee4b0adc924ed28c4b84670b1e99f",
+    "time_axis_sha256": "d2a16fbd55ffba5fc2ff041f8bbe5f59d5a902a326bc004c968f17fba1082625",
+    "frequency_axis_sha256": "60965ffc307c910246d70bc6f7267352dfa75371bc4a0cddb3f162341e55f9d5",
+    "publication": "CHIME/FRB Catalog 1, DOI 10.11570/21.0007",
+    "documentation": [
+      "https://chime-frb-open-data.github.io/waterfall/",
+      "https://chime-frb.ca/tutorials",
+      "https://chime-frb.ca/catalogs/catalog1/FRB20180725A"
+    ],
+    "axis_crosscheck": "https://sandboxphysics.com/stories/interstellar-radio/chime-intensity/",
+    "catalog1": {
+      "dm_fitb": 715.8093,
+      "dm_fitb_err": 0.0041,
+      "flag_frac": 0.403,
+      "snr_fitb": 33.2,
+      "width_fitb_s": 0.000296,
+      "scat_time_s": 0.0011,
+      "population_excluded": true
+    },
+    "interpretation": "Processed intensity already dedispersed near archive DM, not raw voltage. Time axis ms per current CHIME tutorial and 0.98304 ms sampling; historical tutorial incorrectly labels microseconds. Use extent (origin upper, official plotting) and monotonic axis to map rows; independently compare row means to spec in both orders if compatible. Report mismatch/ambiguity; no refit absolute DM from cutout."
+  },
+  "retina": {
+    "temporal_code": "research/uap_poss1/janus_uap_tachyon_r14_temporal_arrow.py",
+    "temporal_blob": "33b26706c1dbd6a1706e59f03158234097348b5f",
+    "temporal_contract": "registry/uap/JANUS-UAP-TACHYON-R1.4-TEMPORAL-ARROW-CONTRACT-2026-11-28-v1.0.json",
+    "native_cosmos": "74a023786d23e567e1f91d84688c2945bdca53a5",
+    "native_blob": "43683dee60433ea2612bb1a433d8e7afc9704494",
+    "native_admission": "Native narrowband ON/OFF/REPEAT_ON/REPEAT_OFF scorer cannot be given single FRB spectrum; no fabricated roles or resize. Separate exact R14 temporal scorer + new mask-aware broad-band spectral adapter. No promotion to production.",
+    "mask": "Record per-channel and time counts, whole masked rows, partial rows, nonfinite type, mask contiguous run lengths, comparison to catalog flag_frac. Never fill NaNs or infer missing data as noise. Use all-time finite rows for unshifted time-profile; retain raw mask hash.",
+    "spectral": "64 fixed contiguous 256-channel bins with valid count weights; 4 fixed equal-width physical frequency bands; edge bins 0..5 and 32..37 for diagnostic baseline/RMS only, not independent background. Compare archived fitted model on common finite cells, report residual descriptively (same data fit, not holdout). Record dimensions of all arrays; don't use calibrated_wfall with wrong time axis.",
+    "dispersion": "Residual DM grid [-2,-1,-.5,-.25,0,.25,.5,1,2] pc cm^-3. Relative delay ms=4.148808*dDM*((f_MHz/1000)^-2-.8^-2). Interpolate native channels, require finite neighbors, no wrap, retain sample count by time. Peak/edge RMS descriptive, not p-value or new absolute DM. Mirror requires reversing time and sign of residual correction; compare profiles and counts; if axis ambiguity, skip physical frequency claims.",
+    "inverse": "Exact frozen R14 score on full 38-point finite-row mean and 4 bands when available, mirror check D antisymmetry and Q parity; original thresholds not calibrated for real FRB. Hide fixed windows 11:16 and 22:27 (mirror pair), fit F/R/S models on all other points; rank only on observed loss, retain all candidates, compare held measured samples (not latent truth) and linear interpolation; mirrored replay compare all directions. No unique cause."
+  },
+  "outrigger": {
+    "csv": "https://assets.chime-frb.ca/catalogs/outriggers1/releases/2502.11217v2/data/outriggers1.csv",
+    "sha256": "4b068b53b1223b93a74790814d0e66fbc4ef1f76e2a1d7660ea8b0a1ef25fe1a",
+    "expected_rows": 83,
+    "api": "https://chime-frb.ca/api/v1",
+    "catalog2_version": "20251231",
+    "paper": "https://arxiv.org/abs/2502.11217",
+    "search": "Reacquire pinned CSV, join exact normalized TNS names to public Catalog2 pinned pages (max 10 pages), inspect all 83 official Outrigger event API detail endpoints for explicit paired-data links and plot keys, no guessing file paths. Record per-event failures and direct links to possible HDF5/FITS/baseband/visibility data; images and rows not waveforms. Metadata-only matches not pair admission.",
+    "admission": "Require two separately identified site arrays, common event ID, UTC/time reference, frequency grid, clock/geometric delay calibration, and independent noise witness for full R15E. A second science telescope is not automatically a noise witness. No inferred synchronized arrays from plots or catalog. Public endpoint search not exhaustive archive access; no contacting custodians automatically."
+  },
+  "spiral": "Five canonical axes; origin→mirror→model replay→source→return, hashes of actual deltas; preserve mask/instrument, residual dispersion, astrophysical pulse, common noise, hypothetical carrier; no physical retrocausality, no automatic veto or production change."
+}
