@@ -1,0 +1,923 @@
+{
+  "schema": "janus.uap_tachyon.open_evidence_catalog.v1",
+  "date": "2026-11-28",
+  "status": "WEB_DISCOVERY_SNAPSHOT__MACHINE_ACQUISITION_SEPARATE",
+  "parent_commit": "c378a29ff9543761fe574918406ca35aa34f0dfa",
+  "scope": "Bounded public source catalog; not an exhaustive web crawl and not an archive of all underlying media. R1.8 focuses on UAP; FRB ordinary controls only. No claims of tachyon or physical causality.",
+  "source_count": 51,
+  "sources": [
+    {
+      "id": "PURSUE_OFFICIAL",
+      "category": "UAP_PRIMARY",
+      "publisher": "US Department of War",
+      "url": "https://www.war.gov/UFO/",
+      "priority": "P0",
+      "data": "official release portal; records and media; direct page returned 403 in web check, earlier indexed snapshot only through R05",
+      "limits": "Do not infer native sensor provenance or independent confirmation from declassification.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "PURSUE_CSV",
+      "category": "UAP_PRIMARY",
+      "publisher": "US Department of War",
+      "url": "https://www.war.gov/Portals/1/Interactive/2026/UFO/uap-data.csv",
+      "priority": "P0",
+      "data": "canonical release CSV; web parser did not support content type",
+      "limits": "Acquire ordinary public endpoint only; record exact revision and SHA; count rows and unique IDs separately.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "PURSUE_ARCHIVE",
+      "category": "UAP_DISCOVERY",
+      "publisher": "Independent UAP Records Archive",
+      "url": "https://www.uap-archive.org/uap/data/",
+      "priority": "P0",
+      "data": "2026-11-26 archive update claims 521 catalog entries through R08; public JSON/CSV and checksums",
+      "limits": "Independent mirror; compare with official source; no independent events from duplicate records.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "PURSUE_ARCHIVE_JSON",
+      "category": "UAP_DISCOVERY",
+      "publisher": "Independent UAP Records Archive",
+      "url": "https://www.uap-archive.org/uap/data/pursue-documents.json",
+      "priority": "P0",
+      "data": "machine-readable metadata export advertised by archive",
+      "limits": "Exact endpoint download not yet verified; preserve source URL, media format, incident and publication date, archive checksum.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "PURSUE_TRACKER",
+      "category": "UAP_DISCOVERY",
+      "publisher": "Independent PURSUE UFO Tracker",
+      "url": "https://pursueufotracker.com/uap-data-csv",
+      "priority": "P0",
+      "data": "CSV revision log; indexed snapshot may be stale",
+      "limits": "Published counts differ across revisions; not a government source.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "PURSUE_TRACKER_CSV",
+      "category": "UAP_DISCOVERY",
+      "publisher": "Independent PURSUE UFO Tracker",
+      "url": "https://pursueufotracker.com/data/uap-data.csv",
+      "priority": "P0",
+      "data": "advertised mirror of official CSV",
+      "limits": "Verify bytes and freshness independently; do not assume current or identical.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "PURSUE_R08_BROWSER",
+      "category": "UAP_DISCOVERY",
+      "publisher": "UAP Browser",
+      "url": "https://uapbrowser.com/en/releases/release-08?group=aaro-recent",
+      "priority": "P0",
+      "data": "2026-11-20 release index, 43 entries reported",
+      "limits": "Independent navigation, official individual files remain to be authenticated.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "PURSUE_R08_REGISTER",
+      "category": "UAP_DISCOVERY",
+      "publisher": "Independent PURSUE File Register",
+      "url": "https://theobservatory-pursue.pplx.app/?release=08",
+      "priority": "P0",
+      "data": "recent release index; reported cross-check against official CSV",
+      "limits": "Secondary discovery only; no original file hash verified here.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "AARO_RESOLUTIONS",
+      "category": "UAP_PRIMARY",
+      "publisher": "AARO",
+      "url": "https://www.aaro.mil/UAP-Cases/UAP-Case-Resolution-Reports/",
+      "priority": "P0",
+      "data": "published case resolutions and methodology",
+      "limits": "Resolved and unresolved cases retained equally; conclusions not raw evidence.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "AARO_IMAGERY",
+      "category": "UAP_PRIMARY",
+      "publisher": "AARO",
+      "url": "https://www.aaro.mil/UAP-Cases/Official-UAP-Imagery/",
+      "priority": "P0",
+      "data": "official image/video records",
+      "limits": "Some are display recordings rather than native sensor output; no metric speed without geometry.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "AARO_REPORTS",
+      "category": "UAP_PRIMARY",
+      "publisher": "AARO",
+      "url": "https://www.aaro.mil/Congressional-Press-Products/",
+      "priority": "P0",
+      "data": "FY2025 annual report added 2026-07-20; other official reports",
+      "limits": "Aggregate counts are reporting statistics, not incidence rates.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "AARO_TRENDS",
+      "category": "UAP_PRIMARY",
+      "publisher": "AARO",
+      "url": "https://www.aaro.mil/UAP-Cases/UAP-Reporting-Trends/",
+      "priority": "P1",
+      "data": "indexed trend period through 2026-08-15",
+      "limits": "Missing morphology fields and reporting/exposure bias.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "NARA_RG615",
+      "category": "UAP_PRIMARY",
+      "publisher": "US National Archives",
+      "url": "https://www.archives.gov/research/topics/uaps/rg-615",
+      "priority": "P0",
+      "data": "UAP records collection accessioned from federal agencies",
+      "limits": "Archive record existence is not validation of content.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "NARA_BULK",
+      "category": "UAP_PRIMARY",
+      "publisher": "US National Archives",
+      "url": "https://www.archives.gov/research/catalog/catalog-bulk-downloads/uap-bulk-download",
+      "priority": "P0",
+      "data": "JSON metadata downloads separated from media ZIP bundles",
+      "limits": "Get per-collection metadata; large bundles deferred; preserve NAID.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "NARA_TEXT",
+      "category": "UAP_PRIMARY",
+      "publisher": "US National Archives",
+      "url": "https://www.archives.gov/research/topics/uaps/textual-and-microfilm",
+      "priority": "P1",
+      "data": "Blue Book and other textual/microfilm records",
+      "limits": "OCR errors and duplicate case references.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "NARA_MEDIA",
+      "category": "UAP_PRIMARY",
+      "publisher": "US National Archives",
+      "url": "https://www.archives.gov/research/topics/uaps/moving-images-and-sound",
+      "priority": "P1",
+      "data": "historical films/audio",
+      "limits": "Require digitization lineage, frame rate, timing metadata.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "CIA_READING_ROOM",
+      "category": "UAP_PRIMARY",
+      "publisher": "CIA",
+      "url": "https://www.cia.gov/readingroom/",
+      "priority": "P1",
+      "data": "FOIA archive; historical UFO and speculative physics documents",
+      "limits": "Distinguish proposals, intelligence claims and observed measurements.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "NASA_UAP",
+      "category": "METHOD",
+      "publisher": "NASA",
+      "url": "https://science.nasa.gov/uap/",
+      "priority": "P1",
+      "data": "2023 independent study recommendations",
+      "limits": "Methodology only; not an empirical extraterrestrial finding.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "GEIPAN",
+      "category": "UAP_PRIMARY",
+      "publisher": "CNES GEIPAN",
+      "url": "https://www.cnes-geipan.fr/en/actualites/mise-a-jour-csv",
+      "priority": "P0",
+      "data": "official downloadable case and testimony CSVs",
+      "limits": "Cases and witnesses relational, not independent events; anonymized/rounded geography; avoid personal fields.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "GEIPAN_CASES",
+      "category": "UAP_PRIMARY",
+      "publisher": "CNES GEIPAN",
+      "url": "https://www.cnes-geipan.fr/sites/default/files/Base_de_donn%C3%A9es_des_cas.csv",
+      "priority": "P0",
+      "data": "case CSV endpoint documented by source",
+      "limits": "Retain metadata and case identifiers; do not infer absolute coordinates.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "CANADA_SKY",
+      "category": "METHOD",
+      "publisher": "Office of Chief Science Advisor Canada",
+      "url": "https://ised-isde.canada.ca/site/science/en/office-chief-science-advisor/sky-canada-project/management-public-reporting-unidentified-aerial-phenomena-canada",
+      "priority": "P1",
+      "data": "2025 reporting infrastructure and recommendations",
+      "limits": "Survey/report evidence, not instrument detections.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "CANADA_ARCHIVE",
+      "category": "UAP_PRIMARY",
+      "publisher": "Library and Archives Canada",
+      "url": "https://www.canada.ca/en/library-archives/collection/research-help/science-technology/ufos.html",
+      "priority": "P1",
+      "data": "government UFO records research guide",
+      "limits": "Preserve original record IDs and uncertainty.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "UK_ARCHIVE",
+      "category": "UAP_PRIMARY",
+      "publisher": "UK National Archives",
+      "url": "https://www.nationalarchives.gov.uk/help-with-your-research/research-guides/ufos/",
+      "priority": "P1",
+      "data": "MOD UFO files and catalog guidance",
+      "limits": "Access/reproduction restrictions vary.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "SPAIN_ARCHIVE",
+      "category": "UAP_PRIMARY",
+      "publisher": "Spanish Ministry of Defence",
+      "url": "https://bibliotecavirtual.defensa.gob.es/BVMDefensa/exp_ovni/es/micrositios/inicio.do",
+      "priority": "P1",
+      "data": "declassified historical reports",
+      "limits": "Record-level licensing and metadata verification needed.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "GEP_OCT2026",
+      "category": "UAP_DISCOVERY",
+      "publisher": "GEP Germany / Zenodo",
+      "url": "https://zenodo.org/records/23906585",
+      "priority": "P0",
+      "data": "November 2026 publication of case dataset through October 2026; CSV 2.5 MB; CDLA Permissive 1.0",
+      "limits": "Civilian case reports; not independent instrument data; exclude private witness information.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "IR_WINGBEAT_2026",
+      "category": "MEASUREMENT_CONTROL",
+      "publisher": "Zenodo dataset associated with arXiv:2610.08692",
+      "url": "https://zenodo.org/records/23021686",
+      "priority": "P0",
+      "data": "October 2026 reproducibility data: PR135 military IR, D108 report, five Galileo flying-animal comparison clips, derived data and code",
+      "limits": "Preprint conclusions subject to independent reanalysis; code MIT, derived data CC BY 4.0, Galileo clips attribution; do not equate bird-like flicker with verified identity.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "IR_WINGBEAT_PAPER",
+      "category": "METHOD",
+      "publisher": "arXiv",
+      "url": "https://arxiv.org/abs/2610.08692",
+      "priority": "P0",
+      "data": "2026-10-06 preprint on IR brightness flicker",
+      "limits": "Test frequency extraction, compression artifacts, windowing and independent comparison; not confirmed identity.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "GALILEO_MAG",
+      "category": "MEASUREMENT_CONTROL",
+      "publisher": "Galileo Project / Zenodo",
+      "url": "https://zenodo.org/records/15825118",
+      "priority": "P0",
+      "data": "raw magnetic field and temperature measurements, Colorado, 2025",
+      "limits": "Large raw files; separate calibration, geomagnetic background, local interference; not UAP coincidence by default.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "GALILEO_MAG_PAPER",
+      "category": "METHOD",
+      "publisher": "Geoscientific Instrumentation, Methods and Data Systems",
+      "url": "https://gi.copernicus.org/articles/14/335/2025/",
+      "priority": "P0",
+      "data": "published magnetometer deployment and characterization",
+      "limits": "Use measurement units, quality flags and cross-observatory comparison.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "GALILEO_IR_COMMISSION",
+      "category": "METHOD",
+      "publisher": "Galileo Project",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11820869/",
+      "priority": "P0",
+      "data": "2025 all-sky infrared instrument commissioning; ADS-B and labelled observations",
+      "limits": "Training and control data; raw data availability must be checked independently.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "INTERMAGNET",
+      "category": "INDEPENDENT_CONTEXT",
+      "publisher": "INTERMAGNET",
+      "url": "https://intermagnet.org/data_download.html",
+      "priority": "P0",
+      "data": "geomagnetic observatory time series and data quality documentation",
+      "limits": "Local transient may not be detectable at distant station; verify cadence, coordinates, clock and data conditions.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "FAA_UAS",
+      "category": "INDEPENDENT_CONTEXT",
+      "publisher": "FAA",
+      "url": "https://www.faa.gov/uas/resources/public_records/uas_sightings_report",
+      "priority": "P0",
+      "data": "quarterly UAS reports including July–September 2026 indexed",
+      "limits": "Reports not full surveillance tracks; no negative inference from absent report.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "FAA_RECONSTRUCTION",
+      "category": "UAP_DISCOVERY",
+      "publisher": "Zenodo",
+      "url": "https://zenodo.org/records/21444168",
+      "priority": "P1",
+      "data": "2026 reconstructed FAA UAS report dataset, 2014–2026; 21,765 records stated by depositor",
+      "limits": "Derived archive; deduplicate with FAA originals and verify license.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "OPENSKY",
+      "category": "INDEPENDENT_CONTEXT",
+      "publisher": "OpenSky Network",
+      "url": "https://opensky-network.org/data/scientific",
+      "priority": "P0",
+      "data": "public static scientific datasets; historical Trino access conditional",
+      "limits": "Coverage and timestamps vary; full historical access institutional; no assumption of unrestricted access.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "CELESTRAK",
+      "category": "INDEPENDENT_CONTEXT",
+      "publisher": "CelesTrak",
+      "url": "https://celestrak.org/NORAD/archives/request.php",
+      "priority": "P1",
+      "data": "historical orbital element access/request",
+      "limits": "Use epoch-appropriate elements, observer geometry and propagation uncertainty; not present-day TLE for old events.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "NOAA_ISD",
+      "category": "INDEPENDENT_CONTEXT",
+      "publisher": "NOAA NCEI",
+      "url": "https://www.ncei.noaa.gov/products/land-based-station/integrated-surface-database",
+      "priority": "P0",
+      "data": "historical global surface weather observations",
+      "limits": "Surface wind not necessarily object-altitude wind; metadata and QA required.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "NOAA_NEXRAD",
+      "category": "INDEPENDENT_CONTEXT",
+      "publisher": "NOAA NCEI",
+      "url": "https://www.ncei.noaa.gov/products/radar/next-generation-weather-radar",
+      "priority": "P0",
+      "data": "archived Level II/III weather radar, selected raw Level I",
+      "limits": "Weather radar is not ATC radar; absence of echo not evidence of absence.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "NOAA_GOES",
+      "category": "INDEPENDENT_CONTEXT",
+      "publisher": "NOAA Open Data / AWS",
+      "url": "https://registry.opendata.aws/noaa-goes/",
+      "priority": "P1",
+      "data": "GOES ABI/GLM archives",
+      "limits": "Coverage/epoch constraints and spatial resolution; not ordinary airborne object tracker.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "NOAA_HYSPLIT",
+      "category": "INDEPENDENT_CONTEXT",
+      "publisher": "NOAA",
+      "url": "https://registry.opendata.aws/noaa-arl-hysplit/",
+      "priority": "P1",
+      "data": "historical meteorological fields for drift and trajectories",
+      "limits": "Model-dependent winds, not measurements of object trajectory.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "NOAA_SPACE_WEATHER",
+      "category": "INDEPENDENT_CONTEXT",
+      "publisher": "NOAA NCEI",
+      "url": "https://www.ncei.noaa.gov/satellite/space-weather-data",
+      "priority": "P0",
+      "data": "historical space weather observations",
+      "limits": "Solar/geophysical interference control; coincidence alone not causality.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "SWPC_JSON",
+      "category": "INDEPENDENT_CONTEXT",
+      "publisher": "NOAA SWPC",
+      "url": "https://services.swpc.noaa.gov/json/",
+      "priority": "P1",
+      "data": "rolling operational JSON products updated 2026-11-28",
+      "limits": "Preserve retrieval UTC; rolling feeds not historical archive.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "CNEOS_FIREBALL",
+      "category": "INDEPENDENT_CONTEXT",
+      "publisher": "NASA/JPL CNEOS",
+      "url": "https://ssd-api.jpl.nasa.gov/doc/fireball.html",
+      "priority": "P0",
+      "data": "bolide event API with dates, locations where available",
+      "limits": "Incomplete sensor coverage; coordinates/time may be missing.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "USGS_COMCAT",
+      "category": "INDEPENDENT_CONTEXT",
+      "publisher": "USGS",
+      "url": "https://earthquake.usgs.gov/data/catalog/access/",
+      "priority": "P1",
+      "data": "earthquake and other catalogued seismic events",
+      "limits": "Context only; event classification and selection biases.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "CTBTO_VDEC",
+      "category": "ACCESS_REQUEST",
+      "publisher": "CTBTO",
+      "url": "https://www.ctbto.org/resources/for-researchers-experts/vdec",
+      "priority": "P1",
+      "data": "approved research access to seismic/infrasound/hydroacoustic/radionuclide data",
+      "limits": "Not anonymous open raw access; no application or account creation authorized.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "CHIME_CATALOG2",
+      "category": "ASTRO_CONTROL",
+      "publisher": "CHIME/FRB",
+      "url": "https://chime-frb.ca/catalogs/catalog2",
+      "priority": "P2",
+      "data": "2026 Catalog 2, version 20251231, DOI 10.11570/25.0066",
+      "limits": "Ordinary astrophysical control only; metadata not paired raw spectrum.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "CHIME_OUTRIGGER",
+      "category": "ASTRO_CONTROL",
+      "publisher": "CHIME/FRB",
+      "url": "https://assets.chime-frb.ca/catalogs/outriggers1/releases/2502.11217v2/data/outriggers1.csv",
+      "priority": "P2",
+      "data": "83 localized events, previously acquired in R1.6",
+      "limits": "Paired CHIME/KKO waveforms not established by catalog.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "BREAKTHROUGH",
+      "category": "ASTRO_CONTROL",
+      "publisher": "Breakthrough Listen",
+      "url": "https://breakthroughinitiatives.org/opendatasearch",
+      "priority": "P2",
+      "data": "technical radio data archive",
+      "limits": "No UAP link; time/frequency metadata and RFI controls, bounded downloads.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "GWOSC",
+      "category": "TIMING_CONTROL",
+      "publisher": "LIGO/Virgo/KAGRA",
+      "url": "https://gwosc.org/",
+      "priority": "P1",
+      "data": "public calibrated strain observations; R1.2 known event control",
+      "limits": "Two detector arrivals not emission-to-reception time of flight.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "OPERA",
+      "category": "TIMING_CONTROL",
+      "publisher": "OPERA Collaboration",
+      "url": "https://arxiv.org/abs/1212.1276",
+      "priority": "P1",
+      "data": "2012 dedicated neutrino velocity measurement; published 90% interval -1.8e-6 to +2.3e-6",
+      "limits": "Constraint is on measured muon neutrinos, not a generic tachyon carrier.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "NUFORC",
+      "category": "UAP_DISCOVERY",
+      "publisher": "National UFO Reporting Center",
+      "url": "https://nuforc.org/phoenix/",
+      "priority": "P1",
+      "data": "Phoenix historical report archive",
+      "limits": "Witness report chronology only, not tracked object positions.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    },
+    {
+      "id": "DOE_TEST_ARCHIVE",
+      "category": "INDEPENDENT_CONTEXT",
+      "publisher": "US Government Publishing Office",
+      "url": "https://www.govinfo.gov/app/details/GOVPUB-E11-PURL-gpo82304",
+      "priority": "P1",
+      "data": "historical nuclear test chronology landing page previously retrieved",
+      "limits": "Exact date join only, no causal inference without exposure denominator.",
+      "review_status": "WEB_SOURCE_DISCOVERED__BYTES_NOT_VERIFIED_IN_THIS_MANIFEST",
+      "review_date": "2026-11-28"
+    }
+  ],
+  "fresh_discovery": [
+    {
+      "date": "2026-11-20",
+      "source": "PURSUE_R08_BROWSER",
+      "release": "08",
+      "reported_count": 43,
+      "reported_documents": 40,
+      "reported_videos": 3,
+      "status": "MULTIPLE_SECONDARY_INDEXES_AGREE__PRIMARY_MANIFEST_NOT_VERIFIED",
+      "candidate_ids": [
+        "DOW-UAP-D165",
+        "DOW-UAP-PR166",
+        "DOW-UAP-PR168",
+        "DOW-UAP-PR169",
+        "DOW-UAP-D172",
+        "DOW-UAP-D185",
+        "CIA-UAP-D024",
+        "CIA-UAP-D025",
+        "CIA-UAP-D026",
+        "CIA-UAP-D027",
+        "CIA-UAP-D028",
+        "CIA-UAP-D029"
+      ],
+      "why": "Radar and sensor records prioritized; historic program documents are provenance, not detector results.",
+      "corroboration": [
+        "https://uapbrowser.com/en/releases/release-08?group=aaro-recent",
+        "https://www.warufo.com/archive",
+        "https://uap-archive.org/uap/records/pursue-uap-documents/",
+        "https://www.warufo.com/deep-dive"
+      ]
+    },
+    {
+      "date": "2026-11-26",
+      "source": "PURSUE_ARCHIVE",
+      "reported_total": 521,
+      "status": "MIRROR_UPDATE_REPORTED",
+      "why": "Archive advertises 521 entries and downloadable metadata. Another index reports 524: count definitions/revisions conflict; verify actual bytes.",
+      "corroboration": [
+        "https://uap-archive.org/uap/",
+        "https://uapledger.com/releases"
+      ]
+    },
+    {
+      "date": "2026-10-23",
+      "release": "07",
+      "source": "PURSUE_OFFICIAL",
+      "reported_count": 28,
+      "status": "SECONDARY_INDEX_REPORTED",
+      "candidate_ids": [
+        "DOW-UAP-D176",
+        "FBI-UAP-D043"
+      ],
+      "why": "Reported multi-observer 2026 case; witness corroboration not synchronized calibrated arrays.",
+      "corroboration": [
+        "https://beyondbluebook.com/watcher/"
+      ]
+    },
+    {
+      "date": "2026-09-18",
+      "release": "06",
+      "source": "PURSUE_OFFICIAL",
+      "reported_count_range": [
+        72,
+        75
+      ],
+      "status": "SECONDARY_INDEX_REPORTED__REVISIONS_POSSIBLE",
+      "candidate_ids": [
+        "DOW-UAP-D108",
+        "DOW-UAP-PR135"
+      ],
+      "why": "Historical and technical studies, infrared footage suitable for comparison against reproducibility dataset.",
+      "corroboration": [
+        "https://beyondbluebook.com/watcher/",
+        "https://zenodo.org/records/23021686"
+      ]
+    },
+    {
+      "date": "2026-07-20",
+      "source": "AARO_REPORTS",
+      "status": "OFFICIAL_INDEX_VERIFIED",
+      "why": "FY2025 annual report release."
+    },
+    {
+      "date": "2026-10-06",
+      "source": "IR_WINGBEAT_PAPER",
+      "status": "PREPRINT_METADATA_VERIFIED",
+      "why": "Independent test of apparent IR motion and periodic brightness."
+    },
+    {
+      "date": "2026-11",
+      "source": "GEP_OCT2026",
+      "status": "REPOSITORY_METADATA_VERIFIED",
+      "why": "New civilian cases through October; not instrument data."
+    },
+    {
+      "date": "2026-07/09",
+      "source": "FAA_UAS",
+      "status": "OFFICIAL_INDEX_VERIFIED__EVENT_PERIOD_NOT_PUBLICATION_DATE",
+      "why": "Latest indexed quarterly reporting period."
+    }
+  ],
+  "priority_targets": [
+    {
+      "id": "DOW-UAP-D165",
+      "release": "08",
+      "priority": "P0",
+      "role": "RADAR_REPORT",
+      "required": [
+        "original report",
+        "radar point data and time tags",
+        "range/azimuth/elevation uncertainties",
+        "clock provenance",
+        "site geometry",
+        "processing history"
+      ],
+      "ceiling": "DOCUMENTARY_CANDIDATE"
+    },
+    {
+      "id": "DOW-UAP-PR166",
+      "release": "08",
+      "priority": "P0",
+      "role": "OPTICAL_SENSOR_VIDEO",
+      "required": [
+        "native file vs recording of display",
+        "frame timestamps and cadence",
+        "camera calibration",
+        "platform motion",
+        "range and geometry"
+      ],
+      "ceiling": "VIDEO_MORPHOLOGY_ONLY"
+    },
+    {
+      "id": "DOW-UAP-PR168",
+      "release": "08",
+      "priority": "P0",
+      "role": "OPTICAL_SENSOR_VIDEO",
+      "required": [
+        "native file vs recording of display",
+        "frame timestamps and cadence",
+        "camera calibration",
+        "platform motion",
+        "range and geometry"
+      ],
+      "ceiling": "VIDEO_MORPHOLOGY_ONLY"
+    },
+    {
+      "id": "DOW-UAP-PR169",
+      "release": "08",
+      "priority": "P0",
+      "role": "OPTICAL_SENSOR_VIDEO",
+      "required": [
+        "native file vs recording of display",
+        "frame timestamps and cadence",
+        "camera calibration",
+        "platform motion",
+        "range and geometry"
+      ],
+      "ceiling": "VIDEO_MORPHOLOGY_ONLY"
+    },
+    {
+      "id": "DOW-UAP-D176/FBI-UAP-D043",
+      "release": "07",
+      "priority": "P0",
+      "role": "MULTI_OBSERVER_REPORTS",
+      "required": [
+        "independent original statements",
+        "common event identity",
+        "time uncertainties",
+        "bearings and geometry",
+        "independent instrument records"
+      ],
+      "ceiling": "REPORT_CORROBORATION_ONLY"
+    },
+    {
+      "id": "DOW-UAP-D108/DOW-UAP-PR135",
+      "release": "06",
+      "priority": "P0",
+      "role": "IR_REPRODUCIBILITY_CONTROL",
+      "required": [
+        "original and derived files",
+        "code versions",
+        "frequency extraction",
+        "compression and frame cadence",
+        "ordinary flying-animal controls"
+      ],
+      "ceiling": "TEST_MORPHOLOGY_NOT_CAUSALITY"
+    },
+    {
+      "id": "DOW-UAP-D172",
+      "release": "08",
+      "priority": "P1",
+      "role": "PROGRAM_DOCUMENT",
+      "required": [
+        "separate claim, citation and original observation",
+        "version and page mapping"
+      ],
+      "ceiling": "DOCUMENTARY_PROVENANCE_ONLY"
+    },
+    {
+      "id": "DOW-UAP-D185",
+      "release": "08",
+      "priority": "P1",
+      "role": "PROGRAM_DOCUMENT",
+      "required": [
+        "original source",
+        "document date versus disclosure date"
+      ],
+      "ceiling": "DOCUMENTARY_PROVENANCE_ONLY"
+    }
+  ],
+  "acquisition_plan": [
+    {
+      "id": "PURSUE_CSV",
+      "url": "https://www.war.gov/Portals/1/Interactive/2026/UFO/uap-data.csv",
+      "format": "csv",
+      "cap": 8000000
+    },
+    {
+      "id": "PURSUE_ARCHIVE_JSON",
+      "url": "https://www.uap-archive.org/uap/data/pursue-documents.json",
+      "format": "json",
+      "cap": 16000000
+    },
+    {
+      "id": "PURSUE_ARCHIVE_CHECKSUMS",
+      "url": "https://www.uap-archive.org/uap/data/checksums.json",
+      "format": "json",
+      "cap": 1000000
+    },
+    {
+      "id": "PURSUE_TRACKER_CSV",
+      "url": "https://pursueufotracker.com/data/uap-data.csv",
+      "format": "csv",
+      "cap": 8000000
+    },
+    {
+      "id": "ZENODO_23021686",
+      "url": "https://zenodo.org/api/records/23021686",
+      "format": "zenodo",
+      "cap": 4000000
+    },
+    {
+      "id": "ZENODO_15825118",
+      "url": "https://zenodo.org/api/records/15825118",
+      "format": "zenodo",
+      "cap": 4000000
+    },
+    {
+      "id": "ZENODO_23906585",
+      "url": "https://zenodo.org/api/records/23906585",
+      "format": "zenodo",
+      "cap": 4000000
+    },
+    {
+      "id": "ZENODO_21444168",
+      "url": "https://zenodo.org/api/records/21444168",
+      "format": "zenodo",
+      "cap": 4000000
+    },
+    {
+      "id": "GEIPAN_CASES",
+      "url": "https://www.cnes-geipan.fr/sites/default/files/Base_de_donn%C3%A9es_des_cas.csv",
+      "format": "case_schema",
+      "cap": 24000000
+    },
+    {
+      "id": "NARA_BULK",
+      "url": "https://www.archives.gov/research/catalog/catalog-bulk-downloads/uap-bulk-download",
+      "format": "links",
+      "cap": 3000000
+    },
+    {
+      "id": "AARO_RESOLUTIONS",
+      "url": "https://www.aaro.mil/UAP-Cases/UAP-Case-Resolution-Reports/",
+      "format": "links",
+      "cap": 3000000
+    },
+    {
+      "id": "AARO_IMAGERY",
+      "url": "https://www.aaro.mil/UAP-Cases/Official-UAP-Imagery/",
+      "format": "links",
+      "cap": 3000000
+    },
+    {
+      "id": "FAA_UAS",
+      "url": "https://www.faa.gov/uas/resources/public_records/uas_sightings_report",
+      "format": "links",
+      "cap": 3000000
+    },
+    {
+      "id": "CNEOS_FIREBALL",
+      "url": "https://ssd-api.jpl.nasa.gov/fireball.api",
+      "format": "numeric_control",
+      "cap": 4000000
+    },
+    {
+      "id": "SWPC_RADIO_FLUX",
+      "url": "https://services.swpc.noaa.gov/json/solar-radio-flux.json",
+      "format": "numeric_control",
+      "cap": 3000000
+    }
+  ],
+  "admission": {
+    "categories": {
+      "UAP_PRIMARY": "official release or archive, not necessarily verified measurement",
+      "UAP_DISCOVERY": "third-party navigation or report corpus",
+      "MEASUREMENT_CONTROL": "public instrument data for controls, not by itself UAP",
+      "INDEPENDENT_CONTEXT": "independent context with case-specific space-time coverage",
+      "METHOD": "scientific or institutional method",
+      "TIMING_CONTROL": "known measurement or constraint",
+      "ASTRO_CONTROL": "ordinary astrophysics only",
+      "ACCESS_REQUEST": "conditional access, no acquisition without approval"
+    },
+    "event_fields": [
+      "source_record_id",
+      "source_url",
+      "retrieved_utc",
+      "sha256",
+      "publication_date",
+      "event_utc_interval",
+      "event_time_precision",
+      "observer_or_sensor_location",
+      "object_location_or_bearing",
+      "coordinate_uncertainty",
+      "sensor_type",
+      "calibration",
+      "clock_uncertainty",
+      "raw_data_vs_derived",
+      "source_independence_group",
+      "competing_explanations",
+      "missing_fields",
+      "claim_ceiling"
+    ],
+    "rules": [
+      "Never equate event date with release date; preserve original date string and uncertainty.",
+      "No real timing conflict without authenticated emitter and receiver, path lower bound, calibrated clocks and uncertainties, signal front and common event identity.",
+      "No physical tachyon attribution without exclusive calibrated carrier response and independent evidence.",
+      "Duplicate releases, mirrors and multiple statements are not independent physical events.",
+      "No private witness details or unauthorized/restricted acquisition. No bulk copying protected narrative text; retain metadata, links, numeric control data and hashes.",
+      "No live operational tracking. Historical matching only; current rolling environmental data used as a control.",
+      "A missing record does not exclude a conventional explanation; assess archive coverage.",
+      "Record failures and contradictory counts; do not choose a convenient total."
+    ],
+    "native_retina": "HOLD unless ON/OFF/REPEAT_ON/REPEAT_OFF role contract or separately validated modality adapter",
+    "production_changed": false,
+    "physical_claim": false
+  },
+  "notes": [
+    "Web results had inconsistent snapshot dates. Official PURSUE portal direct HTTP403; archive machine export not downloaded by browser in this turn; counts 521 and 524 differ among mirrors.",
+    "PURSUE R08 reported 43 items; no claim that all primary bytes were downloaded. Acquisition workflow verifies actual bytes and manifest contents separately.",
+    "Open access does not imply public domain or unrestricted reuse; use provider-specific terms. No contact with custodians initiated."
+  ]
+}
