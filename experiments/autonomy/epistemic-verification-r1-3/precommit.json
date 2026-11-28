@@ -1,0 +1,179 @@
+{
+  "schema": "janus.epistemic_verification.r1_3.precommit.v1",
+  "status": "PROSPECTIVE_ENGINEERING_TEST",
+  "baseline": {
+    "run": 46130587390,
+    "passed": 84,
+    "total": 84
+  },
+  "scope": "Synthetic trust registry, offline Ed25519, fixed test time; one isolated SQLite transaction store with compare-and-swap version and replay uniqueness; persistent restart test within single runner. No real external source enrollment, wall-clock validation, cross-run persistence or active Memory Cortex write.",
+  "registry": "Trusted independently supplied SHA256 of canonical registry, not a self-declared digest. Registry entries bind issuer/key ID to public key fingerprint and validity interval [not_before,not_after), optional revocation timestamp. Rotation uses a separately enrolled key and revoked old key. Fail closed if revoked at verification time even if issued before revocation. Registry digest mismatch vetoes. No dynamic registry modification or root authority signature in R1.3.",
+  "time": "Synthetic now=1700001000; max age=300 sec, future timestamps not accepted, document expiry exclusive, lifetime positive and <=300 sec. Key valid at issue and verify time; no claim of live time trust.",
+  "document": "Exact signed canonical JSON fields schema,issuer,key_id,context,audience,claim,asserted_truth,nonce,issued_at,expires_at. Nonce 32 lowercase hex. Envelope digest and strict base64 64-byte signature. Context/audience fixed; proposition binding uses R1.1 canonical. Signature independent of truth. Unknown claims not promoted.",
+  "state": "SQLite staging-only store; unique (issuer,nonce) across keys, monotonic version CAS on transaction; use BEGIN IMMEDIATE; failed checks do not consume nonce. Independently supplied expected version and digest of canonical snapshot for integrity check, no self-trusting digest. Restart reopen same DB, no rollback resistance across machines. All state changes within one temporary test directory. No active Cortex access.",
+  "staging": "Store authenticated receipt with origin, claim, internal truth status, asserted truth, nonce, key ID and document digest; never mark signed assertion as verified truth. Symbolic P vs NP remains UNRESOLVED. Stage receipts only, no knowledge admission.",
+  "tests": [
+    {
+      "id": "T01",
+      "case_name": "valid",
+      "expected": "ACCEPTED_STAGED"
+    },
+    {
+      "id": "T02",
+      "case_name": "new_key",
+      "expected": "ACCEPTED_STAGED"
+    },
+    {
+      "id": "T03",
+      "case_name": "old_key_after_rotation",
+      "expected": "KEY_REVOKED"
+    },
+    {
+      "id": "T04",
+      "case_name": "unknown_key",
+      "expected": "KEY_UNKNOWN"
+    },
+    {
+      "id": "T05",
+      "case_name": "unknown_issuer",
+      "expected": "KEY_UNKNOWN"
+    },
+    {
+      "id": "T06",
+      "case_name": "wrong_signer",
+      "expected": "SIGNATURE_INVALID"
+    },
+    {
+      "id": "T07",
+      "case_name": "tamper_nonce",
+      "expected": "SIGNATURE_INVALID"
+    },
+    {
+      "id": "T08",
+      "case_name": "tamper_time",
+      "expected": "SIGNATURE_INVALID"
+    },
+    {
+      "id": "T09",
+      "case_name": "tamper_digest",
+      "expected": "DIGEST_INVALID"
+    },
+    {
+      "id": "T10",
+      "case_name": "stale",
+      "expected": "DOCUMENT_STALE"
+    },
+    {
+      "id": "T11",
+      "case_name": "future",
+      "expected": "DOCUMENT_FUTURE"
+    },
+    {
+      "id": "T12",
+      "case_name": "expired",
+      "expected": "DOCUMENT_EXPIRED"
+    },
+    {
+      "id": "T13",
+      "case_name": "key_not_yet_valid",
+      "expected": "KEY_NOT_YET_VALID"
+    },
+    {
+      "id": "T14",
+      "case_name": "key_expired",
+      "expected": "KEY_EXPIRED"
+    },
+    {
+      "id": "T15",
+      "case_name": "issued_before_key",
+      "expected": "ISSUED_OUTSIDE_KEY_WINDOW"
+    },
+    {
+      "id": "T16",
+      "case_name": "issued_after_revocation",
+      "expected": "KEY_REVOKED"
+    },
+    {
+      "id": "T17",
+      "case_name": "replay",
+      "expected": "REPLAY"
+    },
+    {
+      "id": "T18",
+      "case_name": "nonce_reuse_other_claim",
+      "expected": "REPLAY"
+    },
+    {
+      "id": "T19",
+      "case_name": "wrong_context",
+      "expected": "BINDING_INVALID"
+    },
+    {
+      "id": "T20",
+      "case_name": "wrong_audience",
+      "expected": "BINDING_INVALID"
+    },
+    {
+      "id": "T21",
+      "case_name": "wrong_claim",
+      "expected": "BINDING_INVALID"
+    },
+    {
+      "id": "T22",
+      "case_name": "registry_tamper",
+      "expected": "REGISTRY_INTEGRITY_HOLD"
+    },
+    {
+      "id": "T23",
+      "case_name": "failed_then_valid",
+      "expected": "ACCEPTED_STAGED"
+    },
+    {
+      "id": "T24",
+      "case_name": "cas_stale",
+      "expected": "STATE_CAS_HOLD"
+    },
+    {
+      "id": "T25",
+      "case_name": "signed_symbolic",
+      "expected": "ACCEPTED_STAGED"
+    },
+    {
+      "id": "T26",
+      "case_name": "signed_false",
+      "expected": "ACCEPTED_STAGED"
+    },
+    {
+      "id": "T27",
+      "case_name": "bad_nonce",
+      "expected": "SCHEMA_INVALID"
+    },
+    {
+      "id": "T28",
+      "case_name": "bad_time_type",
+      "expected": "SCHEMA_INVALID"
+    },
+    {
+      "id": "T29",
+      "case_name": "bad_lifetime",
+      "expected": "SCHEMA_INVALID"
+    },
+    {
+      "id": "T30",
+      "case_name": "restart_replay",
+      "expected": "REPLAY"
+    },
+    {
+      "id": "T31",
+      "case_name": "state_tamper",
+      "expected": "STATE_INTEGRITY_HOLD"
+    },
+    {
+      "id": "T32",
+      "case_name": "revocation_retroactive",
+      "expected": "KEY_REVOKED"
+    }
+  ],
+  "gate": "84 prior checks + 32 new cases; assert no state mutation on rejection; verify signed false/symbolic unchanged; restart duplicate denied; compare state version and digest; only engineering pass for synthetic scope.",
+  "execution": "Read-only branch GitHub Actions CPU <=5 minutes; ephemeral keys, SQLite local temporary file; no secrets or production state."
+}
