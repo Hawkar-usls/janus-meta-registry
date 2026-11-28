@@ -1,0 +1,96 @@
+{
+  "schema": "janus.uap_tachyon.temporal_arrow.contract.v1",
+  "date": "2026-11-28",
+  "source_commit": "90d11244eda5dfdd036358234bff335d8a252dd6",
+  "parent_result": "registry/uap/JANUS-UAP-TACHYON-R1.3-REVERSE-5D-RESULT-2026-11-28-v1.0.json",
+  "canonical_spiral": "data/JANUS-DEEP-ANALYSIS-5D-SPIRAL-ORIGIN-PRIME-ORACLE-PROTOCOL-2026-08-21-v2.1.json",
+  "status": "FROZEN_BEFORE_EXECUTION__SHADOW_ONLY",
+  "authority_changed": false,
+  "model": {
+    "name": "TEMPORAL_ARROW_SHAPE_NOT_CAUSAL_ARROW",
+    "equations": [
+      "g(t;t0,r,d)=exp((t-t0)/r) for t<=t0; exp(-(t-t0)/d) otherwise",
+      "y=b+a*g+epsilon; a>=0",
+      "F: r<d, R: r>d, S: r=d; F/R banks exact time mirrors",
+      "D=(MSE_R-MSE_F)/MSE_constant; sign measures morphology only",
+      "Q=1-min(MSE_F,MSE_R,MSE_S)/MSE_constant; diagnostic goodness"
+    ],
+    "parameters": {
+      "length": 129,
+      "normalized_peaks": [
+        -0.25,
+        -0.125,
+        0,
+        0.125,
+        0.25
+      ],
+      "normalized_tau": [
+        0.04,
+        0.08,
+        0.16,
+        0.32
+      ],
+      "time_range": [
+        -1,
+        1
+      ]
+    },
+    "evaluation": "Two symmetric disjoint train/test masks; fit nonnegative amplitude and intercept on train, select minimum train MSE per family, score held-out. Swap folds; normalize by held-out constant fitted on train. No per-case fitting on test. Tie-break symmetric on observable scores; no causal inference from orientation.",
+    "decision": {
+      "min_goodness": 0.25,
+      "min_direction_margin": 0.12,
+      "meaning": "Fixed engineering thresholds, not calibrated scientific false-positive rates. If inadequate fit or insufficient margin, abstain."
+    }
+  },
+  "exam": {
+    "seeds": [
+      614101,
+      614103,
+      614107
+    ],
+    "per_family_per_seed": 32,
+    "families": [
+      "fast_rise_slow_decay",
+      "slow_rise_fast_decay",
+      "symmetric",
+      "ordinary_causal_slow_rise",
+      "two_pulse",
+      "colored_noise",
+      "weak_fast",
+      "clipped_fast"
+    ],
+    "truth": "Morphology labels for defined shapes only; ordinary_causal_slow_rise has identical observable generator as slow_rise_fast_decay and explicit ordinary cause. two_pulse, noise and clipped have no single-template truth; report output distributions, no forced labels.",
+    "gates": {
+      "mirror": "Every case and exact reverse must have D opposite within 1e-10, Q same, and mirrored decisions; no actual veto.",
+      "strong": "Each seed fast/slow strong 32+32: at least 85% correctly oriented including abstentions as noncorrect; no more than 5% wrong orientation. Symmetric case at least 80% abstain. If failure report HOLD, no threshold tuning.",
+      "identifiability": "Paired identical observations with different causal labels produce identical decisions; no physical claim, ever.",
+      "replay": "Fit each direction on observed outside central gap, reconstruct hidden points, evaluate against sealed generator truth; competing models remain possible; compare to interpolation baseline; report all errors, not claim reconstruction uniquely identifies source.",
+      "native": "Re-execute native frozen original scorer on all 288 identical synthetic cubes; compare hashes and scores to R1.2A receipt, apply separate arrow scorer to center-band excess envelope without changing native decision. No claim of time direction for original cube labels.",
+      "real": "Reacquire hash-matched GWOSC H1/L1 raw strain; fixed offline bandpass 35–350 Hz and centered 32ms RMS; extract fixed event window plus ten background windows; compare D and mirror symmetry, no physical signaling inference. CHIME catalog has no time waveform; no fabricated radio observations."
+    }
+  },
+  "inverse": {
+    "egg": "Distinct latent histories generate same observed terminal state; use two different admissible hidden input sequences with identical endpoint under linear transition. Replay each; retain both.",
+    "forecast": "Forward replay is an out-of-observation reconstruction test, not prospective prediction."
+  },
+  "spiral": {
+    "directions": [
+      "D1_CAUSAL_TEMPORAL",
+      "D2_HOMOLOG_MIRROR",
+      "D3_ABSTRACTION_HIERARCHY",
+      "D4_ASSOCIATIVE_SEMANTIC",
+      "D5_PROVENANCE_AUTHORITY"
+    ],
+    "origin_prime": "State enriched only by measured results or explicit blockers, hashes exclude turn number; preserve ambiguity and parent chain."
+  },
+  "native": {
+    "receipt_commit": "2f86b52bafa615159fd505136f88f2c989579255",
+    "receipt": "registry/uap/JANUS-UAP-TACHYON-R1.2A-RETINA-NATIVE-RESULT-2026-11-28-v1.0.json",
+    "contract": "registry/uap/JANUS-UAP-TACHYON-R1.2A-RETINA-NATIVE-CONTRACT-2026-11-28-v1.0.json",
+    "cosmos_commit": "74a023786d23e567e1f91d84688c2945bdca53a5",
+    "code": "research/seti/r41s1h1_physical_profile.py",
+    "blob": "43683dee60433ea2612bb1a433d8e7afc9704494"
+  },
+  "measurement": "registry/uap/JANUS-UAP-TACHYON-R1.2-MEASUREMENT-RESULT-2026-11-28-v1.0.json",
+  "scientific_ceiling": "A temporal asymmetry is not physical retrocausality. H4/H5 remain HOLD: unknown carrier coupling and no independent paired UAP/carrier observations. No real radio data or third-party blind holdout. Native production unchanged."
+}
