@@ -1,0 +1,22 @@
+{
+  "schema": "janus.epistemic.r1_5b.precommit.v1",
+  "status": "SEPARATE_RUN_BYTE_AUDIT_FIRST__AUTOMATIC_CONTINUITY_HOLD",
+  "parent_archive": "573d529faaebfdbf222660b34ebceaf1586fa97d",
+  "parent": {
+    "run": 46165295807,
+    "attempt": 1,
+    "head": "99af99b253035a378aea19a1b12b97751d1d78bc",
+    "artifact": 15270934037,
+    "zip_sha256": "d5940b5a37296e976c2216a5d19c32cf6838098c8fbc53811bddfd6c3886f878",
+    "checkpoint_sha256": "03c33f440dd7ba5ee7f6a3c12d84ac15a978a8fed3a64c5842fc382f66e5e045",
+    "version": 6,
+    "parent_sha256": "b04fbf5814e221975cc8d272a7a3f83461ae2d5e91e8e533d1f69529ddbec00c"
+  },
+  "stage1": "Separate push-triggered read-only GitHub Actions verifier downloads exact v6 ZIP, validates run/attempt/artifact metadata and actual archive/checkpoint hashes, reconstructs all six receipts using historical signatures and registry revisions, compares snapshot, verifies Cortex staging export, rejects older version and altered snapshot relative to pinned anchor. No new receipt, no key enrollment. Same trust domain, not independent witness.",
+  "stage2": "External scheduled read-only observer may independently compare provider metadata and immutable archive/checkpoint pins. No repository writes, dispatch, secrets, knowledge admission, or claim of cryptographic independent monotonic storage. Separate observer run and persistence must be verified. Any discrepancy or unavailable evidence = HOLD.",
+  "stage3": "Require separately approved bounded mechanism for three distinct auto-triggered Actions runs, pinned external witness high-water mark and exact predecessor, self-contained successor, no duplicate nonce, atomic append/ref CAS; no arbitrary workflow writes or permissions escalation. Existing v6 pending fixtures exhausted. Re-enrollment and scheduler not yet approved or implemented. Default-branch registration and workflow dispatch permissions must be verified, do not modify main to bypass.",
+  "gate": "Stage1 actual byte audit successful, external witness result independently observed and persisted, then three distinct automatic runs with monotonic checkpoint commitments; no full R1.5B PASS before all.",
+  "production": false,
+  "training": false,
+  "active_cortex_write": false
+}
