@@ -148,9 +148,16 @@ finally:os.chdir(R)
 hist=[["yolk","white_A","membranes","shell"],["yolk","white_B","membranes","shell"]]
 back=[list(reversed(x)) for x in hist]
 check("EGG_NONUNIQUE_PREDECESSOR",len({tuple(x) for x in back})==2 and len({x[-1] for x in hist})==1 and [x[::-1] for x in back]==hist,{"histories":hist,"meaning":"constructed analogy only; same terminal does not identify its causal history"})
-def slope(x):return float(np.dot(np.arange(len(x))-(len(x)-1)/2,np.asarray(x)-np.mean(x)))
+# For these integer fixtures, 2*slope = sum((2*i-(n-1))*x_i).
+# The centered weights sum to zero, so subtracting a floating mean is unnecessary.
+# Exact integer arithmetic preserves the original strict sign/zero criterion.
+def twice_slope(x):
+    assert all(type(v) is int for v in x)
+    return sum((2*i-(len(x)-1))*v for i,v in enumerate(x))
 a=[0,1,3,7,9];b=[0,2,5,2,0]
-check("ASYMMETRIC_AND_SYMMETRIC_CONTROLS",slope(a)==-slope(a[::-1]) and slope(b)==slope(b[::-1])==0,{"forward":slope(a),"reverse":slope(a[::-1]),"symmetric":slope(b)})
+fa,ra,fb,rb=twice_slope(a),twice_slope(a[::-1]),twice_slope(b),twice_slope(b[::-1])
+check("ASYMMETRIC_AND_SYMMETRIC_CONTROLS",fa==48 and ra==-48 and fb==rb==0,{"forward":fa/2,"reverse":ra/2,"symmetric":fb/2,"reverse_symmetric":rb/2,"exact_twice_slope":[fa,ra,fb,rb],"arithmetic":"integer centered weights; no tolerance"})
+check("TEMPORAL_CONTROL_REGRESSION",twice_slope([v+1000000000000 for v in a])==fa and twice_slope([v+1000000000000 for v in b])==0 and twice_slope([0,2,5,2,1])!=0 and twice_slope([1,3,3,1])==0,{"translation_invariance":True,"perturbed_symmetry_detected":True,"even_length_symmetry":True})
 check("INTERVAL_INVARIANCE",all((t*t-x*x)==((-t)*(-t)-x*x) for t,x in [(3,2),(2,3),(3,3)]),{"note":"units c=1; reversing coordinate sign is not a physical process"})
 # Enrichment states use substantive deltas (not turn index) and preserve explicit gaps.
 state={"known":["archival references are not causal links","carrier coupling unspecified"],"gaps":["H4","H5","independent blind holdout"]};turns=[]
